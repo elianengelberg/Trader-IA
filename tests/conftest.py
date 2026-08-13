@@ -119,3 +119,37 @@ def linear_series(
         )
         price = nxt
     return candles
+
+
+def proportional_series(
+    n: int,
+    *,
+    start_price: float = 100.0,
+    step_pct: float = 0.1,
+    wick_pct: float = 0.05,
+    symbol: str = "BTC-USD",
+    start: datetime = START,
+) -> list[Candle]:
+    """A trending series whose bar geometry is a fixed *percentage* of price.
+
+    Used where a test asserts a feature is scale-free: an absolute-sized wick would be
+    enormous at price 100 and negligible at price 100,000, which is a property of the
+    fixture rather than of the feature under test.
+    """
+    candles: list[Candle] = []
+    price = start_price
+    for i in range(n):
+        nxt = price * (1 + step_pct / 100.0)
+        wick = price * wick_pct / 100.0
+        candles.append(
+            make_candle(
+                symbol=symbol,
+                open_time=start + timedelta(minutes=i),
+                open_=price,
+                close=nxt,
+                high=max(price, nxt) + wick,
+                low=min(price, nxt) - wick,
+            )
+        )
+        price = nxt
+    return candles

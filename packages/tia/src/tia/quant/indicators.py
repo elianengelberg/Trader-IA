@@ -348,11 +348,16 @@ def percentile_rank(values: object, period: int = 100) -> Array:
 
 
 def slope(values: object, period: int = 20) -> Array:
-    """Least-squares slope over a rolling window, normalized by the window mean.
+    """Least-squares slope over a rolling window, as **percent change per window**.
 
-    Normalizing makes the number comparable across instruments with wildly different
-    price levels — a raw slope of 5 means something entirely different for BTC than for
-    an index at 5,400.
+    Two normalizations, both load-bearing:
+
+    * Divided by the window mean, so the number is comparable across instruments with
+      wildly different price levels — a raw slope of 5 means something entirely
+      different for BTC at 62,000 than for an index at 5,400.
+    * Expressed in percent over the whole window rather than as a per-bar fraction,
+      because a per-bar fraction is a number nobody can calibrate a threshold against
+      by eye. A value of 0.5 means "the fitted line rose 0.5% across these 20 bars".
     """
     arr = _as_array(values)
     out = _empty_like(arr)
@@ -367,7 +372,7 @@ def slope(values: object, period: int = 20) -> Array:
     means = windows.mean(axis=1)
     safe = means != 0
     normalized = np.zeros_like(slopes)
-    normalized[safe] = slopes[safe] / means[safe] * period
+    normalized[safe] = slopes[safe] / means[safe] * period * 100.0
     out[period - 1 :] = normalized
     return out
 

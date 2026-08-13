@@ -1,0 +1,354 @@
+/**
+ * The API client.
+ *
+ * Session lives in an HttpOnly cookie, so nothing here touches a token: `credentials:
+ * "same-origin"` is the whole authentication story on this side. A 401 means the session
+ * expired, and every caller treats that the same way — show the login screen — so it is
+ * turned into one typed error rather than left for each call site to detect.
+ */
+
+export class ApiError extends Error {
+  constructor(
+    message: string,
+    readonly status: number,
+  ) {
+    super(message);
+    this.name = "ApiError";
+  }
+  get isUnauthorized() {
+    return this.status === 401;
+  }
+}
+
+async function request<T>(path: string, init?: RequestInit): Promise<T> {
+  const response = await fetch(`/api${path}`, {
+    ...init,
+    credentials: "same-origin",
+    headers: { "Content-Type": "application/json", ...(init?.headers ?? {}) },
+  });
+
+  if (!response.ok) {
+    let detail = response.statusText;
+    try {
+      const body = await response.json();
+      detail = body.detail ?? detail;
+    } catch {
+      /* a non-JSON error body is still an error; the status carries the meaning */
+    }
+    throw new ApiError(String(detail), response.status);
+  }
+  if (response.status === 204) return undefined as T;
+  return (await response.json()) as T;
+}
+
+const get = <T,>(path: string) => request<T>(path);
+const post = <T,>(path: string, body?: unknown) =>
+  request<T>(path, { method: "POST", body: body ? JSON.stringify(body) : undefined });
+
+export interface Capital {
+  starting: number;
+  equity: number;
+  cash: number;
+  invested: number;
+  unrealized_pnl: number;
+  realized_pnl: number;
+  fees_paid?: number;
+  total_pnl: number;
+  return_pct: number;
+  max_drawdown_pct: number;
+  peak_equity?: number;
+}
+
+export interface RuntimeSnapshot {
+  run_id: string | null;
+  state: string;
+  mode: string;
+  simulated: boolean;
+  scenario?: { id: string; title: string; demonstrates: string; expected_outcome: string };
+  symbols?: string[];
+  progress?: { bars_done: number; bars_total: number; percent: number };
+  capital: Capital;
+  risk?: {
+    mode: string;
+    kill_switch_reason: string;
+    trades_today: number;
+    new_trades_allowed: boolean;
+    gross_exposure_pct: number;
+    net_exposure_pct: number;
+    limits: Record<string, number>;
+  };
+  ai?: {
+    provider: string;
+    enabled: boolean;
+    assessments: number;
+    neutral: number;
+    rejections: number;
+    budget: Record<string, unknown>;
+  };
+  counters: Record<string, number>;
+  detail?: string;
+  last_error?: string;
+}
+
+export interface Health {
+  status: string;
+  components: Record<string, string>;
+  degraded: string[];
+  uptime_seconds: number;
+  version: string;
+  simulated_only: boolean;
+}
+
+export interface Position {
+  symbol: string;
+  quantity: number;
+  direction: string;
+  average_price: number;
+  last_price: number;
+  unrealized_pnl: number;
+  realized_pnl: number;
+  fees_paid: number;
+  notional: number;
+  opened_at: string | null;
+}
+
+export interface Decision {
+  decision_id: string;
+  symbol: string;
+  decided_at: string;
+  direction: string;
+  base_confidence: number;
+  confidence: number;
+  verdict: string;
+  approved_quantity: number;
+  regime: string;
+  data_quality_score: number;
+  feature_hash: string;
+  context_modifier: number;
+  context_veto: boolean;
+  context_used: boolean;
+  context_reason: string;
+  thesis: string;
+  why_enter: string[];
+  why_not_enter: string[];
+  risk_checks: { name: string; passed: boolean; detail: string }[];
+  features: Record<string, number>;
+  snapshot: Record<string, unknown>;
+  signal_id: string;
+  correlation_id: string;
+}
+
+export interface Order {
+  order_id: string;
+  symbol: string;
+  side: string;
+  order_type: string;
+  quantity: number;
+  state: string;
+  filled_quantity: number;
+  average_fill_price: number;
+  fees_paid: number;
+  reject_reason: string;
+  created_at: string;
+  updated_at: string;
+  signal_id: string;
+}
+
+export interface Fill {
+  fill_id: string;
+  order_id: string;
+  symbol: string;
+  side: string;
+  quantity: number;
+  price: number;
+  fee: number;
+  slippage_bps: number;
+  liquidity: string;
+  filled_at: string;
+}
+
+export interface Assessment {
+  assessment_id: string;
+  symbol: string;
+  created_at: string;
+  expires_at: string;
+  used: boolean;
+  reason: string;
+  provider: string;
+  model_id: string;
+  context_modifier: number;
+  veto: boolean;
+  leaning: string;
+  confidence: number;
+  thesis: string;
+  supporting: string[];
+  contradicting: string[];
+  input_tokens: number;
+  output_tokens: number;
+  cost_usd: number;
+}
+
+export interface Market {
+  symbol: string;
+  price: number;
+  open: number;
+  high: number;
+  low: number;
+  volume: number;
+  change_pct: number;
+  at: string;
+  regime: string;
+}
+
+export interface NewsItem {
+  news_id: string;
+  published_at: string;
+  source: string;
+  headline: string;
+  symbols: string[];
+  sentiment: string;
+  relevance: number;
+  impact: string;
+}
+
+export interface LogLine {
+  at: string;
+  level: string;
+  channel: string;
+  component: string;
+  message: string;
+}
+
+export interface Scenario {
+  id: string;
+  title: string;
+  demonstrates: string;
+  expected_outcome: string;
+  bars: number;
+  injects_data_faults: boolean;
+  injects_llm_failure: boolean;
+  tightens_risk_limits: boolean;
+  news_items: number;
+}
+
+export interface Strategy {
+  id: string;
+  version: string;
+  enabled: boolean;
+  applicable_regimes: string[];
+  description: string;
+}
+
+export interface Baseline {
+  name: string;
+  description: string;
+  total_return_pct: number;
+  max_drawdown_pct: number;
+  sharpe: number | null;
+  trades: number;
+}
+
+export interface Backtest {
+  run_id: string;
+  created_at: string;
+  dataset: string;
+  symbols: string[];
+  timeframe: string;
+  bars: number;
+  verdict: string;
+  total_return_pct: number;
+  max_drawdown_pct: number;
+  sharpe: number | null;
+  trades: number;
+  baselines: Baseline[];
+  equity_curve: number[];
+  evidence_statement: string;
+  warnings: string[];
+}
+
+export interface RiskView {
+  mode: string;
+  kill_switch_reason: string;
+  new_trades_allowed: boolean;
+  gross_exposure_pct: number;
+  net_exposure_pct: number;
+  limits: Record<string, number>;
+  blocked_by_check: Record<string, number>;
+  rejected_total: number;
+  approved_total: number;
+  reconciliations: number;
+  reconciliation_breaks: number;
+}
+
+export interface Candle {
+  time: string;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
+}
+
+export interface StartOptions {
+  scenario: string;
+  symbols: string[];
+  initial_capital: number;
+  seed: number;
+  bar_interval_seconds: number;
+  strategies: string[];
+  llm_enabled: boolean;
+  news_enabled: boolean;
+}
+
+export const api = {
+  login: (username: string, password: string) =>
+    post<{ username: string; role: string }>("/auth/login", { username, password }),
+  logout: () => post<{ status: string }>("/auth/logout"),
+  me: () => get<{ username: string; role: string }>("/auth/me"),
+
+  health: () => get<Health>("/health"),
+  runtime: () => get<RuntimeSnapshot>("/runtime"),
+  portfolio: () =>
+    get<RuntimeSnapshot & { equity_curve: { at: string; equity: number; drawdown_pct: number }[]; positions: Position[] }>(
+      "/portfolio",
+    ),
+  positions: () => get<Position[]>("/positions"),
+  orders: (limit = 100) => get<Order[]>(`/orders?limit=${limit}`),
+  fills: (limit = 100) => get<Fill[]>(`/fills?limit=${limit}`),
+  decisions: (limit = 60, actionableOnly = false) =>
+    get<Decision[]>(`/decisions?limit=${limit}&actionable_only=${actionableOnly}`),
+  assessments: (limit = 40) => get<Assessment[]>(`/assessments?limit=${limit}`),
+  markets: () => get<Market[]>("/markets"),
+  candles: (symbol: string, limit = 240) =>
+    get<Candle[]>(`/markets/${encodeURIComponent(symbol)}/candles?limit=${limit}`),
+  news: (limit = 40) => get<NewsItem[]>(`/news?limit=${limit}`),
+  logs: (limit = 200, level?: string, channel?: string) => {
+    const params = new URLSearchParams({ limit: String(limit) });
+    if (level) params.set("level", level);
+    if (channel) params.set("channel", channel);
+    return get<LogLine[]>(`/logs?${params}`);
+  },
+  risk: () => get<RiskView>("/risk"),
+  strategies: () => get<Strategy[]>("/strategies"),
+  scenarios: () => get<Scenario[]>("/scenarios"),
+  settings: () => get<Record<string, unknown>>("/settings"),
+  systemStatus: () => get<Record<string, unknown>>("/system/status"),
+
+  backtests: () => get<Backtest[]>("/backtests"),
+  runBacktest: (body: { symbol: string; timeframe: string; bars: number; seed: number }) =>
+    post<Backtest>("/backtests", body),
+
+  start: (options: StartOptions) => post<RuntimeSnapshot>("/runtime/start", options),
+  stop: () => post<RuntimeSnapshot>("/runtime/stop"),
+  pause: () => post<RuntimeSnapshot>("/runtime/pause"),
+  resume: () => post<RuntimeSnapshot>("/runtime/resume"),
+  stopNewTrades: () => post<RuntimeSnapshot>("/runtime/stop-new-trades"),
+  killSwitch: (reason: string) => post<RuntimeSnapshot>("/runtime/kill-switch", { reason }),
+  releaseKillSwitch: (approvedBy: string) =>
+    post<RuntimeSnapshot>("/runtime/release-kill-switch", { approved_by: approvedBy }),
+  reset: (initialCapital: number) =>
+    post<{ state: string; detail: string }>("/runtime/reset", {
+      confirm: true,
+      initial_capital: initialCapital,
+    }),
+};

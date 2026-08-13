@@ -448,10 +448,21 @@ quantity is not reported as a break, while the same absolute difference on a sma
 | Restart | reconcile then resume | see above | info | `system.safe_mode_entered` if diff |
 | Network interruption | as outage | as outage | as outage | as outage |
 
-Each row is to have a matching test in `tests/failure/`. **Status: not yet written** —
-that directory is empty, and the failure-injection suite is Phase 14 of the roadmap in
-§23. The reconciliation rows above are covered today by `tests/unit/test_reconciliation.py`;
-the rest of this table describes intended behaviour that has not been demonstrated.
+**Which of these rows are actually tested**, stated precisely because the honest answer is
+"most, not all":
+
+* **Covered by `tests/failure/test_failure_modes.py`** — LLM timeout and schema violation,
+  a provider raising something the service has never seen, a sustained outage opening the
+  breaker, stale and corrupted market data, reconciliation divergence entering safe mode,
+  safe mode refusing every subsequent signal, a database failure not stopping the trading
+  loop, a schema-version mismatch being refused, state surviving a restart, and a
+  redelivered event being rejected by the database.
+* **Covered elsewhere** — duplicate order submission (`tests/unit/test_paper_execution.py`),
+  rejected orders and partial fills (same), reconciliation discrepancy classification
+  (`tests/unit/test_reconciliation.py`).
+* **Not tested** — Redis failover and provider reconnection with backfill. Both need a
+  live external service, which this environment does not have. They describe intended
+  behaviour that has not been demonstrated, and are listed as such in `AUDIT_REPORT.md` §7.
 
 ---
 

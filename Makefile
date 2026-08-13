@@ -77,6 +77,10 @@ typecheck: ## TypeScript type check for the dashboard
 test: ## Unit and property tests (fast)
 	@$(PYTEST) tests/unit tests/property -q
 
+.PHONY: test-failure
+test-failure: ## Failure-injection tests (outages, corruption, divergence, restart)
+	@$(PYTEST) tests/failure -q
+
 .PHONY: test-e2e
 test-e2e: ## End-to-end pipeline tests (slow — starts real runtimes)
 	@$(PYTEST) tests/e2e -q

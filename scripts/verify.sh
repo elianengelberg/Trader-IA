@@ -48,6 +48,7 @@ printf "Simulation only. No real money, no broker, no custody.\n"
 run  "Lint (ruff)"            $RUFF check packages tests scripts
 run  "Unit tests"             $PY -m pytest tests/unit -q
 run  "Property tests"         $PY -m pytest tests/property -q
+run  "Failure injection"      $PY -m pytest tests/failure -q
 run  "End-to-end pipeline"    $PY -m pytest tests/e2e -q
 soft "Frontend type check"    bash -c 'cd frontend && npm run typecheck --silent'
 soft "Frontend build"         bash -c 'cd frontend && npm run build --silent'

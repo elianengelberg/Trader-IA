@@ -302,47 +302,76 @@ def generate_series(
 
 
 def _corrupt(candles: list[Candle], scenario: Scenario, seed: int) -> list[Candle]:
-    """Inject realistic data faults.
+    """Inject realistic data faults, as **runs** rather than isolated bars.
 
-    Three kinds, because they fail differently and the quality gate has separate checks
-    for each: a frozen feed repeating the last bar, a bar with no volume, and a price
-    that jumps implausibly. None of them raises — they are all *valid* candles that
-    describe an invalid market, which is exactly what makes bad data dangerous.
+    This is the shape the fault actually takes, and it matters: a stuck feed repeats the
+    same price for many bars, a dead venue reports zero volume for a stretch, and a bad
+    tick arrives as a spike that reverts. Corrupting single scattered bars — the obvious
+    first implementation — produced a series the quality gate correctly ignored, because
+    one frozen bar in a moving market is not evidence of a broken feed. The scenario then
+    claimed to demonstrate the gate while demonstrating nothing.
+
+    The gate's thresholds were left alone. Loosening a quality check so a demo looks
+    livelier is the wrong direction entirely.
     """
     rng = np.random.default_rng(derive_seed(seed, f"corrupt:{scenario.id.value}"))
     # The warm-up stretch is left clean so the run can reach a decision at all; a feed
-    # that is broken from bar zero demonstrates nothing beyond "it refused".
+    # broken from bar zero demonstrates only that the system refuses to start.
     protected = min(140, len(candles) // 3)
     out = list(candles)
+    index = protected
 
-    for i in range(protected, len(out)):
+    while index < len(out) - 25:
         if rng.random() >= scenario.data_corruption_rate:
+            index += 1
             continue
-        previous = out[i - 1]
-        kind = rng.integers(0, 3)
-        if kind == 0:  # frozen feed
-            out[i] = out[i].model_copy(
-                update={
-                    "open": previous.close,
-                    "high": previous.close,
-                    "low": previous.close,
-                    "close": previous.close,
-                    "volume": max(1.0, previous.volume * 0.05),
-                }
-            )
-        elif kind == 1:  # dead volume
-            out[i] = out[i].model_copy(update={"volume": 0.0, "trade_count": 0})
-        else:  # implausible jump
-            factor = 1.0 + float(rng.normal(0.0, 0.06))
-            bar = out[i]
-            close = max(1e-6, bar.close * factor)
-            out[i] = bar.model_copy(
+
+        kind = int(rng.integers(0, 3))
+        if kind == 0:
+            # A stuck feed: the same close repeated long enough to be unmistakable. The
+            # frozen-price check looks at the last 20 bars and needs them identical.
+            length = int(rng.integers(22, 30))
+            frozen = out[index - 1].close
+            for offset in range(length):
+                position = index + offset
+                if position >= len(out):
+                    break
+                bar = out[position]
+                out[position] = bar.model_copy(
+                    update={
+                        "open": frozen,
+                        "high": frozen,
+                        "low": frozen,
+                        "close": frozen,
+                        "volume": max(1.0, bar.volume * 0.02),
+                    }
+                )
+            index += length
+        elif kind == 1:
+            # A dead venue: zero volume for long enough that it cannot be a quiet market.
+            length = int(rng.integers(8, 18))
+            for offset in range(length):
+                position = index + offset
+                if position >= len(out):
+                    break
+                out[position] = out[position].model_copy(
+                    update={"volume": 0.0, "trade_count": 0}
+                )
+            index += length
+        else:
+            # A bad tick: a spike far outside the recent distribution, reverting next bar.
+            bar = out[index]
+            direction = 1.0 if rng.random() < 0.5 else -1.0
+            close = max(1e-6, bar.close * (1.0 + direction * 0.22))
+            out[index] = bar.model_copy(
                 update={
                     "close": close,
                     "high": max(bar.high, close) * 1.001,
                     "low": min(bar.low, close) * 0.999,
                 }
             )
+            index += 1
+
     return out
 
 

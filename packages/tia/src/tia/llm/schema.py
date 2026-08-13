@@ -40,15 +40,10 @@ _LEANING_TO_DIRECTION: dict[str, Direction] = {
     "neutral": Direction.NO_TRADE,
 }
 
-_REGIME_VIEW: dict[str, MarketRegime] = {
-    "trending_up": MarketRegime.TRENDING_UP,
-    "trending_down": MarketRegime.TRENDING_DOWN,
-    "ranging": MarketRegime.RANGING,
-    "high_volatility": MarketRegime.HIGH_VOLATILITY,
-    "low_volatility": MarketRegime.LOW_VOLATILITY,
-    "crisis": MarketRegime.CRISIS,
-    "unknown": MarketRegime.UNKNOWN,
-}
+#: Derived from the enum so the two can never disagree.
+_REGIME_VIEW: dict[str, MarketRegime] = {regime.value: regime for regime in MarketRegime}
+
+REGIME_LITERAL = Literal[tuple(regime.value for regime in MarketRegime)]  # type: ignore[valid-type]
 
 #: Bumped whenever the prompt or this schema changes in a way that alters model
 #: behaviour, so an assessment can always be traced to the exact contract that produced it.
@@ -96,15 +91,11 @@ class ContextResponse(BaseModel):
     #: How sure the model is about its own assessment. Recorded, never amplifying.
     confidence: float = Field(default=0.0, ge=0.0, le=1.0)
 
-    regime_view: Literal[
-        "trending_up",
-        "trending_down",
-        "ranging",
-        "high_volatility",
-        "low_volatility",
-        "crisis",
-        "unknown",
-    ] = "unknown"
+    #: Every value ``MarketRegime`` can take. Generated below from the enum itself rather
+    #: than hand-listed: a hand-written subset silently rejects any regime added later,
+    #: which is exactly the defect this once had (`anomalous` was missing and a valid
+    #: assessment raised).
+    regime_view: REGIME_LITERAL = "unknown"  # type: ignore[valid-type]
 
     thesis: str = Field(min_length=1, max_length=4000)
     supporting: list[EvidenceItem] = Field(default_factory=list, max_length=12)

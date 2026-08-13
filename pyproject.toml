@@ -58,7 +58,7 @@ all = [
 ]
 
 [project.scripts]
-tia = "tia.cli:app"
+tia-server = "tia.api.main:run"
 
 [tool.hatch.build.targets.wheel]
 packages = ["packages/tia/src/tia"]

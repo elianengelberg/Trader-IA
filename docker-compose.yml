@@ -1,0 +1,70 @@
+# Trader-IA — one command to a working demo.
+#
+#   docker compose up --build     then open http://127.0.0.1:8000
+#
+# STATUS: REQUIRES VALIDATION. This file was written carefully but has **never been
+# executed**, because the environment it was authored in has no Docker daemon. Every other
+# path in this repository was run and its output recorded (see AUDIT_REPORT.md); this one
+# was not, and saying so is more useful than implying otherwise.
+#
+# The default service needs nothing else: SQLite on a volume, the in-process event bus,
+# seeded synthetic market data, the offline LLM mock. Postgres and Redis are in the
+# `full` profile and are genuinely optional.
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: trader-ia:local
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      TIA_ENV: demo
+      # Set these to choose your own login. Leave them unset and the server generates a
+      # password at startup and prints it once to its own log.
+      TIA_DEMO_USER: ${TIA_DEMO_USER:-operator}
+      TIA_DEMO_PASSWORD: ${TIA_DEMO_PASSWORD:-}
+      # Optional. Without it the platform uses its deterministic offline mock, and the
+      # demo is fully functional. It is never placed in a prompt or returned by an API.
+      TIA_ANTHROPIC_API_KEY: ${TIA_ANTHROPIC_API_KEY:-}
+    volumes:
+      - tia-data:/app/data/runtime
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8000/api/health"]
+      interval: 20s
+      timeout: 4s
+      retries: 3
+      start_period: 15s
+    security_opt:
+      - no-new-privileges:true
+
+  postgres:
+    profiles: ["full"]
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: tia
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-tia-local-only}
+      POSTGRES_DB: tia
+    volumes:
+      - tia-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tia"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    profiles: ["full"]
+    image: redis:7-alpine
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  tia-data:
+  tia-postgres:

@@ -164,7 +164,7 @@ class MockLLMProvider(LLMProvider):
             veto=veto,
             leaning=leaning,
             confidence=round(min(1.0, 0.35 + caution * 0.5), 4),
-            regime_view=signals.get("regime_view", "unknown"),  # type: ignore[arg-type]
+            regime_view=_safe_regime(signals.get("regime_view")),  # type: ignore[arg-type]
             thesis=(
                 "Deterministic mock assessment — not a language model. Caution derived "
                 f"from volatility percentile {signals.get('vol_percentile', 0.0):.2f}, "
@@ -402,6 +402,18 @@ def _derive_caution(signals: dict[str, Any]) -> float:
         + 0.25 * regime_risk
     )
     return min(1.0, max(0.0, caution))
+
+
+def _safe_regime(value: Any) -> str:
+    """Coerce whatever the prompt carried into a value the schema accepts.
+
+    The mock reads the prompt's own payload, which carries the *domain* regime. Passing
+    it straight through made the provider capable of emitting a value its own response
+    schema rejected — a self-inflicted validation error rather than a model misbehaving.
+    """
+    from tia.llm.schema import _REGIME_VIEW
+
+    return str(value) if str(value) in _REGIME_VIEW else "unknown"
 
 
 def _derive_leaning(signals: dict[str, Any]) -> str:

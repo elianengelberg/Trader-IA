@@ -143,9 +143,20 @@ class ContextService:
             return self._neutral(
                 request.symbol, now, ttl, f"schema violation: {exc.message}"
             )
-        except LLMError as exc:  # pragma: no cover - defensive
+        except LLMError as exc:
             self._governor.record_failure(now=now, error=str(exc))
             return self._neutral(request.symbol, now, ttl, f"llm error: {exc.message}")
+        except Exception as exc:
+            # The last-resort catch, and it earns its place: a provider raising something
+            # this module does not know about — a pydantic ValidationError, a bug in a
+            # third-party SDK — must not reach the trading loop. The docstring promises
+            # this method never raises, and a promise that holds only for anticipated
+            # exceptions is not one.
+            _log.exception("llm_provider_raised_unexpectedly", symbol=request.symbol)
+            self._governor.record_failure(now=now, error=str(exc))
+            return self._neutral(
+                request.symbol, now, ttl, f"provider raised {type(exc).__name__}"
+            )
 
         self._governor.record_success(result.usage, now=now)
 

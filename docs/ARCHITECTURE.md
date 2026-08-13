@@ -378,17 +378,59 @@ override it — including Claude.** Enforced by `tests/unit/test_risk_veto_is_ab
            └──────────────────┘    └───────────┘   └─────────┘
 ```
 
-Transitions are declared in one table; anything else raises `InvalidStateTransition`.
-Property-tested over random transition sequences.
+Transitions are declared in one table (`tia/execution/state_machine.py`); anything else
+raises `InvalidStateTransitionError`. `transition()` is the only sanctioned way to change
+an order's state — direct assignment is what lets an order reach `FILLED` without a fill.
+
+Two structural properties of the table are asserted by tests rather than by convention:
+
+* **`SUBMITTING` is reachable only from `RISK_APPROVED`.** This is the Risk Engine's veto
+  expressed as reachability: there is no path to a venue that skips evaluation.
+* **Every non-terminal state can reach a terminal one**, so no edit can produce an order
+  that never finishes.
+
+The table is property-tested over random transition sequences
+(`tests/property/test_order_lifecycle_properties.py`): a random walk may only ever occupy
+states the table permits, a rejected step must leave the order untouched, and no order
+may escape a terminal state.
 
 ---
 
 ## 11. Reconciliation & failure modes
 
 After any restart or provider reconnect:
-read external state → read internal state → diff (orders, fills, positions, balances) →
-resolve deterministic differences → otherwise **enter SAFE MODE** (no new intents; only
+read external state → read internal state → diff (orders, positions, balance, fill count)
+→ classify → **enter SAFE MODE** on any critical divergence (no new intents; only
 cancel/flatten and observation allowed).
+
+**Reconciliation never repairs state.** It compares, classifies and escalates, and that
+is a deliberate limit rather than an unfinished feature. Automatic repair is how a
+reconciliation bug becomes a position: a component that "corrects" the ledger to match a
+snapshot it misread will invent or erase exposure, and it will do so with more confidence
+than the divergence that triggered it. When the two pictures disagree about anything that
+implies risk, the correct action is to stop trading and involve a human. Leaving SAFE MODE
+requires `RiskEngine.resume(approved_by=...)` — a named person, not a subsequent clean run,
+which may only mean the divergence moved.
+
+The taxonomy, and why each severity is what it is:
+
+| Discrepancy | Severity | Why |
+|---|---|---|
+| `phantom_position` — venue holds what we do not | CRITICAL | No stop, size limit or exit logic is watching it; every risk check believes it does not exist |
+| `orphaned_position` — we hold what the venue does not | CRITICAL | The risk the strategy thinks is on is not on |
+| `position_quantity_mismatch` | CRITICAL | Sizing and exits are computed from the wrong exposure; a sign flip is called out separately |
+| `unrecorded_fill` — venue filled, we did not record it | CRITICAL | Exposure exists that no risk check has seen |
+| `order_state_mismatch` where we say terminal and the venue says open | CRITICAL | We have stopped watching something that can still trade |
+| `order_state_mismatch`, benign lag (e.g. `submitted` vs `acknowledged`) | WARNING | Normal propagation delay |
+| `unknown_order` in a filled state | CRITICAL | Same as an unrecorded fill |
+| `unknown_order` in a terminal, unfilled state | WARNING | No exposure implied |
+| `missing_order`, ours open | CRITICAL | An open order the venue does not report can still trade or has already |
+| `missing_order`, ours terminal | WARNING | Record-keeping drift |
+| `balance_mismatch` beyond tolerance | CRITICAL | Sizing derives from the balance, so a wrong balance mis-sizes every subsequent trade in the same direction |
+| `fill_count_mismatch` alone | WARNING | A lagging-feed symptom; the fills that matter surface as position or order divergence |
+
+Tolerances are absolute-floor-plus-relative so that floating-point residue on a large
+quantity is not reported as a break, while the same absolute difference on a small one is.
 
 | Failure | Expected state | Recovery | Notification | Audit |
 |---|---|---|---|---|
@@ -406,7 +448,10 @@ cancel/flatten and observation allowed).
 | Restart | reconcile then resume | see above | info | `system.safe_mode_entered` if diff |
 | Network interruption | as outage | as outage | as outage | as outage |
 
-Each row has a matching test in `tests/failure/`.
+Each row is to have a matching test in `tests/failure/`. **Status: not yet written** —
+that directory is empty, and the failure-injection suite is Phase 14 of the roadmap in
+§23. The reconciliation rows above are covered today by `tests/unit/test_reconciliation.py`;
+the rest of this table describes intended behaviour that has not been demonstrated.
 
 ---
 
@@ -428,6 +473,29 @@ Bias controls:
   latency, and rejection modelling.
 * **Overfitting** — train / validation / out-of-sample split, anchored and rolling
   walk-forward, parameter-sensitivity sweep reported alongside every headline number.
+
+### 12.1 What the paper simulator is not
+
+Stating this plainly matters more than the cost model itself, because a reader who does
+not know the limits will read a backtest number as a forecast.
+
+1. **There is no order book.** Fills are matched against bar OHLCV, so queue position,
+   iceberg orders and book-depletion dynamics do not exist.
+2. **Our own orders have no effect on the market.** A strategy whose size would move the
+   price is modelled as though it would not, which flatters large sizes. The
+   participation cap and the sqrt-scaled impact term are an approximation of that cost,
+   not a measurement of it.
+3. **There is no venue behaviour** — no halts, no auctions, no exchange-specific reject
+   reasons, no funding, borrow or margin costs.
+
+Where a modelling choice was available, the engine takes the worse one: market orders
+fill at the *next* bar's open plus adverse slippage and never at the signal bar's close;
+limit orders require the price to trade *through* the limit rather than merely touch it;
+a triggered stop fills at the worse of the stop level and the bar's open, so a gap costs
+what a gap costs; a bar can only absorb `max_participation_rate` of its own volume; and
+slippage is always adverse to the order and clamped inside the bar's actual range,
+because a price that never traded is not a fill. Each of these is a named test in
+`tests/unit/test_paper_execution.py`.
 
 **Baselines are mandatory.** Every strategy report includes buy-and-hold, an SMA-cross
 technical baseline, a volatility-targeted quant baseline, a seeded random-entry baseline

@@ -26,7 +26,7 @@ from typing import Any
 
 import httpx
 
-from tia.core.clock import ensure_utc, utc_from_millis
+from tia.core.clock import Clock, SystemClock, ensure_utc, utc_from_millis
 from tia.core.errors import ProviderError, ProviderUnavailableError
 from tia.core.logging import get_logger
 from tia.data.providers.base import MarketDataProvider, ProviderCapabilities
@@ -68,6 +68,7 @@ class BinancePublicProvider(MarketDataProvider):
         base_url: str = "https://api.binance.com",
         timeout_seconds: float = 15.0,
         client: httpx.AsyncClient | None = None,
+        clock: Clock | None = None,
     ) -> None:
         super().__init__(
             ProviderCapabilities(
@@ -92,6 +93,10 @@ class BinancePublicProvider(MarketDataProvider):
         self._timeout = timeout_seconds
         self._client = client
         self._owns_client = client is None
+        # A quote carries no timestamp of its own on this endpoint, so one has to be
+        # stamped locally. It comes from an injected clock rather than ``datetime.now``
+        # so a replay of recorded responses reproduces the same timestamps.
+        self._clock = clock or SystemClock()
 
     async def _http(self) -> httpx.AsyncClient:
         if self._client is None:
@@ -203,7 +208,7 @@ class BinancePublicProvider(MarketDataProvider):
             data = response.json()
             return Quote(
                 symbol=symbol,
-                timestamp=ensure_utc(datetime.now(tz=__import__("datetime").UTC)),
+                timestamp=self._clock.now(),
                 bid=float(data["bidPrice"]),
                 ask=float(data["askPrice"]),
                 bid_size=float(data["bidQty"]),

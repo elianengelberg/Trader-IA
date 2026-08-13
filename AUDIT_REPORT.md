@@ -195,7 +195,9 @@ Recorded because a test that fails for its own reasons is a defect too.
 | SSE | `curl -N /api/stream` and a browser | events streaming |
 | Backtest via API | `POST /api/backtests` | verdict + 5 baselines |
 | Dashboard | headless Chromium, 11 views | pass, no console errors |
+| Failure injection | `pytest tests/failure` | 12 cases pass |
 | Smoke | `make smoke` | PASS |
+| Full verification | `make verify` | **8 of 8 areas PASS** |
 | Docker | — | **NOT RUN — no daemon** |
 
 ### The end-to-end flow, observed
@@ -279,8 +281,9 @@ Stated plainly, because an audit that only lists successes is not an audit.
 
 * No parameter-sensitivity sweep in the backtester.
 * No labelled-regime accuracy measurement.
-* `tests/failure/` is empty; the failure-mode table in `docs/ARCHITECTURE.md` §11 is
-  annotated as intended-but-unproven except for the reconciliation rows.
+* Two rows of the failure-mode table remain untested — Redis failover and provider
+  reconnection with backfill — because both need a live external service. The other
+  twelve are covered by `tests/failure/`.
 * Indicators recompute over the whole rolling buffer each bar. Bounded and linear, but the
   main cost of a backtest.
 * Money is stored as `float`. Correct for a simulation, wrong for anything that settles,

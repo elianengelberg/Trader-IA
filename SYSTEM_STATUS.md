@@ -9,7 +9,7 @@ something that was executed, not reviewed. Every NOT VERIFIED says why.
 
 | Area | Status | Evidence |
 |---|---|---|
-| **BACKEND** | **PASS** | 559 tests; the runtime processes bars, decides, sizes and executes end to end |
+| **BACKEND** | **PASS** | 571 tests; the runtime processes bars, decides, sizes and executes end to end |
 | **FRONTEND** | **PASS** | 11 views rendered in headless Chromium, zero console errors |
 | **DATABASE** | **PASS** | schema creates from scratch on SQLite and PostgreSQL; FK cascade, upsert dedup and queries exercised |
 | **EVENT BUS** | **PASS** | in-process bus under test; duplicate events rejected by a unique index, not just in memory |
@@ -21,6 +21,7 @@ something that was executed, not reviewed. Every NOT VERIFIED says why.
 | **EXECUTION SIMULATOR** | **PASS** | order state machine, matching engine, slippage, fees, partial fills, reconciliation |
 | **BACKTESTING** | **PASS** | engine, five mandatory baselines, walk-forward, two independent look-ahead detectors |
 | **MONITORING** | **PASS** | health endpoint, Prometheus metrics, live log stream, per-component status |
+| **FAILURE HANDLING** | **PASS** | 12 injected failures: LLM outage, unknown provider exception, corrupted feed, phantom position, safe mode, database loss, schema mismatch, restart, event redelivery |
 | **SECURITY** | **PASS** | see the table below |
 | **END-TO-END** | **PASS** | the full flow, asserted by an automated test and reproduced in a browser |
 | **DOCKER** | **NOT VERIFIED** | no Docker daemon in the build environment; the compose file has never been run |
@@ -33,13 +34,16 @@ something that was executed, not reviewed. Every NOT VERIFIED says why.
 PASS  Lint (ruff)
 PASS  Unit tests
 PASS  Property tests
+PASS  Failure injection
 PASS  End-to-end pipeline
 PASS  Frontend type check
 PASS  Frontend build
 PASS  Smoke test            RESULT: PASS — every view rendered, no console errors
+
+ALL CHECKS PASSED
 ```
 
-Totals: **559 Python tests**, ruff clean, TypeScript clean, browser smoke PASS.
+Totals: **571 Python tests**, ruff clean, TypeScript clean, browser smoke PASS.
 
 ---
 

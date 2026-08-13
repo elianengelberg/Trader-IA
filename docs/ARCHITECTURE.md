@@ -461,18 +461,35 @@ The backtester **is** the runtime: it feeds historical events through the identi
 handlers, with a `SimulatedClock` and the same `PaperExecutionProvider`. There is no separate
 "backtest strategy code" that could drift from live behaviour.
 
+The bar loop, in the order that makes look-ahead structurally impossible:
+
+1. Advance the clock to bar *t*'s close. Nothing has seen bar *t* yet.
+2. Match resting orders against bar *t*. An order created at bar *t-1*'s close fills at
+   bar *t*'s **open**.
+3. Build features from a backward-looking slice ending at bar *t* — the same bounded
+   rolling buffer a live runtime holds, not the whole history.
+4. Quality gate, regime, strategies, fusion.
+5. Risk Engine. Only it may authorise size.
+6. Submit an intent that cannot be matched until bar *t+1*.
+
 Bias controls:
 
-* **Look-ahead** — features are computed from a rolling window closed at bar *t*; execution
-  occurs at bar *t+1* open with modelled latency. A dedicated test constructs a series where
-  future data would be visibly profitable and asserts the engine cannot see it.
-* **Leakage** — walk-forward splits are *purged* with an embargo period around the boundary.
+* **Look-ahead** — enforced by construction (the loop slices its input) and checked by two
+  *different* detectors, because neither alone is sufficient. See §12.2.
+* **Leakage** — walk-forward splits are purged, with an embargo between test windows. See
+  §12.3 for the precise semantics, which are easy to get subtly wrong.
 * **Survivorship** — the instrument universe is snapshot-dated; delisted symbols remain in
   the dataset with their delist date.
 * **Unrealistic fills** — participation-rate cap per bar, spread cost, slippage model, fees,
-  latency, and rejection modelling.
-* **Overfitting** — train / validation / out-of-sample split, anchored and rolling
-  walk-forward, parameter-sensitivity sweep reported alongside every headline number.
+  latency, and rejection modelling. §12.1.
+* **Overfitting** — anchored and rolling walk-forward; parameter-sensitivity sweeps are
+  planned and **not yet implemented**.
+
+Every evaluated bar produces a `DecisionRecord` — direction, confidence, regime, feature
+hash, risk verdict, approved size — including the bars that declined to trade. That log is
+what makes "why didn't it act here?" answerable, and it is what the look-ahead test in
+§12.2 compares; an equity curve cannot distinguish a decision that changed from a price
+that changed.
 
 ### 12.1 What the paper simulator is not
 
@@ -497,10 +514,83 @@ slippage is always adverse to the order and clamped inside the bar's actual rang
 because a price that never traded is not a fill. Each of these is a named test in
 `tests/unit/test_paper_execution.py`.
 
-**Baselines are mandatory.** Every strategy report includes buy-and-hold, an SMA-cross
-technical baseline, a volatility-targeted quant baseline, a seeded random-entry baseline
-matched on trade count, and always-flat. A strategy that does not beat these out of sample is
-reported as *not demonstrating an edge*.
+### 12.2 Two look-ahead detectors, because one is not enough
+
+This was found while writing the tests, and it is worth stating because the obvious test
+has a blind spot that looks like a pass.
+
+* **Prefix comparison.** Run the pipeline over `bars[:n]` and over `bars[:m]` for `m > n`,
+  and require the shorter run's equity curve and trades to be an exact prefix of the
+  longer one's. This catches every leak that reaches *backwards* from the end of the
+  sample: a z-score computed over full-sample statistics, a percentile rank, a
+  forward-filled value, a normalisation constant fitted on everything.
+
+* **Future perturbation.** Replace every bar after index *k* with a wildly different one
+  and require every `DecisionRecord` at or before bar *k* to be byte-identical.
+
+The second exists because the first **cannot detect a one-bar-ahead leak**. A rule that
+reads bar *t+1* while deciding at bar *t* is stable under truncation — the value it steals
+is the same in the short series and the long one — so both curves agree and the prefix
+test passes while the strategy cheats. `tests/property/test_no_lookahead.py` demonstrates
+this on a deliberately clairvoyant rule: it asserts that the prefix detector misses it and
+that the perturbation detector catches it.
+
+### 12.3 Purge and embargo, stated precisely
+
+Each training window ends `max(purge_bars, embargo_bars)` bars before its test window
+begins.
+
+* The **purge** accounts for feature lookback straddling the boundary.
+* Taking the **maximum** additionally guarantees that the preceding fold's embargo zone
+  never lands inside the next fold's training set — which is exactly what happens in a
+  rolling schedule whenever the purge is shorter than the embargo. Fold 0 has no preceding
+  embargo zone, so the same cut is slightly conservative there, deliberately: folds with
+  unequal training lengths are not comparable to each other.
+
+**What is not a leak.** Earlier *test* windows do appear in later *training* windows. That
+is what walk-forward is — as time passes, an evaluated period becomes history, and a real
+system would refit on it. The protection is against a model seeing its *own* evaluation
+period, not an earlier one.
+
+`assert_no_leakage()` checks all of this against any plan, including one assembled by hand,
+and `tests/unit/test_walkforward.py` proves the checker can actually fail.
+
+### 12.4 Baselines
+
+**Baselines are mandatory.** Five of them, each answering a different way of being fooled,
+all evaluated on the same bars with the same fee and slippage assumptions — a baseline
+computed on gross returns against a strategy computed on net returns is not a comparison.
+
+| Baseline | The question it answers |
+|---|---|
+| buy and hold | Did the strategy add anything over simply owning the asset? |
+| SMA cross | Did it beat the most obvious technical rule in existence? |
+| volatility-targeted | Did it beat exposure sizing alone, with no view on direction? |
+| random entry | Did it beat coin flips **matched on trade count and holding period**, so they pay the same costs? |
+| always flat | The zero line, which a strategy paying real costs can genuinely fail to beat. |
+
+The matching on the random baseline is the point: an unmatched random control trades a
+different number of times, pays different costs and holds for a different duration, so
+beating it proves nothing. Matched, it isolates whether the *timing and direction* carried
+information. It is seeded, so the comparison cannot be re-rolled until it flatters.
+
+### 12.5 Verdicts
+
+`ExperimentVerdict` has four values and none of them means "good":
+`INSUFFICIENT_EVIDENCE`, `NO_EDGE_DEMONSTRATED`, `MIXED`, `BEAT_ALL_BASELINES`. There is no
+`PROFITABLE`, no `DEPLOY`, no `RECOMMENDED`, and no method anywhere in the package that
+turns a result into a recommendation.
+
+The sample-size question is asked **first**: below 30 closed trades the verdict is
+`INSUFFICIENT_EVIDENCE` regardless of how good the comparison looks, because asking "did it
+beat the baselines?" before "could this sample answer anything?" is how eleven trades
+become a deployment decision. A strategy is also only counted as "ahead" of a baseline if
+it is ahead on return *and* not materially worse on drawdown — one point more return for
+twice the risk is leverage, not skill.
+
+`scripts/run_backtest.py` runs the whole thing against the committed fixtures with no
+network and no credentials, and prints the statement, the five comparisons, the
+walk-forward schedule and the caveats.
 
 ---
 

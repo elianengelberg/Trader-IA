@@ -19,8 +19,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "packages" / "tia" / "src"))
 
-from tia.data.providers.csv_replay import write_fixture  # noqa: E402
-from tia.data.providers.synthetic import build_synthetic_history  # noqa: E402
+from tia.data.providers.csv_replay import write_fixture
+from tia.data.providers.synthetic import build_synthetic_history
 
 # Fixed anchor so the fixtures never depend on when the script ran.
 ANCHOR = datetime(2026, 1, 6, 0, 0, tzinfo=UTC)

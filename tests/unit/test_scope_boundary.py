@@ -14,6 +14,7 @@ shapes the boundary is meant to catch.
 from __future__ import annotations
 
 import ast
+import asyncio
 import importlib
 import inspect
 import pkgutil
@@ -182,33 +183,125 @@ def test_no_real_broker_sdk_is_imported() -> None:
 # --------------------------------------------------------------------------- the clock
 
 
-def test_nothing_outside_the_clock_module_reads_the_wall_clock() -> None:
-    """``tia/core/clock.py`` claims no component calls ``datetime.now()`` directly.
+#: Modules that compute or influence a trading decision. A wall-clock read anywhere in
+#: here would make a backtest irreproducible, so the rule is absolute for them.
+DECISION_PATH = (
+    "core", "domain", "data", "quant", "regime", "strategy", "risk", "execution",
+    "backtest", "llm", "events",
+    # Persistence belongs here rather than in the exemption: it *receives* timestamps
+    # and never invents one, so a wall-clock read appearing in it would mean a stored
+    # record disagreed with the decision it describes.
+    "persistence",
+)
 
-    That claim is what makes a backtest reproducible: a stray wall-clock read is a
-    non-determinism that only shows up as an unexplained difference between two runs of
-    the same experiment.
+#: Modules that serve HTTP and run the process. A session expiry, an uptime counter, a
+#: rate-limit window and a log timestamp are wall-clock facts by nature; injecting a Clock
+#: into them would add indirection without buying reproducibility, because none of them
+#: feeds a decision. The exemption is listed here rather than left implicit.
+OPERATIONAL = ("api", "runtime")
+
+
+def _wall_clock_reads(path: Path) -> list[int]:
+    """Line numbers of direct `datetime.now()` / `.utcnow()` / `date.today()` calls."""
+    lines: list[int] = []
+    tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Call) or not isinstance(node.func, ast.Attribute):
+            continue
+        if node.func.attr not in {"now", "utcnow", "today", "time"}:
+            continue
+        value = node.func.value
+        named = isinstance(value, ast.Name) and value.id in {"datetime", "date", "time"}
+        attributed = isinstance(value, ast.Attribute) and value.attr in {"datetime", "date"}
+        if named or attributed:
+            lines.append(node.lineno)
+    return lines
+
+
+def test_the_decision_path_never_reads_the_wall_clock() -> None:
+    """The property that makes a backtest reproducible.
+
+    Every component that computes or influences a decision receives a ``Clock``. A stray
+    wall-clock read is a non-determinism that only shows up as an unexplained difference
+    between two runs of the same experiment — the hardest kind of bug to notice, because
+    the numbers still look plausible.
     """
     offenders: list[str] = []
     for path in _source_files():
         if path.name == "clock.py":
             continue
-        tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
-        for node in ast.walk(tree):
-            if not isinstance(node, ast.Call) or not isinstance(node.func, ast.Attribute):
-                continue
-            if node.func.attr not in {"now", "utcnow", "today", "time"}:
-                continue
-            value = node.func.value
-            named = isinstance(value, ast.Name) and value.id in {"datetime", "date", "time"}
-            attributed = isinstance(value, ast.Attribute) and value.attr in {
-                "datetime",
-                "date",
-            }
-            if named or attributed:
-                offenders.append(f"{path.relative_to(PACKAGE_ROOT)}:{node.lineno}")
+        relative = path.relative_to(PACKAGE_ROOT)
+        if not relative.parts or relative.parts[0] not in DECISION_PATH:
+            continue
+        offenders.extend(f"{relative}:{line}" for line in _wall_clock_reads(path))
 
-    assert not offenders, f"direct wall-clock reads outside the clock module: {offenders}"
+    assert not offenders, f"wall-clock reads on the decision path: {offenders}"
+
+
+def test_the_operational_layer_is_the_only_exemption() -> None:
+    """Whatever wall-clock reads exist are confined to the modules listed as exempt.
+
+    Stated as a test so the exemption cannot quietly widen: a new package that starts
+    reading the wall clock fails here until it is either fixed or added to one of the two
+    lists above, deliberately.
+    """
+    stray: list[str] = []
+    for path in _source_files():
+        if path.name == "clock.py":
+            continue
+        relative = path.relative_to(PACKAGE_ROOT)
+        top = relative.parts[0] if len(relative.parts) > 1 else relative.name
+        if top in DECISION_PATH or top in OPERATIONAL:
+            continue
+        stray.extend(f"{relative}:{line}" for line in _wall_clock_reads(path))
+
+    assert not stray, (
+        "a module outside both the decision path and the operational layer reads the "
+        f"wall clock: {stray}"
+    )
+
+
+def test_every_package_is_classified() -> None:
+    """No package may sit outside both lists unnoticed."""
+    packages = {
+        p.relative_to(PACKAGE_ROOT).parts[0]
+        for p in _source_files()
+        if len(p.relative_to(PACKAGE_ROOT).parts) > 1
+    }
+    unclassified = packages - set(DECISION_PATH) - set(OPERATIONAL)
+    assert not unclassified, (
+        f"these packages are in neither DECISION_PATH nor OPERATIONAL: {sorted(unclassified)}"
+    )
+
+
+async def test_runtime_decisions_are_stamped_by_the_simulated_clock() -> None:
+    """The behavioural half of the rule.
+
+    The runtime is exempt from the *structural* check because it stamps logs and run
+    boundaries with wall-clock time. What must still hold is that its **decisions** carry
+    simulated time — otherwise the exemption would have quietly swallowed the property it
+    was meant to preserve.
+    """
+    from tia.core.config import Environment, settings_for_env
+    from tia.runtime import RuntimeConfig, RuntimeEngine
+
+    engine = RuntimeEngine(
+        settings_for_env(Environment.DEMO),
+        RuntimeConfig(scenario="trend_up", bar_interval_seconds=0.0, initial_capital=10_000.0),
+    )
+    await engine.start()
+    for _ in range(400):
+        await asyncio.sleep(0)
+        if engine.counters.signals > 5:
+            break
+    await engine.stop()
+
+    assert engine.recent_decisions, "the run produced no decisions to check"
+    for row in list(engine.recent_decisions)[:20]:
+        # SCENARIO_START is 2026-01-05; a wall-clock stamp would be the real current year.
+        assert row["decided_at"].startswith("2026-01-05"), (
+            f"a decision carried a wall-clock timestamp: {row['decided_at']}"
+        )
 
 
 # --------------------------------------------------------------------------- environment

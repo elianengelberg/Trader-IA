@@ -234,8 +234,15 @@ class StrategyConfig(FrozenModel):
         return self
 
 
+#: The shipped default for ``jwt_secret``. Anything equal to it is treated as *not
+#: configured*: the API falls back to a per-process random secret (safe — nobody can
+#: forge a token; sessions just die with the process), and the activation gate refuses
+#: to arm. One constant, one source of truth for both checks.
+PLACEHOLDER_JWT_SECRET = "change-me-in-any-real-deployment"  # noqa: S105 - the value to reject
+
+
 class SecurityConfig(FrozenModel):
-    jwt_secret: SecretStr = SecretStr("change-me-in-any-real-deployment")
+    jwt_secret: SecretStr = SecretStr(PLACEHOLDER_JWT_SECRET)
     jwt_algorithm: str = "HS256"
     jwt_ttl_seconds: int = Field(3600, ge=60, le=86_400)
     api_rate_limit_per_minute: int = Field(240, ge=1)
@@ -253,6 +260,11 @@ class SecurityConfig(FrozenModel):
         "52.32.178.7",
     )
     max_webhook_body_bytes: int = Field(16_384, ge=256, le=1_048_576)
+
+    @property
+    def jwt_secret_configured(self) -> bool:
+        """True when a real signing secret was set — the placeholder does not count."""
+        return self.jwt_secret.get_secret_value() != PLACEHOLDER_JWT_SECRET
 
 
 class LiveConfig(FrozenModel):
@@ -308,6 +320,19 @@ class LiveConfig(FrozenModel):
     @property
     def base_url(self) -> str:
         return self.binance_testnet_url if self.use_testnet else self.binance_base_url
+
+    @property
+    def public_data_url(self) -> str:
+        """Where the 24/7 paper session reads public market data: always mainnet.
+
+        ``use_testnet`` is an *execution-side* safety and must not drag the data side
+        onto testnet's thin synthetic market — a paper track record built on testnet
+        prices would say nothing about real spreads or real volatility. Public
+        endpoints take no key and can place nothing, so mainnet data carries no risk.
+        A live session still uses :attr:`base_url` for both sides: it must price on
+        the venue it executes against.
+        """
+        return self.binance_base_url
 
     @property
     def has_credentials(self) -> bool:

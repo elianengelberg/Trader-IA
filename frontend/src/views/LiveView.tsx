@@ -11,7 +11,7 @@
  * this system can and cannot do with it before they read anything else.
  */
 import { useCallback, useEffect, useState } from "react";
-import { ApiError, api, type ActivationAttempt, type GateReport } from "../lib/api";
+import { ApiError, api, type ActivationAttempt, type GateReport, type Health } from "../lib/api";
 import { Card, Empty, Pill, Stat } from "../components/ui";
 
 type LiveSnapshot = Record<string, unknown> & { active: boolean; state: string };
@@ -20,6 +20,8 @@ export function LiveView({ role }: { role: string }) {
   const [report, setReport] = useState<GateReport | null>(null);
   const [history, setHistory] = useState<ActivationAttempt[]>([]);
   const [session, setSession] = useState<LiveSnapshot | null>(null);
+  const [health, setHealth] = useState<Health | null>(null);
+  const [offline, setOffline] = useState(false);
   const [confirmation, setConfirmation] = useState("");
   const [result, setResult] = useState<{ ok: boolean; message: string } | null>(null);
   const [busy, setBusy] = useState(false);
@@ -30,13 +32,16 @@ export function LiveView({ role }: { role: string }) {
     api.liveGate().then(setReport).catch(() => undefined);
     api.liveHistory().then(setHistory).catch(() => undefined);
     api.liveSnapshot().then(setSession).catch(() => undefined);
+    api.health().then((h) => { setHealth(h); setOffline(false); }).catch(() => setOffline(true));
   }, []);
 
   useEffect(load, [load]);
   useEffect(() => {
-    // The heartbeat is only meaningful if it visibly moves.
+    // The heartbeat is only meaningful if it visibly moves — and if the server stops
+    // answering, this is what turns the banner red instead of leaving stale numbers up.
     const timer = setInterval(() => {
       api.liveSnapshot().then(setSession).catch(() => undefined);
+      api.health().then((h) => { setHealth(h); setOffline(false); }).catch(() => setOffline(true));
     }, 10_000);
     return () => clearInterval(timer);
   }, []);
@@ -85,10 +90,54 @@ export function LiveView({ role }: { role: string }) {
   }
 
   const failures = report.checks.filter((check) => !check.passed);
+  const sessionActive = Boolean(session && session.active);
+  const armed = sessionActive && session?.mode === "live";
+  const environment = armed
+    ? report.environment.toUpperCase()
+    : sessionActive
+      ? "PAPER"
+      : "PAPER (idle)";
+  const riskState = health?.components?.risk_engine ?? "unknown";
+  const reconCheck = report.checks.find((c) => c.name === "reconciliation_healthy");
 
   return (
     <>
       <h1>Live trading</h1>
+
+      <div
+        className="card"
+        style={{
+          marginBottom: 16,
+          borderLeft: `4px solid ${offline ? "var(--bad, #c44)" : armed ? "var(--warn, #ca4)" : "var(--ok, #4a4)"}`,
+        }}
+      >
+        <div className="grid cols-4" style={{ gap: 12 }}>
+          <Stat label="Environment" value={<Pill value={environment} tone={armed ? "warn" : "ok"} />}
+            sub={armed ? "REAL EXECUTION PATH" : "simulated fills only"} />
+          <Stat label="System"
+            value={<Pill value={offline ? "OFFLINE" : health?.status === "ok" ? "ONLINE" : "DEGRADED"}
+              tone={offline ? "bad" : health?.status === "ok" ? "ok" : "warn"} />}
+            sub={offline ? "the API stopped answering" : `uptime ${Math.floor((health?.uptime_seconds ?? 0) / 3600)}h`} />
+          <Stat label="Readiness" value={`${report.total - report.failed} / ${report.total}`}
+            tone={report.passed ? "flat" : "warn"} sub="activation checks passing" />
+          <Stat label="Status"
+            value={<Pill value={armed ? "ARMED" : "DISARMED"} tone={armed ? "warn" : "ok"} />}
+            sub={armed ? "live session running" : "no real order can exist"} />
+        </div>
+        <div className="grid cols-3" style={{ gap: 12, marginTop: 10 }}>
+          <Stat label="Risk"
+            value={<Pill value={riskState === "online" ? "HEALTHY" : riskState.toUpperCase()}
+              tone={riskState === "online" ? "ok" : riskState === "unknown" ? "" : "bad"} />}
+            sub="absolute veto, not a suggestion" />
+          <Stat label="Reconciliation"
+            value={<Pill value={reconCheck ? (reconCheck.passed ? "HEALTHY" : "FAILED") : "UNKNOWN"}
+              tone={reconCheck?.passed ? "ok" : "warn"} />}
+            sub="our books vs the venue's" />
+          <Stat label="Live capital" value={report.max_live_capital.toLocaleString()}
+            tone={report.max_live_capital > 0 ? "warn" : "flat"}
+            sub={report.max_live_capital > 0 ? "ceiling configured — still gated" : "0 — fails closed"} />
+        </div>
+      </div>
 
       <div className="card" style={{ marginBottom: 16, borderLeft: "3px solid var(--accent, #58a)" }}>
         <strong>Your money stays at the exchange.</strong>

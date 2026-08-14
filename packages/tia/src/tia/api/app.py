@@ -146,7 +146,17 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     )
 
     app.state.tia = AppState(settings)
-    app.state.auth = AuthService()
+    # A configured signing secret makes dashboard sessions survive restarts — which a
+    # 24/7 deployment restarts on purpose (redeploys, reboots). The placeholder counts
+    # as unconfigured: AuthService then falls back to its per-process random secret,
+    # which is the safe failure mode (nobody can forge a token; sessions just end).
+    app.state.auth = AuthService(
+        secret=(
+            settings.security.jwt_secret.get_secret_value()
+            if settings.security.jwt_secret_configured
+            else None
+        )
+    )
     app.state.login_limiter = RateLimiter(limit=8, window_seconds=300)
     app.state.api_limiter = RateLimiter(limit=600, window_seconds=60)
 

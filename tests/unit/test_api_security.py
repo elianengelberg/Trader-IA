@@ -422,3 +422,32 @@ async def test_risk_limits_are_not_editable_through_the_api(
         if {"post", "put", "patch", "delete"} & set(methods)
     ]
     assert not any("risk" in path and "limit" in path for path in mutating)
+
+
+def test_a_configured_jwt_secret_is_actually_used_and_the_placeholder_is_not() -> None:
+    """The wiring the first CI run of the 24/7 stack depends on: with a real secret in
+    configuration, sessions survive a process restart (two apps over the same settings
+    validate each other's tokens); on the placeholder, the service falls back to a
+    per-process random secret — safe, but every restart logs everyone out."""
+    from pydantic import SecretStr
+
+    from tia.api.security import User
+    from tia.core.config import SecurityConfig
+
+    configured = settings_for_env(Environment.TESTING).model_copy(
+        update={
+            "security": SecurityConfig(
+                jwt_secret=SecretStr("a-real-secret-long-enough-to-sign-with-123456")
+            )
+        }
+    )
+    first = create_app(configured).state.auth
+    second = create_app(configured).state.auth
+    assert first.uses_ephemeral_secret is False
+    token = first.issue_token(User(username="op", role="operator"))
+    survivor = second.read_token(token)
+    assert survivor is not None and survivor.username == "op"
+
+    placeholder = create_app(settings_for_env(Environment.TESTING)).state.auth
+    assert placeholder.uses_ephemeral_secret is True
+    assert placeholder.read_token(token) is None

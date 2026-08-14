@@ -76,34 +76,33 @@ operator, one process, one database — resist the urge.
 
 ## 4. Server preparation
 
-As root, once:
+One script does all of it — updates, the `tia` user, Docker Engine + compose, UFW
+(SSH/80/443 only), and SSH hardening (applied only when a key is already present, so it
+can never lock you out). As root, once:
 
 ```bash
-apt-get update && apt-get upgrade -y
-adduser tia && usermod -aG docker,sudo tia      # never run the stack as root
-rkhunter --version >/dev/null 2>&1 || true       # your hardening taste here
-# SSH: keys only
-sed -i 's/^#\?PasswordAuthentication.*/PasswordAuthentication no/' /etc/ssh/sshd_config
-systemctl reload ssh
-# unattended security updates
-apt-get install -y unattended-upgrades && dpkg-reconfigure -plow unattended-upgrades
+apt-get update && apt-get install -y git
+git clone https://github.com/elianengelberg/Trader-IA.git /opt/trader-ia-setup
+sudo bash /opt/trader-ia-setup/scripts/vps_setup.sh
 ```
 
-Log in as `tia` from here on.
+Idempotent — each step prints PASS/SKIP and a re-run is safe. It deliberately does not
+clone your working copy, write `.env`, or start anything: those are the deploy user's
+actions, not root's. Log in as `tia` from here on.
 
 ## 5. Getting the code and configuring secrets
 
 ```bash
 git clone https://github.com/elianengelberg/Trader-IA.git && cd Trader-IA
-cp .env.production.example .env
-chmod 600 .env
-$EDITOR .env
+bash scripts/generate_env.sh     # writes .env, mode 600, secrets machine-generated
+$EDITOR .env                     # fill in TIA_DOMAIN / webhook when you have them
 ```
 
-Rules for `.env`, which is the **only** place secrets live:
+`generate_env.sh` creates `POSTGRES_PASSWORD`, `TIA_DEMO_PASSWORD` and `TIA_JWT_SECRET`
+cryptographically and **prints none of them** (terminals get logged); it refuses to
+overwrite an existing `.env` without `FORCE=1`, and backs the old one up if forced.
 
-* Generate, don't invent: `python3 -c "import secrets; print(secrets.token_urlsafe(48))"`
-  for `TIA_JWT_SECRET`; 32+ characters for `POSTGRES_PASSWORD` and the dashboard password.
+Rules for `.env`, which is the **only** place secrets live:
 * Nothing sensitive goes in the compose file, the repository, a shell argument (history!)
   or a chat window. The compose file refuses to start if the required three are missing.
 * Venue credentials stay **empty** for paper. When the day comes (§15): create the key
@@ -273,10 +272,17 @@ requires it to come back healthy on its own, and confirms the database answers a
 Exit 0 is the readiness claim; exit 3 means it could not run (no Docker) and readiness
 is **unproven** — the script will not pretend otherwise.
 
-Then the one test no script can wrap: `sudo reboot`, wait two minutes, open the
-dashboard. The stack (`restart: unless-stopped` + Docker's boot integration) and the
-session (§9 resume semantics) should both be back. If they are, you have a deployment;
-until then you have files.
+Then the one test no script can wrap: `sudo reboot`, wait two minutes, and run the
+evidence collector:
+
+```bash
+bash scripts/post_reboot_check.sh
+```
+
+It verifies every service healthy, health through the proxy, the paper session back **by
+itself** (or correctly held down by a sticky operator stop), the engine heartbeat moving,
+and — directly in the journal — **zero duplicate client order ids across all runs**. If
+it prints PASS, you have a deployment; until then you have files.
 
 ## 15. The road from here to live trading
 

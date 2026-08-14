@@ -356,6 +356,16 @@ async def test_paper_realtime_starts_without_credentials_and_says_it_is_simulate
     assert (await client.get("/api/live")).json()["active"] is False
 
 
+def test_paper_data_comes_from_mainnet_even_while_execution_defaults_to_testnet() -> None:
+    """`use_testnet` protects the execution side. If it also moved the *data* side, the
+    paper track record would be built on testnet's thin synthetic market and would say
+    nothing about real spreads — so the public-data URL is mainnet regardless."""
+    safe_default = LiveConfig()
+    assert safe_default.use_testnet is True
+    assert safe_default.base_url == "https://testnet.binance.vision"
+    assert safe_default.public_data_url == "https://api.binance.com"
+
+
 async def test_paper_start_refuses_cleanly_when_the_data_host_is_unreachable(
     client: httpx.AsyncClient, monkeypatch: pytest.MonkeyPatch
 ) -> None:

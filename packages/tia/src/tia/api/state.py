@@ -865,7 +865,11 @@ class AppState:
             )
 
         clock = SystemClock()
-        market = BinancePublicProvider(base_url=self.settings.live.base_url, clock=clock)
+        # Mainnet public data on purpose, whatever use_testnet says: paper's execution
+        # is simulated, and a track record needs real spreads, not testnet's thin market.
+        market = BinancePublicProvider(
+            base_url=self.settings.live.public_data_url, clock=clock
+        )
         execution = PaperExecutionProvider(
             self.settings.execution,
             DEFAULT_UNIVERSE,

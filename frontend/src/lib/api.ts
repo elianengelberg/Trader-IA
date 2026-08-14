@@ -97,6 +97,12 @@ export interface Health {
   uptime_seconds: number;
   version: string;
   simulated_only: boolean;
+  live_runtime: {
+    mode: string;
+    state: string;
+    heartbeat_age_seconds: number | null;
+    market_data_age_seconds: number | null;
+  } | null;
 }
 
 export interface Position {

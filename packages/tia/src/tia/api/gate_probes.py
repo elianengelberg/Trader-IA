@@ -56,9 +56,6 @@ EXPECTED_VALIDATOR_VERSION = 2
 #: permissions are editable at any time and yesterday's answer is a guess about today.
 VALIDATION_MAX_AGE_HOURS = 24.0
 
-#: The placeholder in ``config.py``. A deployment still carrying it has no session
-#: security worth the name.
-_DEFAULT_JWT_SECRET = "change-me-in-any-real-deployment"  # noqa: S105 - the value to reject
 
 
 class BinanceValidationRecord(BaseModel):
@@ -506,7 +503,7 @@ def _ev_enforcement(state: AppState) -> GateCheck:
 
 def _security(state: AppState) -> GateCheck:
     problems: list[str] = []
-    if state.settings.security.jwt_secret.get_secret_value() == _DEFAULT_JWT_SECRET:
+    if not state.settings.security.jwt_secret_configured:
         problems.append("the JWT secret is still the placeholder from config.py")
     if state.settings.live.enabled and not state.settings.live.has_credentials:
         problems.append("live is enabled but no venue credentials are configured")

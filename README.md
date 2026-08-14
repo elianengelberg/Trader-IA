@@ -1,10 +1,27 @@
 # Trader-IA
 
-Quantitative research, backtesting and **paper trading** — simulation only.
+Quantitative research, backtesting and autonomous trading. **Paper by default; live only
+through a gate that has to actually pass.**
 
-This platform holds no money, connects to no broker, and has no custody of any asset. The
-"capital" in it is a number in a simulation and the fills come from a bar-based matching
-engine. Nothing it produces is a prediction or a recommendation.
+Whichever mode it runs in, two things are unconditionally true:
+
+**Your money never leaves your exchange account.** This application has no wallet, takes no
+custody, and never receives a deposit. In live mode it places and cancels spot orders
+against your own Binance account; that is the entire relationship.
+
+**It cannot withdraw or transfer anything.** Not "does not" — cannot. There is no code path
+for it, a test fails the build if one is added, and the API key you create must not have the
+permission either. Three independent barriers, none relying on the others.
+
+Nothing here is a prediction or a recommendation, and nothing in this repository is evidence
+that any strategy is profitable.
+
+> **The number that decides whether this is worth doing.** At Binance's standard 10 bps
+> taker fee, a round trip costs 20 bps in fees alone — closer to 23 with spread, slippage
+> and latency. A strategy must produce more than ~25 bps of gross edge *per trade* just to
+> break even. The Expected Value Engine computes exactly this before every order and refuses
+> the ones that do not clear it. Most signals do not clear it. That is the arithmetic most
+> retail strategies never do, and it is why so many profitable-looking backtests are not.
 
 ---
 
@@ -51,7 +68,7 @@ daemon. Every other instruction on this page was run and its output recorded in
 ## Verify it
 
 ```bash
-make verify   # lint, unit, property, end-to-end, frontend types, browser smoke test
+make verify   # lint, unit, integration, property, failure, e2e, frontend, browser
 make smoke    # start the server, drive the dashboard in a real browser, stop it
 make test     # the fast tests only
 ```
@@ -65,11 +82,12 @@ a report that stops at the first failure hides whether the rest works.
 
 ```
 market data → data quality gate → features → market regime → strategies → fusion
-            → AI context (advisory) → risk engine → order intent
-            → paper execution → fill → position → P&L → dashboard → audit log
+            → AI context (advisory) → risk engine → risk budget
+            → cost model → expected value → order intent
+            → execution → fill → position → P&L → dashboard → audit log
 ```
 
-Two properties define the design.
+Three properties define the design.
 
 **The language model cannot create risk.** Its entire response schema is a *caution*
 level, converted to a modifier clamped to `[-1, 0]`. There is no field it can return that
@@ -81,6 +99,13 @@ boundary, and checked by a property test over adversarial inputs.
 **The risk engine is deterministic and has absolute veto.** It is not a model, it never
 consults one, and nothing downstream can override it. It may only ever *shrink* a
 requested size — an engine that could grow one would be a second, unreviewed sizing model.
+
+**A risk-approved signal is still not a trade.** The risk engine answers "is this
+survivable?"; it does not answer "is this worth doing?". Two more gates sit between
+approval and an order: the risk budget, which decides how much may be risked given the
+current drawdown, volatility and losing streak — possibly nothing — and the expected-value
+engine, which subtracts the round-trip cost from a *measured* edge and refuses when the
+remainder does not clear a threshold. Both refuse far more often than the risk engine does.
 
 Full design: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
@@ -128,14 +153,49 @@ rather than failing to start.
 
 ---
 
+## Going live
+
+Paper is the default and stays the default until fourteen activation checks pass and a
+human types a confirmation phrase. Read [`docs/LIVE_TRADING.md`](docs/LIVE_TRADING.md)
+before you get there — all of it.
+
+```bash
+make verify                                    # 1. writes the record the gate reads
+                                               # 2. create a Binance key: reading + spot
+                                               #    trading ONLY, IP-restricted
+vim .env                                       # 3. key, secret, MAX_LIVE_CAPITAL
+python scripts/validate_binance.py --account \
+  --json-out data/runtime/binance_validation.json   # 4. verify every assumption
+python scripts/validate_binance.py --account --order --testnet   # 5. testnet round trip
+                                               # 6. paper, on real prices, for real time
+                                               # 7. read the gate, then arm
+```
+
+Three properties of the activation token are worth knowing up front:
+
+* **It cannot be forged.** There is no boolean anywhere meaning "allowed to trade live".
+  The only evidence is a token whose constructor refuses outside the gate module.
+* **It expires** — one hour by default — and is re-validated on *every order*, so a lapse
+  stops the next order rather than being noticed at the next restart.
+* **It is bound to a fingerprint of the active risk limits.** Change a limit after arming,
+  by any mechanism, and the token is void.
+
+---
+
 ## What is not here, deliberately
 
-* **No real-money execution.** `ExecutionProvider.__init__` raises if a provider declares
-  `is_simulated=False`, so there is no code path that constructs a live one.
-* **No deposits, withdrawals, transfers, custody, bank details or card details.** No route
-  exists for any of them, and a test asserts the API exposes none.
+* **No custody, deposits, withdrawals, transfers, bank details or card details.** No route
+  exists for any of them; a test greps every source file for withdrawal and transfer
+  endpoints and fails the build on a match, with no allowance list.
+* **No live execution from a configuration flag.** Declaring `is_simulated=False` is not
+  enough and never becomes enough — construction requires a token the activation gate
+  alone can mint.
 * **No risk-limit editing from the interface.** Limits are immutable at runtime and no API
   route changes them. Altering one is a code change that goes through review.
+* **No secret through the browser.** `POST /api/live/arm` accepts a confirmation phrase and
+  nothing else — no key, no secret, no capital amount.
+* **No Martingale, no revenge trading, no sizing up to recover a loss.** Forbidden by a
+  property asserted over randomised inputs, not by a comment.
 * **No claim of profitability anywhere.** Backtest verdicts are
   `insufficient_evidence`, `no_edge_demonstrated`, `mixed`, `beat_all_baselines` — none of
   which means "good", and the strongest is a statement about one dataset.
@@ -146,18 +206,39 @@ rather than failing to start.
 
 Stated here rather than discovered later.
 
+* **The Binance integration has never made a request.** Every Binance host is blocked by
+  the build environment's egress proxy, so every endpoint path, parameter name and response
+  field in it was written from documentation and confirmed against nothing. It is labelled
+  `REQUIRES VALIDATION` in three places and `scripts/validate_binance.py` exists to close
+  the gap. **Run it before trusting anything in that adapter.**
+  See [`docs/BINANCE_INTEGRATION.md`](docs/BINANCE_INTEGRATION.md).
 * **The paper simulator has no order book.** Fills are matched against bar OHLCV, so queue
-  position and book depletion do not exist. Our own orders have no market impact. There
-  are no halts, auctions, funding or borrow costs. `docs/ARCHITECTURE.md` §12.1.
-* **Binance and TradingView integrations are unverified.** Both hosts are blocked by the
-  build environment's egress proxy, so not a single request was ever made. They are opt-in,
-  refused by the demo environment, and labelled `REQUIRES VALIDATION`.
+  position and book depletion do not exist. There are no halts, auctions, funding or borrow
+  costs. `docs/ARCHITECTURE.md` §12.1.
+* **The expected-value engine observes rather than enforces in paper mode.** Enforcing it
+  there is a deadlock — it refuses to trade without a measured edge, and an edge is measured
+  from closed trades. Paper trading is how that evidence gets produced. The `ev_would_reject`
+  counter shows what enforcing would cost. `docs/LIVE_TRADING.md` §4.
+* **No WebSocket market data.** Prices are polled, which is adequate for 1-minute bars and
+  not for anything faster.
 * **No database migrations.** A clean install creates the schema correctly; there is no
-  automated upgrade path from an older database, and the version guard refuses to open a
-  mismatched one rather than misreading it.
+  automated upgrade path, and the version guard refuses to open a mismatched database
+  rather than misreading it.
 * **Docker is untested here** — see above.
 * **The mock LLM is not a model of Claude's judgement.** It is a stand-in that exercises
   the pipeline, and every assessment it produces says so in its own text.
+
+---
+
+## Documentation
+
+| | |
+|---|---|
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | How the whole thing is put together, and why |
+| [`docs/LIVE_TRADING.md`](docs/LIVE_TRADING.md) | Costs, expected value, the activation gate, going live |
+| [`docs/RISK_ENGINE.md`](docs/RISK_ENGINE.md) | The four risk layers, ruin analytics, capital accounting |
+| [`docs/SECURITY.md`](docs/SECURITY.md) | Custody, fund movement, secrets, what the AI may not do |
+| [`docs/BINANCE_INTEGRATION.md`](docs/BINANCE_INTEGRATION.md) | Every unverified assumption, and how to verify it |
 
 ---
 
@@ -172,7 +253,10 @@ packages/tia/src/tia/
   quant/        indicators, features, performance statistics
   regime/       market-regime classifier
   strategy/     strategy library, fusion, signal engine
-  risk/         the deterministic risk engine and position sizing
+  risk/         risk engine, risk budget, ruin analytics, position sizing
+  economics/    cost model and expected-value engine
+  portfolio/    capital accounting: contributions vs trading P&L
+  live/         the activation gate and API-key permission checks
   execution/    order state machine, paper matching engine, reconciliation
   backtest/     backtest engine, baselines, walk-forward, experiment verdicts
   llm/          structured output, providers, validation, cost governance
@@ -180,8 +264,9 @@ packages/tia/src/tia/
   runtime/      the live paper-trading loop and the demo scenarios
   api/          HTTP API, SSE, auth, and the served dashboard
 frontend/       the dashboard (Vite + React + TypeScript)
-tests/          unit, property, end-to-end
-scripts/        diagnose, verify, smoke, fixtures, backtest, browser smoke
+tests/          unit, integration, property, failure, adversarial, end-to-end
+scripts/        diagnose, verify, smoke, fixtures, backtest, browser smoke,
+                validate_binance
 ```
 
 ---

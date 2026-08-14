@@ -1,11 +1,31 @@
 # Audit Report
 
-**Date:** 2026-08-13 · **Branch:** `claude/algo-trading-simulation-platform-ngf7xo`
-**Baseline at audit start:** `4e47c3b` · **At audit end:** see `git log`
+**Branch:** `claude/algo-trading-simulation-platform-ngf7xo`
+
+Two parts, kept in order because the second changes the ground the first stood on:
+
+* **Part I (2026-08-13)** — the audit of the simulation-only platform. Preserved as the
+  record of what was found and fixed; the two statements it makes that are **no longer
+  true** are annotated inline rather than rewritten, because an audit that edits its own
+  history stops being evidence.
+* **Part II (2026-08-14)** — the expansion to a gated live-trading platform: what was
+  built, what running it broke, and the full list of what is wired, pending and unverified.
+
+Nothing in either part is a claim about profitability. Where something could not be
+verified, that is stated rather than implied.
+
+---
+---
+
+# Part I — Simulation-only audit (2026-08-13)
+
+**Baseline at audit start:** `4e47c3b`
 
 This is what was inspected, what was executed, what broke, and what was done about it.
-Nothing in it is a claim about profitability. Where something could not be verified, that
-is stated rather than implied.
+
+> **Superseded by Part II:** this part describes a platform whose scope rule was
+> "simulation only, forever". That rule changed the next day. Where a Part I statement is
+> now false, a `⚠ superseded` note points at the replacement.
 
 ---
 
@@ -236,7 +256,7 @@ Reproducible: the same scenario and seed produce identical fills, asserted by
 | CSP, `X-Frame-Options`, `nosniff`, `Referrer-Policy` | present on every response |
 | Secrets in `/api/settings` | none; reports only *whether* a key is configured |
 | Database password in logs and API | masked |
-| Routes for deposit/withdraw/transfer/bank/card/broker/custody | **none exist** |
+| Routes for deposit/withdraw/transfer/bank/card/broker/custody | **none exist** — still true in Part II; the live path adds order placement, never fund movement |
 | Risk-limit mutation through the API | **no route exists** |
 
 ---
@@ -246,7 +266,7 @@ Reproducible: the same scenario and seed produce identical fills, asserted by
 | Rule | How it is enforced | How it is checked |
 |---|---|---|
 | §1 The LLM cannot create risk | `context_modifier` clamped to `[-1, 0]` in the type, re-clamped at conversion, re-asserted in the service | property test over 300 adversarial assessments; schema test proving no execution field exists |
-| §1 No real-money execution | `ExecutionProvider.__init__` raises on `is_simulated=False` | scope-boundary test walks every subclass in the package |
+| §1 No real-money execution — **⚠ superseded** | *was:* `ExecutionProvider.__init__` raises on `is_simulated=False` | *now:* construction requires an unforgeable, expiring `LiveActivationToken` from the gate — Part II §10; the property that no provider goes live by accident is preserved |
 | §1 No financial secret in a prompt | prompt builder receives only market state | test asserts no credential marker appears in a built prompt |
 | §13/§15 No free-form output becomes an order | forced tool call; text-only replies raise | provider test |
 | §14 Claude does no arithmetic that matters | sizing, limits and exposure are computed by the deterministic engine | risk-engine tests |
@@ -303,3 +323,166 @@ were skipped, and each one is labelled in the code as well as here.
 **On the trading results themselves:** the current configuration, on the committed
 fixtures, produces a small loss and a verdict of *insufficient evidence* against five
 baselines. That number has not been tuned, and improving it was not the goal of this work.
+
+---
+---
+
+# Part II — Expansion to gated live trading (2026-08-14)
+
+**Baseline at Part II start:** `1e5b32c` · **At Part II end:** see `git log`
+
+The brief changed: from "simulation only, forever" to an autonomous BTC/USDT platform on
+Binance where the user connects their own account and authorises a bounded amount of real
+capital. The structural guarantee of Part I — *no code path produces a live provider* —
+was not discarded; it was replaced by a narrower one with the same shape: *no code path
+produces a live provider **by accident***. Everything else in this part exists to make
+that word "accident" carry weight.
+
+---
+
+## 10. What was built
+
+| Piece | Where | Tested by |
+|---|---|---|
+| Cost Engine — round trip, itemised (fees/spread/slippage/latency/impact) | `economics/costs.py` | 21 unit tests |
+| Expected Value Engine — edge from realised outcomes only; refuses < 30 samples/bucket | `economics/expected_value.py` | same file |
+| Risk Budget — drawdown states, volatility cap, streak dampener, 3 ordered profiles | `risk/budget.py` | 20 unit incl. 500 property examples |
+| Probability of ruin — seeded bootstrap + analytic cross-check, ruin = 50% equity | `risk/ruin.py` | 14 unit tests |
+| Capital ledger — contributions vs P&L; unexplained-balance halt | `portfolio/capital.py` | 17 unit tests |
+| Live Activation Gate — 14 checks; unforgeable, expiring, config-fingerprinted token | `live/gate.py` | 45 unit tests |
+| API-key permission checker — refuses fund movement, incl. unknown flags by name shape | `live/permissions.py` | in gate + adapter suites |
+| Binance signing — the only module that touches a secret | `data/providers/binance_signing.py` | 26 adapter tests |
+| Binance spot execution — idempotent, unknown-state-refusing | `data/providers/binance_live.py` | same, mock transport |
+| Gate probe wiring — every check fed by a value it did not choose | `api/gate_probes.py` | 16 integration tests |
+| Runtime wiring — approval → budget → cost → EV → order; round trips scored into evidence | `runtime/engine.py` | 12 integration tests |
+| Venue validation script — turns every documented assumption into a checked fact | `scripts/validate_binance.py` | run here (fails on egress, exit 1, as designed) |
+| API: `/api/economics`, `/api/analytics`, `/api/capital`, `/api/live/gate`, `/api/live/arm` | `api/app.py`, `api/state.py` | integration + security tests |
+| Frontend: Strategy & Costs, Ruin Analytics, Live Trading | `frontend/src/views/` | browser smoke, 14 views |
+| Docs: `LIVE_TRADING`, `RISK_ENGINE`, `SECURITY`, `BINANCE_INTEGRATION`, `.env.example` | `docs/`, repo root | — |
+
+Suite: **571 → 752 tests**, `make verify` 8 → **9 areas** (integration added), all PASS.
+
+---
+
+## 11. Defects found in Part II — again by running, not reading
+
+### D9 — The aggressive profile's risk budget ROSE as drawdown crossed 8% · **CRITICAL** · fixed
+
+The drawdown taper's NORMAL segment ended at a hardcoded 0.5 while the DEFENSIVE segment
+began at the profile's own `defensive_multiplier`. For `balanced` (0.5) the segments met;
+for `aggressive` (0.6) the budget **increased by 6%** on crossing the defensive threshold
+— martingale behaviour produced by arithmetic rather than intent, which is exactly the
+kind that survives review, because every hand-written test used the one profile where the
+constants happened to coincide.
+
+**Found by:** the no-martingale property test (Hypothesis, ~300 examples).
+**Fix:** both segments anchored to the profile, making the discontinuity unrepresentable;
+the continuity test is now parametrised across all three profiles; profiles with
+out-of-order thresholds are rejected at construction.
+
+### D10 — The EV engine's counters could not distinguish "refusing everything" from "not running" · **MEDIUM** · fixed
+
+Only evaluations that reached an edge estimate were recorded. A fresh system — which
+correctly refuses every signal for lack of evidence — reported `evaluations: 0`,
+indistinguishable from an engine that was never called.
+
+**Found by:** the first end-to-end run of the wired pipeline (75 refusals, counter read 0).
+**Fix:** every path records, including refusals.
+
+### D11 — Enforcing the EV gate in paper mode is a deadlock · **DESIGN** · resolved
+
+No trades → no closed trades → no evidence → no trades, permanently. Not a bug in any one
+function; a circularity in the design as briefed.
+
+**Resolution:** paper **observes** (prices every decision, counts `ev_would_reject`, lets
+the trade proceed so its outcome becomes a sample); live **enforces**. Both behaviours are
+tested, including that enforcement genuinely stops the trades observation only counted.
+
+---
+
+## 12. Wiring status — built vs. connected
+
+An honest audit distinguishes "the library passes its tests" from "the system uses it".
+
+| Piece | Built | Wired into the running system |
+|---|---|---|
+| Cost + EV engines | ✔ | ✔ every approved would-be entry is priced; refusals counted |
+| Risk budget | ✔ | ✔ computed per bar from live drawdown/vol/streak |
+| Round-trip scoring → edge evidence | ✔ | ✔ in-memory (see gap 4 below) |
+| Activation gate + probes | ✔ | ✔ `/api/live/gate` reports; `verify_passed.json` and `binance_validation.json` feed it |
+| Capital ledger | ✔ | ✘ `/api/capital` synthesizes from the paper portfolio; `classify_external_change` never called in production |
+| Binance execution adapter | ✔ | ✘ nothing constructs it outside tests |
+| Activation token consumption | ✔ | ✘ `arm_live` mints, returns, and drops it |
+| Live real-time runtime loop | ✘ | ✘ `RuntimeEngine` is scenario-only: simulated clock, generated data |
+
+The unwired rows are the remaining distance between "a live-capable codebase" and "a live
+system". They are listed as gaps 1–4 below and none of them is hidden behind a flag.
+
+---
+
+## 13. Known gaps at Part II close
+
+Numbered for reference from the fix brief.
+
+1. **No real-time live runtime.** No orchestrator runs SystemClock + Binance market data +
+   Binance execution as a continuous loop. The scenario runtime proves the pipeline; the
+   live loop does not exist yet.
+2. **The activation token is not consumed.** Arming verifies everything, then the token is
+   returned to the API caller and dropped. No stored activation, no transition to live
+   execution, no audit-trail row in the database.
+3. **Capital ledger unwired** (see §12). The deposit/withdrawal classifier and the
+   unexplained-balance halt run only in tests.
+4. **Edge evidence is process-memory.** Closed trades, bucket coverage and the consecutive
+   -loss streak are lost on restart; the gate's paper-track-record check resets with them.
+5. **`enforce_expected_value` has no automatic trigger.** Live mode should force it on;
+   today only an explicit constructor argument does.
+6. **`min_paper_days` configured but unread** — the track-record probe counts trades only.
+7. **Latency is configured, not measured.** The cost model prices the simulator's
+   configured submit+ack delays; a live deployment must measure decision-to-fill and feed
+   the measurement back.
+8. **Multi-fill exits scored at the last fill's price**, not exit VWAP. Entry is VWAPed;
+   exit is not.
+9. **No request-weight pacing on the Binance adapter.** It reacts to 429/418 but does not
+   track Binance's request-weight budget to avoid hitting them.
+10. **No live reconciliation scheduler.** The reconciliation engine exists; nothing
+    periodically compares the local order mirror against the venue in a live session.
+11. **No continuous clock-skew monitoring.** Checked once by the validation script; a live
+    session that drifts past `recvWindow` mid-run discovers it as opaque rejections.
+12. **No WebSocket streams** — market data would be polled; order updates would be polled.
+    Adequate for 1-minute bars, stated as such.
+13. **No frontend Capital view** — `/api/capital` and its types exist; no page consumes
+    them.
+14. **`economics_snapshot`'s headline budget** is computed with volatility 0 and exposure
+    0 (the per-bar decision path uses the real values); the two can disagree slightly.
+15. **Gate reports and arming attempts are not persisted** — the audit trail of who tried
+    to arm, when, and what refused them lives only in responses and logs.
+16. **`binance_validation.json` is trusted as read** — the fees/credentials probes accept
+    the file without schema validation or a freshness bound; a stale or hand-edited file
+    would satisfy them.
+17. **Position cost basis from the venue is 0.0** — spot balances carry no cost basis;
+    the fill journal must supply it, and in a fresh process it cannot.
+18. **No automatic flatten on EMERGENCY.** The budget stops new positions; open ones are
+    closed only by their protective stops or reversals.
+19. Inherited from Part I, still true: no Docker execution, no live Claude call, no DB
+    migrations, money as `float`, regime accuracy unmeasured, single-operator sizing,
+    longest observed run 660 bars.
+
+---
+
+## 14. Honest summary, Part II
+
+The economics, risk-budget, capital, gate and adapter layers exist, are tested (752
+passing), and the paper pipeline runs them end to end — including the number the whole
+expansion turns on: a measured 23.4 bps gross edge against 22.9 bps of round-trip costs
+nets 0.45 bps, which is NO_TRADE, and no earlier version of this platform could have told
+you that.
+
+What does not exist yet is the last mile: a real-time loop that runs the same pipeline
+against live Binance data, consumes an activation token, and books capital through the
+ledger. Every piece of that mile is built and tested in isolation; §13 is the exact list
+of what connecting them requires. Nothing on that list is disguised as done.
+
+The Binance adapters remain **REQUIRES VALIDATION** end to end: this environment blocks
+every Binance host including the testnet, so not one request was ever sent, and the
+activation gate is wired to refuse until `scripts/validate_binance.py` has been run from a
+machine that can reach the venue.

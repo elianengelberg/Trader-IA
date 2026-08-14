@@ -54,6 +54,10 @@ from tia.data.providers.binance_signing import (
 )
 from tia.live.permissions import check_permissions
 
+#: Bumped when the envelope or the fact set changes. The gate refuses records from any
+#: other version rather than reinterpreting them.
+VALIDATOR_VERSION = 2
+
 MAINNET = "https://api.binance.com"
 TESTNET = "https://testnet.binance.vision"
 
@@ -273,6 +277,36 @@ async def validate_account(
         results.bad("permissions readable", f"{exc}")
         return
 
+    section("User data stream")
+    try:
+        listen = await client.post(
+            "/api/v3/userDataStream", headers=signer.key_header()
+        )
+        if listen.status_code < 400 and "listenKey" in listen.json():
+            key = listen.json()["listenKey"]
+            closed = await client.delete(
+                f"/api/v3/userDataStream?listenKey={key}",
+                headers=signer.key_header(),
+            )
+            results.facts["user_data_stream_ok"] = closed.status_code < 400
+            if closed.status_code < 400:
+                results.ok("user data stream", "listenKey opened and closed cleanly")
+            else:
+                results.bad(
+                    "user data stream",
+                    f"listenKey opened but close returned HTTP {closed.status_code}",
+                )
+        else:
+            results.facts["user_data_stream_ok"] = False
+            results.bad(
+                "user data stream",
+                f"HTTP {listen.status_code}: {listen.text[:200]} — without it, fills are "
+                "discovered only by polling",
+            )
+    except httpx.HTTPError as exc:
+        results.facts["user_data_stream_ok"] = False
+        results.bad("user data stream", str(exc))
+
     report = check_permissions(restrictions, verified_at_source=True)
     results.facts["permissions"] = report.as_dict()
     if report.acceptable:
@@ -347,11 +381,13 @@ async def validate_order(
             f"/api/v3/order?{signed.query_string}", headers=signed.headers
         )
         if duplicate.status_code >= 400:
+            results.facts["duplicate_order_rejected"] = True
             results.ok(
                 "duplicate rejected",
                 "the venue refuses a repeated newClientOrderId — retries are safe",
             )
         else:
+            results.facts["duplicate_order_rejected"] = False
             results.bad(
                 "duplicate rejected",
                 "the venue ACCEPTED a second order with the same newClientOrderId. "
@@ -427,8 +463,44 @@ def report(results: Results, args: argparse.Namespace) -> int:
         print(f"\n{DIM}Facts confirmed against the venue:{RESET}")
         print(json.dumps(results.facts, indent=2))
         if args.json_out:
-            Path(args.json_out).write_text(json.dumps(results.facts, indent=2), encoding="utf-8")
-            print(f"\nWritten to {args.json_out}")
+            # The envelope the activation gate demands: version, provenance, and a
+            # fingerprint over the facts, so a hand-edited record fails instead of
+            # passing. Written only when every attempted check passed — a record of a
+            # failed validation must never be able to satisfy the gate.
+            if results.failed:
+                print(
+                    f"\n{YELLOW}Not writing {args.json_out}: validation had failures, "
+                    f"and a failed validation is not evidence.{RESET}"
+                )
+            else:
+                import hashlib
+                import shutil
+                import subprocess
+
+                canonical = json.dumps(results.facts, sort_keys=True, default=str)
+                try:
+                    git = shutil.which("git") or "git"
+                    commit = subprocess.run(  # noqa: S603 - fixed args, local metadata
+                        [git, "rev-parse", "HEAD"], capture_output=True, text=True,
+                        timeout=5, check=False,
+                    ).stdout.strip()
+                except Exception:
+                    commit = ""
+                envelope = {
+                    "validator_version": VALIDATOR_VERSION,
+                    "generated_at": datetime.now(UTC).isoformat(),
+                    "environment": "testnet" if args.testnet else "mainnet",
+                    "symbol": args.symbol.upper(),
+                    "git_commit": commit,
+                    "fingerprint": hashlib.blake2s(
+                        canonical.encode("utf-8"), digest_size=16
+                    ).hexdigest(),
+                    "facts": results.facts,
+                }
+                Path(args.json_out).write_text(
+                    json.dumps(envelope, indent=2), encoding="utf-8"
+                )
+                print(f"\nWritten to {args.json_out}")
 
     if results.failed:
         print(

@@ -486,3 +486,49 @@ The Binance adapters remain **REQUIRES VALIDATION** end to end: this environment
 every Binance host including the testnet, so not one request was ever sent, and the
 activation gate is wired to refuse until `scripts/validate_binance.py` has been run from a
 machine that can reach the venue.
+
+---
+---
+
+# Part III — Second audit: A1–F6 after the hardening pass (2026-08-14)
+
+Verdicts use the brief's own vocabulary. "SOLVED" means implemented **and** integrated
+**and** tested **and** restart-surviving where that applies — not "a class exists".
+
+| Gap | Verdict | Evidence |
+|---|---|---|
+| A1 live runtime | **SOLVED** | `runtime/live.py` + 13-state machine (`runtime/states.py`); startup validation, graceful stop, halt/cancel-only/flatten, safe mode; 23 tests in `test_live_runtime.py`. RUNNING is set only by the state machine after validation passed. |
+| A2 activation persisted + consumed | **SOLVED** | `arm_live` persists every attempt (report, failed checks, config + token fingerprints), then **starts** the runtime and reports LIVE only on RUNNING; `test_live_activation_persists/starts_runtime/audit_persisted`, `test_gate_report_persistence`. |
+| A3 capital ledger wired | **SOLVED** | LiveRuntime funds the ledger at start, books fees/P&L per fill, and reconciliation classifies balance drift; unexplained >10% halts — `test_capital_ledger_live_reconciliation`, `test_unknown_balance_change_halts`. |
+| A4 edge persistence | **SOLVED** | `edge_outcomes` table; paper and live persist every close (deterministic id = replay-safe upsert); estimator + streak + track record rebuilt at start — `test_restart_recovery`, `test_edge_persistence_survives_restart`. |
+| A5 EV enforced in live | **SOLVED** | Structural: LiveRuntime has no observe flag to misconfigure (asserted absent by `test_live_requires_expected_value`); the gate's `ev_enforcement` check fails if one ever appears. |
+| B1 Binance validation | **EXTERNAL VALIDATION REQUIRED** | Script upgraded: fingerprinted v2 envelope, user-data-stream (listenKey) exercise, duplicate-order demonstration, refuses to write a record of a failed run. Zero requests ever sent from here — every host blocked, verified again this session. |
+| B2 Docker | **EXTERNAL VALIDATION REQUIRED** | `make docker-verify` validates what it can and exits 3 (a distinct code) without a daemon; executed here: exit 3, as designed. |
+| B3 Claude API | **EXTERNAL VALIDATION REQUIRED (integration SOLVED)** | Real adapter behind `ANTHROPIC_API_KEY` with governance, budget, breaker, schema validation and failure-path tests; no key here, so no live call — and the readiness report says exactly that. |
+| B4 TradingView | **SOLVED (as isolation)** | Webhook disabled by default, HMAC+timestamp+replay-window+allowlist, and not on the execution path; its failure cannot corrupt the Binance runtime. |
+| C1 reconciliation scheduler | **SOLVED** | In-loop cadence; venue wins; divergence → SAFE_MODE; every run persisted — `test_reconciliation_scheduler`, `test_live_safe_mode_on_unknown_state`. |
+| C2 clock skew | **SOLVED** | `ClockSkewMonitor`: startup refusal + periodic mid-session halt — `test_clock_skew_monitor`. |
+| C3 request budget | **SOLVED (weights REQUIRE VALIDATION)** | `BinanceRequestBudget`: rolling-window weight tracking, adaptive pacing, 429/418 cooldowns wired into the adapter. The per-endpoint weights are documented values pending confirmation via exchangeInfo. |
+| C4 latency | **SOLVED** | `LatencyTracker` stamps all eight stages, persists samples, and its EMA feeds the cost model's latency term — `test_latency_measurement`. |
+| C5 halt/cancel/flatten | **SOLVED** | Three distinct states with an explicit transition table; kill switch ≠ flatten (software-in-doubt vs get-me-out); both operator-only, named-actor, persisted — `test_kill_switch`, `test_emergency_flatten`. |
+| C6 min paper days | **SOLVED** | Track-record probe reads days AND trades from the persisted record — `test_min_paper_days_gate`. |
+| C7 validation freshness | **SOLVED** | Pydantic schema, validator version, environment/symbol match, content fingerprint, 24 h bound, future-dated refused — `test_binance_validation_schema/freshness`. UNKNOWN = FAILED throughout. |
+| C8 WebSockets | **NOT SOLVED (deliberate)** | Implementing a WS client that has never once connected would be inventing an API surface. The listenKey path is validated by the script; runtime remains polling (adequate for 1 m bars, stated); WS is the first post-validation task. |
+| D1 exit VWAP | **SOLVED** | Both runtimes accumulate exit legs; `test_multi_fill_exit_vwap` (2-fill exit scored at 50,500, not the last fill's 50,800). |
+| D2 snapshot consistency | **SOLVED** | Snapshot reuses the decision path's own `BudgetInputs`, provenance flagged — `test_economics_snapshot_matches_risk`. |
+| D3 cost basis | **SOLVED (as honesty)** | Venue balances carry no basis; the live snapshot says UNKNOWN-until-replayed and no fabricated figure exists — `test_cost_basis_recovery`. |
+| E1 capital view | **SOLVED** | `/capital` page: CAPITAL FLOW and TRADING PERFORMANCE as separate cards, live ceiling panel; renders in browser smoke. |
+| E2 risk profile | **SOLVED** | `POST /api/risk/profile`: confirmed, operator-only, refused mid-live-session, applies to the next run, audited — `test_risk_profile_change_audit`. RiskLimits stay immutable; no route touches them. |
+| E3 gate history | **SOLVED** | Every attempt persisted and shown on the Live page ("who tried, when, what stopped them"). |
+| F1 migrations | **SOLVED** | Alembic 0001/0002; empty→head, v1→v2 in-place with rows preserved, pre-Alembic adoption — 2 migration tests. |
+| F2 money types | **SOLVED (settlement scope)** | Decimal in the capital ledger internals and the live order builder (lot/tick quantization, venue formatting); simulation/analytics stay float **by stated design** — `test_money_uses_decimal`. Full-codebase Decimal was rejected as a stability risk the brief itself forbids. |
+| F3 regime accuracy | **UNVALIDATED** | No trusted labels exist; no metrics invented. Stated in docs and readiness. |
+| F4 single operator | **DOCUMENTED** | SQLite/SSE/rate-limit sizing documented; not overdesigned. |
+| F5 endurance | **SOLVED** | `scripts/endurance.py` executed here: 1,660 simulated bars (>24 h), 6/6 checks green (dup-orders, RSS, latency, errors, evidence coherence, equity) — and it **found D12** (silent decision-persistence failure), now fixed with columns + guarded migration. |
+| F6 paper order book | **SOLVED (existing, documented)** | Spread, slippage, sqrt impact, participation cap, partial fills already modelled; queue position and book depletion documented as absent. Not misrepresented as an HFT simulator. |
+
+New defects found and fixed during this pass, all by running: **D12** (decisions silently
+not persisting since the economics wiring — endurance caught it), the boundary suite
+catching **the API layer touching the secret** and **the budget module naming order
+endpoints** (first fixed by moving code, second allowed deliberately), and the fills FK
+ordering race (documented as accepted, §7.3 of SECURITY_AUDIT.md).

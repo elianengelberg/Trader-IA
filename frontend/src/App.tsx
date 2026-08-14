@@ -17,11 +17,12 @@ import { SettingsView } from "./views/SettingsView";
 import { StrategyView } from "./views/StrategyView";
 import { AnalyticsView } from "./views/AnalyticsView";
 import { LiveView } from "./views/LiveView";
+import { CapitalView } from "./views/CapitalView";
 import { Pill } from "./components/ui";
 
 type Tab =
   | "dashboard" | "markets" | "ai" | "risk" | "portfolio" | "orders"
-  | "strategy" | "analytics" | "live"
+  | "strategy" | "analytics" | "live" | "capital"
   | "backtests" | "news" | "logs" | "system" | "settings";
 
 const NAV: { group: string; items: { id: Tab; label: string }[] }[] = [
@@ -31,6 +32,7 @@ const NAV: { group: string; items: { id: Tab; label: string }[] }[] = [
       { id: "dashboard", label: "Dashboard" },
       { id: "markets", label: "Markets" },
       { id: "portfolio", label: "Portfolio" },
+      { id: "capital", label: "Capital" },
       { id: "orders", label: "Orders & Fills" },
     ],
   },
@@ -170,6 +172,7 @@ export default function App() {
           {tab === "risk" && <RiskView subscribe={subscribe} />}
           {tab === "analytics" && <AnalyticsView subscribe={subscribe} />}
           {tab === "live" && <LiveView role={user.role} />}
+          {tab === "capital" && <CapitalView subscribe={subscribe} />}
           {tab === "news" && <NewsView subscribe={subscribe} />}
           {tab === "backtests" && <Backtests />}
           {tab === "system" && <SystemView health={health} runtime={runtime} />}

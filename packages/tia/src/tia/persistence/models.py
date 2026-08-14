@@ -170,6 +170,13 @@ class DecisionRow(Base):
     risk_checks: Mapped[list[Any]] = mapped_column(JSON, default=list)
     features: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
     snapshot: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
+    #: The trade-or-not arithmetic, when the decision would have opened something. Null
+    #: for exits, which are never priced for edge. Added in v2: the endurance run caught
+    #: every decision failing to persist because these keys had no columns (defect D12) —
+    #: a persistence failure that was logged-but-quiet, which is why the endurance
+    #: harness now checks journal coherence rather than trusting the log level.
+    risk_budget: Mapped[dict[str, Any] | None] = mapped_column(JSON)
+    expected_value: Mapped[dict[str, Any] | None] = mapped_column(JSON)
 
 
 class OrderRow(Base):

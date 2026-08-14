@@ -675,7 +675,7 @@ async def test_clock_skew_monitor() -> None:
     async def wandering_venue_time() -> int:
         return session2.timestamp_ms() - drift["ms"]
 
-    runtime2, _, market = build_runtime(
+    runtime2, _, _market = build_runtime(
         clock=session2,
         feed_at_end=True,
         venue_time_ms=wandering_venue_time,

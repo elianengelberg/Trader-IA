@@ -106,6 +106,11 @@ class ArmLiveRequest(BaseModel):
     confirmation: str = Field(min_length=1, max_length=200)
 
 
+class ProfileChangeRequest(BaseModel):
+    profile: str = Field(pattern="^(conservative|balanced|aggressive)$")
+    confirm: bool = False
+
+
 # --------------------------------------------------------------------------- app
 
 
@@ -458,6 +463,80 @@ def _register_routes(app: FastAPI, settings: Settings) -> None:
             # 409, not 400: the request was well-formed and the *system* is not in a state
             # where it can be granted. A 400 would suggest the caller should fix the body.
             raise HTTPException(409, str(exc)) from exc
+
+    @app.get("/api/live")
+    async def live_snapshot(
+        request: Request, _user: User = Depends(current_user)
+    ) -> dict[str, Any]:
+        """The live session's real state — the state machine's word, not a wish."""
+        live = tia(request).live_runtime
+        if live is None:
+            return {"active": False, "state": "disarmed"}
+        return {"active": live.is_running, **live.snapshot()}
+
+    @app.post("/api/risk/profile")
+    async def change_risk_profile(
+        body: ProfileChangeRequest, request: Request, user: User = Depends(require_operator)
+    ) -> dict[str, Any]:
+        """Change the risk profile for the NEXT run. Audited; refused mid-live-session.
+
+        Note what this route cannot do: it cannot touch `RiskLimits` (immutable, no route
+        exists), cannot raise `max_live_capital`, and cannot affect a session already
+        running. It selects among the three reviewed profiles, nothing more.
+        """
+        try:
+            return await tia(request).change_risk_profile(
+                profile=body.profile, actor=user.username, confirmed=body.confirm
+            )
+        except ValueError as exc:
+            raise HTTPException(409, str(exc)) from exc
+
+    @app.get("/api/risk/profile/history")
+    async def profile_history(
+        request: Request, _user: User = Depends(current_user)
+    ) -> list[dict[str, Any]]:
+        return await tia(request).profile_change_history()
+
+    @app.get("/api/live/history")
+    async def live_history(
+        request: Request, _user: User = Depends(current_user)
+    ) -> list[dict[str, Any]]:
+        """Every arming attempt ever made, pass or fail, with what decided it."""
+        return await tia(request).activation_history()
+
+    @app.post("/api/live/stop")
+    async def live_stop(
+        request: Request, user: User = Depends(require_operator)
+    ) -> dict[str, Any]:
+        live = tia(request).live_runtime
+        if live is None:
+            return {"active": False, "state": "disarmed"}
+        await live.stop(reason=f"operator stop by {user.username}")
+        return live.snapshot()
+
+    @app.post("/api/live/kill-switch")
+    async def live_kill_switch(
+        body: KillRequest, request: Request, user: User = Depends(require_operator)
+    ) -> dict[str, Any]:
+        """The emergency stop. Cancels resting orders and lands in SAFE_MODE.
+
+        Reachable by an operator only, never by a model — there is no code path from the
+        LLM layer to this endpoint, and the runtime method requires a named actor.
+        """
+        live = tia(request).live_runtime
+        if live is None:
+            raise HTTPException(409, "no live session to stop")
+        return await live.kill_switch(reason=body.reason, actor=user.username)
+
+    @app.post("/api/live/flatten")
+    async def live_flatten(
+        body: KillRequest, request: Request, user: User = Depends(require_operator)
+    ) -> dict[str, Any]:
+        """Emergency flatten: cancel everything, close every position, verify, record."""
+        live = tia(request).live_runtime
+        if live is None:
+            raise HTTPException(409, "no live session to flatten")
+        return await live.emergency_flatten(reason=body.reason, actor=user.username)
 
     @app.get("/api/scenarios")
     async def scenarios(_user: User = Depends(current_user)) -> list[Any]:

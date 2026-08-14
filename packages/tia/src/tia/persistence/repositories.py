@@ -457,7 +457,9 @@ class EdgeStateRepository:
         self._session = session
 
     async def append(self, values: dict[str, Any]) -> None:
-        await _upsert(self._session, EdgeOutcomeRow, values, ["outcome_id"])
+        await self._session.execute(
+            _upsert(self._session, EdgeOutcomeRow, values, ["outcome_id"])
+        )
 
     async def load_all(self, *, source: str | None = None) -> list[EdgeOutcomeRow]:
         query = select(EdgeOutcomeRow).order_by(EdgeOutcomeRow.closed_at)
@@ -543,7 +545,9 @@ class CapitalEventRepository:
         self._session = session
 
     async def append(self, values: dict[str, Any]) -> None:
-        await _upsert(self._session, CapitalEventRow, values, ["event_id"])
+        await self._session.execute(
+            _upsert(self._session, CapitalEventRow, values, ["event_id"])
+        )
 
     async def recent(self, *, limit: int = 100, run_id: str = "") -> list[CapitalEventRow]:
         query = select(CapitalEventRow).order_by(desc(CapitalEventRow.at)).limit(limit)
@@ -571,7 +575,9 @@ class LatencyRepository:
         self._session = session
 
     async def append(self, values: dict[str, Any]) -> None:
-        await _upsert(self._session, LatencySampleRow, values, ["sample_id"])
+        await self._session.execute(
+            _upsert(self._session, LatencySampleRow, values, ["sample_id"])
+        )
 
     async def recent(self, *, limit: int = 200, run_id: str = "") -> list[LatencySampleRow]:
         query = select(LatencySampleRow).order_by(desc(LatencySampleRow.at)).limit(limit)

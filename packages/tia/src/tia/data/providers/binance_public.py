@@ -199,6 +199,13 @@ class BinancePublicProvider(MarketDataProvider):
             self._record_success(candles[-1].close_time)
         return candles
 
+    async def server_time_ms(self) -> int:
+        """The venue's own clock, for the skew monitor. REQUIRES VALIDATION."""
+        client = await self._http()
+        response = await client.get("/api/v3/time")
+        response.raise_for_status()
+        return int(response.json()["serverTime"])
+
     async def get_quote(self, symbol: str) -> Quote | None:
         client = await self._http()
         try:

@@ -26,16 +26,19 @@ from typing import Any
 from tia.core.config import Settings
 from tia.core.logging import get_logger
 from tia.persistence import (
+    ActivationRepository,
     AssessmentRepository,
     BacktestRepository,
     Database,
     DecisionRepository,
     EdgeStateRepository,
     FillRepository,
+    IncidentRepository,
     LogRepository,
     NewsRepository,
     OrderRepository,
     PortfolioRepository,
+    ReconciliationRepository,
     RunRepository,
 )
 from tia.runtime.engine import RuntimeConfig, RuntimeEngine, RuntimeState
@@ -54,6 +57,9 @@ class AppState:
         self.settings = settings
         self.database = Database(settings.database_url)
         self.runtime: RuntimeEngine | None = None
+        #: The live session, if one was armed and started. At most one, and its state
+        #: machine — not this reference's existence — is what the API reports.
+        self.live_runtime: Any | None = None
         self.started_at = datetime.now(UTC)
 
         self._subscribers: set[asyncio.Queue[dict[str, Any]]] = set()
@@ -71,6 +77,8 @@ class AppState:
     async def shutdown(self) -> None:
         if self.runtime is not None and self.runtime.is_running:
             await self.runtime.stop()
+        if self.live_runtime is not None and self.live_runtime.is_running:
+            await self.live_runtime.stop(reason="application shutdown")
         await self.database.close()
 
     # ------------------------------------------------------------------ streaming
@@ -255,6 +263,14 @@ class AppState:
                     await LogRepository(session).append(payload)
                 elif kind == "edge_outcome":
                     await EdgeStateRepository(session).append(payload)
+                elif kind == "reconciliation":
+                    await ReconciliationRepository(session).record(payload)
+                elif kind == "incident":
+                    await IncidentRepository(session).record(payload)
+                elif kind == "latency":
+                    from tia.persistence import LatencyRepository
+
+                    await LatencyRepository(session).append(payload)
                 elif kind == "equity" and self.runtime is not None:
                     await PortfolioRepository(session).append_equity(
                         self.runtime.run_id, payload
@@ -562,6 +578,33 @@ class AppState:
 
     # ------------------------------------------------------------------ live gate
 
+    async def _gate_inputs(self) -> dict[str, Any]:
+        """The async-derived facts the probes need, gathered in one place."""
+        from tia.persistence.models import SCHEMA_VERSION, SchemaInfo
+
+        database_ok = await self.database.ping()
+        schema_version_ok: bool | None = None
+        edge_persisted: int | None = None
+        track_record: dict[str, Any] | None = None
+        if database_ok:
+            try:
+                from sqlalchemy import select
+
+                async with self.database.session() as session:
+                    info = (await session.execute(select(SchemaInfo))).scalars().first()
+                    schema_version_ok = info is not None and info.version == SCHEMA_VERSION
+                    repo = EdgeStateRepository(session)
+                    edge_persisted = await repo.count()
+                    track_record = await repo.track_record()
+            except Exception as exc:
+                _log.warning("gate_inputs_failed", error=str(exc)[:200])
+        return {
+            "database_ok": database_ok,
+            "schema_version_ok": schema_version_ok,
+            "edge_persisted": edge_persisted,
+            "track_record": track_record,
+        }
+
     async def live_gate(self) -> dict[str, Any]:
         """Run every activation check and report. **Never arms anything.**"""
         from tia.api.gate_probes import build_probes, validation_facts
@@ -573,7 +616,7 @@ class AppState:
             environment=self.settings.env.value,
             ttl_seconds=self.settings.live.activation_ttl_seconds,
         )
-        probes = build_probes(self, database_ok=await self.database.ping())
+        probes = build_probes(self, **await self._gate_inputs())
         report = gate.evaluate(probes)
 
         return {
@@ -583,6 +626,9 @@ class AppState:
             "confirmation_phrase": CONFIRMATION_PHRASE,
             "ttl_seconds": gate.ttl_seconds,
             "venue_validation": validation_facts(),
+            "live_runtime": (
+                self.live_runtime.snapshot() if self.live_runtime is not None else None
+            ),
             "custody_note": (
                 "Arming lets this system place and cancel spot orders on your behalf. It "
                 "never lets it move funds: there is no withdrawal or transfer code path, "
@@ -591,14 +637,17 @@ class AppState:
         }
 
     async def arm_live(self, *, operator: str, confirmation: str) -> dict[str, Any]:
-        """Attempt to arm live trading. Raises unless every check passes.
+        """Arm, then actually start the live runtime — and report only what happened.
 
-        Expected to refuse in any deployment where the Binance adapter has not been
-        validated against the real venue — which is the correct output, not a limitation
-        to work around.
+        Every attempt is persisted, pass or fail, with the report that decided it. On a
+        passed gate the runtime is constructed and started; LIVE is reported active only
+        if the state machine reached RUNNING. A minted token whose runtime failed to
+        start is recorded as exactly that and discarded.
         """
         from tia.api.gate_probes import build_probes
         from tia.core.clock import SystemClock
+        from tia.core.errors import LiveActivationError
+        from tia.core.ids import new_ulid
         from tia.live.gate import LiveActivationGate, configuration_fingerprint
 
         if not self.settings.live.enabled:
@@ -606,20 +655,246 @@ class AppState:
                 "the live path is disabled in configuration. Enable it deliberately with "
                 "TIA_LIVE__ENABLED=true after every activation check passes."
             )
+        if self.live_runtime is not None and self.live_runtime.is_running:
+            raise LiveActivationError(
+                "a live session is already active; stop it before arming another"
+            )
 
+        clock = SystemClock()
         gate = LiveActivationGate(
-            SystemClock(),
+            clock,
             environment=self.settings.env.value,
             ttl_seconds=self.settings.live.activation_ttl_seconds,
         )
-        token = gate.arm(
-            build_probes(self, database_ok=await self.database.ping()),
-            operator=operator,
-            confirmation=confirmation,
-            max_live_capital=self.settings.live.max_live_capital,
-            fingerprint=configuration_fingerprint(self.settings.risk, self.settings.live),
+        probes = build_probes(self, **await self._gate_inputs())
+        fingerprint = configuration_fingerprint(self.settings.risk, self.settings.live)
+        attempt_id = f"arm_{new_ulid(clock)}"
+
+        try:
+            token = gate.arm(
+                probes,
+                operator=operator,
+                confirmation=confirmation,
+                max_live_capital=self.settings.live.max_live_capital,
+                fingerprint=fingerprint,
+            )
+        except LiveActivationError as exc:
+            report = gate.last_report
+            await self._record_activation(
+                attempt_id=attempt_id,
+                operator=operator,
+                passed=False,
+                report=report.as_dict() if report else {},
+                failed_checks=(
+                    [c.name.value for c in report.failures] if report else ["unknown"]
+                ),
+                fingerprint=fingerprint,
+                token_fingerprint="",
+                runtime_started=False,
+                runtime_state="",
+                detail=str(exc)[:1000],
+            )
+            raise
+
+        # The gate passed. Now the runtime has to actually start — and if it does not,
+        # the honest answer is "armed but NOT live", recorded as such.
+        runtime_started = False
+        runtime_state = ""
+        detail = ""
+        try:
+            runtime = await self._build_live_runtime(token)
+            await runtime.start()
+            self.live_runtime = runtime
+            runtime_started = runtime.state.value == "running"
+            runtime_state = runtime.state.value
+            async with self.database.session() as session:
+                await RunRepository(session).create(
+                    run_id=runtime.run_id,
+                    mode="live",
+                    scenario="live",
+                    started_at=datetime.now(UTC),
+                    initial_capital=self.settings.live.max_live_capital,
+                    seed=0,
+                    symbols=(self.settings.live.symbol,),
+                )
+        except Exception as exc:
+            detail = f"gate passed but the runtime did not start: {exc}"[:1000]
+            runtime_state = "error"
+        finally:
+            await self._record_activation(
+                attempt_id=attempt_id,
+                operator=operator,
+                passed=True,
+                report=token.report.as_dict(),
+                failed_checks=[],
+                fingerprint=fingerprint,
+                token_fingerprint=_hash_token(token),
+                runtime_started=runtime_started,
+                runtime_state=runtime_state,
+                detail=detail,
+            )
+
+        if not runtime_started:
+            raise LiveActivationError(
+                detail or "the live runtime did not reach RUNNING; LIVE is not active"
+            )
+        return {
+            "armed": True,
+            "live": True,
+            "runtime": self.live_runtime.snapshot(),
+            "activation": token.as_dict(),
+        }
+
+    async def _build_live_runtime(self, token: Any) -> Any:
+        """Construct the live runtime with the real adapters.
+
+        REQUIRES VALIDATION end to end: nothing here has ever reached a Binance host from
+        this environment. The construction is still real — credentials from the process
+        environment, the signed execution adapter, the public data client, the venue's
+        own time endpoint for the skew monitor.
+        """
+        from tia.core.clock import SystemClock
+        from tia.data.providers.binance_live import BinanceExecutionProvider
+        from tia.data.providers.binance_public import BinancePublicProvider
+        from tia.data.providers.binance_signing import signer_from_live_config
+        from tia.runtime.live import LiveRuntime
+
+        live = self.settings.live
+        clock = SystemClock()
+        market = BinancePublicProvider(base_url=live.base_url, clock=clock)
+        try:
+            signer = signer_from_live_config(live, clock)
+        except ValueError as exc:
+            raise PermissionError(str(exc)) from exc
+        execution = BinanceExecutionProvider(
+            signer=signer,
+            clock=clock,
+            activation=None if live.use_testnet else token,
+            base_url=live.base_url,
+            simulated=live.use_testnet,
         )
-        return {"armed": True, "activation": token.as_dict(), "report": token.report.as_dict()}
+        return LiveRuntime(
+            self.settings,
+            activation=token,
+            market_data=market,
+            execution=execution,
+            clock=clock,
+            venue_time_ms=market.server_time_ms,
+            persist=self._persist,
+            on_event=self.broadcast,
+            prior_outcomes=await self._load_prior_outcomes(),
+        )
+
+    async def _record_activation(self, **values: Any) -> None:
+        try:
+            async with self.database.session() as session:
+                await ActivationRepository(session).record(
+                    {
+                        "attempt_id": values["attempt_id"],
+                        "attempted_at": datetime.now(UTC),
+                        "operator": values["operator"],
+                        "environment": self.settings.env.value,
+                        "passed": values["passed"],
+                        "failed_checks": values["failed_checks"],
+                        "report": values["report"],
+                        "configuration_fingerprint": values["fingerprint"],
+                        "token_fingerprint": values["token_fingerprint"],
+                        "max_live_capital": self.settings.live.max_live_capital,
+                        "runtime_started": values["runtime_started"],
+                        "runtime_state": values["runtime_state"],
+                        "detail": values["detail"],
+                    }
+                )
+        except Exception as exc:
+            _log.warning("activation_record_failed", error=str(exc)[:300])
+
+    async def change_risk_profile(
+        self, *, profile: str, actor: str, confirmed: bool
+    ) -> dict[str, Any]:
+        """Change the risk profile — audited, confirmed, and never mid-session.
+
+        The change applies to the *next* run, not the current one: a session's budget
+        engine is constructed once at start, and swapping its parameters mid-flight would
+        be exactly the runtime limit mutation the whole design forbids. A live session
+        must be paused or stopped first, which is the PAUSE + CONFIRM + REVALIDATE path —
+        the revalidation happening naturally because arming again re-runs the gate against
+        the new configuration fingerprint.
+        """
+        from tia.risk.budget import RiskProfileName
+
+        if profile not in {p.value for p in RiskProfileName}:
+            raise ValueError(f"unknown profile {profile!r}")
+        if not confirmed:
+            raise ValueError("a risk profile change must be explicitly confirmed")
+        if self.live_runtime is not None and self.live_runtime.is_running:
+            raise ValueError(
+                "a live session is active; pause or stop it before changing the risk "
+                "profile. The change would apply to the next session either way."
+            )
+
+        previous = self.settings.live.risk_profile
+        self.settings = self.settings.model_copy(
+            update={"live": self.settings.live.model_copy(update={"risk_profile": profile})}
+        )
+        try:
+            from tia.core.ids import deterministic_id
+
+            async with self.database.session() as session:
+                await IncidentRepository(session).record(
+                    {
+                        "incident_id": deterministic_id(
+                            "inc", "profile", actor, datetime.now(UTC)
+                        ),
+                        "at": datetime.now(UTC),
+                        "kind": "risk_profile_change",
+                        "actor": actor,
+                        "reason": f"{previous} -> {profile}",
+                        "run_id": "",
+                        "detail": {"from": previous, "to": profile},
+                    }
+                )
+        except Exception as exc:
+            _log.warning("profile_change_audit_failed", error=str(exc)[:200])
+        return {
+            "profile": profile,
+            "previous": previous,
+            "effective": "next run — an active session keeps the parameters it started with",
+            "changed_by": actor,
+        }
+
+    async def profile_change_history(self, *, limit: int = 50) -> list[dict[str, Any]]:
+        async with self.database.session() as session:
+            rows = await IncidentRepository(session).recent(
+                limit=limit, kind="risk_profile_change"
+            )
+        return [
+            {
+                "at": row.at.isoformat(),
+                "actor": row.actor,
+                "change": row.reason,
+                "detail": row.detail,
+            }
+            for row in rows
+        ]
+
+    async def activation_history(self, *, limit: int = 50) -> list[dict[str, Any]]:
+        async with self.database.session() as session:
+            rows = await ActivationRepository(session).history(limit=limit)
+        return [
+            {
+                "attempt_id": row.attempt_id,
+                "attempted_at": row.attempted_at.isoformat(),
+                "operator": row.operator,
+                "environment": row.environment,
+                "passed": row.passed,
+                "failed_checks": row.failed_checks,
+                "configuration_fingerprint": row.configuration_fingerprint,
+                "runtime_started": row.runtime_started,
+                "runtime_state": row.runtime_state,
+                "detail": row.detail,
+            }
+            for row in rows
+        ]
 
     def settings_view(self) -> dict[str, Any]:
         """Configuration, with every secret withheld.
@@ -868,3 +1143,15 @@ class AppState:
 
 
 __all__ = ["SUBSCRIBER_QUEUE_SIZE", "AppState"]
+
+
+def _hash_token(token: Any) -> str:
+    """A one-way fingerprint of an activation token, for the audit row.
+
+    The token itself is a capability and is never stored; what the audit needs is only
+    "was the token used later the one minted here?", which a digest answers.
+    """
+    import hashlib
+
+    payload = f"{token.issued_at.isoformat()}|{token.expires_at.isoformat()}|{token.issued_by}"
+    return hashlib.blake2s(payload.encode("utf-8"), digest_size=16).hexdigest()

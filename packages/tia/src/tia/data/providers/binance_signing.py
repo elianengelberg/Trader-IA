@@ -156,6 +156,14 @@ class BinanceSigner:
     def key_fingerprint(self) -> str:
         return self._credentials.key_fingerprint
 
+    def key_header(self) -> dict[str, str]:
+        """The API-key header alone, for keyed-but-unsigned endpoints (listenKey).
+
+        The *key* identifies; only the signature authorises. Endpoints that take the key
+        without a signature can open a market-data stream and nothing else.
+        """
+        return {"X-MBX-APIKEY": self._credentials.api_key}
+
     def sign(self, params: dict[str, Any]) -> SignedRequest:
         """Sign ``params``, adding ``timestamp`` and ``recvWindow``.
 
@@ -181,10 +189,33 @@ class BinanceSigner:
         )
 
 
+def signer_from_live_config(live: Any, clock: Clock) -> BinanceSigner:
+    """Build a signer from the live configuration block.
+
+    This function exists so that no module outside this file ever reads the secret — the
+    boundary test flags any other file that so much as names a credential-shaped
+    attribute, and it flagged the API layer the first time it tried. The credential's
+    entire journey is: process environment → pydantic SecretStr → this function → HMAC.
+    """
+    if not live.has_credentials:
+        raise ValueError(
+            "no venue credentials configured; set TIA_LIVE__BINANCE_API_KEY and "
+            "TIA_LIVE__BINANCE_API_SECRET in the process environment"
+        )
+    return BinanceSigner(
+        BinanceCredentials.from_values(
+            api_key=live.binance_api_key.get_secret_value(),
+            secret=live.binance_api_secret.get_secret_value(),
+        ),
+        clock,
+    )
+
+
 __all__ = [
     "DEFAULT_RECV_WINDOW_MS",
     "MAX_RECV_WINDOW_MS",
     "BinanceCredentials",
     "BinanceSigner",
     "SignedRequest",
+    "signer_from_live_config",
 ]

@@ -77,16 +77,29 @@ class CheckName(StrEnum):
     """
 
     TESTS_PASS = "tests_pass"  # noqa: S105 - a check name, not a credential
+    MIGRATIONS_CURRENT = "migrations_current"
     MARKET_DATA_HEALTHY = "market_data_healthy"
     VENUE_CONNECTED = "venue_connected"
+    VENUE_VALIDATION = "venue_validation"
+    VALIDATION_FRESH = "validation_fresh"
+    CLOCK_SKEW_OK = "clock_skew_ok"
+    USER_DATA_STREAM = "user_data_stream"
     DATABASE_HEALTHY = "database_healthy"
     EXECUTION_HEALTHY = "execution_healthy"
+    ORDER_IDEMPOTENCY = "order_idempotency"
     RISK_ENGINE_HEALTHY = "risk_engine_healthy"
     RECONCILIATION_HEALTHY = "reconciliation_healthy"
+    CAPITAL_LEDGER_READY = "capital_ledger_ready"
+    EDGE_PERSISTENCE = "edge_persistence"
+    EV_ENFORCEMENT = "ev_enforcement"
     SECURITY_REVIEW = "security_review"
+    CONFIGURATION_COHERENT = "configuration_coherent"
+    OBSERVABILITY = "observability"
     FEES_VERIFIED_AT_SOURCE = "fees_verified_at_source"
     CAPITAL_POLICY_SET = "capital_policy_set"
     KILL_SWITCH_CLEAR = "kill_switch_clear"
+    EMERGENCY_CONTROLS = "emergency_controls"
+    RESTART_RECOVERY = "restart_recovery"
     CREDENTIALS_SCOPED = "credentials_scoped"
     EDGE_EVIDENCE = "edge_evidence"
     PAPER_TRACK_RECORD = "paper_track_record"
@@ -148,8 +161,67 @@ CHECK_RATIONALE: Mapping[CheckName, str] = {
         "Going live with no measured edge is not trading, it is donating."
     ),
     CheckName.PAPER_TRACK_RECORD: (
-        "The same code must have run in paper mode long enough to have exercised its own "
-        "failure paths. Live is not the place to discover the first reconnect."
+        "The same code must have run in paper mode long enough — in days AND in closed "
+        "trades — to have exercised its own failure paths. Live is not the place to "
+        "discover the first reconnect."
+    ),
+    CheckName.MIGRATIONS_CURRENT: (
+        "The database schema must be at the exact version this build expects. A schema "
+        "one migration behind reads plausibly and wrongly."
+    ),
+    CheckName.VENUE_VALIDATION: (
+        "The venue-validation record must exist, match its schema, name this environment "
+        "and symbol, and carry an intact fingerprint. A hand-edited or truncated record "
+        "satisfying the gate would make every downstream check decorative."
+    ),
+    CheckName.VALIDATION_FRESH: (
+        "Venue facts age: fee tiers change, permissions get edited, filters move. A "
+        "validation older than the freshness bound proves what was true then, not now."
+    ),
+    CheckName.CLOCK_SKEW_OK: (
+        "Signed requests are rejected outside recvWindow, and the venue's error does not "
+        "mention the clock. The skew must have been measured, recently, and be small."
+    ),
+    CheckName.USER_DATA_STREAM: (
+        "Order updates must have a working delivery path from the venue. Without one, "
+        "fills are discovered by polling — later, and sometimes not at all."
+    ),
+    CheckName.ORDER_IDEMPOTENCY: (
+        "The venue must demonstrably reject a duplicate clientOrderId. If it does not, a "
+        "retry after a timeout can open a second position, and the local dedup is the "
+        "only barrier left."
+    ),
+    CheckName.CAPITAL_LEDGER_READY: (
+        "The capital ledger is what keeps a deposit from being booked as profit and an "
+        "unexplained balance from being traded against. Live cannot start without it "
+        "wired and unhalted."
+    ),
+    CheckName.EDGE_PERSISTENCE: (
+        "Evidence must survive a restart. A system whose track record lives in process "
+        "memory becomes a fresh system at every deploy while claiming otherwise."
+    ),
+    CheckName.EV_ENFORCEMENT: (
+        "In live mode the expected-value gate must enforce, structurally. A signal "
+        "without a measured edge that clears its costs must not become an order."
+    ),
+    CheckName.CONFIGURATION_COHERENT: (
+        "The live configuration must be internally consistent: a symbol, a venue, a "
+        "positive ceiling, and no placeholder secrets. Incoherent configuration fails "
+        "at the worst possible moment, which is mid-session."
+    ),
+    CheckName.OBSERVABILITY: (
+        "A live session nobody can observe is a live session nobody can stop in time. "
+        "Metrics, logs and the event stream must be on."
+    ),
+    CheckName.EMERGENCY_CONTROLS: (
+        "The kill switch and emergency flatten must exist, be reachable without the "
+        "model, and be covered by passing tests. An untested emergency control is a "
+        "hope, not a control."
+    ),
+    CheckName.RESTART_RECOVERY: (
+        "A crash mid-session must be recoverable: state reloaded, orders deduplicated, "
+        "books reconciled. Proven by the restart-recovery test having passed, not by "
+        "intention."
     ),
 }
 

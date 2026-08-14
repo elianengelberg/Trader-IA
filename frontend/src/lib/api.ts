@@ -487,6 +487,19 @@ export interface GateReport {
   custody_note: string;
 }
 
+export interface ActivationAttempt {
+  attempt_id: string;
+  attempted_at: string;
+  operator: string;
+  environment: string;
+  passed: boolean;
+  failed_checks: string[];
+  configuration_fingerprint: string;
+  runtime_started: boolean;
+  runtime_state: string;
+  detail: string;
+}
+
 export const api = {
   login: (username: string, password: string) =>
     post<{ username: string; role: string }>("/auth/login", { username, password }),
@@ -523,6 +536,18 @@ export const api = {
   liveGate: () => get<GateReport>("/live/gate"),
   armLive: (confirmation: string) =>
     post<{ armed: boolean; activation: Record<string, unknown> }>("/live/arm", { confirmation }),
+  liveSnapshot: () => get<Record<string, unknown> & { active: boolean; state: string }>("/live"),
+  liveHistory: () => get<ActivationAttempt[]>("/live/history"),
+  liveStop: () => post<Record<string, unknown>>("/live/stop"),
+  liveKillSwitch: (reason: string) =>
+    post<Record<string, unknown>>("/live/kill-switch", { reason }),
+  changeRiskProfile: (profile: string) =>
+    post<{ profile: string; previous: string; effective: string }>("/risk/profile", {
+      profile,
+      confirm: true,
+    }),
+  profileHistory: () =>
+    get<{ at: string; actor: string; change: string }[]>("/risk/profile/history"),
   scenarios: () => get<Scenario[]>("/scenarios"),
   settings: () => get<Record<string, unknown>>("/settings"),
   systemStatus: () => get<Record<string, unknown>>("/system/status"),

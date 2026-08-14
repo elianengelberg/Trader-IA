@@ -1,11 +1,13 @@
 # System Status
 
-Generated after a full `make verify` run on 2026-08-14. Every PASS below corresponds to
+Generated after the hardening pass and a full `make verify` run on 2026-08-14 (later the same day as Part II). Every PASS below corresponds to
 something that was executed, not reviewed. Every NOT VERIFIED and every PENDING says why.
 
-The platform's scope changed on 2026-08-13: from simulation-only to **paper by default,
-live through an activation gate**. Part II of `AUDIT_REPORT.md` records that change and
-the defects found while making it.
+The platform's scope changed on 2026-08-13 (Part II of `AUDIT_REPORT.md`), and the
+hardening pass that followed (Part III) closed the built-vs-wired distance: a LiveRuntime
+with a real state machine, persisted evidence and activations, scheduled reconciliation,
+Alembic migrations, and a 27-check readiness gate. Part III carries the second-audit
+verdicts A1–F6.
 
 ---
 
@@ -25,8 +27,11 @@ the defects found while making it.
 | **RISK ENGINE** | **PASS** | absolute veto verified through the library, the API and the browser |
 | **RISK BUDGET** | **PASS** | drawdown states, volatility scaling, streak dampener; no-martingale asserted over randomised inputs — and it caught a real defect (D9) |
 | **RUIN ANALYTICS** | **PASS** | seeded Monte Carlo + analytic cross-check; refuses below 2 trades, warns below 30 |
-| **CAPITAL LEDGER** | **PASS (library)** · **PENDING (wiring)** | tested in isolation; not yet driven by the runtime — see Pending |
-| **LIVE ACTIVATION GATE** | **PASS** | 14 checks, unforgeable expiring token bound to a config fingerprint; refuses correctly in this environment (11 of 14 checks fail, each naming its remedy) |
+| **CAPITAL LEDGER** | **PASS** | Decimal internals; wired into the LiveRuntime: funded at start, drift classified, unexplained moves halt entries |
+| **LIVE ACTIVATION GATE** | **PASS** | 27 checks, unforgeable expiring token bound to a config fingerprint; arming persists the attempt and starts the runtime — LIVE is reported only on RUNNING |
+| **LIVE RUNTIME** | **PASS (against fakes)** · **NOT VERIFIED (venue)** | 13-state machine, kill switch, emergency flatten, unknown-order resolution, scheduled reconciliation, clock-skew monitor, measured latency; 23 tests |
+| **MIGRATIONS** | **PASS** | Alembic 0001/0002; empty→head and v1→v2 in place, rows preserved |
+| **ENDURANCE** | **PASS** | 1,660 simulated bars, 6/6 checks; found and led to the fix of D12 |
 | **BINANCE EXECUTION** | **NOT VERIFIED** | adapter logic tested against mock transport (26 tests); no request has ever reached Binance; `scripts/validate_binance.py` closes the gap |
 | **CLAUDE / AI LAYER** | **PASS (mock)** · **NOT VERIFIED (live)** | full pipeline on the offline mock and adversarial inputs; no API key available |
 | **EXECUTION SIMULATOR** | **PASS** | order state machine, matching, slippage, fees, partial fills, reconciliation |
@@ -124,28 +129,16 @@ Unchanged from the Part I audit (all rechecked green in this run), plus:
 
 ---
 
-## Pending — built but not yet wired, or known-incomplete
+## Remaining, honestly
 
-Stated here so nobody discovers them in production. Full detail in `AUDIT_REPORT.md`
-Part II §12.
-
-1. **No real-time live runtime loop.** `RuntimeEngine` is scenario-driven (simulated
-   clock, generated data). The Binance adapters, the gate and the economics all exist and
-   are tested, but no orchestrator yet runs them together against real prices in real time.
-2. **The activation token is minted and dropped.** `arm_live` verifies everything and
-   returns the token; nothing stores it or constructs a live provider from it yet.
-3. **`CapitalLedger` is a tested library, not yet the runtime's ledger.** `/api/capital`
-   synthesizes from the paper portfolio; `classify_external_change` (the deposit/withdrawal
-   classifier and the unexplained-balance halt) is never called in production.
-4. **Edge evidence is in-memory only.** Closed trades, bucket coverage and the loss streak
-   die with the process; the paper track record the gate checks resets on restart.
-5. **`enforce_expected_value` is never switched on automatically** — live mode should set
-   it; today only a caller who passes it explicitly gets enforcement.
-6. **`min_paper_days` is configured but unread** — the track-record probe counts trades
-   only.
-7. **Latency is configured, not measured** — the cost model prices the simulator's
-   configured delays; a live deployment must measure decision-to-fill.
-8. **Multi-fill exits are scored at the last fill's price**, not exit VWAP.
-9. **No request-weight limiter on the Binance adapter** — it reacts to 429 but does not
-   pace itself.
-10. **No frontend Capital view** — the endpoint and types exist; no page consumes them.
+1. **Everything Binance-facing needs external validation** — run
+   `scripts/validate_binance.py` (now a fingerprinted v2 record the gate schema-checks,
+   freshness-bounds and refuses if tampered). The gate cannot arm without it. B1/B2/B3.
+2. **WebSockets are deliberately not implemented** until the listenKey path is validated;
+   polling is the stated mechanism (adequate for 1m bars). C8.
+3. **Fire-and-forget persistence can drop a row** under a rare FK ordering race (1 fill
+   row in ~2,100 endurance bars); accepted and documented — persistence never blocks
+   trading, and the endurance coherence check watches the evidence store.
+4. **Regime accuracy remains UNVALIDATED** (no trusted labels; no metrics invented). F3.
+5. Inherited: single-operator sizing; simulation layers stay float by design (Decimal
+   governs settlement paths); the paper simulator has no order book.

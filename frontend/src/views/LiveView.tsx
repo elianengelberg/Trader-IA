@@ -11,17 +11,19 @@
  * this system can and cannot do with it before they read anything else.
  */
 import { useCallback, useEffect, useState } from "react";
-import { ApiError, api, type GateReport } from "../lib/api";
+import { ApiError, api, type ActivationAttempt, type GateReport } from "../lib/api";
 import { Card, Empty, Pill, Stat } from "../components/ui";
 
 export function LiveView({ role }: { role: string }) {
   const [report, setReport] = useState<GateReport | null>(null);
+  const [history, setHistory] = useState<ActivationAttempt[]>([]);
   const [confirmation, setConfirmation] = useState("");
   const [result, setResult] = useState<{ ok: boolean; message: string } | null>(null);
   const [busy, setBusy] = useState(false);
 
   const load = useCallback(() => {
     api.liveGate().then(setReport).catch(() => undefined);
+    api.liveHistory().then(setHistory).catch(() => undefined);
   }, []);
 
   useEffect(load, [load]);
@@ -216,6 +218,51 @@ export function LiveView({ role }: { role: string }) {
           Never share the secret with anyone, including an AI assistant. If you paste it
           somewhere by accident, delete the key in Binance immediately and create a new one —
           that is the whole remedy and it takes thirty seconds.
+        </p>
+      </Card>
+
+      <Card title="Activation history">
+        {history.length === 0 ? (
+          <Empty message="No arming attempt has ever been made. When one happens — pass or fail — it appears here with what decided it." />
+        ) : (
+          <table className="table">
+            <thead>
+              <tr>
+                <th>When</th>
+                <th>Operator</th>
+                <th>Gate</th>
+                <th>Runtime</th>
+                <th>Blocking checks</th>
+              </tr>
+            </thead>
+            <tbody>
+              {history.map((attempt) => (
+                <tr key={attempt.attempt_id}>
+                  <td className="mono">{new Date(attempt.attempted_at).toLocaleString()}</td>
+                  <td>{attempt.operator}</td>
+                  <td>
+                    <Pill value={attempt.passed ? "passed" : "refused"}
+                      tone={attempt.passed ? "ok" : "bad"} />
+                  </td>
+                  <td>
+                    <Pill
+                      value={attempt.runtime_started ? "running" : attempt.runtime_state || "not started"}
+                      tone={attempt.runtime_started ? "ok" : ""}
+                    />
+                  </td>
+                  <td className="mono" style={{ fontSize: "0.85em" }}>
+                    {attempt.failed_checks.slice(0, 4).join(", ")}
+                    {attempt.failed_checks.length > 4 && ` +${attempt.failed_checks.length - 4}`}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+        <p className="footnote">
+          Every attempt is recorded, pass or fail — the audit question this answers is
+          &ldquo;who tried to turn it on, when, and what stopped them?&rdquo;, which matters
+          most exactly when the answer is embarrassing.
         </p>
       </Card>
 

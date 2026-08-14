@@ -34,6 +34,23 @@ install: ## Create the venv and install everything (Python + frontend)
 	@$(MAKE) --no-print-directory build-frontend
 	@echo "Installed. Run 'make diagnose' to confirm, then 'make demo'."
 
+.PHONY: migrate
+migrate: ## Apply database migrations (alembic upgrade head)
+	@$(PY) -m alembic upgrade head
+	@echo "Schema is at the current version."
+
+.PHONY: docker-verify
+docker-verify: ## Validate the Docker setup — requires a Docker daemon
+	@bash scripts/docker_verify.sh
+
+.PHONY: endurance
+endurance: ## 24h-equivalent simulated endurance run (BARS=1440 by default)
+	@$(PY) scripts/endurance.py --bars $${BARS:-1440}
+
+.PHONY: readiness
+readiness: ## Evaluate live readiness and write data/runtime/live_readiness.json
+	@$(PY) scripts/validate_live_environment.py
+
 .PHONY: build-frontend
 build-frontend: ## Build the dashboard into frontend/dist
 	@cd frontend && npm run build

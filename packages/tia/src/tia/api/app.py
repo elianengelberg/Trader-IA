@@ -42,7 +42,7 @@ from tia.api.security import (
 )
 from tia.api.state import AppState
 from tia.core.config import Environment, Settings, settings_for_env
-from tia.core.errors import LiveActivationError
+from tia.core.errors import LiveActivationError, ProviderUnavailableError
 from tia.core.logging import get_logger
 
 _log = get_logger("api.app")
@@ -464,6 +464,26 @@ def _register_routes(app: FastAPI, settings: Settings) -> None:
             # where it can be granted. A 400 would suggest the caller should fix the body.
             raise HTTPException(409, str(exc)) from exc
 
+    @app.post("/api/live/paper-start")
+    async def paper_realtime_start(
+        request: Request, user: User = Depends(require_operator)
+    ) -> dict[str, Any]:
+        """Start the 24/7 paper-realtime session: real market data, simulated fills.
+
+        No activation token, no confirmation phrase, no body at all — because nothing this
+        route starts can spend real money. The provider layer enforces that independently:
+        a non-simulated execution provider cannot be constructed without a token, and this
+        session is built over the paper simulator. Stopping goes through the same
+        `POST /api/live/stop` as a live session.
+        """
+        try:
+            return await tia(request).start_paper_realtime(actor=user.username)
+        except LiveActivationError as exc:
+            raise HTTPException(409, str(exc)) from exc
+        except ProviderUnavailableError as exc:
+            # The venue's public data host could not be reached. Nothing was started.
+            raise HTTPException(503, str(exc)) from exc
+
     @app.get("/api/live")
     async def live_snapshot(
         request: Request, _user: User = Depends(current_user)
@@ -508,11 +528,11 @@ def _register_routes(app: FastAPI, settings: Settings) -> None:
     async def live_stop(
         request: Request, user: User = Depends(require_operator)
     ) -> dict[str, Any]:
-        live = tia(request).live_runtime
-        if live is None:
-            return {"active": False, "state": "disarmed"}
-        await live.stop(reason=f"operator stop by {user.username}")
-        return live.snapshot()
+        """Stops the session and stamps its run row — which is what keeps an operator
+        stop stopped across restarts, while a crash-interrupted paper session resumes."""
+        return await tia(request).stop_realtime_session(
+            reason=f"operator stop by {user.username}"
+        )
 
     @app.post("/api/live/kill-switch")
     async def live_kill_switch(

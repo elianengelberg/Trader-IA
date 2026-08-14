@@ -75,8 +75,21 @@ class FakeMarketData(MarketDataProvider):
 class FakeExecution(ExecutionProvider):
     """An in-memory venue. Fills market orders instantly at the last known price."""
 
-    def __init__(self, *, balance: float = 1_000.0) -> None:
-        super().__init__(ExecutionCapabilities(name="fake-venue"))
+    def __init__(
+        self,
+        *,
+        balance: float = 1_000.0,
+        live_token: Any | None = None,
+        clock: Clock | None = None,
+    ) -> None:
+        if live_token is not None:
+            super().__init__(
+                ExecutionCapabilities(name="fake-venue", is_simulated=False),
+                activation=live_token,
+                clock=clock or SystemClock(),
+            )
+        else:
+            super().__init__(ExecutionCapabilities(name="fake-venue"))
         self.balance = balance
         self.price = 50_000.0
         self.orders: dict[str, Order] = {}
@@ -261,35 +274,149 @@ def build_runtime(
     return runtime, execution, market
 
 
+def build_runtime_paper(*, clock: Clock | None = None):  # type: ignore[no-untyped-def]
+    """A paper-realtime runtime: simulated execution, no token, coherent fake feed."""
+    scenario = get_scenario("trend_up")
+    span_minutes = scenario.total_bars + 5
+    candles = generate_series(
+        scenario, symbol="BTC-USD", timeframe="1m",
+        start=datetime.now(UTC) - timedelta(minutes=span_minutes), seed=9,
+    )
+    if clock is None:
+        clock = SimulatedClock(candles[149].close_time + timedelta(seconds=1))
+        market = FakeMarketData(candles, clock)
+    elif isinstance(clock, SimulatedClock):
+        clock.advance_to(candles[149].close_time + timedelta(seconds=1))
+        market = FakeMarketData(candles, clock)
+    else:
+        market = FakeMarketData(candles)
+    execution = FakeExecution()
+    runtime = LiveRuntime(
+        live_settings(),
+        activation=None,
+        market_data=market,
+        execution=execution,
+        clock=clock,
+        poll_interval_seconds=0.0,
+    )
+    return runtime, execution, market
+
+
 # --------------------------------------------------------------------------- the gate
 
 
-def test_live_runtime_cannot_exist_without_an_activation_token() -> None:
-    """The constructor's first argument is load-bearing: no token, no instance."""
-    settings = live_settings()
-    with pytest.raises((TypeError, LiveActivationError)):
-        LiveRuntime(  # type: ignore[call-arg]
-            settings,
+def test_live_runtime_cannot_exist_without_a_token_over_live_execution() -> None:
+    """The token requirement binds to what the money can do.
+
+    Over a live execution provider, no token → no instance. Over a simulated provider
+    the same class is paper-realtime and needs none — that case is the next test.
+    """
+    clock = SystemClock()
+    live_execution = FakeExecution(live_token=real_token(clock), clock=clock)
+    with pytest.raises(LiveActivationError, match="cannot exist without"):
+        LiveRuntime(
+            live_settings(),
+            activation=None,
             market_data=FakeMarketData([]),
-            execution=FakeExecution(),
-            clock=SystemClock(),
+            execution=live_execution,
+            clock=clock,
         )
 
 
 def test_live_runtime_rejects_an_expired_token_at_construction() -> None:
-    from tia.core.clock import SimulatedClock
-
     clock = SimulatedClock(START)
     token = real_token(clock)
+    live_execution = FakeExecution(live_token=token, clock=clock)
     clock.advance_by(timedelta(hours=7))
     with pytest.raises(LiveActivationError, match="expired"):
         LiveRuntime(
             live_settings(),
             activation=token,
             market_data=FakeMarketData([]),
-            execution=FakeExecution(),
+            execution=live_execution,
             clock=clock,
         )
+
+
+async def test_paper_realtime_runs_without_a_token_and_says_so() -> None:
+    """Paper-realtime: real feed cadence, simulated fills, no token — the 24/7 paper
+    configuration. The snapshot must label it honestly (mode, simulated, no activation),
+    and the provider layer still guarantees no real money is reachable this way."""
+    runtime, execution, market = build_runtime_paper()
+    await runtime.start()
+    market.advance()
+    await runtime._cycle_once()
+
+    snapshot = runtime.snapshot()
+    assert snapshot["mode"] == "paper-live"
+    assert snapshot["simulated"] is True
+    assert snapshot["activation"] is None
+    assert not execution.is_live
+    assert runtime.state is LiveState.RUNNING
+    await runtime.stop()
+
+
+async def test_heartbeat_advances_with_the_loop_not_with_http() -> None:
+    """"The server answers" and "the engine is alive" are different facts."""
+    runtime, _, market = build_runtime_paper()
+    await runtime.start()
+    first = runtime.last_heartbeat
+    market.advance()
+    await runtime._cycle_once()
+    assert runtime.last_heartbeat > first
+    assert runtime.snapshot()["heartbeat_age_seconds"] >= 0
+    await runtime.stop()
+
+
+async def test_stale_market_data_halts_and_recovery_is_earned() -> None:
+    """No new bar past the TTL → entries halt. Bars flowing again does not resume by
+    itself: RUNNING comes back only after a clean reconciliation."""
+    runtime, _, market = build_runtime_paper()
+    clock = runtime._clock  # the fixture's coherent SimulatedClock
+    assert isinstance(clock, SimulatedClock)
+    runtime.market_data_ttl_seconds = 120.0
+    await runtime.start()
+    market.advance()
+    await runtime._cycle_once()
+    assert runtime.state is LiveState.RUNNING
+
+    # The feed goes quiet; the wall clock does not.
+    clock.advance_by(timedelta(seconds=300))
+    await runtime._cycle_once()
+    assert runtime.state is LiveState.HALT_NEW_ORDERS
+    assert "stale" in runtime.machine.history[-1].reason
+
+    # Data returns → reconcile clean → watchdog resumes with its name on the transition.
+    market.advance()
+    await runtime._cycle_once()
+    assert runtime.state is LiveState.RUNNING
+    assert runtime.machine.history[-1].actor == "watchdog"
+    await runtime.stop()
+
+
+async def test_transient_provider_failure_halts_then_escalates_only_if_persistent() -> None:
+    """A network blip is weather; ten in a row is a storm. The first halts entries, the
+    tenth lands in SAFE_MODE — never a blind retry of anything in between."""
+    from tia.core.errors import ProviderUnavailableError
+
+    runtime, _, _market = build_runtime_paper()
+
+    class FlakyFeed(FakeMarketData):
+        failures = 0
+
+        async def get_candles(self, symbol, timeframe, *, limit=500, end=None):  # type: ignore[no-untyped-def]
+            raise ProviderUnavailableError("connection reset", provider="fake")
+
+    runtime._market_data = FlakyFeed([])
+    await runtime.start()
+
+    await runtime._loop_body_once_for_tests()
+    assert runtime.state is LiveState.HALT_NEW_ORDERS
+
+    for _ in range(9):
+        await runtime._loop_body_once_for_tests()
+    assert runtime.state is LiveState.SAFE_MODE
+    await runtime.stop()
 
 
 def test_live_requires_expected_value() -> None:

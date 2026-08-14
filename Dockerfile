@@ -32,11 +32,15 @@ WORKDIR /app
 
 COPY pyproject.toml README.md ./
 COPY packages/ ./packages/
-RUN pip install --no-cache-dir -e ".[api,db]"
+# postgres extra: asyncpg for the app, psycopg2 for alembic. Both are harmless
+# under SQLite, and one image serves the demo and the production profile alike.
+RUN pip install --no-cache-dir -e ".[api,db,postgres]"
 
 COPY data/fixtures/ ./data/fixtures/
 COPY scripts/ ./scripts/
 COPY docs/ ./docs/
+COPY alembic.ini ./
+COPY infra/ ./infra/
 COPY --from=frontend /build/dist ./frontend/dist
 
 RUN mkdir -p /app/data/runtime && chown -R tia:tia /app/data

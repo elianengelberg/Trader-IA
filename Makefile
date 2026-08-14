@@ -55,6 +55,49 @@ readiness: ## Evaluate live readiness and write data/runtime/live_readiness.json
 build-frontend: ## Build the dashboard into frontend/dist
 	@cd frontend && npm run build
 
+# ------------------------------------------------ external validation (venue)
+# These targets need egress to Binance and are therefore EXTERNAL: they cannot
+# succeed from the build environment. Credential checks test *presence only* —
+# no target ever echoes a value, and passing keys as arguments is refused by
+# the validator itself (arguments land in shell history).
+
+.PHONY: binance-public
+binance-public: ## Validate Binance public endpoints (no credentials; needs egress)
+	@mkdir -p data/runtime
+	@$(PY) scripts/validate_binance.py --json-out data/runtime/binance_validation.json
+
+.PHONY: binance-account
+binance-account: ## Validate signing, fees, key permissions (TIA_BINANCE_API_KEY/SECRET must be set)
+	@test -n "$$TIA_BINANCE_API_KEY" || { echo "FAIL: TIA_BINANCE_API_KEY is not set in the environment (its value is never printed)"; exit 2; }
+	@test -n "$$TIA_BINANCE_API_SECRET" || { echo "FAIL: TIA_BINANCE_API_SECRET is not set in the environment (its value is never printed)"; exit 2; }
+	@mkdir -p data/runtime
+	@$(PY) scripts/validate_binance.py --account --json-out data/runtime/binance_validation.json
+
+.PHONY: binance-testnet
+binance-testnet: ## Full testnet validation incl. one resting order (testnet keys required)
+	@test -n "$$TIA_BINANCE_API_KEY" || { echo "FAIL: TIA_BINANCE_API_KEY is not set in the environment (its value is never printed)"; exit 2; }
+	@test -n "$$TIA_BINANCE_API_SECRET" || { echo "FAIL: TIA_BINANCE_API_SECRET is not set in the environment (its value is never printed)"; exit 2; }
+	@mkdir -p data/runtime
+	@$(PY) scripts/validate_binance.py --testnet --account --order --json-out data/runtime/binance_validation.json
+
+# --------------------------------------------------------------- operations
+
+.PHONY: backup
+backup: ## Back up the database (SQLite file or pg_dump), with retention
+	@bash scripts/backup.sh
+
+.PHONY: daily-report
+daily-report: ## Print yesterday's activity: trades, P&L, blocks, incidents, uptime
+	@$(PY) scripts/daily_report.py
+
+.PHONY: regime-accuracy
+regime-accuracy: ## Measure regime-classifier accuracy against scenario ground truth
+	@$(PY) scripts/measure_regime_accuracy.py
+
+.PHONY: production-readiness
+production-readiness: ## Full production check: compose up, health, restart survival (needs Docker)
+	@bash scripts/production_readiness.sh
+
 .PHONY: fixtures
 fixtures: ## Regenerate the committed market fixtures (idempotent)
 	@$(PY) scripts/generate_fixtures.py

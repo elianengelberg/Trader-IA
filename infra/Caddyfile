@@ -1,0 +1,22 @@
+# Reverse proxy for the production stack. One site, one upstream.
+#
+# TIA_DOMAIN=localhost (the default) serves HTTPS with Caddy's own local CA —
+# fine for a first boot and for `make production-readiness`. A real domain whose
+# DNS points at this machine gets automatic Let's Encrypt certificates, renewal
+# included, with no further configuration.
+
+{$TIA_DOMAIN:localhost} {
+	encode gzip
+
+	# SSE needs an unbuffered upstream; flush immediately.
+	reverse_proxy backend:8000 {
+		flush_interval -1
+	}
+
+	header {
+		# The API sets its own security headers; these cover static assets too.
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		-Server
+	}
+}

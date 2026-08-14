@@ -532,3 +532,35 @@ not persisting since the economics wiring — endurance caught it), the boundary
 catching **the API layer touching the secret** and **the budget module naming order
 endpoints** (first fixed by moving code, second allowed deliberately), and the fills FK
 ordering race (documented as accepted, §7.3 of SECURITY_AUDIT.md).
+
+---
+
+# Part IV — 24/7 deployment pass (2026-08-14)
+
+Scope: run the paper platform continuously on a server, unattended, with the live path
+still gated. Everything below was implemented and tested in this pass; the verdict
+column says what was *executed* here versus what needs a machine this environment is not.
+
+| Item | Verdict | Evidence |
+|---|---|---|
+| Paper-realtime session (real data shape, simulated fills, **no token by design**) | **SOLVED** | The token requirement binds to `execution.is_live`; a paper session cannot spend and therefore needs none, while a live provider still cannot exist without one — `test_paper_realtime_runs_without_a_token_and_says_so`, `test_live_runtime_cannot_exist_without_a_token_over_live_execution`. |
+| `POST /api/live/paper-start` | **SOLVED** | Operator-only, 409 on double-start, 503 when the data host is unreachable with nothing half-started; snapshot says `paper-live` / `simulated: true`. 5 API tests. |
+| Heartbeat ≠ HTTP | **SOLVED** | Loop advances `last_heartbeat`; `/api/health` reports `trading_engine: degraded` past 120 s while HTTP still answers — `test_heartbeat_advances_with_the_loop_not_with_http`. |
+| Market-data watchdog | **SOLVED** | No new bar for 300 s → entries halt; recovery only through clean reconciliation, and only for watchdog-caused halts — `test_stale_market_data_halts_and_recovery_is_earned`. |
+| Provider-failure grace | **SOLVED** | Transient failure → halt; 10 consecutive → sticky SAFE_MODE — `test_transient_provider_failure_halts_then_escalates_only_if_persistent`. |
+| Restart semantics | **SOLVED** | Crash/redeploy-interrupted paper sessions resume on boot as a new run over the same evidence store; operator stops stamp the run row and stay stopped; kill-switched sessions stay down — `test_paper_session_resumes_after_a_crash_but_not_after_an_operator_stop`, `test_a_kill_switched_paper_session_stays_down_across_restarts`. |
+| Alert webhook seam | **SOLVED (seam)** | Incidents persist → SSE + POST to `TIA_ALERT_WEBHOOK_URL`; payload carries no secret (scanned); no-URL means no call. Real delivery NOT VERIFIED (no reachable endpoint here). |
+| Validation record bound to the key | **SOLVED (tightening)** | The validator records a one-way key fingerprint; the gate refuses a record made with a different key than configured, and refuses records that never recorded one — `test_validation_record_is_bound_to_the_configured_api_key`. |
+| Regime accuracy (F3) | **MEASURED (synthetic)** | `make regime-accuracy`: settled primary accuracy 16–51% by scenario; high-volatility weakest; confusion matrices persisted. Real-market accuracy remains UNVALIDATED — stated, not padded. |
+| Production stack (Caddy HTTPS, internal-only Postgres, daily backups, unless-stopped) | **AUTHORED — REQUIRES VALIDATION** | `docker-compose.prod.yml`, `infra/Caddyfile`, `.env.production.example` (three secrets required, no defaults). No daemon here; `make production-readiness` proves it on target or exits 3. |
+| Ops scripts | **PARTIALLY EXECUTED** | `backup.sh` ran against SQLite (dump gzip-verified); `daily_report.py` verified against a populated journal; `deploy.sh` / `production_readiness.sh` honest exit-3 paths executed, Docker paths not. |
+| CI | **AUTHORED — REQUIRES VALIDATION** | `.github/workflows/ci.yml` mirrors `make verify` minus the browser smoke; never run from here. |
+| Deployment guide | **WRITTEN** | `docs/DEPLOYMENT.md`, 15 sections, including the infrastructure comparison (recommendation: small Hetzner/DO VPS; prices flagged as unverified) and the reboot test no script can wrap. |
+
+Defect found and fixed in this pass: the live ceiling's fail-closed default
+(`max_live_capital=0`) also blocked the **paper** ledger at construction and start —
+paper now funds from the simulated bankroll while any configured live ceiling still
+binds, and the live path is unchanged (`CapitalPolicy` still rejects a zero ceiling for
+real execution).
+
+Verification after the pass: `make verify` 9/9, **833 tests**, ruff and TypeScript clean.

@@ -15,9 +15,13 @@ code path would be a shared failure mode:
   edge that clears its costs does not become an order, and no configuration can change
   that — the enforcement is the absence of the switch.
 
-Construction requires a :class:`~tia.live.gate.LiveActivationToken`. Not a parameter with
-a default, not optional for tests — tests mint a real token through the real gate, which
-keeps the invariant "no live runtime without a passed gate" true even in the test suite.
+Construction over a **live** execution provider requires a
+:class:`~tia.live.gate.LiveActivationToken` — tests mint theirs through the real gate, so
+"no real-money runtime without a passed gate" holds in the suite too. Over a *simulated*
+provider the same class runs as **paper-realtime**: real market data, real clock, paper
+fills — the configuration a 24/7 paper track record is built on. The token requirement
+binds to what the money can do, and the provider layer enforces the same rule
+independently at construction.
 
 What this runtime does **not** do: withdraw, transfer, or touch any funds beyond placing
 and cancelling spot orders inside its capital ceiling. The adapter beneath it has no such
@@ -34,7 +38,12 @@ from typing import Any
 
 from tia.core.clock import Clock
 from tia.core.config import Settings
-from tia.core.errors import LiveActivationError, ReconciliationError, TiaError
+from tia.core.errors import (
+    LiveActivationError,
+    ProviderUnavailableError,
+    ReconciliationError,
+    TiaError,
+)
 from tia.core.ids import deterministic_id, new_ulid
 from tia.core.logging import get_logger
 from tia.core.money import D, meets_min_notional, quantize_down
@@ -189,7 +198,7 @@ class LiveRuntime:
         self,
         settings: Settings,
         *,
-        activation: LiveActivationToken,
+        activation: LiveActivationToken | None,
         market_data: MarketDataProvider,
         execution: ExecutionProvider,
         clock: Clock,
@@ -202,9 +211,18 @@ class LiveRuntime:
         reconcile_every_cycles: int = 12,
         skew_check_every_cycles: int = 60,
     ) -> None:
-        if activation is None:  # defensive; the annotation already says required
-            raise LiveActivationError("a LiveRuntime cannot exist without an activation token")
-        activation.assert_usable(now=clock.now())
+        # Paper-realtime is this same runtime over a *simulated* execution provider and
+        # real market data — the configuration a 24/7 paper track record runs on. The
+        # token requirement binds to what the money can do, not to the class name: a
+        # provider that can spend real funds demands a token; a simulator demands none,
+        # and the provider layer independently enforces the same rule at construction.
+        if execution.is_live:
+            if activation is None:
+                raise LiveActivationError(
+                    "a LiveRuntime over a live execution provider cannot exist without "
+                    "an activation token"
+                )
+            activation.assert_usable(now=clock.now())
 
         self._settings = settings
         self._activation = activation
@@ -224,11 +242,17 @@ class LiveRuntime:
         self.run_id = f"live_{new_ulid(clock)}"
         self.machine = LiveStateMachine(clock)
         self.machine.transition(LiveState.ARMING, reason="constructing live runtime")
-        self.machine.transition(
-            LiveState.ARMED,
-            reason=f"activation token accepted (issued by {activation.issued_by})",
-            actor=activation.issued_by,
-        )
+        if activation is not None:
+            self.machine.transition(
+                LiveState.ARMED,
+                reason=f"activation token accepted (issued by {activation.issued_by})",
+                actor=activation.issued_by,
+            )
+        else:
+            self.machine.transition(
+                LiveState.ARMED,
+                reason="paper-realtime: simulated execution, no token required",
+            )
 
         #: The fingerprint the token was bound to, recomputed per order so a limit change
         #: after arming voids every subsequent submission.
@@ -262,8 +286,17 @@ class LiveRuntime:
             threshold_bps=settings.live.ev_threshold_bps,
             max_cost_ratio=settings.live.max_cost_ratio,
         )
+        if execution.is_live:
+            # Real money: the configured ceiling, whose fail-closed default of zero is
+            # rejected by CapitalPolicy — exactly the refusal we want.
+            ledger_ceiling = settings.live.max_live_capital
+        else:
+            # Paper-realtime: nothing here can spend, so the live ceiling's zero default
+            # must not stop the session. The simulated bankroll bounds the ledger; a
+            # configured live ceiling still binds if one is set.
+            ledger_ceiling = settings.live.max_live_capital or settings.initial_capital
         self._ledger = CapitalLedger(
-            CapitalPolicy(max_live_capital=settings.live.max_live_capital),
+            CapitalPolicy(max_live_capital=ledger_ceiling),
             clock=clock,
         )
         self.skew = (
@@ -287,6 +320,16 @@ class LiveRuntime:
         self._task: asyncio.Task[None] | None = None
         self._stop_requested = False
         self.last_error = ""
+        #: Watchdog state. A transient provider failure halts entries and heals itself
+        #: after a clean reconciliation; a *persistent* one escalates to SAFE_MODE.
+        self._provider_failures = 0
+        self._watchdog_halt = False
+        self._last_bar_wall = clock.now()
+        #: Updated every loop cycle. "The HTTP server answers" and "the trading engine is
+        #: alive" are different facts; this is the second one.
+        self.last_heartbeat = clock.now()
+        self.market_data_ttl_seconds = 300.0
+        self._last_reconciliation_clean: bool | None = None
         self.counters: dict[str, int] = {
             "cycles": 0, "bars": 0, "quality_skipped": 0, "signals": 0,
             "risk_rejected": 0, "budget_rejected": 0, "ev_rejected": 0,
@@ -326,7 +369,10 @@ class LiveRuntime:
 
         try:
             # 1. The token must still be alive — arming and starting can be minutes apart.
-            self._activation.assert_usable(now=self._clock.now(), fingerprint=self._fingerprint)
+            if self._execution.is_live and self._activation is not None:
+                self._activation.assert_usable(
+                    now=self._clock.now(), fingerprint=self._fingerprint
+                )
 
             # 2. The venue's clock and ours must agree within the signing window.
             if self.skew is not None:
@@ -340,17 +386,23 @@ class LiveRuntime:
 
             # 3. The venue must answer, and the balance funds the ledger.
             balance = await self._execution.get_balance()
-            allocation = min(float(balance), self._settings.live.max_live_capital)
+            if self._execution.is_live:
+                # The ceiling governs real money. A live ceiling of zero funds nothing,
+                # which is the fail-closed default doing its job.
+                allocation = min(float(balance), self._settings.live.max_live_capital)
+                note = f"live start: min(venue balance {balance}, ceiling)"
+            else:
+                # Paper-realtime: simulated capital, already capped at construction.
+                # Binding it to the *live* ceiling would make the safe default
+                # (max_live_capital=0) refuse a session that cannot spend anything.
+                allocation = float(balance)
+                note = f"paper-realtime start: simulated balance {balance}"
             if allocation <= 0:
                 raise LiveActivationError(
                     f"venue balance {balance} funds no allocation under the ceiling "
                     f"{self._settings.live.max_live_capital}; nothing to trade with"
                 )
-            self._ledger.allocate(
-                allocation,
-                at=self._clock.now(),
-                note=f"live start: min(venue balance {balance}, ceiling)",
-            )
+            self._ledger.allocate(allocation, at=self._clock.now(), note=note)
             self._peak_equity = allocation
         except Exception as exc:
             self.last_error = str(exc)[:500]
@@ -491,6 +543,16 @@ class LiveRuntime:
 
     async def _loop(self) -> None:
         while not self._stop_requested:
+            await self._loop_iteration()
+            await asyncio.sleep(self._poll_interval)
+
+    async def _loop_body_once_for_tests(self) -> None:
+        """One loop iteration, no sleep. For tests that drive the loop by hand."""
+        await self._loop_iteration()
+
+    async def _loop_iteration(self) -> None:
+        """The loop body: one cycle plus the full failure taxonomy around it."""
+        if True:
             try:
                 await self._cycle_once()
             except asyncio.CancelledError:
@@ -502,6 +564,26 @@ class LiveRuntime:
                 self.last_error = str(exc)[:500]
                 self.halt_new_orders(reason=f"unknown order state: {exc}")
                 await self._reconcile()
+            except ProviderUnavailableError as exc:
+                # A network blip is expected weather, not an emergency: halt entries,
+                # keep polling, escalate only if it persists.
+                self._provider_failures += 1
+                self.last_error = str(exc)[:500]
+                if self._provider_failures >= 10:
+                    self.machine.transition(
+                        LiveState.SAFE_MODE,
+                        reason=f"provider unreachable {self._provider_failures} times",
+                    )
+                    self._incident(
+                        "safe_mode",
+                        reason=f"persistent provider failure: {exc}"[:500],
+                    )
+                else:
+                    self._watchdog_halt = True
+                    self.halt_new_orders(
+                        reason=f"provider unreachable (attempt {self._provider_failures}): "
+                        f"{str(exc)[:200]}"
+                    )
             except TiaError as exc:
                 self.last_error = str(exc)[:500]
                 self.machine.transition(
@@ -514,11 +596,22 @@ class LiveRuntime:
                     LiveState.SAFE_MODE, reason=f"unexpected error: {exc}"
                 )
                 self._incident("safe_mode", reason=str(exc)[:500])
-            await asyncio.sleep(self._poll_interval)
 
     async def _cycle_once(self) -> None:
         self._cycle += 1
         self.counters["cycles"] += 1
+        self.last_heartbeat = self._clock.now()
+
+        # Market-data watchdog: a feed that stopped producing bars is not a quiet market,
+        # it is an unknown one. Entries halt until bars flow again and a reconciliation
+        # comes back clean.
+        bar_age = (self._clock.now() - self._last_bar_wall).total_seconds()
+        if bar_age > self.market_data_ttl_seconds and self.machine.state is LiveState.RUNNING:
+            self._watchdog_halt = True
+            self.halt_new_orders(
+                reason=f"market data stale: no new bar for {bar_age:.0f}s "
+                f"(TTL {self.market_data_ttl_seconds:.0f}s)"
+            )
 
         if self._cycle % self._skew_every == 0 and self.skew is not None:
             skew, ok = await self.skew.check()
@@ -543,9 +636,32 @@ class LiveRuntime:
         if self._last_close is not None and latest.close_time <= self._last_close:
             return  # no new closed bar yet
         self._last_close = latest.close_time
+        self._last_bar_wall = self._clock.now()
+        self._provider_failures = 0
         self._buffer.clear()
         self._buffer.extend(candles)
         self.counters["bars"] += 1
+
+        # Paper-realtime: the simulated matching engine fills resting orders against the
+        # bar the way the live venue would have filled them against the tape.
+        on_bar = getattr(self._execution, "on_bar", None)
+        if callable(on_bar):
+            for fill in on_bar(latest):
+                self._on_fill(fill)
+
+        # Watchdog self-heal: data is flowing again. RUNNING is earned back through a
+        # clean reconciliation, not assumed — and only for halts the watchdog itself
+        # caused; an operator's halt stays until the operator lifts it.
+        if self._watchdog_halt and self.machine.state is LiveState.HALT_NEW_ORDERS:
+            await self._reconcile()
+            if not self.counters_last_reconciliation_broke():
+                self._watchdog_halt = False
+                self.machine.transition(
+                    LiveState.RUNNING,
+                    reason="watchdog: data restored and reconciliation clean",
+                    actor="watchdog",
+                )
+
         await self._process_bar(latest)
 
     async def _process_bar(self, candle: Candle) -> None:
@@ -734,7 +850,13 @@ class LiveRuntime:
     async def _submit(self, decision: Any, signal: Any, correlation_id: str) -> None:
         # Re-validated immediately before every submission: the token may have expired
         # or the configuration fingerprint may no longer match. Both void the order.
-        self._activation.assert_usable(now=self._clock.now(), fingerprint=self._fingerprint)
+        # In paper-realtime there is no token and nothing real to void.
+        if self._execution.is_live:
+            if self._activation is None:  # unreachable: the constructor refuses this
+                raise LiveActivationError("live execution without an activation token")
+            self._activation.assert_usable(
+                now=self._clock.now(), fingerprint=self._fingerprint
+            )
         self._execution.assert_may_trade()
 
         intent = self._build_intent(
@@ -924,6 +1046,7 @@ class LiveRuntime:
             divergences.append(f"reconciliation itself failed: {exc}")
 
         clean = not divergences
+        self._last_reconciliation_clean = clean
         if not clean:
             self.counters["reconciliation_breaks"] += 1
             if any("unknown locally" in d or "not at the venue" in d for d in divergences):
@@ -983,16 +1106,27 @@ class LiveRuntime:
         with contextlib.suppress(Exception):
             self._on_event({"type": event_type, "payload": payload})
 
+    def counters_last_reconciliation_broke(self) -> bool:
+        """Whether the most recent reconciliation recorded a divergence."""
+        return self._last_reconciliation_clean is False
+
     def snapshot(self) -> dict[str, Any]:
         ledger = self._ledger.snapshot()
         return {
             "run_id": self.run_id,
-            "mode": "live",
-            "simulated": False,
+            "mode": "live" if self._execution.is_live else "paper-live",
+            "simulated": not self._execution.is_live,
+            "last_heartbeat": self.last_heartbeat.isoformat(),
+            "heartbeat_age_seconds": round(
+                (self._clock.now() - self.last_heartbeat).total_seconds(), 1
+            ),
+            "market_data_age_seconds": round(
+                (self._clock.now() - self._last_bar_wall).total_seconds(), 1
+            ),
             "state": self.machine.state.value,
             "state_machine": self.machine.as_dict(),
             "symbol": self._symbol,
-            "activation": self._activation.as_dict(),
+            "activation": self._activation.as_dict() if self._activation else None,
             "capital": ledger.as_dict(),
             "capital_halted": self._ledger.is_halted,
             "clock_skew": self.skew.as_dict() if self.skew else None,

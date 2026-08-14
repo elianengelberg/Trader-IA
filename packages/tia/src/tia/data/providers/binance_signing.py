@@ -108,8 +108,7 @@ class BinanceCredentials:
 
         So that "which key is this?" is answerable without the key ever appearing anywhere.
         """
-        digest = hashlib.blake2s(self.api_key.encode("utf-8"), digest_size=4).hexdigest()
-        return f"key:{digest}"
+        return _fingerprint(self.api_key)
 
     def __repr__(self) -> str:
         return f"BinanceCredentials({self.key_fingerprint}, secret={_REDACTED})"
@@ -189,6 +188,11 @@ class BinanceSigner:
         )
 
 
+def _fingerprint(api_key: str) -> str:
+    digest = hashlib.blake2s(api_key.encode("utf-8"), digest_size=4).hexdigest()
+    return f"key:{digest}"
+
+
 def signer_from_live_config(live: Any, clock: Clock) -> BinanceSigner:
     """Build a signer from the live configuration block.
 
@@ -211,11 +215,25 @@ def signer_from_live_config(live: Any, clock: Clock) -> BinanceSigner:
     )
 
 
+def key_fingerprint_from_live_config(live: Any) -> str:
+    """The configured key's one-way fingerprint, or "" when none is configured.
+
+    Lives here for the same reason as :func:`signer_from_live_config`: the key never
+    leaves this module, only its 4-byte blake2s identifier does. The activation gate
+    uses it to check that the validation record was produced with the *same* key the
+    deployment would trade with — a record made with one key must not vouch for another.
+    """
+    if not live.has_credentials:
+        return ""
+    return _fingerprint(live.binance_api_key.get_secret_value())
+
+
 __all__ = [
     "DEFAULT_RECV_WINDOW_MS",
     "MAX_RECV_WINDOW_MS",
     "BinanceCredentials",
     "BinanceSigner",
     "SignedRequest",
+    "key_fingerprint_from_live_config",
     "signer_from_live_config",
 ]

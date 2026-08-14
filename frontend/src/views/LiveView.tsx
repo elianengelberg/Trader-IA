@@ -14,19 +14,46 @@ import { useCallback, useEffect, useState } from "react";
 import { ApiError, api, type ActivationAttempt, type GateReport } from "../lib/api";
 import { Card, Empty, Pill, Stat } from "../components/ui";
 
+type LiveSnapshot = Record<string, unknown> & { active: boolean; state: string };
+
 export function LiveView({ role }: { role: string }) {
   const [report, setReport] = useState<GateReport | null>(null);
   const [history, setHistory] = useState<ActivationAttempt[]>([]);
+  const [session, setSession] = useState<LiveSnapshot | null>(null);
   const [confirmation, setConfirmation] = useState("");
   const [result, setResult] = useState<{ ok: boolean; message: string } | null>(null);
   const [busy, setBusy] = useState(false);
+  const [sessionBusy, setSessionBusy] = useState(false);
+  const [sessionError, setSessionError] = useState("");
 
   const load = useCallback(() => {
     api.liveGate().then(setReport).catch(() => undefined);
     api.liveHistory().then(setHistory).catch(() => undefined);
+    api.liveSnapshot().then(setSession).catch(() => undefined);
   }, []);
 
   useEffect(load, [load]);
+  useEffect(() => {
+    // The heartbeat is only meaningful if it visibly moves.
+    const timer = setInterval(() => {
+      api.liveSnapshot().then(setSession).catch(() => undefined);
+    }, 10_000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const paperSession = async (action: "start" | "stop") => {
+    setSessionBusy(true);
+    setSessionError("");
+    try {
+      if (action === "start") await api.paperStart();
+      else await api.liveStop();
+    } catch (error) {
+      setSessionError(error instanceof ApiError ? error.message : String(error));
+    } finally {
+      setSessionBusy(false);
+      load();
+    }
+  };
 
   const arm = async () => {
     setBusy(true);
@@ -115,6 +142,61 @@ export function LiveView({ role }: { role: string }) {
           />
         </div>
       </div>
+
+      <Card title="24/7 paper session">
+        <p style={{ marginTop: 0, color: "var(--muted)" }}>
+          Real market data, simulated fills, no credentials — this is the session the
+          paper track record accrues on. It resumes by itself after a crash or redeploy;
+          an operator stop (or an engaged kill switch) stays stopped.
+        </p>
+        {session && session.active ? (
+          <>
+            <div className="grid cols-4" style={{ marginBottom: 12 }}>
+              <Stat
+                label="Mode"
+                value={<Pill value={String(session.mode ?? "?")} tone={session.mode === "paper-live" ? "ok" : "warn"} />}
+                sub={session.simulated ? "simulated fills" : "REAL EXECUTION"}
+              />
+              <Stat
+                label="State"
+                value={<Pill value={String(session.state)} tone={session.state === "running" ? "ok" : "warn"} />}
+                sub="the state machine's word"
+              />
+              <Stat
+                label="Engine heartbeat"
+                value={`${Number(session.heartbeat_age_seconds ?? 0).toFixed(0)} s ago`}
+                tone={Number(session.heartbeat_age_seconds ?? 0) > 120 ? "warn" : "flat"}
+                sub="HTTP answering is not this"
+              />
+              <Stat
+                label="Last market data"
+                value={`${Number(session.market_data_age_seconds ?? 0).toFixed(0)} s ago`}
+                tone={Number(session.market_data_age_seconds ?? 0) > 300 ? "warn" : "flat"}
+                sub="stale data halts new entries"
+              />
+            </div>
+            {role === "operator" && (
+              <button onClick={() => paperSession("stop")} disabled={sessionBusy}>
+                {sessionBusy ? "Stopping…" : "Stop session (stays stopped across restarts)"}
+              </button>
+            )}
+          </>
+        ) : (
+          <>
+            <Empty message="No realtime session is running." />
+            {role === "operator" && (
+              <button onClick={() => paperSession("start")} disabled={sessionBusy} style={{ marginTop: 8 }}>
+                {sessionBusy ? "Starting…" : "Start 24/7 paper session"}
+              </button>
+            )}
+          </>
+        )}
+        {sessionError && (
+          <div className="card" style={{ marginTop: 12, borderLeft: "3px solid var(--bad, #c44)" }}>
+            <pre style={{ margin: 0, whiteSpace: "pre-wrap" }}>{sessionError}</pre>
+          </div>
+        )}
+      </Card>
 
       <Card title={`Activation checks — ${failures.length} blocking`}>
         <p style={{ marginTop: 0, color: "var(--muted)" }}>

@@ -443,6 +443,10 @@ async def run(args: argparse.Namespace) -> Results:
                     recv_window_ms=args.recv_window,
                 )
                 print(f"{DIM}Using {signer.key_fingerprint}{RESET}")
+                # A one-way, 4-byte identifier of the key that was validated — never the
+                # key itself. Binds the record to a specific credential, so a validation
+                # run with one key cannot vouch for an account armed with another.
+                results.facts["api_key_fingerprint"] = signer.key_fingerprint
                 await validate_account(client, signer, results)
                 if args.order:
                     await validate_order(client, signer, results, symbol)

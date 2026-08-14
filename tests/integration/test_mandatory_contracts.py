@@ -199,6 +199,62 @@ def test_binance_validation_schema(tmp_path: Path, monkeypatch: pytest.MonkeyPat
     assert record is None and "schema" in problem
 
 
+def test_validation_record_is_bound_to_the_configured_api_key(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A record produced with one key must not vouch for a deployment using another.
+
+    Permissions are per-key. Validate with a scoped key, then swap in an unscoped one,
+    and every fact in the record is about the wrong credential — so the gate compares
+    the record's one-way key fingerprint against the configured key's and refuses on
+    mismatch, and refuses records that never recorded one at all.
+    """
+    from pydantic import SecretStr
+
+    import tia.api.gate_probes as probes
+    from tia.data.providers.binance_signing import key_fingerprint_from_live_config
+
+    def state_with(key: str) -> _StateStub:
+        stub = _StateStub()
+        if key:
+            stub.settings = stub.settings.model_copy(
+                update={
+                    "live": LiveConfig(
+                        enabled=True,
+                        max_live_capital=100.0,
+                        binance_api_key=SecretStr(key),
+                        binance_api_secret=SecretStr("not-a-real-secret"),
+                    )
+                }
+            )
+        return stub
+
+    def record_with(fingerprint: str | None) -> probes.BinanceValidationRecord:
+        raw = _valid_record()
+        if fingerprint is not None:
+            raw["facts"]["api_key_fingerprint"] = fingerprint
+        return probes.BinanceValidationRecord.model_validate(raw)
+
+    configured = state_with("the-key-that-was-validated")
+    fingerprint = key_fingerprint_from_live_config(configured.settings.live)
+    assert fingerprint.startswith("key:")
+
+    # No fingerprint in the record: the validated key is unknown → refused.
+    check = probes._credentials(configured, record_with(None))  # type: ignore[arg-type]
+    assert not check.passed
+    assert "identify" in check.detail
+
+    # Mismatch: validated one key, configured another → refused, both named.
+    check = probes._credentials(configured, record_with("key:deadbeef"))  # type: ignore[arg-type]
+    assert not check.passed
+    assert "different key" in check.detail
+
+    # Match → passes, and says which key it vouches for.
+    check = probes._credentials(configured, record_with(fingerprint))  # type: ignore[arg-type]
+    assert check.passed
+    assert fingerprint in check.detail
+
+
 def test_binance_validation_freshness(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

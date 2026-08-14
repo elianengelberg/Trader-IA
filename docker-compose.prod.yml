@@ -1,0 +1,157 @@
+# Trader-IA — production profile for a 24/7 VPS deployment.
+#
+#   cp .env.production.example .env        # then edit: passwords, domain, webhook
+#   docker compose -f docker-compose.prod.yml up -d --build
+#
+# STATUS: REQUIRES VALIDATION. Authored without a Docker daemon (none exists in the
+# build environment), so this file has never been executed. `make production-readiness`
+# runs the whole stack, kills the backend, and verifies it comes back — run that on the
+# target machine before trusting anything here.
+#
+# Design, stated once:
+#   * Only the reverse proxy is published. Postgres and the backend live on an internal
+#     network with no host ports — there is nothing to firewall because there is nothing
+#     exposed. (Set a host firewall anyway; see docs/DEPLOYMENT.md §7.)
+#   * Every service restarts unless stopped. Restart safety is the application's job:
+#     on startup the runtime recovers state, reconciles against the venue, and only
+#     then trades — a restart must never re-place an order it cannot account for.
+#   * The backend applies migrations before it serves. A schema the code does not
+#     expect is a refusal, not a surprise at 3 a.m.
+#   * No secret appears in this file. Everything sensitive is `${...}` from .env, and
+#     the two that must exist have no default — compose refuses to start without them.
+
+services:
+  proxy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      # A real domain (with DNS pointing here) gets automatic Let's Encrypt HTTPS.
+      # The default `localhost` gets Caddy's self-signed local CA — still HTTPS.
+      TIA_DOMAIN: ${TIA_DOMAIN:-localhost}
+    volumes:
+      - ./infra/Caddyfile:/etc/caddy/Caddyfile:ro
+      - tia-caddy-data:/data
+      - tia-caddy-config:/config
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks: [edge, internal]
+    security_opt:
+      - no-new-privileges:true
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: trader-ia:prod
+    restart: unless-stopped
+    # Migrations first, serve second. If the upgrade fails the container exits and
+    # restarts into the same failure — visibly, in `docker compose logs backend`.
+    command: >
+      sh -c "python -m alembic upgrade head
+             && python -m uvicorn tia.api.main:app --host 0.0.0.0 --port 8000 --log-config /dev/null"
+    environment:
+      TIA_ENV: paper
+      TIA_DATABASE_URL: postgresql+asyncpg://tia:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}@postgres:5432/tia
+      # Operator login. No defaults in production — choose them in .env.
+      TIA_DEMO_USER: ${TIA_DEMO_USER:?set TIA_DEMO_USER in .env}
+      TIA_DEMO_PASSWORD: ${TIA_DEMO_PASSWORD:?set TIA_DEMO_PASSWORD in .env}
+      # Session-token signing key. With the code default, anyone who has read the
+      # source can forge an operator cookie — hence no default here either.
+      TIA_SECURITY__JWT_SECRET: ${TIA_JWT_SECRET:?set TIA_JWT_SECRET in .env}
+      # Alerts: any endpoint that accepts a JSON POST (Discord/Slack webhook, ntfy,
+      # your own receiver). Empty means alerts stay in the database and the UI only.
+      TIA_OBSERVABILITY__ALERT_WEBHOOK_URL: ${TIA_ALERT_WEBHOOK_URL:-}
+      # Optional. The offline mock runs without it; the advisory layer degrades, the
+      # trading engine does not.
+      TIA_ANTHROPIC_API_KEY: ${TIA_ANTHROPIC_API_KEY:-}
+      # Venue credentials are OPTIONAL and only ever read from the environment.
+      # The 24/7 paper session needs none. Live trading additionally requires the
+      # activation gate's 27 checks — a key alone arms nothing.
+      TIA_LIVE__BINANCE_API_KEY: ${TIA_BINANCE_API_KEY:-}
+      TIA_LIVE__BINANCE_API_SECRET: ${TIA_BINANCE_API_SECRET:-}
+    # No ports: reachable only through the proxy.
+    expose:
+      - "8000"
+    volumes:
+      - tia-data:/app/data/runtime
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8000/api/health"]
+      interval: 20s
+      timeout: 4s
+      retries: 3
+      start_period: 30s
+    networks: [internal]
+    security_opt:
+      - no-new-privileges:true
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: tia
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: tia
+    # No ports section at all: the database is reachable only from the internal
+    # network. Publishing 5432 on a VPS is how databases end up in breach reports.
+    volumes:
+      - tia-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tia -d tia"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [internal]
+    security_opt:
+      - no-new-privileges:true
+
+  # Daily logical backups, inside the stack so they need no host cron. Dumps land on
+  # the `tia-backups` volume; copy them off the machine — a backup that lives only on
+  # the disk it protects is a wish, not a backup. Restore: docs/DEPLOYMENT.md §10.
+  backup:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      PGPASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      BACKUP_KEEP: ${BACKUP_KEEP:-14}
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        while true; do
+          stamp=$$(date -u +%Y%m%d-%H%M%S)
+          if pg_dump -h postgres -U tia -d tia | gzip > "/backups/tia-$${stamp}.sql.gz"; then
+            echo "backup written: tia-$${stamp}.sql.gz"
+          else
+            echo "BACKUP FAILED at $${stamp}" >&2
+          fi
+          ls -1t /backups/tia-*.sql.gz 2>/dev/null | tail -n +$$((BACKUP_KEEP + 1)) | xargs -r rm -f
+          sleep 86400
+        done
+    volumes:
+      - tia-backups:/backups
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks: [internal]
+    security_opt:
+      - no-new-privileges:true
+
+networks:
+  edge:
+  internal:
+    # Postgres and the backend can talk to each other and (via the host) outward to
+    # the venue; nothing outside the compose network can reach them.
+
+volumes:
+  tia-data:
+  tia-postgres:
+  tia-backups:
+  tia-caddy-data:
+  tia-caddy-config:

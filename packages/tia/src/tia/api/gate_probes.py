@@ -34,6 +34,7 @@ from typing import TYPE_CHECKING, Any
 
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
+from tia.data.providers.binance_signing import key_fingerprint_from_live_config
 from tia.live.gate import CheckName, GateCheck, failing, passing
 
 if TYPE_CHECKING:  # pragma: no cover - typing only
@@ -170,7 +171,7 @@ def build_probes(
         CheckName.KILL_SWITCH_CLEAR: _kill_switch(state),
         CheckName.EMERGENCY_CONTROLS: _emergency_controls(),
         CheckName.RESTART_RECOVERY: _restart_recovery(),
-        CheckName.CREDENTIALS_SCOPED: _credentials(record),
+        CheckName.CREDENTIALS_SCOPED: _credentials(state, record),
         CheckName.EDGE_EVIDENCE: _edge(state),
         CheckName.PAPER_TRACK_RECORD: _track_record_probe(state, track_record),
     }
@@ -646,7 +647,7 @@ def _restart_recovery() -> GateCheck:
     return passing(CheckName.RESTART_RECOVERY, "tested; state reloads and orders deduplicate")
 
 
-def _credentials(record: BinanceValidationRecord | None) -> GateCheck:
+def _credentials(state: AppState, record: BinanceValidationRecord | None) -> GateCheck:
     permissions = record.facts.get("permissions") if record else None
     if not permissions:
         return failing(
@@ -661,9 +662,28 @@ def _credentials(record: BinanceValidationRecord | None) -> GateCheck:
             permissions.get("explanation", "the key's permissions are not acceptable"),
             "disable withdrawal, transfer, futures and margin on the key, then re-validate",
         )
+    # The record must have been produced with the key this deployment would trade with.
+    # A validation run against one credential is not evidence about another — permissions
+    # are per-key, and swapping the key after validating is exactly the hole this closes.
+    validated = record.facts.get("api_key_fingerprint", "") if record else ""
+    if not validated:
+        return failing(
+            CheckName.CREDENTIALS_SCOPED,
+            "the validation record does not identify which API key it validated",
+            "re-run `python scripts/validate_binance.py --account` (current versions "
+            "record a one-way key fingerprint — never the key itself)",
+        )
+    configured = key_fingerprint_from_live_config(state.settings.live)
+    if configured and validated != configured:
+        return failing(
+            CheckName.CREDENTIALS_SCOPED,
+            f"the record validated {validated} but this deployment is configured with "
+            f"{configured} — a different key",
+            "re-run the validator with the key the deployment actually uses",
+        )
     return passing(
         CheckName.CREDENTIALS_SCOPED,
-        "can trade, cannot move funds"
+        f"can trade, cannot move funds; validated as {validated}"
         + ("; IP-restricted" if permissions.get("ip_restricted") else "; NOT IP-restricted"),
     )
 

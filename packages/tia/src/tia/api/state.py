@@ -73,6 +73,7 @@ class AppState:
     async def startup(self) -> None:
         self._loop = asyncio.get_running_loop()
         await self.database.ensure_schema()
+        await self._maybe_resume_paper_realtime()
 
     async def shutdown(self) -> None:
         if self.runtime is not None and self.runtime.is_running:
@@ -154,6 +155,40 @@ class AppState:
 
         await engine.start()
         return engine.snapshot()
+
+    def _dispatch_alert(self, incident: dict[str, Any]) -> None:
+        """Push an incident to the configured webhook. Fire-and-forget, never raises.
+
+        The webhook URL comes from configuration and the payload carries no secret —
+        it is the same incident row the database keeps. Email/Telegram/Discord are all
+        webhook consumers in practice; this is the architecture seam they plug into.
+        """
+        url = getattr(self.settings.observability, "alert_webhook_url", "")
+        if not url:
+            return
+
+        async def _post() -> None:
+            try:
+                import httpx
+
+                async with httpx.AsyncClient(timeout=5.0) as client:
+                    await client.post(
+                        url,
+                        json={
+                            "source": "trader-ia",
+                            "kind": incident.get("kind"),
+                            "reason": incident.get("reason"),
+                            "actor": incident.get("actor"),
+                            "run_id": incident.get("run_id"),
+                            "at": str(incident.get("at")),
+                        },
+                    )
+            except Exception as exc:
+                _log.warning("alert_dispatch_failed", error=str(exc)[:200])
+
+        with contextlib.suppress(Exception):
+            asyncio.ensure_future(_post())  # noqa: RUF006 - fire and forget by design
+        self.broadcast({"type": "alert", "payload": incident})
 
     async def _load_prior_outcomes(self):  # type: ignore[no-untyped-def]
         """Rebuild the edge estimator's input from every persisted round trip.
@@ -267,6 +302,7 @@ class AppState:
                     await ReconciliationRepository(session).record(payload)
                 elif kind == "incident":
                     await IncidentRepository(session).record(payload)
+                    self._dispatch_alert(payload)
                 elif kind == "latency":
                     from tia.persistence import LatencyRepository
 
@@ -808,6 +844,155 @@ class AppState:
         except Exception as exc:
             _log.warning("activation_record_failed", error=str(exc)[:300])
 
+    async def start_paper_realtime(self, *, actor: str) -> dict[str, Any]:
+        """Start a 24/7 paper-realtime session: real market data, simulated fills.
+
+        No activation token — nothing here can spend real money, and the provider layer
+        guarantees it independently. This is the session the 7-day paper track record
+        runs on; its closed round trips persist as source="paper" evidence.
+        """
+        from tia.core.clock import SystemClock
+        from tia.core.errors import LiveActivationError
+        from tia.core.rng import RngRegistry
+        from tia.data.providers.binance_public import BinancePublicProvider
+        from tia.domain.instruments import DEFAULT_UNIVERSE
+        from tia.execution.paper import PaperExecutionProvider
+        from tia.runtime.live import LiveRuntime
+
+        if self.live_runtime is not None and self.live_runtime.is_running:
+            raise LiveActivationError(
+                "a realtime session is already active; stop it before starting another"
+            )
+
+        clock = SystemClock()
+        market = BinancePublicProvider(base_url=self.settings.live.base_url, clock=clock)
+        execution = PaperExecutionProvider(
+            self.settings.execution,
+            DEFAULT_UNIVERSE,
+            clock,
+            RngRegistry(self.settings.seed),
+            initial_capital=min(
+                self.settings.initial_capital,
+                self.settings.live.max_live_capital or self.settings.initial_capital,
+            ),
+        )
+        runtime = LiveRuntime(
+            self.settings,
+            activation=None,
+            market_data=market,
+            execution=execution,
+            clock=clock,
+            venue_time_ms=market.server_time_ms,
+            persist=self._persist,
+            on_event=self.broadcast,
+            prior_outcomes=await self._load_prior_outcomes(),
+            poll_interval_seconds=10.0,
+        )
+        await runtime.start()
+        self.live_runtime = runtime
+        async with self.database.session() as session:
+            await RunRepository(session).create(
+                run_id=runtime.run_id,
+                mode="paper-live",
+                scenario="realtime",
+                started_at=datetime.now(UTC),
+                initial_capital=self.settings.initial_capital,
+                seed=self.settings.seed,
+                symbols=(self.settings.live.symbol,),
+            )
+        _log.info("paper_realtime_started", run_id=runtime.run_id, actor=actor)
+        return runtime.snapshot()
+
+    async def stop_realtime_session(self, *, reason: str) -> dict[str, Any]:
+        """Stop the live/paper-realtime session AND stamp its run row.
+
+        The stamp is what makes operator intent survive a restart: startup resumes only
+        runs with no ``stopped_at``, so a session stopped through this method stays
+        stopped, while one interrupted by a crash or redeploy comes back on its own.
+        """
+        live = self.live_runtime
+        if live is None:
+            return {"active": False, "state": "disarmed"}
+        await live.stop(reason=reason)
+        with contextlib.suppress(Exception):  # the stop itself must not fail on a stamp
+            async with self.database.session() as session:
+                await RunRepository(session).stop(live.run_id, datetime.now(UTC))
+        return live.snapshot()
+
+    async def _maybe_resume_paper_realtime(self) -> None:
+        """Resume a 24/7 paper session that a restart interrupted — and only that.
+
+        Three rules, in tension and resolved deliberately:
+
+        * A run row with ``stopped_at`` NULL means the process died mid-session — every
+          intentional stop goes through :meth:`stop_realtime_session`, which stamps it.
+        * Operator-level halts outlive the process: a run that saw a kill switch,
+          emergency flatten or safe-mode incident is NOT resumed. Sticky means sticky.
+        * Only ``paper-live`` runs resume. A live session re-arms through the gate and a
+          human, never through a reboot.
+
+        The resumed session is a *new* run over the same evidence store — closed trades,
+        the edge estimator and the paper track record all reload from the database, so a
+        restart costs continuity of process, not continuity of evidence. Failure to
+        resume (say, the data host is unreachable at boot) is logged and alerted, never
+        fatal: the API must come up so the operator can see what happened.
+        """
+        from sqlalchemy import text
+
+        try:
+            async with self.database.session() as session:
+                row = (
+                    await session.execute(
+                        text(
+                            "SELECT run_id FROM runs WHERE mode = 'paper-live' "
+                            "AND stopped_at IS NULL ORDER BY started_at DESC LIMIT 1"
+                        )
+                    )
+                ).first()
+                if row is None:
+                    return
+                interrupted = str(row[0])
+                halts = (
+                    await session.execute(
+                        text(
+                            "SELECT COUNT(*) FROM incidents WHERE run_id = :run AND "
+                            "kind IN ('kill_switch', 'emergency_flatten', 'safe_mode')"
+                        ),
+                        {"run": interrupted},
+                    )
+                ).scalar()
+                # Either way this run is over; the question is only whether a new one
+                # starts unattended.
+                await RunRepository(session).stop(interrupted, datetime.now(UTC))
+        except Exception as exc:
+            _log.warning("paper_realtime_resume_check_failed", error=str(exc)[:300])
+            return
+
+        if halts:
+            _log.warning(
+                "paper_realtime_not_resumed",
+                run_id=interrupted,
+                reason="an operator-level halt was engaged; restart it deliberately",
+            )
+            return
+
+        try:
+            await self.start_paper_realtime(actor="startup-recovery")
+            _log.info("paper_realtime_resumed", interrupted_run=interrupted)
+        except Exception as exc:
+            _log.warning(
+                "paper_realtime_resume_failed", run_id=interrupted, error=str(exc)[:300]
+            )
+            self._dispatch_alert(
+                {
+                    "kind": "paper_resume_failed",
+                    "reason": str(exc)[:300],
+                    "actor": "startup-recovery",
+                    "run_id": interrupted,
+                    "at": datetime.now(UTC).isoformat(),
+                }
+            )
+
     async def change_risk_profile(
         self, *, profile: str, actor: str, confirmed: bool
     ) -> dict[str, Any]:
@@ -971,14 +1156,45 @@ class AppState:
             "event_stream": "online" if self._subscribers else "unknown",
             "news": "online" if runtime and runtime.config.news_enabled else "unknown",
         }
-        degraded = [k for k, v in components.items() if v in {"offline", "degraded"}]
+        live = self.live_runtime
+        live_view: dict[str, Any] | None = None
+        simulated_only = True
+        if live is not None:
+            snapshot = live.snapshot()
+            heartbeat_age = snapshot.get("heartbeat_age_seconds")
+            # "The HTTP server answers" is not "the trading engine is alive": the engine
+            # proves life by moving its own heartbeat, and a stalled loop reports as
+            # degraded here even while this endpoint keeps returning 200.
+            components["trading_engine"] = (
+                "degraded"
+                if heartbeat_age is not None and heartbeat_age > 120
+                else snapshot.get("state", "unknown")
+            )
+            components["market_data_feed"] = (
+                "degraded"
+                if (snapshot.get("market_data_age_seconds") or 0) > live.market_data_ttl_seconds
+                else "online"
+            )
+            simulated_only = bool(snapshot.get("simulated", True))
+            live_view = {
+                "mode": snapshot.get("mode"),
+                "state": snapshot.get("state"),
+                "heartbeat_age_seconds": heartbeat_age,
+                "market_data_age_seconds": snapshot.get("market_data_age_seconds"),
+            }
+        degraded = [
+            k
+            for k, v in components.items()
+            if v in {"offline", "degraded", "safe_mode", "error"}
+        ]
         return {
             "status": "degraded" if degraded else "ok",
+            "live_runtime": live_view,
             "components": components,
             "degraded": degraded,
             "uptime_seconds": (datetime.now(UTC) - self.started_at).total_seconds(),
             "version": "0.1.0",
-            "simulated_only": True,
+            "simulated_only": simulated_only,
         }
 
     async def system_status(self) -> dict[str, Any]:

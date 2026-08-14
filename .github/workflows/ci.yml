@@ -1,0 +1,71 @@
+# CI: lint + every Python test + frontend typecheck/build, on every push and PR.
+#
+# STATUS: REQUIRES VALIDATION — authored in an environment that cannot reach GitHub
+# Actions, so this workflow has never run. The steps mirror `make verify` (minus the
+# browser smoke test, which needs a display server) so a green local verify is the
+# strongest available predictor of a green CI run.
+#
+# Deliberately NOT here: deployment. Deploys are an operator action via
+# scripts/deploy.sh on the target machine — a trading system should not redeploy
+# itself because a branch moved.
+
+name: ci
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      PYTHONPATH: packages/tia/src
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install
+        run: pip install -e ".[api,db,postgres,redis,llm,dev]"
+
+      - name: Lint (ruff)
+        run: ruff check packages tests scripts
+
+      - name: Tests (unit, property, integration, failure, e2e)
+        run: python -m pytest tests -q
+
+      - name: Migrations apply from empty
+        env:
+          TIA_DATABASE_URL: sqlite:///./data/runtime/ci.db
+        run: python -m alembic upgrade head
+
+  frontend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install
+        run: npm ci --no-fund --no-audit
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build

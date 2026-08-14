@@ -539,6 +539,7 @@ export const api = {
   liveSnapshot: () => get<Record<string, unknown> & { active: boolean; state: string }>("/live"),
   liveHistory: () => get<ActivationAttempt[]>("/live/history"),
   liveStop: () => post<Record<string, unknown>>("/live/stop"),
+  paperStart: () => post<Record<string, unknown>>("/live/paper-start"),
   liveKillSwitch: (reason: string) =>
     post<Record<string, unknown>>("/live/kill-switch", { reason }),
   changeRiskProfile: (profile: string) =>

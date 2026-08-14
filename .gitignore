@@ -18,6 +18,7 @@ coverage.xml
 .env
 .env.*
 !.env.example
+!.env.production.example
 *.pem
 *.key
 secrets/
@@ -46,3 +47,4 @@ apps/web/.env*
 # Frontend build output and dependencies
 frontend/node_modules/
 frontend/dist/
+backups/

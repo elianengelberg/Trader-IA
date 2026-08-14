@@ -326,6 +326,9 @@ class LiveConfig(FrozenModel):
 
 class ObservabilityConfig(FrozenModel):
     log_level: str = "INFO"
+    #: POSTed every persisted incident (kill switch, safe mode, halts, capital halts).
+    #: Empty disables. Email/Telegram/Discord bridge in as webhook consumers.
+    alert_webhook_url: str = ""
     log_format: Literal["json", "console"] = "json"
     metrics_enabled: bool = True
     tracing_enabled: bool = False

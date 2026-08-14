@@ -41,7 +41,7 @@ db = [
   "alembic>=1.13",
   "aiosqlite>=0.20",
 ]
-postgres = ["asyncpg>=0.29"]
+postgres = ["asyncpg>=0.29", "psycopg2-binary>=2.9"]  # async for the app, sync for alembic
 redis = ["redis>=5.0"]
 llm = ["anthropic>=0.40"]
 dev = [

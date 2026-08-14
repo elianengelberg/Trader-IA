@@ -42,6 +42,7 @@ from tia.api.security import (
 )
 from tia.api.state import AppState
 from tia.core.config import Environment, Settings, settings_for_env
+from tia.core.errors import LiveActivationError
 from tia.core.logging import get_logger
 
 _log = get_logger("api.app")
@@ -91,6 +92,18 @@ class BacktestRequest(BaseModel):
     timeframe: str = "1h"
     bars: int = Field(default=1200, ge=200, le=5000)
     seed: int = Field(default=20260812, ge=0)
+
+
+class ArmLiveRequest(BaseModel):
+    """Note what is *not* here: no API key, no secret, no capital amount.
+
+    Credentials come from the process environment and the ceiling comes from
+    configuration. Accepting either over HTTP would mean a secret travelling through a
+    request log, a proxy and a browser's memory, and would let the amount at risk be set
+    by whoever can reach the endpoint.
+    """
+
+    confirmation: str = Field(min_length=1, max_length=200)
 
 
 # --------------------------------------------------------------------------- app
@@ -395,6 +408,56 @@ def _register_routes(app: FastAPI, settings: Settings) -> None:
     @app.get("/api/strategies")
     async def strategies(request: Request, _user: User = Depends(current_user)) -> list[Any]:
         return tia(request).strategies()
+
+    # ------------------------------------------------------------------ economics
+
+    @app.get("/api/economics")
+    async def economics(request: Request, _user: User = Depends(current_user)) -> dict[str, Any]:
+        """Costs, expected value and the risk budget for the most recent signals."""
+        return tia(request).economics()
+
+    @app.get("/api/analytics")
+    async def analytics(request: Request, _user: User = Depends(current_user)) -> dict[str, Any]:
+        """Probability of ruin and safe sizing, from this run's closed trades."""
+        return tia(request).analytics()
+
+    @app.get("/api/capital")
+    async def capital(request: Request, _user: User = Depends(current_user)) -> dict[str, Any]:
+        """Contributed capital, trading P&L, and the two kept strictly apart."""
+        return tia(request).capital()
+
+    # ------------------------------------------------------------------ live gate
+
+    @app.get("/api/live/gate")
+    async def live_gate(request: Request, _user: User = Depends(current_user)) -> dict[str, Any]:
+        """Every activation check, with its verdict and what to do about it.
+
+        Read-only. Nothing here arms anything, so it is safe for any authenticated user
+        to look at — and looking is the point: the checks are meant to be visible before
+        anyone tries to pass them.
+        """
+        return await tia(request).live_gate()
+
+    @app.post("/api/live/arm")
+    async def arm_live(
+        body: ArmLiveRequest, request: Request, user: User = Depends(require_operator)
+    ) -> dict[str, Any]:
+        """Attempt to arm live trading.
+
+        Requires an operator, the exact confirmation phrase, and every activation check
+        passing. Refuses with the full report otherwise — which is what it will do in any
+        deployment where the venue adapter has not been validated against the real venue.
+        """
+        try:
+            return await tia(request).arm_live(
+                operator=user.username, confirmation=body.confirmation
+            )
+        except PermissionError as exc:
+            raise HTTPException(403, str(exc)) from exc
+        except LiveActivationError as exc:
+            # 409, not 400: the request was well-formed and the *system* is not in a state
+            # where it can be granted. A 400 would suggest the caller should fix the body.
+            raise HTTPException(409, str(exc)) from exc
 
     @app.get("/api/scenarios")
     async def scenarios(_user: User = Depends(current_user)) -> list[Any]:

@@ -14,10 +14,14 @@ import { NewsView } from "./views/NewsView";
 import { LogsView } from "./views/LogsView";
 import { SystemView } from "./views/SystemView";
 import { SettingsView } from "./views/SettingsView";
+import { StrategyView } from "./views/StrategyView";
+import { AnalyticsView } from "./views/AnalyticsView";
+import { LiveView } from "./views/LiveView";
 import { Pill } from "./components/ui";
 
 type Tab =
   | "dashboard" | "markets" | "ai" | "risk" | "portfolio" | "orders"
+  | "strategy" | "analytics" | "live"
   | "backtests" | "news" | "logs" | "system" | "settings";
 
 const NAV: { group: string; items: { id: Tab; label: string }[] }[] = [
@@ -33,8 +37,10 @@ const NAV: { group: string; items: { id: Tab; label: string }[] }[] = [
   {
     group: "Understand",
     items: [
+      { id: "strategy", label: "Strategy & Costs" },
       { id: "ai", label: "AI Decisions" },
       { id: "risk", label: "Risk" },
+      { id: "analytics", label: "Ruin Analytics" },
       { id: "news", label: "News" },
       { id: "backtests", label: "Backtests" },
     ],
@@ -42,6 +48,7 @@ const NAV: { group: string; items: { id: Tab; label: string }[] }[] = [
   {
     group: "Inspect",
     items: [
+      { id: "live", label: "Live Trading" },
       { id: "system", label: "System" },
       { id: "logs", label: "Logs" },
       { id: "settings", label: "Settings" },
@@ -159,7 +166,10 @@ export default function App() {
           {tab === "portfolio" && <Portfolio subscribe={subscribe} />}
           {tab === "orders" && <Orders subscribe={subscribe} />}
           {tab === "ai" && <AiView runtime={runtime} subscribe={subscribe} />}
+          {tab === "strategy" && <StrategyView subscribe={subscribe} />}
           {tab === "risk" && <RiskView subscribe={subscribe} />}
+          {tab === "analytics" && <AnalyticsView subscribe={subscribe} />}
+          {tab === "live" && <LiveView role={user.role} />}
           {tab === "news" && <NewsView subscribe={subscribe} />}
           {tab === "backtests" && <Backtests />}
           {tab === "system" && <SystemView health={health} runtime={runtime} />}

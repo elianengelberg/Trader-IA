@@ -300,6 +300,193 @@ export interface StartOptions {
   news_enabled: boolean;
 }
 
+/** The itemised round-trip cost of a proposed trade, in basis points. */
+export interface TradeCosts {
+  fee_bps: number;
+  spread_bps: number;
+  slippage_bps: number;
+  latency_bps: number;
+  impact_bps: number;
+  total_bps: number;
+  total_currency: number;
+  dominant: string;
+}
+
+export interface ExpectedValueRow {
+  gross_edge_bps: number;
+  net_edge_bps: number;
+  net_edge_currency: number;
+  threshold_bps: number;
+  cost_ratio: number | null;
+  tradeable: boolean;
+  costs: TradeCosts;
+  edge: {
+    mean_bps: number;
+    adjusted_bps: number;
+    standard_error_bps: number;
+    samples: number;
+    regime: string;
+    direction: string;
+    confidence_band: number[];
+  } | null;
+  reason: string;
+  explanation: string;
+}
+
+export interface RiskBudgetRow {
+  state: string;
+  profile: string;
+  risk_currency: number;
+  risk_pct: number;
+  drawdown_multiplier: number;
+  volatility_multiplier: number;
+  streak_multiplier: number;
+  total_multiplier: number;
+  allows_new_trades: boolean;
+  binding_constraint: string;
+}
+
+export interface Evaluation {
+  symbol: string;
+  at: string;
+  signal_id: string;
+  direction: string;
+  confidence: number;
+  price: number;
+  budget: RiskBudgetRow;
+  expected_value: ExpectedValueRow;
+  tradeable: boolean;
+}
+
+export interface ClosedTrade {
+  symbol: string;
+  direction: string;
+  regime: string;
+  confidence: number;
+  entry_price: number;
+  exit_price: number;
+  gross_bps: number;
+  fees_bps: number;
+  net_bps: number;
+  expected_net_bps: number;
+  closed_at: string;
+  samples_now: number;
+}
+
+export interface Economics {
+  available: boolean;
+  reason?: string;
+  profile?: Record<string, number | string>;
+  budget?: RiskBudgetRow;
+  consecutive_losses?: number;
+  fees?: {
+    maker_bps: number;
+    taker_bps: number;
+    round_trip_taker_bps: number;
+    verified_at_source: boolean;
+    source: string;
+    requires_verification: boolean;
+  };
+  expected_value?: {
+    enforcing: boolean;
+    mode_explanation: string;
+    threshold_bps: number;
+    max_cost_ratio: number;
+    evaluations: number;
+    acceptance_rate: number;
+    would_reject: number;
+    rejected: number;
+    no_evidence: number;
+    min_samples: number;
+    coverage: Record<string, number>;
+    latest: Evaluation | null;
+  };
+  closed_trades?: {
+    count: number;
+    mean_net_bps: number | null;
+    wins: number;
+    losses: number;
+    recent: ClosedTrade[];
+  };
+}
+
+export interface Analytics {
+  available: boolean;
+  reason?: string;
+  closed_trades?: number;
+  ruin?: {
+    probability_of_ruin: number;
+    analytic_probability: number | null;
+    median_max_drawdown_pct: number;
+    worst_max_drawdown_pct: number;
+    equity_5th_percentile: number;
+    median_final_equity: number;
+    longest_losing_streak: number;
+    paths: number;
+    horizon_trades: number;
+    ruin_threshold: number;
+    acceptable: boolean;
+    seed: number;
+  };
+  explanation?: string;
+  max_safe_risk_fraction?: number | null;
+  max_safe_risk_note?: string;
+  sample_warning?: string;
+  profile?: Record<string, number | string>;
+}
+
+export interface CapitalView {
+  simulated: boolean;
+  currency: string;
+  contributed: number;
+  deposits: number;
+  withdrawals: number;
+  net_contributed: number;
+  realized_pnl: number;
+  unrealized_pnl: number;
+  fees_paid: number;
+  equity: number;
+  cash: number;
+  invested: number;
+  trading_pnl: number;
+  return_pct: number;
+  max_drawdown_pct: number;
+  peak_equity: number;
+  live: {
+    enabled: boolean;
+    max_live_capital: number;
+    allocated: number;
+    note: string;
+  };
+  explanation: string;
+}
+
+export interface GateCheckRow {
+  name: string;
+  passed: boolean;
+  reported: boolean;
+  detail: string;
+  remedy: string;
+  rationale: string;
+}
+
+export interface GateReport {
+  passed: boolean;
+  evaluated_at: string;
+  environment: string;
+  total: number;
+  failed: number;
+  unreported: string[];
+  checks: GateCheckRow[];
+  explanation: string;
+  live_enabled_in_config: boolean;
+  max_live_capital: number;
+  confirmation_phrase: string;
+  ttl_seconds: number;
+  venue_validation: Record<string, unknown> | null;
+  custody_note: string;
+}
+
 export const api = {
   login: (username: string, password: string) =>
     post<{ username: string; role: string }>("/auth/login", { username, password }),
@@ -330,6 +517,12 @@ export const api = {
   },
   risk: () => get<RiskView>("/risk"),
   strategies: () => get<Strategy[]>("/strategies"),
+  economics: () => get<Economics>("/economics"),
+  analytics: () => get<Analytics>("/analytics"),
+  capital: () => get<CapitalView>("/capital"),
+  liveGate: () => get<GateReport>("/live/gate"),
+  armLive: (confirmation: string) =>
+    post<{ armed: boolean; activation: Record<string, unknown> }>("/live/arm", { confirmation }),
   scenarios: () => get<Scenario[]>("/scenarios"),
   settings: () => get<Record<string, unknown>>("/settings"),
   systemStatus: () => get<Record<string, unknown>>("/system/status"),

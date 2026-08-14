@@ -414,6 +414,179 @@ class AppState:
             )
         return out
 
+    # ------------------------------------------------------------------ economics
+
+    def economics(self) -> dict[str, Any]:
+        """The trade-or-not machinery: costs, expected value, risk budget, evidence."""
+        if self.runtime is None:
+            return {
+                "available": False,
+                "reason": "no run is active; start one to see how signals are priced",
+            }
+        return {"available": True, **self.runtime.economics_snapshot()}
+
+    def analytics(self) -> dict[str, Any]:
+        """Ruin probability and safe sizing, computed from this run's closed trades.
+
+        Returns a refusal rather than a number when there are too few trades. A ruin
+        probability derived from four round trips is a precise-looking figure in front of
+        someone deciding how much to risk, which is worse than no figure at all.
+        """
+        from tia.risk.ruin import max_safe_risk_fraction, monte_carlo_ruin
+
+        if self.runtime is None:
+            return {"available": False, "reason": "no run is active"}
+
+        trades = list(self.runtime.closed_trades)
+        # Per-trade returns as fractions of the equity at risk. bps -> fraction.
+        returns = [row["net_bps"] / 10_000.0 for row in trades]
+
+        if len(returns) < 2:
+            return {
+                "available": False,
+                "reason": (
+                    f"{len(returns)} closed round trips. A ruin estimate needs at least "
+                    "two, and is not worth much below thirty. Let the paper run continue."
+                ),
+                "closed_trades": len(returns),
+            }
+
+        estimate = monte_carlo_ruin(returns, horizon_trades=250, paths=5_000)
+        safe = max_safe_risk_fraction(returns, horizon_trades=250)
+
+        return {
+            "available": True,
+            "closed_trades": len(returns),
+            "ruin": estimate.as_dict(),
+            "explanation": estimate.explain(),
+            "max_safe_risk_fraction": None if safe is None else round(safe[0] * 100.0, 4),
+            "max_safe_risk_note": (
+                "Even the smallest tested bet size ruins too often — this distribution "
+                "should not be traded."
+                if safe is None
+                else "The largest per-trade risk whose simulated ruin probability stays "
+                "under 1%, searched over a fixed ladder rather than optimised, because the "
+                "input distribution does not support finer precision."
+            ),
+            "sample_warning": (
+                "Fewer than 30 closed trades. Treat every number here as an illustration "
+                "of the method, not as a measurement."
+                if len(returns) < 30
+                else ""
+            ),
+            "profile": self.runtime.economics_snapshot()["profile"],
+        }
+
+    def capital(self) -> dict[str, Any]:
+        """The capital panel: what was contributed, what the strategy did with it.
+
+        Deposits and withdrawals are reported separately from trading P&L and are never
+        counted as return — see :mod:`tia.portfolio.capital` for why that direction of
+        error is the one that matters.
+        """
+        snapshot = self.runtime_snapshot()
+        capital = snapshot.get("capital", {})
+        starting = capital.get("starting", 0.0) or 0.0
+        realized = capital.get("realized_pnl", 0.0)
+        unrealized = capital.get("unrealized_pnl", 0.0)
+
+        return {
+            "simulated": True,
+            "currency": self.settings.base_currency,
+            "contributed": starting,
+            "deposits": starting,
+            "withdrawals": 0.0,
+            "net_contributed": starting,
+            "realized_pnl": realized,
+            "unrealized_pnl": unrealized,
+            "fees_paid": capital.get("fees_paid", 0.0),
+            "equity": capital.get("equity", starting),
+            "cash": capital.get("cash", starting),
+            "invested": capital.get("invested", 0.0),
+            "trading_pnl": realized + unrealized,
+            "return_pct": (
+                (realized + unrealized) / starting * 100.0 if starting > 0 else 0.0
+            ),
+            "max_drawdown_pct": capital.get("max_drawdown_pct", 0.0),
+            "peak_equity": capital.get("peak_equity", starting),
+            "live": {
+                "enabled": self.settings.live.enabled,
+                "max_live_capital": self.settings.live.max_live_capital,
+                "allocated": 0.0,
+                "note": (
+                    "No real capital is allocated. Money would stay at the venue in every "
+                    "case: this platform has no wallet, takes no custody, and its API key "
+                    "must not be able to withdraw."
+                ),
+            },
+            "explanation": (
+                "Return is measured against contributed capital, not against the account "
+                "balance. A deposit raises the balance and the denominator together and is "
+                "never counted as profit."
+            ),
+        }
+
+    # ------------------------------------------------------------------ live gate
+
+    async def live_gate(self) -> dict[str, Any]:
+        """Run every activation check and report. **Never arms anything.**"""
+        from tia.api.gate_probes import build_probes, validation_facts
+        from tia.core.clock import SystemClock
+        from tia.live.gate import CONFIRMATION_PHRASE, LiveActivationGate
+
+        gate = LiveActivationGate(
+            SystemClock(),
+            environment=self.settings.env.value,
+            ttl_seconds=self.settings.live.activation_ttl_seconds,
+        )
+        probes = build_probes(self, database_ok=await self.database.ping())
+        report = gate.evaluate(probes)
+
+        return {
+            **report.as_dict(),
+            "live_enabled_in_config": self.settings.live.enabled,
+            "max_live_capital": self.settings.live.max_live_capital,
+            "confirmation_phrase": CONFIRMATION_PHRASE,
+            "ttl_seconds": gate.ttl_seconds,
+            "venue_validation": validation_facts(),
+            "custody_note": (
+                "Arming lets this system place and cancel spot orders on your behalf. It "
+                "never lets it move funds: there is no withdrawal or transfer code path, "
+                "and the API key must not have the permission either."
+            ),
+        }
+
+    async def arm_live(self, *, operator: str, confirmation: str) -> dict[str, Any]:
+        """Attempt to arm live trading. Raises unless every check passes.
+
+        Expected to refuse in any deployment where the Binance adapter has not been
+        validated against the real venue — which is the correct output, not a limitation
+        to work around.
+        """
+        from tia.api.gate_probes import build_probes
+        from tia.core.clock import SystemClock
+        from tia.live.gate import LiveActivationGate, configuration_fingerprint
+
+        if not self.settings.live.enabled:
+            raise PermissionError(
+                "the live path is disabled in configuration. Enable it deliberately with "
+                "TIA_LIVE__ENABLED=true after every activation check passes."
+            )
+
+        gate = LiveActivationGate(
+            SystemClock(),
+            environment=self.settings.env.value,
+            ttl_seconds=self.settings.live.activation_ttl_seconds,
+        )
+        token = gate.arm(
+            build_probes(self, database_ok=await self.database.ping()),
+            operator=operator,
+            confirmation=confirmation,
+            max_live_capital=self.settings.live.max_live_capital,
+            fingerprint=configuration_fingerprint(self.settings.risk, self.settings.live),
+        )
+        return {"armed": True, "activation": token.as_dict(), "report": token.report.as_dict()}
+
     def settings_view(self) -> dict[str, Any]:
         """Configuration, with every secret withheld.
 
@@ -423,7 +596,18 @@ class AppState:
         return {
             "environment": self.settings.env.value,
             "mode": self.settings.mode.value,
-            "simulated_only": True,
+            "simulated_only": self.settings.is_simulation_only,
+            "live": {
+                "enabled": self.settings.live.enabled,
+                "venue": self.settings.live.venue,
+                "use_testnet": self.settings.live.use_testnet,
+                "max_live_capital": self.settings.live.max_live_capital,
+                "risk_profile": self.settings.live.risk_profile,
+                "ev_threshold_bps": self.settings.live.ev_threshold_bps,
+                # Whether a key is configured, never the key. The frontend needs to know
+                # if it should tell the user to set one; it must never learn what it is.
+                "credentials_configured": self.settings.live.has_credentials,
+            },
             "database": self.database.url,
             "llm": {
                 "provider": self.settings.llm.provider,

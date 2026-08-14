@@ -47,6 +47,7 @@ printf "Simulation only. No real money, no broker, no custody.\n"
 
 run  "Lint (ruff)"            $RUFF check packages tests scripts
 run  "Unit tests"             $PY -m pytest tests/unit -q
+run  "Integration tests"      $PY -m pytest tests/integration -q
 run  "Property tests"         $PY -m pytest tests/property -q
 run  "Failure injection"      $PY -m pytest tests/failure -q
 run  "End-to-end pipeline"    $PY -m pytest tests/e2e -q
@@ -64,6 +65,21 @@ for i in "${!NAMES[@]}"; do
   esac
   printf "  %s%-4s%s  %-26s %s\n" "$colour" "${RESULTS[$i]}" "$RESET" "${NAMES[$i]}" "${DETAILS[$i]}"
 done
+
+# Record the outcome where the live activation gate can read it. A file rather than
+# in-process state on purpose: the gate's `tests_pass` check must be satisfiable only by a
+# run that actually happened, in a separate process, against this commit — a check the API
+# could satisfy from its own memory is a check the API could satisfy by being wrong.
+mkdir -p data/runtime
+cat > data/runtime/verify_passed.json <<JSON
+{
+  "passed": $([ "$failures" -eq 0 ] && echo true || echo false),
+  "failed": $failures,
+  "at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+  "commit": "$(git rev-parse HEAD 2>/dev/null || echo unknown)",
+  "dirty": $(test -n "$(git status --porcelain 2>/dev/null)" && echo true || echo false)
+}
+JSON
 
 printf "\n"
 if [ "$failures" -eq 0 ]; then

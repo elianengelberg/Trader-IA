@@ -3,10 +3,11 @@
 This is the pipeline the whole project exists to run, as one loop:
 
     bar → data quality → features → regime → strategies → fusion
-        → context (LLM, advisory only) → Risk Engine → order intent
+        → context (LLM, advisory only) → Risk Engine → risk budget
+        → cost model → expected value → order intent
         → paper execution → fill → position → P&L → persistence → broadcast
 
-Two properties are worth stating because they are what make the loop trustworthy rather
+Three properties are worth stating because they are what make the loop trustworthy rather
 than merely working.
 
 **The fast loop never waits on the slow loop.** The context assessment is fetched with a
@@ -18,6 +19,17 @@ decides beyond removing risk.
 signals that produced NO_TRADE, risk vetoes, orders rejected by the simulator — all of them
 are counted, persisted and shown. A dashboard that only displays trades cannot distinguish
 a system that is working carefully from one that is broken and silent.
+
+**A risk-approved signal is still not a trade.** The Risk Engine answers "is this
+survivable?"; it does not answer "is this worth doing?". Two more gates sit between
+approval and an order, and both refuse far more often than the risk engine does:
+
+* the **risk budget**, which decides how much may be risked given the current drawdown,
+  volatility and losing streak — and may decide the answer is nothing;
+* the **expected value engine**, which subtracts the round-trip cost from a *measured*
+  edge and refuses when the remainder does not clear a threshold. Early in a run it
+  refuses everything, because there is no measured edge yet and the honest response to
+  having no evidence is not to trade.
 """
 
 from __future__ import annotations
@@ -44,6 +56,13 @@ from tia.domain.market import Candle, NewsItem
 from tia.domain.orders import Fill, Order, OrderIntent
 from tia.domain.risk import RiskDecision
 from tia.domain.signals import ContextAssessment, SignalCandidate
+from tia.economics.costs import CostModel, FeeSchedule, MarketConditions
+from tia.economics.expected_value import (
+    EdgeEstimator,
+    ExpectedValue,
+    ExpectedValueEngine,
+    Outcome,
+)
 from tia.execution.paper import PaperExecutionProvider
 from tia.execution.reconciliation import LedgerSnapshot, ReconciliationEngine
 from tia.llm.context import ContextRequest, ContextService
@@ -51,6 +70,12 @@ from tia.llm.governance import LLMGovernor
 from tia.llm.provider import MockLLMProvider, build_provider
 from tia.quant.features import FeatureBuilder, FeatureSet
 from tia.regime.classifier import RegimeAssessment, RegimeClassifier
+from tia.risk.budget import (
+    BudgetInputs,
+    RiskBudget,
+    RiskBudgetEngine,
+    RiskProfileName,
+)
 from tia.risk.engine import RiskEngine
 from tia.runtime.scenarios import (
     Scenario,
@@ -116,6 +141,19 @@ class Counters:
     no_trade: int = 0
     risk_rejected: int = 0
     approved: int = 0
+    #: Risk-approved, then refused because the budget allowed nothing — emergency
+    #: drawdown, the daily trade cap, or the gross exposure ceiling.
+    budget_rejected: int = 0
+    #: Risk-approved and within budget, then refused because the trade did not pay for
+    #: itself. Only ever non-zero when the EV engine is enforcing.
+    ev_rejected: int = 0
+    #: What the EV engine *would* have refused, counted whether or not it is enforcing.
+    #: In paper mode this is the number that matters: it says what enforcing would cost.
+    ev_would_reject: int = 0
+    #: Of those, the ones refused for lack of evidence rather than for a measured edge
+    #: that was too small. Worth separating: one resolves with time, the other says the
+    #: strategy does not clear its costs.
+    ev_no_evidence: int = 0
     suppressed_position_open: int = 0
     intents: int = 0
     orders_rejected: int = 0
@@ -148,6 +186,27 @@ class RuntimeConfig:
     llm_enabled: bool = True
     news_enabled: bool = True
     reconcile_every_bars: int = 50
+
+    #: Whether the expected-value engine **vetoes** or merely **observes**.
+    #:
+    #: Default False, and the reason is a genuine circularity rather than a compromise.
+    #: The EV engine refuses to trade without a measured edge, and an edge is measured
+    #: from closed trades. Enforcing it in paper mode is therefore a deadlock: the system
+    #: refuses every trade, never closes one, and never accumulates the evidence that
+    #: would let it start — a system that is technically correct and permanently inert.
+    #:
+    #: The resolution is the one the design always assumed: **paper trading is how the
+    #: evidence is produced without risking money.** So in paper and backtest the engine
+    #: evaluates every decision, records the full arithmetic, and counts what it *would*
+    #: have refused — but the trade proceeds, and its outcome becomes a sample. Live
+    #: execution sets this True, at which point the accumulated evidence is what the gate
+    #: reads and a signal without a measured edge does not become an order.
+    #:
+    #: The counter to watch while this is False is ``ev_would_reject``. If it stays near
+    #: the signal count once the buckets have filled, the strategy does not clear its own
+    #: costs, and turning enforcement on would stop it trading entirely. That is a finding,
+    #: not a malfunction.
+    enforce_expected_value: bool = False
 
 
 class RuntimeEngine:
@@ -211,6 +270,37 @@ class RuntimeEngine:
         )
         self._reconciler = ReconciliationEngine(on_critical=self._risk.enter_safe_mode)
 
+        # --- economics -------------------------------------------------------------
+        # The fee schedule mirrors the paper simulator's, so the cost the EV engine
+        # subtracts is the cost the simulator actually charges. In a live deployment it
+        # would come from the account instead, and `verified_at_source` stays False until
+        # it does — which is one of the activation gate's checks.
+        self._costs = CostModel(
+            FeeSchedule(
+                maker_bps=settings.execution.maker_fee_bps,
+                taker_bps=settings.execution.taker_fee_bps,
+                verified_at_source=False,
+                source="paper simulator's configured fee model — not a live account",
+            ),
+            impact_coefficient=settings.execution.impact_coefficient,
+        )
+        self._edges = EdgeEstimator()
+        self._ev = ExpectedValueEngine(
+            self._edges,
+            threshold_bps=settings.live.ev_threshold_bps,
+            max_cost_ratio=settings.live.max_cost_ratio,
+        )
+        self._budget = RiskBudgetEngine(RiskProfileName(settings.live.risk_profile))
+        #: Consecutive losing round trips. Shrinks the budget; never grows it.
+        self._consecutive_losses = 0
+        #: Open round trips, keyed by symbol, so a close can be scored against its entry
+        #: and fed back to the edge estimator. Without this the estimator never fills and
+        #: the system never trades — which is correct behaviour but a useless product.
+        self._open_trades: dict[str, dict[str, Any]] = {}
+        #: What the system believed when it entered, carried to the exit so the outcome
+        #: lands in the same bucket the decision was drawn from.
+        self._entry_beliefs: dict[str, dict[str, Any]] = {}
+
         llm_provider = (
             MockLLMProvider(seed=config.seed, fail_rate=self._scenario.llm_failure_rate)
             if settings.llm.provider == "stub" or not config.llm_enabled
@@ -239,6 +329,11 @@ class RuntimeEngine:
         self.recent_orders: deque[dict[str, Any]] = deque(maxlen=200)
         self.recent_fills: deque[dict[str, Any]] = deque(maxlen=200)
         self.recent_assessments: deque[dict[str, Any]] = deque(maxlen=100)
+        #: Every trade-or-not evaluation with its full arithmetic, so the strategy page can
+        #: show why a signal did not become an order.
+        self.recent_evaluations: deque[dict[str, Any]] = deque(maxlen=200)
+        #: Closed round trips, as the edge estimator consumed them.
+        self.closed_trades: deque[dict[str, Any]] = deque(maxlen=1000)
         self.recent_news: deque[dict[str, Any]] = deque(maxlen=100)
         self.recent_logs: deque[dict[str, Any]] = deque(maxlen=500)
         self.equity_curve: deque[dict[str, Any]] = deque(maxlen=5000)
@@ -499,17 +594,36 @@ class RuntimeEngine:
         elif signal.direction.is_actionable:
             self.counters.risk_rejected += 1
 
-        self._record_decision(
-            symbol, candle, signal, decision, regime, report, features,
-            assessment, context_note, context_used,
-        )
-
-        # 5. Act. An opposing signal flattens; otherwise open, if flat and allowed.
-        if not decision.allows_execution:
-            return
-
+        # 5. Risk budget and expected value. Only meaningful for an approved, actionable
+        #    signal that would open something — an exit is not a discretionary trade and
+        #    must never be blocked by an edge calculation.
         position = self._execution.portfolio.positions.get(symbol)
         holding = position is not None and not position.is_flat
+        opening = decision.allows_execution and not holding
+
+        budget: RiskBudget | None = None
+        evaluation: ExpectedValue | None = None
+        if opening:
+            budget = self._budget.compute(self._budget_inputs(features))
+            evaluation = self._ev.evaluate(
+                regime=regime.regime,
+                direction=signal.direction,
+                confidence=signal.confidence,
+                costs=self._costs.estimate(
+                    quantity=decision.approved_quantity,
+                    conditions=self._market_conditions(candle, features, window),
+                ),
+            )
+            self._record_evaluation(symbol, candle, signal, budget, evaluation)
+
+        self._record_decision(
+            symbol, candle, signal, decision, regime, report, features,
+            assessment, context_note, context_used, budget, evaluation,
+        )
+
+        # 6. Act. An opposing signal flattens; otherwise open, if flat and allowed.
+        if not decision.allows_execution:
+            return
 
         if holding:
             # A position already open plus an approved signal in the *opposite*
@@ -528,8 +642,198 @@ class RuntimeEngine:
             self.counters.suppressed_position_open += 1
             return
 
+        if budget is not None and not budget.allows_new_trades:
+            self.counters.budget_rejected += 1
+            self._log(
+                "INFO", "risk", symbol,
+                f"no order: risk budget is zero ({budget.binding_constraint})",
+            )
+            return
+
+        if evaluation is not None and not evaluation.is_tradeable:
+            self.counters.ev_would_reject += 1
+            if evaluation.edge_estimate is None:
+                self.counters.ev_no_evidence += 1
+            if self._config.enforce_expected_value:
+                self.counters.ev_rejected += 1
+                self._log("INFO", "trading", symbol, f"no order: {evaluation.explain()}")
+                return
+            # Observing, not enforcing. The trade proceeds and its outcome becomes the
+            # evidence that enforcement will later read — see
+            # ``RuntimeConfig.enforce_expected_value`` for why this is not a loophole.
+            self._log(
+                "DEBUG", "trading", symbol,
+                f"expected value would refuse this ({evaluation.explain()}), but the EV "
+                "engine is observing rather than enforcing; the outcome becomes a sample",
+            )
+
         self._stop_price[symbol] = decision.stop_price or 0.0
+        self._entry_beliefs[symbol] = {
+            "regime": regime.regime,
+            "direction": signal.direction,
+            "confidence": signal.confidence,
+            "signal_id": signal.signal_id,
+            "expected_net_bps": evaluation.net_edge_bps if evaluation else 0.0,
+        }
         await self._submit(decision, signal, candle)
+
+    # ------------------------------------------------------------------ economics
+
+    def _market_conditions(
+        self, candle: Candle, features: FeatureSet, window: list[Candle]
+    ) -> MarketConditions:
+        """The inputs the cost model prices against, read from this bar.
+
+        Assembled explicitly rather than reached for, so a stored decision can be
+        re-priced later and produce the same number — which is what makes a past
+        NO_TRADE auditable rather than merely asserted.
+        """
+        values = features.finite_values()
+        atr_pct = values.get("atr_pct", 0.0)
+        per_bar_volatility = max(0.0, atr_pct / 100.0)
+
+        # The paper simulator's configured spread. In a live deployment this comes from
+        # the book; here, using the simulator's own number keeps the cost the EV engine
+        # subtracts equal to the cost the simulator will charge.
+        spread_bps = self._settings.execution.base_slippage_bps
+
+        recent = window[-20:] if len(window) >= 20 else window
+        typical_volume = (
+            sum(bar.volume for bar in recent) / len(recent) if recent else candle.volume
+        )
+
+        return MarketConditions(
+            price=max(candle.close, 1e-9),
+            spread_bps=spread_bps,
+            volatility_per_bar=per_bar_volatility,
+            # The simulator caps participation rather than exposing a book, so the
+            # available-at-touch quantity is derived from that cap. Stated here because a
+            # reader would otherwise assume a real depth reading.
+            top_of_book_quantity=typical_volume
+            * self._settings.execution.max_participation_rate,
+            bar_volume=typical_volume,
+            latency_ms=float(
+                self._settings.execution.submit_latency_ms
+                + self._settings.execution.ack_latency_ms
+            ),
+            bar_seconds=60.0,
+        )
+
+    def _budget_inputs(self, features: FeatureSet) -> BudgetInputs:
+        portfolio = self._execution.portfolio
+        equity = portfolio.equity
+        drawdown = (
+            0.0
+            if self.peak_equity <= 0
+            else max(0.0, (self.peak_equity - equity) / self.peak_equity * 100.0)
+        )
+        return BudgetInputs(
+            equity=equity,
+            peak_equity=self.peak_equity,
+            drawdown_pct=drawdown,
+            realised_annual_volatility=max(
+                0.0, features.finite_values().get("realized_vol_20", 0.0)
+            ),
+            consecutive_losses=self._consecutive_losses,
+            trades_today=self._risk.state.trades_today,
+            open_gross_exposure_pct=(
+                portfolio.gross_exposure / equity * 100.0 if equity > 0 else 0.0
+            ),
+        )
+
+    def _record_evaluation(
+        self,
+        symbol: str,
+        candle: Candle,
+        signal: SignalCandidate,
+        budget: RiskBudget,
+        evaluation: ExpectedValue,
+    ) -> None:
+        row = {
+            "symbol": symbol,
+            "at": self._clock.now(),
+            "signal_id": signal.signal_id,
+            "direction": signal.direction.value,
+            "confidence": signal.confidence,
+            "price": candle.close,
+            "budget": budget.as_dict(),
+            "expected_value": evaluation.as_dict(),
+            "tradeable": evaluation.is_tradeable and budget.allows_new_trades,
+        }
+        self.recent_evaluations.appendleft(_jsonable(row))
+        self._emit("evaluation.created", _jsonable(row))
+
+    def _score_round_trip(self, symbol: str, exit_fill: Fill) -> None:
+        """Turn a closed position into evidence the edge estimator can use.
+
+        The realised return is measured **net of the fees actually paid on both legs**,
+        because the EV engine subtracts costs again downstream and counting them twice
+        would understate every edge. It is expressed in basis points of the entry
+        notional, so it is directly comparable to the cost estimate that authorised the
+        entry in the first place.
+        """
+        entry = self._open_trades.pop(symbol, None)
+        beliefs = self._entry_beliefs.pop(symbol, None)
+        if entry is None or beliefs is None:
+            return
+
+        entry_price = float(entry["price"])
+        if entry_price <= 0:
+            return
+
+        long_side = entry["side"] is Side.BUY
+        raw_bps = (exit_fill.price - entry_price) / entry_price * 10_000.0
+        gross_bps = raw_bps if long_side else -raw_bps
+
+        notional = entry["quantity"] * entry_price
+        fees_bps = (
+            (float(entry["fee"]) + exit_fill.fee) / notional * 10_000.0
+            if notional > 0
+            else 0.0
+        )
+        net_bps = gross_bps - fees_bps
+
+        self._edges.record(
+            Outcome(
+                regime=beliefs["regime"],
+                direction=beliefs["direction"],
+                confidence=beliefs["confidence"],
+                net_return_bps=net_bps,
+            )
+        )
+
+        # A losing streak shrinks the next budget. It never grows it — see
+        # :func:`tia.risk.budget.assert_no_martingale`.
+        self._consecutive_losses = 0 if net_bps > 0 else self._consecutive_losses + 1
+
+        row = {
+            "symbol": symbol,
+            "signal_id": beliefs["signal_id"],
+            "regime": beliefs["regime"].value,
+            "direction": beliefs["direction"].value,
+            "confidence": beliefs["confidence"],
+            "entry_price": entry_price,
+            "exit_price": exit_fill.price,
+            "quantity": entry["quantity"],
+            "gross_bps": gross_bps,
+            "fees_bps": fees_bps,
+            "net_bps": net_bps,
+            "expected_net_bps": beliefs["expected_net_bps"],
+            "closed_at": exit_fill.filled_at,
+            "samples_now": self._edges.sample_count(
+                regime=beliefs["regime"],
+                direction=beliefs["direction"],
+                confidence=beliefs["confidence"],
+            ),
+        }
+        self.closed_trades.appendleft(_jsonable(row))
+        self._emit("trade.closed", _jsonable(row))
+        self._log(
+            "INFO", "trading", symbol,
+            f"round trip closed at {net_bps:+.1f} bps net "
+            f"(expected {beliefs['expected_net_bps']:+.1f}); "
+            f"{row['samples_now']} samples in this bucket",
+        )
 
     async def _assess(
         self,
@@ -751,6 +1055,8 @@ class RuntimeEngine:
         assessment: ContextAssessment | None,
         context_note: str,
         context_used: bool,
+        budget: RiskBudget | None = None,
+        evaluation: ExpectedValue | None = None,
     ) -> None:
         row = {
             "decision_id": decision.decision_id,
@@ -780,6 +1086,11 @@ class RuntimeEngine:
                 {"name": c.name, "passed": c.passed, "detail": c.detail}
                 for c in decision.checks
             ],
+            # Present only when the decision would have opened something. An exit is not
+            # priced for edge, so attaching a null here is more honest than attaching a
+            # number that was never consulted.
+            "risk_budget": budget.as_dict() if budget else None,
+            "expected_value": evaluation.as_dict() if evaluation else None,
             "features": dict(list(features.finite_values().items())[:40]),
             "snapshot": {
                 "close": candle.close,
@@ -815,6 +1126,7 @@ class RuntimeEngine:
 
     def _record_fill(self, fill: Fill) -> None:
         self.counters.fills += 1
+        self._track_round_trip(fill)
         row = {
             "fill_id": fill.fill_id,
             "order_id": fill.order_id,
@@ -840,6 +1152,43 @@ class RuntimeEngine:
         order = self._execution._orders.get(fill.order_id)
         if order is not None:
             self._record_order(order)
+
+    def _track_round_trip(self, fill: Fill) -> None:
+        """Open or close the round trip this fill belongs to.
+
+        Driven off the *portfolio* rather than off the order, because a position can be
+        closed by a protective stop, by a reversal, or by a partial sequence, and only the
+        portfolio knows whether the symbol ended up flat. Reading the position after the
+        fill has been applied is what makes "did this close?" a fact rather than an
+        inference from order metadata.
+        """
+        position = self._execution.portfolio.positions.get(fill.symbol)
+        flat = position is None or position.is_flat
+        open_trade = self._open_trades.get(fill.symbol)
+
+        if open_trade is None:
+            if not flat:
+                self._open_trades[fill.symbol] = {
+                    "price": fill.price,
+                    "quantity": fill.quantity,
+                    "side": fill.side,
+                    "fee": fill.fee,
+                    "opened_at": fill.filled_at,
+                }
+            return
+
+        if flat:
+            self._score_round_trip(fill.symbol, fill)
+        elif fill.side is open_trade["side"]:
+            # Adding to the position: the entry becomes a volume-weighted average, so the
+            # round trip is scored against what was actually paid rather than against the
+            # first fill of several.
+            total = open_trade["quantity"] + fill.quantity
+            open_trade["price"] = (
+                open_trade["price"] * open_trade["quantity"] + fill.price * fill.quantity
+            ) / total
+            open_trade["quantity"] = total
+            open_trade["fee"] += fill.fee
 
     def _record_assessment(self, symbol: str, outcome: Any, candle: Candle) -> None:
         assessment = outcome.assessment
@@ -1037,8 +1386,84 @@ class RuntimeEngine:
                 "rejections": self._context.rejections,
                 "budget": self._context.governor.snapshot().as_dict(),
             },
+            "economics": self.economics_snapshot(),
             "counters": self.counters.as_dict(),
             "last_error": self.last_error,
+        }
+
+    def economics_snapshot(self) -> dict[str, Any]:
+        """The trade-or-not machinery, as the strategy page shows it.
+
+        Split out from :meth:`snapshot` because the strategy page polls it on its own and
+        has no use for the equity curve.
+        """
+        latest = self.recent_evaluations[0] if self.recent_evaluations else None
+        closed = [row["net_bps"] for row in self.closed_trades]
+        budget = self._budget.compute(
+            BudgetInputs(
+                equity=self._execution.portfolio.equity,
+                peak_equity=self.peak_equity,
+                drawdown_pct=(
+                    0.0
+                    if self.peak_equity <= 0
+                    else max(
+                        0.0,
+                        (self.peak_equity - self._execution.portfolio.equity)
+                        / self.peak_equity
+                        * 100.0,
+                    )
+                ),
+                realised_annual_volatility=0.0,
+                consecutive_losses=self._consecutive_losses,
+                trades_today=self._risk.state.trades_today,
+                open_gross_exposure_pct=0.0,
+            )
+        )
+        return {
+            "profile": self._budget.profile.model_dump(mode="json"),
+            "budget": budget.as_dict(),
+            "consecutive_losses": self._consecutive_losses,
+            "fees": {
+                "maker_bps": self._costs.fees.maker_bps,
+                "taker_bps": self._costs.fees.taker_bps,
+                "round_trip_taker_bps": self._costs.fees.taker_bps * 2,
+                "verified_at_source": self._costs.fees.verified_at_source,
+                "source": self._costs.fees.source,
+                # Surfaced rather than buried: an unverified fee schedule is the single
+                # assumption most able to turn a losing strategy into a winning-looking
+                # one, and the activation gate refuses to arm while this is True.
+                "requires_verification": self._costs.requires_verification,
+            },
+            "expected_value": {
+                "enforcing": self._config.enforce_expected_value,
+                "mode_explanation": (
+                    "Enforcing: a signal without a measured edge that clears its costs "
+                    "does not become an order."
+                    if self._config.enforce_expected_value
+                    else "Observing: every decision is priced and recorded, but the trade "
+                    "proceeds so its outcome becomes evidence. Paper trading is how the "
+                    "edge is measured; enforcing here would deadlock — no trades, so no "
+                    "evidence, so no trades. Watch would_reject to see what enforcing "
+                    "would cost."
+                ),
+                "threshold_bps": self._ev.threshold_bps,
+                "max_cost_ratio": self._ev.max_cost_ratio,
+                "evaluations": self._ev.evaluations,
+                "acceptance_rate": round(self._ev.acceptance_rate(), 4),
+                "would_reject": self.counters.ev_would_reject,
+                "rejected": self.counters.ev_rejected,
+                "no_evidence": self.counters.ev_no_evidence,
+                "min_samples": self._edges.min_samples,
+                "coverage": self._edges.coverage(),
+                "latest": latest,
+            },
+            "closed_trades": {
+                "count": len(closed),
+                "mean_net_bps": round(sum(closed) / len(closed), 4) if closed else None,
+                "wins": sum(1 for value in closed if value > 0),
+                "losses": sum(1 for value in closed if value <= 0),
+                "recent": list(self.closed_trades)[:20],
+            },
         }
 
 

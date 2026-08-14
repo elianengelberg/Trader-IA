@@ -264,12 +264,14 @@ class ExpectedValueEngine:
         costs: TradeCosts,
     ) -> ExpectedValue:
         if not direction.is_actionable:
-            return ExpectedValue(
-                gross_edge_bps=0.0,
-                costs=costs,
-                threshold_bps=self.threshold_bps,
-                edge_estimate=None,
-                reason=f"direction is {direction.value}",
+            return self._remember(
+                ExpectedValue(
+                    gross_edge_bps=0.0,
+                    costs=costs,
+                    threshold_bps=self.threshold_bps,
+                    edge_estimate=None,
+                    reason=f"direction is {direction.value}",
+                )
             )
 
         estimate = self.estimator.estimate(
@@ -279,16 +281,18 @@ class ExpectedValueEngine:
             have = self.estimator.sample_count(
                 regime=regime, direction=direction, confidence=confidence
             )
-            return ExpectedValue(
-                gross_edge_bps=0.0,
-                costs=costs,
-                threshold_bps=self.threshold_bps,
-                edge_estimate=None,
-                reason=(
-                    f"only {have} closed trades for {regime.value}/{direction.value} at this "
-                    f"confidence; {self.estimator.min_samples} are needed before an "
-                    "expectation means anything"
-                ),
+            return self._remember(
+                ExpectedValue(
+                    gross_edge_bps=0.0,
+                    costs=costs,
+                    threshold_bps=self.threshold_bps,
+                    edge_estimate=None,
+                    reason=(
+                        f"only {have} closed trades for {regime.value}/{direction.value} at "
+                        f"this confidence; {self.estimator.min_samples} are needed before an "
+                        "expectation means anything"
+                    ),
+                )
             )
 
         result = ExpectedValue(
@@ -311,6 +315,17 @@ class ExpectedValueEngine:
                 ),
             )
 
+        return self._remember(result)
+
+    def _remember(self, result: ExpectedValue) -> ExpectedValue:
+        """Record every evaluation, including the refusals.
+
+        All of them, not just the ones that got as far as an edge estimate. An earlier
+        version appended only on the path that produced a number, so a system refusing
+        every signal for lack of evidence reported ``evaluations: 0`` and an acceptance
+        rate of 0/0 — the counters looked identical to a system that was not evaluating
+        at all, which is precisely the confusion they exist to prevent.
+        """
         self._history.append(result)
         return result
 

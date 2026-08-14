@@ -46,7 +46,7 @@ webhook seam, the production compose stack, and the operational scripts. See
 | **SECURITY** | **PASS** | see the table below; secret-leak tests scan whole response bodies including error paths |
 | **END-TO-END** | **PASS** | full flow asserted by automated test and reproduced in a browser |
 | **DOCKER (demo + prod)** | **NOT VERIFIED** | no daemon in the build environment; `docker-compose.prod.yml` (Caddy HTTPS proxy, internal-only Postgres, daily backups, restart unless-stopped) authored but never run — `make production-readiness` proves it on a real machine or honestly exits 3 |
-| **CI WORKFLOW** | **NOT VERIFIED** | `.github/workflows/ci.yml` mirrors `make verify`; it has never executed because this environment cannot reach GitHub Actions |
+| **CI WORKFLOW** | **PASS (executed)** | run #1 failed honestly (phantom test dependency `asgi-lifespan`, hidden by the local venv — fixed by declaring it); run #2 on `afdf52b` green end to end on GitHub Actions: lint, 835 tests, migrations from empty, frontend typecheck + build |
 | **OPS SCRIPTS** | **PASS (local paths)** · Docker paths NOT VERIFIED | `backup.sh` exercised against SQLite (dump verified restorable); `daily_report.py` verified against a populated journal; `deploy.sh`/`production_readiness.sh` exit 3 without a daemon, as designed |
 
 ---
@@ -128,9 +128,10 @@ Unchanged from the Part I audit (all rechecked green in this run), plus:
    Run `scripts/validate_binance.py` from a machine with egress; the gate refuses to arm
    until its output exists — and now refuses a record whose key fingerprint does not
    match the configured credential.
-2. **Docker (demo and production stacks) and CI** — no daemon here, no Actions runner.
-   Written, syntax-checked where possible, never run. `make production-readiness` is the
-   proof procedure and exits 3 rather than pretending.
+2. **Docker (demo and production stacks)** — no daemon here. Written, syntax-checked
+   where possible, never run. `make production-readiness` is the proof procedure and
+   exits 3 rather than pretending. (CI is no longer on this list: it executed green on
+   GitHub Actions, run 31815272053.)
 3. **Live Claude API** — no key available.
 4. **Load beyond one operator** — sized for one process serving one dashboard.
 5. **Regime-classification accuracy on real markets** — now *measured against synthetic

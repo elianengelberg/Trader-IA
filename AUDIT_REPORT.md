@@ -564,3 +564,27 @@ binds, and the live path is unchanged (`CapitalPolicy` still rejects a zero ceil
 real execution).
 
 Verification after the pass: `make verify` 9/9, **833 tests**, ruff and TypeScript clean.
+
+---
+
+# Part V — Deployment coherence pass + first real CI runs (2026-08-14)
+
+The 24/7 mission's Phase 1 audit ("does the deployment described match the code?") found
+three real inconsistencies, each fixed and tested:
+
+| Finding | Fix | Evidence |
+|---|---|---|
+| **Phantom test dependency.** `asgi-lifespan` was imported by four test modules but declared nowhere — the local venv hid it, and CI run #1 (31813897651) failed on collection in 33 s. | Declared in the `dev` extra. | CI run #2 (31815272053) on `afdf52b`: **success** — lint, 835 tests, migrations from empty, frontend typecheck + build, all on GitHub Actions. |
+| **The configured JWT secret was never used.** `create_app` built `AuthService()` bare, so `TIA_SECURITY__JWT_SECRET` had no effect and every restart logged everyone out (safe, but not what the docs claimed). | Configured secret wired in; the placeholder still falls back to the per-process random secret; one `PLACEHOLDER_JWT_SECRET` constant now serves the wiring and the gate probe. | `test_a_configured_jwt_secret_is_actually_used_and_the_placeholder_is_not` — two apps over one settings object validate each other's tokens. |
+| **Paper data came from testnet.** The session read public data from `live.base_url`, which the safe default `use_testnet=True` pointed at testnet.binance.vision — a track record on testnet's thin synthetic market would be worthless. | `live.public_data_url` (always mainnet, keyless, read-only) for paper; live sessions still price on the venue they execute against. | `test_paper_data_comes_from_mainnet_even_while_execution_defaults_to_testnet`. |
+
+Also in this pass: VPS preparation became executable rather than prose
+(`scripts/vps_setup.sh` — idempotent root setup; `scripts/generate_env.sh` — mode-600
+.env with machine-generated secrets, nothing printed; `scripts/post_reboot_check.sh` —
+after-restart evidence incl. zero duplicate client order ids straight from the journal),
+and the Live page gained the status banner: Environment, System ONLINE/OFFLINE (offline
+is loud), Readiness X/N, Risk, Reconciliation, live capital, ARMED/DISARMED.
+
+`make readiness` executed here reports NOT_READY with exit 3 — correct for this
+environment: binance_validation, docker and claude_api are EXTERNAL_REQUIRED and stay
+that way until run on machines that exist outside this sandbox.

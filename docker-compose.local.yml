@@ -1,0 +1,127 @@
+# Trader-IA — autonomous LOCAL stack: runs while this PC is on, recovers on reboot.
+#
+#   bash scripts/local_up.sh          # one command: .env, build, start, health
+#   http://127.0.0.1:8000             # the dashboard (login: operator / see .env)
+#
+# STATUS: REQUIRES VALIDATION — authored without a Docker daemon (none in the build
+# environment). `make local-readiness` exercises the whole thing on your machine,
+# including a hard kill of the backend, and refuses to pretend if it cannot run.
+#
+# How this differs from docker-compose.prod.yml, and why:
+#   * No reverse proxy, no HTTPS, no published 80/443. The backend binds to
+#     127.0.0.1 ONLY — the dashboard is reachable from this machine and from
+#     nowhere else, not even your LAN. HTTPS protects traffic in transit; on
+#     loopback there is no transit. (Want phone/tablet access? That is what the
+#     prod stack on a VPS is for — docs/DEPLOYMENT.md.)
+#   * Same Postgres-on-internal-network, same daily backup sidecar, same
+#     restart: unless-stopped everywhere, same required secrets with no defaults.
+#   * Reboot recovery is two layers: Docker restarts the containers (as long as
+#     Docker itself starts at boot — see docs/LOCAL_DEPLOYMENT.md §5), and the
+#     application resumes a crash-interrupted paper session by itself, while an
+#     operator stop or kill switch stays down. Sticky means sticky.
+#
+# Honest limits of a PC deployment: sleep, hibernation and a closed laptop lid all
+# pause the system — the paper track record accrues only while the machine is awake.
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: trader-ia:local-stack
+    restart: unless-stopped
+    # Migrations first, serve second — a schema mismatch is a visible startup
+    # failure in `docker compose logs backend`, not a surprise later.
+    command: >
+      sh -c "python -m alembic upgrade head
+             && python -m uvicorn tia.api.main:app --host 0.0.0.0 --port 8000 --log-config /dev/null"
+    environment:
+      TIA_ENV: paper
+      TIA_DATABASE_URL: postgresql+asyncpg://tia:${POSTGRES_PASSWORD:?run scripts/generate_env.sh first}@postgres:5432/tia
+      TIA_DEMO_USER: ${TIA_DEMO_USER:?run scripts/generate_env.sh first}
+      TIA_DEMO_PASSWORD: ${TIA_DEMO_PASSWORD:?run scripts/generate_env.sh first}
+      TIA_SECURITY__JWT_SECRET: ${TIA_JWT_SECRET:?run scripts/generate_env.sh first}
+      TIA_OBSERVABILITY__ALERT_WEBHOOK_URL: ${TIA_ALERT_WEBHOOK_URL:-}
+      TIA_ANTHROPIC_API_KEY: ${TIA_ANTHROPIC_API_KEY:-}
+      # Optional; the 24/7 paper session needs none. Testnet keys go in .env when
+      # you run `make binance-testnet` — never anywhere else.
+      TIA_LIVE__BINANCE_API_KEY: ${TIA_BINANCE_API_KEY:-}
+      TIA_LIVE__BINANCE_API_SECRET: ${TIA_BINANCE_API_SECRET:-}
+    ports:
+      # Loopback only. "127.0.0.1:" is the security control here: without it Docker
+      # would publish the port on every interface and your dashboard would be on
+      # the LAN. Do not shorten this to "8000:8000".
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - tia-local-data:/app/data/runtime
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8000/api/health"]
+      interval: 20s
+      timeout: 4s
+      retries: 3
+      start_period: 30s
+    networks: [internal]
+    security_opt:
+      - no-new-privileges:true
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: tia
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?run scripts/generate_env.sh first}
+      POSTGRES_DB: tia
+    # No ports section: the database is reachable only from the internal network.
+    volumes:
+      - tia-local-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tia -d tia"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [internal]
+    security_opt:
+      - no-new-privileges:true
+
+  # Daily logical backups on their own volume. Copy them somewhere that is not
+  # this disk (an external drive, cloud storage) — restore drill in
+  # docs/LOCAL_DEPLOYMENT.md §8.
+  backup:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      PGPASSWORD: ${POSTGRES_PASSWORD:?run scripts/generate_env.sh first}
+      BACKUP_KEEP: ${BACKUP_KEEP:-14}
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        while true; do
+          stamp=$$(date -u +%Y%m%d-%H%M%S)
+          if pg_dump -h postgres -U tia -d tia | gzip > "/backups/tia-$${stamp}.sql.gz"; then
+            echo "backup written: tia-$${stamp}.sql.gz"
+          else
+            echo "BACKUP FAILED at $${stamp}" >&2
+          fi
+          ls -1t /backups/tia-*.sql.gz 2>/dev/null | tail -n +$$((BACKUP_KEEP + 1)) | xargs -r rm -f
+          sleep 86400
+        done
+    volumes:
+      - tia-local-backups:/backups
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks: [internal]
+    security_opt:
+      - no-new-privileges:true
+
+networks:
+  internal:
+
+volumes:
+  tia-local-data:
+  tia-local-postgres:
+  tia-local-backups:

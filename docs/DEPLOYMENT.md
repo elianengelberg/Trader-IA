@@ -4,6 +4,10 @@ This document takes the platform from a git clone to a hardened, self-restarting
 deployment on a small server. Follow it in order; every section states what it proves
 and what it merely prepares.
 
+> Running it on **your own PC** instead (while it's on, loopback-only, no server to
+> rent)? That is `docs/LOCAL_DEPLOYMENT.md` — same system, same safety controls,
+> different trade-offs.
+
 **Honesty header, before anything else.** The Docker files, the compose stack, the CI
 workflow and every command in this document were authored in an environment with **no
 Docker daemon and no route to Binance**, so none of them has been executed end-to-end

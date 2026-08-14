@@ -98,6 +98,33 @@ regime-accuracy: ## Measure regime-classifier accuracy against scenario ground t
 production-readiness: ## Full production check: compose up, health, restart survival (needs Docker)
 	@bash scripts/production_readiness.sh
 
+# ------------------------------------------------- local autonomous stack (your PC)
+
+.PHONY: local-up
+local-up: ## Start the autonomous local stack on http://127.0.0.1:8000 (needs Docker)
+	@bash scripts/local_up.sh
+
+.PHONY: local-down
+local-down: ## Stop the local stack (data volumes are kept)
+	@docker compose -f docker-compose.local.yml down
+
+.PHONY: local-status
+local-status: ## Show local stack services and current health
+	@docker compose -f docker-compose.local.yml ps
+	@curl -fsS --max-time 5 http://127.0.0.1:8000/api/health || echo "no answer on 127.0.0.1:8000"
+
+.PHONY: local-logs
+local-logs: ## Tail the local backend's logs
+	@docker compose -f docker-compose.local.yml logs -f --tail 100 backend
+
+.PHONY: local-readiness
+local-readiness: ## Same hard checks as production-readiness, against the local stack
+	@COMPOSE_FILE=docker-compose.local.yml BASE_URL=http://127.0.0.1:8000 bash scripts/production_readiness.sh
+
+.PHONY: local-restart-check
+local-restart-check: ## After a reboot: collect evidence that everything came back by itself
+	@COMPOSE_FILE=docker-compose.local.yml BASE_URL=http://127.0.0.1:8000 bash scripts/post_reboot_check.sh
+
 .PHONY: fixtures
 fixtures: ## Regenerate the committed market fixtures (idempotent)
 	@$(PY) scripts/generate_fixtures.py

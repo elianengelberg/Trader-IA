@@ -14,10 +14,15 @@
 #   5. the engine heartbeat is moving
 #
 # Exit 0 = all green. Exit 1 = something failed. Exit 3 = no stack to check.
+#
+# Works for both stacks. Defaults to production; for the local stack:
+#   COMPOSE_FILE=docker-compose.local.yml BASE_URL=http://127.0.0.1:8000 bash scripts/post_reboot_check.sh
+# (or just `make local-restart-check`).
 set -uo pipefail
 
-COMPOSE="docker compose -f docker-compose.prod.yml"
-DOMAIN="${TIA_DOMAIN:-localhost}"
+COMPOSE_FILE="${COMPOSE_FILE:-docker-compose.prod.yml}"
+COMPOSE="docker compose -f ${COMPOSE_FILE}"
+BASE_URL="${BASE_URL:-https://${TIA_DOMAIN:-localhost}}"
 fail=0
 pass() { echo "  PASS  $*"; }
 warn() { echo "  WARN  $*"; }
@@ -39,9 +44,9 @@ else
 fi
 
 # ---- 2 + 3 + 5. through the API ------------------------------------------------------
-health="$(curl -kfsS --max-time 10 "https://${DOMAIN}/api/health" 2>/dev/null || true)"
+health="$(curl -kfsS --max-time 10 "${BASE_URL}/api/health" 2>/dev/null || true)"
 if [ -z "$health" ]; then
-  nope "no answer from https://${DOMAIN}/api/health"
+  nope "no answer from ${BASE_URL}/api/health"
 else
   pass "health endpoint answers through the proxy"
   echo "$health" | grep -q '"database": *"online"' \

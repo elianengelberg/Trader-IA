@@ -23,14 +23,19 @@ prune() {
   ls -1t "$OUT_DIR"/$1 2>/dev/null | tail -n +"$((KEEP + 1))" | xargs -r rm -f
 }
 
-# ---- case 1: production compose stack ------------------------------------------------
-if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1 \
-   && docker compose -f docker-compose.prod.yml ps --status running postgres 2>/dev/null | grep -q postgres; then
-  out="$OUT_DIR/tia-${STAMP}.sql.gz"
-  docker compose -f docker-compose.prod.yml exec -T postgres pg_dump -U tia -d tia | gzip > "$out"
-  echo "PASS  postgres dump (via compose): $out ($(du -h "$out" | cut -f1))"
-  prune "tia-*.sql.gz"
-  exit 0
+# ---- case 1: a compose stack (production or local) -----------------------------------
+# COMPOSE_FILE pins one explicitly; otherwise whichever stack is actually running wins.
+if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
+  for compose_file in ${COMPOSE_FILE:-docker-compose.prod.yml docker-compose.local.yml}; do
+    [ -f "$compose_file" ] || continue
+    if docker compose -f "$compose_file" ps --status running postgres 2>/dev/null | grep -q postgres; then
+      out="$OUT_DIR/tia-${STAMP}.sql.gz"
+      docker compose -f "$compose_file" exec -T postgres pg_dump -U tia -d tia | gzip > "$out"
+      echo "PASS  postgres dump (via $compose_file): $out ($(du -h "$out" | cut -f1))"
+      prune "tia-*.sql.gz"
+      exit 0
+    fi
+  done
 fi
 
 URL="${TIA_DATABASE_URL:-sqlite+aiosqlite:///./data/runtime/tia.db}"

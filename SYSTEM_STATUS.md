@@ -45,7 +45,7 @@ webhook seam, the production compose stack, and the operational scripts. See
 | **FAILURE HANDLING** | **PASS** | injected failures incl. LLM outage, corrupted feed, phantom position, safe mode, restart, redelivery |
 | **SECURITY** | **PASS** | see the table below; secret-leak tests scan whole response bodies including error paths |
 | **END-TO-END** | **PASS** | full flow asserted by automated test and reproduced in a browser |
-| **DOCKER (demo + prod)** | **NOT VERIFIED** | no daemon in the build environment; `docker-compose.prod.yml` (Caddy HTTPS proxy, internal-only Postgres, daily backups, restart unless-stopped) authored but never run — `make production-readiness` proves it on a real machine or honestly exits 3 |
+| **DOCKER (demo + prod + local)** | **NOT VERIFIED** | no daemon in the build environment; `docker-compose.prod.yml` (Caddy HTTPS, VPS) and `docker-compose.local.yml` (loopback-only, your PC) both parse under `docker compose config` and refuse to start without their secrets, but have never run — `make production-readiness` / `make local-readiness` prove them on a real machine or honestly exit 3 |
 | **CI WORKFLOW** | **PASS (executed)** | run #1 failed honestly (phantom test dependency `asgi-lifespan`, hidden by the local venv — fixed by declaring it); run #2 on `afdf52b` green end to end on GitHub Actions: lint, 835 tests, migrations from empty, frontend typecheck + build |
 | **OPS SCRIPTS** | **PASS (local paths)** · Docker paths NOT VERIFIED | `backup.sh` exercised against SQLite (dump verified restorable); `daily_report.py` verified against a populated journal; `deploy.sh`/`production_readiness.sh` exit 3 without a daemon, as designed |
 

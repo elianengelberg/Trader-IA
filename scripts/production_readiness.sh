@@ -14,11 +14,16 @@
 # Honesty rules, same as scripts/docker_verify.sh: without a Docker daemon this
 # exits 3 (EXTERNAL VALIDATION REQUIRED), never 0 — "could not test" is not "passed".
 # KEEP_UP=1 leaves the stack running afterwards; default tears it down.
+#
+# Works for both stacks. Defaults to production; `make local-readiness` runs it as:
+#   COMPOSE_FILE=docker-compose.local.yml BASE_URL=http://127.0.0.1:8000
+# (same checks, including the hard kill; only the entry URL differs).
 set -uo pipefail
 
 BOLD=$'\033[1m'; GREEN=$'\033[32m'; RED=$'\033[31m'; YELLOW=$'\033[33m'; RESET=$'\033[0m'
-COMPOSE="docker compose -f docker-compose.prod.yml"
-DOMAIN="${TIA_DOMAIN:-localhost}"
+COMPOSE_FILE="${COMPOSE_FILE:-docker-compose.prod.yml}"
+COMPOSE="docker compose -f ${COMPOSE_FILE}"
+BASE_URL="${BASE_URL:-https://${TIA_DOMAIN:-localhost}}"
 fail=0
 
 pass() { echo "  ${GREEN}PASS${RESET}  $*"; }
@@ -62,11 +67,11 @@ $COMPOSE config -q && pass "compose file parses" || { nope "compose config inval
 # ---- 2. up ---------------------------------------------------------------------------
 $COMPOSE up -d --build --wait && pass "stack built and healthy" || { nope "stack failed to come up — $COMPOSE logs"; exit 1; }
 
-# ---- 3. through the proxy, with TLS --------------------------------------------------
-if curl -kfsS --max-time 10 "https://${DOMAIN}/api/health" | grep -q '"status"'; then
-  pass "HTTPS through the proxy answers /api/health"
+# ---- 3. through the entry point users take -------------------------------------------
+if curl -kfsS --max-time 10 "${BASE_URL}/api/health" | grep -q '"status"'; then
+  pass "/api/health answers on ${BASE_URL}"
 else
-  nope "no answer through the proxy on https://${DOMAIN}"
+  nope "no answer on ${BASE_URL}"
 fi
 
 # The database must NOT be reachable from the host: no published port.
@@ -92,7 +97,7 @@ else
 fi
 
 # ---- 5. state survived ---------------------------------------------------------------
-if curl -kfsS --max-time 10 "https://${DOMAIN}/api/health" | grep -q '"database": *"online"'; then
+if curl -kfsS --max-time 10 "${BASE_URL}/api/health" | grep -q '"database": *"online"'; then
   pass "database online after the restart"
 else
   nope "database not online after restart"

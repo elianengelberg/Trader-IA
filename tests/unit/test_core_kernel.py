@@ -146,11 +146,54 @@ class TestRiskLimits:
 
 
 class TestSettings:
-    def test_every_mode_is_simulation_only(self) -> None:
-        """The scope rule, asserted mechanically: no mode may execute real orders."""
+    def test_every_mode_but_live_is_simulation_only(self) -> None:
         for mode in TradingMode:
             settings = settings_for_env(Environment.DEVELOPMENT, mode=mode)
-            assert settings.is_simulation_only
+            assert settings.is_simulation_only is (mode is not TradingMode.LIVE)
+
+    def test_selecting_live_mode_grants_no_permission_by_itself(self) -> None:
+        """``mode=LIVE`` is a statement of intent, not an authorisation.
+
+        A copied ``.env``, a typo, or a container inheriting the wrong profile must not be
+        enough to put real money at risk. Execution requires a token from the activation
+        gate, and nothing in configuration can produce one — the live block below carries
+        no credentials, no capital and no enabled flag, and that is the default.
+        """
+        settings = settings_for_env(Environment.DEVELOPMENT, mode=TradingMode.LIVE)
+
+        assert settings.live.enabled is False
+        assert settings.live.max_live_capital == 0.0
+        assert settings.live.has_credentials is False
+        assert settings.live.use_testnet is True
+
+    def test_enabling_live_without_a_capital_ceiling_is_refused(self) -> None:
+        """Without a ceiling, the amount at risk is whatever happens to be in the
+        account."""
+        from tia.core.config import LiveConfig
+
+        with pytest.raises(ValueError, match="max_live_capital"):
+            LiveConfig(enabled=True)
+
+    def test_venue_credentials_never_appear_in_the_redacted_config(self) -> None:
+        """``redacted()`` is what the API returns and what gets logged."""
+        from pydantic import SecretStr
+
+        from tia.core.config import LiveConfig
+
+        settings = settings_for_env(
+            Environment.PAPER,
+            live=LiveConfig(
+                enabled=True,
+                max_live_capital=500.0,
+                binance_api_key=SecretStr("public-part"),
+                binance_api_secret=SecretStr("the-secret-value"),
+            ),
+        )
+        payload = settings.redacted()
+
+        assert "the-secret-value" not in str(payload)
+        assert "public-part" not in str(payload)
+        assert payload["live"]["binance_api_secret"] == "***"  # noqa: S105 - redaction marker
 
     def test_demo_refuses_a_network_provider(self) -> None:
         with pytest.raises(ValueError, match="synthetic or csv"):

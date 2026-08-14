@@ -34,12 +34,21 @@ class Environment(StrEnum):
 
 
 class TradingMode(StrEnum):
-    """The only modes that exist. There is deliberately no ``LIVE``."""
+    """How the system is running.
+
+    ``LIVE`` is a description of intent, **not a permission**. Selecting it does not let
+    anything reach a venue: execution requires a
+    :class:`~tia.live.gate.LiveActivationToken`, which only the activation gate can mint
+    and which no configuration value can produce. The distinction matters because a copied
+    ``.env``, a typo, or a container inheriting the wrong profile must never be sufficient
+    to put real money at risk.
+    """
 
     BACKTEST = "backtest"
     PAPER = "paper"
     SHADOW = "shadow"
     RESEARCH = "research"
+    LIVE = "live"
 
 
 class FrozenModel(BaseModel):
@@ -246,6 +255,75 @@ class SecurityConfig(FrozenModel):
     max_webhook_body_bytes: int = Field(16_384, ge=256, le=1_048_576)
 
 
+class LiveConfig(FrozenModel):
+    """Configuration for the live path. **Permits consideration; never activates.**
+
+    Every field here is an upper bound or a coordinate — where the venue is, which symbol,
+    how much may ever be at work. None of them turns anything on. Turning it on requires
+    the activation gate to pass every check and a human to type a confirmation phrase, and
+    nothing in this class can substitute for either.
+
+    ``max_live_capital`` defaults to ``0.0``, which is not a placeholder: zero means no
+    capital policy can be constructed, so the gate cannot arm. The system fails closed
+    until someone sets a number on purpose.
+
+    **Secrets.** ``binance_api_key`` and ``binance_api_secret`` are read from the process
+    environment (``TIA_LIVE__BINANCE_API_KEY`` / ``TIA_LIVE__BINANCE_API_SECRET``) or a
+    secret manager. They are never accepted through the API, never sent to the frontend,
+    never written to a log, and never included in :meth:`Settings.redacted`. The API key
+    must not have withdrawal or transfer permission — checked against the venue by
+    :func:`tia.live.permissions.check_permissions`, which refuses to trade with one that
+    does.
+    """
+
+    #: Whether the live path may be *considered* at all. False disables the activation
+    #: endpoint entirely, which is the state a research deployment should stay in.
+    enabled: bool = False
+    venue: Literal["binance"] = "binance"
+    symbol: str = "BTC-USD"
+
+    #: The most that may ever be at work, in quote currency. The venue holds the rest and
+    #: this system cannot reach it. Zero means the gate cannot arm.
+    max_live_capital: float = Field(0.0, ge=0)
+    risk_profile: Literal["conservative", "balanced", "aggressive"] = "conservative"
+
+    #: Minimum net edge, in basis points, after all costs, before a trade is worth taking.
+    ev_threshold_bps: float = Field(5.0, ge=0, le=1000)
+    #: Costs may not exceed this fraction of the expected gross edge.
+    max_cost_ratio: float = Field(0.6, gt=0, le=1.0)
+
+    binance_api_key: SecretStr | None = None
+    binance_api_secret: SecretStr | None = None
+    binance_base_url: str = "https://api.binance.com"
+    binance_testnet_url: str = "https://testnet.binance.vision"
+    #: Default True. Pointing at the real venue is a deliberate act, not a default.
+    use_testnet: bool = True
+
+    #: How long an activation stays valid before the gate must run again.
+    activation_ttl_seconds: int = Field(3600, ge=60, le=21_600)
+    #: Paper-trading evidence required before the gate's track-record check can pass.
+    min_paper_days: float = Field(7.0, ge=0)
+    min_paper_trades: int = Field(30, ge=0)
+
+    @property
+    def base_url(self) -> str:
+        return self.binance_testnet_url if self.use_testnet else self.binance_base_url
+
+    @property
+    def has_credentials(self) -> bool:
+        return self.binance_api_key is not None and self.binance_api_secret is not None
+
+    @model_validator(mode="after")
+    def _coherent(self) -> LiveConfig:
+        if self.enabled and self.max_live_capital <= 0:
+            raise ValueError(
+                "live.enabled=True requires a positive live.max_live_capital. Set the "
+                "ceiling deliberately — without one, the amount at risk is whatever "
+                "happens to be in the account."
+            )
+        return self
+
+
 class ObservabilityConfig(FrozenModel):
     log_level: str = "INFO"
     log_format: Literal["json", "console"] = "json"
@@ -290,6 +368,7 @@ class Settings(BaseSettings):
     market_data: MarketDataConfig = Field(default_factory=MarketDataConfig)
     strategy: StrategyConfig = Field(default_factory=StrategyConfig)
     security: SecurityConfig = Field(default_factory=SecurityConfig)
+    live: LiveConfig = Field(default_factory=LiveConfig)
     observability: ObservabilityConfig = Field(default_factory=ObservabilityConfig)
 
     @model_validator(mode="after")
@@ -316,7 +395,12 @@ class Settings(BaseSettings):
 
     @property
     def is_simulation_only(self) -> bool:
-        """Always true. Kept as an explicit, testable assertion of the scope rule."""
+        """Whether this configuration can only ever produce simulated fills.
+
+        True for every mode but ``LIVE``. Note the asymmetry: ``False`` here means "a live
+        path exists in principle", not "live trading is enabled" — that still requires the
+        activation gate to pass and a human to confirm.
+        """
         return self.mode in {
             TradingMode.BACKTEST,
             TradingMode.PAPER,
@@ -332,6 +416,11 @@ class Settings(BaseSettings):
                 data[key] = "***"
         data["security"]["jwt_secret"] = "***"  # noqa: S105 - redaction marker
         data["security"]["webhook_secret"] = "***"  # noqa: S105 - redaction marker
+        # Venue credentials are redacted whether or not they are set, so that the shape of
+        # the response does not itself reveal whether a key is configured.
+        for key in ("binance_api_key", "binance_api_secret"):
+            if data["live"].get(key) is not None:
+                data["live"][key] = "***"
         if "://" in str(data.get("database_url", "")) and "@" in str(data["database_url"]):
             scheme, _, rest = str(data["database_url"]).partition("://")
             data["database_url"] = f"{scheme}://***@{rest.rsplit('@', 1)[-1]}"

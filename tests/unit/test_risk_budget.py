@@ -141,16 +141,65 @@ def test_emergency_stops_new_trades_entirely_rather_than_shrinking_them() -> Non
     assert "emergency" in budget.binding_constraint
 
 
-def test_the_budget_is_continuous_across_the_defensive_boundary() -> None:
-    """A discontinuity at a threshold means a hundredth of a percent of drawdown changes
-    position size by a step, which shows up as an unexplainable pair of adjacent trades."""
-    profile = PROFILES[RiskProfileName.BALANCED]
-    engine = RiskBudgetEngine(RiskProfileName.BALANCED)
+@pytest.mark.parametrize("name", list(RiskProfileName))
+def test_the_budget_is_continuous_across_the_defensive_boundary(name: RiskProfileName) -> None:
+    """A step at the threshold means a hundredth of a percent of drawdown changes position
+    size discontinuously — and if the step goes *up*, it is martingale behaviour arriving
+    by accident.
+
+    Parametrised across all three profiles deliberately. An earlier version of this test
+    checked only ``balanced``, which passed because that profile's defensive multiplier
+    happened to equal the constant the normal-state taper ended at. ``aggressive`` did not,
+    and its budget rose 6% on crossing into the defensive state. One profile is not a test
+    of a formula that takes the profile as a parameter.
+    """
+    profile = PROFILES[name]
+    engine = RiskBudgetEngine(name)
 
     just_under = engine.compute(inputs(drawdown_pct=profile.defensive_drawdown_pct - 1e-6))
     just_over = engine.compute(inputs(drawdown_pct=profile.defensive_drawdown_pct + 1e-6))
 
-    assert just_over.risk_currency == pytest.approx(just_under.risk_currency, rel=0.01)
+    assert just_over.risk_currency == pytest.approx(just_under.risk_currency, rel=1e-4)
+    assert just_over.risk_currency <= just_under.risk_currency + 1e-9
+
+
+@pytest.mark.parametrize("name", list(RiskProfileName))
+def test_the_drawdown_taper_hits_its_endpoints_exactly(name: RiskProfileName) -> None:
+    """Full budget at no drawdown, the profile's defensive multiplier at the defensive
+    threshold, zero at the emergency threshold. Anchoring the taper to the profile rather
+    than to a constant is what keeps the two segments joined."""
+    profile = PROFILES[name]
+    engine = RiskBudgetEngine(name)
+
+    assert engine.compute(inputs(drawdown_pct=0.0)).drawdown_multiplier == pytest.approx(1.0)
+    assert engine.compute(
+        inputs(drawdown_pct=profile.defensive_drawdown_pct)
+    ).drawdown_multiplier == pytest.approx(profile.defensive_multiplier)
+    assert engine.compute(
+        inputs(drawdown_pct=profile.emergency_drawdown_pct)
+    ).drawdown_multiplier == 0.0
+
+
+def test_a_profile_whose_thresholds_are_out_of_order_is_rejected() -> None:
+    """An emergency threshold below the defensive one means the defensive state is
+    unreachable, and a state machine with an unreachable state is a bug wearing a
+    configuration costume."""
+    from pydantic import ValidationError
+
+    from tia.risk.budget import RiskProfile
+
+    with pytest.raises(ValidationError, match="emergency_drawdown_pct"):
+        RiskProfile(
+            name=RiskProfileName.BALANCED,
+            risk_per_trade_pct=0.5,
+            defensive_drawdown_pct=10.0,
+            emergency_drawdown_pct=5.0,
+            max_gross_exposure_pct=80.0,
+            defensive_multiplier=0.5,
+            target_annual_volatility=0.2,
+            max_trades_per_day=20,
+            consecutive_loss_dampener=4,
+        )
 
 
 # --------------------------------------------------------------------------- volatility

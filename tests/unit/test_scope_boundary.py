@@ -201,11 +201,13 @@ _ORDER_ENDPOINT_TOKENS = (
     "/v1/orders",
 )
 
-#: Files permitted to name the signing machinery a *trading* account needs. Signing is
-#: unavoidable for authenticated requests; confining it to one module is what makes it
-#: reviewable, and what makes "which code touches the secret?" a question with a
-#: one-line answer.
-_SIGNING_ALLOWANCE = frozenset({"data/providers/binance_signing.py"})
+#: The only two files permitted to name a *trading* credential: the one that loads it from
+#: the environment, and the one that signs with it. Two, not one, because loading and using
+#: are genuinely different jobs — but two is the whole list, which is what makes "which code
+#: touches the secret?" a question with a one-line answer.
+_SIGNING_ALLOWANCE = frozenset(
+    {"data/providers/binance_signing.py", "core/config.py"}
+)
 
 _TRADING_CREDENTIAL_TOKENS = (
     "api_secret",

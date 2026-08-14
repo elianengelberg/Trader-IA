@@ -26,7 +26,7 @@ from dataclasses import dataclass
 from enum import StrEnum
 from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 class DrawdownState(StrEnum):
@@ -74,6 +74,15 @@ class RiskProfile(BaseModel):
     #: Consecutive losses after which the budget is halved. Not zero — a losing streak is
     #: evidence about the strategy, not a reason to stop entirely.
     consecutive_loss_dampener: int = Field(ge=1, le=50)
+
+    @model_validator(mode="after")
+    def _thresholds_ordered(self) -> RiskProfile:
+        if self.emergency_drawdown_pct <= self.defensive_drawdown_pct:
+            raise ValueError(
+                "emergency_drawdown_pct must be above defensive_drawdown_pct, otherwise "
+                "the defensive state can never be entered before trading stops"
+            )
+        return self
 
     @property
     def description(self) -> str:
@@ -240,22 +249,39 @@ class RiskBudgetEngine:
         )
 
     def _drawdown_multiplier(self, state: DrawdownState, drawdown_pct: float) -> float:
-        """Risk falls as drawdown deepens. Monotonically non-increasing, always."""
+        """Risk falls as drawdown deepens. Monotonically non-increasing, always.
+
+        Two straight lines that meet exactly at the defensive threshold:
+
+        * NORMAL, over ``[0, defensive]``: 1.0 down to ``defensive_multiplier``.
+        * DEFENSIVE, over ``[defensive, emergency]``: ``defensive_multiplier`` down to 0.
+
+        The first line is anchored to the profile's own ``defensive_multiplier`` rather
+        than to a fixed 0.5, and that is not cosmetic. Anchoring it to a constant made the
+        two lines meet only when ``defensive_multiplier`` happened to equal that constant;
+        for the aggressive profile (0.6) they did not, and the budget **rose** by 6% as
+        drawdown crossed 8%. That is martingale behaviour produced by a plotting mistake
+        rather than by intent, which is exactly the kind that survives review — a property
+        test found it, and this form makes it unrepresentable for any profile.
+        """
         if state is DrawdownState.EMERGENCY:
             return 0.0
-        if state is DrawdownState.NORMAL:
-            # Taper smoothly toward the defensive threshold rather than stepping off a
-            # cliff, so behaviour either side of the boundary is continuous.
-            threshold = self._profile.defensive_drawdown_pct
-            if threshold <= 0:
-                return 1.0
-            return max(0.0, 1.0 - 0.5 * (drawdown_pct / threshold))
 
-        span = self._profile.emergency_drawdown_pct - self._profile.defensive_drawdown_pct
+        profile = self._profile
+        floor = profile.defensive_multiplier
+
+        if state is DrawdownState.NORMAL:
+            threshold = profile.defensive_drawdown_pct
+            if threshold <= 0:
+                return floor
+            progress = min(1.0, max(0.0, drawdown_pct / threshold))
+            return 1.0 - (1.0 - floor) * progress
+
+        span = profile.emergency_drawdown_pct - profile.defensive_drawdown_pct
         if span <= 0:
-            return self._profile.defensive_multiplier
-        progress = (drawdown_pct - self._profile.defensive_drawdown_pct) / span
-        return self._profile.defensive_multiplier * max(0.0, 1.0 - progress)
+            return floor
+        progress = (drawdown_pct - profile.defensive_drawdown_pct) / span
+        return floor * max(0.0, 1.0 - progress)
 
     def _volatility_multiplier(self, realised_annual_volatility: float) -> float:
         """Scale size so a fixed fractional risk is a fixed monetary risk.

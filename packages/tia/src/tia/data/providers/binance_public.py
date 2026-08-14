@@ -12,8 +12,9 @@ Consequences, deliberately chosen:
 
 * It is never selected by default, and the ``demo`` environment refuses it outright.
 * It is excluded from the test suite's default run (marked ``network``).
-* Before trusting it, run ``scripts/verify_binance_provider.py`` from a machine with
-  egress and compare the parsed output against the live response.
+* Before trusting it, run ``scripts/validate_binance.py`` from a machine with egress. It
+  checks the kline array's positional layout specifically, because a reordering there
+  produces candles that parse cleanly and are wrong.
 
 If a field name or the array ordering has changed, :meth:`_parse_kline` raises with the
 raw payload attached rather than silently producing a plausible-looking wrong candle.

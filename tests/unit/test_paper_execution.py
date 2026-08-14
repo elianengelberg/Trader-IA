@@ -15,7 +15,7 @@ import pytest
 
 from tia.core.clock import SimulatedClock
 from tia.core.config import ExecutionSimConfig
-from tia.core.errors import DuplicateOrderError
+from tia.core.errors import DuplicateOrderError, LiveActivationError
 from tia.core.rng import RngRegistry
 from tia.domain.enums import AssetClass, OrderState, OrderType, Side, TimeInForce
 from tia.domain.instruments import DEFAULT_UNIVERSE, Instrument, InstrumentUniverse
@@ -102,9 +102,15 @@ def provider(clock: SimulatedClock, rng: RngRegistry) -> PaperExecutionProvider:
 # --------------------------------------------------------------------------- scope rule
 
 
-def test_a_non_simulated_provider_cannot_be_constructed() -> None:
-    """The scope rule as code: there is no way to instantiate a live provider, so no
-    later edit can quietly turn one on by flipping a config flag."""
+def test_a_non_simulated_provider_cannot_be_constructed_from_a_flag_alone() -> None:
+    """Declaring liveness is not the same as being allowed to be live.
+
+    A live provider needs a token from the activation gate, which can only be minted when
+    every check in :data:`~tia.live.gate.REQUIRED_CHECKS` has passed. So no config flag, no
+    environment variable and no later edit to a capabilities object can turn one on: the
+    gate has to actually pass first. ``tests/unit/test_scope_boundary.py`` covers the same
+    boundary from the package side, including that the token cannot be forged.
+    """
 
     class Live(ExecutionProvider):
         async def submit_order(self, intent):  # type: ignore[no-untyped-def]  # pragma: no cover
@@ -134,8 +140,11 @@ def test_a_non_simulated_provider_cannot_be_constructed() -> None:
         async def get_portfolio(self):  # type: ignore[no-untyped-def]  # pragma: no cover
             raise NotImplementedError
 
-    with pytest.raises(ValueError, match="simulation-only"):
+    with pytest.raises(LiveActivationError, match="LiveActivationToken"):
         Live(ExecutionCapabilities(name="live-venue", is_simulated=False))
+
+    # A simulator needs nothing at all.
+    assert Live(ExecutionCapabilities(name="sim")).capabilities.is_simulated
 
 
 def test_the_paper_provider_declares_itself_simulated(

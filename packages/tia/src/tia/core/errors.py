@@ -145,6 +145,17 @@ class DuplicateOrderError(ExecutionError):
     code = "DUPLICATE_ORDER"
 
 
+class LiveActivationError(ExecutionError):
+    """Raised when something tries to reach a real venue without a valid activation.
+
+    Not recoverable by retrying: the answer to "the gate refused" is to fix what it
+    refused about, never to try again and hope.
+    """
+
+    code = "LIVE_ACTIVATION_REQUIRED"
+    recoverable = False
+
+
 class ReconciliationError(TiaError):
     code = "RECONCILIATION_ERROR"
 
@@ -207,6 +218,7 @@ __all__ = [
     "LLMError",
     "LLMSchemaError",
     "LLMUnavailableError",
+    "LiveActivationError",
     "LookAheadBiasError",
     "NaiveDatetimeError",
     "OrderRejectedError",

@@ -30,6 +30,7 @@ from tia.persistence import (
     BacktestRepository,
     Database,
     DecisionRepository,
+    EdgeStateRepository,
     FillRepository,
     LogRepository,
     NewsRepository,
@@ -119,12 +120,16 @@ class AppState:
         )
 
         # A fresh engine per run: the simulated clock only moves forward, so reusing one
-        # would either rewind time or resume where the last run ended.
+        # would either rewind time or resume where the last run ended. The edge evidence
+        # is *not* fresh — it is reloaded from every previous run, because a restart that
+        # forgot its closed trades would reset the paper track record the activation gate
+        # requires, and would let the same lesson be paid for twice.
         engine = RuntimeEngine(
             self.settings,
             config,
             on_event=self.broadcast,
             persist=self._persist,
+            prior_outcomes=await self._load_prior_outcomes(),
         )
         self.runtime = engine
 
@@ -141,6 +146,33 @@ class AppState:
 
         await engine.start()
         return engine.snapshot()
+
+    async def _load_prior_outcomes(self):  # type: ignore[no-untyped-def]
+        """Rebuild the edge estimator's input from every persisted round trip.
+
+        Failure here degrades to an empty list **with a loud log**, never to a crash: a
+        corrupted evidence store should stop live activation (the gate's edge check will
+        fail on the missing evidence), not stop paper trading — paper is how the evidence
+        gets rebuilt.
+        """
+        from tia.domain.enums import Direction, MarketRegime
+        from tia.economics.expected_value import Outcome
+
+        try:
+            async with self.database.session() as session:
+                rows = await EdgeStateRepository(session).load_all()
+            return [
+                Outcome(
+                    regime=MarketRegime(row.regime),
+                    direction=Direction(row.direction),
+                    confidence=row.confidence,
+                    net_return_bps=row.net_bps,
+                )
+                for row in rows
+            ]
+        except Exception as exc:
+            _log.warning("edge_state_load_failed", error=str(exc)[:300])
+            return []
 
     async def stop_run(self) -> dict[str, Any]:
         if self.runtime is None:
@@ -221,6 +253,8 @@ class AppState:
                     await NewsRepository(session).record(payload)
                 elif kind == "log":
                     await LogRepository(session).append(payload)
+                elif kind == "edge_outcome":
+                    await EdgeStateRepository(session).append(payload)
                 elif kind == "equity" and self.runtime is not None:
                     await PortfolioRepository(session).append_equity(
                         self.runtime.run_id, payload

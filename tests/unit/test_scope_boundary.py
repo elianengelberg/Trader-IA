@@ -189,7 +189,15 @@ _FUND_MOVEMENT_TOKENS = (
 #: are for. Everything else in the package is still forbidden from naming one: a
 #: market-data client or a strategy module that mentions an order path is a mistake or
 #: something worse.
-_ORDER_ENDPOINT_ALLOWANCE = frozenset({"data/providers/binance_live.py"})
+_ORDER_ENDPOINT_ALLOWANCE = frozenset(
+    {
+        # Placing orders is what it is for.
+        "data/providers/binance_live.py",
+        # Names the order endpoints only to assign them request weights; it can neither
+        # build a request nor sign one.
+        "data/providers/binance_budget.py",
+    }
+)
 
 #: Order-placing endpoints.
 _ORDER_ENDPOINT_TOKENS = (

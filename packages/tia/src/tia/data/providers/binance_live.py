@@ -48,6 +48,7 @@ from tia.core.errors import (
     ReconciliationError,
 )
 from tia.core.logging import get_logger
+from tia.data.providers.binance_budget import BinanceRequestBudget
 from tia.data.providers.binance_signing import BinanceSigner
 from tia.domain.enums import OrderState, OrderType, Side, TimeInForce
 from tia.domain.orders import Fill, Order, OrderIntent
@@ -115,6 +116,7 @@ class BinanceExecutionProvider(ExecutionProvider):
         timeout_seconds: float = 10.0,
         client: httpx.AsyncClient | None = None,
         quote_asset: str = "USDT",
+        budget: BinanceRequestBudget | None = None,
     ) -> None:
         super().__init__(
             ExecutionCapabilities(
@@ -143,6 +145,9 @@ class BinanceExecutionProvider(ExecutionProvider):
         self._client = client
         self._owns_client = client is None
         self._quote_asset = quote_asset.upper()
+        #: Paces every request against the venue's weight limits, so a busy loop backs
+        #: off before the venue starts penalising rather than after.
+        self._budget = budget or BinanceRequestBudget(clock)
         #: client_order_id -> our Order. The local mirror of venue state; reconciliation
         #: compares it against the venue and the venue wins every disagreement.
         self._orders: dict[str, Order] = {}
@@ -173,6 +178,7 @@ class BinanceExecutionProvider(ExecutionProvider):
           **unknown**, and the only safe response is to say that too. This is why
           ``httpx.TimeoutException`` is not folded in with the rest.
         """
+        await self._budget.acquire(path)
         signed = self._signer.sign(params)
         client = await self._http()
         url = f"{path}?{signed.query_string}"
@@ -222,8 +228,14 @@ class BinanceExecutionProvider(ExecutionProvider):
         detail = f"binance rejected {path}: HTTP {response.status_code} code={code} {message}"
 
         if response.status_code == 429 or response.status_code == 418:
+            retry_after = response.headers.get("Retry-After")
+            self._budget.note_rate_limited(
+                status_code=response.status_code,
+                retry_after_seconds=float(retry_after) if retry_after else None,
+            )
             raise ProviderUnavailableError(
-                f"{detail} — rate limited. Back off; do not retry immediately.",
+                f"{detail} — rate limited; a cooldown is now armed and every subsequent "
+                "request waits it out. Do not work around the wait.",
                 provider=self.name,
             )
         if response.status_code == 401 or response.status_code == 403:
@@ -306,6 +318,51 @@ class BinanceExecutionProvider(ExecutionProvider):
         order = self._parse_order(payload, intent=intent)
         self._orders[intent.client_order_id] = order
         self._by_venue_id[str(payload.get("orderId"))] = intent.client_order_id
+        return order
+
+    async def resolve_unknown_order(self, *, symbol: str, client_order_id: str) -> Order | None:
+        """Determine the true fate of an order whose submission ended in a timeout.
+
+        The idempotency contract's other half. A timeout leaves the order in a genuinely
+        unknown state — the venue may or may not have it — and this is the only correct
+        next step: **ask the venue**, by the ``origClientOrderId`` we chose, before
+        anything is allowed to retry.
+
+        Returns the venue's order if it exists (adopted into the local mirror, so a
+        duplicate submission of the same intent is answered locally), or ``None`` if the
+        venue confirms it never arrived — which is the only condition under which a retry
+        of that intent is safe. A transport failure during *this* call re-raises: an
+        unknown state does not resolve into a known one by failing to check.
+        """
+        try:
+            payload = await self._signed_get(
+                _ORDER_PATH,
+                {
+                    "symbol": self.to_venue_symbol(symbol),
+                    "origClientOrderId": client_order_id,
+                },
+            )
+        except OrderRejectedError as exc:
+            # Documented "order does not exist" code. REQUIRES VALIDATION: -2013 is the
+            # documented value; anything else stays unknown and is re-raised.
+            if exc.context.get("code") == -2013:
+                _log.info(
+                    "unknown_order_resolved_absent",
+                    client_order_id=client_order_id,
+                    detail="venue confirms the order never arrived; retry is safe",
+                )
+                return None
+            raise
+
+        order = self._parse_order(payload)
+        self._orders[order.client_order_id] = order
+        self._by_venue_id[str(order.order_id)] = order.client_order_id
+        _log.warning(
+            "unknown_order_resolved_present",
+            client_order_id=client_order_id,
+            state=order.state.value,
+            detail="the timed-out submission DID reach the venue; adopted, not retried",
+        )
         return order
 
     async def cancel_order(self, order_id: str) -> Order:
@@ -433,12 +490,17 @@ class BinanceExecutionProvider(ExecutionProvider):
         order rounded to the wrong lot size is rejected by the venue, so this is execution's
         concern. REQUIRES VALIDATION for the filter names.
         """
+        await self._budget.acquire(_EXCHANGE_INFO_PATH)
         client = await self._http()
         response = await client.get(
             _EXCHANGE_INFO_PATH, params={"symbol": self.to_venue_symbol(symbol)}
         )
         response.raise_for_status()
         return response.json()
+
+    @property
+    def request_budget(self) -> BinanceRequestBudget:
+        return self._budget
 
     # ------------------------------------------------------------------ parsing
 

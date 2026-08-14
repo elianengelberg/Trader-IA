@@ -37,7 +37,7 @@ from __future__ import annotations
 import asyncio
 import contextlib
 from collections import deque
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 from datetime import UTC as UTC_TZ
 from datetime import datetime, timedelta
@@ -220,6 +220,7 @@ class RuntimeEngine:
         universe: InstrumentUniverse | None = None,
         on_event: Callable[[dict[str, Any]], None] | None = None,
         persist: Callable[[str, dict[str, Any]], Any] | None = None,
+        prior_outcomes: Sequence[Outcome] = (),
     ) -> None:
         self._settings = settings
         self._config = config
@@ -285,14 +286,27 @@ class RuntimeEngine:
             impact_coefficient=settings.execution.impact_coefficient,
         )
         self._edges = EdgeEstimator()
+        # A restart is not amnesia: evidence persisted by earlier runs is reloaded before
+        # the first bar, and the loss streak resumes from where the record left it. The
+        # streak is *derived* — recomputed from the tail of the outcomes — because a
+        # separately-stored counter can disagree with its own evidence.
+        self._edges.record_many(list(prior_outcomes))
+        self._consecutive_losses = 0
+        for outcome in reversed(list(prior_outcomes)):
+            if outcome.net_return_bps > 0:
+                break
+            self._consecutive_losses += 1
+        self._prior_outcome_count = len(prior_outcomes)
         self._ev = ExpectedValueEngine(
             self._edges,
             threshold_bps=settings.live.ev_threshold_bps,
             max_cost_ratio=settings.live.max_cost_ratio,
         )
         self._budget = RiskBudgetEngine(RiskProfileName(settings.live.risk_profile))
-        #: Consecutive losing round trips. Shrinks the budget; never grows it.
-        self._consecutive_losses = 0
+        #: The exact inputs the last per-bar budget decision used, kept so the snapshot
+        #: reports the same numbers the decision path saw (defect D2: the snapshot used
+        #: to recompute with volatility=0 and exposure=0 and could disagree).
+        self._last_budget_inputs: BudgetInputs | None = None
         #: Open round trips, keyed by symbol, so a close can be scored against its entry
         #: and fed back to the edge estimator. Without this the estimator never fills and
         #: the system never trades — which is correct behaviour but a useless product.
@@ -604,7 +618,8 @@ class RuntimeEngine:
         budget: RiskBudget | None = None
         evaluation: ExpectedValue | None = None
         if opening:
-            budget = self._budget.compute(self._budget_inputs(features))
+            self._last_budget_inputs = self._budget_inputs(features)
+            budget = self._budget.compute(self._last_budget_inputs)
             evaluation = self._ev.evaluate(
                 regime=regime.regime,
                 direction=signal.direction,
@@ -763,8 +778,14 @@ class RuntimeEngine:
         self.recent_evaluations.appendleft(_jsonable(row))
         self._emit("evaluation.created", _jsonable(row))
 
-    def _score_round_trip(self, symbol: str, exit_fill: Fill) -> None:
+    def _score_round_trip(self, symbol: str, closed_at: datetime) -> None:
         """Turn a closed position into evidence the edge estimator can use.
+
+        Both legs are volume-weighted. The entry accumulates a VWAP as fills add to the
+        position; the exit accumulates one as fills reduce it. An earlier version scored
+        the exit at the *last* fill's price alone, which mis-measured every round trip
+        that closed in more than one fill — and mis-measured evidence is worse than no
+        evidence, because the estimator treats it as fact.
 
         The realised return is measured **net of the fees actually paid on both legs**,
         because the EV engine subtracts costs again downstream and counting them twice
@@ -778,16 +799,18 @@ class RuntimeEngine:
             return
 
         entry_price = float(entry["price"])
-        if entry_price <= 0:
+        exit_quantity = float(entry.get("exit_quantity", 0.0))
+        if entry_price <= 0 or exit_quantity <= 0:
             return
+        exit_price = float(entry["exit_value"]) / exit_quantity
 
         long_side = entry["side"] is Side.BUY
-        raw_bps = (exit_fill.price - entry_price) / entry_price * 10_000.0
+        raw_bps = (exit_price - entry_price) / entry_price * 10_000.0
         gross_bps = raw_bps if long_side else -raw_bps
 
         notional = entry["quantity"] * entry_price
         fees_bps = (
-            (float(entry["fee"]) + exit_fill.fee) / notional * 10_000.0
+            (float(entry["fee"]) + float(entry.get("exit_fees", 0.0))) / notional * 10_000.0
             if notional > 0
             else 0.0
         )
@@ -813,13 +836,13 @@ class RuntimeEngine:
             "direction": beliefs["direction"].value,
             "confidence": beliefs["confidence"],
             "entry_price": entry_price,
-            "exit_price": exit_fill.price,
+            "exit_price": exit_price,
             "quantity": entry["quantity"],
             "gross_bps": gross_bps,
             "fees_bps": fees_bps,
             "net_bps": net_bps,
             "expected_net_bps": beliefs["expected_net_bps"],
-            "closed_at": exit_fill.filled_at,
+            "closed_at": closed_at,
             "samples_now": self._edges.sample_count(
                 regime=beliefs["regime"],
                 direction=beliefs["direction"],
@@ -828,6 +851,31 @@ class RuntimeEngine:
         }
         self.closed_trades.appendleft(_jsonable(row))
         self._emit("trade.closed", _jsonable(row))
+        # Persisted with a deterministic id, so a redelivered close upserts rather than
+        # double-counting — evidence that arrives twice is still one trade's worth.
+        self._save(
+            "edge_outcome",
+            {
+                "outcome_id": deterministic_id(
+                    "edge", self.run_id, symbol, beliefs["signal_id"], closed_at
+                ),
+                "run_id": self.run_id,
+                "signal_id": beliefs["signal_id"],
+                "symbol": symbol,
+                "regime": beliefs["regime"].value,
+                "direction": beliefs["direction"].value,
+                "confidence": beliefs["confidence"],
+                "entry_price": entry_price,
+                "exit_price": exit_price,
+                "quantity": entry["quantity"],
+                "gross_bps": gross_bps,
+                "fees_bps": fees_bps,
+                "net_bps": net_bps,
+                "expected_net_bps": beliefs["expected_net_bps"],
+                "closed_at": closed_at,
+                "source": "paper",
+            },
+        )
         self._log(
             "INFO", "trading", symbol,
             f"round trip closed at {net_bps:+.1f} bps net "
@@ -1174,12 +1222,15 @@ class RuntimeEngine:
                     "side": fill.side,
                     "fee": fill.fee,
                     "opened_at": fill.filled_at,
+                    # The exit leg, accumulated fill by fill. A position can close in
+                    # several partial fills, and each one is part of the exit price.
+                    "exit_value": 0.0,
+                    "exit_quantity": 0.0,
+                    "exit_fees": 0.0,
                 }
             return
 
-        if flat:
-            self._score_round_trip(fill.symbol, fill)
-        elif fill.side is open_trade["side"]:
+        if fill.side is open_trade["side"]:
             # Adding to the position: the entry becomes a volume-weighted average, so the
             # round trip is scored against what was actually paid rather than against the
             # first fill of several.
@@ -1189,6 +1240,15 @@ class RuntimeEngine:
             ) / total
             open_trade["quantity"] = total
             open_trade["fee"] += fill.fee
+        else:
+            # Reducing: accumulate the exit VWAP whether or not this fill finishes the
+            # job. Scoring only the final fill's price was defect D1 — a two-fill exit
+            # was measured at half its own prices.
+            open_trade["exit_value"] += fill.price * fill.quantity
+            open_trade["exit_quantity"] += fill.quantity
+            open_trade["exit_fees"] += fill.fee
+            if flat:
+                self._score_round_trip(fill.symbol, fill.filled_at)
 
     def _record_assessment(self, symbol: str, outcome: Any, candle: Candle) -> None:
         assessment = outcome.assessment
@@ -1399,29 +1459,40 @@ class RuntimeEngine:
         """
         latest = self.recent_evaluations[0] if self.recent_evaluations else None
         closed = [row["net_bps"] for row in self.closed_trades]
-        budget = self._budget.compute(
-            BudgetInputs(
-                equity=self._execution.portfolio.equity,
-                peak_equity=self.peak_equity,
-                drawdown_pct=(
-                    0.0
-                    if self.peak_equity <= 0
-                    else max(
-                        0.0,
-                        (self.peak_equity - self._execution.portfolio.equity)
-                        / self.peak_equity
-                        * 100.0,
-                    )
-                ),
-                realised_annual_volatility=0.0,
-                consecutive_losses=self._consecutive_losses,
-                trades_today=self._risk.state.trades_today,
-                open_gross_exposure_pct=0.0,
-            )
+        # The same inputs the decision path last used — never a parallel recomputation.
+        # Before any decision has run, the honest inputs are the current portfolio state
+        # with volatility unknown, and the snapshot says so via `inputs_from_decision`.
+        inputs = self._last_budget_inputs or BudgetInputs(
+            equity=self._execution.portfolio.equity,
+            peak_equity=self.peak_equity,
+            drawdown_pct=(
+                0.0
+                if self.peak_equity <= 0
+                else max(
+                    0.0,
+                    (self.peak_equity - self._execution.portfolio.equity)
+                    / self.peak_equity
+                    * 100.0,
+                )
+            ),
+            realised_annual_volatility=0.0,
+            consecutive_losses=self._consecutive_losses,
+            trades_today=self._risk.state.trades_today,
+            open_gross_exposure_pct=0.0,
         )
+        budget = self._budget.compute(inputs)
         return {
             "profile": self._budget.profile.model_dump(mode="json"),
             "budget": budget.as_dict(),
+            "budget_inputs": {
+                "equity": inputs.equity,
+                "drawdown_pct": inputs.drawdown_pct,
+                "realised_annual_volatility": inputs.realised_annual_volatility,
+                "consecutive_losses": inputs.consecutive_losses,
+                "trades_today": inputs.trades_today,
+                "open_gross_exposure_pct": inputs.open_gross_exposure_pct,
+                "inputs_from_decision": self._last_budget_inputs is not None,
+            },
             "consecutive_losses": self._consecutive_losses,
             "fees": {
                 "maker_bps": self._costs.fees.maker_bps,
@@ -1459,6 +1530,7 @@ class RuntimeEngine:
             },
             "closed_trades": {
                 "count": len(closed),
+                "prior_evidence": self._prior_outcome_count,
                 "mean_net_bps": round(sum(closed) / len(closed), 4) if closed else None,
                 "wins": sum(1 for value in closed if value > 0),
                 "losses": sum(1 for value in closed if value <= 0),

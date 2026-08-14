@@ -42,7 +42,10 @@ from sqlalchemy.types import JSON
 
 #: Bumped on any schema change. `ensure_schema()` refuses to run against a database
 #: written by a newer version rather than silently misreading it.
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
+#: v1 -> v2: edge_outcomes, activation_attempts, reconciliations, capital_events,
+#: incidents, latency_samples. The Alembic migration `0002` performs the upgrade;
+#: `ensure_schema` still refuses a *newer* database rather than misreading it.
 
 
 class Base(DeclarativeBase):
@@ -376,6 +379,138 @@ class NewsRow(Base):
     body_hash: Mapped[str] = mapped_column(String(64), default="")
 
 
+class EdgeOutcomeRow(Base):
+    """One closed round trip, as evidence the edge estimator consumes.
+
+    This table is why a restart does not amnesia the system: the estimator's buckets, the
+    paper track record the activation gate checks, and the loss streak are all *derived*
+    state, rebuilt from these rows at startup. Nothing here is an aggregate — aggregates
+    are recomputed, because a stored aggregate that disagrees with its own rows is a bug
+    with no error message.
+    """
+
+    __tablename__ = "edge_outcomes"
+    __table_args__ = (
+        Index("ix_edge_bucket", "regime", "direction"),
+        Index("ix_edge_closed_at", "closed_at"),
+    )
+
+    outcome_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    run_id: Mapped[str] = mapped_column(String(64), default="", index=True)
+    signal_id: Mapped[str] = mapped_column(String(96), default="")
+    symbol: Mapped[str] = mapped_column(String(32), nullable=False)
+    regime: Mapped[str] = mapped_column(String(32), nullable=False)
+    direction: Mapped[str] = mapped_column(String(16), nullable=False)
+    confidence: Mapped[float] = mapped_column(Float, nullable=False)
+    entry_price: Mapped[float] = mapped_column(Float, nullable=False)
+    exit_price: Mapped[float] = mapped_column(Float, nullable=False)
+    quantity: Mapped[float] = mapped_column(Float, nullable=False)
+    gross_bps: Mapped[float] = mapped_column(Float, nullable=False)
+    fees_bps: Mapped[float] = mapped_column(Float, nullable=False)
+    net_bps: Mapped[float] = mapped_column(Float, nullable=False)
+    expected_net_bps: Mapped[float] = mapped_column(Float, default=0.0)
+    closed_at: Mapped[datetime] = _utc_column(nullable=False)
+    #: 'paper' | 'backtest' | 'live'. Live evidence and paper evidence are both evidence,
+    #: but the gate's track-record check needs to know which kind it is counting.
+    source: Mapped[str] = mapped_column(String(16), default="paper")
+
+
+class ActivationAttemptRow(Base):
+    """Every attempt to arm live trading, successful or not.
+
+    The audit question this answers is "who tried to turn it on, when, and what stopped
+    them?" — which matters most precisely when the answer is embarrassing. The token
+    itself is never stored; only a one-way fingerprint, because a stored token is a
+    stored capability.
+    """
+
+    __tablename__ = "activation_attempts"
+    __table_args__ = (Index("ix_activation_at", "attempted_at"),)
+
+    attempt_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    attempted_at: Mapped[datetime] = _utc_column(nullable=False)
+    operator: Mapped[str] = mapped_column(String(120), nullable=False)
+    environment: Mapped[str] = mapped_column(String(24), nullable=False)
+    passed: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    failed_checks: Mapped[list[Any]] = mapped_column(JSON, default=list)
+    report: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
+    configuration_fingerprint: Mapped[str] = mapped_column(String(64), default="")
+    token_fingerprint: Mapped[str] = mapped_column(String(64), default="")
+    max_live_capital: Mapped[float] = mapped_column(Float, default=0.0)
+    #: Whether the live runtime actually reached RUNNING after arming. An activation
+    #: whose runtime failed to start is recorded as exactly that, never as live.
+    runtime_started: Mapped[bool] = mapped_column(Boolean, default=False)
+    runtime_state: Mapped[str] = mapped_column(String(32), default="")
+    detail: Mapped[str] = mapped_column(Text, default="")
+
+
+class ReconciliationRow(Base):
+    """One comparison between our books and the provider's or the venue's."""
+
+    __tablename__ = "reconciliations"
+    __table_args__ = (Index("ix_recon_run_at", "run_id", "at"),)
+
+    reconciliation_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    run_id: Mapped[str] = mapped_column(String(64), default="", index=True)
+    at: Mapped[datetime] = _utc_column(nullable=False)
+    source: Mapped[str] = mapped_column(String(16), default="paper")
+    clean: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    divergences: Mapped[list[Any]] = mapped_column(JSON, default=list)
+    detail: Mapped[str] = mapped_column(Text, default="")
+
+
+class CapitalEventRow(Base):
+    """One change to the capital base — the persisted form of CapitalEvent."""
+
+    __tablename__ = "capital_events"
+    __table_args__ = (Index("ix_capital_run_at", "run_id", "at"),)
+
+    event_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    run_id: Mapped[str] = mapped_column(String(64), default="", index=True)
+    at: Mapped[datetime] = _utc_column(nullable=False)
+    kind: Mapped[str] = mapped_column(String(24), nullable=False)
+    amount: Mapped[float] = mapped_column(Float, nullable=False)
+    note: Mapped[str] = mapped_column(Text, default="")
+    venue_balance_after: Mapped[float | None] = mapped_column(Float)
+
+
+class IncidentRow(Base):
+    """Operator actions and safety events: kill switch, halts, flattens, profile changes.
+
+    One table rather than one per kind, because the question an incident review asks is
+    "what happened around 14:32?", and the answer should not require a four-way join.
+    """
+
+    __tablename__ = "incidents"
+    __table_args__ = (Index("ix_incident_at", "at"),)
+
+    incident_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    at: Mapped[datetime] = _utc_column(nullable=False)
+    #: kill_switch | kill_switch_released | halt_new_orders | cancel_only |
+    #: emergency_flatten | safe_mode | capital_halt | risk_profile_change | ...
+    kind: Mapped[str] = mapped_column(String(32), nullable=False, index=True)
+    actor: Mapped[str] = mapped_column(String(120), default="")
+    reason: Mapped[str] = mapped_column(Text, default="")
+    run_id: Mapped[str] = mapped_column(String(64), default="")
+    detail: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
+
+
+class LatencySampleRow(Base):
+    """Measured stage timings for one decision-to-fill path, in milliseconds."""
+
+    __tablename__ = "latency_samples"
+    __table_args__ = (Index("ix_latency_run_at", "run_id", "at"),)
+
+    sample_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    run_id: Mapped[str] = mapped_column(String(64), default="", index=True)
+    at: Mapped[datetime] = _utc_column(nullable=False)
+    symbol: Mapped[str] = mapped_column(String(32), default="")
+    correlation_id: Mapped[str] = mapped_column(String(96), default="")
+    #: Segment name -> milliseconds; e.g. market_to_decision, submit_to_ack.
+    segments_ms: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
+    total_ms: Mapped[float] = mapped_column(Float, default=0.0)
+
+
 ALL_TABLES = (
     SchemaInfo,
     RunRecord,
@@ -389,22 +524,34 @@ ALL_TABLES = (
     LogRow,
     BacktestRow,
     NewsRow,
+    EdgeOutcomeRow,
+    ActivationAttemptRow,
+    ReconciliationRow,
+    CapitalEventRow,
+    IncidentRow,
+    LatencySampleRow,
 )
 
 __all__ = [
     "ALL_TABLES",
     "SCHEMA_VERSION",
+    "ActivationAttemptRow",
     "AssessmentRow",
     "BacktestRow",
     "Base",
+    "CapitalEventRow",
     "DecisionRow",
+    "EdgeOutcomeRow",
     "EquityPoint",
     "EventRecord",
     "FillRow",
+    "IncidentRow",
+    "LatencySampleRow",
     "LogRow",
     "NewsRow",
     "OrderRow",
     "PositionRow",
+    "ReconciliationRow",
     "RunRecord",
     "SchemaInfo",
 ]

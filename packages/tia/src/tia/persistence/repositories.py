@@ -26,16 +26,22 @@ from tia.domain.orders import Fill, Order
 from tia.domain.portfolio import PortfolioState
 from tia.events.envelope import EventEnvelope
 from tia.persistence.models import (
+    ActivationAttemptRow,
     AssessmentRow,
     BacktestRow,
+    CapitalEventRow,
     DecisionRow,
+    EdgeOutcomeRow,
     EquityPoint,
     EventRecord,
     FillRow,
+    IncidentRow,
+    LatencySampleRow,
     LogRow,
     NewsRow,
     OrderRow,
     PositionRow,
+    ReconciliationRow,
     RunRecord,
 )
 
@@ -438,15 +444,157 @@ class NewsRepository:
         return list(result.scalars().all())
 
 
+class EdgeStateRepository:
+    """The edge estimator's memory.
+
+    The estimator itself stays a pure in-memory structure; this repository is how it
+    survives a restart. Load order at startup is: read every row, rebuild the buckets,
+    and only then let the runtime trade — a runtime that starts deciding before its
+    evidence is loaded is a fresh system wearing an experienced system's configuration.
+    """
+
+    def __init__(self, session: AsyncSession) -> None:
+        self._session = session
+
+    async def append(self, values: dict[str, Any]) -> None:
+        await _upsert(self._session, EdgeOutcomeRow, values, ["outcome_id"])
+
+    async def load_all(self, *, source: str | None = None) -> list[EdgeOutcomeRow]:
+        query = select(EdgeOutcomeRow).order_by(EdgeOutcomeRow.closed_at)
+        if source:
+            query = query.where(EdgeOutcomeRow.source == source)
+        return list((await self._session.execute(query)).scalars().all())
+
+    async def count(self) -> int:
+        return int(
+            (await self._session.execute(select(func.count(EdgeOutcomeRow.outcome_id)))).scalar()
+            or 0
+        )
+
+    async def track_record(self) -> dict[str, Any]:
+        """What the gate's paper-track-record check reads: span and volume of evidence.
+
+        Days are measured from the first to the last *closed* trade rather than from any
+        run boundary, because a run that sat idle for a week proved nothing during it.
+        """
+        result = await self._session.execute(
+            select(
+                func.count(EdgeOutcomeRow.outcome_id),
+                func.min(EdgeOutcomeRow.closed_at),
+                func.max(EdgeOutcomeRow.closed_at),
+                func.sum(EdgeOutcomeRow.net_bps),
+            )
+        )
+        count, first, last, net_sum = result.one()
+        days = 0.0
+        if first is not None and last is not None:
+            days = max(0.0, (last - first).total_seconds() / 86_400.0)
+        return {
+            "closed_trades": int(count or 0),
+            "first_closed_at": first,
+            "last_closed_at": last,
+            "span_days": days,
+            "net_bps_sum": float(net_sum or 0.0),
+        }
+
+
+class ActivationRepository:
+    """Arming attempts, kept forever. Failure is the common case and the useful record."""
+
+    def __init__(self, session: AsyncSession) -> None:
+        self._session = session
+
+    async def record(self, values: dict[str, Any]) -> None:
+        self._session.add(ActivationAttemptRow(**values))
+
+    async def history(self, *, limit: int = 50) -> list[ActivationAttemptRow]:
+        result = await self._session.execute(
+            select(ActivationAttemptRow)
+            .order_by(desc(ActivationAttemptRow.attempted_at))
+            .limit(limit)
+        )
+        return list(result.scalars().all())
+
+
+class ReconciliationRepository:
+    def __init__(self, session: AsyncSession) -> None:
+        self._session = session
+
+    async def record(self, values: dict[str, Any]) -> None:
+        self._session.add(ReconciliationRow(**values))
+
+    async def recent(self, *, limit: int = 50, run_id: str = "") -> list[ReconciliationRow]:
+        query = select(ReconciliationRow).order_by(desc(ReconciliationRow.at)).limit(limit)
+        if run_id:
+            query = query.where(ReconciliationRow.run_id == run_id)
+        return list((await self._session.execute(query)).scalars().all())
+
+    async def break_count(self, *, run_id: str = "") -> int:
+        query = select(func.count(ReconciliationRow.reconciliation_id)).where(
+            ReconciliationRow.clean.is_(False)
+        )
+        if run_id:
+            query = query.where(ReconciliationRow.run_id == run_id)
+        return int((await self._session.execute(query)).scalar() or 0)
+
+
+class CapitalEventRepository:
+    def __init__(self, session: AsyncSession) -> None:
+        self._session = session
+
+    async def append(self, values: dict[str, Any]) -> None:
+        await _upsert(self._session, CapitalEventRow, values, ["event_id"])
+
+    async def recent(self, *, limit: int = 100, run_id: str = "") -> list[CapitalEventRow]:
+        query = select(CapitalEventRow).order_by(desc(CapitalEventRow.at)).limit(limit)
+        if run_id:
+            query = query.where(CapitalEventRow.run_id == run_id)
+        return list((await self._session.execute(query)).scalars().all())
+
+
+class IncidentRepository:
+    def __init__(self, session: AsyncSession) -> None:
+        self._session = session
+
+    async def record(self, values: dict[str, Any]) -> None:
+        self._session.add(IncidentRow(**values))
+
+    async def recent(self, *, limit: int = 100, kind: str = "") -> list[IncidentRow]:
+        query = select(IncidentRow).order_by(desc(IncidentRow.at)).limit(limit)
+        if kind:
+            query = query.where(IncidentRow.kind == kind)
+        return list((await self._session.execute(query)).scalars().all())
+
+
+class LatencyRepository:
+    def __init__(self, session: AsyncSession) -> None:
+        self._session = session
+
+    async def append(self, values: dict[str, Any]) -> None:
+        await _upsert(self._session, LatencySampleRow, values, ["sample_id"])
+
+    async def recent(self, *, limit: int = 200, run_id: str = "") -> list[LatencySampleRow]:
+        query = select(LatencySampleRow).order_by(desc(LatencySampleRow.at)).limit(limit)
+        if run_id:
+            query = query.where(LatencySampleRow.run_id == run_id)
+        return list((await self._session.execute(query)).scalars().all())
+
+
 __all__ = [
+    "ActivationRepository",
     "AssessmentRepository",
     "BacktestRepository",
+    "CapitalEventRepository",
     "DecisionRepository",
+    "EdgeStateRepository",
     "EventRepository",
     "FillRepository",
+    "IncidentRepository",
+    "LatencyRepository",
     "LogRepository",
     "NewsRepository",
     "OrderRepository",
     "PortfolioRepository",
+    "ReconciliationRepository",
     "RunRepository",
 ]

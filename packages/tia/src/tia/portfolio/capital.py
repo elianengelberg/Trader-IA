@@ -32,6 +32,7 @@ from typing import Any
 from pydantic import BaseModel, ConfigDict, Field
 
 from tia.core.clock import Clock, SystemClock, ensure_utc
+from tia.core.money import ZERO, D
 
 
 class CapitalEventKind(StrEnum):
@@ -197,11 +198,16 @@ class CapitalLedger:
     ) -> None:
         self._policy = policy
         self._clock = clock or SystemClock()
-        self._allocated = 0.0
-        self._deposits = 0.0
-        self._withdrawals = 0.0
-        self._realised_pnl = 0.0
-        self._fees = 0.0
+        # Internal arithmetic is Decimal — this ledger is the one place in the system
+        # where an accumulated rounding error becomes a real-money misstatement rather
+        # than a cosmetic one. The public surface stays float: every property converts at
+        # the boundary, so callers and their tests are unaffected. Conversion is always
+        # through str (see tia.core.money) so a float's binary error is not imported.
+        self._allocated = ZERO
+        self._deposits = ZERO
+        self._withdrawals = ZERO
+        self._realised_pnl = ZERO
+        self._fees = ZERO
         self._events: list[CapitalEvent] = []
         self._halted_reason = ""
 
@@ -234,15 +240,16 @@ class CapitalLedger:
         """
         if amount <= 0:
             raise ValueError("allocation must be positive")
-        if self._allocated + amount > self._policy.max_live_capital + self.DUST:
+        amount_d = D(amount)
+        if self._allocated + amount_d > D(self._policy.max_live_capital) + D(self.DUST):
             raise ValueError(
                 f"allocating {amount} would take the total to "
-                f"{self._allocated + amount}, above the max_live_capital ceiling of "
-                f"{self._policy.max_live_capital}. Raise the ceiling deliberately in "
+                f"{float(self._allocated + amount_d)}, above the max_live_capital ceiling "
+                f"of {self._policy.max_live_capital}. Raise the ceiling deliberately in "
                 "configuration, or allocate less."
             )
-        self._allocated += amount
-        self._deposits += amount
+        self._allocated += amount_d
+        self._deposits += amount_d
         self._record(CapitalEventKind.DEPOSIT, amount, at, note or "capital allocated")
 
     def withdraw_allocation(self, amount: float, *, at: datetime | None, note: str = "") -> None:
@@ -253,22 +260,23 @@ class CapitalLedger:
         """
         if amount <= 0:
             raise ValueError("withdrawal must be positive")
-        if amount > self._allocated + self.DUST:
+        amount_d = D(amount)
+        if amount_d > self._allocated + D(self.DUST):
             raise ValueError(
-                f"cannot deallocate {amount}; only {self._allocated} is allocated"
+                f"cannot deallocate {amount}; only {float(self._allocated)} is allocated"
             )
-        self._allocated -= amount
-        self._withdrawals += amount
+        self._allocated -= amount_d
+        self._withdrawals += amount_d
         self._record(CapitalEventKind.WITHDRAWAL, -amount, at, note or "allocation reduced")
 
     def record_realised_pnl(self, amount: float, *, at: datetime | None = None) -> None:
-        self._realised_pnl += amount
+        self._realised_pnl += D(amount)
         self._record(CapitalEventKind.REALISED_PNL, amount, at, "")
 
     def record_fee(self, amount: float, *, at: datetime | None = None) -> None:
         if amount < 0:
             raise ValueError("a fee is a positive cost")
-        self._fees += amount
+        self._fees += D(amount)
         self._record(CapitalEventKind.FEE, -amount, at, "")
 
     # ------------------------------------------------------------------ views
@@ -276,14 +284,14 @@ class CapitalLedger:
     def snapshot(
         self, *, unrealised_pnl: float = 0.0, used_capital: float = 0.0
     ) -> CapitalSnapshot:
-        equity = self._allocated + self._realised_pnl + unrealised_pnl
+        equity = float(self._allocated + self._realised_pnl) + unrealised_pnl
         return CapitalSnapshot(
-            allocated_capital=self._allocated,
-            deposits=self._deposits,
-            withdrawals=self._withdrawals,
-            realised_pnl=self._realised_pnl,
+            allocated_capital=float(self._allocated),
+            deposits=float(self._deposits),
+            withdrawals=float(self._withdrawals),
+            realised_pnl=float(self._realised_pnl),
             unrealised_pnl=unrealised_pnl,
-            fees_paid=self._fees,
+            fees_paid=float(self._fees),
             available_capital=max(0.0, equity - used_capital),
             used_capital=used_capital,
             max_live_capital=self._policy.max_live_capital,
@@ -293,7 +301,7 @@ class CapitalLedger:
         """Whether cumulative loss has passed the policy's hard stop."""
         if self._deposits <= 0:
             return False
-        loss_pct = -(self._realised_pnl + unrealised_pnl) / self._deposits * 100.0
+        loss_pct = float(-(self._realised_pnl + D(unrealised_pnl)) / self._deposits) * 100.0
         return loss_pct >= self._policy.max_total_loss_pct
 
     # ------------------------------------------------------------------ reconciliation
@@ -358,14 +366,15 @@ class CapitalLedger:
             self._halted_reason = explanation
 
         self._record(kind, difference, at, explanation, venue_balance_after=venue_balance)
+        difference_d = D(difference)
         if kind is CapitalEventKind.DEPOSIT:
-            self._deposits += difference
+            self._deposits += difference_d
             self._allocated = min(
-                self._policy.max_live_capital, self._allocated + difference
+                D(self._policy.max_live_capital), self._allocated + difference_d
             )
         elif kind is CapitalEventKind.WITHDRAWAL:
-            self._withdrawals += abs(difference)
-            self._allocated = max(0.0, self._allocated + difference)
+            self._withdrawals += abs(difference_d)
+            self._allocated = max(ZERO, self._allocated + difference_d)
 
         return BalanceReconciliation(
             expected=expected_balance,

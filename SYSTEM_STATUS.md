@@ -15,7 +15,7 @@ verdicts A1–F6.
 
 | Area | Status | Evidence |
 |---|---|---|
-| **BACKEND** | **PASS** | 752 tests; the runtime processes bars, decides, budgets, prices, and executes end to end |
+| **BACKEND** | **PASS** | 821 tests; the runtime processes bars, decides, budgets, prices, and executes end to end |
 | **FRONTEND** | **PASS** | 14 views rendered in headless Chromium, zero console errors |
 | **DATABASE** | **PASS** | schema creates from scratch on SQLite and PostgreSQL; FK cascade, upsert dedup and queries exercised |
 | **EVENT BUS** | **PASS** | in-process bus under test; duplicate events rejected by a unique index |
@@ -61,7 +61,7 @@ ALL CHECKS PASSED           → recorded in data/runtime/verify_passed.json,
                               which is what the gate's tests_pass check reads
 ```
 
-Totals: **752 Python tests**, ruff clean, TypeScript clean, browser smoke over 14 views.
+Totals: **821 Python tests**, ruff clean, TypeScript clean, browser smoke over 14 views.
 
 ---
 

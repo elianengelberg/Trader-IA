@@ -43,7 +43,7 @@ from tia.api.state import AppState
 from tia.core.config import Environment, settings_for_env
 from tia.persistence import Database, EdgeStateRepository
 
-SCENARIOS = ("trend_up", "mixed", "trend_down", "range_bound")
+SCENARIOS = ("trend_up", "mixed", "trend_down", "range")
 
 
 def rss_mb() -> float:

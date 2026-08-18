@@ -610,3 +610,25 @@ unpublished, in-container hard kill recovered unattended, database online after.
 Still not proven by this, stated as always: venue connectivity (`validate_binance.py`
 needs its first run with egress), host reboot survival (one `reboot` + 
 `post_reboot_check.sh` away), and profitability (nothing proves that).
+
+---
+
+# Part VII — First real Binance validation (2026-08-18, Frankfurt)
+
+The public market-data path reached the venue for the first time in the project's
+history. From the Frankfurt droplet (a NYC droplet had returned HTTP 451, US geo-block),
+`scripts/validate_binance.py` reported **5 passed, 0 failed**:
+
+- reachable `https://api.binance.com`
+- clock skew 131 ms (inside the signing window)
+- kline array positional layout confirmed against a live BTC candle (the field most
+  likely to silently produce wrong-but-plausible candles if reordered)
+- bookTicker fields present
+- spot filters: step 0.00001, tick 0.01, minNotional 5 USDT
+
+Facts written to `data/runtime/binance_validation.json`. What this moves from assumption
+to fact: the public data adapter. What it does **not** cover, still assumptions until a
+`--account --order` run with testnet keys: signing/HMAC against the account endpoint,
+fee-tier encoding, listenKey/user-data-stream, and the order lifecycle including
+duplicate-clientOrderId rejection. None of that is required for the 24/7 paper session,
+which uses public data only.

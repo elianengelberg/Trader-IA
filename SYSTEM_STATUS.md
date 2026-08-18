@@ -22,7 +22,7 @@ webhook seam, the production compose stack, and the operational scripts. See
 | **DATABASE** | **PASS** | schema creates from scratch on SQLite and PostgreSQL; FK cascade, upsert dedup and queries exercised |
 | **EVENT BUS** | **PASS** | in-process bus under test; duplicate events rejected by a unique index |
 | **MARKET DATA (synthetic/CSV)** | **PASS** | seeded and reproducible byte-for-byte |
-| **MARKET DATA (Binance)** | **NOT VERIFIED** | every Binance host blocked by the egress proxy; zero requests ever made |
+| **MARKET DATA (Binance public)** | **PASS (verified against mainnet)** | 2026-08-18 from a Frankfurt VPS: `validate_binance.py` 5/5 — reachable, clock skew 131 ms, kline array order confirmed (BTC live), bookTicker fields, and the spot filters (step 0.00001, tick 0.01, minNotional 5 USDT). Facts written to `binance_validation.json`; the gate's binance_validated check reads it |
 | **QUANT** | **PASS** | indicators, features and statistics against known values and property tests |
 | **STRATEGY** | **PASS** | library, fusion, regime gating; the asymmetry rule property-tested |
 | **ECONOMICS (costs + EV)** | **PASS** | round-trip pricing itemised; edge from realised outcomes only; refuses below 30 samples; observing in paper, enforcing in live |
@@ -123,12 +123,13 @@ Unchanged from the Part I audit (all rechecked green in this run), plus:
 
 ## Not verified, and why
 
-1. **Everything Binance.** All hosts blocked here — including the testnet and the public
-   data mirror. Endpoints, field names, kline array order, fee-tier encoding, and
-   duplicate-order rejection are documented assumptions, not facts.
-   Run `scripts/validate_binance.py` from a machine with egress; the gate refuses to arm
-   until its output exists — and now refuses a record whose key fingerprint does not
-   match the configured credential.
+1. **Binance public data: VERIFIED** (2026-08-18, Frankfurt) — reachability, clock skew,
+   kline array order, bookTicker fields and spot filters confirmed against mainnet by
+   `validate_binance.py` (5/5). **Still assumptions:** the signed/account path (fees,
+   permissions, listenKey) and order lifecycle/duplicate-rejection — these need testnet
+   keys and `--account --order`, which is a separate, later step and NOT needed for the
+   24/7 paper session. Note the US geo-block: `api.binance.com` answers US datacenter IPs
+   with HTTP 451, so the deployment region must be outside the US.
 2. **Docker (demo and production stacks)** — no daemon here. Written, syntax-checked
    where possible, never run. `make production-readiness` is the proof procedure and
    exits 3 rather than pretending. (CI is no longer on this list: it executed green on

@@ -414,6 +414,26 @@ def _register_routes(app: FastAPI, settings: Settings) -> None:
         except (ProviderError, ValueError) as exc:
             raise HTTPException(502, f"could not fetch history: {exc}") from exc
 
+    @app.get("/api/markets/{symbol}/depth")
+    async def market_depth(
+        symbol: str,
+        request: Request,
+        _user: User = Depends(current_user),
+        limit: int = Query(20, ge=5, le=100),
+    ) -> dict[str, Any]:
+        """Live order book (bids/asks) from Binance public depth — the buys and sells.
+
+        This is a *polled*, best-effort widget: the dashboard refreshes it every few
+        seconds. A venue hiccup therefore must not answer with a non-2xx status, or the
+        browser would log a console error on every poll. It degrades to an empty book with
+        a reason instead, and the client renders that reason in place of the ladder.
+        """
+        try:
+            book = await tia(request).order_book(symbol, limit)
+            return {"available": True, **book}
+        except (ProviderUnavailableError, ProviderError, ValueError) as exc:
+            return {"available": False, "reason": str(exc), "bids": [], "asks": []}
+
     @app.get("/api/news")
     async def news(
         request: Request,

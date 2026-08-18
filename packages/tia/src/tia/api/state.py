@@ -499,6 +499,20 @@ class AppState:
             for c in candles
         ]
 
+    async def order_book(self, symbol: str, limit: int) -> dict[str, Any]:
+        """Live order book (bids/asks) from Binance public depth. Keyless, read-only."""
+        from tia.core.clock import SystemClock
+        from tia.data.providers.binance_public import BinancePublicProvider
+
+        provider = BinancePublicProvider(
+            base_url=self.settings.live.public_data_url, clock=SystemClock()
+        )
+        try:
+            return await provider.order_book(symbol, limit=limit)
+        finally:
+            with contextlib.suppress(Exception):
+                await provider.close()
+
     def risk(self) -> dict[str, Any]:
         snapshot = self.runtime_snapshot()
         risk = snapshot.get("risk", {})

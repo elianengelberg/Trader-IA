@@ -303,6 +303,44 @@ h1 { font-size: 19px; margin: 0 0 4px; font-weight: 600; letter-spacing: -0.01em
 
 .chart { width: 100%; }
 
+/* --------------------------------------------------------- markets / book */
+.markets-chart { display: grid; grid-template-columns: 1fr 260px; gap: 16px; align-items: start; }
+@media (max-width: 900px) { .markets-chart { grid-template-columns: 1fr; } }
+
+.orderbook { font-family: var(--mono); font-size: 12px; -webkit-user-select: none; user-select: none; }
+.ob-head {
+  display: flex; justify-content: space-between;
+  color: var(--text-faint); font-size: 10.5px;
+  text-transform: uppercase; letter-spacing: 0.05em; padding: 0 6px 6px;
+}
+.ob-asks, .ob-bids { display: flex; flex-direction: column; gap: 1px; }
+.ob-row {
+  position: relative; display: flex; justify-content: space-between;
+  padding: 2px 6px; overflow: hidden; line-height: 1.6;
+}
+.ob-depth { position: absolute; top: 0; bottom: 0; right: 0; z-index: 0; }
+.ob-depth.ask { background: rgba(248, 113, 113, 0.14); }
+.ob-depth.bid { background: rgba(52, 211, 153, 0.14); }
+.ob-price, .ob-size { position: relative; z-index: 1; }
+.ob-row.ask .ob-price { color: var(--neg); }
+.ob-row.bid .ob-price { color: var(--pos); }
+.ob-size { color: var(--text-dim); }
+.ob-spread {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 8px 6px; margin: 4px 0;
+  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+}
+.ob-mid { font-size: 15px; font-weight: 600; }
+.ob-spread-val { font-size: 10.5px; color: var(--text-faint); }
+
+.chart-overlay {
+  position: fixed; inset: 0; z-index: 200; background: var(--bg);
+  display: flex; flex-direction: column; padding: 16px; gap: 12px;
+}
+.chart-overlay-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.chart-overlay-body { flex: 1; display: grid; grid-template-columns: 1fr 300px; gap: 16px; min-height: 0; }
+@media (max-width: 900px) { .chart-overlay-body { grid-template-columns: 1fr; } }
+
 .footnote {
   margin-top: 26px;
   padding-top: 14px;

@@ -297,6 +297,13 @@ class _FakePublicFeed(MarketDataProvider):
     async def server_time_ms(self) -> int:
         return int(datetime.now(UTC).timestamp() * 1000)
 
+    async def order_book(self, symbol, limit=20):  # type: ignore[no-untyped-def]
+        last = self._candles[-1].close
+        return {
+            "bids": [[last - i, 0.5 + i * 0.1] for i in range(1, limit + 1)],
+            "asks": [[last + i, 0.5 + i * 0.1] for i in range(1, limit + 1)],
+        }
+
 
 class _UnreachableFeed(MarketDataProvider):
     """A venue whose host cannot be resolved. Every call fails the way httpx would."""
@@ -308,6 +315,9 @@ class _UnreachableFeed(MarketDataProvider):
         raise ProviderUnavailableError("binance: host unreachable (egress blocked)")
 
     async def server_time_ms(self) -> int:
+        raise ProviderUnavailableError("binance: host unreachable (egress blocked)")
+
+    async def order_book(self, symbol, limit=20):  # type: ignore[no-untyped-def]
         raise ProviderUnavailableError("binance: host unreachable (egress blocked)")
 
 
@@ -380,6 +390,43 @@ async def test_paper_start_refuses_cleanly_when_the_data_host_is_unreachable(
     assert "unreachable" in response.json()["detail"]
 
     assert (await client.get("/api/live")).json()["active"] is False
+
+
+async def test_the_order_book_endpoint_returns_live_depth(
+    client: httpx.AsyncClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The buys-and-sells ladder: keyless public depth, bids under asks."""
+    import tia.data.providers.binance_public as binance_public
+
+    monkeypatch.setattr(binance_public, "BinancePublicProvider", _FakePublicFeed)
+
+    response = await client.get("/api/markets/BTC-USD/depth?limit=10")
+    assert response.status_code == 200, response.text
+    body = response.json()
+    assert body["available"] is True
+    assert len(body["bids"]) == 10
+    assert len(body["asks"]) == 10
+    # The best bid sits below the best ask, or it is not a book.
+    assert body["bids"][0][0] < body["asks"][0][0]
+
+
+async def test_the_order_book_degrades_softly_when_the_venue_is_unreachable(
+    client: httpx.AsyncClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The book is polled every couple of seconds, so an outage must answer 200 with a
+    reason rather than a non-2xx status — otherwise the browser logs a console error on
+    every single poll while the venue is down."""
+    import tia.data.providers.binance_public as binance_public
+
+    monkeypatch.setattr(binance_public, "BinancePublicProvider", _UnreachableFeed)
+
+    response = await client.get("/api/markets/BTC-USD/depth")
+    assert response.status_code == 200, response.text
+    body = response.json()
+    assert body["available"] is False
+    assert body["bids"] == []
+    assert body["asks"] == []
+    assert "unreachable" in body["reason"]
 
 
 async def test_paper_session_resumes_after_a_crash_but_not_after_an_operator_stop(

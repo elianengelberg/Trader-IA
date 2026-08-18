@@ -51,6 +51,7 @@ _INTERVAL_MAP = {
     "1d": "1d",
     "3d": "3d",
     "1w": "1w",
+    "1M": "1M",
 }
 
 MAX_LIMIT = 1000
@@ -227,6 +228,32 @@ class BinancePublicProvider(MarketDataProvider):
             self._record_failure()
             _log.warning("binance_quote_failed", error=str(exc))
             return None
+
+    async def order_book(self, symbol: str, limit: int = 20) -> dict[str, Any]:
+        """Top-of-book depth (bids and asks), the way Binance shows it. Public, keyless.
+
+        Returns ``{"bids": [[price, qty], ...], "asks": [[price, qty], ...]}`` with prices
+        as floats, bids descending and asks ascending — ready to render as a ladder.
+        """
+        client = await self._http()
+        try:
+            response = await client.get(
+                "/api/v3/depth",
+                params={"symbol": self.to_venue_symbol(symbol), "limit": limit},
+            )
+            response.raise_for_status()
+            data = response.json()
+        except httpx.HTTPError as exc:
+            self._record_failure()
+            raise ProviderUnavailableError(
+                f"binance depth request failed: {exc}",
+                provider=self.name,
+                consecutive_failures=self._consecutive_failures,
+            ) from exc
+        return {
+            "bids": [[float(p), float(q)] for p, q in data.get("bids", [])],
+            "asks": [[float(p), float(q)] for p, q in data.get("asks", [])],
+        }
 
     async def close(self) -> None:
         if self._client is not None and self._owns_client:

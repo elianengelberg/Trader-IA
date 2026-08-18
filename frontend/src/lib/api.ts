@@ -295,6 +295,17 @@ export interface Candle {
   volume: number;
 }
 
+/** A live order-book snapshot: `[price, quantity]` levels, bids descending, asks ascending.
+ *
+ * `available` is false when the venue could not be reached — the endpoint answers 200 with
+ * an empty book and a reason rather than an error status, because the client polls it. */
+export interface OrderBook {
+  bids: [number, number][];
+  asks: [number, number][];
+  available?: boolean;
+  reason?: string;
+}
+
 export interface StartOptions {
   scenario: string;
   symbols: string[];
@@ -531,6 +542,8 @@ export const api = {
     get<Candle[]>(
       `/markets/${encodeURIComponent(symbol)}/history?timeframe=${timeframe}&limit=${limit}`
     ),
+  orderBook: (symbol: string, limit = 20) =>
+    get<OrderBook>(`/markets/${encodeURIComponent(symbol)}/depth?limit=${limit}`),
   news: (limit = 40) => get<NewsItem[]>(`/news?limit=${limit}`),
   logs: (limit = 200, level?: string, channel?: string) => {
     const params = new URLSearchParams({ limit: String(limit) });

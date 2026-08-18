@@ -37,7 +37,8 @@ TIA_DEMO_PASSWORD=${TIA_DEMO_PASSWORD}
 TIA_JWT_SECRET=${TIA_JWT_SECRET}
 
 # ---- recommended (fill in) ----
-# Domain with DNS pointing at this machine -> automatic Let's Encrypt HTTPS.
+# Set to your domain (Let's Encrypt, no warnings) or this server's PUBLIC IP
+# (self-signed; browsers warn once). localhost = reachable only from the server.
 TIA_DOMAIN=localhost
 # Any JSON-POST endpoint (Discord/Slack webhook, ntfy, ...). Empty = alerts stay
 # in the database and the dashboard only.

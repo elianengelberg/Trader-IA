@@ -588,3 +588,25 @@ is loud), Readiness X/N, Risk, Reconciliation, live capital, ARMED/DISARMED.
 `make readiness` executed here reports NOT_READY with exit 3 — correct for this
 environment: binance_validation, docker and claude_api are EXTERNAL_REQUIRED and stay
 that way until run on machines that exist outside this sandbox.
+
+---
+
+# Part VI — First real deployment (2026-08-18, DigitalOcean)
+
+The production stack ran for the first time on a real machine (2 vCPU / 2 GB droplet,
+Ubuntu 24.04, set up end-to-end by `scripts/vps_setup.sh` — all five PASS including the
+new automatic swap). Three defects that no amount of review had caught fell out of the
+first three boots, each fixed, pushed, and re-verified on the server:
+
+| # | Defect | Mechanism | Fix |
+|---|---|---|---|
+| 1 | Backend crash-loop: `sh: 2: Syntax error: "&&" unexpected` | The compose `command:` used a folded YAML scalar whose continuation line was more-indented, so the newline survived into the string and dash choked | Exec-array command form in both compose files |
+| 2 | Backend crash-loop: `RuntimeError: /dev/null is an empty file` | uvicorn's `--log-config /dev/null` silencing trick is rejected by Python 3.11's `logging.fileConfig` | Use the app's own entry point (`python -m tia.api.main`), which calls `uvicorn.run(log_config=None)` — fixed in the Dockerfile CMD and both compose files |
+| 3 | Readiness drill FAIL: backend never returned after `docker kill` | Docker counts `docker kill` as a manual stop, and restart policies deliberately ignore manual stops — the drill was proving the wrong thing (and accidentally proving "sticky means sticky" right) | The drill now SIGKILLs the server process *inside* the container; PID 1 exits non-zero and `unless-stopped` fires — a real crash as Docker sees one |
+
+Final run: **PRODUCTION READINESS: PASS** — stack healthy behind Caddy HTTPS, Postgres
+unpublished, in-container hard kill recovered unattended, database online after.
+
+Still not proven by this, stated as always: venue connectivity (`validate_binance.py`
+needs its first run with egress), host reboot survival (one `reboot` + 
+`post_reboot_check.sh` away), and profitability (nothing proves that).

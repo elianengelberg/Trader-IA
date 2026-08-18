@@ -2,15 +2,12 @@ import { useCallback, useEffect, useState } from "react";
 import { ApiError, api, type Health, type RuntimeSnapshot } from "./lib/api";
 import { useEventStream } from "./lib/stream";
 import { Login } from "./views/Login";
-import { Controls } from "./views/Controls";
 import { Dashboard } from "./views/Dashboard";
 import { Markets } from "./views/Markets";
 import { AiView } from "./views/AiView";
 import { RiskView } from "./views/RiskView";
 import { Portfolio } from "./views/Portfolio";
 import { Orders } from "./views/Orders";
-import { Backtests } from "./views/Backtests";
-import { NewsView } from "./views/NewsView";
 import { LogsView } from "./views/LogsView";
 import { SystemView } from "./views/SystemView";
 import { SettingsView } from "./views/SettingsView";
@@ -23,7 +20,7 @@ import { Pill } from "./components/ui";
 type Tab =
   | "dashboard" | "markets" | "ai" | "risk" | "portfolio" | "orders"
   | "strategy" | "analytics" | "live" | "capital"
-  | "backtests" | "news" | "logs" | "system" | "settings";
+  | "logs" | "system" | "settings";
 
 const NAV: { group: string; items: { id: Tab; label: string }[] }[] = [
   {
@@ -43,8 +40,6 @@ const NAV: { group: string; items: { id: Tab; label: string }[] }[] = [
       { id: "ai", label: "AI Decisions" },
       { id: "risk", label: "Risk" },
       { id: "analytics", label: "Ruin Analytics" },
-      { id: "news", label: "News" },
-      { id: "backtests", label: "Backtests" },
     ],
   },
   {
@@ -164,8 +159,6 @@ export default function App() {
         </nav>
 
         <main>
-          <Controls runtime={runtime} onChanged={refreshRuntime} subscribe={subscribe} />
-
           {tab === "dashboard" && <Dashboard runtime={runtime} subscribe={subscribe} />}
           {tab === "markets" && <Markets subscribe={subscribe} />}
           {tab === "portfolio" && <Portfolio subscribe={subscribe} />}
@@ -176,8 +169,6 @@ export default function App() {
           {tab === "analytics" && <AnalyticsView subscribe={subscribe} />}
           {tab === "live" && <LiveView role={user.role} />}
           {tab === "capital" && <CapitalView subscribe={subscribe} />}
-          {tab === "news" && <NewsView subscribe={subscribe} />}
-          {tab === "backtests" && <Backtests />}
           {tab === "system" && <SystemView health={health} runtime={runtime} />}
           {tab === "logs" && <LogsView subscribe={subscribe} />}
           {tab === "settings" && <SettingsView />}

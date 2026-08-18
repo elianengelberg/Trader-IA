@@ -56,9 +56,9 @@ export function Dashboard({
       <>
         <h1>Dashboard</h1>
         <p className="section-note">
-          No run is active. Pick a scenario above and start paper trading — the system will
-          generate market data, analyse it, decide, size, and execute against a simulated
-          matching engine, showing every step as it happens.
+          No run is active. Your 24/7 session lives in <strong>Live Trading</strong> — start
+          it there and watch the real market decisions arrive under <strong>AI Decisions</strong>,
+          the price under <strong>Markets</strong>, and the P&amp;L under <strong>Capital</strong>.
         </p>
         <SimulationFootnote />
       </>

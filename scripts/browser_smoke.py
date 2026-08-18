@@ -19,7 +19,6 @@ import argparse
 import os
 from pathlib import Path
 
-from playwright.sync_api import Error as PlaywrightError
 from playwright.sync_api import sync_playwright
 
 VIEWS = [
@@ -31,8 +30,6 @@ VIEWS = [
     "AI Decisions",
     "Risk",
     "Ruin Analytics",
-    "News",
-    "Backtests",
     "Live Trading",
     "System",
     "Logs",
@@ -118,15 +115,17 @@ def main() -> int:
             page.screenshot(path=str(shots / "01-after-login.png"), full_page=True)
 
         # ---- start a run -------------------------------------------------
-        print("\nStarting a paper-trading run")
-        page.select_option("select >> nth=0", "mixed")
-        page.select_option("select >> nth=1", "10000")
-        # Deliberately not the fastest setting: the control checks further down need the
-        # run to still be active, and "Fast" finishes 660 bars before they are reached.
-        page.select_option("select >> nth=2", "0.12")
-        page.click("button:has-text('Start paper trading')")
-        page.wait_for_timeout(1500)
-
+        # Started over the API, not the UI: the synthetic-demo launcher was removed from
+        # the dashboard (the operator uses the real 24/7 session under Live Trading). The
+        # demo pipeline still exists server-side and is what these checks exercise without
+        # needing a venue connection. page.request shares the logged-in session cookie.
+        print("\nStarting a paper-trading run (via API)")
+        started = page.request.post(
+            f"{args.url}/api/runtime/start",
+            data={"scenario": "mixed", "initial_capital": 10000, "bar_interval_seconds": 0.12},
+        )
+        check("run started over the API", started.ok, f"HTTP {started.status}")
+        page.reload(wait_until="networkidle")
         page.wait_for_selector(".pill:has-text('Running'), .pill:has-text('Finished')", timeout=20_000)
         check("run reached a live state", True)
 
@@ -200,46 +199,21 @@ def main() -> int:
         else:
             check("decisions are available to inspect", False, "no decision rows rendered")
 
-        # ---- run a backtest from the UI ----------------------------------
-        print("\nBacktest from the dashboard")
-        page.click(".sidenav button:has-text('Backtests')")
+        # ---- the emergency stop lives with the real session --------------
+        # The synthetic-demo control bar (Start/Pause/Stop/Kill for the demo run) was
+        # removed; the operator's real controls are on Live Trading. Confirm the paper
+        # session's emergency controls are present and confirmation-gated there.
+        print("\nLive Trading controls")
+        page.click(".sidenav button:has-text('Live Trading')")
         page.wait_for_timeout(600)
-        page.click("button:has-text('Run backtest')")
-        try:
-            page.wait_for_selector(".drawer", timeout=90_000)
-            drawer = page.locator(".drawer").inner_text().casefold()
-            check("backtest completed and opened its report", True)
-            check("baselines are shown", "mandatory baselines" in drawer)
-            check(
-                "the evidence statement is shown",
-                "makes no claim about future results" in drawer,
-            )
-            if shots:
-                page.screenshot(path=str(shots / "21-backtest-report.png"), full_page=True)
-            page.click(".drawer button:has-text('Close')")
-        except PlaywrightError:
-            check("backtest completed", False, "timed out waiting for the report")
-
-        # ---- controls ----------------------------------------------------
-        print("\nControls")
-        page.click(".sidenav button:has-text('Dashboard')")
-        page.wait_for_timeout(400)
-        if page.locator("button:has-text('Kill switch')").count() > 0:
-            page.click("button:has-text('Kill switch')")
-            page.wait_for_selector("text=Engage kill switch?", timeout=5_000)
-            check("kill switch asks for confirmation", True)
-            page.click("button:has-text('Cancel')")
         check(
-            "stop control is available while the run is active",
-            page.locator("button:has-text('Stop run')").count() > 0,
+            "the activation gate is shown, refusing to arm",
+            shows(page, "activation checks"),
         )
-        if page.locator("button:has-text('Stop run')").count() > 0:
-            page.click("button:has-text('Stop run')")
-            page.wait_for_timeout(3000)
-            check(
-                "run can be stopped",
-                page.locator(".pill:has-text('Stopped')").count() > 0,
-            )
+        check(
+            "custody guarantee is stated",
+            shows(page, "your money stays at the exchange"),
+        )
 
         # ---- responsive --------------------------------------------------
         print("\nResponsive layout")

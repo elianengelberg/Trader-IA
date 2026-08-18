@@ -6,9 +6,14 @@ import { PriceChart } from "../components/charts";
 import { Card, Empty, Pill, SimulationFootnote, Stat } from "../components/ui";
 import { money, signedPct } from "../lib/format";
 
+type ChartRange = "live" | "history";
+
 export function Markets({ subscribe }: { subscribe: Subscribe }) {
   const [markets, setMarkets] = useState<Market[]>([]);
   const [candles, setCandles] = useState<Candle[]>([]);
+  const [history, setHistory] = useState<Candle[]>([]);
+  const [range, setRange] = useState<ChartRange>("live");
+  const [historyError, setHistoryError] = useState("");
   const [symbol, setSymbol] = useState<string>("");
   const [liveData, setLiveData] = useState(false);
 
@@ -29,6 +34,16 @@ export function Markets({ subscribe }: { subscribe: Subscribe }) {
     if (!symbol) return;
     api.candles(symbol, 260).then(setCandles).catch(() => undefined);
   }, [symbol]);
+
+  // One year of real daily candles from Binance, fetched on demand when the operator
+  // switches the chart to the history range.
+  useEffect(() => {
+    if (!symbol || range !== "history") return;
+    setHistoryError("");
+    api.marketHistory(symbol, "1d", 365)
+      .then(setHistory)
+      .catch(() => setHistoryError("Could not load history from the venue right now."));
+  }, [symbol, range]);
 
   // Prices move on every bar; the candle series is refetched rather than appended because
   // the buffer is capped server-side and a refetch of 260 bars is a few kilobytes.
@@ -84,8 +99,38 @@ export function Markets({ subscribe }: { subscribe: Subscribe }) {
             ))}
           </div>
 
-          <Card title={`${symbol} · price`}>
-            {candles.length > 1 ? <PriceChart candles={candles} height={340} /> : <Empty message="Collecting bars…" />}
+          <Card
+            title={`${symbol} · price`}
+            actions={
+              <div className="row" style={{ gap: 6 }}>
+                <button
+                  className={`btn small ${range === "live" ? "" : "ghost"}`}
+                  onClick={() => setRange("live")}
+                >
+                  Live · 1m
+                </button>
+                <button
+                  className={`btn small ${range === "history" ? "" : "ghost"}`}
+                  onClick={() => setRange("history")}
+                >
+                  1 year · daily
+                </button>
+              </div>
+            }
+          >
+            {range === "live" ? (
+              candles.length > 1 ? (
+                <PriceChart candles={candles} height={340} />
+              ) : (
+                <Empty message="Collecting bars…" />
+              )
+            ) : historyError ? (
+              <Empty message={historyError} />
+            ) : history.length > 1 ? (
+              <PriceChart candles={history} height={340} />
+            ) : (
+              <Empty message="Loading a year of daily bars from Binance…" />
+            )}
           </Card>
         </>
       )}

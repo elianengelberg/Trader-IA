@@ -469,6 +469,36 @@ class AppState:
             return []
         return [shape(c) for c in list(stream.buffer)[-limit:]]
 
+    async def market_history(
+        self, symbol: str, timeframe: str, limit: int
+    ) -> list[dict[str, Any]]:
+        """Historical candles straight from Binance public klines (e.g. a year of daily
+        bars). Independent of any running session — it opens a short-lived read-only
+        client, fetches, and closes. Never touches credentials; public endpoints only.
+        """
+        from tia.core.clock import SystemClock
+        from tia.data.providers.binance_public import BinancePublicProvider
+
+        provider = BinancePublicProvider(
+            base_url=self.settings.live.public_data_url, clock=SystemClock()
+        )
+        try:
+            candles = await provider.get_candles(symbol, timeframe, limit=limit)
+        finally:
+            with contextlib.suppress(Exception):
+                await provider.close()
+        return [
+            {
+                "time": c.open_time.isoformat(),
+                "open": c.open,
+                "high": c.high,
+                "low": c.low,
+                "close": c.close,
+                "volume": c.volume,
+            }
+            for c in candles
+        ]
+
     def risk(self) -> dict[str, Any]:
         snapshot = self.runtime_snapshot()
         risk = snapshot.get("risk", {})

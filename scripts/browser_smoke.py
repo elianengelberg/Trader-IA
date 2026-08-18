@@ -148,7 +148,10 @@ def main() -> int:
         check("drawdown is displayed", shows(page, "max drawdown"))
         check("pipeline counters are displayed", shows(page, "risk approved"))
         check("fills are displayed", shows(page, "recent fills"))
-        check("stream reports live", page.locator(".pill:has-text('Live')").count() > 0)
+        check(
+            "stream reports connected",
+            page.locator(".pill:has-text('Connected')").count() > 0,
+        )
         check(
             "the simulation disclaimer is present",
             shows(page, "every number on this page is simulated"),

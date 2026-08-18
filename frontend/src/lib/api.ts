@@ -527,6 +527,10 @@ export const api = {
   markets: () => get<Market[]>("/markets"),
   candles: (symbol: string, limit = 240) =>
     get<Candle[]>(`/markets/${encodeURIComponent(symbol)}/candles?limit=${limit}`),
+  marketHistory: (symbol: string, timeframe = "1d", limit = 365) =>
+    get<Candle[]>(
+      `/markets/${encodeURIComponent(symbol)}/history?timeframe=${timeframe}&limit=${limit}`
+    ),
   news: (limit = 40) => get<NewsItem[]>(`/news?limit=${limit}`),
   logs: (limit = 200, level?: string, channel?: string) => {
     const params = new URLSearchParams({ limit: String(limit) });

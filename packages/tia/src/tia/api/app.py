@@ -42,7 +42,7 @@ from tia.api.security import (
 )
 from tia.api.state import AppState
 from tia.core.config import Environment, Settings, settings_for_env
-from tia.core.errors import LiveActivationError, ProviderUnavailableError
+from tia.core.errors import LiveActivationError, ProviderError, ProviderUnavailableError
 from tia.core.logging import get_logger
 
 _log = get_logger("api.app")
@@ -397,6 +397,22 @@ def _register_routes(app: FastAPI, settings: Settings) -> None:
         limit: int = Query(200, ge=10, le=1000),
     ) -> list[Any]:
         return tia(request).candles(symbol, limit)
+
+    @app.get("/api/markets/{symbol}/history")
+    async def market_history(
+        symbol: str,
+        request: Request,
+        _user: User = Depends(current_user),
+        timeframe: str = Query("1d"),
+        limit: int = Query(365, ge=30, le=1000),
+    ) -> list[Any]:
+        """Historical candles (default a year of daily bars) from Binance public data."""
+        try:
+            return await tia(request).market_history(symbol, timeframe, limit)
+        except ProviderUnavailableError as exc:
+            raise HTTPException(503, str(exc)) from exc
+        except (ProviderError, ValueError) as exc:
+            raise HTTPException(502, f"could not fetch history: {exc}") from exc
 
     @app.get("/api/news")
     async def news(

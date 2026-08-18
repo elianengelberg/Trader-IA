@@ -50,9 +50,13 @@ services:
     restart: unless-stopped
     # Migrations first, serve second. If the upgrade fails the container exits and
     # restarts into the same failure — visibly, in `docker compose logs backend`.
-    command: >
-      sh -c "python -m alembic upgrade head
-             && python -m uvicorn tia.api.main:app --host 0.0.0.0 --port 8000 --log-config /dev/null"
+    # Exec-array form on purpose: a folded YAML scalar keeps the newline on
+    # more-indented continuation lines, and dash refuses a line that begins with
+    # "&&" — found on the first real boot, not in review.
+    command:
+      - sh
+      - -c
+      - python -m alembic upgrade head && python -m uvicorn tia.api.main:app --host 0.0.0.0 --port 8000 --log-config /dev/null
     environment:
       TIA_ENV: paper
       TIA_DATABASE_URL: postgresql+asyncpg://tia:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}@postgres:5432/tia

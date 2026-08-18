@@ -32,9 +32,12 @@ services:
     restart: unless-stopped
     # Migrations first, serve second — a schema mismatch is a visible startup
     # failure in `docker compose logs backend`, not a surprise later.
-    command: >
-      sh -c "python -m alembic upgrade head
-             && python -m uvicorn tia.api.main:app --host 0.0.0.0 --port 8000 --log-config /dev/null"
+    # Exec-array form: a folded scalar kept a newline and dash chokes on a line
+    # starting with "&&" (same defect as the prod file, fixed after the first boot).
+    command:
+      - sh
+      - -c
+      - python -m alembic upgrade head && python -m uvicorn tia.api.main:app --host 0.0.0.0 --port 8000 --log-config /dev/null
     environment:
       TIA_ENV: paper
       TIA_DATABASE_URL: postgresql+asyncpg://tia:${POSTGRES_PASSWORD:?run scripts/generate_env.sh first}@postgres:5432/tia

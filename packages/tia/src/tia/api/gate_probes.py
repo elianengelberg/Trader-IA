@@ -398,6 +398,22 @@ def _order_idempotency(record: BinanceValidationRecord | None) -> GateCheck:
 
 
 def _risk(state: AppState) -> GateCheck:
+    # A running paper-live session is the active risk path — read it, not the demo run.
+    live = state.live_runtime
+    if live is not None and live.is_running:
+        if live.risk_is_halted:
+            return failing(
+                CheckName.RISK_ENGINE_HEALTHY,
+                "the risk engine is halted (safe mode)",
+                "resolve the cause and release the halt deliberately",
+            )
+        if not live.risk_has_evaluated:
+            return failing(
+                CheckName.RISK_ENGINE_HEALTHY,
+                "the risk engine has not judged a signal yet in this session",
+                "let the session process enough bars to produce a signal",
+            )
+        return passing(CheckName.RISK_ENGINE_HEALTHY, "the paper-live risk engine is evaluating")
     runtime = state.runtime
     if runtime is None:
         return failing(CheckName.RISK_ENGINE_HEALTHY, "no risk engine is running", "start a run")
@@ -420,6 +436,24 @@ def _risk(state: AppState) -> GateCheck:
 
 
 def _reconciliation(state: AppState) -> GateCheck:
+    # Prefer the running paper-live session; the demo run may be stopped.
+    live = state.live_runtime
+    if live is not None and live.is_running:
+        recs = int(live.counters["reconciliations"])
+        breaks = int(live.counters["reconciliation_breaks"])
+        if not recs:
+            return failing(
+                CheckName.RECONCILIATION_HEALTHY,
+                "this session has not reached its first scheduled reconciliation yet",
+                "let the session run a few more cycles",
+            )
+        if breaks:
+            return failing(
+                CheckName.RECONCILIATION_HEALTHY,
+                f"{breaks} divergences between our books and the venue's",
+                "one of the two is wrong about what we own, and sizing runs off it",
+            )
+        return passing(CheckName.RECONCILIATION_HEALTHY, f"{recs} clean reconciliations")
     runtime = state.runtime
     if runtime is None or not runtime.counters.reconciliations:
         return failing(

@@ -1160,15 +1160,25 @@ class AppState:
                 "open": "offline",
             }.get(breaker, "unknown")
 
-        components = {
-            "database": "online" if database_ok else "offline",
-            "market_data": "online" if runtime and runtime.is_running else "unknown",
-            "paper_execution": "online" if runtime else "unknown",
-            "risk_engine": (
+        # A running paper-live session is the active engine; prefer its state over the
+        # demo run's for the components the operator watches on the banner.
+        live_active = self.live_runtime is not None and self.live_runtime.is_running
+        if live_active:
+            risk_engine_state = "degraded" if self.live_runtime.risk_is_halted else "online"
+            market_data_state = "online"
+        else:
+            risk_engine_state = (
                 "degraded"
                 if runtime and runtime.risk.state.is_halted
                 else ("online" if runtime else "unknown")
-            ),
+            )
+            market_data_state = "online" if runtime and runtime.is_running else "unknown"
+
+        components = {
+            "database": "online" if database_ok else "offline",
+            "market_data": market_data_state,
+            "paper_execution": "online" if (runtime or live_active) else "unknown",
+            "risk_engine": risk_engine_state,
             "llm": llm_state,
             "backtest_engine": "online",
             "event_stream": "online" if self._subscribers else "unknown",

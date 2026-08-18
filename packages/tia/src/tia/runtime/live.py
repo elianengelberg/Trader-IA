@@ -1110,6 +1110,19 @@ class LiveRuntime:
         """Whether the most recent reconciliation recorded a divergence."""
         return self._last_reconciliation_clean is False
 
+    @property
+    def risk_is_halted(self) -> bool:
+        """True when this session's risk path is in a stop state (safe mode / halted)."""
+        return (
+            self.machine.state in {LiveState.SAFE_MODE, LiveState.ERROR}
+            or self._risk.state.is_halted
+        )
+
+    @property
+    def risk_has_evaluated(self) -> bool:
+        """True once the risk engine has actually judged at least one signal."""
+        return bool(self.counters["signals"] or self.counters["risk_rejected"])
+
     def real_candles(self, limit: int = 200) -> list[Candle]:
         """The real venue candles this session is trading on. Empty until the first bar.
 

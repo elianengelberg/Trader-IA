@@ -225,8 +225,25 @@ export function LiveView({ role }: { role: string }) {
               />
             </div>
             {role === "operator" && (
-              <button onClick={() => paperSession("stop")} disabled={sessionBusy}>
-                {sessionBusy ? "Stopping…" : "Stop session (stays stopped across restarts)"}
+              <button
+                onClick={() => {
+                  if (window.confirm(
+                    "Stop the 24/7 paper session?\n\nIt will STAY stopped across restarts " +
+                    "until you start it again, and it stops accruing the paper track record " +
+                    "while stopped."
+                  )) paperSession("stop");
+                }}
+                disabled={sessionBusy}
+                style={{
+                  background: "var(--bad, #c0392b)",
+                  color: "#fff",
+                  fontWeight: 600,
+                  border: "none",
+                  padding: "10px 18px",
+                  borderRadius: 6,
+                }}
+              >
+                {sessionBusy ? "Stopping…" : "⏹  Stop the 24/7 session"}
               </button>
             )}
           </>
@@ -234,8 +251,20 @@ export function LiveView({ role }: { role: string }) {
           <>
             <Empty message="No realtime session is running." />
             {role === "operator" && (
-              <button onClick={() => paperSession("start")} disabled={sessionBusy} style={{ marginTop: 8 }}>
-                {sessionBusy ? "Starting…" : "Start 24/7 paper session"}
+              <button
+                onClick={() => paperSession("start")}
+                disabled={sessionBusy}
+                style={{
+                  marginTop: 8,
+                  background: "var(--ok, #1e8e4e)",
+                  color: "#fff",
+                  fontWeight: 600,
+                  border: "none",
+                  padding: "10px 18px",
+                  borderRadius: 6,
+                }}
+              >
+                {sessionBusy ? "Starting…" : "▶  Start the 24/7 paper session"}
               </button>
             )}
           </>

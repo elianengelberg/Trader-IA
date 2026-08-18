@@ -3,7 +3,17 @@
 # TIA_DOMAIN=localhost (the default) serves HTTPS with Caddy's own local CA —
 # fine for a first boot and for `make production-readiness`. A real domain whose
 # DNS points at this machine gets automatic Let's Encrypt certificates, renewal
-# included, with no further configuration.
+# included, with no further configuration. TIA_DOMAIN can also be the server's
+# public IP: self-signed cert, browsers warn once.
+
+{
+	# Browsers and curl send no SNI when the address is a bare IP, and without
+	# SNI Caddy cannot pick a certificate — the handshake dies with
+	# "tlsv1 alert internal error" even though the IP's cert was issued fine.
+	# Found on the first real deployment. Harmless with a domain (clients
+	# send SNI then, and this default never applies).
+	default_sni {$TIA_DOMAIN:localhost}
+}
 
 {$TIA_DOMAIN:localhost} {
 	encode gzip

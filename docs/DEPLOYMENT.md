@@ -56,7 +56,7 @@ What matters: a machine that stays up, a disk that persists, a bill you don't no
 
 | Option | Fit | Notes |
 |---|---|---|
-| **Hetzner Cloud (CX-line)** | **Recommended** | Small instances (2 vCPU / 4 GB class) have historically been in the €5–10/month range; excellent price/performance. EU/US regions. |
+| **Hetzner Cloud (CX-line)** | **Recommended** | Small instances (2 vCPU / 4 GB class) have historically been in the €5–10/month range; excellent price/performance. Use an EU region — see the 451 note in §3. |
 | DigitalOcean droplet | Good | Same shape, typically a few dollars more; nicer UI, good docs. |
 | AWS Lightsail / EC2 | Works | Lightsail is the sane entry point; raw EC2 + EBS + egress pricing is overkill and easy to misestimate. |
 | Fly.io / Railway / Render | Possible | PaaS comfort, but persistent volumes, always-on containers and outbound-connection pricing need checking; the compose file maps least directly onto them. |
@@ -71,7 +71,10 @@ operator, one process, one database — resist the urge.
 
 ## 3. Prerequisites
 
-* A VPS (§2) running a current Debian or Ubuntu LTS, reachable over SSH.
+* A VPS (§2) running a current Debian or Ubuntu LTS, reachable over SSH — in a
+  region **outside the United States** (Frankfurt, Amsterdam, any EU location):
+  Binance answers US datacenter IPs with HTTP 451 "Unavailable For Legal Reasons",
+  which no configuration on our side can fix. Found the hard way from a NYC droplet.
 * Docker Engine + the compose plugin ([docs.docker.com/engine/install](https://docs.docker.com/engine/install/)).
 * Optional but recommended: a domain (any registrar, ~$10/year) with an A record
   pointing at the VPS — this is what turns self-signed HTTPS into real HTTPS (§8).

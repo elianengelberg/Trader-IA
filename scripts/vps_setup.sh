@@ -59,6 +59,19 @@ usermod -aG docker tia
 systemctl enable --now docker >/dev/null 2>&1
 pass "docker enabled at boot (the stack's restart:unless-stopped rides on this)"
 
+# ---- 3b. swap on small machines ------------------------------------------------------
+# 2 GB droplets/instances run the stack fine but can run out of memory during the
+# image build (the dashboard's Node build stage). A swap file is the standard net.
+if [ "$(free -m | awk '/^Swap:/{print $2}')" -eq 0 ]; then
+  (fallocate -l 2G /swapfile 2>/dev/null || dd if=/dev/zero of=/swapfile bs=1M count=2048 status=none) \
+    && chmod 600 /swapfile && mkswap /swapfile >/dev/null && swapon /swapfile \
+    && { grep -q '^/swapfile' /etc/fstab || echo '/swapfile none swap sw 0 0' >> /etc/fstab; } \
+    && pass "2G swap file created and persisted (build-time safety on small RAM)" \
+    || skip "could not create swap — fine on machines with 4 GB+ RAM"
+else
+  skip "swap already present"
+fi
+
 # ---- 4. firewall ---------------------------------------------------------------------
 ufw default deny incoming >/dev/null
 ufw default allow outgoing >/dev/null

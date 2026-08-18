@@ -7,7 +7,8 @@
 #   1. compose file parses with the local .env (a synthetic one is generated if absent)
 #   2. the stack builds and comes up healthy behind the proxy, with HTTPS
 #   3. /api/health answers THROUGH the proxy — the path a user takes
-#   4. the backend container is killed hard and comes back on its own
+#   4. the backend server process is killed hard (a real crash) and the container
+#      comes back on its own
 #      (restart: unless-stopped), and health recovers
 #   5. the database survives the restart: the same schema version answers after
 #
@@ -81,9 +82,24 @@ else
   pass "postgres has no published port"
 fi
 
-# ---- 4. kill the backend, watch it return --------------------------------------------
+# ---- 4. crash the backend, watch it return -------------------------------------------
+# NOT `docker kill`: Docker counts that as a manual stop and restart policies
+# deliberately ignore it (found on the first real run of this drill — the backend
+# stayed down exactly as `unless-stopped` promises for operator stops). A real
+# crash is the server PROCESS dying inside the container: PID 1 (sh) sees its
+# child killed, exits non-zero, and the restart policy fires.
 backend_id="$($COMPOSE ps -q backend)"
-docker kill "$backend_id" >/dev/null 2>&1 && pass "backend killed (SIGKILL, no warning)"
+docker exec "$backend_id" python -c "
+import os, signal
+for pid in filter(str.isdigit, os.listdir('/proc')):
+    try:
+        with open(f'/proc/{pid}/cmdline', 'rb') as fh:
+            cmd = fh.read().decode(errors='ignore')
+    except OSError:
+        continue
+    if ('tia.api' + '.main') in cmd and int(pid) != os.getpid():
+        os.kill(int(pid), signal.SIGKILL)
+" >/dev/null 2>&1 && pass "backend server process killed (SIGKILL inside the container — a crash, not a stop)"
 recovered=0
 for _ in $(seq 1 30); do
   sleep 4

@@ -1110,6 +1110,34 @@ class LiveRuntime:
         """Whether the most recent reconciliation recorded a divergence."""
         return self._last_reconciliation_clean is False
 
+    def real_candles(self, limit: int = 200) -> list[Candle]:
+        """The real venue candles this session is trading on. Empty until the first bar.
+
+        The dashboard's Markets/Chart views read this when a paper-live session is
+        running, so what the operator sees is the same real data the engine decides on —
+        not the synthetic demo runtime that also happens to exist.
+        """
+        return list(self._buffer)[-limit:]
+
+    def market_state(self) -> dict[str, Any] | None:
+        """One market row for the symbol this session trades, from real venue data."""
+        if not self._buffer:
+            return None
+        latest = self._buffer[-1]
+        prior = self._buffer[-2].close if len(self._buffer) > 1 else latest.open
+        regime = self._regimes.current_regime(self._symbol).value
+        return {
+            "symbol": self._symbol,
+            "price": latest.close,
+            "open": latest.open,
+            "high": latest.high,
+            "low": latest.low,
+            "volume": latest.volume,
+            "change_pct": ((latest.close - prior) / prior * 100.0) if prior else 0.0,
+            "at": latest.close_time.isoformat(),
+            "regime": regime,
+        }
+
     def snapshot(self) -> dict[str, Any]:
         ledger = self._ledger.snapshot()
         return {

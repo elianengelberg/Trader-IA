@@ -426,6 +426,14 @@ class AppState:
         return rows[:limit]
 
     def markets(self) -> list[dict[str, Any]]:
+        # A running paper-live session is the real thing: show ITS real Binance data,
+        # not the synthetic demo runtime that may also be running. The operator asked to
+        # see the real BTC price here, and this is where it comes from.
+        live = self.live_runtime
+        if live is not None and live.is_running:
+            row = live.market_state()
+            if row is not None:
+                return [row]
         if self.runtime is None:
             return []
         out = []
@@ -438,13 +446,8 @@ class AppState:
         return out
 
     def candles(self, symbol: str, limit: int) -> list[dict[str, Any]]:
-        if self.runtime is None:
-            return []
-        stream = self.runtime._streams.get(symbol)
-        if stream is None:
-            return []
-        return [
-            {
+        def shape(candle: Any) -> dict[str, Any]:
+            return {
                 "time": candle.open_time.isoformat(),
                 "open": candle.open,
                 "high": candle.high,
@@ -452,8 +455,19 @@ class AppState:
                 "close": candle.close,
                 "volume": candle.volume,
             }
-            for candle in list(stream.buffer)[-limit:]
-        ]
+
+        # Real venue candles from the paper-live session take precedence over the demo.
+        live = self.live_runtime
+        if live is not None and live.is_running:
+            real = live.real_candles(limit)
+            if real:
+                return [shape(c) for c in real]
+        if self.runtime is None:
+            return []
+        stream = self.runtime._streams.get(symbol)
+        if stream is None:
+            return []
+        return [shape(c) for c in list(stream.buffer)[-limit:]]
 
     def risk(self) -> dict[str, Any]:
         snapshot = self.runtime_snapshot()

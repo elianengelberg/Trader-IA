@@ -10,12 +10,17 @@ export function Markets({ subscribe }: { subscribe: Subscribe }) {
   const [markets, setMarkets] = useState<Market[]>([]);
   const [candles, setCandles] = useState<Candle[]>([]);
   const [symbol, setSymbol] = useState<string>("");
+  const [liveData, setLiveData] = useState(false);
 
   const load = useCallback(() => {
     api.markets().then((rows) => {
       setMarkets(rows);
       if (!symbol && rows.length > 0) setSymbol(rows[0].symbol);
     }).catch(() => undefined);
+    // Are we showing the real paper-live feed, or the synthetic demo?
+    api.liveSnapshot()
+      .then((s) => setLiveData(Boolean(s.active) && s.mode === "paper-live"))
+      .catch(() => setLiveData(false));
   }, [symbol]);
 
   useEffect(load, [load]);
@@ -36,8 +41,18 @@ export function Markets({ subscribe }: { subscribe: Subscribe }) {
     <>
       <h1>Markets</h1>
       <p className="section-note">
-        Synthetic, seeded market data. The same scenario and seed produce the same bars on
-        any machine, which is what makes a demo run reproducible rather than anecdotal.
+        {liveData ? (
+          <>
+            <strong>Real Binance market data</strong> — the live price the 24/7 paper
+            session is trading on, 1-minute bars, straight from the venue. Fills are still
+            simulated; the price and the chart are real.
+          </>
+        ) : (
+          <>
+            Synthetic, seeded market data (demo run). Start the 24/7 paper session in the
+            Live Trading tab to see real Binance prices here instead.
+          </>
+        )}
       </p>
 
       {markets.length === 0 ? (

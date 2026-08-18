@@ -368,6 +368,25 @@ async def test_heartbeat_advances_with_the_loop_not_with_http() -> None:
     await runtime.stop()
 
 
+async def test_paper_session_exposes_its_real_candles_and_market_row() -> None:
+    """The Markets/Chart views read these when a paper-live session runs, so the operator
+    sees the same real venue data the engine decides on — not the synthetic demo."""
+    runtime, _, market = build_runtime_paper()
+    await runtime.start()
+    market.advance()
+    await runtime._cycle_once()
+
+    candles = runtime.real_candles(limit=50)
+    assert candles, "a running session should expose its venue candles"
+    row = runtime.market_state()
+    assert row is not None
+    assert row["symbol"] == "BTC-USD"
+    # The market row's price is the latest real candle's close, not a synthetic value.
+    assert row["price"] == candles[-1].close
+    assert "regime" in row and "change_pct" in row
+    await runtime.stop()
+
+
 async def test_stale_market_data_halts_and_recovery_is_earned() -> None:
     """No new bar past the TTL → entries halt. Bars flowing again does not resume by
     itself: RUNNING comes back only after a clean reconciliation."""

@@ -128,9 +128,12 @@ export default function App() {
           </span>
         )}
         <div className="topbar-spacer" />
-        <span className={`pill ${connected ? "ok" : "warn"}`}>
+        {/* Stream connection status — NOT live trading. "Live" here read as
+            "live trading", which is exactly what this platform is not; call it what
+            it is: the event stream is connected or reconnecting. */}
+        <span className={`pill ${connected ? "ok" : "warn"}`} title="Event-stream connection">
           <i className="dot" />
-          {connected ? "Live" : "Reconnecting"}
+          {connected ? "Connected" : "Reconnecting"}
         </span>
         {health && <Pill value={health.status} />}
         <span className="dim" style={{ fontSize: 12 }}>{user.username}</span>

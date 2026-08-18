@@ -24,6 +24,14 @@ set -uo pipefail
 BOLD=$'\033[1m'; GREEN=$'\033[32m'; RED=$'\033[31m'; YELLOW=$'\033[33m'; RESET=$'\033[0m'
 COMPOSE_FILE="${COMPOSE_FILE:-docker-compose.prod.yml}"
 COMPOSE="docker compose -f ${COMPOSE_FILE}"
+# The drill must probe the SAME name Caddy serves under, or the TLS handshake fails
+# with an SNI mismatch that looks like a stack failure but isn't. That name lives in
+# .env (TIA_DOMAIN), so read it from there when the caller didn't pin BASE_URL —
+# found on the Frankfurt deploy, where the site was on the IP and the drill hit
+# localhost.
+if [ -z "${BASE_URL:-}" ] && [ -z "${TIA_DOMAIN:-}" ] && [ -f .env ]; then
+  TIA_DOMAIN="$(grep -E '^TIA_DOMAIN=' .env | tail -1 | cut -d= -f2-)"
+fi
 BASE_URL="${BASE_URL:-https://${TIA_DOMAIN:-localhost}}"
 fail=0
 

@@ -22,6 +22,9 @@ set -uo pipefail
 
 COMPOSE_FILE="${COMPOSE_FILE:-docker-compose.prod.yml}"
 COMPOSE="docker compose -f ${COMPOSE_FILE}"
+if [ -z "${BASE_URL:-}" ] && [ -z "${TIA_DOMAIN:-}" ] && [ -f .env ]; then
+  TIA_DOMAIN="$(grep -E '^TIA_DOMAIN=' .env | tail -1 | cut -d= -f2-)"
+fi
 BASE_URL="${BASE_URL:-https://${TIA_DOMAIN:-localhost}}"
 fail=0
 pass() { echo "  PASS  $*"; }

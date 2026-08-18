@@ -37,7 +37,7 @@ services:
     command:
       - sh
       - -c
-      - python -m alembic upgrade head && python -m uvicorn tia.api.main:app --host 0.0.0.0 --port 8000 --log-config /dev/null
+      - python -m alembic upgrade head && python -m tia.api.main
     environment:
       TIA_ENV: paper
       TIA_DATABASE_URL: postgresql+asyncpg://tia:${POSTGRES_PASSWORD:?run scripts/generate_env.sh first}@postgres:5432/tia

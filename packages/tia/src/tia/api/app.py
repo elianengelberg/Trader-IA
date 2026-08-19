@@ -117,6 +117,12 @@ class AdvisorAskRequest(BaseModel):
     question: str = Field(min_length=1, max_length=2000)
 
 
+class TrainingStartRequest(BaseModel):
+    """Launch training simulations. Bounded so a typo cannot queue a week of CPU."""
+
+    runs: int = Field(default=100, ge=1, le=5000)
+
+
 class MentorApplyRequest(BaseModel):
     """Apply one validated Mentor proposal. The catalog is tighten-only, so the worst this
     request can do is make the system more cautious — and it is audited either way."""
@@ -499,6 +505,43 @@ def _register_routes(app: FastAPI, settings: Settings) -> None:
     async def mentor(request: Request, _user: User = Depends(current_user)) -> dict[str, Any]:
         """The Mentor's tighten-only proposals, each with its replay verdict."""
         return tia(request).mentor_report()
+
+    @app.get("/api/training")
+    async def training_status(
+        request: Request, _user: User = Depends(current_user)
+    ) -> dict[str, Any]:
+        """Live progress of the evidence trainer: state, run counter, trades, mean."""
+        return tia(request).training_status()
+
+    @app.post("/api/training/start")
+    async def training_start(
+        body: TrainingStartRequest, request: Request, user: User = Depends(current_user)
+    ) -> dict[str, Any]:
+        """Launch training simulations in the background. Evidence only — never the gate."""
+        try:
+            return await tia(request).training_start(runs=body.runs, actor=user.username)
+        except ValueError as exc:
+            raise HTTPException(409, str(exc)) from exc
+
+    @app.post("/api/training/stop")
+    async def training_stop(
+        request: Request, user: User = Depends(current_user)
+    ) -> dict[str, Any]:
+        """Stop the trainer. Every completed run's evidence stays persisted."""
+        try:
+            return await tia(request).training_stop(actor=user.username)
+        except ValueError as exc:
+            raise HTTPException(409, str(exc)) from exc
+
+    @app.post("/api/training/reload")
+    async def training_reload(
+        request: Request, user: User = Depends(current_user)
+    ) -> dict[str, Any]:
+        """Restart the engine so the 24/7 session reloads the enlarged evidence."""
+        try:
+            return tia(request).training_reload(actor=user.username)
+        except ValueError as exc:
+            raise HTTPException(409, str(exc)) from exc
 
     @app.get("/api/intel")
     async def market_intel(

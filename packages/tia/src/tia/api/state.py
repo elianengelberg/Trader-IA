@@ -18,6 +18,10 @@ from __future__ import annotations
 
 import asyncio
 import contextlib
+import json
+import os
+import signal
+import sys
 from collections import deque
 from datetime import UTC, datetime
 from pathlib import Path
@@ -51,6 +55,12 @@ _log = get_logger("api.state")
 #: subscriber which has gone away cannot consume meaningful memory.
 SUBSCRIBER_QUEUE_SIZE = 512
 
+#: The trainer's PID lock and progress file — the contract shared with
+#: ``scripts/train_sims.py``, which owns writing them. Relative to the process CWD
+#: (``/app`` in the container, the repo root locally), same as the runtime data dir.
+TRAINING_LOCK = Path("data/train.lock")
+TRAINING_STATUS = Path("data/training_status.json")
+
 
 class AppState:
     """Everything the API needs, in one place."""
@@ -82,6 +92,8 @@ class AppState:
         #: Curated macro/crypto headlines. Built lazily; informs the UI and the Advisor,
         #: never the trading pipeline.
         self._intel: Any | None = None
+        #: Keeps spawned-subprocess reaper tasks alive until they finish.
+        self._background_tasks: set[asyncio.Task[Any]] = set()
 
     # ------------------------------------------------------------------ lifecycle
 
@@ -794,6 +806,99 @@ class AppState:
         if self._intel is None:
             return {"available": False, "items": []}
         return {"available": True, **self._intel.report()}
+
+    # ------------------------------------------------------------------ training
+
+    def _training_pid(self) -> int | None:
+        """PID of a live trainer, or None. A stale lock (dead owner) counts as absent."""
+        if not TRAINING_LOCK.exists():
+            return None
+        try:
+            pid = int(TRAINING_LOCK.read_text().strip() or 0)
+        except (ValueError, OSError):
+            return None
+        if pid <= 0:
+            return None
+        try:
+            os.kill(pid, 0)
+        except (ProcessLookupError, ValueError):
+            return None
+        except PermissionError:
+            return pid
+        return pid
+
+    def training_status(self) -> dict[str, Any]:
+        """What the trainer last reported, plus whether its process is actually alive.
+
+        The liveness check is the PID, not the file: a trainer that died mid-run leaves a
+        status saying "running", and this reports that honestly as ``interrupted``.
+        """
+        status: dict[str, Any] = {}
+        if TRAINING_STATUS.exists():
+            with contextlib.suppress(Exception):
+                status = json.loads(TRAINING_STATUS.read_text())
+        running = self._training_pid() is not None
+        if not running and status.get("state") == "running":
+            status["state"] = "interrupted"
+        status.setdefault("state", "idle")
+        status["running"] = running
+        return status
+
+    async def training_start(self, *, runs: int, actor: str) -> dict[str, Any]:
+        """Launch the trainer as a detached subprocess. The script's own PID lock makes a
+        double click (or a second operator) harmless — the second launch refuses itself."""
+        if self._training_pid() is not None:
+            raise ValueError("a training run is already active")
+        process = await asyncio.create_subprocess_exec(
+            sys.executable,
+            "scripts/train_sims.py",
+            "--runs",
+            str(runs),
+            stdout=asyncio.subprocess.DEVNULL,
+            stderr=asyncio.subprocess.DEVNULL,
+        )
+        # Reap the child when it exits so it never lingers as a zombie.
+        task = asyncio.get_running_loop().create_task(process.wait())
+        self._background_tasks.add(task)
+        task.add_done_callback(self._background_tasks.discard)
+        _log.info("training_started", runs=runs, actor=actor, pid=process.pid)
+        return {"started": True, "runs": runs, "pid": process.pid}
+
+    async def training_stop(self, *, actor: str) -> dict[str, Any]:
+        """SIGTERM the trainer; it unwinds, keeps every completed run's evidence, writes
+        its final status and frees the lock. Nothing already persisted is lost."""
+        pid = self._training_pid()
+        if pid is None:
+            raise ValueError("no training run is active")
+        with contextlib.suppress(ProcessLookupError):
+            os.kill(pid, signal.SIGTERM)
+        for _ in range(20):  # give it up to ~5s to unwind cleanly
+            await asyncio.sleep(0.25)
+            if self._training_pid() is None:
+                break
+        _log.info("training_stopped", actor=actor, pid=pid)
+        return {"stopped": self._training_pid() is None, "pid": pid}
+
+    def training_reload(self, *, actor: str) -> dict[str, Any]:
+        """Load freshly trained evidence by restarting the engine process.
+
+        The estimator, retrospective and Mentor read the evidence store at session
+        construction, so a reload IS a restart. The process exits cleanly; the container
+        supervisor (restart: unless-stopped) brings it back, and the 24/7 paper session
+        auto-resumes — the exact crash-recovery path the restart drills exercise.
+        """
+        if self._training_pid() is not None:
+            raise ValueError("a training run is active; stop it or let it finish first")
+        _log.info("training_reload_restart", actor=actor)
+        loop = asyncio.get_running_loop()
+        loop.call_later(0.7, os._exit, 0)
+        return {
+            "restarting": True,
+            "detail": (
+                "the engine is restarting to load the new evidence; the 24/7 session "
+                "resumes by itself. Give it ~30 seconds, then refresh."
+            ),
+        }
 
     # ------------------------------------------------------------------ mentor
 

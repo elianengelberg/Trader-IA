@@ -129,7 +129,8 @@ export function Markets({ subscribe }: { subscribe: Subscribe }) {
   useEffect(() => {
     if (!symbol) return;
     let active = true;
-    const poll = () =>
+    const poll = () => {
+      if (document.hidden) return;
       api.orderBook(symbol, 20)
         .then((b) => {
           if (!active) return;
@@ -139,8 +140,9 @@ export function Markets({ subscribe }: { subscribe: Subscribe }) {
         .catch(() => {
           if (active) setBookError("Order book unavailable right now.");
         });
+    };
     poll();
-    const id = window.setInterval(poll, 2500);
+    const id = window.setInterval(poll, 1_500);
     return () => {
       active = false;
       window.clearInterval(id);
@@ -156,6 +158,34 @@ export function Markets({ subscribe }: { subscribe: Subscribe }) {
       api.candles(symbol, 240).then(setCandles).catch(() => undefined);
     }
   });
+
+  // Autonomous refresh: the 24/7 session emits no per-bar browser event, so the page
+  // polls on its own — price and live candles every 2 seconds, no manual reload ever.
+  // Both fetches are served from in-memory state (no venue call). A hidden tab skips.
+  useEffect(() => {
+    if (!symbol) return;
+    const id = window.setInterval(() => {
+      if (document.hidden) return;
+      api.markets().then(setMarkets).catch(() => undefined);
+      if (timeframe === "1m") {
+        api.candles(symbol, 240).then(setCandles).catch(() => undefined);
+      }
+    }, 2_000);
+    return () => window.clearInterval(id);
+  }, [symbol, timeframe]);
+
+  // Longer frames only grow a bar per interval; one refetch a minute keeps them honest
+  // without hammering the venue's kline endpoint.
+  useEffect(() => {
+    if (!symbol || timeframe === "1m") return;
+    const frame = TIMEFRAMES.find((t) => t.id === timeframe);
+    if (!frame) return;
+    const id = window.setInterval(() => {
+      if (document.hidden) return;
+      api.marketHistory(symbol, timeframe, frame.limit).then(setCandles).catch(() => undefined);
+    }, 60_000);
+    return () => window.clearInterval(id);
+  }, [symbol, timeframe]);
 
   // Escape leaves the fullscreen view — never trap the operator behind an overlay.
   useEffect(() => {

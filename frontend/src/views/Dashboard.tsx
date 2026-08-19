@@ -1,5 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
-import { api, type Decision, type Fill, type Position, type RuntimeSnapshot } from "../lib/api";
+import {
+  api,
+  type Decision,
+  type Fill,
+  type Position,
+  type RuntimeSnapshot,
+  type TrainingStatus,
+} from "../lib/api";
 import type { Subscribe } from "../lib/stream";
 import { useStreamEvent } from "../lib/stream";
 import { EquityChart } from "../components/charts";
@@ -105,6 +112,123 @@ function LiveSessionPanel({ subscribe }: { subscribe: Subscribe }) {
   );
 }
 
+function TrainingPanel() {
+  const [status, setStatus] = useState<TrainingStatus | null>(null);
+  const [busy, setBusy] = useState("");
+  const [note, setNote] = useState("");
+
+  const load = useCallback(() => {
+    api.training().then(setStatus).catch(() => undefined);
+  }, []);
+
+  useEffect(() => {
+    load();
+    const id = window.setInterval(() => {
+      if (!document.hidden) load();
+    }, 3_000);
+    return () => window.clearInterval(id);
+  }, [load]);
+
+  const act = useCallback(
+    async (kind: "start" | "stop" | "reload", runs = 0) => {
+      setBusy(kind);
+      setNote("");
+      try {
+        if (kind === "start") await api.trainingStart(runs);
+        else if (kind === "stop") await api.trainingStop();
+        else {
+          const result = await api.trainingReload();
+          setNote(result.detail);
+        }
+        load();
+      } catch (error) {
+        setNote(error instanceof Error ? error.message : "request failed");
+      } finally {
+        setBusy("");
+      }
+    },
+    [load],
+  );
+
+  if (!status) return null;
+  const running = status.running;
+  const total = status.total ?? 0;
+  const run = status.run ?? 0;
+  const percent = total > 0 ? Math.round((run / total) * 100) : 0;
+
+  return (
+    <Card
+      title="Training simulations — evidence for the learning engine"
+      actions={<Pill value={status.state} tone={running ? "ok" : status.state === "finished" ? "info" : ""} />}
+    >
+      {running ? (
+        <>
+          <div className="row" style={{ justifyContent: "space-between", marginBottom: 6 }}>
+            <span style={{ fontSize: 12.5 }}>
+              Run <strong>{run}</strong> of {total} · {status.scenario ?? ""}
+            </span>
+            <span className="mono" style={{ fontSize: 12.5 }}>{percent}%</span>
+          </div>
+          <div className="progress">
+            <div className="progress-fill" style={{ width: `${percent}%` }} />
+          </div>
+          <div className="row" style={{ marginTop: 10, gap: 18 }}>
+            <Stat label="Trades persisted" value={String(status.closed_trades ?? 0)} />
+            <Stat
+              label="Mean net"
+              value={status.mean_bps == null ? "—" : `${status.mean_bps > 0 ? "+" : ""}${status.mean_bps} bps`}
+              tone={(status.mean_bps ?? 0) > 0 ? "pos" : "neg"}
+            />
+            <Stat label="Wins" value={String(status.wins ?? 0)} />
+          </div>
+          <div className="row" style={{ marginTop: 12 }}>
+            <button className="btn small danger" disabled={busy !== ""} onClick={() => act("stop")}>
+              {busy === "stop" ? "Stopping…" : "Stop training"}
+            </button>
+            <span style={{ fontSize: 11.5, color: "var(--text-faint)" }}>
+              Stopping keeps every completed run&apos;s evidence.
+            </span>
+          </div>
+        </>
+      ) : (
+        <>
+          <p style={{ marginTop: 0, fontSize: 12.5, color: "var(--text-dim)" }}>
+            {status.state === "finished" || status.state === "stopped"
+              ? `Last batch: ${status.closed_trades ?? 0} trades persisted` +
+                (status.mean_bps != null ? ` (mean ${status.mean_bps} bps)` : "") +
+                (status.buckets_ready != null ? ` · ${status.buckets_ready} buckets at the 30-trade floor` : "") +
+                ". Load it into the session to act on it."
+              : status.state === "interrupted"
+                ? "The last trainer died mid-run — every completed run's evidence is safe. Launch a new batch (fresh seeds are automatic)."
+                : "Simulations teach the learning engine which setups win and lose after costs. They never count toward the real-money gate. Fresh seeds every launch — duplicates are impossible."}
+          </p>
+          <div className="row" style={{ gap: 8 }}>
+            {[100, 500, 1000].map((n) => (
+              <button
+                key={n}
+                className="btn small"
+                disabled={busy !== ""}
+                onClick={() => act("start", n)}
+              >
+                {busy === "start" ? "Starting…" : `Run ${n} sims`}
+              </button>
+            ))}
+            <button
+              className="btn small primary"
+              disabled={busy !== ""}
+              onClick={() => act("reload")}
+              title="Restarts the engine (~30s); the 24/7 session resumes by itself with the enlarged evidence"
+            >
+              {busy === "reload" ? "Restarting…" : "Load evidence into session"}
+            </button>
+          </div>
+        </>
+      )}
+      {note && <p style={{ marginTop: 10, fontSize: 12, color: "var(--text-dim)" }}>{note}</p>}
+    </Card>
+  );
+}
+
 export function Dashboard({
   runtime,
   subscribe,
@@ -158,6 +282,9 @@ export function Dashboard({
           the lessons from every closed trade under <strong>Learning</strong>.
         </p>
         <LiveSessionPanel subscribe={subscribe} />
+        <div style={{ marginTop: 16 }}>
+          <TrainingPanel />
+        </div>
         <SimulationFootnote />
       </>
     );
@@ -172,6 +299,9 @@ export function Dashboard({
 
       <div style={{ marginBottom: 16 }}>
         <LiveSessionPanel subscribe={subscribe} />
+      </div>
+      <div style={{ marginBottom: 16 }}>
+        <TrainingPanel />
       </div>
 
       <div className="grid cols-4" style={{ marginBottom: 16 }}>

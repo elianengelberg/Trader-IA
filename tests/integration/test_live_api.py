@@ -16,6 +16,8 @@ Two properties matter more than the rest:
 
 from __future__ import annotations
 
+import asyncio
+import os
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -441,6 +443,60 @@ async def test_the_mentor_refuses_cleanly_when_idle_and_refuses_unknown_applies(
     apply = await client.post("/api/mentor/apply", json={"proposal_id": "raise_ev_threshold"})
     assert apply.status_code == 409
     assert "no validated proposal" in apply.json()["detail"]
+
+
+async def test_training_endpoints_report_start_and_guard(
+    client: httpx.AsyncClient, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """The training panel's API: status reads the trainer's files, start spawns exactly
+    one detached process, stop/reload refuse when there is nothing to act on."""
+    import tia.api.state as state_module
+
+    # Point the shared lock/status contract at a scratch directory so this test neither
+    # sees nor disturbs any real trainer artifacts in the working tree.
+    monkeypatch.setattr(state_module, "TRAINING_LOCK", tmp_path / "train.lock")
+    monkeypatch.setattr(state_module, "TRAINING_STATUS", tmp_path / "training_status.json")
+
+    idle = await client.get("/api/training")
+    assert idle.status_code == 200, idle.text
+    assert idle.json() == {"state": "idle", "running": False}
+
+    # Stopping with no trainer is a conflict, not a crash.
+    assert (await client.post("/api/training/stop")).status_code == 409
+
+    # Start spawns a subprocess — faked here; a real launch would run 100 simulations.
+    spawned: dict[str, Any] = {}
+
+    class _FakeProcess:
+        pid = 4242
+
+        async def wait(self) -> int:
+            return 0
+
+    async def fake_exec(*argv: str, **kwargs: Any) -> _FakeProcess:
+        spawned["argv"] = argv
+        return _FakeProcess()
+
+    monkeypatch.setattr(asyncio, "create_subprocess_exec", fake_exec)
+    started = await client.post("/api/training/start", json={"runs": 100})
+    assert started.status_code == 200, started.text
+    assert started.json()["started"] is True
+    assert "scripts/train_sims.py" in spawned["argv"]
+    assert "100" in spawned["argv"]
+
+    # A live lock (this test's own PID is alive) blocks a second start AND the reload —
+    # nothing may recycle the engine out from under a running trainer.
+    (tmp_path / "train.lock").write_text(str(os.getpid()))
+    assert (await client.post("/api/training/start", json={"runs": 10})).status_code == 409
+    assert (await client.post("/api/training/reload")).status_code == 409
+
+    # A stale lock (dead PID) counts as not running, and a status file whose process
+    # died mid-run is reported as interrupted, not as running.
+    (tmp_path / "train.lock").write_text("999999999")
+    (tmp_path / "training_status.json").write_text('{"state": "running", "run": 7}')
+    status = (await client.get("/api/training")).json()
+    assert status["running"] is False
+    assert status["state"] == "interrupted"
 
 
 async def test_market_intel_reports_source_health_even_when_every_feed_is_down(

@@ -613,6 +613,24 @@ export interface IntelReport {
   explanation?: string;
 }
 
+export interface TrainingStatus {
+  state: string; // idle | running | finished | stopped | interrupted | failed
+  running: boolean;
+  run?: number;
+  total?: number;
+  scenario?: string;
+  seed_base?: number;
+  closed_trades?: number;
+  mean_bps?: number | null;
+  wins?: number;
+  started_at?: number;
+  finished_at?: number | null;
+  error?: string | null;
+  buckets_ready?: number | null;
+  pid?: number;
+  updated_at?: number;
+}
+
 export interface CapitalView {
   simulated: boolean;
   currency: string;
@@ -720,6 +738,11 @@ export const api = {
   antipatterns: () => get<AntiPatternReport>("/antipatterns"),
   mentor: () => get<MentorReport>("/mentor"),
   intel: (force = false) => get<IntelReport>(`/intel?force=${force}`),
+  training: () => get<TrainingStatus>("/training"),
+  trainingStart: (runs: number) =>
+    post<{ started: boolean; runs: number; pid: number }>("/training/start", { runs }),
+  trainingStop: () => post<{ stopped: boolean; pid: number }>("/training/stop"),
+  trainingReload: () => post<{ restarting: boolean; detail: string }>("/training/reload"),
   mentorApply: (proposalId: string) =>
     post<{ applied: string; result: Record<string, unknown> }>("/mentor/apply", {
       proposal_id: proposalId,

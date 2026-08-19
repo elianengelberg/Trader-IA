@@ -72,6 +72,13 @@ services:
       # Optional. The offline mock runs without it; the advisory layer degrades, the
       # trading engine does not.
       TIA_ANTHROPIC_API_KEY: ${TIA_ANTHROPIC_API_KEY:-}
+      # The conversational Advisor ("Ask the AI") and the per-bar context layer. Off by
+      # default; flip ENABLED+PROVIDER in .env ONLY together with a real API key above —
+      # provider=anthropic without a key refuses to boot, by design. The model is
+      # configurable; spend is capped by the LLM budget config (default $25/day).
+      TIA_LLM__ENABLED: ${TIA_LLM__ENABLED:-false}
+      TIA_LLM__PROVIDER: ${TIA_LLM__PROVIDER:-stub}
+      TIA_LLM__MODEL: ${TIA_LLM__MODEL:-claude-opus-5}
       # Venue credentials are OPTIONAL and only ever read from the environment.
       # The 24/7 paper session needs none. Live trading additionally requires the
       # activation gate's 27 checks — a key alone arms nothing.

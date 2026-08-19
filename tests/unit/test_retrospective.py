@@ -238,3 +238,66 @@ def test_the_memory_is_rebuilt_exactly_from_the_persisted_trade_record() -> None
     )
     assert rebuilt_guard.threshold_add_bps == live_guard.threshold_add_bps
     assert rebuilt_guard.size_multiplier == live_guard.size_multiplier
+
+
+# --------------------------------------------------------------------- dollars
+
+def test_lessons_carry_dollars_and_the_report_exposes_the_typical_trade_size() -> None:
+    """Basis points stay the learning unit — they compare trades of any size — but each
+    lesson keeps its trade's dollars, and the report exposes the *median* trade size so
+    every page can translate. Median on purpose: one whale trade must not skew what a
+    threshold appears to cost."""
+    engine = RetrospectiveEngine()
+    for i, notional in enumerate((10_000.0, 12_000.0, 900_000.0)):
+        engine.review(
+            regime=MarketRegime.TRENDING_UP,
+            direction=Direction.LONG,
+            confidence=0.8,
+            expected_net_bps=20.0,
+            realised_net_bps=-30.0,
+            fees_bps=6.0,
+            closed_at=BASE + timedelta(minutes=i),
+            signal_id=f"sig-{i}",
+            symbol="BTC-USD",
+            notional_usd=notional,
+        )
+    assert engine.typical_notional_usd == 12_000.0
+    report = engine.report()
+    assert report["typical_notional_usd"] == 12_000.0
+    newest = report["recent_lessons"][0]
+    assert newest["notional_usd"] == 900_000.0
+    # With a known size the narration speaks dollars; the whale trade lost 30 bps of
+    # $900k = $2,700, and that is the number a person should read.
+    assert "$2,700.00" in newest["headline"]
+
+
+def test_narration_falls_back_to_bps_when_no_trade_size_is_known() -> None:
+    """A made-up dollar figure would be worse than an unfamiliar unit."""
+    review = _review(RetrospectiveEngine(), expected=15.0, realised=-30.0)
+    assert "bps" in review.headline
+    assert review.notional_usd == 0.0
+
+
+def test_rebuilding_from_persisted_rows_recovers_each_trades_dollars() -> None:
+    """The persisted trade record stores entry price and quantity; record_many must turn
+    them back into the notional, so dollars survive a restart exactly like the lessons."""
+    engine = RetrospectiveEngine()
+    engine.record_many(
+        [
+            {
+                "regime": "trending_up",
+                "direction": "long",
+                "confidence": 0.8,
+                "expected_net_bps": 20.0,
+                "net_bps": -25.0,
+                "fees_bps": 6.0,
+                "closed_at": BASE,
+                "signal_id": "sig-0",
+                "symbol": "BTC-USD",
+                "entry_price": 50_000.0,
+                "quantity": 0.3,
+            }
+        ]
+    )
+    assert engine.typical_notional_usd == 15_000.0
+    assert engine.recent(1)[0].notional_usd == 15_000.0

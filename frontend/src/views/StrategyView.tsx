@@ -13,6 +13,7 @@ import { api, type Economics } from "../lib/api";
 import type { Subscribe } from "../lib/stream";
 import { useStreamEvent } from "../lib/stream";
 import { Bar, Card, Empty, Pill, SimulationFootnote, Stat } from "../components/ui";
+import { bpsUsd, medianNotional, money } from "../lib/format";
 
 const COST_LABELS: Record<string, string> = {
   fee_bps: "Fees",
@@ -49,6 +50,18 @@ export function StrategyView({ subscribe }: { subscribe: Subscribe }) {
   const budget = data.budget!;
   const closed = data.closed_trades!;
   const latest = ev.latest;
+  // The engine reasons in basis points because they compare trades of any size; people
+  // reason in dollars. Everything below converts at the typical trade size of the recent
+  // closed round trips — each table row uses its own trade's actual size where recorded.
+  const notional = medianNotional(closed.recent);
+  const tradeUsd = (
+    bps: number,
+    trade?: { entry_price?: number; quantity?: number },
+    opts?: { signed?: boolean },
+  ) => {
+    const own = (trade?.entry_price ?? 0) * (trade?.quantity ?? 0);
+    return bpsUsd(bps, own > 0 ? own : notional, opts);
+  };
   const costs = latest?.expected_value.costs;
   const components = costs
     ? Object.entries(COST_LABELS).map(([key, label]) => ({
@@ -89,19 +102,26 @@ export function StrategyView({ subscribe }: { subscribe: Subscribe }) {
         <div className="card">
           <Stat
             label="Round-trip fees"
-            value={`${fees.round_trip_taker_bps.toFixed(1)} bps`}
+            value={bpsUsd(fees.round_trip_taker_bps, notional, { signed: false })}
             tone={fees.requires_verification ? "warn" : "flat"}
-            sub={fees.verified_at_source ? "read from account" : "configured, unverified"}
+            sub={fees.verified_at_source ? "per trade, read from account" : "per trade — configured, unverified"}
           />
         </div>
         <div className="card">
           <Stat
-            label="Net edge threshold"
-            value={`${ev.threshold_bps.toFixed(1)} bps`}
-            sub={`costs may not exceed ${(ev.max_cost_ratio * 100).toFixed(0)}% of edge`}
+            label="Min profit demanded"
+            value={bpsUsd(ev.threshold_bps, notional, { signed: false })}
+            sub={`per trade after costs · costs capped at ${(ev.max_cost_ratio * 100).toFixed(0)}% of edge`}
           />
         </div>
       </div>
+
+      {notional != null && (
+        <p className="footnote" style={{ marginTop: -6, marginBottom: 16 }}>
+          Dollar figures are per trade, at the typical trade size of ≈${money(notional, 0)}{" "}
+          (simulated money). Rows in the trade table use each trade&apos;s actual size.
+        </p>
+      )}
 
       {!ev.enforcing && (
         <div className="card" style={{ marginBottom: 16, borderLeft: "3px solid var(--warn, #c90)" }}>
@@ -126,7 +146,7 @@ export function StrategyView({ subscribe }: { subscribe: Subscribe }) {
               <div className="grid cols-3" style={{ marginBottom: 12 }}>
                 <Stat
                   label="Expected gross"
-                  value={`${latest.expected_value.gross_edge_bps.toFixed(2)} bps`}
+                  value={bpsUsd(latest.expected_value.gross_edge_bps, notional)}
                   sub={
                     latest.expected_value.edge
                       ? `from ${latest.expected_value.edge.samples} past trades`
@@ -135,14 +155,14 @@ export function StrategyView({ subscribe }: { subscribe: Subscribe }) {
                 />
                 <Stat
                   label="Round-trip cost"
-                  value={`${latest.expected_value.costs.total_bps.toFixed(2)} bps`}
+                  value={bpsUsd(latest.expected_value.costs.total_bps, notional, { signed: false })}
                   sub={`${latest.expected_value.costs.dominant} dominant`}
                 />
                 <Stat
-                  label="Net edge"
-                  value={`${latest.expected_value.net_edge_bps.toFixed(2)} bps`}
+                  label="Expected net profit"
+                  value={bpsUsd(latest.expected_value.net_edge_bps, notional)}
                   tone={latest.expected_value.net_edge_bps >= ev.threshold_bps ? "pos" : "neg"}
-                  sub={`threshold ${ev.threshold_bps.toFixed(1)} bps`}
+                  sub={`must clear ${bpsUsd(ev.threshold_bps, notional, { signed: false })}`}
                 />
               </div>
               <p style={{ margin: 0, color: "var(--muted)" }}>
@@ -161,7 +181,7 @@ export function StrategyView({ subscribe }: { subscribe: Subscribe }) {
                 <div key={component.label}>
                   <div className="row" style={{ justifyContent: "space-between" }}>
                     <span>{component.label}</span>
-                    <span className="mono">{component.value.toFixed(2)} bps</span>
+                    <span className="mono">{bpsUsd(component.value, notional, { signed: false })}</span>
                   </div>
                   <Bar value={component.value} max={maxComponent} />
                 </div>
@@ -180,8 +200,8 @@ export function StrategyView({ subscribe }: { subscribe: Subscribe }) {
           <div className="grid cols-3" style={{ marginBottom: 12 }}>
             <Stat label="Closed round trips" value={closed.count} />
             <Stat
-              label="Mean net"
-              value={closed.mean_net_bps === null ? "—" : `${closed.mean_net_bps.toFixed(1)} bps`}
+              label="Mean net per trade"
+              value={closed.mean_net_bps === null ? "—" : bpsUsd(closed.mean_net_bps, notional)}
               tone={
                 closed.mean_net_bps === null ? "flat" : closed.mean_net_bps > 0 ? "pos" : "neg"
               }
@@ -277,20 +297,19 @@ export function StrategyView({ subscribe }: { subscribe: Subscribe }) {
                   <td><Pill value={trade.direction} /></td>
                   <td className="mono">{trade.regime}</td>
                   <td style={{ textAlign: "right" }} className="mono">
-                    {trade.gross_bps.toFixed(1)}
+                    {tradeUsd(trade.gross_bps, trade)}
                   </td>
                   <td style={{ textAlign: "right" }} className="mono">
-                    −{trade.fees_bps.toFixed(1)}
+                    −{tradeUsd(trade.fees_bps, trade, { signed: false })}
                   </td>
                   <td
                     style={{ textAlign: "right" }}
                     className={`mono ${trade.net_bps > 0 ? "pos" : "neg"}`}
                   >
-                    {trade.net_bps > 0 ? "+" : ""}
-                    {trade.net_bps.toFixed(1)}
+                    {tradeUsd(trade.net_bps, trade)}
                   </td>
                   <td style={{ textAlign: "right" }} className="mono">
-                    {trade.expected_net_bps.toFixed(1)}
+                    {tradeUsd(trade.expected_net_bps, trade)}
                   </td>
                 </tr>
               ))}

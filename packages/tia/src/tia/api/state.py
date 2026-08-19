@@ -269,6 +269,8 @@ class AppState:
                     "closed_at": row.closed_at,
                     "signal_id": row.signal_id,
                     "symbol": row.symbol,
+                    "entry_price": row.entry_price,
+                    "quantity": row.quantity,
                 }
                 for row in rows
             ]
@@ -842,6 +844,12 @@ class AppState:
             status["state"] = "interrupted"
         status.setdefault("state", "idle")
         status["running"] = running
+        # The trainer reports per-trade returns in basis points, which are honest but
+        # unreadable; the typical trade size lets the dashboard translate them to dollars.
+        session = self.live_runtime or self.runtime
+        if session is not None:
+            with contextlib.suppress(Exception):
+                status["typical_notional_usd"] = round(session.typical_trade_notional_usd, 2)
         return status
 
     async def training_start(self, *, runs: int, actor: str) -> dict[str, Any]:

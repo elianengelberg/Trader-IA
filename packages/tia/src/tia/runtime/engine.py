@@ -367,6 +367,11 @@ class RuntimeEngine:
         return self._config
 
     @property
+    def typical_trade_notional_usd(self) -> float:
+        """Median dollars-at-work per closed trade — the bps→USD conversion factor."""
+        return self._retro.typical_notional_usd
+
+    @property
     def scenario(self) -> Scenario:
         return self._scenario
 
@@ -840,6 +845,7 @@ class RuntimeEngine:
             closed_at=closed_at,
             signal_id=beliefs["signal_id"],
             symbol=symbol,
+            notional_usd=notional,
         )
 
         # A losing streak shrinks the next budget. It never grows it — see

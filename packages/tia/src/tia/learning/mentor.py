@@ -105,6 +105,32 @@ REPLAY_METHOD = (
 )
 
 
+def _typical_notional(lessons: list[dict[str, Any]]) -> float:
+    """Median dollars-at-work of the lessons that carry one — 0.0 when none do."""
+    notionals = sorted(
+        float(item.get("notional_usd") or 0.0)
+        for item in lessons
+        if float(item.get("notional_usd") or 0.0) > 0
+    )
+    if not notionals:
+        return 0.0
+    mid = len(notionals) // 2
+    if len(notionals) % 2:
+        return notionals[mid]
+    return (notionals[mid - 1] + notionals[mid]) / 2.0
+
+
+def _amount(bps_value: float, notional_usd: float) -> str:
+    """A bps figure spoken as dollars at the given trade size; bps when no size is known.
+
+    Presentation only — every stored number and threshold stays in basis points.
+    """
+    if notional_usd > 0:
+        value = bps_value * notional_usd / 10_000.0
+        return f"{'+' if value >= 0 else '-'}${abs(value):,.2f}"
+    return f"{bps_value:+.1f} bps"
+
+
 @dataclass
 class MentorEngine:
     """Reads the record, proposes tighten-only adjustments, validates each by replay."""
@@ -178,12 +204,13 @@ class MentorEngine:
         ]
         delta = -sum(float(item["realised_net_bps"]) for item in skipped)
         passed = len(skipped) >= self.min_affected and delta > 0
+        usd = _typical_notional(lessons)
         if passed:
             detail = (
-                f"With the bar at {new_bps:.1f} bps, {len(skipped)} of the last "
-                f"{len(lessons)} trades would have been refused; their combined net was "
-                f"{-delta:+.1f} bps, so skipping them improves the record by "
-                f"{delta:+.1f} bps."
+                f"With the bar at {_amount(new_bps, usd)} per trade, {len(skipped)} of the "
+                f"last {len(lessons)} trades would have been refused; together they netted "
+                f"{_amount(-delta, usd)}, so skipping them improves the record by "
+                f"{_amount(delta, usd)}."
             )
         elif len(skipped) < self.min_affected:
             detail = (
@@ -193,17 +220,22 @@ class MentorEngine:
         else:
             detail = (
                 f"The {len(skipped)} trades the higher bar would have refused netted "
-                f"{-delta:+.1f} bps combined — refusing them would not have helped."
+                f"{_amount(-delta, usd)} combined — refusing them would not have helped."
             )
 
         return MentorProposal(
             proposal_id="raise_ev_threshold",
             kind="raise_ev_threshold",
-            title=f"Raise the expected-value bar to {new_bps:.1f} bps",
+            title=(
+                f"Demand at least {_amount(new_bps, usd)} expected profit per trade"
+                if usd > 0
+                else f"Raise the expected-value bar to {new_bps:.1f} bps"
+            ),
             rationale=(
                 f"Across the last {len(lessons)} closed trades, realised returns averaged "
-                f"{mean_error:+.1f} bps below what the system expected at entry. When the "
-                "estimate runs hot, the honest correction is a larger margin of safety."
+                f"{_amount(mean_error, usd)} per trade below what the system expected at "
+                "entry. When the estimate runs hot, the honest correction is a larger "
+                "margin of safety."
             ),
             action={
                 "kind": "raise_ev_threshold",
@@ -236,26 +268,27 @@ class MentorEngine:
 
         delta = -sum(nets)
         passed = delta > 0
+        usd = _typical_notional(lessons)
         return MentorProposal(
             proposal_id="halt_new_entries",
             kind="halt_new_entries",
             title="Halt new entries until the evidence improves",
             rationale=(
-                f"The last {len(nets)} closed trades averaged {mean_net:+.1f} bps net of "
-                "fees. A negative average sustained over many trades is the market's "
-                "verdict on the current edge; the disciplined response is to stop paying "
-                "for information the record already contains."
+                f"The last {len(nets)} closed trades averaged {_amount(mean_net, usd)} "
+                "per trade net of fees. A negative average sustained over many trades is "
+                "the market's verdict on the current edge; the disciplined response is to "
+                "stop paying for information the record already contains."
             ),
             action={"kind": "halt_new_entries"},
             validation=Validation(
                 passed=passed,
                 method=REPLAY_METHOD,
                 detail=(
-                    f"Had entries been halted, the {-delta:+.1f} bps those trades lost "
-                    "would not have been lost."
+                    f"Had entries been halted, the {_amount(-delta, usd)} those trades "
+                    "lost would not have been lost."
                     if passed
-                    else f"Those trades netted {-delta:+.1f} bps combined — halting would "
-                    "have cost money, so the halt is not justified by the record."
+                    else f"Those trades netted {_amount(-delta, usd)} combined — halting "
+                    "would have cost money, so the halt is not justified by the record."
                 ),
                 delta_bps=delta,
                 trades_affected=len(nets),
@@ -282,10 +315,11 @@ class MentorEngine:
         # recorded outcomes accordingly. Approximate on purpose, and labelled as such.
         delta = -0.5 * total
         passed = len(nets) >= self.min_affected and total < 0
+        usd = _typical_notional(lessons)
         if passed:
             detail = (
-                f"At roughly half size, the {total:+.1f} bps the recent trades lost "
-                f"would have been about {0.5 * total:+.1f} bps."
+                f"At roughly half size, the {_amount(total, usd)} the recent trades lost "
+                f"would have been about {_amount(0.5 * total, usd)}."
             )
         elif total >= 0:
             detail = (

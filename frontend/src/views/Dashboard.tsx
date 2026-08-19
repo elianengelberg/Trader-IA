@@ -11,7 +11,7 @@ import type { Subscribe } from "../lib/stream";
 import { useStreamEvent } from "../lib/stream";
 import { EquityChart } from "../components/charts";
 import { Card, Empty, MoneyStat, PctStat, Pill, SimulationFootnote, Stat } from "../components/ui";
-import { clock, money, qty, signedMoney } from "../lib/format";
+import { bpsUsd, clock, money, qty, signedMoney } from "../lib/format";
 
 type EquityPoint = { at: string; equity: number; drawdown_pct: number };
 
@@ -180,8 +180,12 @@ function TrainingPanel() {
           <div className="row" style={{ marginTop: 10, gap: 18 }}>
             <Stat label="Trades persisted" value={String(status.closed_trades ?? 0)} />
             <Stat
-              label="Mean net"
-              value={status.mean_bps == null ? "—" : `${status.mean_bps > 0 ? "+" : ""}${status.mean_bps} bps`}
+              label="Mean net per trade"
+              value={
+                status.mean_bps == null
+                  ? "—"
+                  : bpsUsd(status.mean_bps, status.typical_notional_usd)
+              }
               tone={(status.mean_bps ?? 0) > 0 ? "pos" : "neg"}
             />
             <Stat label="Wins" value={String(status.wins ?? 0)} />
@@ -200,7 +204,9 @@ function TrainingPanel() {
           <p style={{ marginTop: 0, fontSize: 12.5, color: "var(--text-dim)" }}>
             {status.state === "finished" || status.state === "stopped"
               ? `Last batch: ${status.closed_trades ?? 0} trades persisted` +
-                (status.mean_bps != null ? ` (mean ${status.mean_bps} bps)` : "") +
+                (status.mean_bps != null && (status.typical_notional_usd ?? 0) > 0
+                  ? ` (mean ${bpsUsd(status.mean_bps, status.typical_notional_usd)} per trade)`
+                  : "") +
                 (status.buckets_ready != null ? ` · ${status.buckets_ready} buckets at the 30-trade floor` : "") +
                 ". Load it into the session to act on it."
               : status.state === "interrupted"
@@ -410,7 +416,7 @@ export function Dashboard({
                   <th>Side</th>
                   <th className="num">Qty</th>
                   <th className="num">Price</th>
-                  <th className="num">Slip (bps)</th>
+                  <th className="num">Slippage</th>
                 </tr>
               </thead>
               <tbody>
@@ -421,7 +427,9 @@ export function Dashboard({
                     <td className={fill.side === "buy" ? "pos" : "neg"}>{fill.side}</td>
                     <td className="num">{qty(fill.quantity)}</td>
                     <td className="num">{money(fill.price)}</td>
-                    <td className="num faint">{fill.slippage_bps.toFixed(1)}</td>
+                    <td className="num faint">
+                      {bpsUsd(fill.slippage_bps, fill.price * fill.quantity, { signed: false })}
+                    </td>
                   </tr>
                 ))}
               </tbody>

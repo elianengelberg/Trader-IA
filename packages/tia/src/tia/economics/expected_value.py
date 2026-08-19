@@ -214,6 +214,23 @@ class ExpectedValue:
                 "The system declines rather than guessing."
             )
         verdict = "TRADE" if self.is_tradeable else "NO_TRADE"
+        # Spoken in the dollars of this specific trade when its size is priced — basis
+        # points stay the decision unit, but nobody outside the engine thinks in them.
+        notional = self.costs.notional
+        if notional > 0:
+
+            def usd(bps_value: float) -> str:
+                value = notional * bps_value * BPS
+                return f"{'+' if value >= 0 else '-'}${abs(value):,.2f}"
+
+            return (
+                f"{verdict} — on a ${notional:,.0f} position: expected gross "
+                f"{usd(self.gross_edge_bps)} (from {self.edge_estimate.samples} past "
+                f"trades) minus costs {usd(self.costs.total_bps)} "
+                f"({self.costs.dominant_component} dominant) = net "
+                f"{usd(self.net_edge_bps)}, against a required minimum of "
+                f"{usd(self.threshold_bps)}."
+            )
         return (
             f"{verdict} — expected gross {self.gross_edge_bps:.2f} bps "
             f"(from {self.edge_estimate.samples} past trades) minus costs "

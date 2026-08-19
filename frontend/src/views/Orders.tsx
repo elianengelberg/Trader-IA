@@ -3,7 +3,7 @@ import { api, type Fill, type Order } from "../lib/api";
 import type { Subscribe } from "../lib/stream";
 import { useStreamEvent } from "../lib/stream";
 import { Card, Empty, Pill, SimulationFootnote } from "../components/ui";
-import { dateTime, money, qty } from "../lib/format";
+import { bpsUsd, dateTime, money, qty } from "../lib/format";
 
 export function Orders({ subscribe }: { subscribe: Subscribe }) {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -76,7 +76,7 @@ export function Orders({ subscribe }: { subscribe: Subscribe }) {
                   <tr>
                     <th>Time</th><th>Symbol</th><th>Side</th>
                     <th className="num">Qty</th><th className="num">Price</th>
-                    <th className="num">Fee</th><th className="num">Slippage (bps)</th><th>Liquidity</th>
+                    <th className="num">Fee</th><th className="num">Slippage</th><th>Liquidity</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -88,7 +88,9 @@ export function Orders({ subscribe }: { subscribe: Subscribe }) {
                       <td className="num">{qty(fill.quantity)}</td>
                       <td className="num">{money(fill.price)}</td>
                       <td className="num faint">{money(fill.fee)}</td>
-                      <td className="num warn">{fill.slippage_bps.toFixed(2)}</td>
+                      <td className="num warn">
+                        {bpsUsd(fill.slippage_bps, fill.price * fill.quantity, { signed: false })}
+                      </td>
                       <td className="faint">{fill.liquidity}</td>
                     </tr>
                   ))}

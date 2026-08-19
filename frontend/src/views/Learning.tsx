@@ -13,7 +13,7 @@ import { api, type LearningReport, type MentorReport } from "../lib/api";
 import type { Subscribe } from "../lib/stream";
 import { useStreamEvent } from "../lib/stream";
 import { Card, Empty, Pill, SimulationFootnote, Stat } from "../components/ui";
-import { clock, titleCase } from "../lib/format";
+import { bpsUsd, clock, money, titleCase } from "../lib/format";
 
 const CATEGORY: Record<string, { label: string; tone: string }> = {
   edge_confirmed: { label: "Confirmed", tone: "ok" },
@@ -22,7 +22,6 @@ const CATEGORY: Record<string, { label: string; tone: string }> = {
   edge_underestimated: { label: "Underestimated", tone: "info" },
 };
 
-const bps = (value: number) => `${value >= 0 ? "+" : ""}${value.toFixed(1)} bps`;
 
 export function Learning({ subscribe }: { subscribe: Subscribe }) {
   const [data, setData] = useState<LearningReport | null>(null);
@@ -83,6 +82,12 @@ export function Learning({ subscribe }: { subscribe: Subscribe }) {
 
   const acts = Boolean(data.applies_guardrails);
   const meanErr = data.mean_calibration_error_bps ?? 0;
+  // The engine learns in basis points (they compare trades of any size); the page speaks
+  // dollars, converted at this session's typical trade size — or per row where the trade's
+  // own size is on record.
+  const notional = data.typical_notional_usd ?? 0;
+  const rowUsd = (bps: number, rowNotional?: number) =>
+    bpsUsd(bps, rowNotional && rowNotional > 0 ? rowNotional : notional);
   const categories = data.category_counts ?? {};
   const guardrails = data.active_guardrails ?? [];
   const patterns = data.patterns ?? [];
@@ -133,9 +138,9 @@ export function Learning({ subscribe }: { subscribe: Subscribe }) {
         <div className="card">
           <Stat
             label="Mean calibration error"
-            value={bps(meanErr)}
+            value={bpsUsd(meanErr, notional)}
             tone={meanErr >= -3 ? "flat" : "neg"}
-            sub="realised minus expected"
+            sub="got minus expected, per trade"
           />
         </div>
         <div className="card">
@@ -144,6 +149,13 @@ export function Learning({ subscribe }: { subscribe: Subscribe }) {
             sub={`${data.concerns ?? 0} concerning trades`} />
         </div>
       </div>
+
+      {notional > 0 && (
+        <p className="footnote" style={{ marginTop: -6, marginBottom: 16 }}>
+          Dollar figures are per trade, at this session&apos;s typical trade size of ≈$
+          {money(notional, 0)} (simulated money).
+        </p>
+      )}
 
       {Object.keys(categories).length > 0 && (
         <Card title="What the lessons were">
@@ -173,7 +185,7 @@ export function Learning({ subscribe }: { subscribe: Subscribe }) {
               <thead>
                 <tr>
                   <th>Pattern</th>
-                  <th className="num">Threshold add</th>
+                  <th className="num">Extra profit demanded</th>
                   <th className="num">Size</th>
                   <th>Why</th>
                 </tr>
@@ -183,7 +195,7 @@ export function Learning({ subscribe }: { subscribe: Subscribe }) {
                   <tr key={g.pattern}>
                     <td className="mono">{g.pattern}</td>
                     <td className="num mono" style={{ color: "var(--neg)" }}>
-                      +{g.threshold_add_bps.toFixed(1)} bps
+                      {bpsUsd(g.threshold_add_bps, notional)}
                     </td>
                     <td className="num mono">×{g.size_multiplier.toFixed(2)}</td>
                     <td style={{ color: "var(--text-dim)", fontSize: 12 }}>{g.reason}</td>
@@ -244,7 +256,7 @@ export function Learning({ subscribe }: { subscribe: Subscribe }) {
                       {applying === p.proposal_id ? "Applying…" : "Apply (tightens risk)"}
                     </button>
                     <span style={{ fontSize: 11.5, color: "var(--text-faint)" }}>
-                      est. +{p.validation.delta_bps.toFixed(0)} bps over{" "}
+                      est. {bpsUsd(p.validation.delta_bps, notional)} per trade over{" "}
                       {p.validation.trades_affected} trades
                     </span>
                   </div>
@@ -301,12 +313,12 @@ export function Learning({ subscribe }: { subscribe: Subscribe }) {
                         tone={CATEGORY[l.category]?.tone ?? ""}
                       />
                     </td>
-                    <td className="num mono">{bps(l.expected_net_bps)}</td>
+                    <td className="num mono">{rowUsd(l.expected_net_bps, l.notional_usd)}</td>
                     <td className="num mono" style={{ color: l.is_win ? "var(--pos)" : "var(--neg)" }}>
-                      {bps(l.realised_net_bps)}
+                      {rowUsd(l.realised_net_bps, l.notional_usd)}
                     </td>
                     <td className="num mono" style={{ color: l.calibration_error_bps < 0 ? "var(--neg)" : "var(--text-dim)" }}>
-                      {bps(l.calibration_error_bps)}
+                      {rowUsd(l.calibration_error_bps, l.notional_usd)}
                     </td>
                   </tr>
                 ))}
@@ -336,7 +348,7 @@ export function Learning({ subscribe }: { subscribe: Subscribe }) {
                     <td className="num mono">{p.reviews}</td>
                     <td className="num mono">{(p.win_rate * 100).toFixed(0)}%</td>
                     <td className="num mono" style={{ color: p.mean_error_bps < -3 ? "var(--neg)" : "var(--text-dim)" }}>
-                      {bps(p.mean_error_bps)}
+                      {bpsUsd(p.mean_error_bps, notional)}
                     </td>
                     <td style={{ color: "var(--text-dim)", fontSize: 12 }}>{p.last_headline}</td>
                   </tr>

@@ -30,3 +30,36 @@ export const titleCase = (value: string) =>
 
 /** Positive is good, negative is bad — used for P&L colouring, never for a prediction. */
 export const toneOf = (value: number) => (value > 0 ? "pos" : value < 0 ? "neg" : "flat");
+
+/**
+ * A per-trade return in basis points, as the dollars it means at the given trade size —
+ * or null when no trade size is known, because $0.00 would be a lie, not a conversion.
+ * The engine keeps deciding in basis points (they compare trades of different sizes);
+ * this is purely how the number is spoken to a person.
+ */
+export const bpsUsdValue = (bps: number, notionalUsd?: number | null) =>
+  notionalUsd && notionalUsd > 0 ? (bps / 10_000) * notionalUsd : null;
+
+/** The same conversion, rendered: "+$1.23" / "−$0.45", or "—" with no known trade size. */
+export const bpsUsd = (
+  bps: number,
+  notionalUsd?: number | null,
+  opts?: { signed?: boolean; digits?: number },
+) => {
+  const value = bpsUsdValue(bps, notionalUsd);
+  if (value === null) return "—";
+  const digits = opts?.digits ?? 2;
+  const sign = opts?.signed === false ? "" : value >= 0 ? "+" : "−";
+  return `${sign}$${money(Math.abs(value), digits)}`;
+};
+
+/** Median dollars-at-work of the rows that carry one — the page-local conversion factor. */
+export const medianNotional = (rows: Array<{ entry_price?: number; quantity?: number }>) => {
+  const notionals = rows
+    .map((row) => (row.entry_price ?? 0) * (row.quantity ?? 0))
+    .filter((value) => value > 0)
+    .sort((a, b) => a - b);
+  if (notionals.length === 0) return null;
+  const mid = Math.floor(notionals.length / 2);
+  return notionals.length % 2 ? notionals[mid] : (notionals[mid - 1] + notionals[mid]) / 2;
+};

@@ -373,6 +373,11 @@ class LiveRuntime:
     # ------------------------------------------------------------------ properties
 
     @property
+    def typical_trade_notional_usd(self) -> float:
+        """Median dollars-at-work per closed trade — the bps→USD conversion factor."""
+        return self._retro.typical_notional_usd
+
+    @property
     def state(self) -> LiveState:
         return self.machine.state
 
@@ -869,17 +874,23 @@ class LiveRuntime:
             evaluation.threshold_bps + guard.threshold_add_bps
         ):
             self.counters["guardrail_rejected"] += 1
+            raised_bar = evaluation.threshold_bps + guard.threshold_add_bps
+            notional = evaluation.costs.notional
+            if notional > 0:
+                reason = (
+                    f"learning guardrail — expected net profit "
+                    f"${evaluation.net_edge_bps * notional / 10_000:,.2f} is below the "
+                    f"raised bar of ${raised_bar * notional / 10_000:,.2f} on a "
+                    f"${notional:,.0f} position. {guard.reason}"
+                )
+            else:
+                reason = (
+                    f"learning guardrail — net edge {evaluation.net_edge_bps:.1f} bps "
+                    f"below the raised bar of {raised_bar:.1f} bps. {guard.reason}"
+                )
             self._emit(
                 "live.no_trade",
-                {
-                    "correlation_id": correlation_id,
-                    "reason": (
-                        f"learning guardrail — net edge {evaluation.net_edge_bps:.1f} bps "
-                        f"below the raised bar of "
-                        f"{evaluation.threshold_bps + guard.threshold_add_bps:.1f} bps. "
-                        f"{guard.reason}"
-                    ),
-                },
+                {"correlation_id": correlation_id, "reason": reason},
             )
             return
 
@@ -1100,6 +1111,7 @@ class LiveRuntime:
             closed_at=exit_fill.filled_at,
             signal_id=beliefs["signal_id"],
             symbol=self._symbol,
+            notional_usd=notional,
         )
         self._consecutive_losses = 0 if net_bps > 0 else self._consecutive_losses + 1
         self._ledger.record_realised_pnl(

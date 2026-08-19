@@ -32,7 +32,6 @@ function OrderBookLadder({ book, levels = 12 }: { book: OrderBook; levels?: numb
   const bestBid = bids[0]?.[0] ?? 0;
   const mid = bestAsk && bestBid ? (bestAsk + bestBid) / 2 : bestAsk || bestBid;
   const spread = bestAsk && bestBid ? bestAsk - bestBid : 0;
-  const spreadBps = mid ? (spread / mid) * 10000 : 0;
 
   // Cumulative size outward from the touch, so the depth bars read as a wall of resting
   // liquidity rather than a per-level blip. Each side is scaled to its own deepest level.
@@ -61,7 +60,7 @@ function OrderBookLadder({ book, levels = 12 }: { book: OrderBook; levels?: numb
       <div className="ob-spread">
         <span className="ob-mid">{money(mid)}</span>
         <span className="ob-spread-val">
-          spread {spread.toFixed(2)} · {spreadBps.toFixed(1)} bps
+          spread ${spread.toFixed(2)} · {mid ? ((spread / mid) * 100).toFixed(3) : "0"}%
         </span>
       </div>
       <div className="ob-bids">

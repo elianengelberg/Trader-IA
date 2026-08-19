@@ -227,10 +227,22 @@ def build_briefing(context: dict[str, Any]) -> tuple[str, list[str]]:
     learning = context.get("learning") or {}
     if learning.get("available") and learning.get("reviews"):
         used.append("learning report")
+        error_bps = float(learning.get("mean_calibration_error_bps", 0) or 0.0)
+        notional = float(learning.get("typical_notional_usd") or 0.0)
+        # Spoken in dollars at the typical trade size when one is known — bps mean nothing
+        # to the person asking. The engine itself still learns in bps.
+        if notional > 0:
+            error_usd = error_bps * notional / 10_000
+            error_text = (
+                f"{'+' if error_usd >= 0 else '-'}${abs(error_usd):,.2f} per trade "
+                f"(typical trade ≈${notional:,.0f}, simulated)"
+            )
+        else:
+            error_text = f"{error_bps:+.1f} bps"
         lines.append(
             f"WHAT IT HAS LEARNED: {learning.get('reviews', 0)} trades reviewed, "
             f"win rate {learning.get('win_rate', 0):.0%}, "
-            f"mean calibration error {learning.get('mean_calibration_error_bps', 0):+.1f} bps. "
+            f"mean calibration error {error_text}. "
             f"Guardrails now active on {len(learning.get('active_guardrails', []))} pattern(s)"
             + (
                 f"; they have refused {learning.get('guardrail_rejected', 0)} trade(s)."

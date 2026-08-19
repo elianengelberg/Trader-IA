@@ -382,6 +382,7 @@ export interface ClosedTrade {
   confidence: number;
   entry_price: number;
   exit_price: number;
+  quantity?: number;
   gross_bps: number;
   fees_bps: number;
   net_bps: number;
@@ -468,6 +469,7 @@ export interface LessonReview {
   closed_at: string;
   signal_id: string;
   symbol: string;
+  notional_usd?: number;
   is_win: boolean;
   is_concern: boolean;
 }
@@ -510,6 +512,7 @@ export interface LearningReport {
   concerns?: number;
   win_rate?: number;
   mean_calibration_error_bps?: number;
+  typical_notional_usd?: number;
   category_counts?: Record<string, number>;
   patterns?: LessonPattern[];
   active_guardrails?: LessonGuardrail[];
@@ -629,6 +632,7 @@ export interface TrainingStatus {
   buckets_ready?: number | null;
   pid?: number;
   updated_at?: number;
+  typical_notional_usd?: number;
 }
 
 export interface CapitalView {

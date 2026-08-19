@@ -108,6 +108,10 @@ class TradeReview:
     closed_at: datetime
     signal_id: str
     symbol: str
+    #: Dollars at work on the trade (entry price x quantity). Basis points are the honest
+    #: unit for *learning* — they compare trades of different sizes — but nobody thinks in
+    #: them, so the record keeps the notional that turns each bps figure back into money.
+    notional_usd: float = 0.0
 
     @property
     def is_win(self) -> bool:
@@ -138,6 +142,7 @@ class TradeReview:
             "closed_at": self.closed_at.isoformat(),
             "signal_id": self.signal_id,
             "symbol": self.symbol,
+            "notional_usd": round(self.notional_usd, 2),
             "is_win": self.is_win,
             "is_concern": self.is_concern,
         }
@@ -329,6 +334,7 @@ class RetrospectiveEngine:
         signal_id: str = "",
         symbol: str = "",
         expected_cost_bps: float | None = None,
+        notional_usd: float = 0.0,
     ) -> TradeReview:
         """Judge one closed trade, file the lesson, and fold it into the pattern memory."""
         pattern = self._pattern(regime, direction, confidence)
@@ -339,7 +345,13 @@ class RetrospectiveEngine:
         )
         category = self._classify(expected_net_bps, realised_net_bps, error)
         headline, lesson = self._narrate(
-            regime, direction, category, expected_net_bps, realised_net_bps, cost_overrun
+            regime,
+            direction,
+            category,
+            expected_net_bps,
+            realised_net_bps,
+            cost_overrun,
+            notional_usd=max(0.0, notional_usd),
         )
 
         review = TradeReview(
@@ -358,6 +370,7 @@ class RetrospectiveEngine:
             closed_at=closed_at,
             signal_id=signal_id,
             symbol=symbol,
+            notional_usd=max(0.0, notional_usd),
         )
 
         memory = self._memory.get(pattern)
@@ -385,6 +398,18 @@ class RetrospectiveEngine:
             return LessonCategory.EDGE_UNDERESTIMATED
         return LessonCategory.EDGE_CONFIRMED
 
+    @staticmethod
+    def _amount(bps: float, notional_usd: float) -> str:
+        """A per-trade return, spoken in dollars when the trade's size is on record.
+
+        Falls back to basis points with no notional — inventing a dollar figure would be
+        worse than an unfamiliar unit. The engine's arithmetic stays in bps either way.
+        """
+        if notional_usd > 0:
+            value = bps * notional_usd / 10_000.0
+            return f"{'+' if value >= 0 else '-'}${abs(value):,.2f}"
+        return f"{bps:+.1f} bps"
+
     def _narrate(
         self,
         regime: MarketRegime,
@@ -393,30 +418,32 @@ class RetrospectiveEngine:
         expected: float,
         realised: float,
         cost_overrun: bool,
+        notional_usd: float = 0.0,
     ) -> tuple[str, str]:
         where = f"{direction.value} in {regime.value.replace('_', ' ')}"
-        exp, real = f"{expected:+.1f}", f"{realised:+.1f}"
+        exp = self._amount(expected, notional_usd)
+        real = self._amount(realised, notional_usd)
         cost_note = " Fees ran over their modelled budget." if cost_overrun else ""
         if category is LessonCategory.UNEXPECTED_LOSS:
             return (
-                f"{where}: expected {exp} bps, lost {real} bps.",
+                f"{where}: expected {exp}, lost {real}.",
                 f"A {where} trade that cleared the gate still lost money. Demand a larger "
                 f"margin of safety here until the bucket re-earns trust.{cost_note}",
             )
         if category is LessonCategory.EDGE_OVERESTIMATED:
             return (
-                f"{where}: expected {exp} bps, made only {real} bps.",
+                f"{where}: expected {exp}, made only {real}.",
                 f"The edge for {where} is real but smaller than claimed; the estimate is "
                 f"optimistic and is being revised down.{cost_note}",
             )
         if category is LessonCategory.EDGE_UNDERESTIMATED:
             return (
-                f"{where}: expected {exp} bps, made {real} bps.",
+                f"{where}: expected {exp}, made {real}.",
                 f"{where} did better than the estimate; the bucket may be under-credited, "
                 "which the running mean will correct as more close.",
             )
         return (
-            f"{where}: expected {exp} bps, made {real} bps — on target.",
+            f"{where}: expected {exp}, made {real} — on target.",
             f"{where} behaved as expected. Evidence the bucket's edge is calibrated; "
             "reinforce, do not touch.",
         )
@@ -439,6 +466,9 @@ class RetrospectiveEngine:
                 closed_at=row["closed_at"],
                 signal_id=str(row.get("signal_id", "")),
                 symbol=str(row.get("symbol", "")),
+                notional_usd=(
+                    float(row.get("entry_price") or 0.0) * float(row.get("quantity") or 0.0)
+                ),
             )
 
     # ------------------------------------------------------------------ guardrails
@@ -467,15 +497,16 @@ class RetrospectiveEngine:
         # floored so the pattern is dampened, never switched off outright.
         concern_ratio = memory.recent_concern_ratio
         size_multiplier = max(self._size_floor, 1.0 - concern_ratio)
+        usd = self.typical_notional_usd
         return Guardrail(
             pattern=pattern,
             threshold_add_bps=threshold_add,
             size_multiplier=size_multiplier,
             reason=(
                 f"{memory.recent_concerns}/{memory.recent_reviews} recent trades here "
-                f"disappointed; mean miss {mean_error:.1f} bps — threshold "
-                f"+{threshold_add:.1f} bps, size x{size_multiplier:.2f} until it re-earns "
-                "trust"
+                f"disappointed; mean miss {self._amount(mean_error, usd)} per trade — "
+                f"demanding {self._amount(threshold_add, usd)} more profit and size "
+                f"x{size_multiplier:.2f} until it re-earns trust"
             ),
             based_on_trades=memory.recent_reviews,
         )
@@ -493,6 +524,22 @@ class RetrospectiveEngine:
     @property
     def reviews(self) -> int:
         return len(self._history)
+
+    @property
+    def typical_notional_usd(self) -> float:
+        """The median dollars-at-work of recent trades — the honest conversion factor
+        between a basis-point figure and "about how many dollars is that per trade".
+
+        Median, not mean: one oversized trade must not inflate what every threshold
+        appears to cost. Zero when no trade carried a notional (nothing to convert with).
+        """
+        notionals = sorted(r.notional_usd for r in self._history if r.notional_usd > 0)
+        if not notionals:
+            return 0.0
+        mid = len(notionals) // 2
+        if len(notionals) % 2:
+            return notionals[mid]
+        return (notionals[mid - 1] + notionals[mid]) / 2.0
 
     def report(self, *, recent_limit: int = 40) -> dict[str, Any]:
         """Everything the dashboard shows: overall calibration, patterns, guards, lessons.
@@ -529,6 +576,7 @@ class RetrospectiveEngine:
             "concerns": concerns,
             "win_rate": round(wins / total, 4) if total else 0.0,
             "mean_calibration_error_bps": round(mean_error, 4),
+            "typical_notional_usd": round(self.typical_notional_usd, 2),
             "category_counts": dict(category_counts),
             "patterns": [memory.as_dict() for memory in self.memory()],
             "active_guardrails": guardrails,

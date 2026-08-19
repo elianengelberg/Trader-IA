@@ -108,6 +108,17 @@ export default function App() {
 
   const state = runtime?.state ?? "stopped";
   const capital = runtime?.capital;
+  // The 24/7 session is the state that matters. The demo runtime being "stopped" is not
+  // news — showing it as THE state while the real session runs read as a contradiction.
+  const live = health?.live_runtime ?? null;
+  const liveTone =
+    live?.state === "running"
+      ? "ok"
+      : live?.state === "stopped"
+        ? ""
+        : live && ["safe_mode", "error"].includes(live.state)
+          ? "bad"
+          : "warn";
 
   return (
     <div className="app">
@@ -117,7 +128,20 @@ export default function App() {
           <span>Paper Trading</span>
         </div>
         <span className="sim-badge">SIMULATED CAPITAL · NO REAL MONEY</span>
-        <Pill value={state} />
+        {live ? (
+          <>
+            <span title="The 24/7 paper-live session — the state that matters">
+              <Pill value={`24/7 · ${live.state}`} tone={liveTone} />
+            </span>
+            {(state === "running" || state === "paused") && (
+              <span title="The synthetic demo run, separate from the 24/7 session">
+                <Pill value={`demo · ${state}`} tone={state === "running" ? "ok" : "warn"} />
+              </span>
+            )}
+          </>
+        ) : (
+          <Pill value={state} />
+        )}
         {capital && capital.starting > 0 && (
           <span className="mono dim" style={{ fontSize: 13 }}>
             ${capital.equity.toLocaleString("en-US", { maximumFractionDigits: 2 })}

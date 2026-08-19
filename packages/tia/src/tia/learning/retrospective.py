@@ -495,18 +495,26 @@ class RetrospectiveEngine:
         return len(self._history)
 
     def report(self, *, recent_limit: int = 40) -> dict[str, Any]:
-        """Everything the dashboard shows: overall calibration, patterns, guards, lessons."""
-        total = len(self._history)
-        wins = sum(1 for review in self._history if review.is_win)
-        concerns = sum(1 for review in self._history if review.is_concern)
+        """Everything the dashboard shows: overall calibration, patterns, guards, lessons.
+
+        The headline numbers aggregate the pattern memories' **lifetime** counters, not
+        the bounded recent-lessons list — an earlier version summed the capped list, so a
+        system that had reviewed 3,200 trades reported "500 reviewed", which read as the
+        page being stale rather than the buffer being bounded.
+        """
+        memories = list(self._memory.values())
+        total = sum(memory.reviews for memory in memories)
+        wins = sum(memory.wins for memory in memories)
+        concerns = sum(memory.concerns for memory in memories)
         mean_error = (
-            sum(review.calibration_error_bps for review in self._history) / total
+            sum(memory.mean_error_bps * memory.reviews for memory in memories) / total
             if total
             else 0.0
         )
         category_counts: dict[str, int] = defaultdict(int)
-        for review in self._history:
-            category_counts[review.category.value] += 1
+        for memory in memories:
+            for category, count in memory.category_counts.items():
+                category_counts[category] += count
 
         guardrails = [
             self._guardrail_for_memory(memory).as_dict()

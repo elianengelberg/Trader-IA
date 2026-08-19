@@ -38,6 +38,16 @@ export function Learning({ subscribe }: { subscribe: Subscribe }) {
   useEffect(load, [load]);
   useStreamEvent(subscribe, "trade.closed", load);
 
+  // The learning record also grows without browser events — training simulations write
+  // straight to the database and load on an engine restart — so the page keeps itself
+  // current instead of waiting for a manual reload. Hidden tabs skip the fetch.
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      if (!document.hidden) load();
+    }, 10_000);
+    return () => window.clearInterval(id);
+  }, [load]);
+
   const applyProposal = useCallback(
     async (proposalId: string) => {
       setApplying(proposalId);

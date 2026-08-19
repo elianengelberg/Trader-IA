@@ -192,6 +192,20 @@ def test_the_report_summarises_calibration_and_lists_active_guards() -> None:
     assert report["recent_lessons"][0]["signal_id"] == "sig-105"
 
 
+def test_the_report_headline_counts_every_trade_beyond_the_recent_buffer() -> None:
+    """The recent-lessons list is bounded; the headline statistics must not be. A system
+    that reviewed 3,200 trades saying "500 reviewed" reads as a stale page, not a buffer."""
+    engine = RetrospectiveEngine(history_limit=5)
+    for i in range(8):
+        _review(engine, expected=10.0, realised=12.0, i=i)
+
+    report = engine.report()
+    assert report["reviews"] == 8  # lifetime, not the capped buffer
+    assert report["wins"] == 8
+    assert sum(report["category_counts"].values()) == 8
+    assert len(report["recent_lessons"]) <= 5  # the buffer itself stays bounded
+
+
 def test_the_memory_is_rebuilt_exactly_from_the_persisted_trade_record() -> None:
     """A restart must not amnesia the lessons: replaying the stored rows reproduces them."""
     live = RetrospectiveEngine()

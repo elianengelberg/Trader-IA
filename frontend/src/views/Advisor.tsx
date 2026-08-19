@@ -37,6 +37,12 @@ export function Advisor({ subscribe }: { subscribe: Subscribe }) {
   }, []);
   useEffect(loadAudit, [loadAudit]);
   useStreamEvent(subscribe, "trade.closed", loadAudit);
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      if (!document.hidden) loadAudit();
+    }, 15_000);
+    return () => window.clearInterval(id);
+  }, [loadAudit]);
 
   useEffect(() => {
     scroller.current?.scrollTo({ top: scroller.current.scrollHeight, behavior: "smooth" });

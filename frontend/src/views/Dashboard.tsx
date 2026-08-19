@@ -213,15 +213,15 @@ function TrainingPanel() {
                 ? "The last trainer died mid-run — every completed run's evidence is safe. Launch a new batch (fresh seeds are automatic)."
                 : "Simulations teach the learning engine which setups win and lose after costs. They never count toward the real-money gate. Fresh seeds every launch — duplicates are impossible."}
           </p>
-          <div className="row" style={{ gap: 8 }}>
-            {[100, 500, 1000].map((n) => (
+          <div className="row" style={{ gap: 8, flexWrap: "wrap" }}>
+            {[500, 1000, 5000, 10000].map((n) => (
               <button
                 key={n}
                 className="btn small"
                 disabled={busy !== ""}
                 onClick={() => act("start", n)}
               >
-                {busy === "start" ? "Starting…" : `Run ${n} sims`}
+                {busy === "start" ? "Starting…" : `Run ${n.toLocaleString("en-US")} sims`}
               </button>
             ))}
             <button

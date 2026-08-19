@@ -120,7 +120,7 @@ class AdvisorAskRequest(BaseModel):
 class TrainingStartRequest(BaseModel):
     """Launch training simulations. Bounded so a typo cannot queue a week of CPU."""
 
-    runs: int = Field(default=100, ge=1, le=5000)
+    runs: int = Field(default=100, ge=1, le=10_000)
 
 
 class MentorApplyRequest(BaseModel):

@@ -8,6 +8,103 @@ import { clock, money, qty, signedMoney } from "../lib/format";
 
 type EquityPoint = { at: string; equity: number; drawdown_pct: number };
 
+/** The 24/7 session's snapshot, as this panel reads it. The API returns more. */
+interface LiveSnap {
+  active: boolean;
+  state: string;
+  mode?: string;
+  symbol?: string;
+  heartbeat_age_seconds?: number | null;
+  market_data_age_seconds?: number | null;
+  capital?: {
+    equity?: number;
+    allocated_capital?: number;
+    realised_pnl?: number;
+    unrealised_pnl?: number;
+    fees_paid?: number;
+    net_return_pct?: number;
+  };
+  counters?: Record<string, number>;
+  expected_value?: { threshold_bps?: number; coverage?: Record<string, number> };
+}
+
+/** Every bucket needs this many closed trades before the session will trade it. */
+const EVIDENCE_FLOOR = 30;
+
+function LiveSessionPanel({ subscribe }: { subscribe: Subscribe }) {
+  const [snap, setSnap] = useState<LiveSnap | null>(null);
+
+  const load = useCallback(() => {
+    api.liveSnapshot()
+      .then((s) => setSnap(s as unknown as LiveSnap))
+      .catch(() => undefined);
+  }, []);
+
+  useEffect(() => {
+    load();
+    const timer = window.setInterval(load, 10_000);
+    return () => window.clearInterval(timer);
+  }, [load]);
+  useStreamEvent(subscribe, "trade.closed", load);
+
+  if (!snap?.active) return null;
+
+  const cap = snap.capital ?? {};
+  const counters = snap.counters ?? {};
+  const pnl = (cap.realised_pnl ?? 0) + (cap.unrealised_pnl ?? 0);
+  const coverage = snap.expected_value?.coverage ?? {};
+  const bucketsSeen = Object.keys(coverage).length;
+  const bucketsReady = Object.values(coverage).filter((n) => n >= EVIDENCE_FLOOR).length;
+  const refusals =
+    (counters.ev_rejected ?? 0) +
+    (counters.risk_rejected ?? 0) +
+    (counters.budget_rejected ?? 0) +
+    (counters.guardrail_rejected ?? 0);
+  const starving = (counters.signals ?? 0) > 0 && (counters.orders ?? 0) === 0;
+
+  return (
+    <Card
+      title="24/7 session — real Binance market, simulated fills"
+      actions={<Pill value={snap.state} tone={snap.state === "running" ? "ok" : "warn"} />}
+    >
+      <div className="grid cols-4" style={{ gap: 12 }}>
+        <MoneyStat
+          label="Equity (simulated)"
+          value={cap.equity ?? 0}
+          sub={`from $${money(cap.allocated_capital ?? 0, 0)} allocated`}
+        />
+        <MoneyStat
+          label="Session P&L"
+          value={pnl}
+          signed
+          sub={`fees ${money(cap.fees_paid ?? 0)}`}
+        />
+        <Stat
+          label="Signals → orders"
+          value={`${counters.signals ?? 0} → ${counters.orders ?? 0}`}
+          sub={`${refusals} refused by the gates · ${counters.fills ?? 0} fills`}
+        />
+        <Stat
+          label="Evidence buckets ready"
+          value={`${bucketsReady}`}
+          tone={bucketsReady > 0 ? "pos" : "warn"}
+          sub={`of ${bucketsSeen} seen · needs ${EVIDENCE_FLOOR} trades each`}
+        />
+      </div>
+      <p className="footnote" style={{ marginTop: 12 }}>
+        {starving
+          ? "The session is producing signals but refusing to trade them — the honest " +
+            "behaviour with no proven edge in these conditions. Feed it evidence: run the " +
+            "training simulations (scripts/train_sims.py) and restart the session, or let " +
+            "it keep watching. It will not guess."
+          : "Bars " + (counters.bars ?? 0) + " · cycles " + (counters.cycles ?? 0) +
+            " · every entry must clear risk, budget, expected value and the learning " +
+            "guardrails. Lessons from each closed trade appear under Learning."}
+      </p>
+    </Card>
+  );
+}
+
 export function Dashboard({
   runtime,
   subscribe,
@@ -56,10 +153,11 @@ export function Dashboard({
       <>
         <h1>Dashboard</h1>
         <p className="section-note">
-          No run is active. Your 24/7 session lives in <strong>Live Trading</strong> — start
-          it there and watch the real market decisions arrive under <strong>AI Decisions</strong>,
-          the price under <strong>Markets</strong>, and the P&amp;L under <strong>Capital</strong>.
+          The 24/7 session lives in <strong>Live Trading</strong>. While it runs, its
+          activity shows right here; the live price is under <strong>Markets</strong> and
+          the lessons from every closed trade under <strong>Learning</strong>.
         </p>
+        <LiveSessionPanel subscribe={subscribe} />
         <SimulationFootnote />
       </>
     );
@@ -71,6 +169,10 @@ export function Dashboard({
       <p className="section-note">
         {runtime.scenario?.title}. {runtime.scenario?.demonstrates}
       </p>
+
+      <div style={{ marginBottom: 16 }}>
+        <LiveSessionPanel subscribe={subscribe} />
+      </div>
 
       <div className="grid cols-4" style={{ marginBottom: 16 }}>
         <div className="card">

@@ -473,11 +473,17 @@ class EdgeStateRepository:
             or 0
         )
 
-    async def track_record(self) -> dict[str, Any]:
+    async def track_record(self, *, source: str = "live") -> dict[str, Any]:
         """What the gate's paper-track-record check reads: span and volume of evidence.
 
         Days are measured from the first to the last *closed* trade rather than from any
         run boundary, because a run that sat idle for a week proved nothing during it.
+
+        Counts **only** rows written by the real-time session (``source="live"`` — the tag
+        the 24/7 runtime writes, paper fills included). Demo scenarios and training
+        simulations feed the edge estimator, but a track record padded with synthetic
+        trades would let the activation gate be satisfied by a market that never existed —
+        so they are excluded here by construction, not by convention.
         """
         result = await self._session.execute(
             select(
@@ -485,7 +491,7 @@ class EdgeStateRepository:
                 func.min(EdgeOutcomeRow.closed_at),
                 func.max(EdgeOutcomeRow.closed_at),
                 func.sum(EdgeOutcomeRow.net_bps),
-            )
+            ).where(EdgeOutcomeRow.source == source)
         )
         count, first, last, net_sum = result.one()
         days = 0.0

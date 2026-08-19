@@ -226,7 +226,9 @@ async def test_edge_persistence_survives_restart(tmp_path: Path) -> None:
 
     async with database.session() as session:
         repo = EdgeStateRepository(session)
-        for index in range(35):
+        # 35 simulated/demo rows plus 3 written by the real-time session. The estimator
+        # learns from all of them; the activation gate's track record counts only the 3.
+        for index in range(38):
             await repo.append(
                 {
                     "outcome_id": f"o-{index}",
@@ -244,7 +246,7 @@ async def test_edge_persistence_survives_restart(tmp_path: Path) -> None:
                     "net_bps": 5.0,
                     "expected_net_bps": 4.0,
                     "closed_at": datetime(2026, 8, 1, tzinfo=UTC),
-                    "source": "paper",
+                    "source": "live" if index >= 35 else "paper",
                 }
             )
     await database.close()
@@ -256,8 +258,10 @@ async def test_edge_persistence_survives_restart(tmp_path: Path) -> None:
         record = await EdgeStateRepository(session).track_record()
     await database2.close()
 
-    assert len(rows) == 35
-    assert record["closed_trades"] == 35
+    assert len(rows) == 38
+    # Synthetic evidence teaches, but it must never satisfy the gate: only the rows the
+    # real-time session wrote count toward the activation track record.
+    assert record["closed_trades"] == 3
 
     from tia.economics.expected_value import EdgeEstimator, Outcome
 
@@ -276,8 +280,8 @@ async def test_edge_persistence_survives_restart(tmp_path: Path) -> None:
     estimate = estimator.estimate(
         regime=MarketRegime.TRENDING_UP, direction=Direction.LONG, confidence=0.75
     )
-    assert estimate is not None, "35 reloaded samples must clear the 30-sample floor"
-    assert estimate.samples == 35
+    assert estimate is not None, "38 reloaded samples must clear the 30-sample floor"
+    assert estimate.samples == 38  # the estimator learns from every source, gate aside
 
 
 async def test_a_failed_persistence_write_does_not_pretend_to_be_state(

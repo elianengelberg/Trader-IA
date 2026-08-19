@@ -26,6 +26,7 @@ from typing import Any
 from tia.core.config import Settings
 from tia.core.logging import get_logger
 from tia.learning.antipatterns import AntiPatternMonitor
+from tia.learning.mentor import MentorEngine
 from tia.persistence import (
     ActivationRepository,
     AssessmentRepository,
@@ -73,6 +74,11 @@ class AppState:
         #: the monitor is pure and stateless.
         self._advisor: Any | None = None
         self._antipatterns = AntiPatternMonitor()
+        #: The Mentor: proposals regenerated from the record on every read; only the
+        #: currently-validated set is applicable, and applies are remembered for the report.
+        self._mentor = MentorEngine()
+        self._mentor_validated: dict[str, Any] = {}
+        self._mentor_applied: list[dict[str, Any]] = []
 
     # ------------------------------------------------------------------ lifecycle
 
@@ -656,6 +662,7 @@ class AppState:
             ("economics", self.economics),
             ("learning", self.learning_report),
             ("antipatterns", self.antipattern_report),
+            ("mentor", self.mentor_report),
         ):
             with contextlib.suppress(Exception):
                 context[key] = getter()
@@ -749,6 +756,135 @@ class AppState:
                 "reason": "no session is running; the behaviour audit needs recent trades.",
             }
         return {"available": True, **self._antipatterns.report(snapshot)}
+
+    # ------------------------------------------------------------------ mentor
+
+    def _current_ev_threshold(self) -> float:
+        """The bar trades must clear right now, read from whichever engine is enforcing."""
+        session = self.live_runtime
+        if session is not None and session.is_running:
+            ev = getattr(session, "_ev", None)
+            if ev is not None:
+                return float(ev.threshold_bps)
+        return float(self.settings.live.ev_threshold_bps)
+
+    def mentor_report(self) -> dict[str, Any]:
+        """The Mentor's current proposals, each with its replay verdict attached.
+
+        Regenerated from the record on every call, so a proposal disappears on its own
+        once the condition that raised it clears — there is nothing stale to dismiss.
+        Validated proposals are cached by id for :meth:`mentor_apply`.
+        """
+        learning = self.learning_report()
+        if not learning.get("available"):
+            return {
+                "available": False,
+                "reason": (
+                    "no session is running. The Mentor reads the closed-trade record; "
+                    "start the 24/7 paper session (or a demo run) and it reviews as "
+                    "trades close."
+                ),
+            }
+
+        audit = self.antipattern_report()
+        snapshot = self._antipattern_snapshot() or {}
+        proposals = self._mentor.review(
+            lessons=learning.get("recent_lessons", []),
+            current_threshold_bps=self._current_ev_threshold(),
+            consecutive_losses=int(snapshot.get("consecutive_losses", 0)),
+            risk_profile=self.settings.live.risk_profile,
+            audit_checks=audit.get("checks", []) if audit.get("available") else [],
+        )
+        self._mentor_validated = {
+            p.proposal_id: p for p in proposals if p.validation.passed
+        }
+        live_acting = self.live_runtime is not None and self.live_runtime.is_running
+        return {
+            "available": True,
+            "proposals": [p.as_dict() for p in proposals],
+            "validated": sum(1 for p in proposals if p.validation.passed),
+            "rejected": sum(1 for p in proposals if not p.validation.passed),
+            "applied": list(self._mentor_applied),
+            "can_apply_now": live_acting,
+            "reviewed_trades": len(learning.get("recent_lessons", [])),
+            "explanation": (
+                "The Mentor proposes only tighter risk — a higher expected-value bar, a "
+                "halt, a smaller profile — and every proposal is validated by replaying "
+                "the recorded trades under the proposed rule. A proposal whose replay "
+                "shows no benefit is rejected and shown as rejected. Nothing is applied "
+                "without an explicit operator action, and nothing here can loosen a limit."
+            ),
+        }
+
+    async def mentor_apply(self, *, proposal_id: str, actor: str) -> dict[str, Any]:
+        """Apply one *validated* proposal, as the named operator. Tighten-only by
+        construction: every dispatch below goes to a method that itself refuses to loosen."""
+        proposal = self._mentor_validated.get(proposal_id)
+        if proposal is None:
+            raise ValueError(
+                f"no validated proposal {proposal_id!r}. Proposals are regenerated from "
+                "the record on every read — refresh the Mentor panel and try again."
+            )
+
+        kind = proposal.action["kind"]
+        session = self.live_runtime
+        live_running = session is not None and session.is_running
+
+        if kind == "raise_ev_threshold":
+            if not live_running:
+                raise ValueError(
+                    "raising the expected-value bar acts on the running paper-live "
+                    "session; start it first"
+                )
+            result = session.tighten_ev_threshold(
+                float(proposal.action["to_bps"]), actor=actor
+            )
+        elif kind == "halt_new_entries":
+            if live_running:
+                session.halt_new_orders(
+                    reason=f"mentor: {proposal.rationale[:140]}", actor=actor
+                )
+                result = {"halted": True, "session": "paper-live"}
+            elif self.runtime is not None and self.runtime.is_running:
+                self.runtime.stop_new_trades()
+                result = {"halted": True, "session": "demo"}
+            else:
+                raise ValueError("no running session to halt")
+        elif kind == "switch_profile_conservative":
+            # Reuses the audited profile-change path, including its refusal to change a
+            # profile under a running live session — that refusal surfaces to the caller.
+            result = await self.change_risk_profile(
+                profile="conservative", actor=actor, confirmed=True
+            )
+        else:  # pragma: no cover - the catalog is closed; a new kind must be wired here
+            raise ValueError(f"unknown proposal kind {kind!r}")
+
+        self._mentor_applied.append(
+            {
+                "proposal_id": proposal_id,
+                "kind": kind,
+                "actor": actor,
+                "at": datetime.now(UTC).isoformat(),
+                "title": proposal.title,
+            }
+        )
+        with contextlib.suppress(Exception):
+            from tia.core.ids import deterministic_id
+
+            async with self.database.session() as session_db:
+                await IncidentRepository(session_db).record(
+                    {
+                        "incident_id": deterministic_id(
+                            "inc", "mentor", proposal_id, datetime.now(UTC)
+                        ),
+                        "at": datetime.now(UTC),
+                        "kind": "mentor_apply",
+                        "actor": actor,
+                        "reason": proposal.title,
+                        "detail": proposal.as_dict(),
+                    }
+                )
+        return {"applied": proposal_id, "result": result}
 
     def analytics(self) -> dict[str, Any]:
         """Ruin probability and safe sizing, computed from this run's closed trades.

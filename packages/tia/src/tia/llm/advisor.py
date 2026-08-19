@@ -252,6 +252,20 @@ def build_briefing(context: dict[str, Any]) -> tuple[str, list[str]]:
         else:
             lines.append("BEHAVIOUR AUDIT: no anti-patterns flagged in recent trading.")
 
+    mentor = context.get("mentor") or {}
+    if mentor.get("available") and mentor.get("proposals"):
+        used.append("mentor proposals")
+        lines.append(
+            "MENTOR — tighten-only proposals, each validated by replaying the recorded "
+            "trades under the proposed rule:"
+        )
+        for prop in mentor["proposals"][:4]:
+            verdict = prop.get("status", "?").upper()
+            lines.append(
+                f"  [{verdict}] {prop.get('title', '')} — {prop.get('rationale', '')} "
+                f"Replay: {prop.get('validation', {}).get('detail', '')}"
+            )
+
     focus = context.get("focus_decision")
     if focus:
         used.append("focused decision")

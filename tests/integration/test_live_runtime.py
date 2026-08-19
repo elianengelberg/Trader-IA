@@ -356,6 +356,26 @@ async def test_paper_realtime_runs_without_a_token_and_says_so() -> None:
     await runtime.stop()
 
 
+async def test_the_ev_threshold_can_be_raised_mid_session_but_never_lowered() -> None:
+    """The one runtime parameter the Mentor may touch, and only in one direction. The
+    refusal lives in the runtime itself, not in the caller's manners."""
+    runtime, _execution, _market = build_runtime_paper()
+    await runtime.start()
+    try:
+        before = runtime._ev.threshold_bps
+        result = runtime.tighten_ev_threshold(before + 7.0, actor="mentor-test")
+        assert result == {"previous_bps": before, "current_bps": before + 7.0}
+        assert runtime._ev.threshold_bps == before + 7.0
+
+        import pytest
+
+        with pytest.raises(ValueError, match="only be raised"):
+            runtime.tighten_ev_threshold(before, actor="mentor-test")
+        assert runtime._ev.threshold_bps == before + 7.0  # the refusal changed nothing
+    finally:
+        await runtime.stop()
+
+
 async def test_heartbeat_advances_with_the_loop_not_with_http() -> None:
     """"The server answers" and "the engine is alive" are different facts."""
     runtime, _, market = build_runtime_paper()

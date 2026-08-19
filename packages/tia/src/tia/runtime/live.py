@@ -457,6 +457,29 @@ class LiveRuntime:
             self.machine.transition(LiveState.HALT_NEW_ORDERS, reason=reason, actor=actor)
             self._incident("halt_new_orders", reason=reason, actor=actor)
 
+    def tighten_ev_threshold(self, new_threshold_bps: float, *, actor: str) -> dict[str, Any]:
+        """Raise the expected-value bar mid-session. Raise only — this is the one runtime
+        parameter the Mentor may touch, and the direction is enforced here, not by the
+        caller's good intentions. Lowering the bar means restarting the session with a new
+        configuration, which re-runs every check that configuration is subject to."""
+        current = self._ev.threshold_bps
+        if new_threshold_bps <= current:
+            raise ValueError(
+                f"the EV threshold may only be raised mid-session "
+                f"(current {current:.2f} bps, requested {new_threshold_bps:.2f} bps)"
+            )
+        self._ev.threshold_bps = new_threshold_bps
+        self._incident(
+            "ev_threshold_raised",
+            reason=f"{current:.2f} -> {new_threshold_bps:.2f} bps",
+            actor=actor,
+        )
+        self._emit(
+            "live.ev_threshold",
+            {"previous_bps": current, "current_bps": new_threshold_bps, "actor": actor},
+        )
+        return {"previous_bps": current, "current_bps": new_threshold_bps}
+
     # ------------------------------------------------------------------ kill switch
 
     async def kill_switch(self, *, reason: str, actor: str) -> dict[str, Any]:

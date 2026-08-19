@@ -8,6 +8,8 @@ guardrails that make the system warier of exactly the patterns that have disappo
 before. It only ever tightens; it never invents an edge.
 """
 
+from tia.learning.antipatterns import AntiPatternCheck, AntiPatternMonitor, Severity
+from tia.learning.mentor import MentorEngine, MentorProposal, ProposalStatus
 from tia.learning.retrospective import (
     Guardrail,
     LessonCategory,
@@ -17,9 +19,15 @@ from tia.learning.retrospective import (
 )
 
 __all__ = [
+    "AntiPatternCheck",
+    "AntiPatternMonitor",
     "Guardrail",
     "LessonCategory",
+    "MentorEngine",
+    "MentorProposal",
     "PatternMemory",
+    "ProposalStatus",
     "RetrospectiveEngine",
+    "Severity",
     "TradeReview",
 ]

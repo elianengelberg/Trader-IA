@@ -429,6 +429,20 @@ async def test_the_behaviour_audit_refuses_cleanly_when_idle(
     assert body["available"] is False
 
 
+async def test_the_mentor_refuses_cleanly_when_idle_and_refuses_unknown_applies(
+    client: httpx.AsyncClient,
+) -> None:
+    """No record, no proposals — and an apply for a proposal that does not exist is a
+    conflict, not a crash. Only currently-validated proposals are ever applicable."""
+    report = await client.get("/api/mentor")
+    assert report.status_code == 200, report.text
+    assert report.json()["available"] is False
+
+    apply = await client.post("/api/mentor/apply", json={"proposal_id": "raise_ev_threshold"})
+    assert apply.status_code == 409
+    assert "no validated proposal" in apply.json()["detail"]
+
+
 async def test_the_order_book_endpoint_returns_live_depth(
     client: httpx.AsyncClient, monkeypatch: pytest.MonkeyPatch
 ) -> None:

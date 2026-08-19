@@ -544,6 +544,35 @@ export interface AntiPatternReport {
   explanation?: string;
 }
 
+export interface MentorProposal {
+  proposal_id: string;
+  kind: string;
+  title: string;
+  rationale: string;
+  action: Record<string, unknown>;
+  validation: {
+    passed: boolean;
+    method: string;
+    detail: string;
+    delta_bps: number;
+    trades_affected: number;
+  };
+  applies: string;
+  status: string;
+}
+
+export interface MentorReport {
+  available: boolean;
+  reason?: string;
+  proposals?: MentorProposal[];
+  validated?: number;
+  rejected?: number;
+  applied?: { proposal_id: string; kind: string; actor: string; at: string; title: string }[];
+  can_apply_now?: boolean;
+  reviewed_trades?: number;
+  explanation?: string;
+}
+
 export interface CapitalView {
   simulated: boolean;
   currency: string;
@@ -649,6 +678,11 @@ export const api = {
   analytics: () => get<Analytics>("/analytics"),
   learning: () => get<LearningReport>("/learning"),
   antipatterns: () => get<AntiPatternReport>("/antipatterns"),
+  mentor: () => get<MentorReport>("/mentor"),
+  mentorApply: (proposalId: string) =>
+    post<{ applied: string; result: Record<string, unknown> }>("/mentor/apply", {
+      proposal_id: proposalId,
+    }),
   advisorAsk: (question: string) => post<AdvisorAnswer>("/advisor/ask", { question }),
   advisorExplain: (decisionId: string) =>
     get<AdvisorAnswer>(`/advisor/explain/${encodeURIComponent(decisionId)}`),

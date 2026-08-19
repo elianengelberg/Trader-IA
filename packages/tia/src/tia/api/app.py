@@ -117,6 +117,13 @@ class AdvisorAskRequest(BaseModel):
     question: str = Field(min_length=1, max_length=2000)
 
 
+class MentorApplyRequest(BaseModel):
+    """Apply one validated Mentor proposal. The catalog is tighten-only, so the worst this
+    request can do is make the system more cautious — and it is audited either way."""
+
+    proposal_id: str = Field(min_length=1, max_length=64)
+
+
 # --------------------------------------------------------------------------- app
 
 
@@ -487,6 +494,23 @@ def _register_routes(app: FastAPI, settings: Settings) -> None:
     async def antipatterns(request: Request, _user: User = Depends(current_user)) -> dict[str, Any]:
         """Curated trading anti-patterns, checked against the system's own recent trading."""
         return tia(request).antipattern_report()
+
+    @app.get("/api/mentor")
+    async def mentor(request: Request, _user: User = Depends(current_user)) -> dict[str, Any]:
+        """The Mentor's tighten-only proposals, each with its replay verdict."""
+        return tia(request).mentor_report()
+
+    @app.post("/api/mentor/apply")
+    async def mentor_apply(
+        body: MentorApplyRequest, request: Request, user: User = Depends(current_user)
+    ) -> dict[str, Any]:
+        """Apply one validated proposal, as the signed-in operator. Audited."""
+        try:
+            return await tia(request).mentor_apply(
+                proposal_id=body.proposal_id, actor=user.username
+            )
+        except ValueError as exc:
+            raise HTTPException(409, str(exc)) from exc
 
     @app.post("/api/advisor/ask")
     async def advisor_ask(

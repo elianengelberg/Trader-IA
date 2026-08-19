@@ -9,7 +9,7 @@
  * cautious; nothing here talks it into a trade.
  */
 import { useCallback, useEffect, useState } from "react";
-import { api, type LearningReport } from "../lib/api";
+import { api, type LearningReport, type MentorReport } from "../lib/api";
 import type { Subscribe } from "../lib/stream";
 import { useStreamEvent } from "../lib/stream";
 import { Card, Empty, Pill, SimulationFootnote, Stat } from "../components/ui";
@@ -26,13 +26,33 @@ const bps = (value: number) => `${value >= 0 ? "+" : ""}${value.toFixed(1)} bps`
 
 export function Learning({ subscribe }: { subscribe: Subscribe }) {
   const [data, setData] = useState<LearningReport | null>(null);
+  const [mentor, setMentor] = useState<MentorReport | null>(null);
+  const [applying, setApplying] = useState("");
+  const [applyError, setApplyError] = useState("");
 
   const load = useCallback(() => {
     api.learning().then(setData).catch(() => undefined);
+    api.mentor().then(setMentor).catch(() => undefined);
   }, []);
 
   useEffect(load, [load]);
   useStreamEvent(subscribe, "trade.closed", load);
+
+  const applyProposal = useCallback(
+    async (proposalId: string) => {
+      setApplying(proposalId);
+      setApplyError("");
+      try {
+        await api.mentorApply(proposalId);
+        load();
+      } catch (error) {
+        setApplyError(error instanceof Error ? error.message : "could not apply");
+      } finally {
+        setApplying("");
+      }
+    },
+    [load],
+  );
 
   if (!data?.available) {
     return (
@@ -169,6 +189,73 @@ export function Learning({ subscribe }: { subscribe: Subscribe }) {
           </p>
         </Card>
       )}
+
+      {mentor?.available && (mentor.proposals?.length || mentor.applied?.length) ? (
+        <Card title="Mentor — proposed adjustments, validated by replay">
+          <p style={{ marginTop: 0, fontSize: 12.5, color: "var(--text-dim)" }}>
+            The Mentor only ever proposes <strong>tighter</strong> risk, and every proposal
+            is validated by replaying the recorded trades under the proposed rule — the
+            arithmetic decides, and a proposal the replay cannot justify is shown rejected.
+            Nothing is applied without your explicit click.
+          </p>
+          {applyError && (
+            <p style={{ color: "var(--neg)", fontSize: 12.5 }}>{applyError}</p>
+          )}
+          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            {(mentor.proposals ?? []).map((p) => (
+              <div
+                key={p.proposal_id}
+                className="card"
+                style={{
+                  borderLeft: `3px solid var(--${p.status === "validated" ? "accent" : "border-strong"})`,
+                }}
+              >
+                <div className="row" style={{ justifyContent: "space-between" }}>
+                  <strong style={{ fontSize: 13.5 }}>{p.title}</strong>
+                  <div className="row" style={{ gap: 8 }}>
+                    {p.applies === "next_session" && <Pill value="next session" />}
+                    <Pill
+                      value={p.status}
+                      tone={p.status === "validated" ? "ok" : "bad"}
+                    />
+                  </div>
+                </div>
+                <p style={{ margin: "8px 0 0", fontSize: 12.5 }}>{p.rationale}</p>
+                <p style={{ margin: "6px 0 0", fontSize: 12, color: "var(--text-dim)" }}>
+                  <strong>Replay:</strong> {p.validation.detail}
+                </p>
+                {p.status === "validated" && (
+                  <div className="row" style={{ marginTop: 10 }}>
+                    <button
+                      className="btn small primary"
+                      disabled={applying === p.proposal_id}
+                      onClick={() => applyProposal(p.proposal_id)}
+                    >
+                      {applying === p.proposal_id ? "Applying…" : "Apply (tightens risk)"}
+                    </button>
+                    <span style={{ fontSize: 11.5, color: "var(--text-faint)" }}>
+                      est. +{p.validation.delta_bps.toFixed(0)} bps over{" "}
+                      {p.validation.trades_affected} trades
+                    </span>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+          {(mentor.applied ?? []).length > 0 && (
+            <p className="footnote" style={{ marginTop: 12 }}>
+              Applied this session:{" "}
+              {(mentor.applied ?? [])
+                .map((a) => `${a.title} (${a.actor})`)
+                .join(" · ")}
+            </p>
+          )}
+        </Card>
+      ) : mentor?.available ? (
+        <Card title="Mentor — proposed adjustments, validated by replay">
+          <Empty message="No proposals. The record does not currently justify tightening anything — that is the Mentor saying the system is behaving." />
+        </Card>
+      ) : null}
 
       <Card title="Recent lessons">
         {lessons.length === 0 ? (

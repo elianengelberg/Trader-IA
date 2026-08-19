@@ -111,6 +111,12 @@ class ProfileChangeRequest(BaseModel):
     confirm: bool = False
 
 
+class AdvisorAskRequest(BaseModel):
+    """A question for the read-only Advisor. It can explain, never act."""
+
+    question: str = Field(min_length=1, max_length=2000)
+
+
 # --------------------------------------------------------------------------- app
 
 
@@ -476,6 +482,25 @@ def _register_routes(app: FastAPI, settings: Settings) -> None:
     async def learning(request: Request, _user: User = Depends(current_user)) -> dict[str, Any]:
         """What the system has learned from its own closed trades: lessons and guardrails."""
         return tia(request).learning_report()
+
+    @app.get("/api/antipatterns")
+    async def antipatterns(request: Request, _user: User = Depends(current_user)) -> dict[str, Any]:
+        """Curated trading anti-patterns, checked against the system's own recent trading."""
+        return tia(request).antipattern_report()
+
+    @app.post("/api/advisor/ask")
+    async def advisor_ask(
+        body: AdvisorAskRequest, request: Request, _user: User = Depends(current_user)
+    ) -> dict[str, Any]:
+        """Ask the read-only Advisor about the running system. It explains; it cannot act."""
+        return await tia(request).advisor_ask(body.question)
+
+    @app.get("/api/advisor/explain/{decision_id}")
+    async def advisor_explain(
+        decision_id: str, request: Request, _user: User = Depends(current_user)
+    ) -> dict[str, Any]:
+        """Explain one decision: why the system took or refused it, on what grounds."""
+        return await tia(request).advisor_explain(decision_id)
 
     @app.get("/api/capital")
     async def capital(request: Request, _user: User = Depends(current_user)) -> dict[str, Any]:

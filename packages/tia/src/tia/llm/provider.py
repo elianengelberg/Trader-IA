@@ -76,6 +76,12 @@ class LLMProvider(ABC):
 
     name: str = "abstract"
 
+    @property
+    def supports_narration(self) -> bool:
+        """Whether :meth:`narrate` reaches a real model. False for the offline mock, so the
+        Advisor answers from a deterministic briefing instead of pretending to converse."""
+        return False
+
     @abstractmethod
     async def assess(self, prompt: str, *, call_id: str) -> LLMResult:
         """Return a validated response, or raise.
@@ -83,6 +89,20 @@ class LLMProvider(ABC):
         Implementations must never return an unvalidated object: a caller that receives
         an :class:`LLMResult` is entitled to assume the schema held.
         """
+
+    async def narrate(
+        self, *, system: str, user: str, max_tokens: int = 1200
+    ) -> tuple[str, LLMUsage]:
+        """Free-form text for the read-only Advisor. Never touches the decision pipeline.
+
+        This is a *separate* channel from :meth:`assess`. ``assess`` is a forced tool call
+        that can only dampen or veto a trade; ``narrate`` produces prose to explain what the
+        system is doing, and has no path to place, size, or modify anything. The default
+        refuses, so a provider that cannot converse (the mock) makes the Advisor fall back
+        to a deterministic briefing rather than inventing one.
+        """
+        del system, user, max_tokens
+        raise LLMUnavailableError("this provider does not support free-form narration")
 
     async def close(self) -> None:  # pragma: no cover - default no-op
         return None
@@ -254,6 +274,10 @@ class AnthropicProvider(LLMProvider):
             max_retries=config.max_retries,
         )
 
+    @property
+    def supports_narration(self) -> bool:
+        return True
+
     async def assess(self, prompt: str, *, call_id: str) -> LLMResult:
         import time
 
@@ -302,6 +326,42 @@ class AnthropicProvider(LLMProvider):
                 call_id=call_id,
             ),
             raw=payload,
+        )
+
+    async def narrate(self, *, system: str, user: str, max_tokens: int = 1200) -> tuple[str, LLMUsage]:
+        """A plain-text answer for the Advisor. No tools are offered, so there is nothing
+        the model could call even if it tried — this channel cannot reach the trade path."""
+        import time
+
+        from anthropic import APIError, APITimeoutError
+
+        started = time.perf_counter()
+        try:
+            message = await self._client.messages.create(
+                model=self._config.model,
+                max_tokens=max_tokens,
+                system=system,
+                messages=[{"role": "user", "content": user}],
+            )
+        except APITimeoutError as exc:
+            raise LLMUnavailableError("Advisor request timed out", error=str(exc)) from exc
+        except APIError as exc:
+            raise LLMUnavailableError("Advisor request failed", error=str(exc)) from exc
+
+        latency_ms = (time.perf_counter() - started) * 1000.0
+        text = "".join(
+            getattr(block, "text", "")
+            for block in getattr(message, "content", []) or []
+            if getattr(block, "type", None) == "text"
+        ).strip()
+        if not text:
+            raise LLMUnavailableError("Advisor received an empty response")
+        usage = getattr(message, "usage", None)
+        return text, LLMUsage(
+            input_tokens=getattr(usage, "input_tokens", 0) or 0,
+            output_tokens=getattr(usage, "output_tokens", 0) or 0,
+            latency_ms=latency_ms,
+            model=self._config.model,
         )
 
     async def close(self) -> None:

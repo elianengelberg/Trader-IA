@@ -517,6 +517,33 @@ export interface LearningReport {
   explanation?: string;
 }
 
+export interface AdvisorAnswer {
+  question: string;
+  answer: string;
+  grounded_on: string[];
+  used_llm: boolean;
+  model: string;
+  note: string;
+}
+
+export interface AntiPatternCheck {
+  key: string;
+  title: string;
+  severity: string;
+  detail: string;
+  principle: string;
+}
+
+export interface AntiPatternReport {
+  available: boolean;
+  reason?: string;
+  worst_severity?: string;
+  alerts?: number;
+  watches?: number;
+  checks?: AntiPatternCheck[];
+  explanation?: string;
+}
+
 export interface CapitalView {
   simulated: boolean;
   currency: string;
@@ -621,6 +648,10 @@ export const api = {
   economics: () => get<Economics>("/economics"),
   analytics: () => get<Analytics>("/analytics"),
   learning: () => get<LearningReport>("/learning"),
+  antipatterns: () => get<AntiPatternReport>("/antipatterns"),
+  advisorAsk: (question: string) => post<AdvisorAnswer>("/advisor/ask", { question }),
+  advisorExplain: (decisionId: string) =>
+    get<AdvisorAnswer>(`/advisor/explain/${encodeURIComponent(decisionId)}`),
   capital: () => get<CapitalView>("/capital"),
   liveGate: () => get<GateReport>("/live/gate"),
   armLive: (confirmation: string) =>

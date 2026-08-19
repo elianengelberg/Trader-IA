@@ -31,6 +31,7 @@ VIEWS = [
     "Risk",
     "Ruin Analytics",
     "Learning",
+    "Ask the AI",
     "Live Trading",
     "System",
     "Logs",

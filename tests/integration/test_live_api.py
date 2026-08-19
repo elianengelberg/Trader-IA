@@ -404,6 +404,31 @@ async def test_learning_refuses_cleanly_when_nothing_is_running(
     assert "learn" in body["reason"].lower()
 
 
+async def test_the_advisor_answers_read_only_and_never_500s(
+    client: httpx.AsyncClient,
+) -> None:
+    """The read-only Advisor: it answers from system state, and with no model configured it
+    returns the grounded briefing rather than an error. It has no way to act."""
+    response = await client.post("/api/advisor/ask", json={"question": "what are you doing?"})
+    assert response.status_code == 200, response.text
+    body = response.json()
+    assert body["used_llm"] is False  # no API key in the test env
+    assert "answer" in body
+    # An unknown decision id is answered, not errored.
+    explain = await client.get("/api/advisor/explain/does-not-exist")
+    assert explain.status_code == 200
+    assert "no decision" in explain.json()["answer"].lower()
+
+
+async def test_the_behaviour_audit_refuses_cleanly_when_idle(
+    client: httpx.AsyncClient,
+) -> None:
+    response = await client.get("/api/antipatterns")
+    assert response.status_code == 200, response.text
+    body = response.json()
+    assert body["available"] is False
+
+
 async def test_the_order_book_endpoint_returns_live_depth(
     client: httpx.AsyncClient, monkeypatch: pytest.MonkeyPatch
 ) -> None:

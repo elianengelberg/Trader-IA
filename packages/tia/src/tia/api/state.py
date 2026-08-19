@@ -25,6 +25,7 @@ from typing import Any
 
 from tia.core.config import Settings
 from tia.core.logging import get_logger
+from tia.learning.antipatterns import AntiPatternMonitor
 from tia.persistence import (
     ActivationRepository,
     AssessmentRepository,
@@ -67,6 +68,11 @@ class AppState:
         self._dropped_events = 0
         self._request_errors = 0
         self._recent_backtests: deque[dict[str, Any]] = deque(maxlen=25)
+        #: The read-only Advisor and the behaviour auditor. The Advisor is built lazily and
+        #: cached so its language-model budget (the governor) is shared across questions;
+        #: the monitor is pure and stateless.
+        self._advisor: Any | None = None
+        self._antipatterns = AntiPatternMonitor()
 
     # ------------------------------------------------------------------ lifecycle
 
@@ -617,6 +623,132 @@ class AppState:
                 "24/7 paper session (or a demo run) and lessons appear here as trades close."
             ),
         }
+
+    # ------------------------------------------------------------------ advisor / audit
+
+    def _get_advisor(self) -> Any:
+        """Build the read-only Advisor once and cache it. Never raises — a missing key
+        downgrades the provider to the deterministic mock, which the Advisor handles."""
+        if self._advisor is None:
+            from tia.core.clock import SystemClock
+            from tia.llm.advisor import AdvisorService
+            from tia.llm.governance import LLMGovernor
+            from tia.llm.provider import build_provider
+
+            key = (
+                self.settings.anthropic_api_key.get_secret_value()
+                if self.settings.anthropic_api_key
+                else None
+            )
+            provider = build_provider(self.settings.llm, api_key=key)
+            governor = LLMGovernor(self.settings.llm, SystemClock())
+            self._advisor = AdvisorService(provider, governor, self.settings.llm)
+        return self._advisor
+
+    def _advisor_context(self) -> dict[str, Any]:
+        """Assemble the grounded facts the Advisor may answer from. Read-only; each source
+        is guarded so one missing panel cannot deny an answer built from the rest."""
+        context: dict[str, Any] = {}
+        for key, getter in (
+            ("state", self.runtime_snapshot),
+            ("positions", self.positions),
+            ("decisions", lambda: self.decisions(8, actionable_only=False)),
+            ("economics", self.economics),
+            ("learning", self.learning_report),
+            ("antipatterns", self.antipattern_report),
+        ):
+            with contextlib.suppress(Exception):
+                context[key] = getter()
+        return context
+
+    async def advisor_ask(self, question: str) -> dict[str, Any]:
+        """Answer a free-form question about the running system, grounded in its state."""
+        answer = await self._get_advisor().answer(question, self._advisor_context())
+        return answer.as_dict()
+
+    async def advisor_explain(self, decision_id: str) -> dict[str, Any]:
+        """Explain one decision: why the system took or refused it, on what grounds."""
+        focus = self.decision(decision_id)
+        if focus is None:
+            return {
+                "question": f"explain decision {decision_id}",
+                "answer": (
+                    "There is no decision with that id in the current session. Open the AI "
+                    "Decisions tab and pick one that is still in the journal."
+                ),
+                "grounded_on": [],
+                "used_llm": False,
+                "model": "",
+                "note": "decision not found",
+            }
+        context = self._advisor_context()
+        context["focus_decision"] = focus
+        question = (
+            f"Explain decision {decision_id} for {focus.get('symbol')}: why did the system "
+            f"take or refuse this {focus.get('direction')} trade, and on what grounds?"
+        )
+        answer = await self._get_advisor().answer(question, context)
+        return answer.as_dict()
+
+    def _antipattern_snapshot(self) -> dict[str, Any] | None:
+        """A read of recent behaviour for the audit, uniform across demo and live sessions.
+
+        Recent trades come from the learning report (which already prefers the live
+        session); the exposure and streak figures come from the demo runtime's snapshot.
+        Returns ``None`` when nothing is running.
+        """
+        running = self.runtime is not None or (
+            self.live_runtime is not None and self.live_runtime.is_running
+        )
+        if not running:
+            return None
+        learning = self.learning_report()
+        lessons = learning.get("recent_lessons", []) if learning.get("available") else []
+        recent_trades = [
+            {
+                "net_bps": lesson.get("realised_net_bps", 0.0),
+                "gross_bps": lesson.get("realised_net_bps", 0.0) + lesson.get("fees_bps", 0.0),
+                "fees_bps": lesson.get("fees_bps", 0.0),
+                "direction": lesson.get("direction"),
+                "symbol": lesson.get("symbol"),
+                "closed_at": lesson.get("closed_at"),
+            }
+            for lesson in lessons
+        ]
+        snapshot = self.runtime_snapshot()
+        risk = snapshot.get("risk", {}) or {}
+        capital = snapshot.get("capital", {}) or {}
+        limits = risk.get("limits", {}) or {}
+        streak = getattr(self.live_runtime, "_consecutive_losses", None)
+        if streak is None:
+            streak = getattr(self.runtime, "_consecutive_losses", 0)
+        return {
+            "recent_trades": recent_trades,
+            "trades_today": risk.get("trades_today", 0),
+            "max_trades_per_day": limits.get("max_trades_per_day", 0),
+            "consecutive_losses": streak or 0,
+            "positions": [
+                {
+                    "symbol": p.get("symbol"),
+                    "direction": p.get("direction"),
+                    "notional": p.get("notional", 0.0),
+                }
+                for p in self.positions()
+            ],
+            "equity": capital.get("equity", 0.0),
+            "new_trades_allowed": risk.get("new_trades_allowed", True),
+            "risk_mode": risk.get("mode", ""),
+        }
+
+    def antipattern_report(self) -> dict[str, Any]:
+        """Audit recent trading against the curated set of trading anti-patterns."""
+        snapshot = self._antipattern_snapshot()
+        if snapshot is None:
+            return {
+                "available": False,
+                "reason": "no session is running; the behaviour audit needs recent trades.",
+            }
+        return {"available": True, **self._antipatterns.report(snapshot)}
 
     def analytics(self) -> dict[str, Any]:
         """Ruin probability and safe sizing, computed from this run's closed trades.

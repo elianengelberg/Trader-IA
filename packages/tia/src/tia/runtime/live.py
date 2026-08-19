@@ -55,6 +55,7 @@ from tia.domain.orders import Fill, Order, OrderIntent
 from tia.economics.costs import CostModel, FeeSchedule, MarketConditions
 from tia.economics.expected_value import EdgeEstimator, ExpectedValueEngine, Outcome
 from tia.execution.provider import ExecutionProvider
+from tia.learning.retrospective import RetrospectiveEngine
 from tia.live.gate import LiveActivationToken, configuration_fingerprint
 from tia.portfolio.capital import CapitalLedger, CapitalPolicy
 from tia.quant.features import FeatureBuilder
@@ -206,6 +207,7 @@ class LiveRuntime:
         persist: Callable[[str, dict[str, Any]], Any] | None = None,
         on_event: Callable[[dict[str, Any]], None] | None = None,
         prior_outcomes: Sequence[Outcome] = (),
+        prior_reviews: Sequence[dict[str, Any]] = (),
         symbol_filters: dict[str, Any] | None = None,
         poll_interval_seconds: float = 5.0,
         reconcile_every_cycles: int = 12,
@@ -286,6 +288,12 @@ class LiveRuntime:
             threshold_bps=settings.live.ev_threshold_bps,
             max_cost_ratio=settings.live.max_cost_ratio,
         )
+        # The retrospective reads a lesson from every closed trade and — unlike in the demo
+        # — its guardrails *act*: a bucket that has recently disappointed must clear a
+        # higher edge threshold before this session will trade it again. Rebuilt from the
+        # persisted trade record so a restart keeps the lessons, exactly like the estimator.
+        self._retro = RetrospectiveEngine()
+        self._retro.record_many(list(prior_reviews))
         if execution.is_live:
             # Real money: the configured ceiling, whose fail-closed default of zero is
             # rejected by CapitalPolicy — exactly the refusal we want.
@@ -333,6 +341,7 @@ class LiveRuntime:
         self.counters: dict[str, int] = {
             "cycles": 0, "bars": 0, "quality_skipped": 0, "signals": 0,
             "risk_rejected": 0, "budget_rejected": 0, "ev_rejected": 0,
+            "guardrail_rejected": 0,
             "orders": 0, "fills": 0, "reconciliations": 0, "reconciliation_breaks": 0,
             "unknown_order_states": 0, "skew_halts": 0,
         }
@@ -785,6 +794,32 @@ class LiveRuntime:
             )
             return
 
+        # The learning guardrail: a bucket that has recently lost money or overstated its
+        # edge must clear a *raised* threshold before this session re-enters it. This can
+        # only ever refuse a trade the EV engine would have taken — it never authorises one.
+        guard = self._retro.guardrail_for(
+            regime=regime.regime,
+            direction=signal.direction,
+            confidence=signal.confidence,
+        )
+        if guard.is_active and evaluation.net_edge_bps < (
+            evaluation.threshold_bps + guard.threshold_add_bps
+        ):
+            self.counters["guardrail_rejected"] += 1
+            self._emit(
+                "live.no_trade",
+                {
+                    "correlation_id": correlation_id,
+                    "reason": (
+                        f"learning guardrail — net edge {evaluation.net_edge_bps:.1f} bps "
+                        f"below the raised bar of "
+                        f"{evaluation.threshold_bps + guard.threshold_add_bps:.1f} bps. "
+                        f"{guard.reason}"
+                    ),
+                },
+            )
+            return
+
         await self._submit(decision, signal, correlation_id)
         self._entry_beliefs = {
             "regime": regime.regime,
@@ -975,6 +1010,17 @@ class LiveRuntime:
                 net_return_bps=net_bps,
             )
         )
+        self._retro.review(
+            regime=beliefs["regime"],
+            direction=beliefs["direction"],
+            confidence=beliefs["confidence"],
+            expected_net_bps=beliefs["expected_net_bps"],
+            realised_net_bps=net_bps,
+            fees_bps=fees_bps,
+            closed_at=exit_fill.filled_at,
+            signal_id=beliefs["signal_id"],
+            symbol=self._symbol,
+        )
         self._consecutive_losses = 0 if net_bps > 0 else self._consecutive_losses + 1
         self._ledger.record_realised_pnl(
             notional * net_bps / 10_000.0, at=exit_fill.filled_at
@@ -1150,6 +1196,18 @@ class LiveRuntime:
             "at": latest.close_time.isoformat(),
             "regime": regime,
         }
+
+    def learning_report(self) -> dict[str, Any]:
+        """What this session has learned from its own closed trades, for the Learning view.
+
+        Unlike the demo, this session *acts* on the lessons: ``applies_guardrails`` is true,
+        and ``guardrail_rejected`` counts the trades the raised threshold has refused.
+        """
+        report = self._retro.report()
+        report["applies_guardrails"] = True
+        report["source"] = "live" if self._execution.is_live else "paper-live"
+        report["guardrail_rejected"] = self.counters.get("guardrail_rejected", 0)
+        return report
 
     def snapshot(self) -> dict[str, Any]:
         ledger = self._ledger.snapshot()

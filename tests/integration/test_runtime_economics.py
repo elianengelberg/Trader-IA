@@ -114,6 +114,28 @@ async def test_a_closed_round_trip_becomes_evidence_in_the_right_bucket() -> Non
     assert sum(coverage.values()) == len(engine.closed_trades)
 
 
+async def test_every_closed_trade_becomes_a_readable_lesson() -> None:
+    """The learning layer, wired in: each closed round trip is scored against the edge it
+    was taken on, and the count of lessons matches the count of closed trades exactly."""
+    engine = await run_engine()
+
+    assert engine.closed_trades, "the run closed no round trips, so nothing was learned"
+    report = engine.learning_report()
+
+    assert report["reviews"] == len(engine.closed_trades)
+    assert report["wins"] + report["losses"] == report["reviews"]
+    # The demo reads lessons but does not act on them — it must say so, so the dashboard
+    # never implies the teaching run is tightening its own risk.
+    assert report["applies_guardrails"] is False
+    assert report["source"] == "demo"
+    # Every recent lesson carries a category and a human-readable headline.
+    for lesson in report["recent_lessons"]:
+        assert lesson["category"] in {
+            "edge_confirmed", "unexpected_loss", "edge_overestimated", "edge_underestimated"
+        }
+        assert lesson["headline"]
+
+
 async def test_realised_returns_are_recorded_net_of_fees_actually_paid() -> None:
     """Gross would double-count: the EV engine subtracts costs again downstream. An edge
     estimate built from gross returns overstates every expectation by a round trip."""

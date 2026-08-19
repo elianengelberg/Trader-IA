@@ -351,6 +351,10 @@ DECISION_PATH = (
     # decides whether it may be real. All three feed decisions; none may read the wall
     # clock, so that a replayed session reaches the same verdicts it reached live.
     "economics", "portfolio", "live",
+    # The retrospective: it scores closed trades and feeds guardrails back into the
+    # decision. Pure and clock-free by construction — it receives each trade's close
+    # time, so replaying the same trades reproduces the same lessons and the same guards.
+    "learning",
     # Persistence belongs here rather than in the exemption: it *receives* timestamps
     # and never invents one, so a wall-clock read appearing in it would mean a stored
     # record disagreed with the decision it describes.

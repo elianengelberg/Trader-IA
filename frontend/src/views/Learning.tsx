@@ -1,0 +1,257 @@
+/**
+ * What the system has learned from its own closed trades.
+ *
+ * The Expected Value engine already learns silently — it revises a bucket's edge down after
+ * a bad trade and refuses buckets it has no evidence for. This page makes that legible: for
+ * every closed round trip it shows what the system *expected* against what it *got*, files
+ * the gap as a categorised lesson, and — on the live session — raises the bar for exactly
+ * the patterns that have recently disappointed. It can only ever make the system more
+ * cautious; nothing here talks it into a trade.
+ */
+import { useCallback, useEffect, useState } from "react";
+import { api, type LearningReport } from "../lib/api";
+import type { Subscribe } from "../lib/stream";
+import { useStreamEvent } from "../lib/stream";
+import { Card, Empty, Pill, SimulationFootnote, Stat } from "../components/ui";
+import { clock, titleCase } from "../lib/format";
+
+const CATEGORY: Record<string, { label: string; tone: string }> = {
+  edge_confirmed: { label: "Confirmed", tone: "ok" },
+  unexpected_loss: { label: "Unexpected loss", tone: "bad" },
+  edge_overestimated: { label: "Overestimated", tone: "warn" },
+  edge_underestimated: { label: "Underestimated", tone: "info" },
+};
+
+const bps = (value: number) => `${value >= 0 ? "+" : ""}${value.toFixed(1)} bps`;
+
+export function Learning({ subscribe }: { subscribe: Subscribe }) {
+  const [data, setData] = useState<LearningReport | null>(null);
+
+  const load = useCallback(() => {
+    api.learning().then(setData).catch(() => undefined);
+  }, []);
+
+  useEffect(load, [load]);
+  useStreamEvent(subscribe, "trade.closed", load);
+
+  if (!data?.available) {
+    return (
+      <>
+        <h1>Learning</h1>
+        <p className="section-note">
+          The system learns from its own closed trades: every round trip is scored against
+          the edge it was taken on, and recurring disappointments make it warier of that
+          exact setup. Nothing here is an opinion scraped from the internet — it is the
+          system&apos;s own track record, read back to it.
+        </p>
+        <Card>
+          <Empty message={data?.reason ?? "Loading…"} />
+        </Card>
+      </>
+    );
+  }
+
+  const acts = Boolean(data.applies_guardrails);
+  const meanErr = data.mean_calibration_error_bps ?? 0;
+  const categories = data.category_counts ?? {};
+  const guardrails = data.active_guardrails ?? [];
+  const patterns = data.patterns ?? [];
+  const lessons = data.recent_lessons ?? [];
+
+  return (
+    <>
+      <h1>Learning</h1>
+      <p className="section-note">
+        Every closed trade is judged against the edge it was taken on. On the 24/7 paper
+        session the lessons <strong>act</strong>: a pattern that has recently lost money or
+        overstated its edge must clear a higher threshold before the system re-enters it —
+        and the penalty eases on its own as the pattern comes back in line. The system only
+        ever grows more cautious from what it learns; it never talks itself into a trade.
+      </p>
+
+      <div
+        className="card"
+        style={{
+          marginBottom: 16,
+          borderLeft: `3px solid var(--${acts ? "accent" : "border-strong"})`,
+        }}
+      >
+        <div className="row" style={{ justifyContent: "space-between" }}>
+          <strong>
+            {acts
+              ? "Live session — the lessons are tightening risk."
+              : "Demo run — lessons are being read, but not acted on."}
+          </strong>
+          <Pill value={data.source ?? "unknown"} tone={acts ? "ok" : ""} />
+        </div>
+        <p style={{ margin: "8px 0 0", color: "var(--text-dim)", fontSize: 13 }}>
+          {acts
+            ? `The guardrails below have refused ${data.guardrail_rejected ?? 0} trade(s) so far in this session.`
+            : "The demo explores every bucket to produce evidence; the live session is where these lessons actually gate trades."}
+        </p>
+      </div>
+
+      <div className="grid cols-4" style={{ marginBottom: 16 }}>
+        <div className="card">
+          <Stat label="Trades reviewed" value={String(data.reviews ?? 0)}
+            sub={`${data.wins ?? 0} up · ${data.losses ?? 0} down`} />
+        </div>
+        <div className="card">
+          <Stat label="Win rate" value={`${((data.win_rate ?? 0) * 100).toFixed(0)}%`}
+            tone={(data.win_rate ?? 0) >= 0.5 ? "pos" : "neg"} sub="of closed round trips" />
+        </div>
+        <div className="card">
+          <Stat
+            label="Mean calibration error"
+            value={bps(meanErr)}
+            tone={meanErr >= -3 ? "flat" : "neg"}
+            sub="realised minus expected"
+          />
+        </div>
+        <div className="card">
+          <Stat label="Patterns being guarded" value={String(guardrails.length)}
+            tone={guardrails.length > 0 ? "warn" : "flat"}
+            sub={`${data.concerns ?? 0} concerning trades`} />
+        </div>
+      </div>
+
+      {Object.keys(categories).length > 0 && (
+        <Card title="What the lessons were">
+          <div className="grid cols-4">
+            {Object.entries(categories).map(([key, count]) => (
+              <Stat
+                key={key}
+                label={CATEGORY[key]?.label ?? titleCase(key)}
+                value={String(count)}
+                tone={
+                  key === "unexpected_loss"
+                    ? "neg"
+                    : key === "edge_confirmed"
+                      ? "pos"
+                      : "flat"
+                }
+              />
+            ))}
+          </div>
+        </Card>
+      )}
+
+      {guardrails.length > 0 && (
+        <Card title="Active guardrails — where the system is now warier">
+          <div className="scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Pattern</th>
+                  <th className="num">Threshold add</th>
+                  <th className="num">Size</th>
+                  <th>Why</th>
+                </tr>
+              </thead>
+              <tbody>
+                {guardrails.map((g) => (
+                  <tr key={g.pattern}>
+                    <td className="mono">{g.pattern}</td>
+                    <td className="num mono" style={{ color: "var(--neg)" }}>
+                      +{g.threshold_add_bps.toFixed(1)} bps
+                    </td>
+                    <td className="num mono">×{g.size_multiplier.toFixed(2)}</td>
+                    <td style={{ color: "var(--text-dim)", fontSize: 12 }}>{g.reason}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="footnote">
+            A guardrail can only refuse a trade the rest of the pipeline would have taken. It
+            is recomputed from recent trades every time, so it disappears on its own once the
+            pattern behaves again — there is no penalty to reset by hand.
+          </p>
+        </Card>
+      )}
+
+      <Card title="Recent lessons">
+        {lessons.length === 0 ? (
+          <Empty message="No closed trades yet. Lessons appear here as round trips close." />
+        ) : (
+          <div className="scroll tall">
+            <table>
+              <thead>
+                <tr>
+                  <th>When</th>
+                  <th>Lesson</th>
+                  <th>Verdict</th>
+                  <th className="num">Expected</th>
+                  <th className="num">Realised</th>
+                  <th className="num">Miss</th>
+                </tr>
+              </thead>
+              <tbody>
+                {lessons.map((l) => (
+                  <tr key={`${l.signal_id}-${l.closed_at}`}>
+                    <td className="mono" style={{ whiteSpace: "nowrap" }}>{clock(l.closed_at)}</td>
+                    <td>
+                      {l.headline}
+                      {l.cost_overrun && (
+                        <span style={{ color: "var(--warn, #c90)", marginLeft: 6, fontSize: 11 }}>
+                          · fees over budget
+                        </span>
+                      )}
+                    </td>
+                    <td>
+                      <Pill
+                        value={CATEGORY[l.category]?.label ?? l.category}
+                        tone={CATEGORY[l.category]?.tone ?? ""}
+                      />
+                    </td>
+                    <td className="num mono">{bps(l.expected_net_bps)}</td>
+                    <td className="num mono" style={{ color: l.is_win ? "var(--pos)" : "var(--neg)" }}>
+                      {bps(l.realised_net_bps)}
+                    </td>
+                    <td className="num mono" style={{ color: l.calibration_error_bps < 0 ? "var(--neg)" : "var(--text-dim)" }}>
+                      {bps(l.calibration_error_bps)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </Card>
+
+      {patterns.length > 0 && (
+        <Card title="Every pattern seen — worst calibration first">
+          <div className="scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Pattern</th>
+                  <th className="num">Trades</th>
+                  <th className="num">Win rate</th>
+                  <th className="num">Mean miss</th>
+                  <th>Last lesson</th>
+                </tr>
+              </thead>
+              <tbody>
+                {patterns.map((p) => (
+                  <tr key={p.pattern}>
+                    <td className="mono">{p.pattern}</td>
+                    <td className="num mono">{p.reviews}</td>
+                    <td className="num mono">{(p.win_rate * 100).toFixed(0)}%</td>
+                    <td className="num mono" style={{ color: p.mean_error_bps < -3 ? "var(--neg)" : "var(--text-dim)" }}>
+                      {bps(p.mean_error_bps)}
+                    </td>
+                    <td style={{ color: "var(--text-dim)", fontSize: 12 }}>{p.last_headline}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Card>
+      )}
+
+      <p className="footnote">{data.explanation}</p>
+      <SimulationFootnote />
+    </>
+  );
+}

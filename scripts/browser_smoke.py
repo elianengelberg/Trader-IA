@@ -30,6 +30,7 @@ VIEWS = [
     "AI Decisions",
     "Risk",
     "Ruin Analytics",
+    "Learning",
     "Live Trading",
     "System",
     "Logs",

@@ -452,6 +452,71 @@ export interface Analytics {
   profile?: Record<string, number | string>;
 }
 
+export interface LessonReview {
+  pattern: string;
+  regime: string;
+  direction: string;
+  confidence: number;
+  expected_net_bps: number;
+  realised_net_bps: number;
+  fees_bps: number;
+  calibration_error_bps: number;
+  category: string;
+  cost_overrun: boolean;
+  headline: string;
+  lesson: string;
+  closed_at: string;
+  signal_id: string;
+  symbol: string;
+  is_win: boolean;
+  is_concern: boolean;
+}
+
+export interface LessonPattern {
+  pattern: string;
+  regime: string;
+  direction: string;
+  reviews: number;
+  wins: number;
+  losses: number;
+  concerns: number;
+  cost_overruns: number;
+  win_rate: number;
+  mean_error_bps: number;
+  mean_realised_bps: number;
+  category_counts: Record<string, number>;
+  last_seen: string | null;
+  last_headline: string;
+}
+
+export interface LessonGuardrail {
+  pattern: string;
+  threshold_add_bps: number;
+  size_multiplier: number;
+  reason: string;
+  based_on_trades: number;
+  active: boolean;
+}
+
+export interface LearningReport {
+  available: boolean;
+  reason?: string;
+  source?: string;
+  applies_guardrails?: boolean;
+  guardrail_rejected?: number;
+  reviews?: number;
+  wins?: number;
+  losses?: number;
+  concerns?: number;
+  win_rate?: number;
+  mean_calibration_error_bps?: number;
+  category_counts?: Record<string, number>;
+  patterns?: LessonPattern[];
+  active_guardrails?: LessonGuardrail[];
+  recent_lessons?: LessonReview[];
+  explanation?: string;
+}
+
 export interface CapitalView {
   simulated: boolean;
   currency: string;
@@ -555,6 +620,7 @@ export const api = {
   strategies: () => get<Strategy[]>("/strategies"),
   economics: () => get<Economics>("/economics"),
   analytics: () => get<Analytics>("/analytics"),
+  learning: () => get<LearningReport>("/learning"),
   capital: () => get<CapitalView>("/capital"),
   liveGate: () => get<GateReport>("/live/gate"),
   armLive: (confirmation: string) =>

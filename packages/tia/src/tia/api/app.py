@@ -472,6 +472,11 @@ def _register_routes(app: FastAPI, settings: Settings) -> None:
         """Probability of ruin and safe sizing, from this run's closed trades."""
         return tia(request).analytics()
 
+    @app.get("/api/learning")
+    async def learning(request: Request, _user: User = Depends(current_user)) -> dict[str, Any]:
+        """What the system has learned from its own closed trades: lessons and guardrails."""
+        return tia(request).learning_report()
+
     @app.get("/api/capital")
     async def capital(request: Request, _user: User = Depends(current_user)) -> dict[str, Any]:
         """Contributed capital, trading P&L, and the two kept strictly apart."""

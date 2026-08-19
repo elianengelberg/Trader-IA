@@ -65,6 +65,7 @@ from tia.economics.expected_value import (
 )
 from tia.execution.paper import PaperExecutionProvider
 from tia.execution.reconciliation import LedgerSnapshot, ReconciliationEngine
+from tia.learning.retrospective import RetrospectiveEngine
 from tia.llm.context import ContextRequest, ContextService
 from tia.llm.governance import LLMGovernor
 from tia.llm.provider import MockLLMProvider, build_provider
@@ -297,6 +298,11 @@ class RuntimeEngine:
                 break
             self._consecutive_losses += 1
         self._prior_outcome_count = len(prior_outcomes)
+        # The retrospective is observe-only in the demo: it reads a lesson from every close
+        # so the Learning view fills as the run trades, but it does not gate the demo's
+        # trades. The demo's job is to explore every bucket and produce evidence; the live
+        # session is where the lessons actually tighten risk.
+        self._retro = RetrospectiveEngine()
         self._ev = ExpectedValueEngine(
             self._edges,
             threshold_bps=settings.live.ev_threshold_bps,
@@ -823,6 +829,17 @@ class RuntimeEngine:
                 confidence=beliefs["confidence"],
                 net_return_bps=net_bps,
             )
+        )
+        self._retro.review(
+            regime=beliefs["regime"],
+            direction=beliefs["direction"],
+            confidence=beliefs["confidence"],
+            expected_net_bps=beliefs["expected_net_bps"],
+            realised_net_bps=net_bps,
+            fees_bps=fees_bps,
+            closed_at=closed_at,
+            signal_id=beliefs["signal_id"],
+            symbol=symbol,
         )
 
         # A losing streak shrinks the next budget. It never grows it — see
@@ -1450,6 +1467,18 @@ class RuntimeEngine:
             "counters": self.counters.as_dict(),
             "last_error": self.last_error,
         }
+
+    def learning_report(self) -> dict[str, Any]:
+        """What the system has learned from its own closed trades, for the Learning view.
+
+        Observe-only in the demo: it reflects the lessons read from this run's trades but
+        does not gate them. ``applies_guardrails`` says so, so the dashboard never implies
+        the demo is acting on what it learns.
+        """
+        report = self._retro.report()
+        report["applies_guardrails"] = False
+        report["source"] = "demo"
+        return report
 
     def economics_snapshot(self) -> dict[str, Any]:
         """The trade-or-not machinery, as the strategy page shows it.

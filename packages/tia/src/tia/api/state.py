@@ -217,6 +217,35 @@ class AppState:
             _log.warning("edge_state_load_failed", error=str(exc)[:300])
             return []
 
+    async def _load_prior_reviews(self) -> list[dict[str, Any]]:
+        """Rebuild the retrospective's input from the persisted trade record.
+
+        The same rows the estimator learns from, but kept whole — the retrospective needs
+        the expectation and the fees each trade carried, which the lossy ``Outcome`` drops.
+        Degrades to an empty list on any failure, never a crash: a session that cannot read
+        its past lessons still trades, it just starts its guardrails from a clean slate.
+        """
+        try:
+            async with self.database.session() as session:
+                rows = await EdgeStateRepository(session).load_all()
+            return [
+                {
+                    "regime": row.regime,
+                    "direction": row.direction,
+                    "confidence": row.confidence,
+                    "expected_net_bps": row.expected_net_bps,
+                    "net_bps": row.net_bps,
+                    "fees_bps": row.fees_bps,
+                    "closed_at": row.closed_at,
+                    "signal_id": row.signal_id,
+                    "symbol": row.symbol,
+                }
+                for row in rows
+            ]
+        except Exception as exc:
+            _log.warning("edge_review_load_failed", error=str(exc)[:300])
+            return []
+
     async def stop_run(self) -> dict[str, Any]:
         if self.runtime is None:
             return {"state": "stopped", "detail": "no run was active"}
@@ -569,6 +598,26 @@ class AppState:
             }
         return {"available": True, **self.runtime.economics_snapshot()}
 
+    def learning_report(self) -> dict[str, Any]:
+        """What the system has learned from its own closed trades.
+
+        Prefers the 24/7 paper-live session, because that is the one whose guardrails
+        actually tighten risk; falls back to the demo run, which reads the same lessons but
+        only to show them. Returns a refusal, never a crash, when nothing is running.
+        """
+        session = self.live_runtime
+        if session is not None and session.is_running:
+            return {"available": True, **session.learning_report()}
+        if self.runtime is not None:
+            return {"available": True, **self.runtime.learning_report()}
+        return {
+            "available": False,
+            "reason": (
+                "no session is running. The system learns from closed trades — start the "
+                "24/7 paper session (or a demo run) and lessons appear here as trades close."
+            ),
+        }
+
     def analytics(self) -> dict[str, Any]:
         """Ruin probability and safe sizing, computed from this run's closed trades.
 
@@ -877,6 +926,7 @@ class AppState:
             persist=self._persist,
             on_event=self.broadcast,
             prior_outcomes=await self._load_prior_outcomes(),
+            prior_reviews=await self._load_prior_reviews(),
         )
 
     async def _record_activation(self, **values: Any) -> None:
@@ -948,6 +998,7 @@ class AppState:
             persist=self._persist,
             on_event=self.broadcast,
             prior_outcomes=await self._load_prior_outcomes(),
+            prior_reviews=await self._load_prior_reviews(),
             poll_interval_seconds=10.0,
         )
         await runtime.start()

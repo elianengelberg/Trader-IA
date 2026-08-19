@@ -392,6 +392,18 @@ async def test_paper_start_refuses_cleanly_when_the_data_host_is_unreachable(
     assert (await client.get("/api/live")).json()["active"] is False
 
 
+async def test_learning_refuses_cleanly_when_nothing_is_running(
+    client: httpx.AsyncClient,
+) -> None:
+    """No session, no lessons — but a readable refusal, never a 500. The system learns
+    from closed trades, and there are none until something trades."""
+    response = await client.get("/api/learning")
+    assert response.status_code == 200, response.text
+    body = response.json()
+    assert body["available"] is False
+    assert "learn" in body["reason"].lower()
+
+
 async def test_the_order_book_endpoint_returns_live_depth(
     client: httpx.AsyncClient, monkeypatch: pytest.MonkeyPatch
 ) -> None:

@@ -301,6 +301,12 @@ class LiveConfig(FrozenModel):
 
     #: Minimum net edge, in basis points, after all costs, before a trade is worth taking.
     ev_threshold_bps: float = Field(5.0, ge=0, le=1000)
+    #: Paper-only exploration budget: how many trades per UTC day the session may take in
+    #: buckets that **lack** evidence (never in buckets the evidence says lose, and never
+    #: past a learning guardrail). Exploration buys lessons with simulated money — it is
+    #: ignored outright over a live execution provider, no matter what this says, because
+    #: with real money "I don't know yet" is a reason not to trade, not an experiment.
+    exploration_trades_per_day: int = Field(0, ge=0, le=50)
     #: Costs may not exceed this fraction of the expected gross edge.
     max_cost_ratio: float = Field(0.6, gt=0, le=1.0)
 

@@ -356,6 +356,67 @@ async def test_paper_realtime_runs_without_a_token_and_says_so() -> None:
     await runtime.stop()
 
 
+async def test_exploration_is_paper_only_and_bounded() -> None:
+    """The exploration budget's three load-bearing properties.
+
+    1. Over a live execution provider it is OFF no matter what the config says — with
+       real money, "no evidence yet" is a reason not to trade, not an experiment.
+    2. In paper it takes trades ONLY in evidence-free buckets, and no more per day than
+       the configured budget.
+    3. The budget rolls with the injected clock's UTC date.
+    """
+    # (1) The hard rule: config says explore, provider says live -> disabled.
+    clock = SimulatedClock(START)
+    token = real_token(clock)
+    live_execution = FakeExecution(live_token=token, clock=clock)
+    live_runtime = LiveRuntime(
+        live_settings(exploration_trades_per_day=5),
+        activation=token,
+        market_data=FakeMarketData([]),
+        execution=live_execution,
+        clock=clock,
+    )
+    assert live_execution.is_live
+    assert live_runtime.exploration_enabled is False
+
+    # (2) Paper, empty estimator, budget of 2: signals that EV would refuse for lack of
+    # evidence become at most two exploration entries.
+    runtime, _execution, market = build_runtime_paper()
+    runtime._settings = live_settings(exploration_trades_per_day=2)
+    assert runtime.exploration_enabled is True
+    await runtime.start()
+    for _ in range(400):
+        market.advance()
+        await runtime._cycle_once()
+    await runtime.stop()
+
+    explored = runtime.counters["exploration_trades"]
+    assert 1 <= explored <= 2, f"expected 1-2 exploration trades, got {explored}"
+    assert runtime.counters["orders"] >= explored
+
+    # (3) The daily budget resets when the clock's date changes, not before.
+    fresh, _, _ = build_runtime_paper()
+    fresh._settings = live_settings(exploration_trades_per_day=1)
+    assert fresh._exploration_budget_left() is True
+    fresh._exploration_used += 1
+    assert fresh._exploration_budget_left() is False
+    fresh._clock.advance_by(timedelta(days=1))
+    assert fresh._exploration_budget_left() is True
+
+
+async def test_exploration_defaults_off_and_changes_nothing() -> None:
+    """With the default budget of zero the session behaves exactly as before: every
+    evidence-free signal is refused and no order exists."""
+    runtime, _execution, market = build_runtime_paper()
+    await runtime.start()
+    for _ in range(400):
+        market.advance()
+        await runtime._cycle_once()
+    await runtime.stop()
+    assert runtime.counters["exploration_trades"] == 0
+    assert runtime.counters["orders"] == 0
+
+
 async def test_the_ev_threshold_can_be_raised_mid_session_but_never_lowered() -> None:
     """The one runtime parameter the Mentor may touch, and only in one direction. The
     refusal lives in the runtime itself, not in the caller's manners."""

@@ -341,10 +341,34 @@ class LiveRuntime:
         self.counters: dict[str, int] = {
             "cycles": 0, "bars": 0, "quality_skipped": 0, "signals": 0,
             "risk_rejected": 0, "budget_rejected": 0, "ev_rejected": 0,
-            "guardrail_rejected": 0,
+            "guardrail_rejected": 0, "exploration_trades": 0,
             "orders": 0, "fills": 0, "reconciliations": 0, "reconciliation_breaks": 0,
             "unknown_order_states": 0, "skew_halts": 0,
         }
+        self._exploration_used = 0
+        self._exploration_day = ""
+
+    @property
+    def exploration_enabled(self) -> bool:
+        """Whether exploration trades exist at all for this runtime.
+
+        Two conditions, and the second is not configurable: a positive budget in config,
+        AND a simulated execution provider. Over real money this is False no matter what
+        the configuration says — exploration buys lessons, and lessons are only worth
+        buying with simulated funds.
+        """
+        return (
+            self._settings.live.exploration_trades_per_day > 0
+            and not self._execution.is_live
+        )
+
+    def _exploration_budget_left(self) -> bool:
+        """Per-UTC-day budget, keyed on the injected clock so replays behave."""
+        today = self._clock.now().date().isoformat()
+        if today != self._exploration_day:
+            self._exploration_day = today
+            self._exploration_used = 0
+        return self._exploration_used < self._settings.live.exploration_trades_per_day
 
     # ------------------------------------------------------------------ properties
 
@@ -809,14 +833,6 @@ class LiveRuntime:
                 quantity=decision.approved_quantity, conditions=conditions
             ),
         )
-        if not evaluation.is_tradeable:
-            self.counters["ev_rejected"] += 1
-            self._emit(
-                "live.no_trade",
-                {"correlation_id": correlation_id, "reason": evaluation.explain()},
-            )
-            return
-
         # The learning guardrail: a bucket that has recently lost money or overstated its
         # edge must clear a *raised* threshold before this session re-enters it. This can
         # only ever refuse a trade the EV engine would have taken — it never authorises one.
@@ -825,7 +841,31 @@ class LiveRuntime:
             direction=signal.direction,
             confidence=signal.confidence,
         )
-        if guard.is_active and evaluation.net_edge_bps < (
+
+        exploring = False
+        if not evaluation.is_tradeable:
+            # Paper-only exploration: a bucket the estimator knows NOTHING about may be
+            # traded a bounded number of times per day, purely to buy evidence with
+            # simulated money. Three refusals stand regardless: evidence that says the
+            # bucket loses (edge_estimate present) is respected, an active guardrail is
+            # respected, and a live execution provider disables exploration entirely —
+            # with real money, "I don't know yet" is a reason not to trade.
+            if (
+                self.exploration_enabled
+                and evaluation.edge_estimate is None
+                and not guard.is_active
+                and self._exploration_budget_left()
+            ):
+                exploring = True
+            else:
+                self.counters["ev_rejected"] += 1
+                self._emit(
+                    "live.no_trade",
+                    {"correlation_id": correlation_id, "reason": evaluation.explain()},
+                )
+                return
+
+        if not exploring and guard.is_active and evaluation.net_edge_bps < (
             evaluation.threshold_bps + guard.threshold_add_bps
         ):
             self.counters["guardrail_rejected"] += 1
@@ -842,6 +882,23 @@ class LiveRuntime:
                 },
             )
             return
+
+        if exploring:
+            self._exploration_used += 1
+            self.counters["exploration_trades"] += 1
+            self._emit(
+                "live.exploration",
+                {
+                    "correlation_id": correlation_id,
+                    "reason": (
+                        "exploration trade — no evidence exists for "
+                        f"{regime.regime.value}/{signal.direction.value} at this "
+                        f"confidence yet; buying a lesson with simulated money "
+                        f"({self._exploration_used} of "
+                        f"{self._settings.live.exploration_trades_per_day} today)"
+                    ),
+                },
+            )
 
         await self._submit(decision, signal, correlation_id)
         self._entry_beliefs = {

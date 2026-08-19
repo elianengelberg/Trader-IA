@@ -79,6 +79,9 @@ services:
       TIA_LLM__ENABLED: ${TIA_LLM__ENABLED:-false}
       TIA_LLM__PROVIDER: ${TIA_LLM__PROVIDER:-stub}
       TIA_LLM__MODEL: ${TIA_LLM__MODEL:-claude-opus-5}
+      # Paper-only exploration: trades/day the session may take in buckets that LACK
+      # evidence, to buy lessons with simulated money. Ignored over live execution.
+      TIA_LIVE__EXPLORATION_TRADES_PER_DAY: ${TIA_LIVE__EXPLORATION_TRADES_PER_DAY:-0}
       # Venue credentials are OPTIONAL and only ever read from the environment.
       # The 24/7 paper session needs none. Live trading additionally requires the
       # activation gate's 27 checks — a key alone arms nothing.

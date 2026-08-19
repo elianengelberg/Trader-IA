@@ -89,7 +89,12 @@ function LiveSessionPanel({ subscribe }: { subscribe: Subscribe }) {
         <Stat
           label="Signals → orders"
           value={`${counters.signals ?? 0} → ${counters.orders ?? 0}`}
-          sub={`${refusals} refused by the gates · ${counters.fills ?? 0} fills`}
+          sub={
+            `${refusals} refused by the gates · ${counters.fills ?? 0} fills` +
+            ((counters.exploration_trades ?? 0) > 0
+              ? ` · ${counters.exploration_trades} exploration`
+              : "")
+          }
         />
         <Stat
           label="Evidence buckets ready"

@@ -79,6 +79,9 @@ class AppState:
         self._mentor = MentorEngine()
         self._mentor_validated: dict[str, Any] = {}
         self._mentor_applied: list[dict[str, Any]] = []
+        #: Curated macro/crypto headlines. Built lazily; informs the UI and the Advisor,
+        #: never the trading pipeline.
+        self._intel: Any | None = None
 
     # ------------------------------------------------------------------ lifecycle
 
@@ -92,6 +95,9 @@ class AppState:
             await self.runtime.stop()
         if self.live_runtime is not None and self.live_runtime.is_running:
             await self.live_runtime.stop(reason="application shutdown")
+        if self._intel is not None:
+            with contextlib.suppress(Exception):
+                await self._intel.close()
         await self.database.close()
 
     # ------------------------------------------------------------------ streaming
@@ -663,6 +669,7 @@ class AppState:
             ("learning", self.learning_report),
             ("antipatterns", self.antipattern_report),
             ("mentor", self.mentor_report),
+            ("intel", self.intel_snapshot),
         ):
             with contextlib.suppress(Exception):
                 context[key] = getter()
@@ -756,6 +763,37 @@ class AppState:
                 "reason": "no session is running; the behaviour audit needs recent trades.",
             }
         return {"available": True, **self._antipatterns.report(snapshot)}
+
+    # ------------------------------------------------------------------ market intel
+
+    def _get_intel(self) -> Any:
+        if self._intel is None:
+            from tia.core.clock import SystemClock
+            from tia.data.intel import MarketIntelService
+
+            self._intel = MarketIntelService(clock=SystemClock())
+        return self._intel
+
+    async def market_intel(self, *, force: bool = False) -> dict[str, Any]:
+        """Curated macro/crypto headlines, freshly polled if the cache window has passed.
+
+        Always answers: with every source unreachable the items list is empty and the
+        per-source health rows say exactly which feed failed and how — the honest state,
+        not an error page.
+        """
+        service = self._get_intel()
+        await service.refresh(force=force)
+        return {"available": True, **service.report()}
+
+    def intel_snapshot(self) -> dict[str, Any]:
+        """Already-fetched intel for the Advisor's grounding — no network from here.
+
+        Synchronous on purpose: the Advisor context is assembled inline and must never
+        block a question on five feed requests. It sees whatever the last poll brought.
+        """
+        if self._intel is None:
+            return {"available": False, "items": []}
+        return {"available": True, **self._intel.report()}
 
     # ------------------------------------------------------------------ mentor
 

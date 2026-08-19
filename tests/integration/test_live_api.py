@@ -443,6 +443,48 @@ async def test_the_mentor_refuses_cleanly_when_idle_and_refuses_unknown_applies(
     assert "no validated proposal" in apply.json()["detail"]
 
 
+async def test_market_intel_reports_source_health_even_when_every_feed_is_down(
+    tmp_path: Path,
+) -> None:
+    """The intel endpoint answers 200 with per-source health, never a 500 — one dead feed
+    (or five) is a visible state, not an error page. Sources are injected with a mock
+    transport so the test never touches the network."""
+    import httpx as _httpx
+
+    from tia.core.clock import SystemClock
+    from tia.data.intel import IntelSource, MarketIntelService
+
+    rss = (
+        '<?xml version="1.0"?><rss version="2.0"><channel>'
+        "<item><title>Federal Reserve issues FOMC statement</title>"
+        "<link>https://example.org/fomc</link></item></channel></rss>"
+    )
+
+    def handler(request: _httpx.Request) -> _httpx.Response:
+        if "alive" in str(request.url):
+            return _httpx.Response(200, text=rss)
+        return _httpx.Response(502, text="bad gateway")
+
+    app = create_app(_settings(tmp_path))
+    async for http in _client(app):
+        app.state.tia._intel = MarketIntelService(
+            clock=SystemClock(),
+            sources=(
+                IntelSource("alive", "Alive", "https://alive.example/rss", tier="official", region="US"),
+                IntelSource("down", "Down", "https://down.example/rss", tier="premier", region="global"),
+            ),
+            client=_httpx.AsyncClient(transport=_httpx.MockTransport(handler)),
+        )
+        response = await http.get("/api/intel?force=true")
+        assert response.status_code == 200, response.text
+        body = response.json()
+        assert body["available"] is True
+        assert body["sources_ok"] == 1 and body["sources_total"] == 2
+        assert any("FOMC" in item["headline"] for item in body["items"])
+        down = next(s for s in body["sources"] if s["source_id"] == "down")
+        assert down["ok"] is False
+
+
 async def test_the_order_book_endpoint_returns_live_depth(
     client: httpx.AsyncClient, monkeypatch: pytest.MonkeyPatch
 ) -> None:

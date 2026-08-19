@@ -32,6 +32,7 @@ VIEWS = [
     "Ruin Analytics",
     "Learning",
     "Ask the AI",
+    "Macro & News",
     "Live Trading",
     "System",
     "Logs",

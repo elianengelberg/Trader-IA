@@ -266,6 +266,19 @@ def build_briefing(context: dict[str, Any]) -> tuple[str, list[str]]:
                 f"Replay: {prop.get('validation', {}).get('detail', '')}"
             )
 
+    intel = context.get("intel") or {}
+    if intel.get("available") and intel.get("items"):
+        used.append("market intel")
+        lines.append(
+            "MARKET INTEL — curated headlines (central banks + premier crypto press, "
+            "relevance-filtered; informational only, the pipeline does not trade on them):"
+        )
+        for item in intel["items"][:6]:
+            lines.append(
+                f"  - [{item.get('kind', '?')}/{item.get('source', '?')}, relevance "
+                f"{item.get('relevance', 0):.2f}] {item.get('headline', '')}"
+            )
+
     focus = context.get("focus_decision")
     if focus:
         used.append("focused decision")

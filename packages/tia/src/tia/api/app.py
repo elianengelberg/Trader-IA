@@ -500,6 +500,16 @@ def _register_routes(app: FastAPI, settings: Settings) -> None:
         """The Mentor's tighten-only proposals, each with its replay verdict."""
         return tia(request).mentor_report()
 
+    @app.get("/api/intel")
+    async def market_intel(
+        request: Request,
+        _user: User = Depends(current_user),
+        force: bool = Query(False),
+    ) -> dict[str, Any]:
+        """Curated macro/crypto headlines with per-source health. Informational only —
+        nothing on this surface reaches the trading pipeline."""
+        return await tia(request).market_intel(force=force)
+
     @app.post("/api/mentor/apply")
     async def mentor_apply(
         body: MentorApplyRequest, request: Request, user: User = Depends(current_user)

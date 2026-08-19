@@ -362,6 +362,19 @@ h1 { font-size: 19px; margin: 0 0 4px; font-weight: 600; letter-spacing: -0.01em
 }
 .advisor-input:focus { outline: none; border-color: var(--accent); }
 
+/* ------------------------------------------------------------------ market intel */
+.intel-row {
+  display: grid; grid-template-columns: 6px 1fr; gap: 12px; align-items: stretch;
+  padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px;
+  background: var(--bg-input);
+}
+.intel-row a:hover { text-decoration: underline; }
+.intel-score {
+  width: 6px; border-radius: 3px; background: var(--border);
+  overflow: hidden; display: flex; align-items: flex-end;
+}
+.intel-score-fill { width: 100%; background: var(--accent); border-radius: 3px; }
+
 .footnote {
   margin-top: 26px;
   padding-top: 14px;

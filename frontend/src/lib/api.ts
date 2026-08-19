@@ -573,6 +573,46 @@ export interface MentorReport {
   explanation?: string;
 }
 
+export interface IntelItem {
+  item_id: string;
+  headline: string;
+  url: string | null;
+  source: string;
+  source_id: string;
+  tier: string;
+  region: string;
+  published_at: string;
+  ingested_at: string;
+  relevance: number;
+  kind: string;
+  horizon: string;
+  matched: string[];
+}
+
+export interface IntelSourceHealth {
+  source_id: string;
+  name: string;
+  tier: string;
+  region: string;
+  url: string;
+  ok: boolean | null;
+  detail: string;
+  items_seen: number;
+  last_attempt: string | null;
+}
+
+export interface IntelReport {
+  available: boolean;
+  items?: IntelItem[];
+  sources?: IntelSourceHealth[];
+  sources_ok?: number;
+  sources_total?: number;
+  discarded?: number;
+  filtered_irrelevant?: number;
+  last_refresh?: string | null;
+  explanation?: string;
+}
+
 export interface CapitalView {
   simulated: boolean;
   currency: string;
@@ -679,6 +719,7 @@ export const api = {
   learning: () => get<LearningReport>("/learning"),
   antipatterns: () => get<AntiPatternReport>("/antipatterns"),
   mentor: () => get<MentorReport>("/mentor"),
+  intel: (force = false) => get<IntelReport>(`/intel?force=${force}`),
   mentorApply: (proposalId: string) =>
     post<{ applied: string; result: Record<string, unknown> }>("/mentor/apply", {
       proposal_id: proposalId,

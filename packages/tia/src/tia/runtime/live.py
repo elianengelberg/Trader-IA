@@ -34,6 +34,7 @@ import asyncio
 import contextlib
 from collections import deque
 from collections.abc import Awaitable, Callable, Sequence
+from datetime import datetime
 from typing import Any
 
 from tia.core.clock import Clock
@@ -347,6 +348,10 @@ class LiveRuntime:
         }
         self._exploration_used = 0
         self._exploration_day = ""
+        #: Evidence folded in *after* startup — training runs that finished while this
+        #: session was already live. See :meth:`absorb_evidence`.
+        self._evidence_absorbed = 0
+        self._evidence_absorbed_at: datetime | None = None
 
     @property
     def exploration_enabled(self) -> bool:
@@ -485,6 +490,55 @@ class LiveRuntime:
         if self.machine.state is LiveState.RUNNING:
             self.machine.transition(LiveState.HALT_NEW_ORDERS, reason=reason, actor=actor)
             self._incident("halt_new_orders", reason=reason, actor=actor)
+
+    def absorb_evidence(
+        self,
+        *,
+        outcomes: Sequence[Outcome] = (),
+        reviews: Sequence[dict[str, Any]] = (),
+    ) -> dict[str, Any]:
+        """Fold newly-persisted trade evidence into the running session.
+
+        Training simulations write to the same evidence store this session learns from,
+        but a session that read that store only at startup keeps showing yesterday's
+        lessons until someone restarts it. This is the useful half of a restart without
+        the restart: the estimator's buckets and the retrospective's memory take the new
+        rows, and the guardrails recompute from the enlarged record on their next read.
+
+        Three properties make this safe to do mid-session:
+
+        * It only ever **adds**. Nothing here erases a lesson the session already paid
+          for, and a guardrail that eases does so because the enlarged record says the
+          pattern behaves — not because absorbing reset anything.
+        * It is synchronous and free of awaits, so it cannot interleave with a trading
+          cycle. No decision is ever made against a half-absorbed record.
+        * It leaves the loss streak alone. That counter is about *this* session's recent
+          trades; a simulation from last night is not one of them.
+
+        The caller passes only rows this session did not itself produce — its own closed
+        trades are already in memory, and handing them back would count them twice.
+        """
+        outcomes = list(outcomes)
+        reviews = list(reviews)
+        if not outcomes and not reviews:
+            return {"absorbed_outcomes": 0, "absorbed_reviews": 0, "buckets_ready": 0}
+        self._edges.record_many(outcomes)
+        self._retro.record_many(reviews)
+        self._evidence_absorbed += len(outcomes)
+        self._evidence_absorbed_at = self._clock.now()
+        result = {
+            "absorbed_outcomes": len(outcomes),
+            "absorbed_reviews": len(reviews),
+            "buckets_ready": sum(
+                1
+                for count in self._edges.coverage().values()
+                if count >= self._edges.min_samples
+            ),
+            "at": self._evidence_absorbed_at.isoformat(),
+        }
+        _log.info("evidence_absorbed", **result)
+        self._emit("live.evidence_absorbed", result)
+        return result
 
     def tighten_ev_threshold(self, new_threshold_bps: float, *, actor: str) -> dict[str, Any]:
         """Raise the expected-value bar mid-session. Raise only — this is the one runtime
@@ -1299,7 +1353,25 @@ class LiveRuntime:
         report["applies_guardrails"] = True
         report["source"] = "live" if self._execution.is_live else "paper-live"
         report["guardrail_rejected"] = self.counters.get("guardrail_rejected", 0)
+        report["evidence"] = self.evidence_state()
         return report
+
+    def evidence_state(self) -> dict[str, Any]:
+        """How current this session's evidence is — what the Learning page's freshness
+        line reads, so "is this stale?" has an answer instead of a guess."""
+        return {
+            "absorbed_since_start": self._evidence_absorbed,
+            "last_absorbed_at": (
+                self._evidence_absorbed_at.isoformat()
+                if self._evidence_absorbed_at
+                else None
+            ),
+            "buckets_ready": sum(
+                1
+                for count in self._edges.coverage().values()
+                if count >= self._edges.min_samples
+            ),
+        }
 
     def snapshot(self) -> dict[str, Any]:
         ledger = self._ledger.snapshot()
@@ -1331,6 +1403,7 @@ class LiveRuntime:
                 "threshold_bps": self._ev.threshold_bps,
                 "coverage": self._edges.coverage(),
             },
+            "evidence": self.evidence_state(),
             "last_error": self.last_error,
         }
 

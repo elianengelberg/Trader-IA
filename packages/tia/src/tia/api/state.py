@@ -58,6 +58,11 @@ SUBSCRIBER_QUEUE_SIZE = 512
 #: The trainer's PID lock and progress file — the contract shared with
 #: ``scripts/train_sims.py``, which owns writing them. Relative to the process CWD
 #: (``/app`` in the container, the repo root locally), same as the runtime data dir.
+#: How often the running 24/7 session checks the evidence store for trades it has not
+#: seen. A minute is far below the pace at which a training batch produces them and far
+#: above the cost of a row count, which is all a quiet check does.
+EVIDENCE_REFRESH_SECONDS = 60.0
+
 TRAINING_LOCK = Path("data/train.lock")
 TRAINING_STATUS = Path("data/training_status.json")
 
@@ -94,6 +99,10 @@ class AppState:
         self._intel: Any | None = None
         #: Keeps spawned-subprocess reaper tasks alive until they finish.
         self._background_tasks: set[asyncio.Task[Any]] = set()
+        #: Evidence rows the running 24/7 session has already been given. Trades it
+        #: closed itself are in here too — see :meth:`refresh_session_evidence`.
+        self._absorbed_evidence_ids: set[str] = set()
+        self._evidence_task: asyncio.Task[Any] | None = None
 
     # ------------------------------------------------------------------ lifecycle
 
@@ -103,6 +112,10 @@ class AppState:
         await self._maybe_resume_paper_realtime()
 
     async def shutdown(self) -> None:
+        if self._evidence_task is not None:
+            self._evidence_task.cancel()
+            with contextlib.suppress(asyncio.CancelledError, Exception):
+                await self._evidence_task
         if self.runtime is not None and self.runtime.is_running:
             await self.runtime.stop()
         if self.live_runtime is not None and self.live_runtime.is_running:
@@ -247,6 +260,36 @@ class AppState:
             _log.warning("edge_state_load_failed", error=str(exc)[:300])
             return []
 
+    @staticmethod
+    def _as_outcome(row: Any) -> Any:
+        """One persisted round trip, as the lossy thing the edge estimator consumes."""
+        from tia.domain.enums import Direction, MarketRegime
+        from tia.economics.expected_value import Outcome
+
+        return Outcome(
+            regime=MarketRegime(row.regime),
+            direction=Direction(row.direction),
+            confidence=row.confidence,
+            net_return_bps=row.net_bps,
+        )
+
+    @staticmethod
+    def _as_review(row: Any) -> dict[str, Any]:
+        """The same round trip kept whole, as the retrospective needs it."""
+        return {
+            "regime": row.regime,
+            "direction": row.direction,
+            "confidence": row.confidence,
+            "expected_net_bps": row.expected_net_bps,
+            "net_bps": row.net_bps,
+            "fees_bps": row.fees_bps,
+            "closed_at": row.closed_at,
+            "signal_id": row.signal_id,
+            "symbol": row.symbol,
+            "entry_price": row.entry_price,
+            "quantity": row.quantity,
+        }
+
     async def _load_prior_reviews(self) -> list[dict[str, Any]]:
         """Rebuild the retrospective's input from the persisted trade record.
 
@@ -277,6 +320,94 @@ class AppState:
         except Exception as exc:
             _log.warning("edge_review_load_failed", error=str(exc)[:300])
             return []
+
+    # ---------------------------------------------------------- evidence freshness
+
+    async def _load_live_evidence(self) -> tuple[list[Any], list[dict[str, Any]]]:
+        """The whole trade record, shaped for both learners, in a single read.
+
+        Also records which rows the starting session has been given, so the refresher
+        below can tell "new since this session started" from "already in its memory".
+        """
+        try:
+            async with self.database.session() as session:
+                rows = await EdgeStateRepository(session).load_all()
+        except Exception as exc:
+            _log.warning("live_evidence_load_failed", error=str(exc)[:300])
+            return [], []
+        self._absorbed_evidence_ids = {row.outcome_id for row in rows}
+        return [self._as_outcome(row) for row in rows], [self._as_review(row) for row in rows]
+
+    async def refresh_session_evidence(self) -> dict[str, Any]:
+        """Fold evidence persisted since the session started into the running session.
+
+        This is what makes a finished training batch show up in Learning without a
+        restart. Two exclusions keep the arithmetic honest: rows the session has already
+        been given (by id), and rows the session produced itself (by run id — its own
+        closed trades are already in memory, and re-feeding them would count each trade
+        twice, inflating both the evidence and the paper track record).
+
+        Cheap when there is nothing to do: a row count is compared first, and the full
+        read only happens when the store has actually grown.
+        """
+        session = self.live_runtime
+        if session is None or not session.is_running:
+            return {"absorbed": 0, "reason": "no 24/7 session is running"}
+        try:
+            async with self.database.session() as db:
+                repository = EdgeStateRepository(db)
+                total = await repository.count()
+                if total <= len(self._absorbed_evidence_ids):
+                    return {"absorbed": 0, "total": total}
+                rows = await repository.load_all()
+        except Exception as exc:
+            _log.warning("evidence_refresh_failed", error=str(exc)[:300])
+            return {"absorbed": 0, "error": str(exc)[:200]}
+
+        fresh = [
+            row
+            for row in rows
+            if row.outcome_id not in self._absorbed_evidence_ids
+            and row.run_id != session.run_id
+        ]
+        # Own-run rows are still marked seen, so they are never reconsidered.
+        self._absorbed_evidence_ids.update(row.outcome_id for row in rows)
+        if not fresh:
+            return {"absorbed": 0, "total": len(rows)}
+
+        result = session.absorb_evidence(
+            outcomes=[self._as_outcome(row) for row in fresh],
+            reviews=[self._as_review(row) for row in fresh],
+        )
+        return {"absorbed": len(fresh), "total": len(rows), **result}
+
+    async def _evidence_refresh_loop(self) -> None:
+        """Keep the running session's lessons current, without anyone asking.
+
+        The 24/7 session used to read the evidence store once, at startup: a training
+        batch that finished overnight was invisible until someone restarted the engine,
+        which read as the Learning page being broken rather than merely behind.
+        """
+        while True:
+            await asyncio.sleep(EVIDENCE_REFRESH_SECONDS)
+            with contextlib.suppress(Exception):  # a refresh must never kill the loop
+                result = await self.refresh_session_evidence()
+                if result.get("absorbed"):
+                    self.broadcast(
+                        {
+                            "event": "live.evidence_absorbed",
+                            "at": datetime.now(UTC).isoformat(),
+                            "data": result,
+                        }
+                    )
+
+    def _start_evidence_refresh(self) -> None:
+        """Idempotent: one refresher for the process, started with the first session."""
+        if self._evidence_task is not None and not self._evidence_task.done():
+            return
+        self._evidence_task = asyncio.get_running_loop().create_task(
+            self._evidence_refresh_loop()
+        )
 
     async def stop_run(self) -> dict[str, Any]:
         if self.runtime is None:
@@ -1267,6 +1398,7 @@ class AppState:
             runtime = await self._build_live_runtime(token)
             await runtime.start()
             self.live_runtime = runtime
+            self._start_evidence_refresh()
             runtime_started = runtime.state.value == "running"
             runtime_state = runtime.state.value
             async with self.database.session() as session:
@@ -1335,6 +1467,7 @@ class AppState:
             base_url=live.base_url,
             simulated=live.use_testnet,
         )
+        prior_outcomes, prior_reviews = await self._load_live_evidence()
         return LiveRuntime(
             self.settings,
             activation=token,
@@ -1344,8 +1477,8 @@ class AppState:
             venue_time_ms=market.server_time_ms,
             persist=self._persist,
             on_event=self.broadcast,
-            prior_outcomes=await self._load_prior_outcomes(),
-            prior_reviews=await self._load_prior_reviews(),
+            prior_outcomes=prior_outcomes,
+            prior_reviews=prior_reviews,
         )
 
     async def _record_activation(self, **values: Any) -> None:
@@ -1407,6 +1540,7 @@ class AppState:
                 self.settings.live.max_live_capital or self.settings.initial_capital,
             ),
         )
+        prior_outcomes, prior_reviews = await self._load_live_evidence()
         runtime = LiveRuntime(
             self.settings,
             activation=None,
@@ -1416,12 +1550,13 @@ class AppState:
             venue_time_ms=market.server_time_ms,
             persist=self._persist,
             on_event=self.broadcast,
-            prior_outcomes=await self._load_prior_outcomes(),
-            prior_reviews=await self._load_prior_reviews(),
+            prior_outcomes=prior_outcomes,
+            prior_reviews=prior_reviews,
             poll_interval_seconds=10.0,
         )
         await runtime.start()
         self.live_runtime = runtime
+        self._start_evidence_refresh()
         async with self.database.session() as session:
             await RunRepository(session).create(
                 run_id=runtime.run_id,
@@ -1718,9 +1853,15 @@ class AppState:
                 else "online"
             )
             simulated_only = bool(snapshot.get("simulated", True))
+            # Why a session stopped taking entries is the whole content of the news that
+            # it did. A halt with no reason on screen reads as a fault; the reason is
+            # usually mundane (a stale feed, a network blip) and self-healing.
+            history = (snapshot.get("state_machine") or {}).get("history") or []
             live_view = {
                 "mode": snapshot.get("mode"),
                 "state": snapshot.get("state"),
+                "state_reason": history[-1].get("reason") if history else None,
+                "state_since": history[-1].get("at") if history else None,
                 "heartbeat_age_seconds": heartbeat_age,
                 "market_data_age_seconds": snapshot.get("market_data_age_seconds"),
             }

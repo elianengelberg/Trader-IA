@@ -36,6 +36,7 @@ export function Learning({ subscribe }: { subscribe: Subscribe }) {
 
   useEffect(load, [load]);
   useStreamEvent(subscribe, "trade.closed", load);
+  useStreamEvent(subscribe, "live.evidence_absorbed", load);
 
   // The learning record also grows without browser events — training simulations write
   // straight to the database and load on an engine restart — so the page keeps itself
@@ -88,6 +89,7 @@ export function Learning({ subscribe }: { subscribe: Subscribe }) {
   const notional = data.typical_notional_usd ?? 0;
   const rowUsd = (bps: number, rowNotional?: number) =>
     bpsUsd(bps, rowNotional && rowNotional > 0 ? rowNotional : notional);
+  const evidence = data.evidence;
   const categories = data.category_counts ?? {};
   const guardrails = data.active_guardrails ?? [];
   const patterns = data.patterns ?? [];
@@ -124,6 +126,18 @@ export function Learning({ subscribe }: { subscribe: Subscribe }) {
             ? `The guardrails below have refused ${data.guardrail_rejected ?? 0} trade(s) so far in this session.`
             : "The demo explores every bucket to produce evidence; the live session is where these lessons actually gate trades."}
         </p>
+        {acts && (
+          <p style={{ margin: "6px 0 0", color: "var(--text-faint)", fontSize: 12 }}>
+            {evidence && evidence.absorbed_since_start > 0
+              ? `Evidence is current: ${evidence.absorbed_since_start.toLocaleString("en-US")} ` +
+                `trades from finished training runs were folded in without a restart` +
+                (evidence.last_absorbed_at ? `, most recently at ${clock(evidence.last_absorbed_at)}` : "") +
+                `. ${evidence.buckets_ready} bucket(s) are at the evidence floor.`
+              : "The session checks the trade store every minute and folds in anything new " +
+                "on its own — a training batch that finishes overnight appears here without " +
+                "a restart."}
+          </p>
+        )}
       </div>
 
       <div className="grid cols-4" style={{ marginBottom: 16 }}>

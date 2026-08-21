@@ -498,6 +498,13 @@ async def test_training_endpoints_report_start_and_guard(
     assert status["running"] is False
     assert status["state"] == "interrupted"
 
+    # Absorbing with no session running is a refusal with a reason, not an error: the
+    # button exists on a page you can open before starting anything.
+    absorbed = await client.post("/api/training/absorb")
+    assert absorbed.status_code == 200, absorbed.text
+    assert absorbed.json()["absorbed"] == 0
+    assert "no 24/7 session" in absorbed.json()["reason"]
+
 
 async def test_market_intel_reports_source_health_even_when_every_feed_is_down(
     tmp_path: Path,

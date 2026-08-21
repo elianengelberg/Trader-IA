@@ -533,11 +533,23 @@ def _register_routes(app: FastAPI, settings: Settings) -> None:
         except ValueError as exc:
             raise HTTPException(409, str(exc)) from exc
 
+    @app.post("/api/training/absorb")
+    async def training_absorb(
+        request: Request, _user: User = Depends(current_user)
+    ) -> dict[str, Any]:
+        """Fold newly-persisted evidence into the running session, now.
+
+        The session does this on its own every minute; this is the same operation on
+        demand, for an operator who does not want to wait for the next sweep.
+        """
+        return await tia(request).refresh_session_evidence()
+
     @app.post("/api/training/reload")
     async def training_reload(
         request: Request, user: User = Depends(current_user)
     ) -> dict[str, Any]:
-        """Restart the engine so the 24/7 session reloads the enlarged evidence."""
+        """Restart the engine. Rarely needed for evidence — the session absorbs new
+        trades by itself — but it remains the way to pick up changed configuration."""
         try:
             return tia(request).training_reload(actor=user.username)
         except ValueError as exc:

@@ -130,9 +130,23 @@ export default function App() {
         <span className="sim-badge">SIMULATED CAPITAL · NO REAL MONEY</span>
         {live ? (
           <>
-            <span title="The 24/7 paper-live session — the state that matters">
+            <span
+              title={
+                // A halt with no reason on screen reads as a fault. Most are mundane and
+                // self-healing — a stale feed, a network blip — and saying so is the
+                // difference between "something broke" and "it is being careful".
+                live.state_reason
+                  ? `24/7 session — ${live.state}: ${live.state_reason}`
+                  : "The 24/7 paper-live session — the state that matters"
+              }
+            >
               <Pill value={`24/7 · ${live.state}`} tone={liveTone} />
             </span>
+            {live.state !== "running" && live.state_reason && (
+              <span className="dim" style={{ fontSize: 12, maxWidth: 460 }}>
+                {live.state_reason}
+              </span>
+            )}
             {(state === "running" || state === "paused") && (
               <span title="The synthetic demo run, separate from the 24/7 session">
                 <Pill value={`demo · ${state}`} tone={state === "running" ? "ok" : "warn"} />

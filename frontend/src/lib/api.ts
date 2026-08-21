@@ -100,6 +100,8 @@ export interface Health {
   live_runtime: {
     mode: string;
     state: string;
+    state_reason?: string | null;
+    state_since?: string | null;
     heartbeat_age_seconds: number | null;
     market_data_age_seconds: number | null;
   } | null;
@@ -500,10 +502,26 @@ export interface LessonGuardrail {
   active: boolean;
 }
 
+/** How current a running session's evidence is, and what a refresh just folded in. */
+export interface EvidenceState {
+  absorbed_since_start: number;
+  last_absorbed_at: string | null;
+  buckets_ready: number;
+}
+
+export interface EvidenceAbsorbed {
+  absorbed: number;
+  total?: number;
+  reason?: string;
+  error?: string;
+  buckets_ready?: number;
+}
+
 export interface LearningReport {
   available: boolean;
   reason?: string;
   source?: string;
+  evidence?: EvidenceState;
   applies_guardrails?: boolean;
   guardrail_rejected?: number;
   reviews?: number;
@@ -746,6 +764,7 @@ export const api = {
   trainingStart: (runs: number) =>
     post<{ started: boolean; runs: number; pid: number }>("/training/start", { runs }),
   trainingStop: () => post<{ stopped: boolean; pid: number }>("/training/stop"),
+  trainingAbsorb: () => post<EvidenceAbsorbed>("/training/absorb"),
   trainingReload: () => post<{ restarting: boolean; detail: string }>("/training/reload"),
   mentorApply: (proposalId: string) =>
     post<{ applied: string; result: Record<string, unknown> }>("/mentor/apply", {

@@ -948,3 +948,69 @@ def test_no_trade_is_valid_decision() -> None:
     assert not Direction.HOLD.is_actionable
     with pytest.raises(ValueError):
         Direction.NO_TRADE.to_side()
+
+
+async def test_absorbing_evidence_mid_session_only_ever_adds() -> None:
+    """A finished training batch must reach a running session without a restart.
+
+    Three properties, and the third is the one that keeps the paper track record
+    honest: absorbing adds buckets, leaves the session's own loss streak alone (a
+    simulation from last night is not one of this session's recent trades), and an
+    empty absorb changes nothing at all.
+    """
+    from tia.domain.enums import Direction, MarketRegime
+    from tia.economics.expected_value import Outcome
+
+    runtime, _execution, _market = build_runtime_paper()
+    await runtime.start()
+    try:
+        before_coverage = dict(runtime._edges.coverage())
+        runtime._consecutive_losses = 3
+
+        empty = runtime.absorb_evidence()
+        assert empty["absorbed_outcomes"] == 0
+        assert dict(runtime._edges.coverage()) == before_coverage
+
+        outcomes = [
+            Outcome(
+                regime=MarketRegime.TRENDING_UP,
+                direction=Direction.LONG,
+                confidence=0.65,
+                net_return_bps=-40.0,
+            )
+            for _ in range(35)
+        ]
+        reviews = [
+            {
+                "regime": "trending_up",
+                "direction": "long",
+                "confidence": 0.65,
+                "expected_net_bps": 20.0,
+                "net_bps": -40.0,
+                "fees_bps": 6.0,
+                "closed_at": START + timedelta(minutes=i),
+                "signal_id": f"sim-{i}",
+                "symbol": "BTC-USD",
+                "entry_price": 50_000.0,
+                "quantity": 0.04,
+            }
+            for i in range(35)
+        ]
+        result = runtime.absorb_evidence(outcomes=outcomes, reviews=reviews)
+
+        assert result["absorbed_outcomes"] == 35
+        assert result["buckets_ready"] >= 1
+        # The lessons are readable immediately — this is the whole point of not
+        # needing a restart — and the estimator now has a bucket it can price.
+        assert runtime.learning_report()["reviews"] == 35
+        assert runtime.evidence_state()["absorbed_since_start"] == 35
+        # ...and the guardrail derived from those disappointing trades is active.
+        guard = runtime._retro.guardrail_for(
+            regime=MarketRegime.TRENDING_UP, direction=Direction.LONG, confidence=0.65
+        )
+        assert guard.is_active
+
+        # The loss streak is this session's business; absorbed history never touches it.
+        assert runtime._consecutive_losses == 3
+    finally:
+        await runtime.stop()

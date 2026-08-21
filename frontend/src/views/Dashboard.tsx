@@ -135,15 +135,22 @@ function TrainingPanel() {
   }, [load]);
 
   const act = useCallback(
-    async (kind: "start" | "stop" | "reload", runs = 0) => {
+    async (kind: "start" | "stop" | "absorb", runs = 0) => {
       setBusy(kind);
       setNote("");
       try {
         if (kind === "start") await api.trainingStart(runs);
         else if (kind === "stop") await api.trainingStop();
         else {
-          const result = await api.trainingReload();
-          setNote(result.detail);
+          const result = await api.trainingAbsorb();
+          setNote(
+            result.reason ??
+              result.error ??
+              (result.absorbed > 0
+                ? `Folded ${result.absorbed.toLocaleString("en-US")} new trades into the ` +
+                  `session — ${result.buckets_ready ?? 0} buckets now at the evidence floor.`
+                : "The session is already up to date with every persisted trade."),
+          );
         }
         load();
       } catch (error) {
@@ -208,7 +215,8 @@ function TrainingPanel() {
                   ? ` (mean ${bpsUsd(status.mean_bps, status.typical_notional_usd)} per trade)`
                   : "") +
                 (status.buckets_ready != null ? ` · ${status.buckets_ready} buckets at the 30-trade floor` : "") +
-                ". Load it into the session to act on it."
+                ". The 24/7 session folds new evidence in by itself within a minute — " +
+                "no restart, nothing to press."
               : status.state === "interrupted"
                 ? "The last trainer died mid-run — every completed run's evidence is safe. Launch a new batch (fresh seeds are automatic)."
                 : "Simulations teach the learning engine which setups win and lose after costs. They never count toward the real-money gate. Fresh seeds every launch — duplicates are impossible."}
@@ -227,10 +235,10 @@ function TrainingPanel() {
             <button
               className="btn small primary"
               disabled={busy !== ""}
-              onClick={() => act("reload")}
-              title="Restarts the engine (~30s); the 24/7 session resumes by itself with the enlarged evidence"
+              onClick={() => act("absorb")}
+              title="The session folds new trades in by itself every minute; this does it now, with no restart"
             >
-              {busy === "reload" ? "Restarting…" : "Load evidence into session"}
+              {busy === "absorb" ? "Loading…" : "Load evidence now"}
             </button>
           </div>
         </>

@@ -167,6 +167,19 @@ function TrainingPanel() {
   const total = status.total ?? 0;
   const run = status.run ?? 0;
   const percent = total > 0 ? Math.round((run / total) * 100) : 0;
+  // A 50,000-run batch takes days. "Run 1,240 of 50,000" answers where it is but not
+  // when it ends, and the second question is the one someone actually has. Measured
+  // from this batch's own pace rather than assumed — scenarios differ in length.
+  const eta = (() => {
+    if (!running || !status.started_at || run < 2 || total <= run) return null;
+    const elapsed = Date.now() / 1000 - status.started_at;
+    if (elapsed <= 0) return null;
+    const remaining = (elapsed / run) * (total - run);
+    const hours = remaining / 3600;
+    if (hours < 1) return `~${Math.max(1, Math.round(remaining / 60))} min left`;
+    if (hours < 48) return `~${hours.toFixed(1)} h left`;
+    return `~${(hours / 24).toFixed(1)} days left`;
+  })();
 
   return (
     <Card
@@ -177,9 +190,12 @@ function TrainingPanel() {
         <>
           <div className="row" style={{ justifyContent: "space-between", marginBottom: 6 }}>
             <span style={{ fontSize: 12.5 }}>
-              Run <strong>{run}</strong> of {total} · {status.scenario ?? ""}
+              Run <strong>{run.toLocaleString("en-US")}</strong> of{" "}
+              {total.toLocaleString("en-US")} · {status.scenario ?? ""}
             </span>
-            <span className="mono" style={{ fontSize: 12.5 }}>{percent}%</span>
+            <span className="mono" style={{ fontSize: 12.5 }}>
+              {percent}%{eta ? ` · ${eta}` : ""}
+            </span>
           </div>
           <div className="progress">
             <div className="progress-fill" style={{ width: `${percent}%` }} />
@@ -222,7 +238,7 @@ function TrainingPanel() {
                 : "Simulations teach the learning engine which setups win and lose after costs. They never count toward the real-money gate. Fresh seeds every launch — duplicates are impossible."}
           </p>
           <div className="row" style={{ gap: 8, flexWrap: "wrap" }}>
-            {[500, 1000, 5000, 10000].map((n) => (
+            {[500, 1000, 5000, 10000, 50000].map((n) => (
               <button
                 key={n}
                 className="btn small"

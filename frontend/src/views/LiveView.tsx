@@ -46,11 +46,12 @@ export function LiveView({ role }: { role: string }) {
     return () => clearInterval(timer);
   }, []);
 
-  const paperSession = async (action: "start" | "stop") => {
+  const paperSession = async (action: "start" | "stop" | "resume") => {
     setSessionBusy(true);
     setSessionError("");
     try {
       if (action === "start") await api.paperStart();
+      else if (action === "resume") await api.liveResume();
       else await api.liveStop();
     } catch (error) {
       setSessionError(error instanceof ApiError ? error.message : String(error));
@@ -91,6 +92,9 @@ export function LiveView({ role }: { role: string }) {
 
   const failures = report.checks.filter((check) => !check.passed);
   const sessionActive = Boolean(session && session.active);
+  // A session that stopped taking entries needs a way back that is not "restart the
+  // process". The stop ladder had every rung except this one.
+  const halted = sessionActive && ["halt_new_orders", "paused"].includes(String(session?.state));
   const armed = sessionActive && session?.mode === "live";
   const environment = armed
     ? report.environment.toUpperCase()
@@ -224,6 +228,24 @@ export function LiveView({ role }: { role: string }) {
                 sub="stale data halts new entries"
               />
             </div>
+            {role === "operator" && halted && (
+              <button
+                onClick={() => paperSession("resume")}
+                disabled={sessionBusy}
+                title="Lifts the halt and lets the session take entries again"
+                style={{
+                  marginRight: 10,
+                  background: "var(--ok, #1e8e4e)",
+                  color: "#fff",
+                  fontWeight: 600,
+                  border: "none",
+                  padding: "10px 18px",
+                  borderRadius: 6,
+                }}
+              >
+                {sessionBusy ? "Resuming…" : "▶  Resume entries"}
+              </button>
+            )}
             {role === "operator" && (
               <button
                 onClick={() => {

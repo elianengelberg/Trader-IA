@@ -42,7 +42,12 @@ from tia.api.security import (
 )
 from tia.api.state import AppState
 from tia.core.config import Environment, Settings, settings_for_env
-from tia.core.errors import LiveActivationError, ProviderError, ProviderUnavailableError
+from tia.core.errors import (
+    InvalidStateTransitionError,
+    LiveActivationError,
+    ProviderError,
+    ProviderUnavailableError,
+)
 from tia.core.logging import get_logger
 
 _log = get_logger("api.app")
@@ -698,6 +703,28 @@ def _register_routes(app: FastAPI, settings: Settings) -> None:
         return await tia(request).stop_realtime_session(
             reason=f"operator stop by {user.username}"
         )
+
+    @app.post("/api/live/resume")
+    async def live_resume(
+        request: Request, user: User = Depends(require_operator)
+    ) -> dict[str, Any]:
+        """Lift a halt on the 24/7 session: HALT_NEW_ORDERS or PAUSED back to RUNNING.
+
+        The counterpart the stop ladder was missing. Without it a session halted by a
+        cause the watchdog does not self-heal could only be revived by restarting the
+        process — a blunt instrument that also discards the session's continuity.
+
+        The runtime refuses every state this is not valid from, and requires a named
+        operator: a halt is lifted by a person, never by a timer and never by a model.
+        """
+        live = tia(request).live_runtime
+        if live is None:
+            raise HTTPException(409, "no 24/7 session is running")
+        try:
+            live.resume(actor=user.username)
+        except (ValueError, InvalidStateTransitionError) as exc:
+            raise HTTPException(409, str(exc)) from exc
+        return live.snapshot()
 
     @app.post("/api/live/kill-switch")
     async def live_kill_switch(

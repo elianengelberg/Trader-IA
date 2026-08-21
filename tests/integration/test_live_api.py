@@ -761,3 +761,17 @@ async def test_paper_start_requires_the_operator_role(
                 json={"username": "viewer", "password": "viewer-password-not-a-secret"},
             )
             assert (await http.post("/api/live/paper-start")).status_code == 403
+
+
+async def test_resuming_the_session_refuses_when_there_is_nothing_to_resume(
+    client: httpx.AsyncClient,
+) -> None:
+    """The rung the stop ladder was missing, and its refusals.
+
+    A halt that can only be lifted by restarting the process is a halt that outlives its
+    cause. This route lifts it — but only from a state where lifting means something, and
+    only for a named operator.
+    """
+    absent = await client.post("/api/live/resume")
+    assert absent.status_code == 409, absent.text
+    assert "no 24/7 session" in absent.json()["detail"]

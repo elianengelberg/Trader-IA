@@ -301,3 +301,76 @@ def test_rebuilding_from_persisted_rows_recovers_each_trades_dollars() -> None:
     )
     assert engine.typical_notional_usd == 15_000.0
     assert engine.recent(1)[0].notional_usd == 15_000.0
+
+
+# --------------------------------------------------------------------- exploration
+
+def test_an_exploration_trade_teaches_without_being_scored_as_a_broken_promise() -> None:
+    """The distortion this flag exists to prevent.
+
+    An exploration trade is taken *because* the bucket has no evidence, so its recorded
+    "expectation" is just the round-trip cost. Scored as a claim the system then missed,
+    a handful of them drag the mean calibration error down, tighten guardrails on the very
+    buckets the session went to investigate, and have the Mentor propose halting because
+    the system paid for the lessons it was told to buy.
+    """
+    engine = RetrospectiveEngine(min_reviews_for_guardrail=5, error_floor_bps=3.0)
+    for i in range(10):
+        engine.review(
+            regime=MarketRegime.TRENDING_UP,
+            direction=Direction.LONG,
+            confidence=0.8,
+            expected_net_bps=-3.5,   # no edge known: the cost of finding out
+            realised_net_bps=-40.0,
+            fees_bps=6.0,
+            closed_at=BASE + timedelta(minutes=i),
+            signal_id=f"exp-{i}",
+            symbol="BTC-USD",
+            notional_usd=2_000.0,
+            exploratory=True,
+        )
+
+    report = engine.report()
+    # They happened, they lost, and the win rate says so — nothing is hidden.
+    assert report["reviews"] == 10
+    assert report["wins"] == 0
+    assert report["exploration_reviews"] == 10
+    # But no claim was made, so there is no calibration error and no concern.
+    assert report["calibrated_reviews"] == 0
+    assert report["mean_calibration_error_bps"] == 0.0
+    assert report["concerns"] == 0
+    assert report["active_guardrails"] == []
+    guard = engine.guardrail_for(
+        regime=MarketRegime.TRENDING_UP, direction=Direction.LONG, confidence=0.8
+    )
+    assert not guard.is_active
+
+    # A judged trade in the same bucket still counts, and still bites once there are
+    # enough of them: the exclusion is about exploration, not about going easy.
+    for i in range(5):
+        _review(engine, expected=20.0, realised=-30.0, i=100 + i)
+    assert engine.report()["calibrated_reviews"] == 5
+    assert engine.guardrail_for(
+        regime=MarketRegime.TRENDING_UP, direction=Direction.LONG, confidence=0.8
+    ).is_active
+
+
+def test_an_exploration_lesson_reads_as_a_lesson_bought_not_a_verdict() -> None:
+    review = RetrospectiveEngine().review(
+        regime=MarketRegime.RANGING,
+        direction=Direction.SHORT,
+        confidence=0.6,
+        expected_net_bps=-3.5,
+        realised_net_bps=25.0,
+        fees_bps=6.0,
+        closed_at=BASE,
+        signal_id="exp",
+        symbol="BTC-USD",
+        notional_usd=2_000.0,
+        exploratory=True,
+    )
+    assert review.category is LessonCategory.EXPLORATION
+    assert review.exploratory
+    assert not review.is_concern
+    assert "exploration trade" in review.headline
+    assert "no judgement was made" in review.lesson

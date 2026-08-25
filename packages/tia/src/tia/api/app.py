@@ -560,6 +560,18 @@ def _register_routes(app: FastAPI, settings: Settings) -> None:
         except ValueError as exc:
             raise HTTPException(409, str(exc)) from exc
 
+    @app.get("/api/money")
+    async def money_record(
+        request: Request, _user: User = Depends(current_user)
+    ) -> dict[str, Any]:
+        """What the closed-trade record comes to in dollars, from the configured base.
+
+        Simulated money. The session's continuous account and the training simulations'
+        pooled total are returned separately because they answer different questions —
+        see AppState.money_record.
+        """
+        return await tia(request).money_record()
+
     @app.get("/api/intel")
     async def market_intel(
         request: Request,

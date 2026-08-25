@@ -43,7 +43,11 @@ def _alembic(db_path: Path, *args: str) -> subprocess.CompletedProcess[str]:
 
 
 def test_migrations_build_a_complete_schema_from_nothing(tmp_path: Path) -> None:
-    """EMPTY DB → MIGRATE → the full v2 schema, stamped at both version markers."""
+    """EMPTY DB → MIGRATE → the full current schema, stamped at both version markers.
+
+    Both markers are read from the code rather than written out, so adding a migration
+    does not require editing this test — and a migration that forgets to move one of the
+    two markers still fails it, which is the failure worth catching."""
     db = tmp_path / "fresh.db"
     result = _alembic(db, "upgrade", "head")
     assert result.returncode == 0, result.stderr
@@ -54,7 +58,9 @@ def test_migrations_build_a_complete_schema_from_nothing(tmp_path: Path) -> None
     tables = {r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")}
     assert {"edge_outcomes", "activation_attempts", "incidents", "orders"} <= tables
     assert conn.execute("SELECT version FROM schema_info").fetchone()[0] == SCHEMA_VERSION
-    assert conn.execute("SELECT version_num FROM alembic_version").fetchone()[0] == "0002"
+    assert conn.execute("SELECT version_num FROM alembic_version").fetchone()[0] == (
+        f"{SCHEMA_VERSION:04d}"
+    )
 
 
 def test_a_v1_database_upgrades_in_place_without_losing_its_rows(tmp_path: Path) -> None:
@@ -100,7 +106,7 @@ def test_a_v1_database_upgrades_in_place_without_losing_its_rows(tmp_path: Path)
     import sqlite3
 
     conn = sqlite3.connect(db)
-    assert conn.execute("SELECT version FROM schema_info").fetchone()[0] == 2
+    assert conn.execute("SELECT version FROM schema_info").fetchone()[0] == SCHEMA_VERSION
     assert conn.execute("SELECT run_id FROM runs").fetchone()[0] == "run_old"
     tables = {r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")}
     assert "edge_outcomes" in tables

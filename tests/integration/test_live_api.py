@@ -775,3 +775,26 @@ async def test_resuming_the_session_refuses_when_there_is_nothing_to_resume(
     absent = await client.post("/api/live/resume")
     assert absent.status_code == 409, absent.text
     assert "no 24/7 session" in absent.json()["detail"]
+
+
+async def test_the_money_record_keeps_the_session_and_the_simulations_apart(
+    client: httpx.AsyncClient,
+) -> None:
+    """"How much would we have?" is two questions, and pooling them answers neither.
+
+    The 24/7 session is one continuous account. The training simulations are thousands of
+    independent runs whose sum says whether the strategy makes money at that size — not
+    what an account holding them in sequence would be worth. The payload must keep them
+    separate and say which is which.
+    """
+    response = await client.get("/api/money")
+    assert response.status_code == 200, response.text
+    body = response.json()
+    assert body["available"] is True
+    assert body["simulated"] is True
+    assert body["starting_usd"] > 0
+    assert set(body) >= {"session", "training", "demo", "explanation"}
+    # Empty record: no trades, so the balance is exactly the starting balance.
+    assert body["session"]["trades"] == 0
+    assert body["session"]["ending_usd"] == body["starting_usd"]
+    assert "independent" in body["explanation"]

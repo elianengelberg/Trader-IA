@@ -4,6 +4,8 @@ import {
   type Decision,
   type Fill,
   type Position,
+  type MoneyRecord,
+  type MoneySlice,
   type RuntimeSnapshot,
   type TrainingStatus,
 } from "../lib/api";
@@ -264,6 +266,101 @@ function TrainingPanel() {
   );
 }
 
+/**
+ * "If this had been real money, where would we be?"
+ *
+ * Two answers, kept apart on purpose. The 24/7 session is one continuous account, so its
+ * balance is a real answer. The training total is the sum of thousands of independent
+ * simulations — it says whether the strategy makes money at that trade size, not what an
+ * account holding them in sequence would be worth, and the panel says so rather than
+ * letting a big number imply the stronger claim.
+ */
+function MoneyPanel() {
+  const [money, setMoney] = useState<MoneyRecord | null>(null);
+
+  const load = useCallback(() => {
+    api.money().then(setMoney).catch(() => undefined);
+  }, []);
+
+  useEffect(() => {
+    load();
+    const id = window.setInterval(() => {
+      if (!document.hidden) load();
+    }, 30_000);
+    return () => window.clearInterval(id);
+  }, [load]);
+
+  if (!money?.available) return null;
+  const base = money.starting_usd ?? 0;
+  const session = money.session;
+  const training = money.training;
+
+  const slice = (label: string, data: MoneySlice | undefined, note: string) => {
+    if (!data || data.trades === 0) {
+      return (
+        <div className="card">
+          <Stat label={label} value="—" sub="no closed trades yet" />
+        </div>
+      );
+    }
+    return (
+      <div className="card">
+        <MoneyStat
+          label={label}
+          value={data.ending_usd}
+          sub={`${signedMoney(data.pnl_usd)} over ${data.trades.toLocaleString("en-US")} trades · ${(data.win_rate * 100).toFixed(0)}% won`}
+        />
+        <p className="footnote" style={{ marginTop: 8, marginBottom: 0 }}>
+          {note} Average trade {signedMoney(data.mean_trade_usd)} on a typical position of $
+          {data.typical_notional_usd.toLocaleString("en-US", { maximumFractionDigits: 0 })}.
+        </p>
+      </div>
+    );
+  };
+
+  return (
+    <Card title="If this had been real money — simulated, from $100,000">
+      <p style={{ marginTop: 0, fontSize: 12.5, color: "var(--text-dim)" }}>
+        Starting balance ${money.starting_usd?.toLocaleString("en-US")} (simulated). Every
+        trade is priced at the size it actually carried, not an assumed one.
+      </p>
+      <div className="grid cols-2" style={{ gap: 12 }}>
+        {slice(
+          "24/7 session — a real account",
+          session,
+          "One continuous account against the live Binance market, so this balance is a genuine answer for the trades it took.",
+        )}
+        {slice(
+          "Training simulations — pooled",
+          training,
+          "The sum of thousands of INDEPENDENT runs. It answers whether the strategy makes money at this size; no single account ever held this sequence.",
+        )}
+      </div>
+      {(training?.curve?.length ?? 0) > 1 && (
+        <div style={{ marginTop: 14 }}>
+          <div className="row" style={{ justifyContent: "space-between", marginBottom: 6 }}>
+            <span style={{ fontSize: 12.5, color: "var(--text-dim)" }}>
+              Cumulative result of the training record
+            </span>
+            <span className={`mono ${(training?.pnl_usd ?? 0) >= 0 ? "pos" : "neg"}`} style={{ fontSize: 12.5 }}>
+              {signedMoney(training?.pnl_usd ?? 0)}
+            </span>
+          </div>
+          <EquityChart
+            points={(training?.curve ?? []).map((value, index) => ({
+              at: String(index),
+              equity: base + value,
+              drawdown_pct: 0,
+            }))}
+            height={170}
+          />
+        </div>
+      )}
+      <p className="footnote" style={{ marginTop: 12 }}>{money.explanation}</p>
+    </Card>
+  );
+}
+
 export function Dashboard({
   runtime,
   subscribe,
@@ -318,6 +415,9 @@ export function Dashboard({
         </p>
         <LiveSessionPanel subscribe={subscribe} />
         <div style={{ marginTop: 16 }}>
+          <MoneyPanel />
+        </div>
+        <div style={{ marginTop: 16 }}>
           <TrainingPanel />
         </div>
         <SimulationFootnote />
@@ -334,6 +434,9 @@ export function Dashboard({
 
       <div style={{ marginBottom: 16 }}>
         <LiveSessionPanel subscribe={subscribe} />
+      </div>
+      <div style={{ marginBottom: 16 }}>
+        <MoneyPanel />
       </div>
       <div style={{ marginBottom: 16 }}>
         <TrainingPanel />

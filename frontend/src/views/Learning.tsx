@@ -20,6 +20,7 @@ const CATEGORY: Record<string, { label: string; tone: string }> = {
   unexpected_loss: { label: "Unexpected loss", tone: "bad" },
   edge_overestimated: { label: "Overestimated", tone: "warn" },
   edge_underestimated: { label: "Underestimated", tone: "info" },
+  exploration: { label: "Exploration", tone: "info" },
 };
 
 
@@ -260,7 +261,13 @@ export function Learning({ subscribe }: { subscribe: Subscribe }) {
                 <p style={{ margin: "6px 0 0", fontSize: 12, color: "var(--text-dim)" }}>
                   <strong>Replay:</strong> {p.validation.detail}
                 </p>
-                {p.status === "validated" && (
+                {p.status === "validated" && p.in_effect && (
+                  <p style={{ margin: "10px 0 0", fontSize: 12, color: "var(--text-faint)" }}>
+                    Already in effect — the session is not taking new entries. Applying it
+                    again would change nothing; lift the halt from Live Trading first.
+                  </p>
+                )}
+                {p.status === "validated" && !p.in_effect && (
                   <div className="row" style={{ marginTop: 10 }}>
                     <button
                       className="btn small primary"

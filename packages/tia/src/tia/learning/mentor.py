@@ -160,8 +160,15 @@ class MentorEngine:
         ``lessons`` are the retrospective's reviews (each carries ``expected_net_bps`` and
         ``realised_net_bps``), newest first — the same rows the Learning page shows, so the
         Mentor and the operator are reading identical evidence.
+
+        Exploration trades are dropped first. Every proposal below reasons about the
+        system's *edge* — that it overestimated one, or that the market has passed
+        verdict on one — and an exploration trade claimed no edge to be wrong about. Left
+        in, they would have the Mentor demand a halt because the system paid the price of
+        the lessons it was told to go and buy.
         """
         audit_checks = audit_checks or []
+        lessons = [item for item in lessons if not item.get("exploratory")]
         proposals: list[MentorProposal] = []
 
         threshold = self._propose_threshold_raise(lessons, current_threshold_bps)

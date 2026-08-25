@@ -502,6 +502,30 @@ export interface LessonGuardrail {
   active: boolean;
 }
 
+/** One source's closed trades, priced in dollars from the configured starting balance. */
+export interface MoneySlice {
+  trades: number;
+  wins: number;
+  win_rate: number;
+  pnl_usd: number;
+  ending_usd: number;
+  return_pct: number;
+  mean_trade_usd: number;
+  typical_notional_usd: number;
+  curve?: number[];
+}
+
+export interface MoneyRecord {
+  available: boolean;
+  reason?: string;
+  starting_usd?: number;
+  simulated?: boolean;
+  session?: MoneySlice;
+  training?: MoneySlice;
+  demo?: MoneySlice;
+  explanation?: string;
+}
+
 /** How current a running session's evidence is, and what a refresh just folded in. */
 export interface EvidenceState {
   absorbed_since_start: number;
@@ -580,6 +604,8 @@ export interface MentorProposal {
   };
   applies: string;
   status: string;
+  /** The change is already in place; applying again would be a no-op. */
+  in_effect?: boolean;
 }
 
 export interface MentorReport {
@@ -765,6 +791,7 @@ export const api = {
     post<{ started: boolean; runs: number; pid: number }>("/training/start", { runs }),
   trainingStop: () => post<{ stopped: boolean; pid: number }>("/training/stop"),
   trainingAbsorb: () => post<EvidenceAbsorbed>("/training/absorb"),
+  money: () => get<MoneyRecord>("/money"),
   trainingReload: () => post<{ restarting: boolean; detail: string }>("/training/reload"),
   mentorApply: (proposalId: string) =>
     post<{ applied: string; result: Record<string, unknown> }>("/mentor/apply", {

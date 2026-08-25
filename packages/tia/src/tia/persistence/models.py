@@ -42,7 +42,7 @@ from sqlalchemy.types import JSON
 
 #: Bumped on any schema change. `ensure_schema()` refuses to run against a database
 #: written by a newer version rather than silently misreading it.
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 3
 #: v1 -> v2: edge_outcomes, activation_attempts, reconciliations, capital_events,
 #: incidents, latency_samples. The Alembic migration `0002` performs the upgrade;
 #: `ensure_schema` still refuses a *newer* database rather than misreading it.
@@ -415,6 +415,10 @@ class EdgeOutcomeRow(Base):
     gross_bps: Mapped[float] = mapped_column(Float, nullable=False)
     fees_bps: Mapped[float] = mapped_column(Float, nullable=False)
     net_bps: Mapped[float] = mapped_column(Float, nullable=False)
+    #: Taken to buy evidence in a bucket with none, rather than on a measured edge. Such
+    #: a trade teaches like any other but made no claim, so the retrospective must not
+    #: score it as a claim missed — and that distinction has to survive a restart.
+    exploratory: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     expected_net_bps: Mapped[float] = mapped_column(Float, default=0.0)
     closed_at: Mapped[datetime] = _utc_column(nullable=False)
     #: 'paper' | 'backtest' | 'live'. Live evidence and paper evidence are both evidence,

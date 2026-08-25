@@ -486,10 +486,18 @@ class LiveRuntime:
         )
         self.machine.transition(LiveState.RUNNING, reason="operator resume", actor=actor)
 
-    def halt_new_orders(self, *, reason: str, actor: str = "system") -> None:
-        if self.machine.state is LiveState.RUNNING:
-            self.machine.transition(LiveState.HALT_NEW_ORDERS, reason=reason, actor=actor)
-            self._incident("halt_new_orders", reason=reason, actor=actor)
+    def halt_new_orders(self, *, reason: str, actor: str = "system") -> bool:
+        """Stop taking new entries. Returns whether this call is what did it.
+
+        A halt is only reachable from RUNNING, so calling this on an already-halted
+        session is a no-op — and a no-op that reports success is how an operator ends up
+        clicking the same button six times wondering why nothing happens.
+        """
+        if self.machine.state is not LiveState.RUNNING:
+            return False
+        self.machine.transition(LiveState.HALT_NEW_ORDERS, reason=reason, actor=actor)
+        self._incident("halt_new_orders", reason=reason, actor=actor)
+        return True
 
     def absorb_evidence(
         self,
@@ -972,6 +980,11 @@ class LiveRuntime:
             "confidence": signal.confidence,
             "signal_id": signal.signal_id,
             "expected_net_bps": evaluation.net_edge_bps,
+            # An exploration entry carries no claim about its own outcome: it was taken
+            # *because* the bucket has no evidence. Recording it as an expectation the
+            # system then missed would have the session punish itself for deliberately
+            # buying a lesson — see RetrospectiveEngine.review.
+            "exploratory": exploring,
         }
 
     # ------------------------------------------------------------------ orders
@@ -1166,6 +1179,7 @@ class LiveRuntime:
             signal_id=beliefs["signal_id"],
             symbol=self._symbol,
             notional_usd=notional,
+            exploratory=bool(beliefs.get("exploratory")),
         )
         self._consecutive_losses = 0 if net_bps > 0 else self._consecutive_losses + 1
         self._ledger.record_realised_pnl(
@@ -1191,6 +1205,7 @@ class LiveRuntime:
                 "fees_bps": fees_bps,
                 "net_bps": net_bps,
                 "expected_net_bps": beliefs["expected_net_bps"],
+                "exploratory": bool(beliefs.get("exploratory")),
                 "closed_at": exit_fill.filled_at,
                 "source": "live",
             },

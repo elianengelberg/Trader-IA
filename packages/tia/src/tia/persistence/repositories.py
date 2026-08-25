@@ -16,7 +16,7 @@ from collections.abc import Sequence
 from datetime import datetime
 from typing import Any
 
-from sqlalchemy import delete, desc, func, select
+from sqlalchemy import case, delete, desc, func, select
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.dialects.sqlite import insert as sqlite_insert
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -472,6 +472,78 @@ class EdgeStateRepository:
             (await self._session.execute(select(func.count(EdgeOutcomeRow.outcome_id)))).scalar()
             or 0
         )
+
+    async def dollar_record(self) -> dict[str, Any]:
+        """Every closed trade's result in dollars, grouped by where it came from.
+
+        Basis points are what the engine learns in; this is the question a person asks —
+        "so did it make money?". Each row's dollars are its own: ``net_bps`` applied to
+        the notional that row actually carried, never to an assumed one.
+
+        Rows are returned per source rather than pooled, because pooling them would state
+        something false. ``sim`` rows come from thousands of *independent* simulation
+        runs, each with its own starting capital; their sum is "what these trades made",
+        not the balance of an account that took them in sequence. Only ``live`` rows —
+        the 24/7 session — form one continuous account, and the caller keeps them apart.
+        """
+        pnl = (
+            EdgeOutcomeRow.net_bps
+            * EdgeOutcomeRow.entry_price
+            * EdgeOutcomeRow.quantity
+            / 10_000.0
+        )
+        rows = (
+            await self._session.execute(
+                select(
+                    EdgeOutcomeRow.source,
+                    func.count(EdgeOutcomeRow.outcome_id),
+                    func.sum(pnl),
+                    func.sum(case((EdgeOutcomeRow.net_bps > 0, 1), else_=0)),
+                    func.sum(EdgeOutcomeRow.entry_price * EdgeOutcomeRow.quantity),
+                ).group_by(EdgeOutcomeRow.source)
+            )
+        ).all()
+        return {
+            str(source or "unknown"): {
+                "trades": int(count or 0),
+                "pnl_usd": float(total or 0.0),
+                "wins": int(wins or 0),
+                "notional_sum_usd": float(notional or 0.0),
+            }
+            for source, count, total, wins, notional in rows
+        }
+
+    async def dollar_curve(self, *, source: str, points: int = 240) -> list[float]:
+        """The running dollar total of one source's trades, downsampled to ``points``.
+
+        The shape of the record, cheap enough to poll. Reads three columns, not whole
+        rows, and thins the result in Python rather than sending thousands of points to a
+        browser that would draw them one pixel apart.
+        """
+        rows = (
+            await self._session.execute(
+                select(
+                    EdgeOutcomeRow.net_bps,
+                    EdgeOutcomeRow.entry_price,
+                    EdgeOutcomeRow.quantity,
+                )
+                .where(EdgeOutcomeRow.source == source)
+                .order_by(EdgeOutcomeRow.closed_at)
+            )
+        ).all()
+        if not rows:
+            return []
+        running = 0.0
+        cumulative: list[float] = []
+        for net_bps, entry_price, quantity in rows:
+            running += (net_bps or 0.0) * (entry_price or 0.0) * (quantity or 0.0) / 10_000.0
+            cumulative.append(round(running, 2))
+        if len(cumulative) <= points:
+            return cumulative
+        step = len(cumulative) / points
+        thinned = [cumulative[min(len(cumulative) - 1, int(i * step))] for i in range(points)]
+        thinned[-1] = cumulative[-1]  # the last point is the answer; never lose it
+        return thinned
 
     async def track_record(self, *, source: str = "live") -> dict[str, Any]:
         """What the gate's paper-track-record check reads: span and volume of evidence.

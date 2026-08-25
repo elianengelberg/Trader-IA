@@ -58,6 +58,10 @@ class LessonCategory(StrEnum):
     #: Realised came in materially above expectation. A miss in the pleasant direction, but
     #: still a calibration error worth recording so the estimate catches up.
     EDGE_UNDERESTIMATED = "edge_underestimated"
+    #: A deliberate exploration trade in a bucket with no evidence. Its outcome is
+    #: evidence like any other, but it is not a calibration verdict: the system never
+    #: claimed an edge here, so there is nothing it can be said to have got wrong.
+    EXPLORATION = "exploration"
 
 
 #: Calibration tolerance, in basis points. A gap between expected and realised smaller than
@@ -112,6 +116,10 @@ class TradeReview:
     #: unit for *learning* — they compare trades of different sizes — but nobody thinks in
     #: them, so the record keeps the notional that turns each bps figure back into money.
     notional_usd: float = 0.0
+    #: True when the trade was taken to buy evidence in a bucket the estimator knew
+    #: nothing about. Such a trade still teaches — its outcome feeds the estimator like
+    #: any other — but it made no claim to miss, so it is excluded from calibration.
+    exploratory: bool = False
 
     @property
     def is_win(self) -> bool:
@@ -119,7 +127,14 @@ class TradeReview:
 
     @property
     def is_concern(self) -> bool:
-        """A trade the system should have judged better — the kind a guardrail reacts to."""
+        """A trade the system should have judged better — the kind a guardrail reacts to.
+
+        An exploration trade is never one. It was taken precisely because nothing was
+        known about the bucket, so there was no judgement to have got wrong; counting it
+        would let the system punish itself for the evidence it deliberately went and got.
+        """
+        if self.exploratory:
+            return False
         return self.category in (
             LessonCategory.UNEXPECTED_LOSS,
             LessonCategory.EDGE_OVERESTIMATED,
@@ -143,6 +158,7 @@ class TradeReview:
             "signal_id": self.signal_id,
             "symbol": self.symbol,
             "notional_usd": round(self.notional_usd, 2),
+            "exploratory": self.exploratory,
             "is_win": self.is_win,
             "is_concern": self.is_concern,
         }
@@ -206,6 +222,11 @@ class PatternMemory:
     losses: int = 0
     concerns: int = 0
     cost_overruns: int = 0
+    #: Reviews that carried an expectation. Exploration trades are counted in ``reviews``
+    #: (they happened, they won or lost) but not here, because the mean calibration error
+    #: is the average of claims missed and they made no claim.
+    calibrated: int = 0
+    explorations: int = 0
     _error_sum: float = 0.0
     _realised_sum: float = 0.0
     category_counts: dict[str, int] = field(default_factory=dict)
@@ -220,7 +241,7 @@ class PatternMemory:
 
     @property
     def mean_error_bps(self) -> float:
-        return self._error_sum / self.reviews if self.reviews else 0.0
+        return self._error_sum / self.calibrated if self.calibrated else 0.0
 
     @property
     def mean_realised_bps(self) -> float:
@@ -250,8 +271,12 @@ class PatternMemory:
 
     def observe(self, review: TradeReview) -> None:
         self.reviews += 1
-        self._error_sum += review.calibration_error_bps
         self._realised_sum += review.realised_net_bps
+        if review.exploratory:
+            self.explorations += 1
+        else:
+            self.calibrated += 1
+            self._error_sum += review.calibration_error_bps
         if review.is_win:
             self.wins += 1
         else:
@@ -265,7 +290,11 @@ class PatternMemory:
         )
         self.last_seen = review.closed_at
         self.last_headline = review.headline
-        self._recent.append((review.calibration_error_bps, review.is_concern))
+        # The guardrail window is a calibration window: an exploration trade belongs in
+        # the record and in the estimator, but letting it into this deque would let a
+        # bucket be punished for the very trades that went and found out about it.
+        if not review.exploratory:
+            self._recent.append((review.calibration_error_bps, review.is_concern))
 
     def as_dict(self) -> dict[str, Any]:
         return {
@@ -277,6 +306,7 @@ class PatternMemory:
             "losses": self.losses,
             "concerns": self.concerns,
             "cost_overruns": self.cost_overruns,
+            "explorations": self.explorations,
             "win_rate": round(self.win_rate, 4),
             "mean_error_bps": round(self.mean_error_bps, 4),
             "mean_realised_bps": round(self.mean_realised_bps, 4),
@@ -335,6 +365,7 @@ class RetrospectiveEngine:
         symbol: str = "",
         expected_cost_bps: float | None = None,
         notional_usd: float = 0.0,
+        exploratory: bool = False,
     ) -> TradeReview:
         """Judge one closed trade, file the lesson, and fold it into the pattern memory."""
         pattern = self._pattern(regime, direction, confidence)
@@ -343,7 +374,11 @@ class RetrospectiveEngine:
             expected_cost_bps is not None
             and fees_bps - expected_cost_bps >= self._cost_tolerance
         )
-        category = self._classify(expected_net_bps, realised_net_bps, error)
+        category = (
+            LessonCategory.EXPLORATION
+            if exploratory
+            else self._classify(expected_net_bps, realised_net_bps, error)
+        )
         headline, lesson = self._narrate(
             regime,
             direction,
@@ -371,6 +406,7 @@ class RetrospectiveEngine:
             signal_id=signal_id,
             symbol=symbol,
             notional_usd=max(0.0, notional_usd),
+            exploratory=exploratory,
         )
 
         memory = self._memory.get(pattern)
@@ -424,6 +460,13 @@ class RetrospectiveEngine:
         exp = self._amount(expected, notional_usd)
         real = self._amount(realised, notional_usd)
         cost_note = " Fees ran over their modelled budget." if cost_overrun else ""
+        if category is LessonCategory.EXPLORATION:
+            return (
+                f"{where}: exploration trade, made {real}.",
+                f"Nothing was known about {where} at this confidence, so this trade was "
+                f"taken to find out. Its outcome is now evidence; it is not a verdict on "
+                f"the system's judgement, because no judgement was made.{cost_note}",
+            )
         if category is LessonCategory.UNEXPECTED_LOSS:
             return (
                 f"{where}: expected {exp}, lost {real}.",
@@ -469,6 +512,7 @@ class RetrospectiveEngine:
                 notional_usd=(
                     float(row.get("entry_price") or 0.0) * float(row.get("quantity") or 0.0)
                 ),
+                exploratory=bool(row.get("exploratory", False)),
             )
 
     # ------------------------------------------------------------------ guardrails
@@ -553,9 +597,16 @@ class RetrospectiveEngine:
         total = sum(memory.reviews for memory in memories)
         wins = sum(memory.wins for memory in memories)
         concerns = sum(memory.concerns for memory in memories)
+        # Calibration is averaged over the trades that carried an expectation. Including
+        # exploration trades would report the system as wildly overconfident precisely
+        # when it was being honest about knowing nothing — and that number drives the
+        # guardrails and the Mentor, so the error would not stay cosmetic.
+        calibrated = sum(memory.calibrated for memory in memories)
+        explorations = sum(memory.explorations for memory in memories)
         mean_error = (
-            sum(memory.mean_error_bps * memory.reviews for memory in memories) / total
-            if total
+            sum(memory.mean_error_bps * memory.calibrated for memory in memories)
+            / calibrated
+            if calibrated
             else 0.0
         )
         category_counts: dict[str, int] = defaultdict(int)
@@ -575,6 +626,8 @@ class RetrospectiveEngine:
             "losses": total - wins,
             "concerns": concerns,
             "win_rate": round(wins / total, 4) if total else 0.0,
+            "calibrated_reviews": calibrated,
+            "exploration_reviews": explorations,
             "mean_calibration_error_bps": round(mean_error, 4),
             "typical_notional_usd": round(self.typical_notional_usd, 2),
             "category_counts": dict(category_counts),

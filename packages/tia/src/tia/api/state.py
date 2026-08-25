@@ -63,6 +63,10 @@ SUBSCRIBER_QUEUE_SIZE = 512
 #: above the cost of a row count, which is all a quiet check does.
 EVIDENCE_REFRESH_SECONDS = 60.0
 
+#: How long the money-record answer is reused. It reads every closed trade, and the
+#: number moves on the timescale of trades closing, not of a browser polling.
+MONEY_RECORD_CACHE_SECONDS = 30.0
+
 TRAINING_LOCK = Path("data/train.lock")
 TRAINING_STATUS = Path("data/training_status.json")
 
@@ -103,6 +107,9 @@ class AppState:
         #: closed itself are in here too — see :meth:`refresh_session_evidence`.
         self._absorbed_evidence_ids: set[str] = set()
         self._evidence_task: asyncio.Task[Any] | None = None
+        #: (computed_at, payload) for :meth:`money_record` — it scans the whole trade
+        #: record, and the dashboard polls it.
+        self._money_cache: tuple[float, dict[str, Any]] | None = None
 
     # ------------------------------------------------------------------ lifecycle
 
@@ -288,6 +295,7 @@ class AppState:
             "symbol": row.symbol,
             "entry_price": row.entry_price,
             "quantity": row.quantity,
+            "exploratory": bool(getattr(row, "exploratory", False)),
         }
 
     async def _load_prior_reviews(self) -> list[dict[str, Any]]:
@@ -314,6 +322,7 @@ class AppState:
                     "symbol": row.symbol,
                     "entry_price": row.entry_price,
                     "quantity": row.quantity,
+                    "exploratory": bool(getattr(row, "exploratory", False)),
                 }
                 for row in rows
             ]
@@ -380,6 +389,73 @@ class AppState:
             reviews=[self._as_review(row) for row in fresh],
         )
         return {"absorbed": len(fresh), "total": len(rows), **result}
+
+    async def money_record(self) -> dict[str, Any]:
+        """"If this had been real money, where would we be?" — answered carefully.
+
+        Two numbers, kept apart because pooling them would state something false:
+
+        * **The 24/7 session** is one continuous account against the real market. Its
+          equity is a genuine answer to the question, for the trades it has taken.
+        * **The training simulations** come from thousands of *independent* runs. Their
+          sum is "what these trades made", not the balance of an account that took them
+          in order — nothing ever held that position sequence. It answers a different and
+          still useful question: at these trade sizes, did the strategy make money?
+
+        The starting balance is the configured simulated capital, so the headline reads
+        as a balance rather than a delta. Every figure here is simulated money.
+        """
+        cached = self._money_cache
+        now = datetime.now(UTC).timestamp()
+        if cached is not None and now - cached[0] < MONEY_RECORD_CACHE_SECONDS:
+            return cached[1]
+
+        base = float(self.settings.initial_capital)
+        try:
+            async with self.database.session() as db:
+                repository = EdgeStateRepository(db)
+                by_source = await repository.dollar_record()
+                sim_curve = await repository.dollar_curve(source="sim")
+                live_curve = await repository.dollar_curve(source="live")
+        except Exception as exc:
+            _log.warning("money_record_failed", error=str(exc)[:300])
+            return {"available": False, "reason": "the trade record could not be read"}
+
+        def shaped(key: str) -> dict[str, Any]:
+            row = by_source.get(key) or {}
+            trades = int(row.get("trades", 0))
+            pnl = float(row.get("pnl_usd", 0.0))
+            return {
+                "trades": trades,
+                "wins": int(row.get("wins", 0)),
+                "win_rate": round(row.get("wins", 0) / trades, 4) if trades else 0.0,
+                "pnl_usd": round(pnl, 2),
+                "ending_usd": round(base + pnl, 2),
+                "return_pct": round(pnl / base * 100.0, 4) if base else 0.0,
+                "mean_trade_usd": round(pnl / trades, 2) if trades else 0.0,
+                "typical_notional_usd": (
+                    round(row.get("notional_sum_usd", 0.0) / trades, 2) if trades else 0.0
+                ),
+            }
+
+        payload = {
+            "available": True,
+            "starting_usd": round(base, 2),
+            "simulated": True,
+            "session": {**shaped("live"), "curve": live_curve},
+            "training": {**shaped("sim"), "curve": sim_curve},
+            "demo": shaped("paper"),
+            "explanation": (
+                "Simulated money throughout — no real account exists. The 24/7 session is "
+                "one continuous account against the live market, so its balance is a real "
+                "answer for the trades it took. The training total is the sum of what "
+                "thousands of independent simulations made at their own trade sizes; it "
+                "says whether the strategy makes money at that size, not what a single "
+                "account holding them in sequence would be worth."
+            ),
+        }
+        self._money_cache = (now, payload)
+        return payload
 
     async def _evidence_refresh_loop(self) -> None:
         """Keep the running session's lessons current, without anyone asking.
@@ -1081,9 +1157,19 @@ class AppState:
             p.proposal_id: p for p in proposals if p.validation.passed
         }
         live_acting = self.live_runtime is not None and self.live_runtime.is_running
+        # A proposal whose effect is already in place must not offer an Apply button:
+        # applying it would be a no-op, and a no-op behind a button reads as a bug.
+        halted = live_acting and not self.live_runtime.state.accepts_new_orders
+        already = {"halt_new_entries"} if halted else set()
+
+        def _shaped(proposal: Any) -> dict[str, Any]:
+            payload = proposal.as_dict()
+            payload["in_effect"] = proposal.action["kind"] in already
+            return payload
+
         return {
             "available": True,
-            "proposals": [p.as_dict() for p in proposals],
+            "proposals": [_shaped(p) for p in proposals],
             "validated": sum(1 for p in proposals if p.validation.passed),
             "rejected": sum(1 for p in proposals if not p.validation.passed),
             "applied": list(self._mentor_applied),
@@ -1123,9 +1209,17 @@ class AppState:
             )
         elif kind == "halt_new_entries":
             if live_running:
-                session.halt_new_orders(
+                acted = session.halt_new_orders(
                     reason=f"mentor: {proposal.rationale[:140]}", actor=actor
                 )
+                if not acted:
+                    # Already halted. Reporting success here is what let the same button
+                    # be clicked six times with nothing happening and no explanation.
+                    raise ValueError(
+                        "the 24/7 session is already halted, so this proposal is "
+                        "already in effect. Lift the halt from Live Trading before "
+                        "applying it again."
+                    )
                 result = {"halted": True, "session": "paper-live"}
             elif self.runtime is not None and self.runtime.is_running:
                 self.runtime.stop_new_trades()
@@ -1141,6 +1235,9 @@ class AppState:
         else:  # pragma: no cover - the catalog is closed; a new kind must be wired here
             raise ValueError(f"unknown proposal kind {kind!r}")
 
+        self._mentor_applied = [
+            entry for entry in self._mentor_applied if entry.get("proposal_id") != proposal_id
+        ]
         self._mentor_applied.append(
             {
                 "proposal_id": proposal_id,

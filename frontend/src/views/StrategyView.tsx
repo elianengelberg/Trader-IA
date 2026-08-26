@@ -138,10 +138,17 @@ export function StrategyView({ subscribe }: { subscribe: Subscribe }) {
             <>
               <div className="row" style={{ justifyContent: "space-between", marginBottom: 12 }}>
                 <Pill value={latest.direction} />
-                <Pill
-                  value={latest.tradeable ? "trade" : "no trade"}
-                  tone={latest.tradeable ? "ok" : ""}
-                />
+                <div className="row" style={{ gap: 8 }}>
+                  {latest.expected_value.edge?.level === "regime" && (
+                    <span title={latest.expected_value.edge.basis ?? ""}>
+                      <Pill value="pooled evidence" tone="warn" />
+                    </span>
+                  )}
+                  <Pill
+                    value={latest.tradeable ? "trade" : "no trade"}
+                    tone={latest.tradeable ? "ok" : ""}
+                  />
+                </div>
               </div>
               <div className="grid cols-3" style={{ marginBottom: 12 }}>
                 <Stat
@@ -149,7 +156,9 @@ export function StrategyView({ subscribe }: { subscribe: Subscribe }) {
                   value={bpsUsd(latest.expected_value.gross_edge_bps, notional)}
                   sub={
                     latest.expected_value.edge
-                      ? `from ${latest.expected_value.edge.samples} past trades`
+                      ? latest.expected_value.edge.level === "regime"
+                        ? `${latest.expected_value.edge.samples} trades, pooled across the regime's bands — priced at double the uncertainty discount`
+                        : `from ${latest.expected_value.edge.samples} past trades in this exact bucket`
                       : "no measured edge"
                   }
                 />
@@ -211,32 +220,63 @@ export function StrategyView({ subscribe }: { subscribe: Subscribe }) {
           {Object.keys(ev.coverage).length === 0 ? (
             <Empty message={`No bucket has any samples yet. ${ev.min_samples} are needed before an edge can be estimated at all.`} />
           ) : (
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>Bucket (regime | direction | confidence)</th>
-                  <th style={{ textAlign: "right" }}>Samples</th>
-                  <th style={{ textAlign: "right" }}>Usable</th>
-                </tr>
-              </thead>
-              <tbody>
-                {Object.entries(ev.coverage)
-                  .sort((a, b) => b[1] - a[1])
-                  .map(([bucket, count]) => (
-                    <tr key={bucket}>
-                      <td className="mono">{bucket}</td>
-                      <td style={{ textAlign: "right" }}>{count}</td>
-                      <td style={{ textAlign: "right" }}>
-                        {count >= ev.min_samples ? (
-                          <Pill value="yes" tone="ok" />
-                        ) : (
-                          <span className="mono">{count}/{ev.min_samples}</span>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
+            (() => {
+              // A thin band can now borrow its regime's pooled evidence (all bands of the
+              // same regime|direction, needing twice the floor). Recomputed here from the
+              // same coverage the estimator reports, so the table and the engine agree.
+              const poolTotals: Record<string, number> = {};
+              for (const [bucket, count] of Object.entries(ev.coverage)) {
+                const group = bucket.split("|").slice(0, 2).join("|");
+                poolTotals[group] = (poolTotals[group] ?? 0) + count;
+              }
+              const poolFloor = ev.min_samples * 2;
+              return (
+                <>
+                  <table className="table">
+                    <thead>
+                      <tr>
+                        <th>Bucket (regime | direction | confidence)</th>
+                        <th style={{ textAlign: "right" }}>Samples</th>
+                        <th style={{ textAlign: "right" }}>Usable</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Object.entries(ev.coverage)
+                        .sort((a, b) => b[1] - a[1])
+                        .map(([bucket, count]) => {
+                          const group = bucket.split("|").slice(0, 2).join("|");
+                          const pooled = (poolTotals[group] ?? 0) >= poolFloor;
+                          return (
+                            <tr key={bucket}>
+                              <td className="mono">{bucket}</td>
+                              <td style={{ textAlign: "right" }}>{count}</td>
+                              <td style={{ textAlign: "right" }}>
+                                {count >= ev.min_samples ? (
+                                  <Pill value="yes" tone="ok" />
+                                ) : pooled ? (
+                                  <span
+                                    title={`Fewer than ${ev.min_samples} trades of its own, but ${poolTotals[group]} across ${group}'s bands — tradeable on the pooled estimate, at double the uncertainty discount`}
+                                  >
+                                    <Pill value="via pool" tone="warn" />
+                                  </span>
+                                ) : (
+                                  <span className="mono">{count}/{ev.min_samples}</span>
+                                )}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                    </tbody>
+                  </table>
+                  <p className="footnote">
+                    &ldquo;via pool&rdquo;: the band is thin, but its regime and direction
+                    hold {poolFloor}+ trades across all bands, so the engine prices it from
+                    the pool — shrunk twice as hard, because borrowed evidence is a coarser
+                    claim.
+                  </p>
+                </>
+              );
+            })()
           )}
         </Card>
 

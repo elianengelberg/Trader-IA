@@ -17,8 +17,11 @@ So the edge estimate here comes from **realised outcomes**, not from confidence:
 * Past trades are bucketed by ``(regime, confidence band, direction)``.
 * A bucket must contain at least :data:`MIN_SAMPLES_FOR_EDGE` closed trades before it can
   produce an estimate at all.
-* Below that, :meth:`EdgeEstimator.estimate` returns ``None``, which the caller must treat
-  as NO_TRADE. There is no fallback to a guess.
+* Below that, the estimator may fall back ONE level: every confidence band of the same
+  regime and direction pooled together, requiring twice the sample floor and shrunk by
+  twice the standard error — a coarser claim, priced as one. Never across regimes or
+  directions, and never to a guess: below both floors it returns ``None``, which the
+  caller must treat as NO_TRADE.
 * The estimate is the bucket's mean realised return, shrunk toward zero by its own
   standard error — so a bucket of eleven trades that averaged +40 bps does not get to
   claim +40 bps.
@@ -42,6 +45,16 @@ from tia.economics.costs import BPS, TradeCosts
 #: Thirty is the conventional floor for a mean to mean anything; it is not a guarantee,
 #: it is the point below which the estimate is certainly noise.
 MIN_SAMPLES_FOR_EDGE = 30
+
+#: A pooled (regime+direction, all confidence bands) estimate must rest on this many
+#: times the bucket floor. A coarser claim borrowed from neighbouring bands earns trust
+#: with MORE data than an exact one, never with less.
+POOLED_MIN_MULTIPLE = 2
+
+#: How many standard errors a pooled estimate is shrunk by. Twice the bucket rate: the
+#: pooling assumption — that this band behaves like its regime's other bands — is itself
+#: a source of error, and it is charged for, not waved through.
+POOLED_SHRINK_SE = 2.0
 
 #: Confidence bands. Coarse on purpose: finer bands fill more slowly, and a bucket that
 #: never reaches the sample floor is a bucket that never trades.
@@ -84,10 +97,21 @@ class EdgeEstimate:
     regime: MarketRegime
     direction: Direction
     confidence_band: tuple[float, float]
+    #: "bucket" when the evidence is this exact (regime, direction, confidence band);
+    #: "regime" when the band was too thin and the estimate pooled every band of the same
+    #: regime and direction. A reader must be able to tell the two apart, because the
+    #: second is a coarser claim and is deliberately priced as one.
+    level: str = "bucket"
+    #: One sentence naming what the number rests on, for the decision's explanation.
+    basis: str = ""
 
     @property
     def is_positive(self) -> bool:
         return self.adjusted_bps > 0.0
+
+    @property
+    def is_pooled(self) -> bool:
+        return self.level != "bucket"
 
     def as_dict(self) -> dict[str, Any]:
         return {
@@ -98,6 +122,8 @@ class EdgeEstimate:
             "regime": self.regime.value,
             "direction": self.direction.value,
             "confidence_band": list(self.confidence_band),
+            "level": self.level,
+            "basis": self.basis,
         }
 
 
@@ -133,27 +159,80 @@ class EdgeEstimator:
     def estimate(
         self, *, regime: MarketRegime, direction: Direction, confidence: float
     ) -> EdgeEstimate | None:
-        """The edge this bucket supports, or ``None`` when it supports nothing.
+        """The edge the evidence supports, at the finest level that has enough of it.
 
-        ``None`` is not an error and must not be treated as zero-with-a-shrug: it means
-        the system has no basis for an expectation, and the only honest response is
-        NO_TRADE.
+        Two levels, tried in order:
+
+        1. **The exact bucket** — (regime, direction, confidence band), at the bucket
+           floor, shrunk by one standard error. The estimate as it always was.
+        2. **The regime pool** — every confidence band of the same regime and direction,
+           together. Only when the pool holds :data:`POOLED_MIN_MULTIPLE` times the
+           bucket floor, and shrunk by :data:`POOLED_SHRINK_SE` standard errors, because
+           "this band behaves like its neighbours" is an assumption and assumptions are
+           charged for. The estimate says it is pooled; downstream shows it as such.
+
+        Never across regimes or directions — a long in a trending market and a short in a
+        ranging one are different animals, and an estimator that averaged them would be
+        smuggling in exactly the guess this class exists to refuse.
+
+        ``None`` still means what it meant: no basis for an expectation at either level,
+        and the only honest response is NO_TRADE (or, in paper, an exploration trade).
         """
         band = band_of(confidence)
-        samples = self._buckets.get((regime.value, direction.value, band), [])
-        if len(samples) < self._min_samples:
+        exact = self._buckets.get((regime.value, direction.value, band), [])
+        if len(exact) >= self._min_samples:
+            return self._fit(
+                exact,
+                regime=regime,
+                direction=direction,
+                band=band,
+                level="bucket",
+                shrink_se=1.0,
+                basis=f"{len(exact)} closed trades in this exact bucket",
+            )
+
+        pooled: list[float] = []
+        for pool_band in CONFIDENCE_BANDS:
+            pooled.extend(
+                self._buckets.get((regime.value, direction.value, pool_band), [])
+            )
+        if len(pooled) < self._min_samples * POOLED_MIN_MULTIPLE:
             return None
 
+        return self._fit(
+            pooled,
+            regime=regime,
+            direction=direction,
+            band=band,
+            level="regime",
+            shrink_se=POOLED_SHRINK_SE,
+            basis=(
+                f"pooled {len(pooled)} trades across every confidence band of "
+                f"{regime.value}/{direction.value} — the exact band has only "
+                f"{len(exact)} — priced at double the uncertainty discount"
+            ),
+        )
+
+    @staticmethod
+    def _fit(
+        samples: list[float],
+        *,
+        regime: MarketRegime,
+        direction: Direction,
+        band: tuple[float, float],
+        level: str,
+        shrink_se: float,
+        basis: str,
+    ) -> EdgeEstimate:
         count = len(samples)
         mean = sum(samples) / count
         variance = sum((value - mean) ** 2 for value in samples) / (count - 1)
         standard_error = math.sqrt(variance / count)
 
-        # Shrink toward zero by one standard error, floored at zero from whichever side
-        # the mean is on. A bucket whose mean is inside its own noise gets no credit.
-        adjusted = (
-            max(0.0, mean - standard_error) if mean > 0 else min(0.0, mean + standard_error)
-        )
+        # Shrink toward zero, floored at zero from whichever side the mean is on. A
+        # bucket whose mean is inside its own (scaled) noise gets no credit.
+        discount = shrink_se * standard_error
+        adjusted = max(0.0, mean - discount) if mean > 0 else min(0.0, mean + discount)
 
         return EdgeEstimate(
             mean_bps=mean,
@@ -163,6 +242,15 @@ class EdgeEstimator:
             regime=regime,
             direction=direction,
             confidence_band=band,
+            level=level,
+            basis=basis,
+        )
+
+    def pooled_count(self, *, regime: MarketRegime, direction: Direction) -> int:
+        """Closed trades across every confidence band of one regime and direction."""
+        return sum(
+            len(self._buckets.get((regime.value, direction.value, band), []))
+            for band in CONFIDENCE_BANDS
         )
 
     def coverage(self) -> dict[str, int]:
@@ -223,13 +311,19 @@ class ExpectedValue:
                 value = notional * bps_value * BPS
                 return f"{'+' if value >= 0 else '-'}${abs(value):,.2f}"
 
+            pooled_note = (
+                " The edge is pooled from every confidence band of this regime and "
+                "direction, priced at double the uncertainty discount."
+                if self.edge_estimate.is_pooled
+                else ""
+            )
             return (
                 f"{verdict} — on a ${notional:,.0f} position: expected gross "
                 f"{usd(self.gross_edge_bps)} (from {self.edge_estimate.samples} past "
                 f"trades) minus costs {usd(self.costs.total_bps)} "
                 f"({self.costs.dominant_component} dominant) = net "
                 f"{usd(self.net_edge_bps)}, against a required minimum of "
-                f"{usd(self.threshold_bps)}."
+                f"{usd(self.threshold_bps)}.{pooled_note}"
             )
         return (
             f"{verdict} — expected gross {self.gross_edge_bps:.2f} bps "
@@ -298,6 +392,7 @@ class ExpectedValueEngine:
             have = self.estimator.sample_count(
                 regime=regime, direction=direction, confidence=confidence
             )
+            pooled = self.estimator.pooled_count(regime=regime, direction=direction)
             return self._remember(
                 ExpectedValue(
                     gross_edge_bps=0.0,
@@ -306,8 +401,10 @@ class ExpectedValueEngine:
                     edge_estimate=None,
                     reason=(
                         f"only {have} closed trades for {regime.value}/{direction.value} at "
-                        f"this confidence; {self.estimator.min_samples} are needed before an "
-                        "expectation means anything"
+                        f"this confidence ({self.estimator.min_samples} needed), and "
+                        f"{pooled} across all its confidence bands "
+                        f"({self.estimator.min_samples * POOLED_MIN_MULTIPLE} would allow "
+                        "a pooled estimate at double the uncertainty discount)"
                     ),
                 )
             )

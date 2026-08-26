@@ -347,6 +347,10 @@ export interface ExpectedValueRow {
     regime: string;
     direction: string;
     confidence_band: number[];
+    /** "bucket" = this exact band's own trades; "regime" = pooled across the regime's
+     * bands, priced at double the uncertainty discount. */
+    level?: string;
+    basis?: string;
   } | null;
   reason: string;
   explanation: string;

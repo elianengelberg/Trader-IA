@@ -35,6 +35,8 @@ interface LiveSnap {
   };
   counters?: Record<string, number>;
   expected_value?: { threshold_bps?: number; coverage?: Record<string, number> };
+  state_machine?: { history?: { reason?: string; at?: string }[] };
+  evidence?: { absorbed_since_start?: number; buckets_ready?: number };
 }
 
 /** Every bucket needs this many closed trades before the session will trade it. */
@@ -70,6 +72,11 @@ function LiveSessionPanel({ subscribe }: { subscribe: Subscribe }) {
     (counters.budget_rejected ?? 0) +
     (counters.guardrail_rejected ?? 0);
   const starving = (counters.signals ?? 0) > 0 && (counters.orders ?? 0) === 0;
+  // Why the session is not RUNNING is the whole content of the news that it is not.
+  // The reason lives in the state machine's last transition; showing it here saves a
+  // trip to Live Trading just to find out nothing is actually wrong.
+  const history = snap.state_machine?.history ?? [];
+  const stateReason = snap.state !== "running" ? history[history.length - 1]?.reason : null;
 
   return (
     <Card
@@ -105,12 +112,22 @@ function LiveSessionPanel({ subscribe }: { subscribe: Subscribe }) {
           sub={`of ${bucketsSeen} seen · needs ${EVIDENCE_FLOOR} trades each`}
         />
       </div>
+      {stateReason && (
+        <p
+          className="footnote"
+          style={{ marginTop: 12, borderLeft: "3px solid var(--warn, #c90)", paddingLeft: 10 }}
+        >
+          Entries are paused: {stateReason} — lift it from <strong>Live Trading → Resume
+          entries</strong> when the cause is resolved. Lessons and evidence keep updating
+          while paused.
+        </p>
+      )}
       <p className="footnote" style={{ marginTop: 12 }}>
         {starving
           ? "The session is producing signals but refusing to trade them — the honest " +
-            "behaviour with no proven edge in these conditions. Feed it evidence: run the " +
-            "training simulations (scripts/train_sims.py) and restart the session, or let " +
-            "it keep watching. It will not guess."
+            "behaviour with no proven edge in these conditions. Feed it evidence with the " +
+            "training buttons below; new trades fold in automatically within a minute. " +
+            "It will not guess."
           : "Bars " + (counters.bars ?? 0) + " · cycles " + (counters.cycles ?? 0) +
             " · every entry must clear risk, budget, expected value and the learning " +
             "guardrails. Lessons from each closed trade appear under Learning."}

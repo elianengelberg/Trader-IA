@@ -374,3 +374,161 @@ def test_the_decision_serialises_with_every_term_of_the_arithmetic() -> None:
     }
     assert payload["costs"]["total_bps"] > 0
     assert payload["edge"]["samples"] == 200
+
+
+# --------------------------------------------------------- hierarchical backoff
+
+
+def _varied(count: int, mean_bps: float, *, confidence: float, spread: float = 4.0) -> list[Outcome]:
+    """Outcomes with real variance, alternating around the mean — a zero-variance bucket
+    would make the standard error zero and the shrink invisible to the test."""
+    return [
+        Outcome(
+            regime=MarketRegime.TRENDING_UP,
+            direction=Direction.LONG,
+            confidence=confidence,
+            net_return_bps=mean_bps + (spread if i % 2 == 0 else -spread),
+        )
+        for i in range(count)
+    ]
+
+
+def test_a_thin_band_borrows_from_its_regime_at_double_the_uncertainty_discount() -> None:
+    """The backoff and its price, in one scenario.
+
+    The 0.70-0.85 band has 5 trades — far below the floor, and yesterday that meant
+    NO_TRADE while 80 trades of the same regime and direction sat one band over. Now the
+    pool answers, but as the coarser claim it is: level "regime", shrunk by TWO standard
+    errors where the exact bucket is shrunk by one, and the basis sentence says exactly
+    what was borrowed.
+    """
+    estimator = EdgeEstimator()
+    estimator.record_many(_varied(80, 20.0, confidence=0.60))
+    estimator.record_many(_varied(5, 20.0, confidence=0.75))
+
+    estimate = estimator.estimate(
+        regime=MarketRegime.TRENDING_UP, direction=Direction.LONG, confidence=0.75
+    )
+    assert estimate is not None
+    assert estimate.level == "regime"
+    assert estimate.is_pooled
+    assert estimate.samples == 85
+    assert "pooled 85 trades" in estimate.basis
+    assert "only 5" in estimate.basis
+    # The discount is genuinely doubled: adjusted == mean - 2*SE, not mean - SE.
+    assert estimate.adjusted_bps == pytest.approx(
+        estimate.mean_bps - 2.0 * estimate.standard_error_bps
+    )
+    # And the confidence band reported is the one that was ASKED about, so a guardrail
+    # keyed on the band still finds its pattern.
+    assert estimate.confidence_band == band_of(0.75)
+
+
+def test_an_exact_bucket_at_the_floor_is_untouched_by_the_backoff() -> None:
+    """The finest level wins whenever it can answer, at the original one-SE shrink."""
+    estimator = EdgeEstimator()
+    estimator.record_many(_varied(MIN_SAMPLES_FOR_EDGE, 15.0, confidence=0.75))
+    estimator.record_many(_varied(500, -60.0, confidence=0.60))  # a poisoned neighbour
+
+    estimate = estimator.estimate(
+        regime=MarketRegime.TRENDING_UP, direction=Direction.LONG, confidence=0.75
+    )
+    assert estimate is not None
+    assert estimate.level == "bucket"
+    assert not estimate.is_pooled
+    assert estimate.samples == MIN_SAMPLES_FOR_EDGE
+    # The neighbouring band's -60s did not leak in.
+    assert estimate.mean_bps == pytest.approx(15.0)
+    assert estimate.adjusted_bps == pytest.approx(
+        estimate.mean_bps - estimate.standard_error_bps
+    )
+
+
+def test_the_pool_needs_twice_the_floor_before_it_answers_at_all() -> None:
+    """A coarser prior earns trust with MORE data, never less: 59 pooled trades refuse,
+    the 60th answers."""
+    estimator = EdgeEstimator()
+    estimator.record_many(_varied(59, 20.0, confidence=0.60))
+    assert (
+        estimator.estimate(
+            regime=MarketRegime.TRENDING_UP, direction=Direction.LONG, confidence=0.75
+        )
+        is None
+    )
+    estimator.record(_varied(1, 20.0, confidence=0.60)[0])
+    pooled = estimator.estimate(
+        regime=MarketRegime.TRENDING_UP, direction=Direction.LONG, confidence=0.75
+    )
+    assert pooled is not None
+    assert pooled.level == "regime"
+
+
+def test_the_pool_never_crosses_a_regime_or_a_direction() -> None:
+    """A long in a trending market and a short in a ranging one are different animals.
+    Hundreds of trades elsewhere must buy this bucket nothing."""
+    estimator = EdgeEstimator()
+    estimator.record_many(
+        [
+            Outcome(
+                regime=MarketRegime.RANGING,
+                direction=Direction.LONG,
+                confidence=0.60,
+                net_return_bps=25.0,
+            )
+            for _ in range(200)
+        ]
+    )
+    estimator.record_many(
+        [
+            Outcome(
+                regime=MarketRegime.TRENDING_UP,
+                direction=Direction.SHORT,
+                confidence=0.60,
+                net_return_bps=25.0,
+            )
+            for _ in range(200)
+        ]
+    )
+    assert (
+        estimator.estimate(
+            regime=MarketRegime.TRENDING_UP, direction=Direction.LONG, confidence=0.60
+        )
+        is None
+    )
+
+
+def test_the_refusal_names_both_floors_and_what_would_unlock_each() -> None:
+    """A NO_TRADE that says "not enough data" teaches nothing; one that says how much
+    data, at which level, is a to-do list."""
+    engine = ExpectedValueEngine(EdgeEstimator())
+    costs = CostModel(FeeSchedule(maker_bps=1.0, taker_bps=7.5)).estimate(
+        quantity=0.1, conditions=CONDITIONS
+    )
+    result = engine.evaluate(
+        regime=MarketRegime.TRENDING_UP,
+        direction=Direction.LONG,
+        confidence=0.75,
+        costs=costs,
+    )
+    assert not result.is_tradeable
+    assert "only 0 closed trades" in result.reason
+    assert "0 across all its confidence bands" in result.reason
+    assert "60 would allow" in result.reason
+
+
+def test_a_pooled_trade_says_so_in_its_own_explanation() -> None:
+    """The coarser claim is visible at the point of decision, not buried in a field."""
+    estimator = EdgeEstimator()
+    estimator.record_many(_varied(80, 40.0, confidence=0.60))
+    engine = ExpectedValueEngine(estimator)
+    costs = CostModel(FeeSchedule(maker_bps=1.0, taker_bps=7.5)).estimate(
+        quantity=0.1, conditions=CONDITIONS
+    )
+    result = engine.evaluate(
+        regime=MarketRegime.TRENDING_UP,
+        direction=Direction.LONG,
+        confidence=0.75,
+        costs=costs,
+    )
+    assert result.edge_estimate is not None and result.edge_estimate.is_pooled
+    assert "pooled from every confidence band" in result.explain()

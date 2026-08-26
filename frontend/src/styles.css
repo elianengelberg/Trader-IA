@@ -77,6 +77,23 @@ button, input, select { font: inherit; color: inherit; }
 
 .topbar-spacer { flex: 1; }
 
+/* A halt reason can be a full sentence. It belongs in the header — a halt with no reason
+   on screen reads as a fault — but it must never be what decides the header's height. */
+.topbar-reason {
+  color: var(--text-faint);
+  font-size: 12px;
+  min-width: 0;
+  max-width: 34ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  /* On a narrow screen the sentence loses to the controls it was crowding out. */
+  .topbar-reason { display: none; }
+}
+
 .body { display: grid; grid-template-columns: 190px 1fr; min-height: 0; }
 
 .sidenav {

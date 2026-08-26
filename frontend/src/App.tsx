@@ -143,7 +143,10 @@ export default function App() {
               <Pill value={`24/7 · ${live.state}`} tone={liveTone} />
             </span>
             {live.state !== "running" && live.state_reason && (
-              <span className="dim" style={{ fontSize: 12, maxWidth: 460 }}>
+              // One line, ellipsised, and never a flex item that can grow: a halt reason
+              // is often a whole sentence from the Mentor, and letting it size the header
+              // pushed the account controls onto a second row.
+              <span className="topbar-reason" title={live.state_reason}>
                 {live.state_reason}
               </span>
             )}

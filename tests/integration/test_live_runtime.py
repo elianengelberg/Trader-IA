@@ -1014,3 +1014,47 @@ async def test_absorbing_evidence_mid_session_only_ever_adds() -> None:
         assert runtime._consecutive_losses == 3
     finally:
         await runtime.stop()
+
+
+async def test_selectivity_splits_the_record_by_what_todays_rules_would_take() -> None:
+    """The answer to "did it learn?" is a split, not an average.
+
+    The trainer trades everything on purpose, so the pooled win rate is pinned to the
+    curriculum's base rate no matter how much is learned. What learning changes is which
+    trades the rules now refuse — so the report replays every recorded trade against
+    today's estimator, threshold and guardrails, and the two win rates must separate.
+    """
+    from tia.domain.enums import Direction, MarketRegime
+    from tia.economics.expected_value import Outcome
+
+    runtime, _execution, _market = build_runtime_paper()
+    # A bucket that demonstrably wins and one that demonstrably loses. Variance is real
+    # (alternating around the mean) so the standard-error shrink is exercised, not skipped.
+    runtime._edges.record_many(
+        [
+            Outcome(
+                regime=MarketRegime.TRENDING_UP, direction=Direction.LONG,
+                confidence=0.60, net_return_bps=50.0 + (4.0 if i % 2 == 0 else -4.0),
+            )
+            for i in range(40)
+        ]
+    )
+    runtime._edges.record_many(
+        [
+            Outcome(
+                regime=MarketRegime.RANGING, direction=Direction.SHORT,
+                confidence=0.60, net_return_bps=-40.0 + (4.0 if i % 2 == 0 else -4.0),
+            )
+            for i in range(40)
+        ]
+    )
+
+    report = runtime.selectivity_report()
+    assert report["reviewed"] == 80
+    assert report["taken"]["trades"] == 40
+    assert report["taken"]["win_rate"] == 1.0
+    assert report["taken"]["mean_net_bps"] == pytest.approx(50.0)
+    assert report["refused"]["trades"] == 40
+    assert report["refused"]["win_rate"] == 0.0
+    # And the whole thing rides along with the learning report the page reads.
+    assert runtime.learning_report()["selectivity"]["reviewed"] == 80

@@ -246,6 +246,10 @@ class EdgeEstimator:
             basis=basis,
         )
 
+    def buckets(self) -> dict[tuple[str, str, tuple[float, float]], list[float]]:
+        """Every bucket's raw samples, for replay-style analysis. Read-only by contract."""
+        return {key: list(values) for key, values in self._buckets.items()}
+
     def pooled_count(self, *, regime: MarketRegime, direction: Direction) -> int:
         """Closed trades across every confidence band of one regime and direction."""
         return sum(

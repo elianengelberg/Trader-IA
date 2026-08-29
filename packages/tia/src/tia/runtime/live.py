@@ -50,7 +50,7 @@ from tia.core.logging import get_logger
 from tia.core.money import D, meets_min_notional, quantize_down
 from tia.data.providers.base import MarketDataProvider
 from tia.data.quality import DataQualityEngine
-from tia.domain.enums import OrderType, Side, TimeInForce
+from tia.domain.enums import Direction, MarketRegime, OrderType, Side, TimeInForce
 from tia.domain.market import Candle
 from tia.domain.orders import Fill, Order, OrderIntent
 from tia.economics.costs import CostModel, FeeSchedule, MarketConditions
@@ -1369,7 +1369,77 @@ class LiveRuntime:
         report["source"] = "live" if self._execution.is_live else "paper-live"
         report["guardrail_rejected"] = self.counters.get("guardrail_rejected", 0)
         report["evidence"] = self.evidence_state()
+        report["selectivity"] = self.selectivity_report()
         return report
+
+    def selectivity_report(self) -> dict[str, Any]:
+        """The honest answer to "did it learn?" — replay the record under today's rules.
+
+        The training win rate cannot rise with more training, because the trainer trades
+        *everything* on purpose (expected-value observe mode) — its trades are the
+        textbook's exercises, and most exercises are deliberately bad. What learning
+        changes is which trades the system now REFUSES. So the measure of learning is a
+        split: of every recorded trade, which would today's estimator, threshold and
+        guardrails accept — and how did the accepted ones do against the refused ones?
+
+        Approximate in one stated way: the acceptance bar here charges round-trip taker
+        fees but not spread or slippage, so it accepts slightly more than the engine
+        would. The bias is against us — the true accepted set is a subset of this one —
+        which makes the reported improvement a floor, not a boast.
+        """
+        cost_floor_bps = self._costs.fees.taker_bps * 2
+        threshold = self._ev.threshold_bps
+        taken = {"trades": 0, "wins": 0, "net_bps_sum": 0.0}
+        refused = {"trades": 0, "wins": 0, "net_bps_sum": 0.0}
+
+        for (regime_s, direction_s, band), samples in self._edges.buckets().items():
+            if not samples:
+                continue
+            regime = MarketRegime(regime_s)
+            direction = Direction(direction_s)
+            confidence = band[0] + 0.001
+            estimate = self._edges.estimate(
+                regime=regime, direction=direction, confidence=confidence
+            )
+            guard = self._retro.guardrail_for(
+                regime=regime, direction=direction, confidence=confidence
+            )
+            bar = threshold + (guard.threshold_add_bps if guard.is_active else 0.0)
+            accepted = (
+                estimate is not None and estimate.adjusted_bps - cost_floor_bps >= bar
+            )
+            side = taken if accepted else refused
+            side["trades"] += len(samples)
+            side["wins"] += sum(1 for value in samples if value > 0)
+            side["net_bps_sum"] += sum(samples)
+
+        def shaped(side: dict[str, Any]) -> dict[str, Any]:
+            trades = int(side["trades"])
+            return {
+                "trades": trades,
+                "wins": int(side["wins"]),
+                "win_rate": round(side["wins"] / trades, 4) if trades else 0.0,
+                "mean_net_bps": (
+                    round(side["net_bps_sum"] / trades, 2) if trades else 0.0
+                ),
+            }
+
+        total = taken["trades"] + refused["trades"]
+        return {
+            "reviewed": total,
+            "taken": shaped(taken),
+            "refused": shaped(refused),
+            "threshold_bps": threshold,
+            "cost_floor_bps": cost_floor_bps,
+            "explanation": (
+                "Every recorded trade, replayed against today's evidence, threshold and "
+                "guardrails. The trainer takes everything on purpose — that is how "
+                "lessons are made — so the overall win rate measures the exercises, not "
+                "the student. The split is the student: what today's rules keep versus "
+                "what they refuse. Costs are floored at round-trip taker fees, so the "
+                "true accepted set is, if anything, smaller and choosier than shown."
+            ),
+        }
 
     def evidence_state(self) -> dict[str, Any]:
         """How current this session's evidence is — what the Learning page's freshness

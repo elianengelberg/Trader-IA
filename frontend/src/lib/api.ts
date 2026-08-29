@@ -545,11 +545,30 @@ export interface EvidenceAbsorbed {
   buckets_ready?: number;
 }
 
+/** One side of the selectivity split: the trades today's rules would take, or refuse. */
+export interface SelectivitySlice {
+  trades: number;
+  wins: number;
+  win_rate: number;
+  mean_net_bps: number;
+}
+
+/** The whole record replayed under today's estimator, threshold and guardrails. */
+export interface SelectivityReport {
+  reviewed: number;
+  taken: SelectivitySlice;
+  refused: SelectivitySlice;
+  threshold_bps: number;
+  cost_floor_bps: number;
+  explanation: string;
+}
+
 export interface LearningReport {
   available: boolean;
   reason?: string;
   source?: string;
   evidence?: EvidenceState;
+  selectivity?: SelectivityReport;
   applies_guardrails?: boolean;
   guardrail_rejected?: number;
   reviews?: number;

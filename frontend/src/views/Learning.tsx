@@ -91,6 +91,7 @@ export function Learning({ subscribe }: { subscribe: Subscribe }) {
   const rowUsd = (bps: number, rowNotional?: number) =>
     bpsUsd(bps, rowNotional && rowNotional > 0 ? rowNotional : notional);
   const evidence = data.evidence;
+  const selectivity = data.selectivity;
   const categories = data.category_counts ?? {};
   const guardrails = data.active_guardrails ?? [];
   const patterns = data.patterns ?? [];
@@ -148,7 +149,8 @@ export function Learning({ subscribe }: { subscribe: Subscribe }) {
         </div>
         <div className="card">
           <Stat label="Win rate" value={`${((data.win_rate ?? 0) * 100).toFixed(0)}%`}
-            tone={(data.win_rate ?? 0) >= 0.5 ? "pos" : "neg"} sub="of closed round trips" />
+            tone={(data.win_rate ?? 0) >= 0.5 ? "pos" : "neg"}
+            sub="all round trips, training material included" />
         </div>
         <div className="card">
           <Stat
@@ -170,6 +172,43 @@ export function Learning({ subscribe }: { subscribe: Subscribe }) {
           Dollar figures are per trade, at this session&apos;s typical trade size of ≈$
           {money(notional, 0)} (simulated money).
         </p>
+      )}
+
+      {selectivity && selectivity.reviewed > 0 && selectivity.taken.trades > 0 && (
+        <Card title="Has it learned? — the whole record, replayed under today's rules">
+          <p style={{ marginTop: 0, fontSize: 12.5, color: "var(--text-dim)" }}>
+            The overall win rate above measures the <strong>exercises</strong>, not the
+            student: the trainer takes every signal on purpose, including deliberately bad
+            ones — that is how lessons are made, and more training cannot raise that
+            number. Learning shows in what the system now <strong>refuses</strong>. Here is
+            every recorded trade, split by whether today&apos;s evidence, threshold and
+            guardrails would take it:
+          </p>
+          <div className="grid cols-2" style={{ gap: 12 }}>
+            <div className="card" style={{ borderLeft: "3px solid var(--pos, #1e8e4e)" }}>
+              <Stat
+                label="Would take today"
+                value={`${(selectivity.taken.win_rate * 100).toFixed(0)}% win rate`}
+                tone={selectivity.taken.win_rate > selectivity.refused.win_rate ? "pos" : "flat"}
+                sub={
+                  `${selectivity.taken.trades.toLocaleString("en-US")} trades · mean ` +
+                  `${bpsUsd(selectivity.taken.mean_net_bps, notional)} per trade`
+                }
+              />
+            </div>
+            <div className="card" style={{ borderLeft: "3px solid var(--border-strong)" }}>
+              <Stat
+                label="Would refuse today"
+                value={`${(selectivity.refused.win_rate * 100).toFixed(0)}% win rate`}
+                sub={
+                  `${selectivity.refused.trades.toLocaleString("en-US")} trades · mean ` +
+                  `${bpsUsd(selectivity.refused.mean_net_bps, notional)} per trade`
+                }
+              />
+            </div>
+          </div>
+          <p className="footnote" style={{ marginTop: 10 }}>{selectivity.explanation}</p>
+        </Card>
       )}
 
       {Object.keys(categories).length > 0 && (

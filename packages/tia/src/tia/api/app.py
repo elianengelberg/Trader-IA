@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import mimetypes
 import time
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
@@ -51,6 +52,10 @@ from tia.core.errors import (
 from tia.core.logging import get_logger
 
 _log = get_logger("api.app")
+
+# The installable-app manifest is served by the SPA fallback below; without this the
+# stdlib guesses application/octet-stream and browsers ignore it.
+mimetypes.add_type("application/manifest+json", ".webmanifest")
 
 FRONTEND_DIR = Path(__file__).resolve().parents[5] / "frontend" / "dist"
 
@@ -559,6 +564,33 @@ def _register_routes(app: FastAPI, settings: Settings) -> None:
             return tia(request).training_reload(actor=user.username)
         except ValueError as exc:
             raise HTTPException(409, str(exc)) from exc
+
+    @app.get("/api/journal")
+    async def journal(
+        request: Request,
+        _user: User = Depends(current_user),
+        limit: int = Query(50, ge=1, le=200),
+        offset: int = Query(0, ge=0),
+        source: str | None = Query(None, pattern="^(live|sim|paper)$"),
+        regime: str | None = Query(None, max_length=32),
+        direction: str | None = Query(None, pattern="^(long|short)$"),
+        outcome: str | None = Query(None, pattern="^(win|loss)$"),
+    ) -> dict[str, Any]:
+        """Every closed round trip the system has on record, newest first, filterable.
+
+        The register the operator asked for: what was traded, what was expected, what
+        it made, at what size — every row an argument the next decision can be checked
+        against. Read-only, like everything else under /api that is not an operator
+        action.
+        """
+        return await tia(request).journal(
+            limit=limit,
+            offset=offset,
+            source=source,
+            regime=regime,
+            direction=direction,
+            outcome=outcome,
+        )
 
     @app.get("/api/money")
     async def money_record(

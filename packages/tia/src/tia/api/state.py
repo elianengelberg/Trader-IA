@@ -390,6 +390,23 @@ class AppState:
         )
         return {"absorbed": len(fresh), "total": len(rows), **result}
 
+    async def journal(self, **filters: Any) -> dict[str, Any]:
+        """The complete trade record with filters — see EdgeStateRepository.journal."""
+        try:
+            async with self.database.session() as db:
+                return await EdgeStateRepository(db).journal(**filters)
+        except Exception as exc:
+            _log.warning("journal_failed", error=str(exc)[:300])
+            return {
+                "rows": [],
+                "total": 0,
+                "offset": 0,
+                "limit": int(filters.get("limit", 50)),
+                "summary": {"trades": 0, "wins": 0, "win_rate": 0.0, "pnl_usd": 0.0,
+                            "mean_trade_usd": 0.0},
+                "error": "the trade record could not be read",
+            }
+
     async def money_record(self) -> dict[str, Any]:
         """"If this had been real money, where would we be?" — answered carefully.
 

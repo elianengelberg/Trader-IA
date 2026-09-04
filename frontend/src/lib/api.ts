@@ -506,6 +506,54 @@ export interface LessonGuardrail {
   active: boolean;
 }
 
+/** One closed round trip as the Trade Journal shows it. */
+export interface JournalRow {
+  outcome_id: string;
+  run_id: string;
+  closed_at: string | null;
+  source: string;
+  symbol: string;
+  regime: string;
+  direction: string;
+  confidence: number;
+  entry_price: number;
+  exit_price: number;
+  quantity: number;
+  notional_usd: number;
+  gross_bps: number;
+  fees_bps: number;
+  net_bps: number;
+  expected_net_bps: number;
+  net_usd: number;
+  expected_usd: number;
+  exploratory: boolean;
+  is_win: boolean;
+}
+
+export interface JournalPage {
+  rows: JournalRow[];
+  total: number;
+  offset: number;
+  limit: number;
+  summary: {
+    trades: number;
+    wins: number;
+    win_rate: number;
+    pnl_usd: number;
+    mean_trade_usd: number;
+  };
+  error?: string;
+}
+
+export interface JournalFilters {
+  limit?: number;
+  offset?: number;
+  source?: string;
+  regime?: string;
+  direction?: string;
+  outcome?: string;
+}
+
 /** One source's closed trades, priced in dollars from the configured starting balance. */
 export interface MoneySlice {
   trades: number;
@@ -815,6 +863,14 @@ export const api = {
   trainingStop: () => post<{ stopped: boolean; pid: number }>("/training/stop"),
   trainingAbsorb: () => post<EvidenceAbsorbed>("/training/absorb"),
   money: () => get<MoneyRecord>("/money"),
+  journal: (filters: JournalFilters = {}) => {
+    const params = new URLSearchParams();
+    for (const [key, value] of Object.entries(filters)) {
+      if (value !== undefined && value !== null && value !== "") params.set(key, String(value));
+    }
+    const query = params.toString();
+    return get<JournalPage>(`/journal${query ? `?${query}` : ""}`);
+  },
   trainingReload: () => post<{ restarting: boolean; detail: string }>("/training/reload"),
   mentorApply: (proposalId: string) =>
     post<{ applied: string; result: Record<string, unknown> }>("/mentor/apply", {

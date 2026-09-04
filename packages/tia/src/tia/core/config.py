@@ -307,6 +307,15 @@ class LiveConfig(FrozenModel):
     #: ignored outright over a live execution provider, no matter what this says, because
     #: with real money "I don't know yet" is a reason not to trade, not an experiment.
     exploration_trades_per_day: int = Field(0, ge=0, le=50)
+    #: How the 24/7 session enters. ``market`` crosses the spread and pays the taker fee
+    #: on the way in; ``limit`` rests a post-only order at the touch and pays the maker
+    #: fee with no spread crossed — roughly half the round-trip cost, which is the single
+    #: largest lever on how many signals clear the expected-value bar. The price of that
+    #: is fills that never come: a resting entry unfilled after ``entry_limit_timeout_bars``
+    #: is cancelled, and a missed trade costs nothing. Exits that expire are re-sent as
+    #: market orders, because getting out is never optional.
+    entry_order_type: str = Field("market", pattern="^(market|limit)$")
+    entry_limit_timeout_bars: int = Field(3, ge=1, le=60)
     #: Costs may not exceed this fraction of the expected gross edge.
     max_cost_ratio: float = Field(0.6, gt=0, le=1.0)
 

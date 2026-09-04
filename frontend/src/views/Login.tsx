@@ -35,9 +35,17 @@ export function Login({
     <div className="login-shell">
       <div className="login-card">
         <Card>
-          <h1>Trader-IA</h1>
-          <p className="dim" style={{ margin: 0, fontSize: 13 }}>
-            Simulation-only paper trading. No real money, no broker, no custody.
+          <div className="row" style={{ gap: 12, alignItems: "center" }}>
+            <img src="/icon-192.png" alt="" width={40} height={40} style={{ borderRadius: 10 }} />
+            <div>
+              <h1 style={{ margin: 0 }}>Trader-IA</h1>
+              <span className="dim" style={{ fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase" }}>
+                Autonomous paper-trading research
+              </span>
+            </div>
+          </div>
+          <p className="dim" style={{ margin: "10px 0 0", fontSize: 13 }}>
+            Simulation-only. No real money, no broker, no custody.
           </p>
           <form onSubmit={submit}>
             <label className="field">

@@ -26,10 +26,12 @@ from tia.core.errors import (
     ReconciliationError,
 )
 from tia.data.providers.base import MarketDataProvider, ProviderCapabilities
+from tia.domain.enums import OrderState, OrderType, Side
 from tia.domain.market import Candle
 from tia.domain.orders import Fill, Order, OrderIntent
 from tia.domain.portfolio import PortfolioState, Position
 from tia.execution.provider import ExecutionCapabilities, ExecutionProvider
+from tia.execution.state_machine import transition
 from tia.live.gate import (
     CONFIRMATION_PHRASE,
     REQUIRED_CHECKS,
@@ -99,6 +101,10 @@ class FakeExecution(ExecutionProvider):
         self.fail_next: list[Exception] = []
         #: What resolve_unknown_order should report: "absent" | "present".
         self.unknown_resolution = "absent"
+        #: When True, LIMIT orders rest (ACKNOWLEDGED, no fills) instead of filling at
+        #: once — the case a resting-order manager exists for.
+        self.rest_limits = False
+        self.cancelled: list[str] = []
         self._clock_now = SystemClock().now
 
     async def submit_order(self, intent: OrderIntent) -> Order:
@@ -107,6 +113,24 @@ class FakeExecution(ExecutionProvider):
         self.submissions += 1
         if self.fail_next:
             raise self.fail_next.pop(0)
+        if self.rest_limits and intent.order_type is OrderType.LIMIT:
+            now = self._clock_now()
+            order = Order(
+                order_id=f"o-{self.submissions}",
+                client_order_id=intent.client_order_id,
+                intent_id=intent.intent_id,
+                signal_id=intent.signal_id,
+                symbol=intent.symbol,
+                side=intent.side,
+                order_type=intent.order_type,
+                quantity=intent.quantity,
+                limit_price=intent.limit_price,
+                state=OrderState.ACKNOWLEDGED,
+                created_at=now,
+                updated_at=now,
+            )
+            self.orders[intent.client_order_id] = order
+            return order
         return self._fill(intent)
 
     def _fill(self, intent: OrderIntent) -> Order:
@@ -131,6 +155,7 @@ class FakeExecution(ExecutionProvider):
             side=intent.side,
             order_type=intent.order_type,
             quantity=intent.quantity,
+            limit_price=intent.limit_price,
             state=__import__("tia.domain.enums", fromlist=["OrderState"]).OrderState.FILLED,
             filled_quantity=intent.quantity,
             average_fill_price=self.price,
@@ -167,10 +192,18 @@ class FakeExecution(ExecutionProvider):
             o for o in self.orders.values()
             if order_id in (o.order_id, o.client_order_id)
         )
+        if not order.state.is_terminal:
+            now = self._clock_now()
+            transition(order, OrderState.CANCEL_REQUESTED, at=now)
+            transition(order, OrderState.CANCELLED, at=now, reason="cancelled by caller")
+            self.cancelled.append(order.order_id)
         return order
 
     async def get_order(self, order_id: str) -> Order | None:
-        return self.orders.get(order_id)
+        return next(
+            (o for o in self.orders.values() if order_id in (o.order_id, o.client_order_id)),
+            None,
+        )
 
     async def get_orders(self, *, open_only: bool = False) -> list[Order]:
         orders = list(self.orders.values())
@@ -1058,3 +1091,107 @@ async def test_selectivity_splits_the_record_by_what_todays_rules_would_take() -
     assert report["refused"]["win_rate"] == 0.0
     # And the whole thing rides along with the learning report the page reads.
     assert runtime.learning_report()["selectivity"]["reviewed"] == 80
+
+
+# ------------------------------------------------------------- maker entries
+
+
+def _seed_every_bucket(runtime: LiveRuntime, net_bps: float = 200.0) -> None:
+    from tia.domain.enums import Direction, MarketRegime
+    from tia.economics.expected_value import Outcome
+
+    runtime._edges.record_many(
+        [
+            Outcome(
+                regime=regime, direction=direction, confidence=0.65,
+                net_return_bps=net_bps + (3.0 if i % 2 else -3.0),
+            )
+            for regime in MarketRegime
+            for direction in (Direction.LONG, Direction.SHORT)
+            for i in range(40)
+        ]
+    )
+
+
+async def test_limit_entries_rest_on_our_side_of_the_spread_and_are_priced_as_maker() -> None:
+    """The cheapest trade is the one that does not cross the spread.
+
+    With entries configured as limit orders, the intent that reaches the venue is a LIMIT
+    at the touch on our side (below the reference for a buy), and the session reports the
+    style it is using. The cost model's maker path is tested on its own; what this pins
+    is that the runtime actually asks for it.
+    """
+    runtime, execution, market = build_runtime_paper()
+    runtime._settings = live_settings(entry_order_type="limit")
+    assert runtime.entry_is_limit
+    _seed_every_bucket(runtime)
+    await runtime.start()
+    try:
+        for _ in range(300):
+            market.advance()
+            await runtime._cycle_once()
+            if execution.submissions:
+                break
+        assert execution.submissions >= 1, "no entry was ever submitted"
+        order = next(iter(execution.orders.values()))
+        assert order.order_type is OrderType.LIMIT
+        assert order.limit_price is not None
+        reference = runtime._buffer[-1].close if runtime._buffer else None
+        assert reference is not None
+        if order.side is Side.BUY:
+            assert order.limit_price <= reference
+        else:
+            assert order.limit_price >= reference
+        assert runtime.snapshot()["execution"]["entry_order_type"] == "limit"
+    finally:
+        await runtime.stop()
+
+
+async def test_an_unfilled_limit_entry_expires_and_frees_the_session() -> None:
+    """A missed entry costs nothing — as long as it is actually missed.
+
+    While the order rests, no second entry is considered (one signal, one order). After
+    the configured bars it is cancelled, the expectation formed for it is dropped so it
+    cannot be scored against the next trade, and the session is free to look again.
+    """
+    runtime, execution, market = build_runtime_paper()
+    runtime._settings = live_settings(entry_order_type="limit", entry_limit_timeout_bars=2)
+    execution.rest_limits = True
+    _seed_every_bucket(runtime)
+    await runtime.start()
+    try:
+        for _ in range(300):
+            market.advance()
+            await runtime._cycle_once()
+            if runtime.counters["orders_expired"]:
+                break
+        assert runtime.counters["orders_expired"] >= 1
+        assert runtime._resting is None
+        assert runtime.counters["resting_skipped"] >= 1
+        assert execution.cancelled, "the venue was never asked to cancel"
+        assert runtime._entry_beliefs is None
+        assert runtime._open_trade is None
+        snapshot = runtime.snapshot()["execution"]
+        assert snapshot["resting_order"] is None
+    finally:
+        await runtime.stop()
+
+
+async def test_market_entries_are_unchanged_by_default() -> None:
+    """The default is the old behaviour, exactly: nothing rests, nothing expires."""
+    runtime, execution, market = build_runtime_paper()
+    assert not runtime.entry_is_limit
+    _seed_every_bucket(runtime)
+    await runtime.start()
+    try:
+        for _ in range(300):
+            market.advance()
+            await runtime._cycle_once()
+            if execution.submissions:
+                break
+        assert execution.submissions >= 1
+        assert next(iter(execution.orders.values())).order_type is OrderType.MARKET
+        assert runtime.counters["orders_expired"] == 0
+        assert runtime.counters["resting_skipped"] == 0
+    finally:
+        await runtime.stop()

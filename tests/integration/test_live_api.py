@@ -798,3 +798,25 @@ async def test_the_money_record_keeps_the_session_and_the_simulations_apart(
     assert body["session"]["trades"] == 0
     assert body["session"]["ending_usd"] == body["starting_usd"]
     assert "independent" in body["explanation"]
+
+
+async def test_the_journal_is_readable_filterable_and_bounded(client: httpx.AsyncClient) -> None:
+    """The register: every closed trade, with the filtered set's own totals.
+
+    Empty here — the point is the contract: filters are validated (a bad source is a
+    422, not a silent "all"), the page is bounded, and the summary describes the
+    filtered set even when it is empty.
+    """
+    response = await client.get("/api/journal")
+    assert response.status_code == 200, response.text
+    body = response.json()
+    assert body["rows"] == []
+    assert body["total"] == 0
+    assert body["summary"]["trades"] == 0
+    assert body["summary"]["win_rate"] == 0.0
+
+    assert (await client.get("/api/journal?source=hacker")).status_code == 422
+    assert (await client.get("/api/journal?limit=5000")).status_code == 422
+    filtered = await client.get("/api/journal?source=live&direction=long&outcome=win&limit=10")
+    assert filtered.status_code == 200
+    assert filtered.json()["limit"] == 10

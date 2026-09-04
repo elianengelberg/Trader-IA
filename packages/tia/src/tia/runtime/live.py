@@ -345,7 +345,16 @@ class LiveRuntime:
             "guardrail_rejected": 0, "exploration_trades": 0,
             "orders": 0, "fills": 0, "reconciliations": 0, "reconciliation_breaks": 0,
             "unknown_order_states": 0, "skew_halts": 0,
+            "maker_fills": 0, "orders_expired": 0, "resting_skipped": 0,
         }
+        #: The one order allowed to rest at a time, if entries are limit orders. While it
+        #: rests, no new entry is considered — stacking resting orders is how a session
+        #: ends up long three times on one signal.
+        self._resting: dict[str, Any] | None = None
+        #: Fill ids already routed to the ledger and the round-trip tracker. A fill can be
+        #: seen twice — on the submit response and again on a later order read — and it
+        #: must be counted once.
+        self._seen_fills: set[str] = set()
         self._exploration_used = 0
         self._exploration_day = ""
         #: Evidence folded in *after* startup — training runs that finished while this
@@ -376,6 +385,11 @@ class LiveRuntime:
         return self._exploration_used < self._settings.live.exploration_trades_per_day
 
     # ------------------------------------------------------------------ properties
+
+    @property
+    def entry_is_limit(self) -> bool:
+        """Whether entries rest as maker orders. Read live, so a config reload applies."""
+        return self._settings.live.entry_order_type == "limit"
 
     @property
     def typical_trade_notional_usd(self) -> float:
@@ -772,6 +786,9 @@ class LiveRuntime:
             for fill in on_bar(latest):
                 self._on_fill(fill)
 
+        if self._resting is not None:
+            await self._manage_resting()
+
         # Watchdog self-heal: data is flowing again. RUNNING is earned back through a
         # clean reconciliation, not assumed — and only for halts the watchdog itself
         # caused; an operator's halt stays until the operator lifts it.
@@ -820,6 +837,12 @@ class LiveRuntime:
         self.latency.stamp(correlation_id, "decision_finished")
 
         if not signal.direction.is_actionable:
+            return
+
+        if self._resting is not None:
+            # An order is already working. A second one on the next bar would not be a
+            # second opinion, it would be a second position.
+            self.counters["resting_skipped"] += 1
             return
 
         self.latency.stamp(correlation_id, "risk_started")
@@ -896,8 +919,13 @@ class LiveRuntime:
             regime=regime.regime,
             direction=signal.direction,
             confidence=signal.confidence,
+            # Priced the way it will be executed: a resting maker entry pays the maker
+            # fee and crosses no spread. The exit is priced as a taker regardless — an
+            # expired exit is re-sent as market, so the worst case is the honest case.
             costs=self._costs.estimate(
-                quantity=decision.approved_quantity, conditions=conditions
+                quantity=decision.approved_quantity,
+                conditions=conditions,
+                entry_maker=self.entry_is_limit,
             ),
         )
         # The learning guardrail: a bucket that has recently lost money or overstated its
@@ -989,6 +1017,26 @@ class LiveRuntime:
 
     # ------------------------------------------------------------------ orders
 
+    def _limit_price_for(self, side: Side, reference: float) -> float:
+        """Where a post-only entry rests: at the touch, on our side of the spread.
+
+        A buy rests half a spread below the reference and a sell half a spread above —
+        the price a maker actually gets, not the mid. Quantized to the venue's tick where
+        one is known: down for a buy and up for a sell, so rounding can only make the
+        order more passive, never cross the book by accident.
+        """
+        half_spread = self._settings.execution.base_slippage_bps / 10_000.0 / 2.0
+        raw = reference * (1.0 - half_spread) if side is Side.BUY else reference * (
+            1.0 + half_spread
+        )
+        tick = self._filters.get("tick_size")
+        if not tick:
+            return raw
+        floored = float(quantize_down(raw, tick))
+        if side is Side.BUY or floored == raw:
+            return floored
+        return floored + float(tick)
+
     def _build_intent(
         self,
         *,
@@ -997,6 +1045,8 @@ class LiveRuntime:
         quantity: float,
         signal_id: str,
         reduce_only: bool = False,
+        order_type: OrderType | None = None,
+        reference_price: float | None = None,
     ) -> OrderIntent:
         """A venue-legal intent: quantity quantized DOWN to the lot step, in Decimal.
 
@@ -1020,6 +1070,16 @@ class LiveRuntime:
                 f"venue minimum {min_notional}"
             )
 
+        if order_type is None:
+            order_type = OrderType.LIMIT if self.entry_is_limit else OrderType.MARKET
+        limit_price: float | None = None
+        if order_type is OrderType.LIMIT:
+            reference = reference_price or price_hint
+            if not reference or reference <= 0:
+                order_type = OrderType.MARKET  # no price to rest at: cross honestly
+            else:
+                limit_price = self._limit_price_for(side, float(reference))
+
         return OrderIntent(
             intent_id=deterministic_id("int", "live", signal_id, self._clock.now()),
             client_order_id=OrderIntent.build_client_order_id(
@@ -1027,14 +1087,15 @@ class LiveRuntime:
                 symbol=symbol,
                 side=side,
                 quantity=quantity,
-                order_type=OrderType.MARKET,
+                order_type=order_type,
             ),
             signal_id=signal_id,
             risk_decision_id=signal_id,
             symbol=symbol,
             side=side,
             quantity=quantity,
-            order_type=OrderType.MARKET,
+            order_type=order_type,
+            limit_price=limit_price,
             time_in_force=TimeInForce.GTC,
             created_at=self._clock.now(),
             reduce_only=reduce_only,
@@ -1052,11 +1113,14 @@ class LiveRuntime:
             )
         self._execution.assert_may_trade()
 
+        side = signal.direction.to_side()
+        reducing = self._open_trade is not None and side is not self._open_trade["side"]
         intent = self._build_intent(
             symbol=decision.symbol,
-            side=signal.direction.to_side(),
+            side=side,
             quantity=decision.approved_quantity,
             signal_id=decision.signal_id,
+            reference_price=self._buffer[-1].close if self._buffer else None,
         )
 
         self.latency.stamp(correlation_id, "order_submit")
@@ -1082,6 +1146,27 @@ class LiveRuntime:
             self.latency.stamp(correlation_id, "fill_received")
             for fill in fills:
                 self._on_fill(fill)
+        if not order.state.is_terminal and order.order_type is OrderType.LIMIT:
+            self._resting = {
+                "order_id": order.order_id,
+                "client_order_id": order.client_order_id,
+                "side": side,
+                "symbol": decision.symbol,
+                "quantity": decision.approved_quantity,
+                "signal_id": decision.signal_id,
+                "placed_bar": self.counters["bars"],
+                "reducing": reducing,
+                "limit_price": order.limit_price,
+            }
+            self._emit(
+                "live.order_resting",
+                {
+                    "correlation_id": correlation_id,
+                    "side": side.value,
+                    "limit_price": order.limit_price,
+                    "timeout_bars": self._settings.live.entry_limit_timeout_bars,
+                },
+            )
         sample = self.latency.finish(correlation_id, symbol=decision.symbol)
         if sample is not None:
             self._save(
@@ -1098,6 +1183,72 @@ class LiveRuntime:
             )
         self._save("order", {"run_id": self.run_id, "order": order})
 
+    async def _manage_resting(self) -> None:
+        """Advance the one resting order: route its fills, or expire it.
+
+        Fills are read from the venue's view of the order (the paper engine also hands
+        them over on the bar, which is why routing de-duplicates by fill id). An order
+        still open after the configured number of bars is cancelled — the moment the
+        signal priced has passed. If it was an *exit*, a market order follows at once:
+        a missed entry costs nothing, a missed exit is an open position nobody chose.
+        """
+        resting = self._resting
+        if resting is None:
+            return
+        order: Order | None = None
+        for key in (resting["order_id"], resting["client_order_id"]):
+            with contextlib.suppress(Exception):
+                order = await self._execution.get_order(key)
+            if order is not None:
+                break
+        if order is None:
+            # Unknown to the venue: nothing to cancel, nothing to wait for.
+            self._resting = None
+            return
+
+        for fill in order.fills:
+            self._on_fill(fill)
+        if order.state.is_terminal:
+            self._resting = None
+            return
+
+        waited = self.counters["bars"] - int(resting["placed_bar"])
+        if waited < self._settings.live.entry_limit_timeout_bars:
+            return
+
+        with contextlib.suppress(Exception):
+            await self._execution.cancel_order(order.client_order_id or order.order_id)
+        self.counters["orders_expired"] += 1
+        self._resting = None
+        self._emit(
+            "live.order_expired",
+            {
+                "side": resting["side"].value,
+                "limit_price": resting.get("limit_price"),
+                "waited_bars": waited,
+                "reducing": bool(resting["reducing"]),
+            },
+        )
+        if resting["reducing"]:
+            intent = self._build_intent(
+                symbol=resting["symbol"],
+                side=resting["side"],
+                quantity=float(resting["quantity"]),
+                signal_id=f"{resting['signal_id']}:exit-market",
+                reduce_only=True,
+                order_type=OrderType.MARKET,
+            )
+            with contextlib.suppress(Exception):
+                market = await self._execution.submit_order(intent)
+                self.counters["orders"] += 1
+                for fill in market.fills:
+                    self._on_fill(fill)
+                self._save("order", {"run_id": self.run_id, "order": market})
+        elif self._open_trade is None:
+            # The entry never happened; the expectation formed for it must not be scored
+            # against whatever trade comes next.
+            self._entry_beliefs = None
+
     async def _resolve_unknown(self, intent: OrderIntent) -> Order | None:
         resolver = getattr(self._execution, "resolve_unknown_order", None)
         if resolver is None:
@@ -1109,7 +1260,12 @@ class LiveRuntime:
         return await resolver(symbol=intent.symbol, client_order_id=intent.client_order_id)
 
     def _on_fill(self, fill: Fill) -> None:
+        if fill.fill_id in self._seen_fills:
+            return
+        self._seen_fills.add(fill.fill_id)
         self.counters["fills"] += 1
+        if fill.liquidity == "maker":
+            self.counters["maker_fills"] += 1
         self._ledger.record_fee(fill.fee, at=fill.filled_at)
         self._save("fill", {"run_id": self.run_id, "fill": fill})
         self._track_round_trip(fill)
@@ -1387,7 +1543,9 @@ class LiveRuntime:
         would. The bias is against us — the true accepted set is a subset of this one —
         which makes the reported improvement a floor, not a boast.
         """
-        cost_floor_bps = self._costs.fees.taker_bps * 2
+        cost_floor_bps = self._costs.fees.round_trip_bps(
+            entry_maker=self.entry_is_limit, exit_maker=False
+        )
         threshold = self._ev.threshold_bps
         taken = {"trades": 0, "wins": 0, "net_bps_sum": 0.0}
         refused = {"trades": 0, "wins": 0, "net_bps_sum": 0.0}
@@ -1489,6 +1647,20 @@ class LiveRuntime:
                 "coverage": self._edges.coverage(),
             },
             "evidence": self.evidence_state(),
+            "execution": {
+                "entry_order_type": self._settings.live.entry_order_type,
+                "limit_timeout_bars": self._settings.live.entry_limit_timeout_bars,
+                "resting_order": (
+                    {
+                        "side": self._resting["side"].value,
+                        "limit_price": self._resting.get("limit_price"),
+                        "placed_bar": self._resting["placed_bar"],
+                        "reducing": bool(self._resting["reducing"]),
+                    }
+                    if self._resting is not None
+                    else None
+                ),
+            },
             "last_error": self.last_error,
         }
 

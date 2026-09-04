@@ -473,6 +473,98 @@ class EdgeStateRepository:
             or 0
         )
 
+    async def journal(
+        self,
+        *,
+        limit: int = 50,
+        offset: int = 0,
+        source: str | None = None,
+        regime: str | None = None,
+        direction: str | None = None,
+        outcome: str | None = None,
+    ) -> dict[str, Any]:
+        """The complete closed-trade record, newest first, with the filter's totals.
+
+        Every round trip the system ever closed — training, demo and the 24/7 session —
+        with what it expected, what it got, and what it was worth in dollars at the size
+        it actually carried. The totals are computed over the *whole* filtered set, not
+        the page, so "how do longs in ranging markets do?" is answered by the strip, not
+        by scrolling.
+        """
+        conditions = []
+        if source:
+            conditions.append(EdgeOutcomeRow.source == source)
+        if regime:
+            conditions.append(EdgeOutcomeRow.regime == regime)
+        if direction:
+            conditions.append(EdgeOutcomeRow.direction == direction)
+        if outcome == "win":
+            conditions.append(EdgeOutcomeRow.net_bps > 0)
+        elif outcome == "loss":
+            conditions.append(EdgeOutcomeRow.net_bps <= 0)
+
+        pnl = (
+            EdgeOutcomeRow.net_bps
+            * EdgeOutcomeRow.entry_price
+            * EdgeOutcomeRow.quantity
+            / 10_000.0
+        )
+        totals_query = select(
+            func.count(EdgeOutcomeRow.outcome_id),
+            func.sum(case((EdgeOutcomeRow.net_bps > 0, 1), else_=0)),
+            func.sum(pnl),
+        )
+        rows_query = select(EdgeOutcomeRow).order_by(desc(EdgeOutcomeRow.closed_at))
+        for condition in conditions:
+            totals_query = totals_query.where(condition)
+            rows_query = rows_query.where(condition)
+        count, wins, total_pnl = (await self._session.execute(totals_query)).one()
+        rows = list(
+            (await self._session.execute(rows_query.offset(offset).limit(limit)))
+            .scalars()
+            .all()
+        )
+
+        def shaped(row: EdgeOutcomeRow) -> dict[str, Any]:
+            notional = float(row.entry_price or 0.0) * float(row.quantity or 0.0)
+            return {
+                "outcome_id": row.outcome_id,
+                "run_id": row.run_id,
+                "closed_at": row.closed_at.isoformat() if row.closed_at else None,
+                "source": row.source,
+                "symbol": row.symbol,
+                "regime": row.regime,
+                "direction": row.direction,
+                "confidence": round(float(row.confidence), 4),
+                "entry_price": float(row.entry_price),
+                "exit_price": float(row.exit_price),
+                "quantity": float(row.quantity),
+                "notional_usd": round(notional, 2),
+                "gross_bps": round(float(row.gross_bps), 4),
+                "fees_bps": round(float(row.fees_bps), 4),
+                "net_bps": round(float(row.net_bps), 4),
+                "expected_net_bps": round(float(row.expected_net_bps), 4),
+                "net_usd": round(notional * float(row.net_bps) / 10_000.0, 2),
+                "expected_usd": round(notional * float(row.expected_net_bps) / 10_000.0, 2),
+                "exploratory": bool(getattr(row, "exploratory", False)),
+                "is_win": float(row.net_bps) > 0,
+            }
+
+        count = int(count or 0)
+        return {
+            "rows": [shaped(row) for row in rows],
+            "total": count,
+            "offset": offset,
+            "limit": limit,
+            "summary": {
+                "trades": count,
+                "wins": int(wins or 0),
+                "win_rate": round(int(wins or 0) / count, 4) if count else 0.0,
+                "pnl_usd": round(float(total_pnl or 0.0), 2),
+                "mean_trade_usd": round(float(total_pnl or 0.0) / count, 2) if count else 0.0,
+            },
+        }
+
     async def dollar_record(self) -> dict[str, Any]:
         """Every closed trade's result in dollars, grouped by where it came from.
 

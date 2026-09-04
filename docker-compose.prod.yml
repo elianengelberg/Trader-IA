@@ -82,6 +82,11 @@ services:
       # Paper-only exploration: trades/day the session may take in buckets that LACK
       # evidence, to buy lessons with simulated money. Ignored over live execution.
       TIA_LIVE__EXPLORATION_TRADES_PER_DAY: ${TIA_LIVE__EXPLORATION_TRADES_PER_DAY:-0}
+      # Entries as resting maker orders by default in the paper profile: half the
+      # round-trip cost, and paper is exactly where a cheaper execution style should
+      # prove itself before anyone considers it with money. Set to market to compare.
+      TIA_LIVE__ENTRY_ORDER_TYPE: ${TIA_LIVE__ENTRY_ORDER_TYPE:-limit}
+      TIA_LIVE__ENTRY_LIMIT_TIMEOUT_BARS: ${TIA_LIVE__ENTRY_LIMIT_TIMEOUT_BARS:-3}
       # Venue credentials are OPTIONAL and only ever read from the environment.
       # The 24/7 paper session needs none. Live trading additionally requires the
       # activation gate's 27 checks — a key alone arms nothing.

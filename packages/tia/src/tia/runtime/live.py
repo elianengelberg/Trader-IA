@@ -360,6 +360,10 @@ class LiveRuntime:
         #: Why the round trip in progress is ending, for the record. Set by whichever
         #: path closes it; read once by the scorer.
         self._exit_reason: str | None = None
+        #: What the Orders & Fills page shows for this session: the engine's row shape,
+        #: newest first. The database has the durable copy; this is the live window.
+        self.recent_orders: deque[dict[str, Any]] = deque(maxlen=200)
+        self.recent_fills: deque[dict[str, Any]] = deque(maxlen=200)
         #: The one order allowed to rest at a time, if entries are limit orders. While it
         #: rests, no new entry is considered — stacking resting orders is how a session
         #: ends up long three times on one signal.
@@ -1216,6 +1220,7 @@ class LiveRuntime:
                     "total_ms": sample["total_ms"] or 0.0,
                 },
             )
+        self._record_order(order)
         self._save("order", {"run_id": self.run_id, "order": order})
 
     async def _manage_resting(self) -> None:
@@ -1278,6 +1283,7 @@ class LiveRuntime:
                 self.counters["orders"] += 1
                 for fill in market.fills:
                     self._on_fill(fill)
+                self._record_order(market)
                 self._save("order", {"run_id": self.run_id, "order": market})
         elif self._open_trade is None:
             # The entry never happened; the expectation formed for it must not be scored
@@ -1397,6 +1403,7 @@ class LiveRuntime:
         self.counters["stops_placed"] += 1
         for fill in order.fills:  # a stop already through its level fills at once
             self._on_fill(fill)
+        self._record_order(order)
         self._save("order", {"run_id": self.run_id, "order": order})
         self._emit(
             "live.stop_placed",
@@ -1488,6 +1495,7 @@ class LiveRuntime:
             self.counters[key] += 1
         for fill in order.fills:
             self._on_fill(fill)
+        self._record_order(order)
         self._save("order", {"run_id": self.run_id, "order": order})
         self._emit(
             "live.exit",
@@ -1505,10 +1513,49 @@ class LiveRuntime:
             )
         return await resolver(symbol=intent.symbol, client_order_id=intent.client_order_id)
 
+    def _record_order(self, order: Order) -> None:
+        self.recent_orders.appendleft(
+            {
+                "order_id": order.order_id,
+                "client_order_id": order.client_order_id,
+                "symbol": order.symbol,
+                "side": order.side.value,
+                "order_type": order.order_type.value,
+                "quantity": order.quantity,
+                "state": order.state.value,
+                "filled_quantity": order.filled_quantity,
+                "average_fill_price": order.average_fill_price,
+                "fees_paid": order.fees_paid,
+                "reject_reason": order.reject_reason or "",
+                "signal_id": order.signal_id,
+                "correlation_id": order.correlation_id,
+                "limit_price": order.limit_price,
+                "stop_price": order.stop_price,
+                "created_at": order.created_at.isoformat(),
+                "updated_at": order.updated_at.isoformat(),
+            }
+        )
+        self._emit("order.state_changed", self.recent_orders[0])
+
     def _on_fill(self, fill: Fill) -> None:
         if fill.fill_id in self._seen_fills:
             return
         self._seen_fills.add(fill.fill_id)
+        self.recent_fills.appendleft(
+            {
+                "fill_id": fill.fill_id,
+                "order_id": fill.order_id,
+                "symbol": fill.symbol,
+                "side": fill.side.value,
+                "quantity": fill.quantity,
+                "price": fill.price,
+                "fee": fill.fee,
+                "slippage_bps": fill.slippage_bps,
+                "liquidity": fill.liquidity,
+                "filled_at": fill.filled_at.isoformat(),
+            }
+        )
+        self._emit("order.fill_simulated", self.recent_fills[0])
         if self._protective is not None and fill.order_id == self._protective["order_id"]:
             self._exit_reason = "protective stop"
             self.counters["exits_stop"] += 1
@@ -1593,6 +1640,29 @@ class LiveRuntime:
         self._consecutive_losses = 0 if net_bps > 0 else self._consecutive_losses + 1
         self._ledger.record_realised_pnl(
             notional * net_bps / 10_000.0, at=exit_fill.filled_at
+        )
+        self._emit(
+            "trade.closed",
+            {
+                "symbol": self._symbol,
+                "signal_id": beliefs["signal_id"],
+                "regime": beliefs["regime"].value,
+                "direction": beliefs["direction"].value,
+                "confidence": beliefs["confidence"],
+                "entry_price": entry_price,
+                "exit_price": exit_price,
+                "quantity": trade["quantity"],
+                "notional_usd": round(notional, 2),
+                "gross_bps": round(gross_bps, 4),
+                "fees_bps": round(fees_bps, 4),
+                "net_bps": round(net_bps, 4),
+                "net_usd": round(notional * net_bps / 10_000.0, 2),
+                "expected_net_bps": beliefs["expected_net_bps"],
+                "exploratory": bool(beliefs.get("exploratory")),
+                "exit_reason": self._exit_reason or "signal reversed",
+                "closed_at": exit_fill.filled_at.isoformat(),
+                "source": "live",
+            },
         )
         self._save(
             "edge_outcome",
@@ -1720,8 +1790,11 @@ class LiveRuntime:
             _log.warning("live_persist_failed", kind=kind, error=str(exc)[:200])
 
     def _emit(self, event_type: str, payload: dict[str, Any]) -> None:
+        """Push one event to the API's broadcast. ``data`` is the key the SSE endpoint
+        serialises; an earlier version used ``payload`` and every live event reached the
+        browser as an empty object — the pages polled instead and nobody noticed."""
         with contextlib.suppress(Exception):
-            self._on_event({"type": event_type, "payload": payload})
+            self._on_event({"type": event_type, "data": payload})
 
     def counters_last_reconciliation_broke(self) -> bool:
         """Whether the most recent reconciliation recorded a divergence."""

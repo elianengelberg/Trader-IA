@@ -1,5 +1,42 @@
-import { type Health, type RuntimeSnapshot } from "../lib/api";
+import { useEffect, useState } from "react";
+import { api, type Health, type RuntimeSnapshot, type SecurityPosture } from "../lib/api";
 import { Card, Empty, Pill, SimulationFootnote, Stat } from "../components/ui";
+
+/**
+ * What protects this deployment, as facts with remedies. The server judges; this page
+ * only reads. Nothing here is a secret — the password appears as a strength verdict.
+ */
+function SecurityPanel() {
+  const [posture, setPosture] = useState<SecurityPosture | null>(null);
+  useEffect(() => {
+    api.securityPosture().then(setPosture).catch(() => undefined);
+  }, []);
+  if (!posture) return null;
+  return (
+    <Card
+      title="Security posture"
+      actions={<Pill value={`${posture.passed}/${posture.total}`} tone={posture.passed === posture.total ? "ok" : "warn"} />}
+    >
+      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        {posture.checks.map((check) => (
+          <div key={check.key} className="row" style={{ alignItems: "flex-start", gap: 12 }}>
+            <Pill value={check.ok ? "ok" : "fix"} tone={check.ok ? "ok" : "warn"} />
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 13, fontWeight: 600 }}>{check.title}</div>
+              <div className="faint" style={{ fontSize: 12, lineHeight: 1.5 }}>{check.detail}</div>
+              {check.remedy && (
+                <div style={{ fontSize: 12, color: "var(--warn, #c90)", marginTop: 2 }}>→ {check.remedy}</div>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+      <p className="footnote" style={{ marginTop: 12 }}>
+        Sessions last {posture.session_hours} hours. This page was served over {posture.scheme.toUpperCase()}.
+      </p>
+    </Card>
+  );
+}
 
 const DESCRIPTIONS: Record<string, string> = {
   database: "SQLite by default; stores every decision, order, fill and equity point.",
@@ -45,6 +82,7 @@ export function SystemView({
       </div>
 
       <div className="grid cols-2">
+        <SecurityPanel />
         <Card title="Runtime counters">
           {Object.keys(counters).length === 0 ? (
             <Empty message="No run active." />

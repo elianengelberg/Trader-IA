@@ -30,12 +30,32 @@ const EVENT_TYPES = [
   "runtime.kill_switch",
   "system.reconciliation_completed",
   "backtest.completed",
+  // The trade record and the 24/7 session. Pages subscribed to these for a long time
+  // without ever receiving one — EventSource only delivers names it was asked for.
+  "trade.closed",
+  "evaluation.created",
+  "live.state",
+  "live.no_trade",
+  "live.exploration",
+  "live.order_resting",
+  "live.order_expired",
+  "live.stop_placed",
+  "live.exit",
+  "live.evidence_absorbed",
 ] as const;
+
+/** The session's own events, for the activity feed. */
+export const LIVE_EVENT_TYPES = EVENT_TYPES.filter(
+  (type) => type.startsWith("live.") || type === "trade.closed",
+);
 
 export type Subscribe = (type: string, handler: Handler) => () => void;
 
 export function useEventStream(enabled: boolean) {
   const [connected, setConnected] = useState(false);
+  // When the last event of any kind arrived. "Connected" says the pipe is open; this says
+  // something actually came down it, which is the freshness a reader wants to know.
+  const [lastEventAt, setLastEventAt] = useState<number | null>(null);
   const handlers = useRef(new Map<string, Set<Handler>>());
 
   useEffect(() => {
@@ -54,6 +74,7 @@ export function useEventStream(enabled: boolean) {
         } catch {
           /* a frame that is not JSON is still worth delivering as a string */
         }
+        setLastEventAt(Date.now());
         handlers.current.get(type)?.forEach((handler) => handler(payload));
       };
       source.addEventListener(type, listener);
@@ -76,7 +97,7 @@ export function useEventStream(enabled: boolean) {
     };
   }, []);
 
-  return { connected, subscribe };
+  return { connected, subscribe, lastEventAt };
 }
 
 /**

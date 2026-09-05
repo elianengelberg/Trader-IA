@@ -39,6 +39,7 @@ from tia.api.security import (
     User,
     current_user,
     default_credentials,
+    password_strength,
     require_operator,
 )
 from tia.api.state import AppState
@@ -191,6 +192,19 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     username, password, generated = default_credentials()
     app.state.auth.add_user(username, password, role="operator")
+    # Judged once at startup; the verdict is kept, the value is not. A weak password on
+    # the account that owns the kill switch is worth one loud line in the log.
+    strength = password_strength(password)
+    app.state.password_strength = strength
+    if strength["verdict"] == "weak" and not generated:
+        _log.warning(
+            "weak_operator_password",
+            length=strength["length"],
+            hint="set a TIA_DEMO_PASSWORD of 12+ characters; see System → Security posture",
+        )
+    # Per-username limiter beside the per-client one: one account, many source
+    # addresses is what a distributed guess looks like.
+    app.state.user_limiter = RateLimiter(limit=12, window_seconds=600)
     if generated:
         # Printed once, to the server's own log. Never returned by an endpoint.
         _log.warning(
@@ -204,6 +218,12 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     _register_routes(app, settings)
     _register_frontend(app)
     return app
+
+
+def _client_scheme(request: Request) -> str:
+    """The scheme the browser used: the proxy's X-Forwarded-Proto when present."""
+    forwarded = request.headers.get("x-forwarded-proto", "")
+    return forwarded.split(",")[0].strip().lower() or request.url.scheme
 
 
 def _register_middleware(app: FastAPI) -> None:
@@ -251,8 +271,11 @@ def _register_routes(app: FastAPI, settings: Settings) -> None:
     @app.post("/api/auth/login")
     async def login(body: LoginRequest, request: Request, response: Response) -> dict[str, Any]:
         client = request.client.host if request.client else "unknown"
-        if not request.app.state.login_limiter.check(client, now=time.time()):
+        now = time.time()
+        if not request.app.state.login_limiter.check(client, now=now):
             raise HTTPException(429, "too many login attempts; wait five minutes")
+        if not request.app.state.user_limiter.check(body.username.lower(), now=now):
+            raise HTTPException(429, "too many login attempts; wait ten minutes")
 
         user = request.app.state.auth.authenticate(body.username, body.password)
         if user is None:
@@ -260,17 +283,112 @@ def _register_routes(app: FastAPI, settings: Settings) -> None:
             raise HTTPException(status.HTTP_401_UNAUTHORIZED, "invalid credentials")
 
         request.app.state.login_limiter.reset(client)
+        request.app.state.user_limiter.reset(body.username.lower())
         token = request.app.state.auth.issue_token(user)
         response.set_cookie(
             SESSION_COOKIE,
             token,
             httponly=True,
             samesite="strict",
-            secure=request.url.scheme == "https",
+            # Behind the reverse proxy the app itself speaks plain HTTP; the scheme the
+            # browser used arrives in X-Forwarded-Proto. Without honouring it, a site
+            # served over HTTPS was handing out a cookie without the Secure flag.
+            secure=_client_scheme(request) == "https",
             max_age=SESSION_HOURS * 3600,
             path="/",
         )
         return {"username": user.username, "role": user.role}
+
+    @app.get("/api/security/posture")
+    async def security_posture(
+        request: Request, _user: User = Depends(current_user)
+    ) -> dict[str, Any]:
+        """What protects this deployment, as facts with remedies — never as reassurance.
+
+        Nothing here is a secret or derived from one: the password appears only as a
+        strength verdict computed at startup.
+        """
+        scheme = _client_scheme(request)
+        strength = getattr(request.app.state, "password_strength", {"verdict": "unknown"})
+        jwt_configured = bool(tia(request).settings.security.jwt_secret_configured)
+        checks = [
+            {
+                "key": "https",
+                "ok": scheme == "https",
+                "title": "Encrypted in transit",
+                "detail": (
+                    "This page was served over HTTPS." if scheme == "https"
+                    else "This page was served over plain HTTP: the password and the session cookie travel in the clear."
+                ),
+                "remedy": "" if scheme == "https" else "Point a name at the server and set TIA_DOMAIN; the proxy obtains a certificate on its own.",
+            },
+            {
+                "key": "cookie_secure",
+                "ok": scheme == "https",
+                "title": "Session cookie is HttpOnly, SameSite=Strict" + (", Secure" if scheme == "https" else ""),
+                "detail": "Scripts cannot read it and other sites cannot send it." + ("" if scheme == "https" else " The Secure flag is added automatically once the page is served over HTTPS."),
+                "remedy": "",
+            },
+            {
+                "key": "password",
+                "ok": strength.get("verdict") in {"fair", "strong"},
+                "title": f"Operator password: {strength.get('verdict', 'unknown')}",
+                "detail": f"{strength.get('length', '?')} characters, {strength.get('character_classes', '?')} character classes. This account owns the kill switch.",
+                "remedy": "" if strength.get("verdict") in {"fair", "strong"} else "Set TIA_DEMO_PASSWORD to 12+ characters (a generated one is fine — your password manager remembers it).",
+            },
+            {
+                "key": "jwt_secret",
+                "ok": True,
+                "title": "Session signing key " + ("configured" if jwt_configured else "per-process"),
+                "detail": (
+                    "Sessions survive restarts." if jwt_configured
+                    else "A random key per process: nobody can forge a session, but every restart signs everyone out."
+                ),
+                "remedy": "" if jwt_configured else "Optional: set TIA_SECURITY__JWT_SECRET so redeploys do not log you out.",
+            },
+            {
+                "key": "rate_limits",
+                "ok": True,
+                "title": "Login limited per address and per account",
+                "detail": "8 attempts per 5 minutes per address, 12 per 10 minutes per account; the API at 600 requests per minute.",
+                "remedy": "",
+            },
+            {
+                "key": "headers",
+                "ok": True,
+                "title": "Content-Security-Policy, no framing, no sniffing",
+                "detail": "Scripts and connections only to this origin; the page cannot be embedded elsewhere.",
+                "remedy": "",
+            },
+            {
+                "key": "network",
+                "ok": True,
+                "title": "Only the proxy is published",
+                "detail": "The database and the engine sit on an internal network with no host ports.",
+                "remedy": "Keep the host firewall to 22, 80 and 443.",
+            },
+            {
+                "key": "two_factor",
+                "ok": False,
+                "title": "No second factor",
+                "detail": "One password stands between the internet and the operator account.",
+                "remedy": "Not built yet. Until then: a long password, and never reuse it.",
+            },
+            {
+                "key": "custody",
+                "ok": True,
+                "title": "No path to funds",
+                "detail": "No deposit, withdrawal or transfer endpoint exists; the venue key must lack those permissions and the gate verifies it.",
+                "remedy": "",
+            },
+        ]
+        return {
+            "scheme": scheme,
+            "session_hours": SESSION_HOURS,
+            "checks": checks,
+            "passed": sum(1 for c in checks if c["ok"]),
+            "total": len(checks),
+        }
 
     @app.post("/api/auth/logout")
     async def logout(response: Response) -> dict[str, str]:
@@ -592,6 +710,15 @@ def _register_routes(app: FastAPI, settings: Settings) -> None:
             outcome=outcome,
         )
 
+    @app.get("/api/live/activity")
+    async def live_activity(
+        request: Request,
+        _user: User = Depends(current_user),
+        limit: int = Query(60, ge=1, le=150),
+    ) -> list[dict[str, Any]]:
+        """What the 24/7 session did recently, newest first — the dashboard's feed."""
+        return tia(request).live_activity(limit)
+
     @app.get("/api/journal/setups")
     async def journal_setups(
         request: Request,
@@ -868,7 +995,9 @@ def _register_routes(app: FastAPI, settings: Settings) -> None:
                         # connection, and costs nothing.
                         yield b": keepalive\n\n"
                         continue
-                    payload = json.dumps(event.get("data", {}), default=str)
+                    payload = json.dumps(
+                        event.get("data", event.get("payload", {})), default=str
+                    )
                     yield f"event: {event.get('type', 'message')}\ndata: {payload}\n\n".encode()
             finally:
                 state.unsubscribe(queue)

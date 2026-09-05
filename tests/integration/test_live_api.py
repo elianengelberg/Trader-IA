@@ -189,7 +189,8 @@ async def test_the_arm_request_has_no_field_for_a_secret_or_a_capital_amount(
 
 
 @pytest.mark.parametrize(
-    "path", ["/api/live/gate", "/api/settings", "/api/health", "/api/system/status"]
+    "path",
+    ["/api/live/gate", "/api/settings", "/api/health", "/api/system/status", "/api/security/posture"],
 )
 async def test_no_endpoint_leaks_the_venue_secret(
     armed_client: httpx.AsyncClient, path: str
@@ -827,3 +828,44 @@ async def test_setups_are_grouped_and_source_is_validated(client: httpx.AsyncCli
     assert empty.status_code == 200, empty.text
     assert empty.json() == []
     assert (await client.get("/api/journal/setups?source=nope")).status_code == 422
+
+
+async def test_the_security_posture_judges_without_revealing(client: httpx.AsyncClient) -> None:
+    """Facts with remedies, and never the value being judged."""
+    response = await client.get("/api/security/posture")
+    assert response.status_code == 200, response.text
+    body = response.json()
+    keys = {check["key"] for check in body["checks"]}
+    assert {"https", "password", "rate_limits", "two_factor", "custody"} <= keys
+    assert PASSWORD not in response.text
+    password = next(c for c in body["checks"] if c["key"] == "password")
+    assert password["ok"] is True  # the fixture password is long enough
+    # Served over plain HTTP in tests: said so, with the remedy, not hidden.
+    https = next(c for c in body["checks"] if c["key"] == "https")
+    assert https["ok"] is False and "TIA_DOMAIN" in https["remedy"]
+
+
+async def test_the_forwarded_scheme_decides_the_secure_cookie_flag(tmp_path: Path) -> None:
+    """Behind the proxy the app speaks HTTP; the browser's scheme rides in a header."""
+    app = create_app(_settings(tmp_path))
+    async with LifespanManager(app):
+        transport = httpx.ASGITransport(app=app)
+        async with httpx.AsyncClient(transport=transport, base_url="http://test") as http:
+            plain = await http.post(
+                "/api/auth/login", json={"username": USERNAME, "password": PASSWORD}
+            )
+            assert plain.status_code == 200
+            assert "secure" not in plain.headers.get("set-cookie", "").lower()
+            forwarded = await http.post(
+                "/api/auth/login",
+                json={"username": USERNAME, "password": PASSWORD},
+                headers={"x-forwarded-proto": "https"},
+            )
+            assert forwarded.status_code == 200
+            assert "secure" in forwarded.headers.get("set-cookie", "").lower()
+
+
+async def test_the_activity_feed_is_readable_and_bounded(client: httpx.AsyncClient) -> None:
+    empty = await client.get("/api/live/activity")
+    assert empty.status_code == 200 and empty.json() == []
+    assert (await client.get("/api/live/activity?limit=5000")).status_code == 422

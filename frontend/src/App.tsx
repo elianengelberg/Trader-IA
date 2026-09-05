@@ -68,7 +68,14 @@ export default function App() {
   const [runtime, setRuntime] = useState<RuntimeSnapshot | null>(null);
   const [health, setHealth] = useState<Health | null>(null);
 
-  const { connected, subscribe } = useEventStream(user !== null);
+  const { connected, subscribe, lastEventAt } = useEventStream(user !== null);
+  // A one-second tick so "updated 4s ago" counts up between events.
+  const [, setTick] = useState(0);
+  useEffect(() => {
+    const id = window.setInterval(() => setTick((t) => t + 1), 1000);
+    return () => window.clearInterval(id);
+  }, []);
+  const freshness = lastEventAt === null ? null : Math.max(0, Math.round((Date.now() - lastEventAt) / 1000));
 
   useEffect(() => {
     api
@@ -175,9 +182,17 @@ export default function App() {
         {/* Stream connection status — NOT live trading. "Live" here read as
             "live trading", which is exactly what this platform is not; call it what
             it is: the event stream is connected or reconnecting. */}
-        <span className={`pill ${connected ? "ok" : "warn"}`} title="Event-stream connection">
+        <span
+          className={`pill ${connected ? "ok" : "warn"}`}
+          title="Event-stream connection, and how long since the server last pushed anything"
+        >
           <i className="dot" />
           {connected ? "Connected" : "Reconnecting"}
+          {connected && freshness !== null && (
+            <span className="dim" style={{ marginLeft: 6, fontWeight: 400 }}>
+              · {freshness < 60 ? `${freshness}s` : `${Math.floor(freshness / 60)}m`}
+            </span>
+          )}
         </span>
         {health && <Pill value={health.status} />}
         <span className="dim" style={{ fontSize: 12 }}>{user.username}</span>

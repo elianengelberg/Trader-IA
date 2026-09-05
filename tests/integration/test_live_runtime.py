@@ -1349,3 +1349,32 @@ async def test_the_time_stop_is_off_by_default_and_closes_when_set() -> None:
         assert runtime._retro.reviews == reviews_before + 1
     finally:
         await runtime.stop()
+
+
+async def test_the_session_announces_closed_trades_and_orders_on_the_stream() -> None:
+    """Pages subscribed to trade.closed for months without receiving one from the 24/7
+    session: it never emitted it, and what it did emit went out under a key the stream
+    did not read. Both are pinned here: the event exists, carries data, and the orders
+    and fills pages can see the session's activity."""
+    from tia.runtime.live import LiveRuntime as _LR  # noqa: F401 - explicit subject
+
+    seen: list[dict[str, Any]] = []
+    runtime, execution, market = build_runtime_paper()
+    runtime._on_event = seen.append
+    await runtime.start()
+    try:
+        await _open_a_position(runtime, execution, market)
+        position = next(iter((await execution.get_positions()).values()))
+        runtime._planned_exit["target"] = 1.0 if position.quantity > 0 else 10_000_000.0
+        market.advance()
+        await runtime._cycle_once()
+    finally:
+        await runtime.stop()
+
+    closed = [e for e in seen if e.get("type") == "trade.closed"]
+    assert closed, "no trade.closed event was emitted"
+    assert closed[0]["data"]["exit_reason"] == "target reached"
+    assert isinstance(closed[0]["data"]["net_usd"], float)
+    assert all("data" in e for e in seen), "every event carries its payload under data"
+    assert runtime.recent_orders and runtime.recent_fills
+    assert runtime.recent_orders[0]["order_type"] in {"market", "limit", "stop"}

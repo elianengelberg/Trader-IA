@@ -84,6 +84,7 @@ class AppState:
         self.started_at = datetime.now(UTC)
 
         self._subscribers: set[asyncio.Queue[dict[str, Any]]] = set()
+        self._live_activity: deque[dict[str, Any]] = deque(maxlen=150)
         self._loop: asyncio.AbstractEventLoop | None = None
         self._dropped_events = 0
         self._request_errors = 0
@@ -151,6 +152,17 @@ class AppState:
         Called from the runtime's loop, so it must never await and must never raise: a
         browser that stopped reading cannot be allowed to stall the trading loop.
         """
+        kind = str(event.get("type", ""))
+        if kind.startswith("live.") or kind == "trade.closed":
+            # The activity feed: what the session did, in order, for a page opened
+            # after the fact. Bounded; the journal holds the durable record.
+            self._live_activity.appendleft(
+                {
+                    "type": kind,
+                    "at": datetime.now(UTC).isoformat(),
+                    "data": event.get("data", event.get("payload", {})),
+                }
+            )
         for queue in list(self._subscribers):
             try:
                 queue.put_nowait(event)
@@ -500,13 +512,7 @@ class AppState:
             with contextlib.suppress(Exception):  # a refresh must never kill the loop
                 result = await self.refresh_session_evidence()
                 if result.get("absorbed"):
-                    self.broadcast(
-                        {
-                            "event": "live.evidence_absorbed",
-                            "at": datetime.now(UTC).isoformat(),
-                            "data": result,
-                        }
-                    )
+                    self.broadcast({"type": "live.evidence_absorbed", "data": result})
 
     def _start_evidence_refresh(self) -> None:
         """Idempotent: one refresher for the process, started with the first session."""
@@ -687,10 +693,26 @@ class AppState:
         return out
 
     def orders(self, limit: int) -> list[dict[str, Any]]:
-        return list(self.runtime.recent_orders)[:limit] if self.runtime else []
+        """The 24/7 session's orders first, then the demo run's. The page used to show
+        only the demo, so a session that had been trading all night looked idle."""
+        rows: list[dict[str, Any]] = []
+        if self.live_runtime is not None:
+            rows.extend(list(self.live_runtime.recent_orders))
+        if self.runtime is not None:
+            rows.extend(list(self.runtime.recent_orders))
+        return rows[:limit]
 
     def fills(self, limit: int) -> list[dict[str, Any]]:
-        return list(self.runtime.recent_fills)[:limit] if self.runtime else []
+        rows: list[dict[str, Any]] = []
+        if self.live_runtime is not None:
+            rows.extend(list(self.live_runtime.recent_fills))
+        if self.runtime is not None:
+            rows.extend(list(self.runtime.recent_fills))
+        return rows[:limit]
+
+    def live_activity(self, limit: int = 60) -> list[dict[str, Any]]:
+        """The session's recent actions, newest first, for the dashboard feed."""
+        return list(self._live_activity)[:limit]
 
     def decisions(self, limit: int, actionable_only: bool) -> list[dict[str, Any]]:
         if self.runtime is None:

@@ -208,6 +208,28 @@ class RateLimiter:
         self._hits.pop(key, None)
 
 
+def password_strength(password: str) -> dict[str, Any]:
+    """A verdict on the operator password, computed once and never storing the value.
+
+    Length is what matters against a rate-limited online guess; character classes are
+    secondary. The thresholds are deliberately plain: under 12 characters is weak for a
+    control surface reachable from the internet, whatever it contains.
+    """
+    length = len(password)
+    classes = sum(
+        1
+        for test in (str.islower, str.isupper, str.isdigit)
+        if any(test(ch) for ch in password)
+    ) + (1 if any(not ch.isalnum() for ch in password) else 0)
+    if length < 12 or password.lower() in {"password", "operator", "admin", "123456789012"}:
+        verdict = "weak"
+    elif length < 16 or classes < 2:
+        verdict = "fair"
+    else:
+        verdict = "strong"
+    return {"verdict": verdict, "length": length, "character_classes": classes}
+
+
 SECURITY_HEADERS = {
     # No inline-script escape hatch beyond what the bundled app needs, no framing, no
     # referrer leakage. `connect-src 'self'` keeps the page from exfiltrating anything.
@@ -241,6 +263,7 @@ __all__ = [
     "current_user",
     "default_credentials",
     "hash_password",
+    "password_strength",
     "require_operator",
     "verify_password",
 ]

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import {
   api,
+  type ActivityEvent,
   type Decision,
   type Fill,
   type Position,
@@ -10,7 +11,7 @@ import {
   type TrainingStatus,
 } from "../lib/api";
 import type { Subscribe } from "../lib/stream";
-import { useStreamEvent } from "../lib/stream";
+import { LIVE_EVENT_TYPES, useStreamEvent } from "../lib/stream";
 import { EquityChart } from "../components/charts";
 import { Card, Empty, MoneyStat, PctStat, Pill, SimulationFootnote, Stat } from "../components/ui";
 import { bpsUsd, clock, money, qty, signedMoney } from "../lib/format";
@@ -154,6 +155,84 @@ function LiveSessionPanel({ subscribe }: { subscribe: Subscribe }) {
             " · every entry must clear risk, budget, expected value and the learning " +
             "guardrails. Lessons from each closed trade appear under Learning."}
       </p>
+    </Card>
+  );
+}
+
+/** One line of English per session event. Unknown types fall back to their name. */
+function describe(event: ActivityEvent): { text: string; tone: string } {
+  const d = event.data ?? {};
+  const usd = (v: unknown) => (typeof v === "number" ? signedMoney(v) : "");
+  switch (event.type) {
+    case "trade.closed":
+      return {
+        text: `Closed ${d.direction} in ${String(d.regime ?? "").replace("_", " ")}: ${usd(d.net_usd)} (${d.exit_reason ?? "reversal"})${d.exploratory ? " · exploration" : ""}`,
+        tone: typeof d.net_usd === "number" && d.net_usd > 0 ? "pos" : "neg",
+      };
+    case "live.exploration":
+      return { text: String(d.reason ?? "Exploration trade"), tone: "info" };
+    case "live.no_trade":
+      return { text: `No trade — ${String(d.reason ?? "").slice(0, 140)}`, tone: "faint" };
+    case "live.order_resting":
+      return { text: `Resting ${d.side} entry at $${money(Number(d.limit_price ?? 0), 0)} (up to ${d.timeout_bars} bars)`, tone: "" };
+    case "live.order_expired":
+      return { text: `Resting ${d.side} order expired after ${d.waited_bars} bars${d.reducing ? " — exit re-sent at market" : ""}`, tone: "warn" };
+    case "live.stop_placed":
+      return { text: `Protective stop placed at $${money(Number(d.stop_price ?? 0), 0)}`, tone: "" };
+    case "live.exit":
+      return { text: `Exit at market: ${d.reason}`, tone: "warn" };
+    case "live.evidence_absorbed":
+      return { text: `Absorbed ${d.absorbed ?? d.absorbed_outcomes ?? 0} new trades of evidence · ${d.buckets_ready ?? "?"} buckets ready`, tone: "info" };
+    case "live.state":
+      return { text: `Session state: ${d.state}`, tone: d.state === "running" ? "pos" : "warn" };
+    default:
+      return { text: event.type, tone: "faint" };
+  }
+}
+
+/**
+ * The session's own diary, live. Loaded once from the server (so a page opened at 9am
+ * shows what happened at 3am) and then prepended to as events arrive on the stream.
+ */
+function ActivityPanel({ subscribe }: { subscribe: Subscribe }) {
+  const [events, setEvents] = useState<ActivityEvent[]>([]);
+
+  useEffect(() => {
+    api.liveActivity(60).then(setEvents).catch(() => undefined);
+  }, []);
+
+  useEffect(() => {
+    const unsubscribes = LIVE_EVENT_TYPES.map((type) =>
+      subscribe(type, (data) => {
+        setEvents((previous) =>
+          [{ type, at: new Date().toISOString(), data: (data ?? {}) as Record<string, unknown> }, ...previous].slice(0, 80),
+        );
+      }),
+    );
+    return () => unsubscribes.forEach((off) => off());
+  }, [subscribe]);
+
+  return (
+    <Card title="Session activity — live">
+      {events.length === 0 ? (
+        <Empty message="Nothing yet. Entries, stops, exits, refusals and absorbed evidence appear here as they happen." />
+      ) : (
+        <div className="scroll" style={{ maxHeight: 320 }}>
+          <table>
+            <tbody>
+              {events.map((event, index) => {
+                const { text, tone } = describe(event);
+                return (
+                  <tr key={`${event.at}-${index}`}>
+                    <td className="mono faint" style={{ whiteSpace: "nowrap", width: 80 }}>{clock(event.at)}</td>
+                    <td className={tone} style={{ fontSize: 12.5 }}>{text}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
     </Card>
   );
 }
@@ -454,6 +533,9 @@ export function Dashboard({
         </p>
         <LiveSessionPanel subscribe={subscribe} />
         <div style={{ marginTop: 16 }}>
+          <ActivityPanel subscribe={subscribe} />
+        </div>
+        <div style={{ marginTop: 16 }}>
           <MoneyPanel />
         </div>
         <div style={{ marginTop: 16 }}>
@@ -473,6 +555,9 @@ export function Dashboard({
 
       <div style={{ marginBottom: 16 }}>
         <LiveSessionPanel subscribe={subscribe} />
+      </div>
+      <div style={{ marginBottom: 16 }}>
+        <ActivityPanel subscribe={subscribe} />
       </div>
       <div style={{ marginBottom: 16 }}>
         <MoneyPanel />

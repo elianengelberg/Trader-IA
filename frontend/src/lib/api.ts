@@ -506,6 +506,29 @@ export interface LessonGuardrail {
   active: boolean;
 }
 
+/** One entry of the 24/7 session's activity feed. */
+export interface ActivityEvent {
+  type: string;
+  at: string;
+  data: Record<string, unknown>;
+}
+
+export interface SecurityCheck {
+  key: string;
+  ok: boolean;
+  title: string;
+  detail: string;
+  remedy: string;
+}
+
+export interface SecurityPosture {
+  scheme: string;
+  session_hours: number;
+  checks: SecurityCheck[];
+  passed: number;
+  total: number;
+}
+
 /** One closed round trip as the Trade Journal shows it. */
 export interface JournalRow {
   outcome_id: string;
@@ -876,6 +899,8 @@ export const api = {
   trainingStop: () => post<{ stopped: boolean; pid: number }>("/training/stop"),
   trainingAbsorb: () => post<EvidenceAbsorbed>("/training/absorb"),
   money: () => get<MoneyRecord>("/money"),
+  liveActivity: (limit = 60) => get<ActivityEvent[]>(`/live/activity?limit=${limit}`),
+  securityPosture: () => get<SecurityPosture>("/security/posture"),
   journalSetups: (source?: string) =>
     get<SetupRow[]>(`/journal/setups${source ? `?source=${source}` : ""}`),
   journal: (filters: JournalFilters = {}) => {

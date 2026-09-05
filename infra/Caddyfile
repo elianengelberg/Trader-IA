@@ -15,6 +15,22 @@
 	default_sni {$TIA_DOMAIN:localhost}
 }
 
+# Anything that arrives by bare address — the old bookmark, the raw IP, a plain http://
+# link — is sent to the name. Before this, a request whose Host matched no site block got
+# Caddy's empty 200: a blank page that some browsers offered as a "document.txt" download,
+# which read as the site installing something. The raw IP over HTTPS still shows a
+# certificate warning first (no public CA issues certificates for a bare IP), then lands
+# on the real site. ACME challenges are handled by Caddy before these routes, so the
+# redirect does not interfere with certificate issuance.
+:80 {
+	redir https://{$TIA_DOMAIN:localhost}{uri} permanent
+}
+
+:443 {
+	tls internal
+	redir https://{$TIA_DOMAIN:localhost}{uri} permanent
+}
+
 {$TIA_DOMAIN:localhost} {
 	encode gzip
 

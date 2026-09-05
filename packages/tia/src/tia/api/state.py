@@ -106,6 +106,9 @@ class AppState:
         #: Evidence rows the running 24/7 session has already been given. Trades it
         #: closed itself are in here too — see :meth:`refresh_session_evidence`.
         self._absorbed_evidence_ids: set[str] = set()
+        #: The newest ``ingested_at`` the session has been given; the refresher reads
+        #: forward from here instead of re-reading the record.
+        self._evidence_watermark: datetime | None = None
         self._evidence_task: asyncio.Task[Any] | None = None
         #: (computed_at, payload) for :meth:`money_record` — it scans the whole trade
         #: record, and the dashboard polls it.
@@ -345,30 +348,28 @@ class AppState:
             _log.warning("live_evidence_load_failed", error=str(exc)[:300])
             return [], []
         self._absorbed_evidence_ids = {row.outcome_id for row in rows}
+        stamps = [row.ingested_at for row in rows if getattr(row, "ingested_at", None)]
+        self._evidence_watermark = max(stamps) if stamps else None
         return [self._as_outcome(row) for row in rows], [self._as_review(row) for row in rows]
 
     async def refresh_session_evidence(self) -> dict[str, Any]:
-        """Fold evidence persisted since the session started into the running session.
+        """Fold evidence persisted since the session last looked into the running session.
 
         This is what makes a finished training batch show up in Learning without a
-        restart. Two exclusions keep the arithmetic honest: rows the session has already
-        been given (by id), and rows the session produced itself (by run id — its own
-        closed trades are already in memory, and re-feeding them would count each trade
-        twice, inflating both the evidence and the paper track record).
-
-        Cheap when there is nothing to do: a row count is compared first, and the full
-        read only happens when the store has actually grown.
+        restart. The read is an indexed range on ``ingested_at`` — the database's own
+        write clock — from the last watermark, so the cost is proportional to what is
+        new, not to the size of the record. Two exclusions keep the arithmetic honest:
+        rows already given to the session (by id; the range is inclusive because two
+        rows can share a timestamp) and rows the session produced itself (by run id —
+        its own closed trades are already in memory, and re-feeding them would count
+        each twice, inflating both the evidence and the paper track record).
         """
         session = self.live_runtime
         if session is None or not session.is_running:
             return {"absorbed": 0, "reason": "no 24/7 session is running"}
         try:
             async with self.database.session() as db:
-                repository = EdgeStateRepository(db)
-                total = await repository.count()
-                if total <= len(self._absorbed_evidence_ids):
-                    return {"absorbed": 0, "total": total}
-                rows = await repository.load_all()
+                rows = await EdgeStateRepository(db).load_since(self._evidence_watermark)
         except Exception as exc:
             _log.warning("evidence_refresh_failed", error=str(exc)[:300])
             return {"absorbed": 0, "error": str(exc)[:200]}
@@ -379,16 +380,29 @@ class AppState:
             if row.outcome_id not in self._absorbed_evidence_ids
             and row.run_id != session.run_id
         ]
-        # Own-run rows are still marked seen, so they are never reconsidered.
         self._absorbed_evidence_ids.update(row.outcome_id for row in rows)
+        stamps = [row.ingested_at for row in rows if getattr(row, "ingested_at", None)]
+        if stamps:
+            newest = max(stamps)
+            if self._evidence_watermark is None or newest > self._evidence_watermark:
+                self._evidence_watermark = newest
         if not fresh:
-            return {"absorbed": 0, "total": len(rows)}
+            return {"absorbed": 0, "scanned": len(rows)}
 
         result = session.absorb_evidence(
             outcomes=[self._as_outcome(row) for row in fresh],
             reviews=[self._as_review(row) for row in fresh],
         )
-        return {"absorbed": len(fresh), "total": len(rows), **result}
+        return {"absorbed": len(fresh), "scanned": len(rows), **result}
+
+    async def journal_setups(self, *, source: str | None = None) -> list[dict[str, Any]]:
+        """Per-setup record — see EdgeStateRepository.setups."""
+        try:
+            async with self.database.session() as db:
+                return await EdgeStateRepository(db).setups(source=source)
+        except Exception as exc:
+            _log.warning("journal_setups_failed", error=str(exc)[:300])
+            return []
 
     async def journal(self, **filters: Any) -> dict[str, Any]:
         """The complete trade record with filters — see EdgeStateRepository.journal."""

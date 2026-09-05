@@ -473,6 +473,25 @@ class EdgeStateRepository:
             or 0
         )
 
+    async def load_since(
+        self, ingested_after: datetime | None, *, limit: int = 20_000
+    ) -> list[EdgeOutcomeRow]:
+        """Rows written since a moment, by the database's own clock.
+
+        This is what makes the session's minute-by-minute evidence refresh cost what it
+        should: an indexed range read of the rows that are actually new, instead of the
+        whole table diffed by id. Inclusive of the boundary on purpose — two rows can
+        share a timestamp — and the caller de-duplicates by id, so nothing is lost or
+        counted twice. Bounded so a giant backlog is absorbed in slices, never in one
+        allocation.
+        """
+        query = select(EdgeOutcomeRow).order_by(
+            EdgeOutcomeRow.ingested_at, EdgeOutcomeRow.outcome_id
+        )
+        if ingested_after is not None:
+            query = query.where(EdgeOutcomeRow.ingested_at >= ingested_after)
+        return list((await self._session.execute(query.limit(limit))).scalars().all())
+
     async def journal(
         self,
         *,
@@ -547,6 +566,7 @@ class EdgeStateRepository:
                 "net_usd": round(notional * float(row.net_bps) / 10_000.0, 2),
                 "expected_usd": round(notional * float(row.expected_net_bps) / 10_000.0, 2),
                 "exploratory": bool(getattr(row, "exploratory", False)),
+                "exit_reason": getattr(row, "exit_reason", None),
                 "is_win": float(row.net_bps) > 0,
             }
 
@@ -608,34 +628,88 @@ class EdgeStateRepository:
     async def dollar_curve(self, *, source: str, points: int = 240) -> list[float]:
         """The running dollar total of one source's trades, downsampled to ``points``.
 
-        The shape of the record, cheap enough to poll. Reads three columns, not whole
-        rows, and thins the result in Python rather than sending thousands of points to a
-        browser that would draw them one pixel apart.
+        Computed in the database: a window sum over the trades in closed order, then
+        every Nth row kept plus the last. The previous version pulled every row into
+        Python and thinned it there, which was fine at three thousand rows and a
+        per-poll transfer of the whole table at a hundred and twenty thousand.
         """
+        pnl = (
+            EdgeOutcomeRow.net_bps
+            * EdgeOutcomeRow.entry_price
+            * EdgeOutcomeRow.quantity
+            / 10_000.0
+        )
+        total = int(
+            (
+                await self._session.execute(
+                    select(func.count(EdgeOutcomeRow.outcome_id)).where(
+                        EdgeOutcomeRow.source == source
+                    )
+                )
+            ).scalar()
+            or 0
+        )
+        if total == 0:
+            return []
+        step = max(1, -(-total // points))  # ceil
+        ordering = (EdgeOutcomeRow.closed_at, EdgeOutcomeRow.outcome_id)
+        windowed = (
+            select(
+                func.sum(pnl).over(order_by=ordering).label("running"),
+                func.row_number().over(order_by=ordering).label("rn"),
+            )
+            .where(EdgeOutcomeRow.source == source)
+            .subquery()
+        )
         rows = (
             await self._session.execute(
-                select(
-                    EdgeOutcomeRow.net_bps,
-                    EdgeOutcomeRow.entry_price,
-                    EdgeOutcomeRow.quantity,
-                )
-                .where(EdgeOutcomeRow.source == source)
-                .order_by(EdgeOutcomeRow.closed_at)
+                select(windowed.c.running)
+                .where((windowed.c.rn % step == 0) | (windowed.c.rn == total))
+                .order_by(windowed.c.rn)
             )
         ).all()
-        if not rows:
-            return []
-        running = 0.0
-        cumulative: list[float] = []
-        for net_bps, entry_price, quantity in rows:
-            running += (net_bps or 0.0) * (entry_price or 0.0) * (quantity or 0.0) / 10_000.0
-            cumulative.append(round(running, 2))
-        if len(cumulative) <= points:
-            return cumulative
-        step = len(cumulative) / points
-        thinned = [cumulative[min(len(cumulative) - 1, int(i * step))] for i in range(points)]
-        thinned[-1] = cumulative[-1]  # the last point is the answer; never lose it
-        return thinned
+        return [round(float(value or 0.0), 2) for (value,) in rows]
+
+    async def setups(self, *, source: str | None = None) -> list[dict[str, Any]]:
+        """Every (regime, direction) setup with its own record, best first.
+
+        The question behind "improve the hit rate" is "where is it already good and where
+        is it bad?" — and that is a GROUP BY, not a scroll through the journal.
+        """
+        pnl = (
+            EdgeOutcomeRow.net_bps
+            * EdgeOutcomeRow.entry_price
+            * EdgeOutcomeRow.quantity
+            / 10_000.0
+        )
+        query = select(
+            EdgeOutcomeRow.regime,
+            EdgeOutcomeRow.direction,
+            func.count(EdgeOutcomeRow.outcome_id),
+            func.sum(case((EdgeOutcomeRow.net_bps > 0, 1), else_=0)),
+            func.sum(pnl),
+            func.avg(EdgeOutcomeRow.net_bps),
+        ).group_by(EdgeOutcomeRow.regime, EdgeOutcomeRow.direction)
+        if source:
+            query = query.where(EdgeOutcomeRow.source == source)
+        rows = (await self._session.execute(query)).all()
+        shaped = []
+        for regime, direction, count, wins, total_pnl, mean_bps in rows:
+            count = int(count or 0)
+            shaped.append(
+                {
+                    "regime": regime,
+                    "direction": direction,
+                    "trades": count,
+                    "wins": int(wins or 0),
+                    "win_rate": round(int(wins or 0) / count, 4) if count else 0.0,
+                    "pnl_usd": round(float(total_pnl or 0.0), 2),
+                    "mean_trade_usd": round(float(total_pnl or 0.0) / count, 2) if count else 0.0,
+                    "mean_net_bps": round(float(mean_bps or 0.0), 2),
+                }
+            )
+        shaped.sort(key=lambda row: row["pnl_usd"], reverse=True)
+        return shaped
 
     async def track_record(self, *, source: str = "live") -> dict[str, Any]:
         """What the gate's paper-track-record check reads: span and volume of evidence.

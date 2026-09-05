@@ -527,7 +527,20 @@ export interface JournalRow {
   net_usd: number;
   expected_usd: number;
   exploratory: boolean;
+  exit_reason?: string | null;
   is_win: boolean;
+}
+
+/** One (regime, direction) setup's whole record. */
+export interface SetupRow {
+  regime: string;
+  direction: string;
+  trades: number;
+  wins: number;
+  win_rate: number;
+  pnl_usd: number;
+  mean_trade_usd: number;
+  mean_net_bps: number;
 }
 
 export interface JournalPage {
@@ -863,6 +876,8 @@ export const api = {
   trainingStop: () => post<{ stopped: boolean; pid: number }>("/training/stop"),
   trainingAbsorb: () => post<EvidenceAbsorbed>("/training/absorb"),
   money: () => get<MoneyRecord>("/money"),
+  journalSetups: (source?: string) =>
+    get<SetupRow[]>(`/journal/setups${source ? `?source=${source}` : ""}`),
   journal: (filters: JournalFilters = {}) => {
     const params = new URLSearchParams();
     for (const [key, value] of Object.entries(filters)) {

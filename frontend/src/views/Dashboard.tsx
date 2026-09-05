@@ -37,6 +37,13 @@ interface LiveSnap {
   expected_value?: { threshold_bps?: number; coverage?: Record<string, number> };
   state_machine?: { history?: { reason?: string; at?: string }[] };
   evidence?: { absorbed_since_start?: number; buckets_ready?: number };
+  position?: {
+    open?: boolean;
+    stop_price?: number | null;
+    target_price?: number | null;
+    protected?: boolean;
+  };
+  execution?: { entry_order_type?: string; resting_order?: unknown };
 }
 
 /** Every bucket needs this many closed trades before the session will trade it. */
@@ -112,6 +119,21 @@ function LiveSessionPanel({ subscribe }: { subscribe: Subscribe }) {
           sub={`of ${bucketsSeen} seen · needs ${EVIDENCE_FLOOR} trades each`}
         />
       </div>
+      {(snap.position?.open || snap.execution?.entry_order_type) && (
+        <p className="footnote" style={{ marginTop: 12 }}>
+          {snap.position?.open
+            ? `Open position: ${snap.position.protected ? "protected by a stop" : "NOT protected"}` +
+              (snap.position.stop_price ? ` at $${money(snap.position.stop_price, 0)}` : "") +
+              (snap.position.target_price ? ` · target $${money(snap.position.target_price, 0)}` : "") +
+              ". "
+            : "Flat. "}
+          Entries: {snap.execution?.entry_order_type === "limit" ? "resting maker orders" : "market"}
+          {snap.execution?.resting_order ? " · one order resting now" : ""}
+          {(counters.exits_stop ?? 0) + (counters.exits_target ?? 0) + (counters.exits_reversal ?? 0) > 0
+            ? ` · exits: ${counters.exits_stop ?? 0} by stop, ${counters.exits_target ?? 0} at target, ${counters.exits_reversal ?? 0} on reversal`
+            : ""}
+        </p>
+      )}
       {stateReason && (
         <p
           className="footnote"

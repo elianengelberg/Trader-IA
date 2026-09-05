@@ -592,6 +592,15 @@ def _register_routes(app: FastAPI, settings: Settings) -> None:
             outcome=outcome,
         )
 
+    @app.get("/api/journal/setups")
+    async def journal_setups(
+        request: Request,
+        _user: User = Depends(current_user),
+        source: str | None = Query(None, pattern="^(live|sim|paper)$"),
+    ) -> list[dict[str, Any]]:
+        """Every (regime, direction) setup with its own win rate and dollars, best first."""
+        return await tia(request).journal_setups(source=source)
+
     @app.get("/api/money")
     async def money_record(
         request: Request, _user: User = Depends(current_user)

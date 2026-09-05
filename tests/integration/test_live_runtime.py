@@ -113,7 +113,9 @@ class FakeExecution(ExecutionProvider):
         self.submissions += 1
         if self.fail_next:
             raise self.fail_next.pop(0)
-        if self.rest_limits and intent.order_type is OrderType.LIMIT:
+        if (self.rest_limits and intent.order_type is OrderType.LIMIT) or (
+            intent.order_type is OrderType.STOP
+        ):
             now = self._clock_now()
             order = Order(
                 order_id=f"o-{self.submissions}",
@@ -125,6 +127,7 @@ class FakeExecution(ExecutionProvider):
                 order_type=intent.order_type,
                 quantity=intent.quantity,
                 limit_price=intent.limit_price,
+                stop_price=intent.stop_price,
                 state=OrderState.ACKNOWLEDGED,
                 created_at=now,
                 updated_at=now,
@@ -132,6 +135,37 @@ class FakeExecution(ExecutionProvider):
             self.orders[intent.client_order_id] = order
             return order
         return self._fill(intent)
+
+    def fill_resting(self, order: Order, price: float | None = None) -> Fill:
+        """The venue reports a resting order filled — at its stop level by default."""
+        now = self._clock_now()
+        self.submissions += 1
+        price = price or order.stop_price or order.limit_price or self.price
+        fill = Fill(
+            fill_id=f"f-{self.submissions}",
+            order_id=order.order_id,
+            sequence=0,
+            symbol=order.symbol,
+            side=order.side,
+            quantity=order.quantity,
+            price=price,
+            fee=price * order.quantity * 0.00075,
+            filled_at=now,
+        )
+        try:
+            transition(order, OrderState.FILLED, at=now)
+        except InvalidStateTransitionError:
+            transition(order, OrderState.PARTIALLY_FILLED, at=now)
+            transition(order, OrderState.FILLED, at=now)
+        order.filled_quantity = order.quantity
+        order.average_fill_price = price
+        order.fills = [*order.fills, fill]
+        existing = self.positions.get(order.symbol)
+        quantity = (existing.quantity if existing else 0.0) + fill.signed_quantity
+        self.positions[order.symbol] = Position(
+            symbol=order.symbol, quantity=quantity, average_price=price
+        )
+        return fill
 
     def _fill(self, intent: OrderIntent) -> Order:
         now = self._clock_now()
@@ -1193,5 +1227,125 @@ async def test_market_entries_are_unchanged_by_default() -> None:
         assert next(iter(execution.orders.values())).order_type is OrderType.MARKET
         assert runtime.counters["orders_expired"] == 0
         assert runtime.counters["resting_skipped"] == 0
+    finally:
+        await runtime.stop()
+
+
+# ------------------------------------------------------------- exit discipline
+
+
+async def _open_a_position(
+    runtime: LiveRuntime, execution: FakeExecution, market: FakeMarketData, *, keep_target: bool = False
+) -> None:
+    """Drive bars until an entry fills. Unless asked otherwise, disarm the strategy's
+    target so the scenario's next bar cannot close the position before the property
+    under test has been observed — the target has its own test."""
+    _seed_every_bucket(runtime)
+    for _ in range(300):
+        market.advance()
+        await runtime._cycle_once()
+        if runtime._open_trade is not None:
+            if not keep_target:
+                runtime._planned_exit["target"] = None
+            return
+    raise AssertionError("no position was ever opened")
+
+
+async def test_every_open_position_gets_exactly_one_protective_stop() -> None:
+    """The evidence was produced by an engine that protects every position with a stop.
+    A session that learned from it and ran unprotected would be applying evidence from
+    one game to a different one — so the stop is placed on the bar the position opens,
+    sized to it, and reported as such."""
+    runtime, execution, market = build_runtime_paper()
+    await runtime.start()
+    try:
+        await _open_a_position(runtime, execution, market)
+        # The stop is placed by the next bar's position management.
+        market.advance()
+        await runtime._cycle_once()
+        stops = [o for o in execution.orders.values() if o.order_type is OrderType.STOP]
+        assert len(stops) == 1, "exactly one protective stop"
+        stop = stops[0]
+        assert not stop.state.is_terminal
+        assert stop.stop_price is not None and stop.stop_price > 0
+        position = await execution.get_positions()
+        held = abs(next(iter(position.values())).quantity)
+        assert stop.quantity == pytest.approx(held)
+        assert runtime.counters["stops_placed"] == 1
+        assert runtime.snapshot()["position"]["protected"] is True
+        # Another bar changes nothing: one stop, not one per bar.
+        market.advance()
+        await runtime._cycle_once()
+        assert sum(1 for o in execution.orders.values() if o.order_type is OrderType.STOP) == 1
+    finally:
+        await runtime.stop()
+
+
+async def test_a_triggered_stop_closes_the_round_trip_and_records_why() -> None:
+    """The venue reports the stop filled; the session must notice without being pushed,
+    score the round trip with the entry's own beliefs, and file the reason."""
+    runtime, execution, market = build_runtime_paper()
+    await runtime.start()
+    try:
+        await _open_a_position(runtime, execution, market)
+        market.advance()
+        await runtime._cycle_once()
+        stop = next(o for o in execution.orders.values() if o.order_type is OrderType.STOP)
+        reviews_before = runtime._retro.reviews
+
+        execution.fill_resting(stop)  # the market went through the stop
+        market.advance()
+        await runtime._cycle_once()
+
+        # The round trip is scored — that is the fact. Whether the SAME bar then opens a
+        # fresh position on the next signal is the strategy's business, not this test's.
+        assert runtime.counters["exits_stop"] == 1
+        assert runtime._retro.reviews == reviews_before + 1
+        assert runtime._retro.recent(1)[0].signal_id != ""
+        assert stop.state.is_terminal
+    finally:
+        await runtime.stop()
+
+
+async def test_a_reached_target_closes_at_market_and_says_so() -> None:
+    runtime, execution, market = build_runtime_paper()
+    await runtime.start()
+    try:
+        await _open_a_position(runtime, execution, market)
+        position = next(iter((await execution.get_positions()).values()))
+        # Put the target where the next bar cannot miss it.
+        runtime._planned_exit["target"] = 1.0 if position.quantity > 0 else 10_000_000.0
+        reviews_before = runtime._retro.reviews
+        market.advance()
+        await runtime._cycle_once()
+        assert runtime.counters["exits_target"] == 1
+        assert runtime._retro.reviews == reviews_before + 1
+        closing = [o for o in execution.orders.values() if o.signal_id.startswith("exit:target")]
+        assert len(closing) == 1 and closing[0].order_type is OrderType.MARKET
+    finally:
+        await runtime.stop()
+
+
+async def test_the_time_stop_is_off_by_default_and_closes_when_set() -> None:
+    runtime, execution, market = build_runtime_paper()
+    await runtime.start()
+    try:
+        await _open_a_position(runtime, execution, market)
+        position = next(iter((await execution.get_positions()).values()))
+        runtime._planned_exit["stop"] = 1.0 if position.quantity > 0 else 10_000_000.0
+        for _ in range(5):
+            market.advance()
+            await runtime._cycle_once()
+        assert runtime.counters["exits_time"] == 0, "off by default, parity with the evidence"
+
+        runtime._settings = live_settings(max_holding_bars=2)
+        reviews_before = runtime._retro.reviews
+        for _ in range(4):
+            market.advance()
+            await runtime._cycle_once()
+            if runtime.counters["exits_time"]:
+                break
+        assert runtime.counters["exits_time"] == 1
+        assert runtime._retro.reviews == reviews_before + 1
     finally:
         await runtime.stop()

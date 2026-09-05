@@ -316,6 +316,11 @@ class LiveConfig(FrozenModel):
     #: market orders, because getting out is never optional.
     entry_order_type: str = Field("market", pattern="^(market|limit)$")
     entry_limit_timeout_bars: int = Field(3, ge=1, le=60)
+    #: Close any position still open after this many bars, whatever the price. Zero
+    #: disables it. A trade that has gone nowhere is still paying to be there; the
+    #: paper engine that produced the evidence has no such clock, so the default keeps
+    #: parity with the evidence and the operator turns it on deliberately.
+    max_holding_bars: int = Field(0, ge=0, le=100_000)
     #: Costs may not exceed this fraction of the expected gross edge.
     max_cost_ratio: float = Field(0.6, gt=0, le=1.0)
 

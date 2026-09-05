@@ -346,7 +346,20 @@ class LiveRuntime:
             "orders": 0, "fills": 0, "reconciliations": 0, "reconciliation_breaks": 0,
             "unknown_order_states": 0, "skew_halts": 0,
             "maker_fills": 0, "orders_expired": 0, "resting_skipped": 0,
+            "stops_placed": 0, "exits_stop": 0, "exits_target": 0,
+            "exits_reversal": 0, "exits_time": 0, "suppressed_position_open": 0,
+            "unprotected_positions": 0,
         }
+        #: The one protective stop covering the open position, if any. Exactly one, sized
+        #: to the position: a stop that protects the wrong size is worse than none.
+        self._protective: dict[str, Any] | None = None
+        #: The exit levels the entry was approved with, carried from the decision to the
+        #: position, and the bar the position opened on (for the optional time stop).
+        self._planned_exit: dict[str, Any] = {}
+        self._position_opened_bar: int | None = None
+        #: Why the round trip in progress is ending, for the record. Set by whichever
+        #: path closes it; read once by the scorer.
+        self._exit_reason: str | None = None
         #: The one order allowed to rest at a time, if entries are limit orders. While it
         #: rests, no new entry is considered — stacking resting orders is how a session
         #: ends up long three times on one signal.
@@ -658,6 +671,8 @@ class LiveRuntime:
         }
 
     async def _cancel_all_open(self) -> int:
+        self._protective = None
+        self._resting = None
         cancelled = 0
         try:
             open_orders = await self._execution.get_orders(open_only=True)
@@ -788,6 +803,7 @@ class LiveRuntime:
 
         if self._resting is not None:
             await self._manage_resting()
+        await self._manage_position(latest)
 
         # Watchdog self-heal: data is flowing again. RUNNING is earned back through a
         # clean reconciliation, not assumed — and only for halts the watchdog itself
@@ -861,6 +877,20 @@ class LiveRuntime:
         self.latency.stamp(correlation_id, "risk_finished")
         if not decision.allows_execution:
             self.counters["risk_rejected"] += 1
+            return
+
+        position = portfolio.positions.get(self._symbol)
+        if position is not None and not position.is_flat:
+            # A position already open plus an approved signal the OTHER way is the system
+            # changing its mind, and the honest response is to close — through no edge
+            # gate, because an exit is not a discretionary trade and must never be
+            # blocked by an edge calculation. The same way means it still believes it,
+            # and nothing happens: pyramiding would exceed the size risk approved.
+            opposing = (position.quantity > 0) != (signal.direction is Direction.LONG)
+            if opposing and self.machine.state.accepts_reducing_orders:
+                await self._close_position("signal reversed")
+            else:
+                self.counters["suppressed_position_open"] += 1
             return
 
         if not self.machine.state.accepts_new_orders:
@@ -1001,6 +1031,11 @@ class LiveRuntime:
                 },
             )
 
+        self._planned_exit = {
+            "stop": decision.stop_price,
+            "target": decision.target_price,
+            "direction": signal.direction,
+        }
         await self._submit(decision, signal, correlation_id)
         self._entry_beliefs = {
             "regime": regime.regime,
@@ -1249,6 +1284,217 @@ class LiveRuntime:
             # against whatever trade comes next.
             self._entry_beliefs = None
 
+    async def _manage_position(self, candle: Candle) -> None:
+        """Every bar, for the open position: target, time stop, and exactly one stop.
+
+        The paper engine that produces the evidence protects every position with a stop
+        and closes on a reversal. A session that learned from those trades and then ran
+        without stops would be applying evidence from one game to a different one —
+        every loss unbounded where the estimator had seen them capped. So this mirrors
+        that discipline, in the same order the engine applies it.
+        """
+        await self._poll_protective()
+        try:
+            portfolio = await self._execution.get_portfolio()
+        except Exception:
+            return
+        position = portfolio.positions.get(self._symbol)
+        holding = position is not None and not position.is_flat
+
+        if not holding:
+            if self._protective is not None:
+                await self._cancel_protective()
+            return
+        if not self.machine.state.accepts_reducing_orders:
+            return
+
+        long = position.quantity > 0
+        target = self._planned_exit.get("target")
+        if target and target > 0:
+            reached = candle.high >= target if long else candle.low <= target
+            if reached:
+                await self._close_position("target reached")
+                return
+
+        max_bars = self._settings.live.max_holding_bars
+        if (
+            max_bars > 0
+            and self._position_opened_bar is not None
+            and self.counters["bars"] - self._position_opened_bar >= max_bars
+        ):
+            await self._close_position("time stop")
+            return
+
+        await self._sync_protective_stop(position.quantity)
+
+    async def _sync_protective_stop(self, position_quantity: float) -> None:
+        """Keep exactly one protective stop matching the open position.
+
+        Replaced when a partial fill changed the quantity it covers; its fills are read
+        from the venue's view of the order so a triggered stop closes the round trip
+        even on a venue that does not push fills. A position whose entry carried no
+        stop is counted as unprotected and said so — never silently.
+        """
+        stop_price = self._planned_exit.get("stop")
+        if not stop_price or stop_price <= 0:
+            if self._protective is None:
+                self.counters["unprotected_positions"] += 1
+                _log.warning("position_unprotected", symbol=self._symbol)
+                self._protective = {"order_id": "", "client_order_id": "", "quantity": 0.0,
+                                    "stop_price": None, "unprotected": True}
+            return
+
+        quantity = abs(position_quantity)
+        existing = self._protective
+        if existing is not None and existing.get("order_id"):
+            order = await self._poll_protective()
+            if order is None or self._protective is None:
+                pass  # gone or filled: fall through and place a fresh one if still held
+            else:
+                covered = order.quantity - order.filled_quantity
+                if abs(covered - quantity) <= max(quantity * 1e-6, 1e-9):
+                    return
+                await self._cancel_protective()
+
+        side = Side.SELL if position_quantity > 0 else Side.BUY
+        intent = OrderIntent(
+            intent_id=deterministic_id("int", "stop", self._symbol, quantity, self._clock.now()),
+            client_order_id=OrderIntent.build_client_order_id(
+                signal_id=f"protective:{self._symbol}:{self.counters['bars']}",
+                symbol=self._symbol,
+                side=side,
+                quantity=quantity,
+                order_type=OrderType.STOP,
+            ),
+            signal_id=f"protective:{self._symbol}",
+            risk_decision_id=f"protective:{self._symbol}",
+            symbol=self._symbol,
+            side=side,
+            quantity=quantity,
+            order_type=OrderType.STOP,
+            stop_price=float(stop_price),
+            time_in_force=TimeInForce.GTC,
+            created_at=self._clock.now(),
+            reduce_only=True,
+        )
+        try:
+            order = await self._execution.submit_order(intent)
+        except Exception as exc:
+            _log.warning("protective_stop_failed", error=str(exc)[:200])
+            return
+        if order.state.is_terminal and not order.fills:
+            _log.warning(
+                "protective_stop_rejected",
+                reason=order.reject_reason or order.state.value,
+            )
+            return
+        self._protective = {
+            "order_id": order.order_id,
+            "client_order_id": order.client_order_id,
+            "quantity": quantity,
+            "stop_price": float(stop_price),
+        }
+        self.counters["stops_placed"] += 1
+        for fill in order.fills:  # a stop already through its level fills at once
+            self._on_fill(fill)
+        self._save("order", {"run_id": self.run_id, "order": order})
+        self._emit(
+            "live.stop_placed",
+            {"stop_price": float(stop_price), "quantity": quantity, "side": side.value},
+        )
+
+    async def _poll_protective(self) -> Order | None:
+        """Read the venue's view of the protective stop and route any fills it produced.
+
+        Returns the order while it is still working; clears the record and returns
+        ``None`` once it is terminal or unknown. Called before any decision about the
+        position, because the position going flat is the *consequence* of the stop
+        filling, and the fill must be scored — it is the round trip's end.
+        """
+        existing = self._protective
+        if not existing or not existing.get("order_id"):
+            return None
+        order: Order | None = None
+        for key in (existing["order_id"], existing["client_order_id"]):
+            with contextlib.suppress(Exception):
+                order = await self._execution.get_order(key)
+            if order is not None:
+                break
+        if order is None:
+            self._protective = None
+            return None
+        for fill in order.fills:
+            self._on_fill(fill)
+        if order.state.is_terminal:
+            self._protective = None
+            return None
+        return order
+
+    async def _cancel_protective(self) -> None:
+        existing = self._protective
+        self._protective = None
+        if not existing or not existing.get("order_id"):
+            return
+        with contextlib.suppress(Exception):
+            await self._execution.cancel_order(
+                existing["client_order_id"] or existing["order_id"]
+            )
+
+    async def _close_position(self, reason: str) -> None:
+        """Close the open position with a reduce-only market order, stop cancelled first.
+
+        Market on purpose: a close is the one order whose fill matters more than its
+        price. The reason travels with the round trip into the record.
+        """
+        try:
+            portfolio = await self._execution.get_portfolio()
+        except Exception:
+            return
+        position = portfolio.positions.get(self._symbol)
+        if position is None or position.is_flat:
+            return
+        if self._resting is not None:
+            with contextlib.suppress(Exception):
+                await self._execution.cancel_order(
+                    self._resting["client_order_id"] or self._resting["order_id"]
+                )
+            self._resting = None
+        await self._cancel_protective()
+
+        quantity = abs(position.quantity)
+        side = Side.SELL if position.quantity > 0 else Side.BUY
+        self._exit_reason = reason
+        slug = reason.replace(" ", "-")
+        intent = self._build_intent(
+            symbol=self._symbol,
+            side=side,
+            quantity=quantity,
+            signal_id=f"exit:{slug}:{self.counters['bars']}",
+            reduce_only=True,
+            order_type=OrderType.MARKET,
+        )
+        try:
+            order = await self._execution.submit_order(intent)
+        except Exception as exc:
+            _log.warning("close_position_failed", reason=reason, error=str(exc)[:200])
+            return
+        self.counters["orders"] += 1
+        key = {
+            "target reached": "exits_target",
+            "time stop": "exits_time",
+            "signal reversed": "exits_reversal",
+        }.get(reason)
+        if key:
+            self.counters[key] += 1
+        for fill in order.fills:
+            self._on_fill(fill)
+        self._save("order", {"run_id": self.run_id, "order": order})
+        self._emit(
+            "live.exit",
+            {"reason": reason, "side": side.value, "quantity": quantity,
+             "state": order.state.value},
+        )
+
     async def _resolve_unknown(self, intent: OrderIntent) -> Order | None:
         resolver = getattr(self._execution, "resolve_unknown_order", None)
         if resolver is None:
@@ -1263,6 +1509,9 @@ class LiveRuntime:
         if fill.fill_id in self._seen_fills:
             return
         self._seen_fills.add(fill.fill_id)
+        if self._protective is not None and fill.order_id == self._protective["order_id"]:
+            self._exit_reason = "protective stop"
+            self.counters["exits_stop"] += 1
         self.counters["fills"] += 1
         if fill.liquidity == "maker":
             self.counters["maker_fills"] += 1
@@ -1272,6 +1521,8 @@ class LiveRuntime:
 
     def _track_round_trip(self, fill: Fill) -> None:
         if self._open_trade is None:
+            self._exit_reason = None
+            self._position_opened_bar = self.counters["bars"]
             self._open_trade = {
                 "price": fill.price,
                 "quantity": fill.quantity,
@@ -1302,6 +1553,8 @@ class LiveRuntime:
         beliefs = self._entry_beliefs
         self._open_trade = None
         self._entry_beliefs = None
+        self._position_opened_bar = None
+        self._planned_exit = {}
         if trade is None or beliefs is None or trade["exit_quantity"] <= 0:
             return
 
@@ -1362,6 +1615,7 @@ class LiveRuntime:
                 "net_bps": net_bps,
                 "expected_net_bps": beliefs["expected_net_bps"],
                 "exploratory": bool(beliefs.get("exploratory")),
+                "exit_reason": self._exit_reason or "signal reversed",
                 "closed_at": exit_fill.filled_at,
                 "source": "live",
             },
@@ -1647,6 +1901,14 @@ class LiveRuntime:
                 "coverage": self._edges.coverage(),
             },
             "evidence": self.evidence_state(),
+            "position": {
+                "open": self._open_trade is not None,
+                "stop_price": self._planned_exit.get("stop"),
+                "target_price": self._planned_exit.get("target"),
+                "protected": bool(self._protective and self._protective.get("order_id")),
+                "opened_bar": self._position_opened_bar,
+                "max_holding_bars": self._settings.live.max_holding_bars,
+            },
             "execution": {
                 "entry_order_type": self._settings.live.entry_order_type,
                 "limit_timeout_bars": self._settings.live.entry_limit_timeout_bars,

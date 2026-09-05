@@ -820,3 +820,10 @@ async def test_the_journal_is_readable_filterable_and_bounded(client: httpx.Asyn
     filtered = await client.get("/api/journal?source=live&direction=long&outcome=win&limit=10")
     assert filtered.status_code == 200
     assert filtered.json()["limit"] == 10
+
+
+async def test_setups_are_grouped_and_source_is_validated(client: httpx.AsyncClient) -> None:
+    empty = await client.get("/api/journal/setups")
+    assert empty.status_code == 200, empty.text
+    assert empty.json() == []
+    assert (await client.get("/api/journal/setups?source=nope")).status_code == 422

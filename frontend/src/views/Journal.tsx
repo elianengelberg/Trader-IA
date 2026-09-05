@@ -8,7 +8,7 @@
  * filtered set on the server, so they mean what they say regardless of the page shown.
  */
 import { useCallback, useEffect, useState } from "react";
-import { api, type JournalFilters, type JournalPage } from "../lib/api";
+import { api, type JournalFilters, type JournalPage, type SetupRow } from "../lib/api";
 import { Card, Empty, Pill, SimulationFootnote, Stat } from "../components/ui";
 import { dateTime, money, signedMoney } from "../lib/format";
 
@@ -24,12 +24,14 @@ const SOURCE_LABEL: Record<string, string> = {
 
 export function Journal() {
   const [page, setPage] = useState<JournalPage | null>(null);
+  const [setups, setSetups] = useState<SetupRow[]>([]);
   const [filters, setFilters] = useState<JournalFilters>({ limit: PAGE, offset: 0 });
   const [loading, setLoading] = useState(false);
 
   const load = useCallback(() => {
     setLoading(true);
     api.journal(filters).then(setPage).catch(() => undefined).finally(() => setLoading(false));
+    api.journalSetups(filters.source).then(setSetups).catch(() => undefined);
   }, [filters]);
 
   useEffect(load, [load]);
@@ -125,6 +127,49 @@ export function Journal() {
         </div>
       )}
 
+      {setups.length > 0 && (
+        <Card title="By setup — where the record is good and where it is not">
+          <div className="scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Setup</th>
+                  <th className="num">Trades</th>
+                  <th className="num">Win rate</th>
+                  <th className="num">Net</th>
+                  <th className="num">Mean / trade</th>
+                </tr>
+              </thead>
+              <tbody>
+                {setups.map((row) => (
+                  <tr key={`${row.regime}|${row.direction}`}>
+                    <td className="mono">
+                      <span className={row.direction === "long" ? "pos" : "neg"}>{row.direction}</span>
+                      {" · "}{row.regime.replace("_", " ")}
+                    </td>
+                    <td className="num mono">{row.trades.toLocaleString("en-US")}</td>
+                    <td className={`num mono ${row.win_rate >= 0.5 ? "pos" : ""}`}>
+                      {(row.win_rate * 100).toFixed(0)}%
+                    </td>
+                    <td className={`num mono ${row.pnl_usd > 0 ? "pos" : "neg"}`}>
+                      {signedMoney(row.pnl_usd)}
+                    </td>
+                    <td className={`num mono ${row.mean_trade_usd > 0 ? "pos" : "neg"}`}>
+                      {signedMoney(row.mean_trade_usd)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="footnote">
+            Best net result first, over the selected source. A setup that is green here is
+            one the expected-value engine can already price; a red one with many trades is
+            evidence of where <em>not</em> to be — which is also learning.
+          </p>
+        </Card>
+      )}
+
       <Card
         title={`Closed round trips ${total ? `· ${from.toLocaleString("en-US")}–${to.toLocaleString("en-US")} of ${total.toLocaleString("en-US")}` : ""}`}
         actions={
@@ -158,6 +203,7 @@ export function Journal() {
                   <th className="num">Expected</th>
                   <th className="num">Got</th>
                   <th className="num">Fees</th>
+                  <th>Exit</th>
                 </tr>
               </thead>
               <tbody>
@@ -189,6 +235,9 @@ export function Journal() {
                     </td>
                     <td className="num mono faint">
                       {money((row.fees_bps / 10_000) * row.notional_usd)}
+                    </td>
+                    <td className="faint" style={{ fontSize: 12, whiteSpace: "nowrap" }}>
+                      {row.exit_reason ?? "—"}
                     </td>
                   </tr>
                 ))}

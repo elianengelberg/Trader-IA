@@ -767,6 +767,73 @@ export interface IntelReport {
   explanation?: string;
 }
 
+/** One exchange in the arbitrage registry, with its last quote and health. */
+export interface ArbVenue {
+  venue_id: string;
+  name: string;
+  url: string;
+  taker_fee_bps: number;
+  fee_source: string;
+  ok: boolean | null;
+  detail: string;
+  failures: number;
+  last_attempt: string | null;
+  bid: number | null;
+  ask: number | null;
+  mid: number | null;
+  spread_bps: number | null;
+  quoted_at: string | null;
+}
+
+/** Buy at one venue's ask, sell at another's bid, both taker fees subtracted. */
+export interface ArbGap {
+  buy_venue: string;
+  sell_venue: string;
+  buy_ask: number;
+  sell_bid: number;
+  gross_bps: number;
+  fee_bps: number;
+  net_bps: number;
+  clears_costs: boolean;
+  net_usd_per_100: number;
+  net_usd_per_10k: number;
+}
+
+export interface ArbitrageReport {
+  available: boolean;
+  instrument: string;
+  started_at: string | null;
+  as_of: string;
+  running: boolean;
+  poll_seconds: number;
+  polls: number;
+  venues: ArbVenue[];
+  venues_ok: number;
+  gaps: ArbGap[];
+  stats: {
+    samples: number;
+    samples_measured: number;
+    span_seconds: number;
+    opportunities: number;
+    opportunity_share: number | null;
+    best_net_bps: number | null;
+    best_gross_bps: number | null;
+    best_at: string | null;
+    best_pair: string | null;
+    mean_best_net_bps: number | null;
+  };
+  hypothetical: {
+    notional_usd: number;
+    round_trips: number;
+    net_usd: number;
+    net_usd_per_hour: number | null;
+    assumes: string;
+  };
+  history: { at: string; net_bps: number; gross_bps: number }[];
+  verdict: string;
+  caveats: string[];
+}
+
 export interface TrainingStatus {
   state: string; // idle | running | finished | stopped | interrupted | failed
   running: boolean;
@@ -893,6 +960,7 @@ export const api = {
   antipatterns: () => get<AntiPatternReport>("/antipatterns"),
   mentor: () => get<MentorReport>("/mentor"),
   intel: (force = false) => get<IntelReport>(`/intel?force=${force}`),
+  arbitrage: (force = false) => get<ArbitrageReport>(`/arbitrage?force=${force}`),
   training: () => get<TrainingStatus>("/training"),
   trainingStart: (runs: number) =>
     post<{ started: boolean; runs: number; pid: number }>("/training/start", { runs }),

@@ -102,6 +102,9 @@ class AppState:
         #: Curated macro/crypto headlines. Built lazily; informs the UI and the Advisor,
         #: never the trading pipeline.
         self._intel: Any | None = None
+        #: Cross-venue price-gap monitor. Built lazily, samples in the background once
+        #: someone asks for it; reads public tickers and nothing else.
+        self._arbitrage: Any | None = None
         #: Keeps spawned-subprocess reaper tasks alive until they finish.
         self._background_tasks: set[asyncio.Task[Any]] = set()
         #: Evidence rows the running 24/7 session has already been given. Trades it
@@ -134,6 +137,9 @@ class AppState:
         if self._intel is not None:
             with contextlib.suppress(Exception):
                 await self._intel.close()
+        if self._arbitrage is not None:
+            with contextlib.suppress(Exception):
+                await self._arbitrage.close()
         await self.database.close()
 
     # ------------------------------------------------------------------ streaming
@@ -1068,6 +1074,30 @@ class AppState:
         if self._intel is None:
             return {"available": False, "items": []}
         return {"available": True, **self._intel.report()}
+
+    # ------------------------------------------------------------------ arbitrage
+
+    def _get_arbitrage(self) -> Any:
+        if self._arbitrage is None:
+            from tia.core.clock import SystemClock
+            from tia.data.arbitrage import CrossVenueMonitor
+
+            self._arbitrage = CrossVenueMonitor(clock=SystemClock())
+        return self._arbitrage
+
+    async def arbitrage_report(self, *, force: bool = False) -> dict[str, Any]:
+        """The measured cross-venue gaps, with the sampler started on first request.
+
+        The first call polls inline so the page opens with numbers; after that the
+        background sampler keeps the record and a read is just a read. ``force`` polls now
+        regardless. Always answers: with every venue unreachable the gap list is empty and
+        the per-venue rows say which endpoint failed and how.
+        """
+        monitor = self._get_arbitrage()
+        if force or monitor.report()["polls"] == 0:
+            await monitor.poll()
+        monitor.start()
+        return {"available": True, **monitor.report()}
 
     # ------------------------------------------------------------------ training
 

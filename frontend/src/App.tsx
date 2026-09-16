@@ -17,13 +17,14 @@ import { Learning } from "./views/Learning";
 import { Journal } from "./views/Journal";
 import { Advisor } from "./views/Advisor";
 import { Intel } from "./views/Intel";
+import { Arbitrage } from "./views/Arbitrage";
 import { LiveView } from "./views/LiveView";
 import { CapitalView } from "./views/CapitalView";
 import { Pill } from "./components/ui";
 
 type Tab =
   | "dashboard" | "markets" | "ai" | "risk" | "portfolio" | "orders"
-  | "strategy" | "analytics" | "learning" | "journal" | "advisor" | "intel" | "live" | "capital"
+  | "strategy" | "analytics" | "learning" | "journal" | "advisor" | "intel" | "arbitrage" | "live" | "capital"
   | "logs" | "system" | "settings";
 
 const NAV: { group: string; items: { id: Tab; label: string }[] }[] = [
@@ -48,6 +49,7 @@ const NAV: { group: string; items: { id: Tab; label: string }[] }[] = [
       { id: "journal", label: "Trade Journal" },
       { id: "advisor", label: "Ask the AI" },
       { id: "intel", label: "Macro & News" },
+      { id: "arbitrage", label: "Arbitrage" },
     ],
   },
   {
@@ -235,6 +237,7 @@ export default function App() {
           {tab === "journal" && <Journal />}
           {tab === "advisor" && <Advisor subscribe={subscribe} />}
           {tab === "intel" && <Intel />}
+          {tab === "arbitrage" && <Arbitrage />}
           {tab === "live" && <LiveView role={user.role} />}
           {tab === "capital" && <CapitalView subscribe={subscribe} />}
           {tab === "system" && <SystemView health={health} runtime={runtime} />}

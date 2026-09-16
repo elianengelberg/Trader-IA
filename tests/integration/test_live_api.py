@@ -869,3 +869,57 @@ async def test_the_activity_feed_is_readable_and_bounded(client: httpx.AsyncClie
     empty = await client.get("/api/live/activity")
     assert empty.status_code == 200 and empty.json() == []
     assert (await client.get("/api/live/activity?limit=5000")).status_code == 422
+
+
+async def test_the_arbitrage_report_is_served_and_survives_dead_venues(tmp_path: Path) -> None:
+    """Public quotes in, measured gaps out — and a venue that fails is a row, not a 500.
+
+    The monitor is installed with a mocked transport before the first request so the test
+    never touches an exchange; the route must start the background sampler and answer
+    with numbers on that first call.
+    """
+    from tia.core.clock import SystemClock
+    from tia.data.arbitrage import CrossVenueMonitor
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        url = str(request.url)
+        if "binance" in url:
+            return httpx.Response(200, json={"bidPrice": "60000", "askPrice": "60001"})
+        if "kraken" in url:
+            return httpx.Response(
+                200, json={"error": [], "result": {"XBTUSDT": {"a": ["60005", "1", "1"], "b": ["60004", "1", "1"]}}}
+            )
+        return httpx.Response(429, text="rate limited")
+
+    app = create_app(_settings(tmp_path))
+    async with LifespanManager(app):
+        state = app.state.tia
+        state._arbitrage = CrossVenueMonitor(
+            clock=SystemClock(),
+            client=httpx.AsyncClient(transport=httpx.MockTransport(handler)),
+            poll_seconds=3600,
+        )
+        transport = httpx.ASGITransport(app=app)
+        async with httpx.AsyncClient(transport=transport, base_url="http://test") as http:
+            assert (await http.get("/api/arbitrage")).status_code == 401  # signed out
+
+            await http.post("/api/auth/login", json={"username": USERNAME, "password": PASSWORD})
+            response = await http.get("/api/arbitrage")
+            assert response.status_code == 200, response.text
+            body = response.json()
+            assert body["available"] is True
+            assert body["running"] is True
+            assert body["polls"] == 1
+            assert body["venues_ok"] == 2
+            coinbase = next(v for v in body["venues"] if v["venue_id"] == "coinbase")
+            assert coinbase["ok"] is False and "429" in coinbase["detail"]
+            assert len(body["gaps"]) == 2
+            assert all(g["fee_bps"] == 50.0 for g in body["gaps"])
+            assert body["stats"]["samples"] == 1
+            assert "bps" in body["verdict"]
+
+            again = await http.get("/api/arbitrage")
+            assert again.json()["polls"] == 1  # a read is a read; the sampler owns polling
+            forced = await http.get("/api/arbitrage?force=true")
+            assert forced.json()["polls"] == 2
+    assert not state._arbitrage.is_running  # shutdown closed the sampler

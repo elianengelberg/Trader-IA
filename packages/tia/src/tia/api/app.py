@@ -750,6 +750,16 @@ def _register_routes(app: FastAPI, settings: Settings) -> None:
         nothing on this surface reaches the trading pipeline."""
         return await tia(request).market_intel(force=force)
 
+    @app.get("/api/arbitrage")
+    async def arbitrage(
+        request: Request,
+        _user: User = Depends(current_user),
+        force: bool = Query(False),
+    ) -> dict[str, Any]:
+        """Measured price gaps between exchanges, net of each venue's taker fee.
+        Read-only public data; nothing here places an order or reaches the pipeline."""
+        return await tia(request).arbitrage_report(force=force)
+
     @app.post("/api/mentor/apply")
     async def mentor_apply(
         body: MentorApplyRequest, request: Request, user: User = Depends(current_user)

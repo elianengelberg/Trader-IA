@@ -13,6 +13,7 @@ import {
 import type { Subscribe } from "../lib/stream";
 import { LIVE_EVENT_TYPES, useStreamEvent } from "../lib/stream";
 import { EquityChart } from "../components/charts";
+import { CommandCenter } from "../components/CommandCenter";
 import { Card, Empty, MoneyStat, PctStat, Pill, SimulationFootnote, Stat } from "../components/ui";
 import { bpsUsd, clock, money, qty, signedMoney } from "../lib/format";
 
@@ -164,11 +165,20 @@ function describe(event: ActivityEvent): { text: string; tone: string } {
   const d = event.data ?? {};
   const usd = (v: unknown) => (typeof v === "number" ? signedMoney(v) : "");
   switch (event.type) {
-    case "trade.closed":
+    case "trade.closed": {
+      // The 24/7 session reports dollars; the demo engine reports basis points only.
+      const result =
+        typeof d.net_usd === "number"
+          ? usd(d.net_usd)
+          : typeof d.net_bps === "number"
+            ? `${d.net_bps >= 0 ? "+" : ""}${d.net_bps.toFixed(1)} bps`
+            : "";
+      const value = typeof d.net_usd === "number" ? d.net_usd : typeof d.net_bps === "number" ? d.net_bps : 0;
       return {
-        text: `Closed ${d.direction} in ${String(d.regime ?? "").replace("_", " ")}: ${usd(d.net_usd)} (${d.exit_reason ?? "reversal"})${d.exploratory ? " · exploration" : ""}`,
-        tone: typeof d.net_usd === "number" && d.net_usd > 0 ? "pos" : "neg",
+        text: `Closed ${d.direction} in ${String(d.regime ?? "").replace("_", " ")}${result ? `: ${result}` : ""} (${d.exit_reason ?? "reversal"})${d.exploratory ? " · exploration" : ""}`,
+        tone: value > 0 ? "pos" : "neg",
       };
+    }
     case "live.exploration":
       return { text: String(d.reason ?? "Exploration trade"), tone: "info" };
     case "live.no_trade":
@@ -531,7 +541,10 @@ export function Dashboard({
           activity shows right here; the live price is under <strong>Markets</strong> and
           the lessons from every closed trade under <strong>Learning</strong>.
         </p>
-        <LiveSessionPanel subscribe={subscribe} />
+        <CommandCenter subscribe={subscribe} />
+        <div style={{ marginTop: 16 }}>
+          <LiveSessionPanel subscribe={subscribe} />
+        </div>
         <div style={{ marginTop: 16 }}>
           <ActivityPanel subscribe={subscribe} />
         </div>
@@ -553,6 +566,9 @@ export function Dashboard({
         {runtime.scenario?.title}. {runtime.scenario?.demonstrates}
       </p>
 
+      <div style={{ marginBottom: 16 }}>
+        <CommandCenter subscribe={subscribe} />
+      </div>
       <div style={{ marginBottom: 16 }}>
         <LiveSessionPanel subscribe={subscribe} />
       </div>

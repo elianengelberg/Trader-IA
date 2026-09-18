@@ -50,6 +50,7 @@ class ReplayResult:
     unregistered_gaps: int = 0
     sequence_breaks: int = 0
     trade_id_jumps: int = 0
+    receive_time_regressions: int = 0  # lines whose R is earlier than the line before
     crossed_books: int = 0
     updates_applied: int = 0
     updates_ignored_old: int = 0
@@ -124,6 +125,7 @@ def replay_segment(path: Path | str, *, allow_flagged: bool = False, symbol: str
     book.begin_sync()
     events: dict[str, int] = {}
     prev_trade_id: int | None = None
+    prev_received_at: int | None = None
     applied_since_snapshot = 0
 
     try:
@@ -136,6 +138,10 @@ def replay_segment(path: Path | str, *, allow_flagged: bool = False, symbol: str
                 row = json.loads(raw)
                 kind = row.get("k", "?")
                 events[kind] = events.get(kind, 0) + 1
+                received_at = int(row.get("R", 0) or 0)
+                if prev_received_at is not None and received_at < prev_received_at:
+                    result.receive_time_regressions += 1
+                prev_received_at = received_at
 
                 if kind == "checkpoint":
                     state = DepthSnapshot(int(row["id"]), _levels(row["b"]), _levels(row["a"]))
@@ -236,6 +242,10 @@ def replay_segment(path: Path | str, *, allow_flagged: bool = False, symbol: str
         result.reasons.append(f"{result.checkpoint_mismatches} checkpoint(s) differ from the replayed book")
     if result.crossed_books:
         result.reasons.append(f"{result.crossed_books} crossed book(s) during replay")
+    if result.receive_time_regressions:
+        result.reasons.append(
+            f"{result.receive_time_regressions} line(s) received earlier than the line before: the tape is not in arrival order"
+        )
     if not result.final_valid:
         result.reasons.append(f"book ended {result.final_state}, not valid")
     if result.final_matches_manifest is False:

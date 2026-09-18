@@ -213,6 +213,11 @@ class LocalOrderBook:
         self.metrics.updates_applied += 1
         return self._verify()
 
+    def quantity_at(self, side: str, price: float) -> float:
+        """Visible quantity at one price on one side, 0 when the level is absent."""
+        levels = self._bids if side == "bid" else self._asks
+        return levels.get(price, 0.0)
+
     # ------------------------------------------------------------------ state export
 
     def levels(self) -> tuple[list[tuple[float, float]], list[tuple[float, float]]]:

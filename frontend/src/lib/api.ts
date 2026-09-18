@@ -1021,6 +1021,121 @@ export interface ActivationAttempt {
   detail: string;
 }
 
+/** The paper market maker (phase 3). Simulated quotes and fills on real Binance data;
+ *  nothing here can reach an execution provider. Shapes are loose on purpose: the
+ *  backend is the source of truth and the page shows what it is given. */
+export interface MMLatency {
+  name: string;
+  profile_id: string;
+  order_latency_ms: number;
+  cancel_latency_ms: number;
+  data_latency_ms: number;
+  processing_ms: number;
+  basis: string;
+}
+export interface MMDecision {
+  t_ms: number;
+  bid_price: number | null;
+  ask_price: number | null;
+  bid_size: number;
+  ask_size: number;
+  quote_size: number;
+  spread_target_bps: number;
+  half_spread_bps: number;
+  fair_value: number;
+  quote_confidence: number;
+  quote_reason: string;
+  ttl_ms: number;
+  is_quote: boolean;
+  components: Record<string, unknown>;
+}
+export interface MMOrder {
+  order_id: string;
+  side: string;
+  price: number;
+  quantity: number;
+  filled: number;
+  unresolved: number;
+  state: string;
+  t_decision_ms: number;
+  t_arrival_ms: number;
+  cancel_reason: string;
+  reason: string;
+  queue: { estimated_queue_position: number; ahead_conservative: number; ahead_optimistic: number; resolution: string } | null;
+}
+export interface MMState {
+  enabled: boolean;
+  market_data_enabled: boolean;
+  running: boolean;
+  phase3_status: string;
+  evidence_status?: string;
+  reason?: string;
+  real_money: boolean;
+  execution: string;
+  paper_capital: number;
+  latency: MMLatency | { profile_path: string; scenario: string };
+  fees: { status: string; scenarios_bps: Record<string, number | null> };
+  symbol?: string;
+  config_id?: string;
+  events?: number;
+  decisions?: number;
+  quotes?: number;
+  requotes?: number;
+  cancels?: number;
+  gate_blocks?: number;
+  data_blocks?: number;
+  no_quote_reasons?: Record<string, number>;
+  gate?: { state: string; reason: string; allows_quoting: boolean } | null;
+  last_block_reason?: string;
+  book?: { state: string; valid: boolean; update_id: number; best_bid: [number, number] | null; best_ask: [number, number] | null; spread_bps: number | null };
+  features?: Record<string, number | string | null> | null;
+  last_decision?: MMDecision | null;
+  active_orders?: MMOrder[];
+  execution_stats?: Record<string, unknown>;
+  ledger?: Record<string, number | string | null>;
+  controller?: { limits: Record<string, number>; kill_switch: boolean; kill_switch_reason: string; quotes_last_minute: number; denials: number };
+  markouts?: { registered: number; pending: number; resolved: number; expired_unresolved: number; horizons: Record<string, { count: number; mean_bps: number | null; adverse_share: number | null; mean_adverse_bps: number | null }> };
+  toxicity?: { overall: { score: number | null; adverse_mean_bps: number | null; samples: number; widen_bps: number; size_factor: number; reason: string } };
+  journal_rows?: number;
+  journal_hash?: string;
+  data_quality?: Record<string, unknown>;
+  persistence?: Record<string, unknown>;
+  [key: string]: unknown;
+}
+export interface MMJournalRow {
+  t: number;
+  kind: string;
+  decision?: string;
+  fair_value?: number;
+  bid?: number | null;
+  ask?: number | null;
+  bid_size?: number;
+  ask_size?: number;
+  inventory_btc?: number;
+  reason?: string;
+  layer?: string;
+  side?: string;
+  price?: number;
+  quantity?: number;
+  fee_usd?: number;
+  realised_usd?: number;
+  markout_bps?: Record<string, number | null>;
+  [key: string]: unknown;
+}
+export interface MMMetrics {
+  available: boolean;
+  reason?: string;
+  scenario?: { latency: string; fees: string };
+  counts?: Record<string, number | null | Record<string, number>>;
+  pnl?: Record<string, unknown>;
+  ratios?: Record<string, number | null>;
+  inventory?: Record<string, number | null>;
+  drawdown_pct?: number | null;
+  markouts?: Record<string, { count: number; mean_bps: number | null; adverse_share: number | null; mean_adverse_bps: number | null }>;
+  by_regime?: Record<string, Record<string, { fills: number; net_usd: number; net_per_fill_usd: number; gross_spread_capture_usd: number; fees_usd: number; markout_1s_bps_mean: number | null }>>;
+  edge: { verdict: string; failed_rules: string[]; note?: string };
+}
+
 export const api = {
   login: (username: string, password: string) =>
     post<{ username: string; role: string }>("/auth/login", { username, password }),
@@ -1064,6 +1179,9 @@ export const api = {
   mentor: () => get<MentorReport>("/mentor"),
   intel: (force = false) => get<IntelReport>(`/intel?force=${force}`),
   arbitrage: (force = false) => get<ArbitrageReport>(`/arbitrage?force=${force}`),
+  mmState: () => get<MMState>("/mm/state"),
+  mmJournal: (limit = 80, kind?: string) => get<MMJournalRow[]>(`/mm/journal?limit=${limit}${kind ? `&kind=${kind}` : ""}`),
+  mmMetrics: () => get<MMMetrics>("/mm/metrics"),
   funding: (force = false) => get<FundingReport>(`/funding?force=${force}`),
   spreadCheck: (sizeBtc = 0.01) => get<SpreadCheck>(`/live/spread-check?size_btc=${sizeBtc}`),
   training: () => get<TrainingStatus>("/training"),

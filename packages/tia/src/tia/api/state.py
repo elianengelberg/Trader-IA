@@ -111,6 +111,7 @@ class AppState:
         #: Market-making market data (phase 2): depth, trades, local book, recorder.
         #: Started at boot only when settings.mm.enabled; quotes nothing.
         self._mm_market: Any | None = None
+        self._mm_maker: Any | None = None  # phase 3: the paper market maker, when enabled
         #: Keeps spawned-subprocess reaper tasks alive until they finish.
         self._background_tasks: set[asyncio.Task[Any]] = set()
         #: Evidence rows the running 24/7 session has already been given. Trades it
@@ -1173,6 +1174,48 @@ class AppState:
         self._mm_market = service
         _log.info("mm_market_data_started", symbol=cfg.symbol, record=cfg.record_ticks)
         return service
+
+    # ------------------------------------------------------------------ market maker (paper)
+
+    def _mm_maker_base(self) -> dict[str, Any]:
+        cfg = self.settings.mm
+        return {
+            "enabled": cfg.adaptive_enabled,
+            "market_data_enabled": cfg.enabled,
+            "real_money": False,  # by construction; nothing in tia/mm reads the flag
+            "execution": "simulated only — no execution provider exists in the market maker",
+            "latency": {"profile_path": cfg.latency_profile_path, "scenario": cfg.latency_scenario},
+            "fees": {"status": cfg.maker_fee_status, "scenarios_bps": cfg.fee_scenarios()},
+            "paper_capital": cfg.paper_capital,
+        }
+
+    def mm_maker_snapshot(self) -> dict[str, Any]:
+        base = self._mm_maker_base()
+        if self._mm_maker is None:
+            reason = (
+                "paper quoting is not enabled (TIA_MM__ADAPTIVE_ENABLED)"
+                if not self.settings.mm.adaptive_enabled
+                else "paper quoting is enabled but the service did not start; see the logs"
+            )
+            return {**base, "running": False, "phase3_status": "IMPLEMENTATION", "reason": reason}
+        running = bool(getattr(self._mm_maker, "is_running", False))
+        return {
+            **base,
+            "running": running,
+            "phase3_status": "PAPER_RUNNING" if running else "IMPLEMENTATION",
+            "evidence_status": "EVIDENCE_PENDING",
+            **self._mm_maker.snapshot(),
+        }
+
+    def mm_maker_journal(self, *, limit: int = 100, kind: str | None = None) -> list[dict[str, Any]]:
+        if self._mm_maker is None:
+            return []
+        return list(self._mm_maker.journal(limit=limit, kind=kind))
+
+    def mm_maker_metrics(self) -> dict[str, Any]:
+        if self._mm_maker is None:
+            return {"available": False, "reason": "paper quoting is not running", "edge": {"verdict": "NO EDGE DETECTED", "failed_rules": ["no paper run"]}}
+        return {"available": True, **self._mm_maker.metrics()}
 
     def mm_market_snapshot(self) -> dict[str, Any]:
         cfg = self.settings.mm

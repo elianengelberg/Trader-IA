@@ -33,6 +33,7 @@ VIEWS = [
     "Learning",
     "Ask the AI",
     "Macro & News",
+    "Market Maker",
     "Live Trading",
     "System",
     "Logs",

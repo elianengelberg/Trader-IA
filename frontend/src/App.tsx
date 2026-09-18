@@ -20,11 +20,12 @@ import { Intel } from "./views/Intel";
 import { Arbitrage } from "./views/Arbitrage";
 import { LiveView } from "./views/LiveView";
 import { CapitalView } from "./views/CapitalView";
+import { MarketMaker } from "./views/MarketMaker";
 import { Pill } from "./components/ui";
 
 type Tab =
   | "dashboard" | "markets" | "ai" | "risk" | "portfolio" | "orders"
-  | "strategy" | "analytics" | "learning" | "journal" | "advisor" | "intel" | "arbitrage" | "live" | "capital"
+  | "strategy" | "analytics" | "learning" | "journal" | "advisor" | "intel" | "arbitrage" | "marketmaker" | "live" | "capital"
   | "logs" | "system" | "settings";
 
 const NAV: { group: string; items: { id: Tab; label: string }[] }[] = [
@@ -50,6 +51,7 @@ const NAV: { group: string; items: { id: Tab; label: string }[] }[] = [
       { id: "advisor", label: "Ask the AI" },
       { id: "intel", label: "Macro & News" },
       { id: "arbitrage", label: "Arbitrage & Carry" },
+      { id: "marketmaker", label: "Market Maker" },
     ],
   },
   {
@@ -66,7 +68,16 @@ const NAV: { group: string; items: { id: Tab; label: string }[] }[] = [
 export default function App() {
   const [user, setUser] = useState<{ username: string; role: string } | null>(null);
   const [checking, setChecking] = useState(true);
-  const [tab, setTab] = useState<Tab>("dashboard");
+  // /market-maker opens the market maker page directly; every other path is the dashboard.
+  const [tab, setTabState] = useState<Tab>(() =>
+    typeof window !== "undefined" && window.location.pathname.replace(/\/+$/, "") === "/market-maker" ? "marketmaker" : "dashboard",
+  );
+  const setTab = useCallback((next: Tab) => {
+    setTabState(next);
+    if (typeof window !== "undefined" && window.history?.replaceState) {
+      window.history.replaceState(null, "", next === "marketmaker" ? "/market-maker" : "/");
+    }
+  }, []);
   const [runtime, setRuntime] = useState<RuntimeSnapshot | null>(null);
   const [health, setHealth] = useState<Health | null>(null);
 
@@ -238,6 +249,7 @@ export default function App() {
           {tab === "advisor" && <Advisor subscribe={subscribe} />}
           {tab === "intel" && <Intel />}
           {tab === "arbitrage" && <Arbitrage />}
+          {tab === "marketmaker" && <MarketMaker subscribe={subscribe} />}
           {tab === "live" && <LiveView role={user.role} />}
           {tab === "capital" && <CapitalView subscribe={subscribe} />}
           {tab === "system" && <SystemView health={health} runtime={runtime} />}

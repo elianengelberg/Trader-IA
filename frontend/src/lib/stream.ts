@@ -46,6 +46,9 @@ const EVENT_TYPES = [
   "live.liquidation",
   "live.exit",
   "live.evidence_absorbed",
+  // The paper market maker: a state push every few seconds and each journal row.
+  "mm.state",
+  "mm.journal",
 ] as const;
 
 /** The session's own events, for the activity feed. */

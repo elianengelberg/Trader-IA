@@ -788,6 +788,29 @@ def _register_routes(app: FastAPI, settings: Settings) -> None:
         latency percentiles, the recorder's status. Nothing here quotes or trades."""
         return tia(request).mm_market_snapshot()
 
+    @app.get("/api/mm/state")
+    async def mm_state(request: Request, _user: User = Depends(current_user)) -> dict[str, Any]:
+        """The paper market maker: gate, book, features, fair value, quotes, simulated
+        orders and fills, the maker's own ledger. Read-only; nothing here trades."""
+        return tia(request).mm_maker_snapshot()
+
+    @app.get("/api/mm/journal")
+    async def mm_journal(
+        request: Request,
+        limit: int = Query(100, ge=1, le=1000),
+        kind: str | None = Query(None, pattern="^(decision|fill|markout|block|hold)$"),
+        _user: User = Depends(current_user),
+    ) -> list[dict[str, Any]]:
+        """The explainable journal: timestamp, decision, fair value, bid, ask, inventory,
+        features, reason, result — each row written once."""
+        return tia(request).mm_maker_journal(limit=limit, kind=kind)
+
+    @app.get("/api/mm/metrics")
+    async def mm_metrics(request: Request, _user: User = Depends(current_user)) -> dict[str, Any]:
+        """Counts, P&L decomposition, ratios, markouts, regime splits and the edge
+        verdict — which is NO EDGE DETECTED until the audit's rules hold out of sample."""
+        return tia(request).mm_maker_metrics()
+
     @app.get("/api/funding")
     async def funding(
         request: Request,

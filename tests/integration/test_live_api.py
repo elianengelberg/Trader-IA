@@ -993,6 +993,45 @@ async def test_the_market_making_feed_is_off_by_default_and_never_claims_real_mo
             state._mm_market = None
 
 
+async def test_the_paper_market_maker_api_is_off_by_default_and_read_only(tmp_path: Path) -> None:
+    """Phase 3: state, journal and metrics are served read-only; disabled unless asked;
+    real money reported False by construction; the verdict defaults to NO EDGE DETECTED."""
+    app = create_app(_settings(tmp_path))
+    async with LifespanManager(app):
+        state = app.state.tia
+        transport = httpx.ASGITransport(app=app)
+        async with httpx.AsyncClient(transport=transport, base_url="http://test") as http:
+            assert (await http.get("/api/mm/state")).status_code == 401
+            await http.post("/api/auth/login", json={"username": USERNAME, "password": PASSWORD})
+            body = (await http.get("/api/mm/state")).json()
+            assert body["enabled"] is False and body["running"] is False and body["phase3_status"] == "IMPLEMENTATION"
+            assert body["real_money"] is False and "TIA_MM__ADAPTIVE_ENABLED" in body["reason"]
+            assert (await http.get("/api/mm/journal")).json() == []
+            metrics = (await http.get("/api/mm/metrics")).json()
+            assert metrics["available"] is False and metrics["edge"]["verdict"] == "NO EDGE DETECTED"
+            assert (await http.get("/api/mm/journal?kind=bogus")).status_code == 422
+
+            class _Maker:
+                is_running = True
+
+                def snapshot(self) -> dict[str, object]:
+                    return {"gate": {"state": "safe"}, "ledger": {"net_pnl_usd": 0.0}, "journal_hash": "abc"}
+
+                def journal(self, *, limit: int, kind: str | None) -> list[dict[str, object]]:
+                    return [{"t": 1, "kind": "decision", "decision": "no_quote", "reason": "test"}][:limit]
+
+                def metrics(self) -> dict[str, object]:
+                    return {"edge": {"verdict": "NO EDGE DETECTED", "failed_rules": ["1 fills < 300"]}}
+
+            state._mm_maker = _Maker()
+            body = (await http.get("/api/mm/state")).json()
+            assert body["running"] is True and body["phase3_status"] == "PAPER_RUNNING" and body["evidence_status"] == "EVIDENCE_PENDING"
+            assert body["real_money"] is False and body["journal_hash"] == "abc"
+            assert (await http.get("/api/mm/journal?limit=5&kind=decision")).json()[0]["reason"] == "test"
+            assert (await http.get("/api/mm/metrics")).json()["edge"]["verdict"] == "NO EDGE DETECTED"
+            state._mm_maker = None
+
+
 async def test_the_track_record_ignores_exploration_trades(tmp_path: Path) -> None:
     """Lessons bought are not claims held: the real-money gate must not count them."""
     from tia.persistence import EdgeStateRepository

@@ -861,6 +861,51 @@ export interface ArbitrageReport {
   caveats: string[];
 }
 
+/** The perpetual's funding and basis, with a year of settlements for context. */
+export interface FundingReport {
+  available: boolean;
+  symbol: string;
+  as_of: string;
+  running: boolean;
+  polls: number;
+  health: { ok: boolean | null; detail: string; failures: number; last_attempt: string | null };
+  latest: {
+    at: string;
+    funding_rate: number;
+    funding_bps: number;
+    annualised_pct: number;
+    mark_price: number | null;
+    index_price: number | null;
+    basis_bps: number | null;
+  } | null;
+  history_settlements: number;
+  history_span_days: number;
+  mean_annualised_pct_7d: number | null;
+  mean_annualised_pct_all: number | null;
+  percentile: number | null;
+  stance: string;
+  carry: { net_annualised_pct: number | null; fee_round_trip_bps: number; assumes: string };
+  history: { at: string; annualised_pct: number }[];
+  verdict: string;
+}
+
+/** The higher-timeframe tide the 24/7 session reads from hourly bars. */
+export interface TrendContext {
+  mode?: string;
+  z_threshold?: number;
+  refreshed_at?: string | null;
+  available: boolean;
+  bias: string;
+  z_1w?: number | null;
+  z_4w?: number | null;
+  return_1w_pct?: number | null;
+  return_4w_pct?: number | null;
+  bars?: number;
+  timeframe?: string;
+  reason: string;
+  as_of?: string | null;
+}
+
 export interface TrainingStatus {
   state: string; // idle | running | finished | stopped | interrupted | failed
   running: boolean;
@@ -988,6 +1033,7 @@ export const api = {
   mentor: () => get<MentorReport>("/mentor"),
   intel: (force = false) => get<IntelReport>(`/intel?force=${force}`),
   arbitrage: (force = false) => get<ArbitrageReport>(`/arbitrage?force=${force}`),
+  funding: (force = false) => get<FundingReport>(`/funding?force=${force}`),
   training: () => get<TrainingStatus>("/training"),
   trainingStart: (runs: number) =>
     post<{ started: boolean; runs: number; pid: number }>("/training/start", { runs }),

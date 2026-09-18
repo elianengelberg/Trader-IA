@@ -769,6 +769,16 @@ def _register_routes(app: FastAPI, settings: Settings) -> None:
         Read-only public data; nothing here places an order or reaches the pipeline."""
         return await tia(request).arbitrage_report(force=force)
 
+    @app.get("/api/funding")
+    async def funding(
+        request: Request,
+        _user: User = Depends(current_user),
+        force: bool = Query(False),
+    ) -> dict[str, Any]:
+        """The perpetual's funding rate and basis, with a year of settlements for
+        context. Read-only public data; informs the operator and the Advisor."""
+        return await tia(request).funding_report(force=force)
+
     @app.post("/api/mentor/apply")
     async def mentor_apply(
         body: MentorApplyRequest, request: Request, user: User = Depends(current_user)

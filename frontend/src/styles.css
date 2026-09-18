@@ -466,6 +466,10 @@ h1 { font-size: 19px; margin: 0 0 4px; font-weight: 600; letter-spacing: -0.01em
   animation: cc-blink 1.4s ease-in-out infinite;
 }
 .cc-live.off { color: var(--text-faint); }
+.cc-tide { font-weight: 700; letter-spacing: 0.12em; }
+.cc-tide.up { color: var(--pos); }
+.cc-tide.down { color: var(--neg); }
+.cc-tide.flat, .cc-tide.unknown { color: var(--text-faint); }
 .cc-live.off i { background: var(--text-faint); box-shadow: none; animation: none; }
 
 .cc-big {

@@ -54,6 +54,7 @@ interface LiveSnap {
   exits?: { breakeven_after_r?: number; trail_atr_multiple?: number };
   market?: { quote?: { spread_bps?: number } | null; max_spread_bps?: number; spread_source?: string };
   sizing?: { conviction?: boolean; last?: { fraction?: number; reason?: string } | null };
+  trend?: { mode?: string; available?: boolean; bias?: string; z_1w?: number | null; z_4w?: number | null; return_4w_pct?: number | null; reason?: string };
 }
 
 /** Every bucket needs this many closed trades before the session will trade it. */
@@ -89,7 +90,8 @@ function LiveSessionPanel({ subscribe }: { subscribe: Subscribe }) {
     (counters.budget_rejected ?? 0) +
     (counters.guardrail_rejected ?? 0) +
     (counters.spread_rejected ?? 0) +
-    (counters.strategy_muted ?? 0);
+    (counters.strategy_muted ?? 0) +
+    (counters.htf_rejected ?? 0);
   const starving = (counters.signals ?? 0) > 0 && (counters.orders ?? 0) === 0;
   // Why the session is not RUNNING is the whole content of the news that it is not.
   // The reason lives in the state machine's last transition; showing it here saves a
@@ -158,6 +160,26 @@ function LiveSessionPanel({ subscribe }: { subscribe: Subscribe }) {
           {(counters.stops_tightened ?? 0) > 0 ? ` · stops tightened ${counters.stops_tightened}` : ""}
           {(counters.strategy_muted ?? 0) > 0 ? ` · ${counters.strategy_muted} refused from a muted strategy` : ""}
           {(counters.spread_rejected ?? 0) > 0 ? ` · ${counters.spread_rejected} waited out a wide spread` : ""}
+          {(counters.htf_rejected ?? 0) > 0 ? ` · ${counters.htf_rejected} refused against the tide` : ""}
+        </p>
+      )}
+      {snap.trend && snap.trend.mode !== "off" && (
+        <p className="footnote" style={{ marginTop: 12 }}>
+          <strong>Tide (1–4 week momentum): </strong>
+          {snap.trend.available ? (
+            <>
+              <span className={snap.trend.bias === "up" ? "pos" : snap.trend.bias === "down" ? "neg" : "dim"}>
+                {String(snap.trend.bias).toUpperCase()}
+              </span>
+              {` · 1w ${(snap.trend.z_1w ?? 0).toFixed(1)}σ, 4w ${(snap.trend.z_4w ?? 0).toFixed(1)}σ`}
+              {snap.trend.return_4w_pct != null ? ` · 4 weeks ${snap.trend.return_4w_pct >= 0 ? "+" : ""}${snap.trend.return_4w_pct.toFixed(1)}%` : ""}
+              {snap.trend.mode === "hard"
+                ? " · entries against it are refused"
+                : " · entries against it are halved"}
+            </>
+          ) : (
+            <span className="dim">unknown — {snap.trend.reason ?? "not read yet"}; no bias is imposed</span>
+          )}
         </p>
       )}
       {stateReason && (
@@ -213,6 +235,8 @@ function describe(event: ActivityEvent): { text: string; tone: string } {
       return { text: `Resting ${d.side} order expired after ${d.waited_bars} bars${d.reducing ? " — exit re-sent at market" : ""}`, tone: "warn" };
     case "live.stop_placed":
       return { text: `Protective stop placed at $${money(Number(d.stop_price ?? 0), 0)}`, tone: "" };
+    case "live.trend":
+      return { text: `Tide re-read: ${String(d.bias ?? "unknown").toUpperCase()} — ${d.reason ?? ""}`, tone: d.bias === "up" ? "pos" : d.bias === "down" ? "neg" : "faint" };
     case "live.stop_tightened":
       return { text: `Stop tightened to $${money(Number(d.stop_price ?? 0), 0)} (${d.kind}: ${d.reason ?? ""})`, tone: "info" };
     case "live.exit":

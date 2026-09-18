@@ -1664,3 +1664,133 @@ async def test_absorbed_evidence_credits_the_strategies_it_names() -> None:
     assert result["strategies_credited"] == 1
     board = runtime.snapshot()["strategies"]
     assert [r["strategy_id"] for r in board] == ["trend_following"]
+
+
+# --------------------------------------------------------------------------- the tide
+
+
+class HourlyMarketData(FakeMarketData):
+    """A feed that serves hourly bars to hourly requests — the property the higher-
+    timeframe context needs and the plain fake deliberately lacks."""
+
+    def __init__(self, candles: list[Candle], clock: SimulatedClock | None, hourly: list[Candle]) -> None:
+        super().__init__(candles, clock)
+        self.hourly = hourly
+
+    async def get_candles(self, symbol, timeframe, *, limit=500, end=None):  # type: ignore[no-untyped-def]
+        if timeframe == "1h":
+            return self.hourly[-limit:]
+        return await super().get_candles(symbol, timeframe, limit=limit, end=end)
+
+
+def _hourly_series(direction: str, hours: int = 800) -> list[Candle]:
+    import math
+
+    from tia.domain.market import Candle as _Candle
+
+    start = datetime.now(UTC) - timedelta(hours=hours + 1)
+    drift = 0.0008 if direction == "up" else -0.0008
+    price, out = 50_000.0, []
+    for i in range(hours):
+        price *= math.exp(drift + (0.002 if i % 2 else -0.002))
+        open_time = start + timedelta(hours=i)
+        out.append(
+            _Candle(
+                symbol="BTC-USD", timeframe="1h", open_time=open_time,
+                close_time=open_time + timedelta(hours=1) - timedelta(seconds=1),
+                open=price, high=price * 1.001, low=price * 0.999, close=price, volume=1.0,
+            )
+        )
+    return out
+
+
+def build_runtime_with_tide(direction: str, **live_overrides: Any):  # type: ignore[no-untyped-def]
+    scenario = get_scenario("trend_up")
+    span_minutes = scenario.total_bars + 5
+    candles = generate_series(
+        scenario, symbol="BTC-USD", timeframe="1m",
+        start=datetime.now(UTC) - timedelta(minutes=span_minutes), seed=9,
+    )
+    clock = SimulatedClock(candles[149].close_time + timedelta(seconds=1))
+    market = HourlyMarketData(candles, clock, _hourly_series(direction))
+    execution = FakeExecution()
+    runtime = LiveRuntime(
+        live_settings(**live_overrides), activation=None, market_data=market,
+        execution=execution, clock=clock, poll_interval_seconds=0.0,
+    )
+    return runtime, execution, market
+
+
+async def test_the_plain_feed_leaves_the_tide_unknown_and_imposes_nothing() -> None:
+    runtime, _execution, market = build_runtime_paper_with()
+    await runtime.start()
+    try:
+        market.advance()
+        await runtime._cycle_once()
+        trend = runtime.snapshot()["trend"]
+        assert trend["available"] is False
+        assert "served" in trend["reason"]  # minute bars to an hourly request: refused
+        assert runtime.counters["htf_rejected"] == 0
+    finally:
+        await runtime.stop()
+
+
+async def test_entries_against_a_down_tide_are_refused_and_with_it_taken() -> None:
+    """A four-week decline: every long the strategies propose is refused as against the
+    tide; shorts pass the gate. Then the same session in soft mode halves instead."""
+    runtime, _execution, market = build_runtime_with_tide("down", htf_mode="hard")
+    await runtime.start()
+    try:
+        _seed_every_bucket(runtime)
+        refusals: list[str] = []
+        runtime._on_event = lambda e: refusals.append(str(e["data"].get("reason", ""))) if e["type"] == "live.no_trade" else None
+        for _ in range(300):
+            market.advance()
+            await runtime._cycle_once()
+        trend = runtime.snapshot()["trend"]
+        assert trend["available"] is True and trend["bias"] == "down"
+        assert runtime.counters["htf_rejected"] > 0
+        assert any("against the tide" in r for r in refusals)
+        # Whatever was taken went with the tide: every opening order is a sell.
+        entries = [o for o in _execution.orders.values() if not o.signal_id.startswith(("protective", "exit"))]
+        assert all(o.side is Side.SELL for o in entries)
+    finally:
+        await runtime.stop()
+
+    runtime, _execution, market = build_runtime_with_tide("down", htf_mode="soft")
+    await runtime.start()
+    try:
+        _seed_every_bucket(runtime)
+        for _ in range(300):
+            market.advance()
+            await runtime._cycle_once()
+            if runtime.counters["htf_sized_down"] > 0:
+                break
+        assert runtime.counters["htf_rejected"] == 0
+        assert runtime.counters["htf_sized_down"] > 0
+        last = runtime.snapshot()["sizing"]["last"]
+        assert last["fraction"] <= 0.5 and "halved" in last["reason"]
+    finally:
+        await runtime.stop()
+
+
+async def test_the_tide_is_read_on_a_slow_clock_not_every_bar() -> None:
+    runtime, _execution, market = build_runtime_with_tide("up", htf_mode="hard", htf_refresh_minutes=60)
+    reads = {"n": 0}
+    original = market.get_candles
+
+    async def counting(symbol, timeframe, *, limit=500, end=None):  # type: ignore[no-untyped-def]
+        if timeframe == "1h":
+            reads["n"] += 1
+        return await original(symbol, timeframe, limit=limit, end=end)
+
+    market.get_candles = counting  # type: ignore[method-assign]
+    await runtime.start()
+    try:
+        for _ in range(90):  # ninety one-minute bars: one hour and a half
+            market.advance()
+            await runtime._cycle_once()
+        assert reads["n"] == 2
+        assert runtime.snapshot()["trend"]["bias"] == "up"
+    finally:
+        await runtime.stop()

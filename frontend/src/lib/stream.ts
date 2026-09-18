@@ -41,6 +41,7 @@ const EVENT_TYPES = [
   "live.order_expired",
   "live.stop_placed",
   "live.stop_tightened",
+  "live.trend",
   "live.exit",
   "live.evidence_absorbed",
 ] as const;

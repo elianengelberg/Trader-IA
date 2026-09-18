@@ -98,6 +98,9 @@ services:
       TIA_LIVE__MIN_SIZE_FRACTION: ${TIA_LIVE__MIN_SIZE_FRACTION:-0.35}
       TIA_LIVE__EXPLORATION_SIZE_FRACTION: ${TIA_LIVE__EXPLORATION_SIZE_FRACTION:-0.25}
       TIA_LIVE__POOLED_SIZE_CAP: ${TIA_LIVE__POOLED_SIZE_CAP:-0.6}
+      # Higher-timeframe (1-4 week momentum) context: hard | soft | off.
+      TIA_LIVE__HTF_MODE: ${TIA_LIVE__HTF_MODE:-hard}
+      TIA_LIVE__HTF_Z_THRESHOLD: ${TIA_LIVE__HTF_Z_THRESHOLD:-1.0}
       # Venue credentials are OPTIONAL and only ever read from the environment.
       # The 24/7 paper session needs none. Live trading additionally requires the
       # activation gate's 27 checks — a key alone arms nothing.

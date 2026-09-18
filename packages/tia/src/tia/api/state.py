@@ -105,6 +105,9 @@ class AppState:
         #: Cross-venue price-gap monitor. Built lazily, samples in the background once
         #: someone asks for it; reads public tickers and nothing else.
         self._arbitrage: Any | None = None
+        #: Perpetual funding and basis monitor. Same discipline as the arbitrage monitor:
+        #: public data, read-only, informs the operator and the Advisor.
+        self._funding: Any | None = None
         #: Keeps spawned-subprocess reaper tasks alive until they finish.
         self._background_tasks: set[asyncio.Task[Any]] = set()
         #: Evidence rows the running 24/7 session has already been given. Trades it
@@ -140,6 +143,9 @@ class AppState:
         if self._arbitrage is not None:
             with contextlib.suppress(Exception):
                 await self._arbitrage.close()
+        if self._funding is not None:
+            with contextlib.suppress(Exception):
+                await self._funding.close()
         await self.database.close()
 
     # ------------------------------------------------------------------ streaming
@@ -960,6 +966,8 @@ class AppState:
             ("antipatterns", self.antipattern_report),
             ("mentor", self.mentor_report),
             ("intel", self.intel_snapshot),
+            ("funding", self.funding_snapshot),
+            ("live_session", self.live_context_snapshot),
         ):
             with contextlib.suppress(Exception):
                 context[key] = getter()
@@ -1108,6 +1116,52 @@ class AppState:
             await monitor.poll()
         monitor.start()
         return {"available": True, **monitor.report()}
+
+    # ------------------------------------------------------------------ funding
+
+    def _get_funding(self) -> Any:
+        if self._funding is None:
+            from tia.core.clock import SystemClock
+            from tia.data.funding import FundingMonitor
+
+            self._funding = FundingMonitor(clock=SystemClock())
+        return self._funding
+
+    async def funding_report(self, *, force: bool = False) -> dict[str, Any]:
+        """The perpetual's funding and basis, with the sampler started on first request."""
+        monitor = self._get_funding()
+        if force or monitor.report()["polls"] == 0:
+            await monitor.poll()
+        monitor.start()
+        return {"available": True, **monitor.report()}
+
+    def funding_snapshot(self) -> dict[str, Any]:
+        """Already-fetched funding for the Advisor's grounding — no network from here."""
+        if self._funding is None:
+            return {"available": False}
+        report = self._funding.report()
+        return {
+            "available": report["latest"] is not None,
+            "latest": report["latest"],
+            "percentile": report["percentile"],
+            "stance": report["stance"],
+            "verdict": report["verdict"],
+        }
+
+    def live_context_snapshot(self) -> dict[str, Any]:
+        """The 24/7 session's tide, sizing and strategy standings, for the Advisor."""
+        if self.live_runtime is None:
+            return {"available": False}
+        snapshot = self.live_runtime.snapshot()
+        return {
+            "available": True,
+            "state": snapshot.get("state"),
+            "trend": snapshot.get("trend"),
+            "sizing": snapshot.get("sizing"),
+            "market": snapshot.get("market"),
+            "strategies": snapshot.get("strategies"),
+            "position": snapshot.get("position"),
+        }
 
     # ------------------------------------------------------------------ training
 

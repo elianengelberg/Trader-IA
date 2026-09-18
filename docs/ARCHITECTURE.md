@@ -799,6 +799,12 @@ The system may *propose* parameter changes. It may never apply them. The path is
 `proposal → backtest → out-of-sample validation → shadow test → human approval → versioned
 config change`. Risk limits are marked immutable-at-runtime; an attempt to mutate them raises.
 
+The trading rules themselves rest on a written evidence base: `docs/RESEARCH_CRYPTO_METHODS.md`
+sorts the published findings on crypto trading by strength, records which became code
+(the one-to-four-week momentum tide, conviction sizing, exit discipline, the carry
+monitor) and which were rejected and why. A new rule is expected to earn its row there
+before it earns a place in the pipeline.
+
 ---
 
 ## 23. Roadmap and Definition of Done

@@ -10,7 +10,7 @@
  * Read-only public data. Nothing here places an order or reaches the trading pipeline.
  */
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { api, type ArbGap, type ArbVenue, type ArbitrageReport } from "../lib/api";
+import { api, type ArbGap, type ArbVenue, type ArbitrageReport, type FundingReport } from "../lib/api";
 import { Card, Empty, Pill, Stat } from "../components/ui";
 import { clock, money } from "../lib/format";
 
@@ -125,6 +125,51 @@ function GapTable({ gaps, names }: { gaps: ArbGap[]; names: Record<string, strin
   );
 }
 
+/**
+ * The perpetual market's price of leverage. The BIS finds crypto carry averages above
+ * 10% a year and that HIGH carry predicts crashes — a crowded long book. Shown as a
+ * yield and as a warning, with a year of settlements so "high" means something.
+ */
+function FundingCard() {
+  const [report, setReport] = useState<FundingReport | null>(null);
+
+  useEffect(() => {
+    const load = () => api.funding().then(setReport).catch(() => undefined);
+    load();
+    const id = window.setInterval(() => { if (!document.hidden) load(); }, 60_000);
+    return () => window.clearInterval(id);
+  }, []);
+
+  const latest = report?.latest ?? null;
+  const pct = (v: number | null | undefined, digits = 1) =>
+    v == null ? "—" : `${v >= 0 ? "+" : ""}${v.toFixed(digits)}%`;
+  const tone = report?.stance === "crowded long" ? "neg" : report?.stance === "crowded short" ? "warn" : "";
+  return (
+    <Card title="Carry — the perpetual's funding rate, measured against a year of it">
+      {!report ? (
+        <Empty message="Reading the funding rate…" />
+      ) : !latest ? (
+        <Empty message={`No funding reading: ${report.health.detail || "the endpoint did not answer"}.`} />
+      ) : (
+        <>
+          <div className="grid cols-4" style={{ gap: 12 }}>
+            <Stat label="Funding now" value={`${latest.funding_bps >= 0 ? "+" : ""}${latest.funding_bps.toFixed(2)} bps / 8h`} sub={`${pct(latest.annualised_pct)} annualised`} tone={latest.funding_bps > 0 ? "pos" : latest.funding_bps < 0 ? "neg" : "flat"} />
+            <Stat label="Last week" value={pct(report.mean_annualised_pct_7d)} sub={`year mean ${pct(report.mean_annualised_pct_all)}`} />
+            <Stat label="Percentile · 1 year" value={report.percentile == null ? "—" : `${report.percentile.toFixed(0)}th`} sub={report.stance} tone={tone as "neg" | "warn" | undefined} />
+            <Stat label="Cash-and-carry, net" value={pct(report.carry.net_annualised_pct)} sub={`after ${report.carry.fee_round_trip_bps} bps of fees · upper bound`} tone={(report.carry.net_annualised_pct ?? 0) > 0 ? "pos" : "neg"} />
+          </div>
+          <p style={{ fontSize: 13, lineHeight: 1.6, marginTop: 14 }}>{report.verdict}</p>
+          <p className="footnote" style={{ marginTop: 10 }}>
+            Basis (mark over index): {latest.basis_bps == null ? "—" : `${latest.basis_bps >= 0 ? "+" : ""}${latest.basis_bps.toFixed(2)} bps`} ·
+            {" "}{report.history_settlements} settlements over {report.history_span_days} days · {report.carry.assumes}.
+            Read-only: nothing here places an order. The Advisor sees this reading; the trading pipeline does not act on it.
+          </p>
+        </>
+      )}
+    </Card>
+  );
+}
+
 export function Arbitrage() {
   const [report, setReport] = useState<ArbitrageReport | null>(null);
   const [loading, setLoading] = useState(false);
@@ -222,6 +267,10 @@ export function Arbitrage() {
             <Empty message="Collecting samples — the line appears after the second poll." />
           )}
         </Card>
+      </div>
+
+      <div style={{ marginTop: 16 }}>
+        <FundingCard />
       </div>
 
       <div style={{ marginTop: 16 }}>

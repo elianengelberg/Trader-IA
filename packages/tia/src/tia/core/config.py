@@ -341,6 +341,16 @@ class LiveConfig(FrozenModel):
     min_size_fraction: float = Field(0.35, gt=0, le=1.0)
     exploration_size_fraction: float = Field(0.25, gt=0, le=1.0)
     pooled_size_cap: float = Field(0.6, gt=0, le=1.0)
+    #: Higher-timeframe trend context — see :mod:`tia.quant.trend_context`. The best-
+    #: documented crypto anomaly is time-series momentum at one-to-four-week horizons;
+    #: this reads it from hourly bars and applies it to entries: ``hard`` refuses an
+    #: entry against an agreed tide, ``soft`` halves its size, ``off`` ignores it. A
+    #: feed that cannot serve hourly bars leaves the context unavailable, which imposes
+    #: nothing and says so.
+    htf_mode: str = Field("hard", pattern="^(off|soft|hard)$")
+    htf_timeframe: str = Field("1h", pattern="^(1h|2h|4h)$")
+    htf_z_threshold: float = Field(1.0, ge=0.25, le=4.0)
+    htf_refresh_minutes: int = Field(60, ge=5, le=1440)
     #: Costs may not exceed this fraction of the expected gross edge.
     max_cost_ratio: float = Field(0.6, gt=0, le=1.0)
 

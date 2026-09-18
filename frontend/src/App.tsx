@@ -49,7 +49,7 @@ const NAV: { group: string; items: { id: Tab; label: string }[] }[] = [
       { id: "journal", label: "Trade Journal" },
       { id: "advisor", label: "Ask the AI" },
       { id: "intel", label: "Macro & News" },
-      { id: "arbitrage", label: "Arbitrage" },
+      { id: "arbitrage", label: "Arbitrage & Carry" },
     ],
   },
   {

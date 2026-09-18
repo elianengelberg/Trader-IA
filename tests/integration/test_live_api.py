@@ -930,3 +930,31 @@ async def test_the_journal_breaks_the_record_down_by_exit_reason(client: httpx.A
     assert response.status_code == 200, response.text
     assert isinstance(response.json(), list)
     assert (await client.get("/api/journal/exits?source=bogus")).status_code == 422
+
+
+async def test_the_funding_report_is_served_and_a_dead_endpoint_is_a_health_row(tmp_path: Path) -> None:
+    from tia.core.clock import SystemClock
+    from tia.data.funding import FundingMonitor
+
+    app = create_app(_settings(tmp_path))
+    async with LifespanManager(app):
+        state = app.state.tia
+        state._funding = FundingMonitor(
+            clock=SystemClock(),
+            client=httpx.AsyncClient(
+                transport=httpx.MockTransport(lambda request: httpx.Response(503, text="down"))
+            ),
+            poll_seconds=3600,
+        )
+        transport = httpx.ASGITransport(app=app)
+        async with httpx.AsyncClient(transport=transport, base_url="http://test") as http:
+            assert (await http.get("/api/funding")).status_code == 401
+            await http.post("/api/auth/login", json={"username": USERNAME, "password": PASSWORD})
+            response = await http.get("/api/funding")
+            assert response.status_code == 200, response.text
+            body = response.json()
+            assert body["available"] is True
+            assert body["health"]["ok"] is False and "503" in body["health"]["detail"]
+            assert body["latest"] is None
+            assert body["running"] is True
+    assert not state._funding.is_running

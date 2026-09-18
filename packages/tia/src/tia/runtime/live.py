@@ -63,6 +63,7 @@ from tia.learning.scoreboard import StrategyScoreboard
 from tia.live.gate import LiveActivationToken, configuration_fingerprint
 from tia.portfolio.capital import CapitalLedger, CapitalPolicy
 from tia.quant.features import FeatureBuilder
+from tia.quant.trend_context import TrendContext, trend_context
 from tia.regime.classifier import RegimeClassifier
 from tia.risk.budget import BudgetInputs, RiskBudgetEngine, RiskProfileName
 from tia.risk.engine import RiskEngine
@@ -359,6 +360,7 @@ class LiveRuntime:
             "unprotected_positions": 0,
             "stops_tightened": 0, "exits_breakeven": 0, "exits_trail": 0,
             "spread_rejected": 0, "strategy_muted": 0, "sized_down": 0,
+            "htf_rejected": 0, "htf_sized_down": 0,
         }
         #: The one protective stop covering the open position, if any. Exactly one, sized
         #: to the position: a stop that protects the wrong size is worse than none.
@@ -377,6 +379,10 @@ class LiveRuntime:
         self._last_quote: dict[str, Any] | None = None
         #: How the last entry was sized relative to the risk engine's approval, and why.
         self._last_size: dict[str, Any] | None = None
+        #: The higher-timeframe tide, refreshed from hourly bars on a slow clock. None
+        #: until the first read; unavailable when the feed cannot serve hourly bars.
+        self._trend: TrendContext | None = None
+        self._trend_refreshed: datetime | None = None
         #: Why the round trip in progress is ending, for the record. Set by whichever
         #: path closes it; read once by the scorer.
         self._exit_reason: str | None = None
@@ -820,6 +826,7 @@ class LiveRuntime:
         self._buffer.extend(candles)
         self.counters["bars"] += 1
         await self._refresh_quote()
+        await self._refresh_trend()
 
         # Paper-realtime: the simulated matching engine fills resting orders against the
         # bar the way the live venue would have filled them against the tape.
@@ -884,6 +891,34 @@ class LiveRuntime:
 
         if not signal.direction.is_actionable:
             return
+
+        # The higher-timeframe tide. Against an agreed one-to-four-week trend an entry
+        # is refused (hard) or halved (soft); with it, or with no tide known, nothing
+        # changes. The estimator's buckets are untouched either way — this is a gate on
+        # entries, like the spread gate, and it can only ever refuse or shrink.
+        htf_fraction = 1.0
+        trend = self._trend
+        agrees = (
+            trend.agrees_with(signal.direction is Direction.LONG)
+            if trend is not None and self._settings.live.htf_mode != "off"
+            else None
+        )
+        if agrees is False:
+            if self._settings.live.htf_mode == "hard":
+                self.counters["htf_rejected"] += 1
+                self._emit(
+                    "live.no_trade",
+                    {
+                        "correlation_id": correlation_id,
+                        "reason": (
+                            f"against the tide — the {trend.timeframe} record says "
+                            f"{trend.bias} ({trend.reason}); a {signal.direction.value} "
+                            "entry is not taken against a one-to-four-week trend"
+                        ),
+                    },
+                )
+                return
+            htf_fraction = 0.5
 
         if self._scoreboard.is_muted(signal.strategy_id):
             # The strategy's own record says it loses. Refused before risk, before
@@ -1102,15 +1137,20 @@ class LiveRuntime:
         # Conviction sizing: the risk engine's approval is the ceiling; the evidence
         # decides how much of it this entry deserves. Only ever downward.
         size_fraction = 1.0
-        if self._settings.live.conviction_sizing:
+        if self._settings.live.conviction_sizing or htf_fraction < 1.0:
             sizing = conviction_fraction(
                 evaluation.edge_estimate,
                 exploring=exploring,
                 min_fraction=self._settings.live.min_size_fraction,
                 exploration_fraction=self._settings.live.exploration_size_fraction,
                 pooled_cap=self._settings.live.pooled_size_cap,
+            ) if self._settings.live.conviction_sizing else None
+            size_fraction = (sizing.fraction if sizing else 1.0) * htf_fraction
+            reason_text = (sizing.reason if sizing else "conviction sizing off") + (
+                f"; halved against the {trend.timeframe} tide" if htf_fraction < 1.0 and trend else ""
             )
-            size_fraction = sizing.fraction
+            if htf_fraction < 1.0:
+                self.counters["htf_sized_down"] += 1
             if size_fraction < 1.0:
                 scaled = decision.approved_quantity * size_fraction
                 min_notional = self._filters.get("min_notional")
@@ -1122,7 +1162,7 @@ class LiveRuntime:
                 self.counters["sized_down"] += 1
             self._last_size = {
                 "fraction": round(size_fraction, 4),
-                "reason": sizing.reason,
+                "reason": reason_text,
                 "quantity": decision.approved_quantity,
                 "at": self._clock.now().isoformat(),
             }
@@ -1414,6 +1454,36 @@ class LiveRuntime:
             "spread_bps": (quote.ask - quote.bid) / mid * 10_000.0,
             "at": self._clock.now().isoformat(),
         }
+
+    async def _refresh_trend(self) -> None:
+        """Re-read the higher-timeframe context when its refresh interval has passed.
+
+        One request an hour for a thousand hourly bars — forty days, enough for the
+        four-week horizon with room. Failure leaves the previous context in place (or
+        none), never a halted session: the tide is a filter on entries, not a feed the
+        loop depends on.
+        """
+        cfg = self._settings.live
+        if cfg.htf_mode == "off":
+            return
+        now = self._clock.now()
+        if (
+            self._trend_refreshed is not None
+            and (now - self._trend_refreshed).total_seconds() < cfg.htf_refresh_minutes * 60
+        ):
+            return
+        self._trend_refreshed = now
+        try:
+            candles = await self._market_data.get_candles(
+                self._symbol, cfg.htf_timeframe, limit=1000
+            )
+        except Exception as exc:
+            _log.warning("htf_fetch_failed", error=str(exc)[:160])
+            return
+        self._trend = trend_context(
+            candles, timeframe=cfg.htf_timeframe, z_threshold=cfg.htf_z_threshold
+        )
+        self._emit("live.trend", self._trend.as_dict())
 
     def _track_best_price(self, candle: Candle, *, long: bool) -> None:
         extreme = candle.high if long else candle.low
@@ -2209,6 +2279,14 @@ class LiveRuntime:
                 "last": self._last_size,
             },
             "strategies": self._scoreboard.report(),
+            "trend": {
+                "mode": self._settings.live.htf_mode,
+                "z_threshold": self._settings.live.htf_z_threshold,
+                "refreshed_at": (
+                    self._trend_refreshed.isoformat() if self._trend_refreshed else None
+                ),
+                **(self._trend.as_dict() if self._trend else {"available": False, "bias": "unknown", "reason": "not read yet"}),
+            },
             "execution": {
                 "entry_order_type": self._settings.live.entry_order_type,
                 "limit_timeout_bars": self._settings.live.entry_limit_timeout_bars,

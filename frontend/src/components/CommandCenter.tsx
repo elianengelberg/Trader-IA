@@ -21,6 +21,7 @@ interface LiveSnap {
   capital?: { equity?: number; allocated_capital?: number; realised_pnl?: number; unrealised_pnl?: number; fees_paid?: number };
   counters?: Record<string, number>;
   position?: { open?: boolean; stop_price?: number | null; target_price?: number | null; protected?: boolean; stop_kind?: string | null; r_multiple?: number | null };
+  trend?: { available?: boolean; bias?: string; mode?: string };
   execution?: { resting_order?: unknown };
 }
 
@@ -196,6 +197,11 @@ export function CommandCenter({ subscribe }: { subscribe: Subscribe }) {
           <div className="cc-kicker">
             <span className={`cc-live ${active && snap?.state === "running" ? "" : "off"}`}><i /> {active ? (snap?.state ?? "").toUpperCase() : "OFFLINE"}</span>
             <span>PAPER · REAL {snap?.symbol ?? "BTC/USDT"} MARKET · 24/7 · simulated fills</span>
+            {snap?.trend?.mode !== "off" && (
+              <span className={`cc-tide ${snap?.trend?.available ? snap.trend.bias : "unknown"}`}>
+                TIDE {snap?.trend?.available ? String(snap.trend.bias).toUpperCase() : "UNKNOWN"}
+              </span>
+            )}
           </div>
           <div className={`cc-big ${pnl > 0 ? "pos" : pnl < 0 ? "neg" : "neon"}`}>{signedMoney(pnl)}</div>
           <div className="cc-sub">

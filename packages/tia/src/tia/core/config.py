@@ -436,6 +436,47 @@ class ObservabilityConfig(FrozenModel):
 # --------------------------------------------------------------------------- root
 
 
+class MarketMakingConfig(BaseModel):
+    """The market maker's own switches. Everything defaults to off.
+
+    ``enabled`` starts the market-data service (Phase 2: depth, trades, book, recorder)
+    and nothing else. ``real_money`` has **no effect in any code path** — it exists so a
+    test can set it to True and prove that no route to a live execution provider
+    opens; the market maker's runtime refuses live providers at construction
+    regardless. The maker fee is a PROVISIONAL_COST_ASSUMPTION until the account's
+    real schedule is verified; the sensitivity scenarios are evaluated side by side
+    so no conclusion can rest on the friendliest one.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    enabled: bool = False
+    real_money: bool = False
+    symbol: str = "BTC-USD"
+    depth_speed: str = Field("100ms", pattern="^(100ms|1000ms)$")
+    depth_snapshot_limit: int = Field(1000, ge=5, le=5000)
+    max_data_age_s: float = Field(2.0, gt=0, le=60)
+    record_ticks: bool = True
+    ticks_dir: str = "data/ticks"
+    ticks_retention_days: int = Field(14, ge=1, le=365)
+    ticks_max_gb: float = Field(2.0, gt=0, le=500)
+    #: PROVISIONAL_COST_ASSUMPTION — Binance's retail maker rate; replace via
+    #: configuration when the account's own schedule is verified at source.
+    maker_fee_bps: float = Field(10.0, ge=0, le=200)
+    maker_fee_status: str = "PROVISIONAL_COST_ASSUMPTION"
+    #: Verified rate (None until verified) and an adverse scenario, evaluated alongside.
+    maker_fee_verified_bps: float | None = None
+    maker_fee_adverse_bps: float = Field(15.0, ge=0, le=200)
+    paper_capital: float = Field(10_000.0, gt=0)
+
+    def fee_scenarios(self) -> dict[str, float | None]:
+        return {
+            "assumed": self.maker_fee_bps,
+            "verified": self.maker_fee_verified_bps,
+            "adverse": self.maker_fee_adverse_bps,
+        }
+
+
 class Settings(BaseSettings):
     """Root settings object. Construct via :func:`get_settings`."""
 
@@ -472,6 +513,7 @@ class Settings(BaseSettings):
     security: SecurityConfig = Field(default_factory=SecurityConfig)
     live: LiveConfig = Field(default_factory=LiveConfig)
     observability: ObservabilityConfig = Field(default_factory=ObservabilityConfig)
+    mm: MarketMakingConfig = Field(default_factory=MarketMakingConfig)
 
     @model_validator(mode="after")
     def _environment_invariants(self) -> Settings:

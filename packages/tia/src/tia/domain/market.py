@@ -118,7 +118,14 @@ class Quote(_MarketModel):
 
 
 class TradePrint(_MarketModel):
-    """A single executed trade observed on the tape."""
+    """A single executed trade observed on the tape.
+
+    ``timestamp`` is the trade time the venue reports. The optional fields carry what a
+    tick feed adds: the venue's trade id (for ordering and de-duplication), the event
+    time (when the venue emitted the message, for latency), and who was the maker —
+    Binance's ``m`` flag, from which ``aggressor`` is derived: buyer-is-maker means the
+    seller crossed the spread.
+    """
 
     symbol: str
     timestamp: datetime
@@ -126,6 +133,9 @@ class TradePrint(_MarketModel):
     size: float = Field(gt=0)
     aggressor: str | None = None
     provider: str = "unknown"
+    trade_id: int | None = None
+    event_time: datetime | None = None
+    is_buyer_maker: bool | None = None
 
     @field_validator("timestamp")
     @classmethod
@@ -139,13 +149,18 @@ class OrderBookLevel(_MarketModel):
 
 
 class OrderBook(_MarketModel):
-    """Depth snapshot. Optional: not every provider exposes one."""
+    """Depth snapshot. Optional: not every provider exposes one.
+
+    ``last_update_id`` is the venue's sequence number for the snapshot — what a local
+    order book aligns its incremental updates against. None when the source has none.
+    """
 
     symbol: str
     timestamp: datetime
     bids: tuple[OrderBookLevel, ...] = ()
     asks: tuple[OrderBookLevel, ...] = ()
     provider: str = "unknown"
+    last_update_id: int | None = None
 
     @field_validator("timestamp")
     @classmethod

@@ -22,7 +22,7 @@ raw payload attached rather than silently producing a plausible-looking wrong ca
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import UTC, datetime
 from typing import Any
 
 import httpx
@@ -31,7 +31,7 @@ from tia.core.clock import Clock, SystemClock, ensure_utc, utc_from_millis
 from tia.core.errors import ProviderError, ProviderUnavailableError
 from tia.core.logging import get_logger
 from tia.data.providers.base import MarketDataProvider, ProviderCapabilities
-from tia.domain.market import Candle, Quote
+from tia.domain.market import Candle, OrderBook, OrderBookLevel, Quote, TradePrint
 
 _log = get_logger("data.binance")
 
@@ -254,6 +254,90 @@ class BinancePublicProvider(MarketDataProvider):
             "bids": [[float(p), float(q)] for p, q in data.get("bids", [])],
             "asks": [[float(p), float(q)] for p, q in data.get("asks", [])],
         }
+
+    async def depth_snapshot(self, symbol: str, *, limit: int = 1000) -> OrderBook:
+        """A full depth snapshot WITH its ``lastUpdateId``, for a local order book.
+
+        ``GET /api/v3/depth`` — documented limits up to 5000 levels. Kept apart from
+        :meth:`order_book` (which the Markets page reads as a plain ladder) so the
+        sequence number the synchroniser depends on is never dropped again.
+        """
+        client = await self._http()
+        try:
+            response = await client.get(
+                "/api/v3/depth",
+                params={"symbol": self.to_venue_symbol(symbol), "limit": min(max(limit, 1), 5000)},
+            )
+            response.raise_for_status()
+            data = response.json()
+        except httpx.HTTPError as exc:
+            self._record_failure()
+            raise ProviderUnavailableError(
+                f"binance depth snapshot failed: {exc}",
+                provider=self.name,
+                consecutive_failures=self._consecutive_failures,
+            ) from exc
+        try:
+            last_update_id = int(data["lastUpdateId"])
+            bids = tuple(OrderBookLevel(price=float(p), size=float(q)) for p, q in data["bids"])
+            asks = tuple(OrderBookLevel(price=float(p), size=float(q)) for p, q in data["asks"])
+        except (KeyError, TypeError, ValueError) as exc:
+            self._record_failure()
+            raise ProviderError(
+                "depth snapshot did not have the documented shape",
+                provider=self.name,
+                received=str(data)[:200],
+            ) from exc
+        now = self._clock.now()
+        self._record_success(now)
+        return OrderBook(
+            symbol=symbol, timestamp=now, bids=bids, asks=asks, provider=self.name,
+            last_update_id=last_update_id,
+        )
+
+    async def agg_trades(
+        self, symbol: str, *, from_id: int | None = None, limit: int = 1000
+    ) -> list[TradePrint]:
+        """Historical aggregate trades, oldest first (``GET /api/v3/aggTrades``).
+
+        Documented row: ``{"a": id, "p": price, "q": qty, "f": first trade id,
+        "l": last trade id, "T": trade time ms, "m": buyer is maker, "M": ignore}``.
+        Backfills order-flow analysis; it is not a substitute for the live trade stream.
+        """
+        params: dict[str, Any] = {
+            "symbol": self.to_venue_symbol(symbol), "limit": min(max(limit, 1), 1000)
+        }
+        if from_id is not None:
+            params["fromId"] = int(from_id)
+        client = await self._http()
+        try:
+            response = await client.get("/api/v3/aggTrades", params=params)
+            response.raise_for_status()
+            rows = response.json()
+        except httpx.HTTPError as exc:
+            self._record_failure()
+            raise ProviderUnavailableError(
+                f"binance aggTrades failed: {exc}",
+                provider=self.name,
+                consecutive_failures=self._consecutive_failures,
+            ) from exc
+        prints: list[TradePrint] = []
+        for row in rows:
+            is_buyer_maker = bool(row["m"])
+            prints.append(
+                TradePrint(
+                    symbol=symbol,
+                    timestamp=datetime.fromtimestamp(int(row["T"]) / 1000.0, tz=UTC),
+                    price=float(row["p"]),
+                    size=float(row["q"]),
+                    aggressor="sell" if is_buyer_maker else "buy",
+                    provider=self.name,
+                    trade_id=int(row["a"]),
+                    is_buyer_maker=is_buyer_maker,
+                )
+            )
+        prints.sort(key=lambda t: t.trade_id or 0)
+        return prints
 
     async def close(self) -> None:
         if self._client is not None and self._owns_client:

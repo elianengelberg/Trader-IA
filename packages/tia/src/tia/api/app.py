@@ -782,6 +782,12 @@ def _register_routes(app: FastAPI, settings: Settings) -> None:
             return {"available": False, "reason": "no 24/7 session is running"}
         return live.spread_check(size_btc=size_btc)
 
+    @app.get("/api/mm/market")
+    async def mm_market(request: Request, _user: User = Depends(current_user)) -> dict[str, Any]:
+        """Market-making market data: the local book's sync state, the tape's counts,
+        latency percentiles, the recorder's status. Nothing here quotes or trades."""
+        return tia(request).mm_market_snapshot()
+
     @app.get("/api/funding")
     async def funding(
         request: Request,

@@ -109,6 +109,16 @@ services:
       # funding modelled. Paper only.
       # Market data over WebSocket (kline + bookTicker), REST as fallback.
       TIA_LIVE__MARKET_STREAM: ${TIA_LIVE__MARKET_STREAM:-true}
+      # Market making, phase 2: depth@100ms + trades + local book + tick recorder.
+      # Off by default; never quotes; real_money has no effect anywhere.
+      TIA_MM__ENABLED: ${TIA_MM__ENABLED:-false}
+      TIA_MM__REAL_MONEY: "false"
+      TIA_MM__RECORD_TICKS: ${TIA_MM__RECORD_TICKS:-true}
+      TIA_MM__TICKS_DIR: /app/data/runtime/ticks
+      TIA_MM__TICKS_RETENTION_DAYS: ${TIA_MM__TICKS_RETENTION_DAYS:-14}
+      TIA_MM__TICKS_MAX_GB: ${TIA_MM__TICKS_MAX_GB:-2}
+      TIA_MM__MAKER_FEE_BPS: ${TIA_MM__MAKER_FEE_BPS:-10}
+      TIA_MM__MAKER_FEE_ADVERSE_BPS: ${TIA_MM__MAKER_FEE_ADVERSE_BPS:-15}
       TIA_LIVE__PAPER_CAPITAL: ${TIA_LIVE__PAPER_CAPITAL:-10000}
       TIA_LIVE__LEVERAGE: ${TIA_LIVE__LEVERAGE:-5}
       TIA_LIVE__MAINTENANCE_MARGIN_PCT: ${TIA_LIVE__MAINTENANCE_MARGIN_PCT:-0.5}

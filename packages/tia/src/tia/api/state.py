@@ -108,6 +108,9 @@ class AppState:
         #: Perpetual funding and basis monitor. Same discipline as the arbitrage monitor:
         #: public data, read-only, informs the operator and the Advisor.
         self._funding: Any | None = None
+        #: Market-making market data (phase 2): depth, trades, local book, recorder.
+        #: Started at boot only when settings.mm.enabled; quotes nothing.
+        self._mm_market: Any | None = None
         #: Keeps spawned-subprocess reaper tasks alive until they finish.
         self._background_tasks: set[asyncio.Task[Any]] = set()
         #: Evidence rows the running 24/7 session has already been given. Trades it
@@ -127,6 +130,9 @@ class AppState:
         self._loop = asyncio.get_running_loop()
         await self.database.ensure_schema()
         await self._maybe_resume_paper_realtime()
+        if self.settings.mm.enabled:
+            with contextlib.suppress(Exception):
+                self._start_mm_market_data()
 
     async def shutdown(self) -> None:
         if self._evidence_task is not None:
@@ -146,6 +152,9 @@ class AppState:
         if self._funding is not None:
             with contextlib.suppress(Exception):
                 await self._funding.close()
+        if self._mm_market is not None:
+            with contextlib.suppress(Exception):
+                await self._mm_market.close()
         await self.database.close()
 
     # ------------------------------------------------------------------ streaming
@@ -1120,6 +1129,62 @@ class AppState:
             await monitor.poll()
         monitor.start()
         return {"available": True, **monitor.report()}
+
+    # ------------------------------------------------------------------ market making
+
+    def _start_mm_market_data(self) -> Any:
+        """Phase 2 of the market maker: the book and the tape, nothing that quotes."""
+        from pathlib import Path
+
+        from tia.data.providers.binance_public import BinancePublicProvider
+        from tia.mm.market_data import MarketDataService
+        from tia.mm.order_book import snapshot_from_levels
+        from tia.mm.recorder import TickRecorder
+        from tia.mm.streams import MarketDataStream
+
+        cfg = self.settings.mm
+        rest = BinancePublicProvider(base_url=self.settings.live.public_data_url)
+
+        async def fetch_snapshot():  # type: ignore[no-untyped-def]
+            book = await rest.depth_snapshot(cfg.symbol, limit=cfg.depth_snapshot_limit)
+            return snapshot_from_levels(
+                book.last_update_id or 0,
+                [(lvl.price, lvl.size) for lvl in book.bids],
+                [(lvl.price, lvl.size) for lvl in book.asks],
+            )
+
+        recorder = (
+            TickRecorder(
+                Path(cfg.ticks_dir), cfg.symbol,
+                retention_days=cfg.ticks_retention_days,
+                max_total_bytes=int(cfg.ticks_max_gb * 1024**3),
+            )
+            if cfg.record_ticks
+            else None
+        )
+        service = MarketDataService(
+            cfg.symbol,
+            stream=MarketDataStream(cfg.symbol, depth_speed=cfg.depth_speed),
+            fetch_snapshot=fetch_snapshot,
+            recorder=recorder,
+            max_data_age_s=cfg.max_data_age_s,
+        )
+        service.start()
+        self._mm_market = service
+        _log.info("mm_market_data_started", symbol=cfg.symbol, record=cfg.record_ticks)
+        return service
+
+    def mm_market_snapshot(self) -> dict[str, Any]:
+        cfg = self.settings.mm
+        base = {
+            "enabled": cfg.enabled,
+            "real_money": False,  # by construction; the flag is never read by execution
+            "quoting": "disabled — phase 2 is market data only",
+            "fees": {"status": cfg.maker_fee_status, "scenarios_bps": cfg.fee_scenarios()},
+        }
+        if self._mm_market is None:
+            return {**base, "running": False, "reason": "market-making market data is not enabled (TIA_MM__ENABLED)"}
+        return {**base, "running": self._mm_market.is_running, **self._mm_market.snapshot()}
 
     # ------------------------------------------------------------------ funding
 

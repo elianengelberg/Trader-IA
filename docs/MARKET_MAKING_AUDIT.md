@@ -261,3 +261,34 @@ los límites (`RiskLimits`) se modifican.
 3. **Comisiones**: usar el nivel minorista de Binance (maker 10 bps) en el modelo de
    costos del market maker aunque el simulador actual esté configurado con 2,5 bps, hasta
    que se verifiquen en la cuenta real.
+
+## 8. Estado de la Fase 2 (datos de mercado) — decisiones confirmadas y lo construido
+
+Las tres decisiones de §7 quedaron confirmadas: (1) cuenta simulada separada para el
+market maker ($10.000; nunca comparte PnL, posición, inventario, balance, estado de
+riesgo, journal ni métricas con la sesión 24/7; los datos de mercado sí pueden
+compartirse); (2) grabación de ticks a disco, comprimida y por lotes, nunca inserts por
+tick en Postgres; (3) comisión maker de 10 bps como `PROVISIONAL_COST_ASSUMPTION`,
+configurable sin tocar código, con escenarios de sensibilidad (asumido / verificado /
+adverso) y sin concluir rentabilidad a partir del escenario favorable.
+
+La Fase 2 construye **solo datos de mercado**. No hay fair value, quoting, inventario
+ni cálculo de rentabilidad; nada de este código puede enviar una orden.
+
+| Pieza | Dónde | Qué hace |
+|---|---|---|
+| Streams | `tia/mm/streams.py` | Un solo WebSocket combinado con `depth@100ms`, `trade` y `bookTicker`; reconexión con backoff; latencia local (recepción − `E`) y del venue (`E` − `T`) en p50/p95/p99. |
+| Libro local | `tia/mm/order_book.py` | Procedimiento oficial de Binance Spot: buffer de eventos, snapshot REST con `lastUpdateId`, descarte de eventos viejos, validación `U ≤ lastUpdateId+1 ≤ u`, gap ⇒ libro inválido y reconstrucción. Verifica libro cruzado y spread implausible. |
+| Snapshot REST | `tia/data/providers/binance_public.py` | `depth_snapshot` (hasta 5000 niveles, con `lastUpdateId`) y `agg_trades`. |
+| Servicio | `tia/mm/market_data.py` | Orquesta stream + snapshot + grabador; `usable` sólo si el libro es válido, el stream está conectado y el último dato tiene menos de `max_data_age_s`. |
+| Grabador | `tia/mm/recorder.py` | Segmentos horarios `jsonl.gz` con manifiesto (conteos, ids, sha256, eventos perdidos, desconexiones, gaps, `replayable`). Retención por días y tope de bytes. Un segmento con pérdida o gap queda marcado como no reproducible. |
+| Configuración | `MarketMakingConfig` (`TIA_MM__*`) | `enabled=false`, `real_money=false` (la bandera no la lee ningún módulo de ejecución), fees y escenarios, dir/retención de ticks. |
+| API | `GET /api/mm/market` | Estado de sincronización, contadores, latencias, grabador. Sólo lectura. |
+| Verificación en vivo | `scripts/mm_market_data_check.py` | Corre N minutos contra Binance real y emite el reporte (updates, gaps, reconstrucciones, eventos perdidos, latencias, CPU/RSS, archivos). |
+
+El paquete `tia/mm` está clasificado como parte del camino de decisión en
+`tests/unit/test_scope_boundary.py`: no lee el reloj de pared, recibe su reloj, para que el
+replay de la Fase 12 sea reproducible.
+
+Pendiente para cerrar la fase: correr el script de verificación en el VPS (este entorno
+de construcción no tiene salida a exchanges) y adjuntar sus cifras reales al reporte.

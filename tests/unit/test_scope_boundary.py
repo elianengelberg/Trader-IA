@@ -359,6 +359,10 @@ DECISION_PATH = (
     # and never invents one, so a wall-clock read appearing in it would mean a stored
     # record disagreed with the decision it describes.
     "persistence",
+    # The market maker: its book, tape, recorder and (later) its quotes must replay
+    # identically from recorded ticks, so every module receives its clock. The
+    # process that runs it live (api) is the one that hands it the system clock.
+    "mm",
 )
 
 #: Modules that serve HTTP and run the process. A session expiry, an uptime counter, a

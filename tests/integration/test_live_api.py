@@ -962,6 +962,37 @@ async def test_the_funding_report_is_served_and_a_dead_endpoint_is_a_health_row(
     assert not state._funding.is_running
 
 
+async def test_the_market_making_feed_is_off_by_default_and_never_claims_real_money(tmp_path: Path) -> None:
+    """Phase 2 of the market maker: an authenticated read-only view, disabled unless asked,
+    and the real-money flag is reported False by construction."""
+    app = create_app(_settings(tmp_path))
+    async with LifespanManager(app):
+        state = app.state.tia
+        transport = httpx.ASGITransport(app=app)
+        async with httpx.AsyncClient(transport=transport, base_url="http://test") as http:
+            assert (await http.get("/api/mm/market")).status_code == 401
+            await http.post("/api/auth/login", json={"username": USERNAME, "password": PASSWORD})
+            body = (await http.get("/api/mm/market")).json()
+            assert body["enabled"] is False and body["running"] is False
+            assert body["real_money"] is False
+            assert "TIA_MM__ENABLED" in body["reason"]
+            assert body["fees"]["status"] == "PROVISIONAL_COST_ASSUMPTION"
+            assert set(body["fees"]["scenarios_bps"]) == {"assumed", "verified", "adverse"}
+            assert state._mm_market is None
+
+            class _Service:
+                is_running = True
+
+                def snapshot(self) -> dict[str, object]:
+                    return {"usable": False, "not_usable_reason": "book not synced", "book": {"state": "SYNCING"}}
+
+            state._mm_market = _Service()
+            body = (await http.get("/api/mm/market")).json()
+            assert body["running"] is True and body["usable"] is False
+            assert body["real_money"] is False and "quoting" in body
+            state._mm_market = None
+
+
 async def test_the_track_record_ignores_exploration_trades(tmp_path: Path) -> None:
     """Lessons bought are not claims held: the real-money gate must not count them."""
     from tia.persistence import EdgeStateRepository

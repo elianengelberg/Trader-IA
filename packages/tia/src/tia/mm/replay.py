@@ -36,6 +36,9 @@ class ReplayResult:
     events: dict[str, int] = field(default_factory=dict)
     manifest_replayable: bool | None = None
     manifest_flags: list[str] = field(default_factory=list)
+    sealed: bool = False
+    manifest_format: int | None = None
+    part: int = 0
     snapshots_applied: int = 0
     snapshots_rejected: int = 0
     checkpoints_adopted: int = 0
@@ -88,17 +91,25 @@ def replay_segment(path: Path | str, *, allow_flagged: bool = False, symbol: str
     path = Path(path)
     result = ReplayResult(path=str(path))
     manifest = _read_manifest(path)
-    result.manifest_replayable = bool(manifest.get("replayable")) if manifest else None
+    replayable, why_not = TickRecorder.replayable_from_manifest(manifest)
+    result.manifest_replayable = replayable if manifest else None
     result.manifest_flags = list(manifest.get("not_replayable_reasons", []))
+    result.sealed = bool(manifest.get("closed_at"))
+    result.manifest_format = int(manifest.get("format", 1) or 1) if manifest else None
+    result.part = int(manifest.get("part", 0) or 0)
     result.gaps_in_manifest = int(manifest.get("book_gaps", 0) or 0)
     result.manifest_last_depth_update_id = manifest.get("last_depth_update_id")
     result.manifest_last_checkpoint_update_id = manifest.get("last_checkpoint_update_id")
     result.manifest_last_checkpoint_digest = manifest.get("last_checkpoint_digest", "") or ""
 
-    if manifest.get("corrupt"):
+    if not manifest:
+        result.reasons.append("no manifest: nothing to verify the file against")
+    elif manifest.get("corrupt"):
         result.reasons.append("manifest says corrupt")
-    if manifest and not manifest.get("replayable", False) and not allow_flagged:
-        result.reasons.append(f"segment flagged not replayable: {result.manifest_flags}")
+    elif not result.sealed:
+        result.reasons.append("segment not sealed: the recorder never closed it, no checksum to verify")
+    elif not replayable and not allow_flagged:
+        result.reasons.append(f"segment not replayable: {why_not}")
 
     verified = TickRecorder.verify(path)
     if not verified["ok"]:

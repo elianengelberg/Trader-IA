@@ -19,13 +19,24 @@ What it promises, and what it does not:
   first. The recorder can never eat the disk.
 * **Corruption is detected, not assumed away.** ``verify()`` recomputes the checksum
   and reads the file end to end; a mismatch marks the segment corrupt.
+* **One writer, one file, one manifest.** A directory is locked by the process that
+  records into it; a second recorder on the same directory is refused, never
+  interleaved. A segment file is never appended to: a second session in the same hour
+  writes ``<hour>.partNN.jsonl.gz`` with its own manifest, so the manifest's line count
+  and checksum always describe exactly one file written by exactly one session.
+* **Replayable means rebuildable.** A segment is ``replayable`` only when it is sealed
+  (closed with a checksum), starts from a whole book (a snapshot or a checkpoint) and
+  ends with a checkpoint; an hour rollover writes the closing checkpoint into the old
+  file and the opening one into the new, from the same book state.
 """
 
 from __future__ import annotations
 
+import fcntl
 import gzip
 import hashlib
 import json
+import re
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
@@ -38,6 +49,16 @@ from tia.core.logging import get_logger
 _log = get_logger("mm.recorder")
 
 MANIFEST_SUFFIX = ".manifest.json"
+LOCK_NAME = ".recorder.lock"
+#: Manifest format. 1 never recorded the book's state (snapshots, checkpoints), so a
+#: format-1 segment cannot be rebuilt and is never called replayable.
+MANIFEST_FORMAT = 2
+_PART = re.compile(r"^(?P<hour>\d{8}-\d{2})(?:\.part(?P<part>\d{2}))?\.jsonl\.gz$")
+
+
+class RecorderBusyError(RuntimeError):
+    """Another process is recording into this directory."""
+
 
 #: Kinds that carry a whole book: the REST snapshot the sync adopted, and a checkpoint
 #: of the local book. Both make a segment self-contained for replay.
@@ -62,6 +83,8 @@ class SegmentManifest:
     symbol: str
     hour: str  # YYYYMMDD-HH (UTC)
     path: str
+    format: int = MANIFEST_FORMAT
+    part: int = 0  # 0 for <hour>.jsonl.gz, N for <hour>.partNN.jsonl.gz
     lines: int = 0
     bytes: int = 0
     sha256: str = ""
@@ -79,6 +102,10 @@ class SegmentManifest:
     checkpoint_events: int = 0
     last_checkpoint_update_id: int | None = None
     last_checkpoint_digest: str = ""
+    first_state_kind: str | None = None  # the line a replay can start from
+    first_state_line: int | None = None
+    last_kind: str | None = None
+    closing_checkpoint: bool = False
     dropped_events: int = 0
     disconnects: int = 0
     book_gaps: int = 0
@@ -118,6 +145,7 @@ class TickRecorder:
         self.symbol = symbol
         self._dir = self.root / symbol.replace("/", "-")
         self._dir.mkdir(parents=True, exist_ok=True)
+        self._lock_fh = self._acquire_lock(self._dir / LOCK_NAME)
         self._flush_interval_s = flush_interval_s
         self._flush_lines = flush_lines
         self._max_buffer_lines = max_buffer_lines
@@ -141,6 +169,28 @@ class TickRecorder:
         self.segments_closed = 0
         self.segments_evicted = 0
         self.last_error = ""
+
+    @staticmethod
+    def _acquire_lock(path: Path) -> Any:
+        """An exclusive, non-blocking lock on the directory: one writer at a time."""
+        fh = path.open("a+")
+        try:
+            fcntl.flock(fh.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except OSError as exc:
+            fh.close()
+            raise RecorderBusyError(
+                f"another recorder is writing {path.parent}: refusing to interleave"
+            ) from exc
+        return fh
+
+    def _release_lock(self) -> None:
+        if self._lock_fh is None:
+            return
+        try:
+            fcntl.flock(self._lock_fh.fileno(), fcntl.LOCK_UN)
+        finally:
+            self._lock_fh.close()
+            self._lock_fh = None
 
     # ------------------------------------------------------------------ recording
 
@@ -228,6 +278,10 @@ class TickRecorder:
         if m.first_received_at_ms is None:
             m.first_received_at_ms = received_at_ms
         m.last_received_at_ms = received_at_ms
+        m.last_kind = kind
+        if kind in BOOK_STATE_KINDS and m.first_state_kind is None:
+            m.first_state_kind = kind
+            m.first_state_line = m.lines + len(self._buffer)  # 1-based: this line
         if kind == "depth":
             m.depth_events += 1
             if m.first_depth_update_id is None:
@@ -249,21 +303,37 @@ class TickRecorder:
 
     # ------------------------------------------------------------------ segments
 
+    def _append_state(self, state: BookStateEvent) -> None:
+        line = self._encode("checkpoint", state, state.received_at_ms)
+        self._buffer.append(line)
+        self._note("checkpoint", state, state.received_at_ms)
+
+    def _unique_path(self, hour: str) -> tuple[Path, int]:
+        """A file this session owns: never an existing one, so never an append."""
+        base = self._dir / f"{hour}.jsonl.gz"
+        if not base.exists():
+            return base, 0
+        for part in range(2, 100):
+            candidate = self._dir / f"{hour}.part{part:02d}.jsonl.gz"
+            if not candidate.exists():
+                return candidate, part
+        raise OSError(f"too many segment parts for {hour} in {self._dir}")
+
     def _roll_segment(self, hour: str) -> None:
+        state = self._checkpoint_source() if self._checkpoint_source is not None else None
+        if self._manifest is not None and state is not None:
+            # The old hour ends with the book as it stands; the new one opens with the
+            # same state. Each file rebuilds on its own and can be checked at both ends.
+            self._append_state(state)
         self.close_segment()
-        path = self._dir / f"{hour}.jsonl.gz"
-        self._manifest = SegmentManifest(symbol=self.symbol, hour=hour, path=str(path))
-        self._writer = gzip.open(path, "ab")  # noqa: SIM115 - long-lived, closed in close_segment
+        path, part = self._unique_path(hour)
+        self._manifest = SegmentManifest(symbol=self.symbol, hour=hour, path=str(path), part=part)
+        self._writer = gzip.open(path, "xb")  # noqa: SIM115 - long-lived, closed in close_segment
         self._hasher = hashlib.sha256()
         self._buffer_hour = hour
         self._enforce_limits()
-        if self._checkpoint_source is not None:
-            state = self._checkpoint_source()
-            if state is not None:
-                # The first line of the hour: where a replay of this file starts.
-                line = self._encode("checkpoint", state, state.received_at_ms)
-                self._buffer.append(line)
-                self._note("checkpoint", state, state.received_at_ms)
+        if state is not None:
+            self._append_state(state)
 
     def flush(self, *, force: bool = False) -> None:
         if not self._buffer or self._writer is None:
@@ -299,10 +369,16 @@ class TickRecorder:
             self._writer.close()
             self._writer = None
         if self._manifest is not None:
-            current = Path(self._manifest.path)
-            self._manifest.bytes = current.stat().st_size if current.exists() else 0
-            self._manifest.sha256 = self._file_sha256(Path(self._manifest.path))
-            self._manifest.closed_at = datetime.fromtimestamp(self._now_ms() / 1000.0, tz=UTC).isoformat()
+            m = self._manifest
+            current = Path(m.path)
+            m.bytes = current.stat().st_size if current.exists() else 0
+            m.sha256 = self._file_sha256(current)
+            m.closing_checkpoint = m.last_kind == "checkpoint"
+            if m.snapshot_events + m.checkpoint_events == 0:
+                m.flag("no initial book state recorded (snapshot or checkpoint): cannot be rebuilt")
+            elif not m.closing_checkpoint:
+                m.flag("no closing checkpoint: the final state cannot be verified")
+            m.closed_at = datetime.fromtimestamp(self._now_ms() / 1000.0, tz=UTC).isoformat()
             self._write_manifest()
             self.segments_closed += 1
             self._manifest = None
@@ -310,6 +386,7 @@ class TickRecorder:
 
     def close(self) -> None:
         self.close_segment()
+        self._release_lock()
 
     def _write_manifest(self) -> None:
         if self._manifest is None:
@@ -349,10 +426,32 @@ class TickRecorder:
 
     # ------------------------------------------------------------------ reading
 
+    @staticmethod
+    def segment_sort_key(path: Path) -> tuple[str, int]:
+        match = _PART.match(path.name)
+        if match is None:
+            return path.name, 0
+        return match.group("hour"), int(match.group("part") or 0)
+
+    @classmethod
+    def replayable_from_manifest(cls, manifest: dict[str, Any]) -> tuple[bool, str]:
+        """Whether a manifest describes a rebuildable, sealed file, and why not."""
+        if not manifest:
+            return False, "no manifest"
+        if manifest.get("corrupt"):
+            return False, "corrupt"
+        if int(manifest.get("format", 1) or 1) < MANIFEST_FORMAT:
+            return False, "legacy manifest format: the book's state was never recorded"
+        if not manifest.get("closed_at"):
+            return False, "not sealed: the recorder did not close this segment"
+        if not manifest.get("replayable", False):
+            return False, "; ".join(manifest.get("not_replayable_reasons", [])) or "flagged"
+        return True, ""
+
     def segments(self) -> list[dict[str, Any]]:
-        """Every recorded hour, oldest first, with its manifest when one exists."""
+        """Every recorded file, oldest first (hour, then part), with its manifest."""
         out = []
-        for path in sorted(self._dir.glob("*.jsonl.gz")):
+        for path in sorted(self._dir.glob("*.jsonl.gz"), key=self.segment_sort_key):
             manifest_path = Path(str(path) + MANIFEST_SUFFIX)
             manifest: dict[str, Any] = {}
             if manifest_path.exists():
@@ -360,13 +459,16 @@ class TickRecorder:
                     manifest = json.loads(manifest_path.read_text())
                 except (OSError, ValueError):
                     manifest = {"corrupt": True, "replayable": False}
+            replayable, why_not = self.replayable_from_manifest(manifest)
             out.append(
                 {
                     "path": str(path),
                     "bytes": path.stat().st_size,
                     "mtime": path.stat().st_mtime,
                     "manifest": manifest,
-                    "replayable": bool(manifest.get("replayable", False)) and not manifest.get("corrupt", False),
+                    "sealed": bool(manifest.get("closed_at")),
+                    "replayable": replayable,
+                    "not_replayable": why_not,
                 }
             )
         return out
@@ -442,4 +544,13 @@ class TickRecorder:
         }
 
 
-__all__ = ["BOOK_STATE_KINDS", "MANIFEST_SUFFIX", "BookStateEvent", "SegmentManifest", "TickRecorder"]
+__all__ = [
+    "BOOK_STATE_KINDS",
+    "LOCK_NAME",
+    "MANIFEST_FORMAT",
+    "MANIFEST_SUFFIX",
+    "BookStateEvent",
+    "RecorderBusyError",
+    "SegmentManifest",
+    "TickRecorder",
+]

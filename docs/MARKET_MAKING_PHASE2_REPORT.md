@@ -1,10 +1,13 @@
 # Market maker profesional — Reporte de la Fase 2 (datos de mercado)
 
-**Estado: PHASE2_STATUS = PENDING.** La infraestructura y las pruebas están completas y
-verificadas 9/9, pero la Fase 2 **no está aprobada**: la aprobación exige evidencia real
-del VPS y el entorno donde se construyó este código no alcanza Binance (el proxy corta la
-conexión; comprobado el 2026-09-18). La sección B dice exactamente qué correr y qué
-mirar. Nada de la sección A cuenta como evidencia de funcionamiento real.
+**Estado: PHASE2_STATUS = PENDING.** La primera prueba real en el VPS (2026-09-18,
+horas 18–19 UTC) confirmó Binance alcanzable, snapshot y updates reales, libro SYNCED,
+0 gaps inexplicados, 0 eventos perdidos, detección de datos viejos y resync tras el
+stall, replay OK del segmento con falta inyectada, y ejecución real deshabilitada. Pero
+reveló **dos defectos de integridad en el grabador** (sección C), corregidos en el commit
+que acompaña este reporte. La fase queda aprobada sólo cuando una nueva prueba limpia en
+el VPS cumpla los criterios de B.1 sobre un directorio nuevo. Nada de la sección A cuenta
+como evidencia de funcionamiento real.
 
 Alcance de la fase: **solo datos de mercado**. No hay fair value, quoting, inventario,
 modelo de fills ni rentabilidad. Ningún módulo de `tia/mm` puede construir un proveedor
@@ -84,7 +87,7 @@ Resultado (30 s, stall de 3 s inyectado): libro SYNCED, 1 gap explicado por el s
 después, segmento íntegro, replay OK con checkpoint coincidente. **Estos números
 describen el harness, no Binance.**
 
-### A.6 Problemas encontrados y corregidos
+### A.6 Problemas encontrados y corregidos (antes de la primera prueba real)
 
 1. Un libro recién sincronizado sin evento posterior se reportaba obsoleto: el snapshot
    siembra el reloj de frescura.
@@ -97,28 +100,28 @@ describen el harness, no Binance.**
 
 ---
 
-## B. Validación en vivo en el VPS — PENDIENTE
+## B. Validación en vivo en el VPS — PENDIENTE (segunda prueba, limpia)
 
-Requisito para aprobar la fase. Dos corridas, dentro del contenedor del backend:
+Requisito para aprobar la fase. Un directorio **nuevo** (`ticks-phase2-final`) para que
+los segmentos defectuosos de la primera prueba queden intactos como evidencia y no
+contaminen la validación:
 
 ```
 cd /home/tia/Trader-IA
 git pull origin claude/algo-trading-simulation-platform-ngf7xo
 docker compose -f docker-compose.prod.yml up -d --build backend
 
-# Corrida 1: limpia, 5 minutos. Produce el segmento que debe ser replayable=true.
-docker compose -f docker-compose.prod.yml exec backend python scripts/mm_market_data_check.py --minutes 5 --ticks-dir /app/data/runtime/ticks-check
+# Prueba limpia, 5 minutos, sin stall.
+docker compose -f docker-compose.prod.yml exec backend python scripts/mm_market_data_check.py --minutes 5 --ticks-dir /app/data/runtime/ticks-phase2-final
 
-# Corrida 2: 2 minutos con un stall de 4 s inyectado. Prueba la detección de datos viejos.
-docker compose -f docker-compose.prod.yml exec backend python scripts/mm_market_data_check.py --minutes 2 --inject-stall 4 --ticks-dir /app/data/runtime/ticks-stall
-
-# Replay independiente del segmento limpio y tamaño real en disco.
-docker compose -f docker-compose.prod.yml exec backend python scripts/mm_replay_check.py --ticks-dir /app/data/runtime/ticks-check
-docker compose -f docker-compose.prod.yml exec backend du -sh /app/data/runtime/ticks-check /app/data/runtime/ticks-stall
+# Replay independiente sobre esos segmentos y tamaño real en disco.
+docker compose -f docker-compose.prod.yml exec backend python scripts/mm_replay_check.py --ticks-dir /app/data/runtime/ticks-phase2-final
+docker compose -f docker-compose.prod.yml exec backend du -sh /app/data/runtime/ticks-phase2-final
 ```
 
-Nota: si la corrida cruza un cambio de hora UTC, el grabador abre un segundo segmento;
-el primero se cierra con checksum y el segundo arranca con un checkpoint del libro.
+Si la corrida cruza un cambio de hora UTC, el grabador cierra la hora vieja con un
+checkpoint de cierre y abre la nueva con el mismo estado: cada archivo se reconstruye
+por separado y ambos deben dar replay OK.
 
 ### B.1 Qué debe verse en el JSON final para marcar PASS
 
@@ -131,10 +134,11 @@ el primero se cierra con checksum y el segundo arranca con un checkpoint del lib
 | 5 Sin gaps inexplicados | `order_book.gaps_unexplained` | 0 (gaps − desconexiones − stalls inyectados) |
 | 6 Sin pérdida silenciosa | `recorder.events_dropped`, `binance_websocket.events_dropped_by_subscribers` | 0 y 0 |
 | 7 Segmentos íntegros | `recorder.segments_detail[*].verify.ok` | true |
-| 8 Replay | `replay[*].ok`, `criteria.8b_clean_segment_replayed` (corrida 1) | true |
-| 9 Datos viejos detectados | `stale_test.stale_detected_after_s` (corrida 2) | no nulo, con `gap_detected_after_s` y `usable_again_after_s` |
+| 8 Replay | `replay[*].ok`, `criteria.8b_clean_segment_replayed` | true; además por segmento: `checksum=ok`, `gaps_in_replay == gaps_in_manifest`, `unregistered_gaps=0`, `final_matches_manifest=true`, `digest_matches_manifest=true`, `final_valid=true`, `final_state=synced` |
+| 7b Manifiesto íntegro | `recorder.segments_detail[*].lines` vs `replay[*].lines` | iguales; `sealed=true`, `corrupt=false`, `replayable=true`, `first_state` no nulo, `closing_checkpoint=true` |
+| 9 Datos viejos detectados | ya demostrado en la primera prueba (`stale_test`, corrida con `--inject-stall 4`) | no se repite en la prueba limpia |
 | 10 Sin ejecución real | `criteria.10_real_execution_enabled` | false |
-| Comparación con bookTicker | `book_ticker_comparison.crossed_vs_venue`, `persistent_inconsistency` | 0 y false; diferencias de 1 tick son timing entre streams |
+| 12 Comparación con bookTicker | `book_ticker_comparison.persistent_inconsistency`, `impossible_state` | false y false (ver B.4) |
 
 ### B.2 Cifras a transcribir en esta sección cuando existan
 
@@ -165,3 +169,90 @@ gaps no registrados, estado final, coincidencia con el manifiesto).
 - Los segmentos con gap, desconexión o falta inyectada quedan `replayable=false` por la
   decisión confirmada (2); el replay igual puede correrlos con `--allow-flagged` y
   reproduce el mismo gap y el mismo resync porque el snapshot está en la cinta.
+
+### B.4 Regla de comparación con bookTicker (documentada en `tia/mm/consistency.py`)
+
+`depth@100ms` se emite por lotes cada 100 ms; `bookTicker` en cada cambio del tope.
+Muestreados en el mismo instante están en momentos distintos, y cada uno trae el id de
+secuencia del venue que dice cuál es más fresco. Por eso:
+
+- Una diferencia de ticks en una muestra es **timing**, se describe y no se juzga.
+- Un tope local dentro del tope del venue en un instante (el caso real de la primera
+  prueba: local 81213.99/81214.00 contra venue 81214.59/81214.60, 60 ticks, una sola
+  muestra, `bookTicker` adelantado) es **timing salvo que persista**.
+- Sólo dos verdictos son inconsistencia: `impossible_state` (ask local ≤ bid local, que
+  el propio libro invalida) y `persistent_inconsistency` (desacuerdo mayor a 1 tick en
+  ≥ 3 muestras consecutivas separadas 5 s, dos órdenes de magnitud sobre el lote de
+  100 ms).
+- El reporte informa además `venue_ahead_samples` (el ticker tenía un id mayor que el
+  libro) y `id_lag` por muestra, para que la explicación por timing sea verificable y no
+  asumida.
+
+---
+
+## C. Defectos encontrados por la primera prueba real y su corrección
+
+### C.1 Segmento `20260918-18.jsonl.gz` sin snapshot ni checkpoint, declarado replayable
+
+**Síntoma.** 50.299 líneas (35.875 bookTicker, 2.994 depth, 11.430 trades), 0 snapshots,
+0 checkpoints, `replayable=true`; el replay termina en `syncing` con
+`final_update_id=0`.
+
+**Causa.** El grabador declaraba `replayable=true` por ausencia de fallos (sin gap, sin
+desconexión, sin pérdida), no por presencia de lo necesario para reconstruir. Un archivo
+sin estado inicial del libro pasaba la regla. Además, el formato de manifiesto anterior
+al commit `c7c5bf1` nunca grababa snapshots ni checkpoints, así que cualquier segmento
+de ese formato es irreconstruible por construcción; el manifiesto no llevaba versión y
+no había forma de distinguirlo.
+
+**Corrección.**
+- La condición de `replayable` se decide **al cerrar el segmento, a partir de su
+  contenido**: exige al menos una línea de estado (snapshot o checkpoint) y que la última
+  línea sea un checkpoint; si falta cualquiera, el manifiesto lo marca con el motivo.
+- Los manifiestos llevan `format=2`; uno sin versión (formato 1) se lista y se reporta
+  como `legacy manifest format: the book's state was never recorded`, nunca como
+  reproducible.
+- Un segmento sin `closed_at` (el proceso no lo cerró) es `not sealed` y no es
+  reproducible hasta cerrarse.
+- En el cambio de hora, la hora vieja recibe un **checkpoint de cierre** y la nueva abre
+  con el mismo estado, así cada archivo se reconstruye y se verifica por separado.
+- El manifiesto registra `first_state_kind`, `first_state_line`, `closing_checkpoint`.
+
+### C.2 `20260918-19.jsonl.gz`: 114.721 líneas reales, 56.803 según el manifiesto
+
+**Síntoma.** Checksum OK, conteo de líneas distinto; el contenido se reconstruye y el
+digest coincide con el checkpoint.
+
+**Causa (reproducida offline).** El grabador abría el archivo de la hora con
+`gzip.open(path, "ab")`: **append**. Una segunda sesión en la misma hora (otra corrida
+del script, o un reinicio) agregaba sus líneas al archivo existente y creaba un manifiesto
+nuevo que contaba sólo las suyas; el sha256 se calculaba al cierre sobre el archivo
+entero, por eso el checksum "pasaba" mientras el conteo fallaba. 114.721 − 56.803 =
+57.918 líneas pertenecían a la sesión anterior. No hubo doble apertura dentro de un
+proceso ni concurrencia entre flush y cierre: fue reanudación sobre un archivo existente.
+
+**Corrección.**
+- **Nunca se anexa.** El archivo se abre en modo exclusivo (`"xb"`); si `<hora>.jsonl.gz`
+  existe, la sesión escribe `<hora>.partNN.jsonl.gz` con su propio manifiesto. Un
+  manifiesto describe exactamente un archivo escrito por exactamente una sesión.
+- **Un escritor por directorio.** Lock exclusivo (`flock`) sobre `.recorder.lock`; un
+  segundo grabador sobre el mismo directorio lanza `RecorderBusyError` y el script sale
+  con `REFUSED` en vez de intercalar.
+- `segments()` ordena por hora y parte.
+
+**Tests de regresión** (`tests/unit/mm/test_recorder_integrity.py`): segunda sesión en la
+misma hora → archivo `part02`, ambos manifiestos con el conteo exacto de su archivo y
+replay OK; escritor concurrente rechazado; segmento sin estado inicial nunca
+reproducible; segmento sin checkpoint de cierre no reproducible; cambio de hora con
+checkpoint de cierre y de apertura y replay OK de ambos archivos con digest coincidente;
+manifiesto legacy reportado; segmento sin sellar reportado; reglas de comparación con
+bookTicker (una muestra dentro del tope del venue es timing; tres consecutivas es
+persistente; libro local cruzado es imposible).
+
+### C.3 Comprobación offline del script completo tras la corrección (sintético, rotulado)
+
+Dos ejecuciones del script en la misma hora sobre el mismo directorio: la segunda
+concurrente fue rechazada (`REFUSED … refusing to interleave`); la secuencial produjo
+`20260918-19.part02.jsonl.gz`; `mm_replay_check.py` reconstruyó ambos archivos: checksum
+OK, 402 líneas = 402 en el manifiesto, `final_matches_manifest=True`,
+`digest_matches_manifest=True`. Estos números describen el harness, no Binance.

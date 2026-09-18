@@ -116,12 +116,15 @@ def test_the_recorder_writes_batches_manifests_and_checksums(tmp_path: Path) -> 
     assert status["events_written"] == 3 and status["buffered_lines"] == 2  # one batch flushed
     recorder.close()
     status = recorder.status()
-    assert status["events_written"] == 5 and status["segments"] == 1 and status["segments_replayable"] == 1
+    # Events alone are not a rebuildable hour: no snapshot, no checkpoint, not replayable.
+    assert status["events_written"] == 5 and status["segments"] == 1 and status["segments_replayable"] == 0
     segment = recorder.segments()[0]
     manifest = json.loads(Path(segment["path"] + MANIFEST_SUFFIX).read_text())
     assert manifest["lines"] == 5 and manifest["depth_events"] == 5
     assert manifest["first_depth_update_id"] == 1 and manifest["last_depth_update_id"] == 5
-    assert manifest["replayable"] is True and len(manifest["sha256"]) == 64
+    assert manifest["replayable"] is False and len(manifest["sha256"]) == 64
+    assert "no initial book state" in manifest["not_replayable_reasons"][0]
+    assert segment["sealed"] is True and manifest["format"] == 2
     with gzip.open(segment["path"], "rt") as fh:
         rows = [json.loads(line) for line in fh]
     assert [r["u"] for r in rows] == [1, 2, 3, 4, 5]
@@ -138,7 +141,7 @@ def test_a_gap_or_disconnect_marks_the_hour_not_replayable(tmp_path: Path) -> No
     manifest = recorder.segments()[0]["manifest"]
     assert manifest["replayable"] is False
     assert manifest["book_gaps"] == 1 and manifest["disconnects"] == 1
-    assert len(manifest["not_replayable_reasons"]) == 2
+    assert {"order book reported a sequence gap", "stream disconnected during the hour"} <= set(manifest["not_replayable_reasons"])
 
 
 def test_a_full_buffer_drops_and_counts_instead_of_blocking(tmp_path: Path) -> None:

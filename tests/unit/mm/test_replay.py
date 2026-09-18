@@ -11,8 +11,6 @@ import json
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-import pytest
-
 from tia.mm.market_data import MarketDataService
 from tia.mm.order_book import BookState, snapshot_from_levels
 from tia.mm.recorder import BookStateEvent, TickRecorder
@@ -157,7 +155,7 @@ async def test_a_flagged_segment_is_refused_unless_allowed(tmp_path: Path) -> No
     segment = service.recorder.segments()[0]  # type: ignore[union-attr]
     assert segment["replayable"] is False
     refused = replay_segment(segment["path"])
-    assert refused.ok is False and "flagged" in refused.reasons[0]
+    assert refused.ok is False and "not replayable" in refused.reasons[0]
     allowed = replay_segment(segment["path"], allow_flagged=True)
     assert allowed.ok, allowed.reasons  # the re-sync snapshot is in the tape: it still rebuilds
     assert allowed.snapshots_applied == 2
@@ -259,11 +257,20 @@ async def test_drops_and_connect_failures_are_counted_apart() -> None:
     assert seen == ["disconnect"]  # a failed connect is not a disconnect: nothing was up
 
 
-@pytest.mark.parametrize("kind", ["snapshot", "checkpoint"])
-def test_a_segment_holding_only_book_state_still_replays(tmp_path: Path, kind: str) -> None:
+def test_a_segment_that_is_only_a_checkpoint_replays_and_a_lone_snapshot_does_not(tmp_path: Path) -> None:
+    state = BookStateEvent(update_id=5, bids=((100.0, 1.0),), asks=((101.0, 1.0),), received_at_ms=BASE_MS)
     recorder = TickRecorder(tmp_path, "BTC-USD", now_ms=lambda: BASE_MS)
-    recorder.record(kind, BookStateEvent(update_id=5, bids=((100.0, 1.0),), asks=((101.0, 1.0),), received_at_ms=BASE_MS))
+    recorder.record("checkpoint", state)
     recorder.close()
     result = replay_segment(recorder.segments()[0]["path"])
     assert result.ok, result.reasons
     assert result.final_update_id == 5 and result.final_valid
+
+    recorder = TickRecorder(tmp_path / "lone", "BTC-USD", now_ms=lambda: BASE_MS)
+    recorder.record("snapshot", state)
+    recorder.close()  # a start without an end: nothing to verify the final state against
+    path = recorder.segments()[0]["path"]
+    refused = replay_segment(path)
+    assert refused.ok is False and "no closing checkpoint" in refused.reasons[0]
+    allowed = replay_segment(path, allow_flagged=True)
+    assert allowed.ok and allowed.final_update_id == 5

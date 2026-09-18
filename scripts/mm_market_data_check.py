@@ -27,9 +27,10 @@ from pathlib import Path
 from typing import Any
 
 from tia.data.providers.binance_public import BinancePublicProvider
+from tia.mm.consistency import TopOfBookSample, summarise
 from tia.mm.market_data import MarketDataService
 from tia.mm.order_book import snapshot_from_levels
-from tia.mm.recorder import TickRecorder
+from tia.mm.recorder import RecorderBusyError, TickRecorder
 from tia.mm.replay import replay_segment
 from tia.mm.streams import MarketDataStream
 
@@ -80,31 +81,21 @@ def _disk(path: Path) -> dict[str, Any]:
         return {"total_gb": NOT_MEASURED, "free_gb": NOT_MEASURED}
 
 
-def _compare(book: dict[str, Any], ticker: Any, tick_size: float) -> dict[str, Any] | None:
-    """One sample of the local top of book against the venue's bookTicker.
-
-    Two different streams, two different clocks: a difference of a tick or two is
-    timing, not a fault. What can never be right is a local bid above the venue's ask
-    or a local ask below the venue's bid ("crossed_vs_venue"), or a local spread ≤ 0.
-    """
+def _compare(book: dict[str, Any], ticker: Any, tick_size: float, t: float) -> TopOfBookSample | None:
+    """One sample of the local top of book against the venue's bookTicker (see
+    tia.mm.consistency for what is timing and what is an inconsistency)."""
     if not (book["valid"] and ticker is not None and book["best_bid"] and book["best_ask"]):
         return None
-    bid, ask = book["best_bid"][0], book["best_ask"][0]
-    bid_ticks = round((bid - ticker.bid) / tick_size)
-    ask_ticks = round((ask - ticker.ask) / tick_size)
-    return {
-        "local_bid": bid,
-        "local_ask": ask,
-        "venue_bid": ticker.bid,
-        "venue_ask": ticker.ask,
-        "bid_diff_ticks": bid_ticks,
-        "ask_diff_ticks": ask_ticks,
-        "exact": bid_ticks == 0 and ask_ticks == 0,
-        "within_1_tick": abs(bid_ticks) <= 1 and abs(ask_ticks) <= 1,
-        "crossed_vs_venue": bid > ticker.ask or ask < ticker.bid,
-        "local_spread_negative": ask <= bid,
-        "id_lag": (book["update_id"] - ticker.update_id) if ticker.update_id else None,
-    }
+    return TopOfBookSample(
+        t=round(t),
+        local_bid=book["best_bid"][0],
+        local_ask=book["best_ask"][0],
+        local_update_id=book["update_id"],
+        venue_bid=ticker.bid,
+        venue_ask=ticker.ask,
+        venue_update_id=ticker.update_id or 0,
+        tick_size=tick_size,
+    )
 
 
 async def main() -> int:
@@ -133,7 +124,11 @@ async def main() -> int:
         )
 
     ticks_dir = Path(args.ticks_dir)
-    recorder = None if args.no_record else TickRecorder(ticks_dir, args.symbol)
+    try:
+        recorder = None if args.no_record else TickRecorder(ticks_dir, args.symbol)
+    except RecorderBusyError as exc:
+        print(f"REFUSED: {exc}. Use another --ticks-dir or stop the other writer.")
+        return 2
     service = MarketDataService(
         args.symbol,
         stream=MarketDataStream(args.symbol, depth_speed=args.depth_speed),
@@ -149,12 +144,10 @@ async def main() -> int:
     deadline = wall_start + args.minutes * 60.0
     stall_at = wall_start + args.minutes * 60.0 * 0.6 if args.inject_stall > 0 else None
     samples: list[dict[str, Any]] = []
-    comparisons: list[dict[str, Any]] = []
+    comparisons: list[TopOfBookSample] = []
     stale_test: dict[str, Any] = {"requested_s": args.inject_stall, "exercised": False}
     synced_seen = False
     rss_max = 0.0
-    consecutive_disagree = 0
-    max_consecutive_disagree = 0
 
     def elapsed() -> float:
         return time.time() - wall_start
@@ -207,15 +200,9 @@ async def main() -> int:
             synced_seen = synced_seen or book["valid"]
             rss = _rss_mb()
             rss_max = max(rss_max, rss)
-            comparison = _compare(book, ticker, args.tick_size)
+            comparison = _compare(book, ticker, args.tick_size, elapsed())
             if comparison is not None:
-                comparison["t"] = round(elapsed())
                 comparisons.append(comparison)
-                if comparison["within_1_tick"]:
-                    consecutive_disagree = 0
-                else:
-                    consecutive_disagree += 1
-                    max_consecutive_disagree = max(max_consecutive_disagree, consecutive_disagree)
             samples.append(
                 {
                     "t": round(elapsed()),
@@ -231,10 +218,10 @@ async def main() -> int:
                 lat = snap["stream"]["latency_depth_ms"]
                 if comparison is None:
                     vs_venue = "n/a"
-                elif comparison["exact"]:
+                elif comparison.exact:
                     vs_venue = "exact"
                 else:
-                    vs_venue = f"{comparison['bid_diff_ticks']}/{comparison['ask_diff_ticks']} ticks"
+                    vs_venue = f"{comparison.bid_diff_ticks}/{comparison.ask_diff_ticks} ticks"
                 print(
                     f"[{elapsed():6.0f}s] usable={snap['usable']} state={book['state']} id={book['update_id']} "
                     f"depth={snap['stream']['depth_events']} trades={snap['stream']['trade_events']} "
@@ -261,7 +248,7 @@ async def main() -> int:
     stalls = 1 if stale_test.get("exercised") else 0
     unexplained_gaps = max(0, metrics["gaps"] - disconnects - stalls)
     silent_loss = (final["recorder"] or {}).get("events_dropped", 0) + stream["dropped_events"]
-    crossed_vs_venue = sum(1 for c in comparisons if c["crossed_vs_venue"])
+    comparison_summary = summarise(comparisons)
     replay_ok = [r for r in replays if r["ok"]]
     clean = [s for s in segments if s["replayable"]]
 
@@ -360,8 +347,12 @@ async def main() -> int:
                         "book_gaps": s["manifest"].get("book_gaps"),
                         "faults_injected": s["manifest"].get("faults_injected"),
                         "corrupt": s["manifest"].get("corrupt"),
+                        "sealed": s["sealed"],
+                        "part": s["manifest"].get("part", 0),
+                        "first_state": s["manifest"].get("first_state_kind"),
+                        "closing_checkpoint": s["manifest"].get("closing_checkpoint"),
                         "replayable": s["replayable"],
-                        "not_replayable_reasons": s["manifest"].get("not_replayable_reasons"),
+                        "not_replayable": s["not_replayable"],
                         "verify": v,
                     }
                     for s, v in zip(segments, verifications, strict=True)
@@ -383,19 +374,7 @@ async def main() -> int:
             "ticks_dir_growth_mb_per_hour": round((ticks_bytes_end - ticks_bytes_start) / 1e6 / (wall / 3600.0), 2) if wall else NOT_MEASURED,
             "samples": samples,
         },
-        "book_ticker_comparison": {
-            "samples": len(comparisons),
-            "exact": sum(1 for c in comparisons if c["exact"]),
-            "within_1_tick": sum(1 for c in comparisons if c["within_1_tick"]),
-            "beyond_1_tick": sum(1 for c in comparisons if not c["within_1_tick"]),
-            "crossed_vs_venue": crossed_vs_venue,
-            "local_spread_negative": sum(1 for c in comparisons if c["local_spread_negative"]),
-            "max_abs_diff_ticks": max((max(abs(c["bid_diff_ticks"]), abs(c["ask_diff_ticks"])) for c in comparisons), default=None),
-            "max_consecutive_disagreements": max_consecutive_disagree,
-            "persistent_inconsistency": max_consecutive_disagree >= 3,
-            "worst_samples": sorted(comparisons, key=lambda c: -max(abs(c["bid_diff_ticks"]), abs(c["ask_diff_ticks"])))[:5],
-            "note": "bookTicker and depth are separate streams; a tick of difference at one instant is timing. Crossed-vs-venue or a persistent disagreement is not.",
-        },
+        "book_ticker_comparison": comparison_summary,
         "stale_test": stale_test,
         "replay": replays,
         "criteria": {
@@ -411,6 +390,7 @@ async def main() -> int:
             "9_stale_detected": stale_test.get("stale_detected_after_s") is not None if stale_test.get("exercised") else "not exercised (--inject-stall 0)",
             "10_real_execution_enabled": False,
             "11_invented_data": False,
+            "12_book_ticker_consistent": not comparison_summary["persistent_inconsistency"] and not comparison_summary["impossible_state"],
         },
         "execution": "none — no execution provider was constructed",
     }

@@ -1,13 +1,15 @@
 # Market maker profesional — Reporte de la Fase 2 (datos de mercado)
 
-**Estado: PHASE2_STATUS = PENDING.** La primera prueba real en el VPS (2026-09-18,
-horas 18–19 UTC) confirmó Binance alcanzable, snapshot y updates reales, libro SYNCED,
-0 gaps inexplicados, 0 eventos perdidos, detección de datos viejos y resync tras el
-stall, replay OK del segmento con falta inyectada, y ejecución real deshabilitada. Pero
-reveló **dos defectos de integridad en el grabador** (sección C), corregidos en el commit
-que acompaña este reporte. La fase queda aprobada sólo cuando una nueva prueba limpia en
-el VPS cumpla los criterios de B.1 sobre un directorio nuevo. Nada de la sección A cuenta
-como evidencia de funcionamiento real.
+**Estado: PHASE2_STATUS = PASS** (declarado por el operador el 2026-09-18 tras la segunda
+prueba limpia en el VPS, sobre un directorio nuevo, con el código del commit `9362dfa`).
+Resultado reportado por el operador: Binance alcanzable; snapshot real; updates de
+profundidad reales; libro local SYNCED; 0 gaps inexplicados; 0 eventos perdidos en
+silencio; integridad de segmentos OK; replay OK; segmento limpio reproducido; checksum
+OK; `final_update_id` igual al manifiesto; digest igual al checkpoint; comparación con
+bookTicker 60/60 exactas; ejecución real deshabilitada. Las cifras detalladas del JSON
+(latencias, tamaños, recursos) quedan en poder del operador; este documento no las
+reproduce porque no las recibió íntegras. La primera prueba real reveló dos defectos del
+grabador, documentados y corregidos en la sección C.
 
 Alcance de la fase: **solo datos de mercado**. No hay fair value, quoting, inventario,
 modelo de fills ni rentabilidad. Ningún módulo de `tia/mm` puede construir un proveedor
@@ -100,7 +102,7 @@ describen el harness, no Binance.**
 
 ---
 
-## B. Validación en vivo en el VPS — PENDIENTE (segunda prueba, limpia)
+## B. Validación en vivo en el VPS — realizada por el operador (segunda prueba, limpia)
 
 Requisito para aprobar la fase. Un directorio **nuevo** (`ticks-phase2-final`) para que
 los segmentos defectuosos de la primera prueba queden intactos como evidencia y no

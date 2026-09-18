@@ -46,6 +46,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        # The image cannot see .git; pass the commit so measurements can name it:
+        #   GIT_COMMIT=$(git rev-parse --short HEAD) docker compose ... up -d --build backend
+        GIT_COMMIT: ${GIT_COMMIT:-unknown}
     image: trader-ia:prod
     restart: unless-stopped
     # Migrations first, serve second. If the upgrade fails the container exits and
@@ -111,8 +115,15 @@ services:
       TIA_LIVE__MARKET_STREAM: ${TIA_LIVE__MARKET_STREAM:-true}
       # Market making, phase 2: depth@100ms + trades + local book + tick recorder.
       # Off by default; never quotes; real_money has no effect anywhere.
+      # Market data + recording only (phase 2). Never quotes.
       TIA_MM__ENABLED: ${TIA_MM__ENABLED:-false}
+      # Paper quoting (phase 3). Simulated orders only; long alias accepted.
+      TIA_MM__ADAPTIVE_ENABLED: ${TIA_MM__ADAPTIVE_ENABLED:-${ADAPTIVE_MARKET_MAKER_ENABLED:-false}}
+      # Pinned. Has no effect in any code path either way; real execution is blocked
+      # architecturally, not by this flag.
       TIA_MM__REAL_MONEY: "false"
+      TIA_MM__LATENCY_PROFILE_PATH: ${TIA_MM__LATENCY_PROFILE_PATH:-/app/data/runtime/mm/latency_profile.json}
+      TIA_MM__LATENCY_SCENARIO: ${TIA_MM__LATENCY_SCENARIO:-baseline}
       TIA_MM__RECORD_TICKS: ${TIA_MM__RECORD_TICKS:-true}
       TIA_MM__TICKS_DIR: /app/data/runtime/ticks
       TIA_MM__TICKS_RETENTION_DAYS: ${TIA_MM__TICKS_RETENTION_DAYS:-14}

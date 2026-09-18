@@ -450,7 +450,13 @@ class MarketMakingConfig(BaseModel):
 
     model_config = ConfigDict(frozen=True)
 
+    #: Market data only: connect, keep the book, receive trades and bookTicker, record,
+    #: measure latency, run health checks. Never quotes.
     enabled: bool = False
+    #: Paper quoting (phase 3). Requires ``enabled``. Simulated orders only, by
+    #: construction: the market maker's runtime accepts no live execution provider.
+    adaptive_enabled: bool = False
+    #: No effect in any code path. Real execution stays architecturally blocked.
     real_money: bool = False
     symbol: str = "BTC-USD"
     depth_speed: str = Field("100ms", pattern="^(100ms|1000ms)$")
@@ -468,6 +474,11 @@ class MarketMakingConfig(BaseModel):
     maker_fee_verified_bps: float | None = None
     maker_fee_adverse_bps: float = Field(15.0, ge=0, le=200)
     paper_capital: float = Field(10_000.0, gt=0)
+    #: The measured latency profile (written by scripts/mm_market_data_check.py on the
+    #: server with --write-latency-profile). Without it, no replay and no paper quoting:
+    #: a latency the system did not measure is a latency it must not assume.
+    latency_profile_path: str = "data/mm/latency_profile.json"
+    latency_scenario: str = Field("baseline", pattern="^(optimistic|baseline|conservative)$")
 
     def fee_scenarios(self) -> dict[str, float | None]:
         return {

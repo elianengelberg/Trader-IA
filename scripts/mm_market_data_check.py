@@ -28,6 +28,7 @@ from typing import Any
 
 from tia.data.providers.binance_public import BinancePublicProvider
 from tia.mm.consistency import TopOfBookSample, summarise
+from tia.mm.latency_model import LatencyProfileError, build_latency_profile
 from tia.mm.market_data import MarketDataService
 from tia.mm.order_book import snapshot_from_levels
 from tia.mm.recorder import RecorderBusyError, TickRecorder
@@ -35,6 +36,22 @@ from tia.mm.replay import replay_segment
 from tia.mm.streams import MarketDataStream
 
 NOT_MEASURED = "NOT MEASURED"
+
+
+def _commit() -> str:
+    """The commit this run measures: the image's label, else git, else unknown."""
+    from_env = os.environ.get("TIA_COMMIT", "").strip()
+    if from_env and from_env != "unknown":
+        return from_env
+    try:
+        import subprocess
+
+        out = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True, timeout=5, check=False)  # noqa: S607
+        if out.returncode == 0 and out.stdout.strip():
+            return out.stdout.strip()
+    except (OSError, ValueError):
+        pass
+    return "unknown"
 
 
 def _rss_mb() -> float:
@@ -109,6 +126,7 @@ async def main() -> int:
     parser.add_argument("--sample-seconds", type=float, default=5.0)
     parser.add_argument("--inject-stall", type=float, default=0.0, help="seconds of events to ignore on purpose at 60%% of the run, to prove stale detection")
     parser.add_argument("--no-record", action="store_true")
+    parser.add_argument("--write-latency-profile", metavar="PATH", help="write the measured latency profile (timestamp, commit, duration, samples, percentiles) to this JSON file")
     parser.add_argument("--json", action="store_true", help="print only the final report as JSON")
     args = parser.parse_args()
 
@@ -394,6 +412,20 @@ async def main() -> int:
         },
         "execution": "none — no execution provider was constructed",
     }
+    if args.write_latency_profile:
+        try:
+            profile = build_latency_profile(
+                stream=stream,
+                processing_us=final["processing_us"],
+                measured_at_utc=started_utc,
+                commit=_commit(),
+                duration_s=wall,
+                symbol=args.symbol,
+            )
+            written = profile.write(args.write_latency_profile)
+            report["latency_profile"] = {"path": str(written), "profile_id": profile.profile_id, "commit": profile.commit, "measured_at_utc": profile.measured_at_utc}
+        except LatencyProfileError as exc:
+            report["latency_profile"] = {"path": None, "error": f"not written: {exc}"}
     print("\n=== PHASE 2 LIVE REPORT ===" if not args.json else "")
     print(json.dumps(report, indent=1, default=str))
     hard = ("1_binance_reachable", "2_snapshot_received", "3_depth_updates_received", "4_book_reached_synced", "5_no_unexplained_gaps", "6_no_silent_loss")

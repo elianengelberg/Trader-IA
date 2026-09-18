@@ -1,6 +1,6 @@
 # Market maker profesional — Fase 3, Etapa 1: auditoría y diseño técnico
 
-**PHASE3_STATUS = AUDIT.** Documento previo a cualquier implementación de Fase 3.
+**PHASE3_STATUS = IMPLEMENTATION** (desde el 2026-09-18, con las cuatro decisiones de §17 confirmadas por el operador; D1 con la arquitectura de una sola autoridad global de solo lectura).
 Fecha: 2026-09-18. Base: commit `9362dfa` (Fase 2 cerrada con PASS sobre Binance real,
 según la evidencia del operador transcrita en `docs/MARKET_MAKING_PHASE2_REPORT.md`).
 
@@ -278,35 +278,39 @@ se reporta el error estándar, `markout_100ms … markout_5s`; todo separado por
 
 ## 17. Inconsistencia arquitectónica y decisiones que requieren confirmación
 
-### D1 — Autoridad del `RiskEngine` existente sobre un proceso de cotización continua (INCONSISTENCIA)
+### D1 — Autoridad del `RiskEngine` existente sobre un proceso de cotización continua (RESUELTA)
 
 `RiskEngine.evaluate(signal: SignalCandidate, portfolio, …)` está diseñado para una
 decisión direccional por vela de 1 minuto: exige un `SignalCandidate`, aplica
 `trade_cooldown_seconds = 300`, `max_trades_per_day = 20` y `max_trades_per_symbol_per_day
 = 5`. Un market maker emite cientos de cotizaciones por hora y mantiene inventario, no
-"trades". Pasar cada cotización por `evaluate` la rechazaría por frecuencia; **cambiar
-esos límites para el market maker sería exactamente lo que está prohibido** (modificar el
-RiskEngine para permitir más exposición). La auditoría de Fase 1 proponía un método
-`evaluate_quote` dentro de `RiskEngine`; tu restricción de Fase 3 ("no modificar
-RiskEngine") lo descarta.
+"trades". Pasar cada cotización por `evaluate` la rechazaría por frecuencia; cambiar esos
+límites para el market maker sería exactamente lo prohibido.
 
-**Recomendación (no implementada hasta confirmar):**
+**Arquitectura confirmada por el operador** (sin segundo `RiskEngine`, sin autoridades
+paralelas):
 
-- No se modifica `tia/risk/engine.py`. Se crea `tia/mm/risk.py::MarketMakerRiskGuard`.
-- El `RiskEngine` de la sesión sigue siendo **autoridad global por veto**: si su estado
-  es kill switch, safe mode o halted (`RiskEngine.state.is_halted`), el market maker
-  **cancela todo y no cotiza**. Es lectura de estado, nunca escritura; el market maker no
-  puede resumir ni relajar nada.
-- El market maker tiene además su **propia instancia** de `RiskEngine` con sus propios
-  `RiskLimits` (la clase existente, congelada) aplicados a su cuenta de $10.000:
-  `daily_loss_limit_pct`, `max_drawdown_pct`, `max_position_notional_pct` (inventario),
-  kill switch propio. Reutiliza los breakers existentes sin tocar el código.
-- Sobre eso, límites específicos en `MarketMakerRiskLimits` (nuevo, congelado):
-  `max_inventory_btc`, `max_notional_usd`, `max_daily_loss_usd`, `max_drawdown_pct`,
-  `max_quotes_per_minute`, `max_order_size_btc`, `kill_switch`. Sólo pueden **restringir**.
-- `ExpectedValueEngine` no se modifica: la evidencia de cotización usa un
-  `EdgeEstimator` propio con buckets de microestructura, y la decisión de cotizar exige
-  neto esperado > 0 con las mismas reglas de piso de muestras y pooled backoff.
+1. `tia/risk/engine.py` **no se modifica**. El `RiskEngine` existente sigue siendo la
+   autoridad de riesgo del sistema existente.
+2. `tia/mm/safety.py::GlobalTradingSafetyGate`: **solo lectura**. Expone un estado
+   `SAFE | SAFE_MODE | HALTED | DATA_INVALID | SYSTEM_UNSAFE` a partir del estado del
+   `RiskEngine` de la sesión (kill switch, safe mode, halted), de la validez de los datos
+   (`MarketDataService.usable`) y de la salud del sistema. No escribe nada en ningún
+   motor. Si el estado no es `SAFE`: se cancelan las cotizaciones paper activas, no se
+   generan nuevas, se registra el motivo y se espera la recuperación.
+3. `tia/mm/risk.py::MarketMakerRiskController`: límites propios de la cuenta paper de
+   $10.000 (inventario, notional, tamaño de cotización, pérdida diaria, drawdown,
+   frecuencia de cotización, kill switch propio). **Solo puede restringir**; no tiene
+   ninguna API para relajar un límite global ni para resumir nada del sistema existente.
+4. Jerarquía, en este orden y nunca al revés, codificada en `MarketMakerEngine`:
+
+```
+DATA VALIDITY  →  GLOBAL SAFETY GATE  →  MARKET MAKER RISK CONTROLLER  →  QUOTING ENGINE  →  PAPER EXECUTION
+```
+
+   No existe camino en el que "el controller dice OK" pueda ignorar una condición de
+   seguridad global: el motor consulta el gate antes que el controller y el controller no
+   recibe el resultado del gate como entrada que pueda anular.
 
 ### D2 — Grabación continua desde hoy (datos para replay/OOS)
 
@@ -350,7 +354,8 @@ aceptan como alias en compose.
 | `queue.py` | libro en `t_arr`, trades, diffs | cotas de cola, resolución | 10 |
 | `sim.py` | `QuoteDecision`, tape | `SimulatedOrder`, `SimulatedFill(resolution, venue_trade_ids)` | 13, 14, 15 |
 | `ledger.py` | fills, marks | inventario, PnL bruto/neto, drawdown | 6, 16, 22 |
-| `risk.py` | estado del `RiskEngine` de sesión, `MarketMakerRiskLimits`, `RiskEngine` propio | `allow/deny(reason)`, kill switch | 16, 17, 23 |
+| `safety.py` | estado del `RiskEngine` de sesión (lectura), validez de datos, salud | `SafetyStatus(SAFE/SAFE_MODE/HALTED/DATA_INVALID/SYSTEM_UNSAFE, reason)` | 17, 23 |
+| `risk.py` | `MarketMakerRiskLimits`, estado del ledger propio | `allow/deny(reason)`, tamaño acotado, kill switch propio; sólo restringe | 16, 17, 23 |
 | `engine.py` | eventos en orden `R` | journal, métricas, snapshot | 18, 19, 20, 21 |
 | `mm_replay.py` | segmentos + config + semilla | resultado determinista, hash del journal | 18, 19 |
 | `metrics.py` | journal | §16 por régimen/escenario | — |

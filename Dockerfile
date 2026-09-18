@@ -46,6 +46,8 @@ COPY --from=frontend /build/dist ./frontend/dist
 RUN mkdir -p /app/data/runtime && chown -R tia:tia /app/data
 USER tia
 
+ARG GIT_COMMIT=unknown
+ENV TIA_COMMIT=$GIT_COMMIT
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     TIA_ENV=demo \

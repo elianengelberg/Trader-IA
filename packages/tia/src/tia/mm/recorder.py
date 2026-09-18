@@ -39,6 +39,21 @@ _log = get_logger("mm.recorder")
 
 MANIFEST_SUFFIX = ".manifest.json"
 
+#: Kinds that carry a whole book: the REST snapshot the sync adopted, and a checkpoint
+#: of the local book. Both make a segment self-contained for replay.
+BOOK_STATE_KINDS = ("snapshot", "checkpoint")
+
+
+@dataclass(frozen=True)
+class BookStateEvent:
+    """A whole book at one sequence id: what a replay starts from or is checked against."""
+
+    update_id: int
+    bids: tuple[tuple[float, float], ...]
+    asks: tuple[tuple[float, float], ...]
+    received_at_ms: int
+    digest: str = ""
+
 
 @dataclass
 class SegmentManifest:
@@ -56,12 +71,18 @@ class SegmentManifest:
     last_depth_update_id: int | None = None
     first_trade_id: int | None = None
     last_trade_id: int | None = None
+    raw_bytes: int = 0  # before compression
     depth_events: int = 0
     trade_events: int = 0
     book_events: int = 0
+    snapshot_events: int = 0
+    checkpoint_events: int = 0
+    last_checkpoint_update_id: int | None = None
+    last_checkpoint_digest: str = ""
     dropped_events: int = 0
     disconnects: int = 0
     book_gaps: int = 0
+    faults_injected: list[str] = field(default_factory=list)
     replayable: bool = True
     not_replayable_reasons: list[str] = field(default_factory=list)
     corrupt: bool = False
@@ -91,6 +112,7 @@ class TickRecorder:
         retention_days: int = 14,
         max_total_bytes: int = 2 * 1024**3,
         now_ms: Callable[[], int] | None = None,
+        checkpoint_source: Callable[[], BookStateEvent | None] | None = None,
     ) -> None:
         self.root = Path(root)
         self.symbol = symbol
@@ -102,6 +124,9 @@ class TickRecorder:
         self._retention_days = retention_days
         self._max_total_bytes = max_total_bytes
         self._now_ms = now_ms or SystemClock().timestamp_ms
+        #: Asked for the current book whenever a new hour opens, so every segment starts
+        #: with the state a replay needs (None while the book is not valid).
+        self._checkpoint_source = checkpoint_source
 
         self._buffer: list[bytes] = []
         self._buffer_hour = ""
@@ -164,9 +189,21 @@ class TickRecorder:
             manifest.book_gaps += 1
             manifest.flag("order book reported a sequence gap")
 
+    def note_fault(self, reason: str) -> None:
+        """A fault injected on purpose (a validation run): written down as such."""
+        manifest = self._current_manifest()
+        if manifest is not None:
+            manifest.faults_injected.append(reason)
+            manifest.flag(f"fault injected: {reason}")
+
     def _encode(self, kind: str, event: Any, received_at_ms: int) -> bytes:
         payload: dict[str, Any] = {"k": kind, "R": received_at_ms}
-        if kind == "depth":
+        if kind in BOOK_STATE_KINDS:
+            payload.update(
+                {"id": event.update_id, "b": [[p, q] for p, q in event.bids],
+                 "a": [[p, q] for p, q in event.asks], "sha": event.digest}
+            )
+        elif kind == "depth":
             payload.update(
                 {"E": event.event_time_ms, "U": event.first_update_id, "u": event.final_update_id,
                  "b": [[p, q] for p, q in event.bids], "a": [[p, q] for p, q in event.asks]}
@@ -203,6 +240,12 @@ class TickRecorder:
             m.last_trade_id = event.trade_id
         elif kind == "book":
             m.book_events += 1
+        elif kind == "snapshot":
+            m.snapshot_events += 1
+        elif kind == "checkpoint":
+            m.checkpoint_events += 1
+            m.last_checkpoint_update_id = event.update_id
+            m.last_checkpoint_digest = event.digest
 
     # ------------------------------------------------------------------ segments
 
@@ -214,6 +257,13 @@ class TickRecorder:
         self._hasher = hashlib.sha256()
         self._buffer_hour = hour
         self._enforce_limits()
+        if self._checkpoint_source is not None:
+            state = self._checkpoint_source()
+            if state is not None:
+                # The first line of the hour: where a replay of this file starts.
+                line = self._encode("checkpoint", state, state.received_at_ms)
+                self._buffer.append(line)
+                self._note("checkpoint", state, state.received_at_ms)
 
     def flush(self, *, force: bool = False) -> None:
         if not self._buffer or self._writer is None:
@@ -228,6 +278,7 @@ class TickRecorder:
             self.bytes_written += len(chunk)
             if self._manifest is not None:
                 self._manifest.lines += len(self._buffer)
+                self._manifest.raw_bytes += len(chunk)
                 self._manifest.bytes = Path(self._manifest.path).stat().st_size
             self.flushes += 1
         except OSError as exc:
@@ -391,4 +442,4 @@ class TickRecorder:
         }
 
 
-__all__ = ["MANIFEST_SUFFIX", "SegmentManifest", "TickRecorder"]
+__all__ = ["BOOK_STATE_KINDS", "MANIFEST_SUFFIX", "BookStateEvent", "SegmentManifest", "TickRecorder"]

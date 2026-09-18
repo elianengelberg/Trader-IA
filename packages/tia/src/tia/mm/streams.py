@@ -91,7 +91,12 @@ class BookTickerEvent:
 @dataclass(frozen=True)
 class StreamStatus:
     connected: bool
+    connections: int
+    disconnects: int
+    connect_failures: int
     reconnects: int
+    current_connection_s: float | None
+    longest_connection_s: float
     messages: int
     depth_events: int
     trade_events: int
@@ -165,7 +170,12 @@ class MarketDataStream:
         self._task: asyncio.Task[Any] | None = None
 
         self.connected = False
-        self.reconnects = 0
+        self.connections = 0  # successful connects
+        self.disconnects = 0  # drops of a connection that was up
+        self.connect_failures = 0  # attempts that never got up
+        self.reconnects = 0  # every failure, up or not: the retry counter
+        self._connected_at_ms: int | None = None
+        self.longest_connection_ms = 0
         self.messages = 0
         self.depth_events = 0
         self.trade_events = 0
@@ -211,7 +221,7 @@ class MarketDataStream:
             with contextlib.suppress(asyncio.CancelledError, Exception):
                 await self._task
             self._task = None
-        self.connected = False
+        self._mark_down()
 
     async def _run(self) -> None:
         attempt = 0
@@ -219,6 +229,8 @@ class MarketDataStream:
             try:
                 async with self._connector(self.url) as socket:
                     self.connected = True
+                    self.connections += 1
+                    self._connected_at_ms = self._now_ms()
                     self.last_error = ""
                     attempt = 0
                     _log.info("mm_stream_connected", url=self.url)
@@ -228,14 +240,28 @@ class MarketDataStream:
             except asyncio.CancelledError:
                 raise
             except Exception as exc:
-                self.connected = False
+                was_up = self.connected
+                self._mark_down()
                 self.reconnects += 1
                 self.last_error = f"{type(exc).__name__}: {str(exc)[:160]}"
                 delay = BACKOFF[min(attempt, len(BACKOFF) - 1)]
                 attempt += 1
-                _log.warning("mm_stream_dropped", error=self.last_error, retry_in=delay)
-                self._dispatch("disconnect", {"error": self.last_error, "at_ms": self._now_ms()})
+                if was_up:
+                    self.disconnects += 1
+                    _log.warning("mm_stream_dropped", error=self.last_error, retry_in=delay)
+                    self._dispatch("disconnect", {"error": self.last_error, "at_ms": self._now_ms()})
+                else:
+                    self.connect_failures += 1
+                    _log.warning("mm_stream_connect_failed", error=self.last_error, retry_in=delay)
                 await asyncio.sleep(delay)
+
+    def _mark_down(self) -> None:
+        if self.connected and self._connected_at_ms is not None:
+            self.longest_connection_ms = max(
+                self.longest_connection_ms, self._now_ms() - self._connected_at_ms
+            )
+        self.connected = False
+        self._connected_at_ms = None
 
     # ------------------------------------------------------------------ messages
 
@@ -293,9 +319,20 @@ class MarketDataStream:
             if self._last_message_ms is not None
             else None
         )
+        current_ms = (
+            self._now_ms() - self._connected_at_ms
+            if self.connected and self._connected_at_ms is not None
+            else None
+        )
+        longest_ms = max(self.longest_connection_ms, current_ms or 0)
         return StreamStatus(
             connected=self.connected,
+            connections=self.connections,
+            disconnects=self.disconnects,
+            connect_failures=self.connect_failures,
             reconnects=self.reconnects,
+            current_connection_s=round(current_ms / 1000.0, 1) if current_ms is not None else None,
+            longest_connection_s=round(longest_ms / 1000.0, 1),
             messages=self.messages,
             depth_events=self.depth_events,
             trade_events=self.trade_events,

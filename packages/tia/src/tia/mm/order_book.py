@@ -92,6 +92,8 @@ class LocalOrderBook:
     last_invalid_reason: str = ""
     last_event_time_ms: int = 0
     last_received_at_ms: int = 0
+    first_applied_update_id: int | None = None
+    last_snapshot_update_id: int | None = None
 
     # ------------------------------------------------------------------ validity
 
@@ -157,6 +159,7 @@ class LocalOrderBook:
         self._bids = {p: q for p, q in snapshot.bids if q > 0}
         self._asks = {p: q for p, q in snapshot.asks if q > 0}
         self.update_id = snapshot.last_update_id
+        self.last_snapshot_update_id = snapshot.last_update_id
         self.state = BookState.SYNCED
         self.metrics.rebuilds += 1
         self.last_invalid_reason = ""
@@ -203,10 +206,29 @@ class LocalOrderBook:
             else:
                 self._asks[price] = quantity
         self.update_id = update.final_update_id
+        if self.first_applied_update_id is None:
+            self.first_applied_update_id = update.first_update_id
         self.last_event_time_ms = update.event_time_ms
         self.last_received_at_ms = update.received_at_ms
         self.metrics.updates_applied += 1
         return self._verify()
+
+    # ------------------------------------------------------------------ state export
+
+    def levels(self) -> tuple[list[tuple[float, float]], list[tuple[float, float]]]:
+        """Every level held, bids best-first and asks best-first, for a checkpoint."""
+        bids = sorted(self._bids.items(), key=lambda kv: -kv[0])
+        asks = sorted(self._asks.items(), key=lambda kv: kv[0])
+        return bids, asks
+
+    def digest(self) -> str:
+        """SHA-256 of the update id and every level: equal books have equal digests."""
+        import hashlib
+        import json
+
+        bids, asks = self.levels()
+        payload = json.dumps([self.update_id, bids, asks], separators=(",", ":"))
+        return hashlib.sha256(payload.encode()).hexdigest()
 
     def _verify(self) -> bool:
         """A book whose best bid is not below its best ask is not a book."""
@@ -367,6 +389,8 @@ class LocalOrderBook:
             "state": self.state.value,
             "valid": self.is_valid,
             "update_id": self.update_id,
+            "first_applied_update_id": self.first_applied_update_id,
+            "last_snapshot_update_id": self.last_snapshot_update_id,
             "last_invalid_reason": self.last_invalid_reason,
             "levels_bid": len(self._bids),
             "levels_ask": len(self._asks),

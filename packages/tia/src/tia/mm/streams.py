@@ -35,7 +35,7 @@ from contextlib import AbstractAsyncContextManager
 from dataclasses import dataclass
 from typing import Any
 
-from tia.core.clock import SystemClock
+from tia.core.clock import Clock, SystemClock
 from tia.core.logging import get_logger
 from tia.mm.latency import LatencyStats
 from tia.mm.order_book import DepthUpdate
@@ -52,6 +52,30 @@ def _default_connector(url: str) -> AbstractAsyncContextManager[AsyncIterator[st
     import websockets
 
     return websockets.connect(url, ping_interval=20, ping_timeout=20, max_size=2**22)
+
+
+class ReceiveClock:
+    """Receive-time stamps that never go backwards within one process.
+
+    ``R`` is wall-clock milliseconds anchored once to the monotonic clock. A later NTP
+    step or slew changes what the wall clock would have said, not the order in which
+    events already arrived; anchoring keeps consecutive stamps non-decreasing, which is
+    the property the recorder promises and the replay requires. The cost: after a
+    wall-clock step, ``R`` differs from true wall time by the step, and so does the
+    measured exchange->local latency. That is reported, never corrected silently.
+    """
+
+    def __init__(self, clock: Clock | None = None) -> None:
+        self._clock = clock or SystemClock()
+        self._anchor_ms = self._clock.timestamp_ms() - self._clock.monotonic_ns() // 1_000_000
+        self._last_ms = self._anchor_ms + self._clock.monotonic_ns() // 1_000_000
+
+    def now_ms(self) -> int:
+        value = self._anchor_ms + self._clock.monotonic_ns() // 1_000_000
+        if value < self._last_ms:  # a monotonic clock cannot do this; guard it anyway
+            value = self._last_ms
+        self._last_ms = value
+        return value
 
 
 def venue_symbol(symbol: str) -> str:
@@ -165,7 +189,10 @@ class MarketDataStream:
         self._stream_url = stream_url
         self._depth_speed = depth_speed
         self._connector = connector or _default_connector
-        self._now_ms = now_ms or SystemClock().timestamp_ms
+        #: Exposed so the service and the recorder can stamp their own lines (snapshots,
+        #: checkpoints) on the same clock as the events they sit between.
+        self.now_ms: Callable[[], int] = now_ms or ReceiveClock().now_ms
+        self._now_ms = self.now_ms
         self._subscribers: list[Callable[[str, Any], None]] = []
         self._task: asyncio.Task[Any] | None = None
 
@@ -358,6 +385,7 @@ __all__ = [
     "DEFAULT_STREAM_URL",
     "BookTickerEvent",
     "MarketDataStream",
+    "ReceiveClock",
     "StreamStatus",
     "TradeEvent",
     "parse_book_ticker",

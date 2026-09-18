@@ -199,3 +199,79 @@ def test_a_crossed_local_book_is_impossible_whatever_the_timing() -> None:
     summary = summarise([_sample(5, 100.02, 100.01, 100.00, 100.01)])
     assert summary["impossible_state"] is True and summary["persistent_inconsistency"] is False
     assert summary["worst_samples"][0]["explanation"].startswith("IMPOSSIBLE")
+
+
+# ------------------------------------------------------------- receive-time order across a rollover
+
+
+def test_a_rollover_checkpoint_never_carries_a_later_stamp_than_the_event_that_triggered_it(tmp_path: Path) -> None:
+    """Reproduces the VPS finding: the wall clock ticks between the stream stamping an
+    event and the recorder rolling the hour. The opening checkpoint used to carry the
+    later wall-clock stamp ahead of the event's earlier R — one receive-time inversion
+    at the start of every hour file. Checkpoints now carry the R of their place in the
+    tape: the closing one the last event's, the opening one the triggering event's."""
+    hour_start = BASE + HOUR_MS
+    clock = {"ms": hour_start - 5}
+    book = {"uid": 0}
+
+    def source() -> BookStateEvent | None:
+        # The service's book_state() stamps with the wall clock at call time.
+        return _state(book["uid"], clock["ms"]) if book["uid"] else None
+
+    recorder = TickRecorder(tmp_path, "BTC-USD", now_ms=lambda: clock["ms"], checkpoint_source=source)
+    recorder.record("snapshot", _state(10, clock["ms"]))
+    book["uid"] = 10
+    for uid in (11, 12):
+        clock["ms"] += 1
+        recorder.record("depth", _depth(uid, clock["ms"]))
+        book["uid"] = uid
+    # The first event of the new hour was stamped R = hour_start by the stream, but by
+    # the time the recorder processes it the wall clock reads hour_start + 3.
+    event = _depth(13, hour_start)
+    clock["ms"] = hour_start + 3
+    recorder.record("depth", event)
+    book["uid"] = 13
+    recorder.record("checkpoint", source())  # type: ignore[arg-type]
+    recorder.close()
+
+    old, new = recorder.segments()
+    old_rows, new_rows = _rows(old["path"]), _rows(new["path"])
+    assert old_rows[-1]["k"] == "checkpoint" and old_rows[-1]["R"] == old_rows[-2]["R"]  # closes at the last event's R
+    assert new_rows[0]["k"] == "checkpoint" and new_rows[0]["R"] == hour_start == new_rows[1]["R"]  # opens at the triggering event's R
+    for rows in (old_rows, new_rows):
+        stamps = [r["R"] for r in rows]
+        assert stamps == sorted(stamps), stamps
+    for result in replay_directory(tmp_path, "BTC-USD"):
+        assert result.ok, result.reasons
+        assert result.receive_time_regressions == 0
+
+
+def test_the_replay_tells_a_clock_step_from_a_reordered_tape_and_fails_both(tmp_path: Path) -> None:
+    """R going backwards while the venue sequence still advances is a stamp artefact
+    (clock step); R and the venue sequence both going backwards is a reordered tape.
+    The replay names which one it saw — and fails either way, because the recorder
+    stamps on a monotonic receive clock and a legitimate tape has no regression."""
+    recorder = TickRecorder(tmp_path, "BTC-USD", now_ms=lambda: BASE)
+    recorder.record("snapshot", _state(1, BASE))
+    recorder.record("depth", _depth(2, BASE + 10))
+    recorder.record("depth", _depth(3, BASE + 8))  # the wall clock stepped back 2 ms; u still advances
+    recorder.record("depth", _depth(4, BASE + 12))
+    recorder.record("checkpoint", _state(4, BASE + 13))
+    recorder.close()
+    path = recorder.segments()[0]["path"]
+    stepped = replay_segment(path)
+    assert stepped.ok is False and any("not in arrival order" in r for r in stepped.reasons)
+    assert stepped.receive_time_regressions == 1 and stepped.clock_artifacts == 1 and stepped.order_violations == 0
+    sample = stepped.regression_samples[0]
+    assert sample["classified"] == "clock_artifact" and sample["receive_time_delta_ms"] == -2
+    assert sample["previous"]["u"] == 2 and sample["current"]["u"] == 3 and sample["current"]["stream"] == "depth@100ms"
+
+    # Now swap two depth lines on disk: R and u both go backwards.
+    rows = _rows(path)
+    rows[2], rows[3] = rows[3], rows[2]
+    with gzip.open(path, "wt") as fh:
+        for r in rows:
+            fh.write(json.dumps(r, separators=(",", ":")) + "\n")
+    reordered = replay_segment(path, allow_flagged=True)
+    assert reordered.order_violations >= 1 and any("not in arrival order" in r for r in reordered.reasons)
+    assert reordered.ok is False

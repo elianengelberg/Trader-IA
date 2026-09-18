@@ -55,7 +55,9 @@ class MarketDataService:
         self._max_data_age_s = max_data_age_s
         self._checkpoint_interval_s = checkpoint_interval_s
         clock = SystemClock()
-        self._now_ms = now_ms or clock.timestamp_ms
+        # Snapshots and checkpoints are stamped on the same clock as the events they sit
+        # between, so a receive-time inversion cannot come from two clocks disagreeing.
+        self._now_ms = now_ms or getattr(stream, "now_ms", None) or clock.timestamp_ms
         self._monotonic_ns = monotonic_ns or clock.monotonic_ns
         self._resync_needed = asyncio.Event()
         self._task: asyncio.Task[Any] | None = None

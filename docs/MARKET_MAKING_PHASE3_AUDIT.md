@@ -528,3 +528,41 @@ gate global y toda negativa dura (kill switch, pérdida diaria, drawdown, invent
 notional) siguen cancelando. El TTL de la cotización (1 s) y la reevaluación cada 500 ms
 no cambian; un HOLD nunca extiende una orden más allá de su TTL. Ningún límite de ritmo
 se aumentó ni se redujo ninguna protección. Tests en `tests/unit/mm/test_hold.py`.
+
+### 22.5 Modelo de tiempo del tape y perfil de latencia del VPS (2026-09-18)
+
+**Tres tiempos, nunca confundidos.** `R` es el tiempo de recepción local (el único "ahora"
+del sistema); `E` es el event time del exchange (sólo en depth y trade; el `bookTicker` de
+Spot no lo trae y no se le inventa); `T` es el trade time del venue. El orden de
+procesamiento es el **orden físico de llegada**, que el recorder preserva por construcción
+(un solo hilo, despacho síncrono, líneas anexadas en orden de llamada). `R` es un atributo
+de cada línea, no la clave de orden.
+
+**Regla determinista para `R`.** (1) Los eventos se estampan con un reloj de recepción
+anclado una sola vez al reloj monotónico (`ReceiveClock`): dos estampas consecutivas del
+mismo proceso nunca retroceden, aunque el reloj de pared salte por NTP; el costo, que se
+declara y no se corrige en silencio, es que tras un salto `R` y la latencia exchange→local
+quedan desplazadas por ese salto. (2) Las líneas sintéticas (snapshot REST, checkpoints)
+no "llegan": llevan el `R` de su lugar en la cinta — el checkpoint de cierre el del último
+evento, el de apertura el del evento que provocó el cambio de hora — y se estampan con el
+mismo reloj que los eventos. (3) Los empates de `R` se resuelven por orden de archivo. (4)
+El replay exige `R` no decreciente; cualquier regresión falla el replay y se clasifica
+(secuencia del venue avanza: artefacto de estampa; retrocede: cinta desordenada), con las
+dos líneas involucradas en el reporte. Nada de esto introduce lookahead: ningún dato
+posterior decide el orden.
+
+**Causa de la regresión del segmento `20260918-22`.** El checkpoint que abre cada archivo
+horario se estampaba con el reloj de pared al momento de escribirse, mientras que el
+evento que provocó el cambio de hora llevaba su `R` de llegada, anterior en ≥ 1 ms. Una
+inversión por archivo de cambio de hora, en su primera línea; corregida por la regla (2).
+Los 12 eventos de diferencia entre `events_written` (21.880) y las líneas de los
+manifiestos (21.892) son el buffer aún no volcado en el instante en que el reporte tomó el
+estado (≤ 1 s de eventos) más el checkpoint de cierre escrito al cerrar; sin pérdida ni
+duplicación (los manifiestos y el checksum describen el archivo completo). El reporte
+ahora toma el estado final del recorder y muestra la conciliación explícita.
+
+**Perfil de latencia del VPS (provisional, utilizable).** exchange→local depth p50 117 /
+p95 118 / p99 120 ms; trade p50 121 / p95 136 / p99 163 ms; procesamiento local p99 1,405 ms
+con **máximo 161,902 ms identificado como outlier** (no es latencia típica y no se usa como
+tal). `bookTicker` no se usa como fuente de latencia exchange→local. Los escenarios derivan
+la latencia de orden y cancelación del camino depth (p50 / p95 / 2×p99).

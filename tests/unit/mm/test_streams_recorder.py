@@ -211,3 +211,33 @@ def test_a_disconnect_before_the_first_tick_still_marks_the_hour(tmp_path: Path)
     recorder.close()
     manifest = recorder.segments()[0]["manifest"]
     assert manifest["disconnects"] == 1 and manifest["replayable"] is False
+
+
+def test_receive_stamps_never_go_backwards_even_when_the_wall_clock_steps() -> None:
+    """The receive clock is wall time anchored once to the monotonic clock: an NTP step
+    changes the wall clock, not the order of what already arrived."""
+    from datetime import UTC, datetime, timedelta
+
+    from tia.core.clock import Clock
+    from tia.mm.streams import ReceiveClock
+
+    class SteppingClock(Clock):
+        def __init__(self) -> None:
+            self.wall = datetime(2026, 9, 18, 22, 0, 0, tzinfo=UTC)
+            self.mono = 1_000_000_000
+
+        def now(self) -> datetime:
+            return self.wall
+
+        def monotonic_ns(self) -> int:
+            return self.mono
+
+    fake = SteppingClock()
+    clock = ReceiveClock(fake)
+    first = clock.now_ms()
+    fake.mono += 5_000_000  # 5 ms pass
+    fake.wall -= timedelta(seconds=2)  # the wall clock is stepped back two seconds
+    second = clock.now_ms()
+    assert second == first + 5  # the stamp followed the monotonic clock, not the step
+    fake.mono += 1_000_000
+    assert clock.now_ms() == first + 6

@@ -53,6 +53,15 @@ def main() -> int:
                 f"matches_manifest={r.final_matches_manifest} digest_matches={r.digest_matches_manifest} "
                 f"best_bid={r.best_bid} best_ask={r.best_ask} spread_bps={r.spread_bps}"
             )
+            if r.receive_time_regressions:
+                print(
+                    f"  receive-time regressions={r.receive_time_regressions}: clock_artifacts={r.clock_artifacts} "
+                    f"order_violations={r.order_violations}"
+                )
+                for sample in r.regression_samples:
+                    print(f"    line {sample['line']} [{sample['classified']}] delta={sample['receive_time_delta_ms']} ms")
+                    print(f"      previous: {sample['previous']}")
+                    print(f"      current:  {sample['current']}")
             for reason in r.reasons:
                 print(f"  ! {reason}")
     return 0 if all(r.ok for r in results) else 1

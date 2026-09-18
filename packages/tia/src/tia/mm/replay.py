@@ -51,6 +51,14 @@ class ReplayResult:
     sequence_breaks: int = 0
     trade_id_jumps: int = 0
     receive_time_regressions: int = 0  # lines whose R is earlier than the line before
+    #: A regression whose venue sequence (u for depth, t for trades, id for book state)
+    #: still advances is a stamp artefact — the wall clock stepped, or a synthetic line
+    #: carried a later stamp — not a reordering: the physical order is the arrival order.
+    clock_artifacts: int = 0
+    #: A regression where the venue sequence also goes backwards: the tape is not in
+    #: arrival order. This one fails the replay.
+    order_violations: int = 0
+    regression_samples: list[dict[str, Any]] = field(default_factory=list)
     crossed_books: int = 0
     updates_applied: int = 0
     updates_ignored_old: int = 0
@@ -85,6 +93,36 @@ def _read_manifest(path: Path) -> dict[str, Any]:
 
 def _levels(rows: list[list[float]]) -> tuple[tuple[float, float], ...]:
     return tuple((float(p), float(q)) for p, q in rows)
+
+
+def _sequence_of(kind: str, row: dict[str, Any]) -> int | None:
+    """The venue's own ordering for a line: u for depth, t for trades, u for bookTicker,
+    the book id for a snapshot or checkpoint."""
+    if kind == "depth":
+        return int(row.get("u", 0) or 0)
+    if kind == "trade":
+        return int(row.get("t", 0) or 0)
+    if kind == "book":
+        return int(row.get("u", 0) or 0)
+    if kind in ("snapshot", "checkpoint"):
+        return int(row.get("id", 0) or 0)
+    return None
+
+
+def _summary(row: dict[str, Any] | None) -> dict[str, Any]:
+    if row is None:
+        return {}
+    kind = row.get("k")
+    out: dict[str, Any] = {"kind": kind, "R": row.get("R")}
+    if kind == "depth":
+        out.update({"E": row.get("E"), "U": row.get("U"), "u": row.get("u"), "stream": "depth@100ms"})
+    elif kind == "trade":
+        out.update({"E": row.get("E"), "T": row.get("T"), "t": row.get("t"), "stream": "trade"})
+    elif kind == "book":
+        out.update({"u": row.get("u"), "stream": "bookTicker (no exchange timestamp on Spot)"})
+    else:
+        out.update({"id": row.get("id"), "stream": "synthetic (REST snapshot or local checkpoint): R is where it sits in the tape"})
+    return out
 
 
 def replay_segment(path: Path | str, *, allow_flagged: bool = False, symbol: str = "") -> ReplayResult:
@@ -126,6 +164,8 @@ def replay_segment(path: Path | str, *, allow_flagged: bool = False, symbol: str
     events: dict[str, int] = {}
     prev_trade_id: int | None = None
     prev_received_at: int | None = None
+    prev_line: dict[str, Any] | None = None
+    last_seq: dict[str, int] = {}  # per kind: the venue sequence of the last line seen
     applied_since_snapshot = 0
 
     try:
@@ -139,9 +179,33 @@ def replay_segment(path: Path | str, *, allow_flagged: bool = False, symbol: str
                 kind = row.get("k", "?")
                 events[kind] = events.get(kind, 0) + 1
                 received_at = int(row.get("R", 0) or 0)
+                seq = _sequence_of(kind, row)
                 if prev_received_at is not None and received_at < prev_received_at:
                     result.receive_time_regressions += 1
+                    # R went backwards. Order is judged by the venue's own sequence: if the
+                    # sequence of this kind still advances (and, for a book-state line, its
+                    # id is not behind the last depth event), the order is right and only
+                    # the stamp is off.
+                    reference = last_seq.get(kind) if kind not in ("snapshot", "checkpoint") else last_seq.get("depth")
+                    advances = seq is None or reference is None or seq >= reference
+                    if advances:
+                        result.clock_artifacts += 1
+                    else:
+                        result.order_violations += 1
+                    if len(result.regression_samples) < 5:
+                        result.regression_samples.append(
+                            {
+                                "line": line_no,
+                                "classified": "clock_artifact" if advances else "order_violation",
+                                "previous": _summary(prev_line),
+                                "current": _summary(row),
+                                "receive_time_delta_ms": received_at - prev_received_at,
+                            }
+                        )
                 prev_received_at = received_at
+                prev_line = row
+                if seq is not None:
+                    last_seq[kind] = seq
 
                 if kind == "checkpoint":
                     state = DepthSnapshot(int(row["id"]), _levels(row["b"]), _levels(row["a"]))
@@ -243,8 +307,13 @@ def replay_segment(path: Path | str, *, allow_flagged: bool = False, symbol: str
     if result.crossed_books:
         result.reasons.append(f"{result.crossed_books} crossed book(s) during replay")
     if result.receive_time_regressions:
+        # Strict on purpose: the recorder stamps on a monotonic receive clock and gives
+        # synthetic lines the stamp of their place in the tape, so no legitimate tape has
+        # a regression. The classification says what kind it was; it never excuses it.
         result.reasons.append(
-            f"{result.receive_time_regressions} line(s) received earlier than the line before: the tape is not in arrival order"
+            f"{result.receive_time_regressions} line(s) received earlier than the line before "
+            f"({result.clock_artifacts} with the venue sequence still advancing, {result.order_violations} with it going backwards): "
+            "the tape is not in arrival order"
         )
     if not result.final_valid:
         result.reasons.append(f"book ended {result.final_state}, not valid")

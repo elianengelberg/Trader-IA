@@ -200,7 +200,7 @@ class TickRecorder:
         hour = datetime.fromtimestamp(received_at_ms / 1000.0, tz=UTC).strftime("%Y%m%d-%H")
         if hour != self._buffer_hour:
             self.flush(force=True)
-            self._roll_segment(hour)
+            self._roll_segment(hour, at_ms=received_at_ms)
         if len(self._buffer) >= self._max_buffer_lines:
             self.events_dropped += 1
             if self._manifest is not None:
@@ -221,10 +221,11 @@ class TickRecorder:
         still be written down: a manifest that never heard of it would call the hour
         replayable.
         """
-        hour = datetime.fromtimestamp(self._now_ms() / 1000.0, tz=UTC).strftime("%Y%m%d-%H")
+        now = self._now_ms()
+        hour = datetime.fromtimestamp(now / 1000.0, tz=UTC).strftime("%Y%m%d-%H")
         if hour != self._buffer_hour:
             self.flush(force=True)
-            self._roll_segment(hour)
+            self._roll_segment(hour, at_ms=now)
         return self._manifest
 
     def note_disconnect(self) -> None:
@@ -303,10 +304,19 @@ class TickRecorder:
 
     # ------------------------------------------------------------------ segments
 
-    def _append_state(self, state: BookStateEvent) -> None:
-        line = self._encode("checkpoint", state, state.received_at_ms)
+    def _append_state(self, state: BookStateEvent, received_at_ms: int) -> None:
+        """A checkpoint line stamped with the receive time of its place in the tape.
+
+        A checkpoint is not something that arrived: it describes the book as of the last
+        event applied. Stamping it with the wall clock at write time would put a later
+        ``R`` *before* the event that triggered the roll — the one receive-order
+        inversion the recorder itself could create. So the closing checkpoint carries
+        the last event's ``R`` and the opening one carries the triggering event's ``R``:
+        never earlier than what precedes it, never later than what follows it.
+        """
+        line = self._encode("checkpoint", state, received_at_ms)
         self._buffer.append(line)
-        self._note("checkpoint", state, state.received_at_ms)
+        self._note("checkpoint", state, received_at_ms)
 
     def _unique_path(self, hour: str) -> tuple[Path, int]:
         """A file this session owns: never an existing one, so never an append."""
@@ -319,12 +329,14 @@ class TickRecorder:
                 return candidate, part
         raise OSError(f"too many segment parts for {hour} in {self._dir}")
 
-    def _roll_segment(self, hour: str) -> None:
+    def _roll_segment(self, hour: str, *, at_ms: int | None = None) -> None:
         state = self._checkpoint_source() if self._checkpoint_source is not None else None
+        at_ms = at_ms if at_ms is not None else self._now_ms()
         if self._manifest is not None and state is not None:
             # The old hour ends with the book as it stands; the new one opens with the
             # same state. Each file rebuilds on its own and can be checked at both ends.
-            self._append_state(state)
+            closing_at = self._manifest.last_received_at_ms
+            self._append_state(state, closing_at if closing_at is not None else at_ms)
         self.close_segment()
         path, part = self._unique_path(hour)
         self._manifest = SegmentManifest(symbol=self.symbol, hour=hour, path=str(path), part=part)
@@ -333,7 +345,7 @@ class TickRecorder:
         self._buffer_hour = hour
         self._enforce_limits()
         if state is not None:
-            self._append_state(state)
+            self._append_state(state, at_ms)
 
     def flush(self, *, force: bool = False) -> None:
         if not self._buffer or self._writer is None:

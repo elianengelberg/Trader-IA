@@ -257,6 +257,27 @@ async def main() -> int:
 
     ticks_bytes_end = _dir_bytes(ticks_dir)
     segments = recorder.segments() if recorder is not None else []
+    # The status captured before close() excludes the last unflushed buffer and the
+    # closing checkpoint; the final status and the manifests are the reconciled truth.
+    recorder_final = recorder.status() if recorder is not None else None
+    manifests = [s["manifest"] for s in segments]
+    reconciliation = (
+        {
+            "events_written_at_snapshot": (final["recorder"] or {}).get("events_written"),
+            "events_written_final": recorder_final["events_written"] if recorder_final else None,
+            "lines_in_manifests": sum(int(m.get("lines", 0) or 0) for m in manifests),
+            "stream_events_received": final["stream"]["depth_events"] + final["stream"]["trade_events"] + final["stream"]["book_ticker_events"],
+            "snapshot_lines": sum(int(m.get("snapshot_events", 0) or 0) for m in manifests),
+            "checkpoint_lines": sum(int(m.get("checkpoint_events", 0) or 0) for m in manifests),
+            "dropped_by_recorder": recorder_final["events_dropped"] if recorder_final else None,
+            "note": (
+                "lines = stream events + snapshot lines + checkpoint lines, minus events received before the recorder's "
+                "first segment opened; events_written_at_snapshot lags the file by the buffer not yet flushed and the closing checkpoint"
+            ),
+        }
+        if recorder is not None
+        else NOT_MEASURED
+    )
     verifications = [TickRecorder.verify(s["path"]) for s in segments]
     replays = [replay_segment(s["path"], allow_flagged=True, symbol=args.symbol).as_dict() for s in segments]
     for row in replays:
@@ -345,7 +366,8 @@ async def main() -> int:
         },
         "recorder": (
             {
-                **{k: final["recorder"][k] for k in ("events_written", "events_dropped", "bytes_written", "flushes", "segments", "segments_replayable", "total_bytes_on_disk", "last_error")},
+                **{k: recorder_final[k] for k in ("events_written", "events_dropped", "bytes_written", "flushes", "segments", "segments_replayable", "total_bytes_on_disk", "last_error")},  # type: ignore[index]
+                "reconciliation": reconciliation,
                 "segments_detail": [
                     {
                         "file": Path(s["path"]).name,

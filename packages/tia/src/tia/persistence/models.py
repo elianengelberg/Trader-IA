@@ -27,6 +27,7 @@ from datetime import datetime
 from typing import Any, ClassVar
 
 from sqlalchemy import (
+    BigInteger,
     Boolean,
     DateTime,
     Float,
@@ -43,7 +44,7 @@ from sqlalchemy.types import JSON
 
 #: Bumped on any schema change. `ensure_schema()` refuses to run against a database
 #: written by a newer version rather than silently misreading it.
-SCHEMA_VERSION = 5
+SCHEMA_VERSION = 6
 #: v1 -> v2: edge_outcomes, activation_attempts, reconciliations, capital_events,
 #: incidents, latency_samples. The Alembic migration `0002` performs the upgrade;
 #: `ensure_schema` still refuses a *newer* database rather than misreading it.
@@ -541,6 +542,57 @@ class LatencySampleRow(Base):
     total_ms: Mapped[float] = mapped_column(Float, default=0.0)
 
 
+class MarketMakerJournalRow(Base):
+    """One explainable row of the market maker's journal: a decision, hold, block,
+    fill or markout, with everything known at that moment. Never rewritten."""
+
+    __tablename__ = "mm_journal"
+    __table_args__ = (Index("ix_mm_journal_run_t", "run_id", "t_ms"),)
+
+    row_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    run_id: Mapped[str] = mapped_column(String(64), index=True)
+    seq: Mapped[int] = mapped_column(Integer, default=0)
+    t_ms: Mapped[int] = mapped_column(BigInteger, default=0)
+    kind: Mapped[str] = mapped_column(String(24), default="")
+    payload: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
+
+
+class MarketMakerFillRow(Base):
+    """A simulated fill with the venue prints that produced it and, once resolved, its
+    markouts. Separate from ``fills`` and ``edge_outcomes`` by construction."""
+
+    __tablename__ = "mm_fills"
+    __table_args__ = (Index("ix_mm_fills_run_t", "run_id", "t_ms"),)
+
+    fill_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    run_id: Mapped[str] = mapped_column(String(64), index=True)
+    order_id: Mapped[str] = mapped_column(String(64), default="")
+    t_ms: Mapped[int] = mapped_column(BigInteger, default=0)
+    side: Mapped[str] = mapped_column(String(8), default="")
+    price: Mapped[float] = mapped_column(Float, default=0.0)
+    quantity: Mapped[float] = mapped_column(Float, default=0.0)
+    fee_usd: Mapped[float] = mapped_column(Float, default=0.0)
+    realised_usd: Mapped[float] = mapped_column(Float, default=0.0)
+    mid_at_fill: Mapped[float | None] = mapped_column(Float, nullable=True)
+    resolution: Mapped[str] = mapped_column(String(16), default="confirmed")
+    venue_trade_ids: Mapped[list[int]] = mapped_column(JSON, default=list)
+    regimes: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
+    markout_bps: Mapped[dict[str, Any] | None] = mapped_column(JSON, nullable=True)
+
+
+class MarketMakerLedgerRow(Base):
+    """The market maker's own paper account, one row per run, for restart recovery."""
+
+    __tablename__ = "mm_ledger"
+
+    run_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    updated_at: Mapped[datetime] = _utc_column(nullable=False)
+    config_id: Mapped[str] = mapped_column(String(32), default="")
+    profile_id: Mapped[str] = mapped_column(String(32), default="")
+    latency_scenario: Mapped[str] = mapped_column(String(16), default="")
+    state: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
+
+
 ALL_TABLES = (
     SchemaInfo,
     RunRecord,
@@ -560,6 +612,9 @@ ALL_TABLES = (
     CapitalEventRow,
     IncidentRow,
     LatencySampleRow,
+    MarketMakerJournalRow,
+    MarketMakerFillRow,
+    MarketMakerLedgerRow,
 )
 
 __all__ = [
@@ -578,6 +633,9 @@ __all__ = [
     "IncidentRow",
     "LatencySampleRow",
     "LogRow",
+    "MarketMakerFillRow",
+    "MarketMakerJournalRow",
+    "MarketMakerLedgerRow",
     "NewsRow",
     "OrderRow",
     "PositionRow",

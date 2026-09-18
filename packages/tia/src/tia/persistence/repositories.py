@@ -38,6 +38,9 @@ from tia.persistence.models import (
     IncidentRow,
     LatencySampleRow,
     LogRow,
+    MarketMakerFillRow,
+    MarketMakerJournalRow,
+    MarketMakerLedgerRow,
     NewsRow,
     OrderRow,
     PositionRow,
@@ -875,6 +878,93 @@ class LatencyRepository:
         return list((await self._session.execute(query)).scalars().all())
 
 
+class MarketMakerRepository:
+    """The market maker's own tables. Nothing here touches fills, edge_outcomes or capital."""
+
+    def __init__(self, session: AsyncSession) -> None:
+        self._session = session
+
+    async def append_journal(self, run_id: str, seq: int, row: dict[str, Any]) -> None:
+        await self._session.execute(
+            _upsert(
+                self._session,
+                MarketMakerJournalRow,
+                {
+                    "row_id": f"{run_id}-{seq:010d}",
+                    "run_id": run_id,
+                    "seq": seq,
+                    "t_ms": int(row.get("t", 0) or 0),
+                    "kind": str(row.get("kind", "")),
+                    "payload": row,
+                },
+                ["row_id"],
+            )
+        )
+
+    async def journal(self, run_id: str, *, limit: int = 200, kind: str = "") -> list[dict[str, Any]]:
+        query = select(MarketMakerJournalRow).where(MarketMakerJournalRow.run_id == run_id)
+        if kind:
+            query = query.where(MarketMakerJournalRow.kind == kind)
+        query = query.order_by(desc(MarketMakerJournalRow.seq)).limit(limit)
+        rows = list((await self._session.execute(query)).scalars().all())
+        return [dict(r.payload) for r in reversed(rows)]
+
+    async def journal_count(self, run_id: str) -> int:
+        query = select(func.count()).select_from(MarketMakerJournalRow).where(MarketMakerJournalRow.run_id == run_id)
+        return int((await self._session.execute(query)).scalar_one())
+
+    async def upsert_fill(self, run_id: str, fill: dict[str, Any]) -> None:
+        await self._session.execute(
+            _upsert(
+                self._session,
+                MarketMakerFillRow,
+                {
+                    "fill_id": str(fill["fill_id"]),
+                    "run_id": run_id,
+                    "order_id": str(fill.get("order_id", "")),
+                    "t_ms": int(fill.get("t_ms", fill.get("t", 0)) or 0),
+                    "side": str(fill.get("side", "")),
+                    "price": float(fill.get("price", 0.0)),
+                    "quantity": float(fill.get("quantity", 0.0)),
+                    "fee_usd": float(fill.get("fee_usd", 0.0)),
+                    "realised_usd": float(fill.get("realised_usd", 0.0)),
+                    "mid_at_fill": fill.get("mid_at_fill"),
+                    "resolution": str(fill.get("resolution", "confirmed")),
+                    "venue_trade_ids": list(fill.get("venue_trade_ids", [])),
+                    "regimes": dict(fill.get("regimes", {})),
+                    "markout_bps": fill.get("markout_bps"),
+                },
+                ["fill_id"],
+            )
+        )
+
+    async def set_markout(self, fill_id: str, markout_bps: dict[str, Any]) -> None:
+        row = await self._session.get(MarketMakerFillRow, fill_id)
+        if row is not None:
+            row.markout_bps = markout_bps
+
+    async def fills(self, run_id: str, *, limit: int = 500) -> list[MarketMakerFillRow]:
+        query = select(MarketMakerFillRow).where(MarketMakerFillRow.run_id == run_id).order_by(desc(MarketMakerFillRow.t_ms)).limit(limit)
+        return list(reversed(list((await self._session.execute(query)).scalars().all())))
+
+    async def fill_count(self, run_id: str) -> int:
+        query = select(func.count()).select_from(MarketMakerFillRow).where(MarketMakerFillRow.run_id == run_id)
+        return int((await self._session.execute(query)).scalar_one())
+
+    async def save_ledger(self, run_id: str, *, state: dict[str, Any], config_id: str, profile_id: str, latency_scenario: str, at: datetime) -> None:
+        await self._session.execute(
+            _upsert(
+                self._session,
+                MarketMakerLedgerRow,
+                {"run_id": run_id, "updated_at": at, "config_id": config_id, "profile_id": profile_id, "latency_scenario": latency_scenario, "state": state},
+                ["run_id"],
+            )
+        )
+
+    async def load_ledger(self, run_id: str) -> MarketMakerLedgerRow | None:
+        return await self._session.get(MarketMakerLedgerRow, run_id)
+
+
 __all__ = [
     "ActivationRepository",
     "AssessmentRepository",
@@ -887,6 +977,7 @@ __all__ = [
     "IncidentRepository",
     "LatencyRepository",
     "LogRepository",
+    "MarketMakerRepository",
     "NewsRepository",
     "OrderRepository",
     "PortfolioRepository",

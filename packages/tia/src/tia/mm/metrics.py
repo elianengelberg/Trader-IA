@@ -70,7 +70,7 @@ class FillRecord:
 
 def fills_from_journal(journal: Iterable[dict[str, Any]]) -> list[FillRecord]:
     rows = list(journal)
-    markouts = {r["fill_id"]: r.get("markout_bps", {}) for r in rows if r.get("kind") == "markout"}
+    markouts = {r["fill_id"]: r.get("markout_bps", {}) for r in rows if r.get("kind") == "markout" and not r.get("shadow")}
     out: list[FillRecord] = []
     for r in rows:
         if r.get("kind") != "fill":

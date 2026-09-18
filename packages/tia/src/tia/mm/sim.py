@@ -16,6 +16,7 @@ and never booked.
 
 from __future__ import annotations
 
+from collections import deque
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -92,9 +93,15 @@ class SimulatedOrder:
 
 
 class PaperMarketMakerExecution:
-    def __init__(self, latency: LatencyScenario) -> None:
+    def __init__(self, latency: LatencyScenario, *, keep_closed: int = 2_000) -> None:
         self.latency = latency
+        #: Orders still in flight or resting. Terminal orders move to ``closed`` so a
+        #: day-long run never iterates its whole history on every event.
         self.orders: dict[str, SimulatedOrder] = {}
+        self.closed: deque[SimulatedOrder] = deque(maxlen=keep_closed)
+        self._terminal_counts: dict[str, int] = {}
+        self._partial_closed = 0
+        self._unresolved_closed = 0.0
         self._seq = 0
         self.placed = 0
         self.arrived = 0
@@ -103,6 +110,8 @@ class PaperMarketMakerExecution:
         self.expired = 0
         self.fills: list[SimulatedFill] = []
         self.unresolved_fills = 0
+        #: (order, quantity) pairs whose unresolved quantity grew during the last event.
+        self.last_unresolved: list[tuple[SimulatedOrder, float]] = []
 
     # ------------------------------------------------------------------ orders
 
@@ -122,6 +131,14 @@ class PaperMarketMakerExecution:
             self.placed += 1
             out.append(order)
         return out
+
+    def _close(self, order: SimulatedOrder) -> None:
+        self.orders.pop(order.order_id, None)
+        self.closed.append(order)
+        self._terminal_counts[order.state] = self._terminal_counts.get(order.state, 0) + 1
+        if 0 < order.filled < order.quantity:
+            self._partial_closed += 1
+        self._unresolved_closed += order.unresolved
 
     def cancel(self, order_id: str, t_ms: int, *, reason: str) -> None:
         order = self.orders.get(order_id)
@@ -147,9 +164,13 @@ class PaperMarketMakerExecution:
     def on_event(self, kind: str, event: Any, book: LocalOrderBook, t_ms: int) -> list[SimulatedFill]:
         """Advance every order with one event. Returns the confirmed fills it produced."""
         produced: list[SimulatedFill] = []
+        self.last_unresolved = []
         for order in list(self.orders.values()):
             if order.state == "pending_arrival" and t_ms >= order.t_arrival_ms:
                 self._arrive(order, book)
+                if order.state == "refused":
+                    self._close(order)
+                    continue
             if order.state != "resting" or order.queue is None:
                 continue
             if kind == "trade" and isinstance(event, TradeEvent):
@@ -164,7 +185,7 @@ class PaperMarketMakerExecution:
                         quantity=confirmed,
                         t_ms=t_ms,
                         venue_trade_ids=(event.trade_id,),
-                        queue_ahead_at_arrival=order.queue.ahead_conservative + order.queue.filled,
+                        queue_ahead_at_arrival=order.queue.ahead_at_arrival,
                         mid_at_fill=book.mid,
                     )
                     order.fills.append(fill)
@@ -172,8 +193,10 @@ class PaperMarketMakerExecution:
                     produced.append(fill)
                 if order.queue.unresolved > before_unresolved:
                     self.unresolved_fills += 1
+                    self.last_unresolved.append((order, order.queue.unresolved - before_unresolved))
                 if order.remaining <= 1e-12:
                     order.state = "filled"
+                    self._close(order)
                     continue
             elif kind == "depth" and isinstance(event, DepthUpdate):
                 side = "bid" if order.side == "buy" else "ask"
@@ -185,6 +208,7 @@ class PaperMarketMakerExecution:
             if order.t_cancel_effective_ms is not None and t_ms >= order.t_cancel_effective_ms:
                 order.state = "cancelled"
                 self.cancelled += 1
+                self._close(order)
         return produced
 
     def _arrive(self, order: SimulatedOrder, book: LocalOrderBook) -> None:
@@ -205,7 +229,7 @@ class PaperMarketMakerExecution:
         order.state = "resting"
 
     def stats(self) -> dict[str, Any]:
-        states = {}
+        states = dict(self._terminal_counts)
         for order in self.orders.values():
             states[order.state] = states.get(order.state, 0) + 1
         return {
@@ -215,10 +239,11 @@ class PaperMarketMakerExecution:
             "cancelled": self.cancelled,
             "expired": self.expired,
             "fills": len(self.fills),
-            "partial_orders": sum(1 for o in self.orders.values() if 0 < o.filled < o.quantity),
+            "partial_orders": self._partial_closed + sum(1 for o in self.orders.values() if 0 < o.filled < o.quantity),
             "unresolved_fill_events": self.unresolved_fills,
-            "unresolved_quantity": sum(o.unresolved for o in self.orders.values()),
+            "unresolved_quantity": self._unresolved_closed + sum(o.unresolved for o in self.orders.values()),
             "states": states,
+            "active": len(self.orders),
             "latency": self.latency.as_dict(),
         }
 

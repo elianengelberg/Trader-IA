@@ -109,6 +109,7 @@ class MarketMakerEngine:
         self.no_quote_reasons: dict[str, int] = {}
         self.gate_blocks = 0
         self.data_blocks = 0
+        self.unresolved_events = 0
         self._last_decision_ms: int | None = None
         self._last_event_ms: int | None = None
         self._last_features: FeatureVector | None = None
@@ -157,16 +158,47 @@ class MarketMakerEngine:
         # Paper execution advances on every event, before any new decision.
         for fill in self.execution.on_event(kind, event, self.book, t_ms):
             self._on_fill(fill, t_ms)
+        self._note_unresolved(t_ms)
         if self.book.is_valid:
             bid, ask, mid = self.book.best_bid(), self.book.best_ask(), self.book.mid
             if bid is not None and ask is not None and mid is not None:
                 self.ledger.mark(t_ms, bid=bid[0], ask=ask[0])
                 for markout in self.markouts.on_mid(t_ms, mid):
-                    self.toxicity.observe(markout)
-                    adverse = markout.adverse_bps_1s or 0.0
-                    self.ledger.record_adverse_selection(adverse / 10_000.0 * markout.observation.price * markout.observation.quantity)
+                    if not markout.observation.shadow:
+                        # Only confirmed fills teach toxicity and cost the ledger.
+                        self.toxicity.observe(markout)
+                        adverse = markout.adverse_bps_1s or 0.0
+                        self.ledger.record_adverse_selection(adverse / 10_000.0 * markout.observation.price * markout.observation.quantity)
                     self._write({"t": t_ms, "kind": "markout", **markout.as_dict()})
         self._maybe_decide(t_ms)
+
+    def _note_unresolved(self, t_ms: int) -> None:
+        """An order whose optimistic-but-not-conservative quantity grew: written down as
+        UNRESOLVED with its context, and shadowed in the markout tracker so the cases the
+        simulator refuses to book can be compared with the ones it books."""
+        for order, grew in self.execution.last_unresolved:
+            if grew <= 1e-12 or order.queue is None:
+                continue
+            self.unresolved_events += 1
+            regimes = self._order_regimes.get(order.order_id, {})
+            mid = self.book.mid
+            row = {
+                "t": t_ms,
+                "kind": "unresolved",
+                "order_id": order.order_id,
+                "side": order.side,
+                "price": order.price,
+                "quantity": grew,
+                "mid": mid,
+                "queue_ahead_conservative": order.queue.ahead_conservative,
+                "queue_ahead_optimistic": order.queue.ahead_optimistic,
+                "inventory_btc": self.ledger.state.inventory_btc,
+                "regimes": regimes,
+                "note": "would fill only if cancellations were ahead of us: not booked",
+            }
+            self._write(row)
+            if mid is not None:
+                self.markouts.register(FillObservation(f"shadow-{order.order_id}-{self.unresolved_events}", t_ms, order.side, order.price, grew, mid, regimes, shadow=True))
 
     def _on_fill(self, fill: SimulatedFill, t_ms: int) -> None:
         booked = self.ledger.apply_fill(fill, fee_scenario=self.config.fee_scenario)
@@ -269,6 +301,10 @@ class MarketMakerEngine:
         placed = self.execution.place(decision, t_ms)
         for order in placed:
             self._order_regimes[order.order_id] = regimes_bid if order.side == "buy" else regimes_ask
+        if len(self._order_regimes) > 4_000:  # regimes are needed while an order lives; prune the oldest
+            for stale in list(self._order_regimes)[:2_000]:
+                if stale not in self.execution.orders:
+                    del self._order_regimes[stale]
         self._active = placed
         self.controller.record_quote(t_ms)
         self.quotes += 1
@@ -321,6 +357,7 @@ class MarketMakerEngine:
             "cancels": self.cancels,
             "gate_blocks": self.gate_blocks,
             "data_blocks": self.data_blocks,
+            "unresolved_events": self.unresolved_events,
             "no_quote_reasons": dict(self.no_quote_reasons),
             "gate": self.last_gate.as_dict() if self.last_gate else None,
             "last_block_reason": self.last_block_reason,

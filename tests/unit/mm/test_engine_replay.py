@@ -20,6 +20,7 @@ from tia.mm.latency_model import build_latency_profile
 from tia.mm.mm_replay import event_from_row, replay_market_maker
 from tia.mm.order_book import DepthSnapshot, DepthUpdate, snapshot_from_levels
 from tia.mm.recorder import BookStateEvent, TickRecorder
+from tia.mm.risk import MarketMakerRiskLimits
 from tia.mm.safety import GlobalTradingSafetyGate
 from tia.mm.spread import SpreadConfig
 from tia.mm.streams import TradeEvent
@@ -52,6 +53,7 @@ def _config() -> MarketMakerConfig:
         costs=MarketMakerCostConfig(maker_fee_bps=0.5, maker_fee_adverse_bps=1.0),
         spread=SpreadConfig(min_half_spread_bps=0.5, cost_buffer_bps=0.0, vol_multiplier=0.0),
         requote_interval_ms=200,
+        limits=MarketMakerRiskLimits(min_quote_interval_ms=100),
     )
 
 
@@ -203,3 +205,42 @@ def test_nothing_in_the_market_maker_can_reach_an_execution_provider() -> None:
     assert reads_real_money == []  # the flag is read by nothing in the package
     engine = _run(_tape(2))
     assert not any(hasattr(v, "submit_order") or getattr(v, "is_live", False) for v in vars(engine).values())
+
+
+def test_unresolved_quantity_is_journaled_and_shadowed_but_never_booked_or_taught() -> None:
+    """The cases the simulator refuses to book are written down with their context and
+    followed by a shadow markout, so their distribution can be audited against the
+    confirmed fills — without touching the ledger, the toxicity or the fills."""
+    from tia.mm.order_book import DepthUpdate
+
+    tape = _tape(6)
+    engine = MarketMakerEngine(_config(), latency=PROFILE.scenario("optimistic"), gate=_gate())
+    engine.on_event(*tape[0])  # the snapshot: a decision and a quote, in flight to the venue
+    order = next(o for o in engine.execution.open_orders() if o.side == "buy")
+    price = order.price  # wherever the quote landed on the tick grid
+    t = order.t_arrival_ms
+
+    def depth(qty: float, at: int) -> None:
+        uid = engine.book.update_id + 1
+        engine.on_event("depth", DepthUpdate(uid, uid, ((price, qty),), (), at - 30, at), at)
+
+    depth(1.0, t - 30)  # a level appears at our price before we arrive: it is ahead of us
+    depth(1.0, t + 10)  # the order arrives at this event with 1.0 visible ahead of it
+    assert order.state == "resting" and order.queue is not None and order.queue.ahead_conservative == 1.0
+    depth(2.0, t + 110)  # 1.0 joins behind us
+    depth(1.1, t + 210)  # 0.9 vanishes without prints: ahead of us or behind us, unknowable
+    assert order.queue.ahead_conservative == pytest.approx(1.0) and order.queue.ahead_optimistic == pytest.approx(0.1)
+    t += 310
+    engine.on_event("trade", TradeEvent(900, price, 0.5, True, t - 5, t - 2, t), t)
+    rows = list(engine.journal)
+    unresolved = [r for r in rows if r["kind"] == "unresolved"]
+    assert [r["kind"] for r in rows if r["kind"] == "fill"] == [] and engine.ledger.state.fills == 0  # nothing booked
+    assert len(unresolved) == 1 and unresolved[0]["quantity"] == pytest.approx(order.quantity) and unresolved[0]["note"].startswith("would fill only")
+    assert unresolved[0]["regimes"] and engine.unresolved_events == 1
+    for i in range(60):  # 6 s of later mids: every horizon of the shadow markout resolves
+        t += 100
+        engine.on_event("trade", TradeEvent(901 + i, price + 1.0, 0.001, False, t - 5, t - 2, t), t)
+    shadows = [r for r in engine.journal if r["kind"] == "markout" and r.get("shadow")]
+    assert shadows and all(r["fill_id"].startswith("shadow-") for r in shadows)
+    assert engine.toxicity.overall().samples == 0 and engine.ledger.state.adverse_selection_usd == 0.0
+    assert engine.markouts.stats(1_000).count == 0  # shadow markouts never enter the fill statistics

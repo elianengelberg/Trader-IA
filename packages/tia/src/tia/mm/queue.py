@@ -36,12 +36,17 @@ class QueueModel:
     t_arrival_ms: int
     ahead_conservative: float
     ahead_optimistic: float
+    ahead_at_arrival: float = -1.0  # what was visible at our price when we arrived
     filled: float = 0.0  # confirmed
     filled_optimistic: float = 0.0  # under the optimistic bound (includes the confirmed part)
     venue_trade_ids: list[int] = field(default_factory=list)
     swept: bool = False
     last_visible: float | None = None
     _traded_since_diff: float = 0.0
+
+    def __post_init__(self) -> None:
+        if self.ahead_at_arrival < 0:
+            self.ahead_at_arrival = self.ahead_conservative
 
     @property
     def remaining(self) -> float:
@@ -121,6 +126,7 @@ class QueueModel:
             "filled_optimistic": self.filled_optimistic,
             "unresolved": self.unresolved,
             "resolution": self.resolution,
+            "ahead_at_arrival": self.ahead_at_arrival,
             "ahead_conservative": self.ahead_conservative,
             "ahead_optimistic": self.ahead_optimistic,
             "estimated_queue_position": self.ahead_conservative,

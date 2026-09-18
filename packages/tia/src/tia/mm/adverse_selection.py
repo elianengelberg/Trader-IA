@@ -90,6 +90,10 @@ class FillObservation:
     quantity: float
     mid_at_fill: float
     buckets: dict[str, str] = field(default_factory=dict)
+    #: A shadow observation is the markout an UNRESOLVED quantity *would* have had, had
+    #: it filled. Measured so the unresolved cases can be compared with the confirmed
+    #: ones; never booked, never fed to toxicity.
+    shadow: bool = False
 
     @property
     def sign(self) -> float:
@@ -129,6 +133,7 @@ class Markout:
     def as_dict(self) -> dict[str, Any]:
         return {
             "fill_id": self.observation.fill_id,
+            "shadow": self.observation.shadow,
             "side": self.observation.side,
             "price": self.observation.price,
             "quantity": self.observation.quantity,
@@ -209,7 +214,8 @@ class MarkoutTracker:
         rows = [
             m.at(horizon_ms)
             for m in self.resolved
-            if buckets is None or all(m.observation.buckets.get(k) == v for k, v in buckets.items())
+            if not m.observation.shadow
+            and (buckets is None or all(m.observation.buckets.get(k) == v for k, v in buckets.items()))
         ]
         values = [v for v in rows if v is not None]
         if not values:

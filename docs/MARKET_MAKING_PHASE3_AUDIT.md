@@ -448,3 +448,69 @@ y se reanuda al reiniciar si la configuración (`config_id`) no cambió.
   NO EDGE DETECTED hasta que lo haya, y no se ajustará ningún parámetro para cambiarlo.
 - El estado pasa a PAPER_RUNNING cuando el operador activa la bandera en el VPS; hasta
   entonces es IMPLEMENTATION. PROFITABLE no es un estado de este sistema.
+
+---
+
+## 22. Objetivo final del proyecto y límites (fijado por el operador, 2026-09-18)
+
+**Durante toda la Fase 3 el market maker opera exclusivamente en simulación**, 24/7,
+sobre datos reales de Binance, con una cuenta paper propia de **$10.000 USD**, y todo el
+proceso simulado de la forma más realista posible: órdenes simuladas, fills simulados
+sólo por trades reales, cola estimada, latencia medida, fees, spread, slippage, adverse
+selection, inventario, drawdown, PnL, riesgo y todas las métricas necesarias. Debe
+comportarse como si administrara $10.000 reales, **sin usar dinero real**.
+
+**Ahora**: `TIA_MM__REAL_MONEY=false`; sin colocación de órdenes en Binance; sin
+permisos de trading en la API; sin órdenes reales; sin workaround; sin endpoint
+alternativo; sin código que pueda mandar una orden real. "Querer dinero real en el
+futuro" **no** es permiso para implementar ejecución real ahora.
+
+**Fase 4 (futura, independiente, no autorizada todavía)**: si tras suficiente tiempo y
+con evaluación TRAIN / VALIDATION / OOS el sistema demuestra una ventaja estadística
+consistente, la arquitectura debe permitir pasar de
+`DATA → QUOTING → PAPER EXECUTION` a `DATA → QUOTING → REAL EXECUTION` sin reconstruir
+el market maker, y **solamente** después de una auditoría específica de ejecución real:
+permisos, límites, reconciliación de órdenes, fills, cancelaciones, fallos de red,
+duplicados, posiciones reales, balances y kill switch.
+
+### 22.1 Qué significa "funciona"
+
+No funciona porque el PnL paper sea positivo, porque hubo unas pocas operaciones
+ganadoras, porque una semana fue positiva ni porque el backtest dio ganancias. Se exige
+evidencia de que el resultado sobre los $10.000 simulados **no proviene de** lookahead,
+fills demasiado optimistas, cola instantánea, latencia cero, UNRESOLVED
+convenientemente excluidos, fees incorrectas, slippage inexistente, parámetros
+sobreoptimizados, un único régimen de mercado ni sobreajuste al histórico. Cómo lo
+cubre la implementación actual, y dónde no llega:
+
+| Riesgo | Mecanismo |
+|---|---|
+| lookahead | una sola pasada por tiempo de recepción; fills resueltos por eventos posteriores a la llegada; markouts en tracker separado; propiedad de prefijo y determinismo por hash (tests) |
+| fills optimistas | fill sólo cuando prints reales superan la cota **conservadora** de cola; nunca por vela, tope de libro ni "tocó el precio" |
+| cola instantánea | la cola al llegar es la cantidad visible al precio en ese instante; se registra por fill (`queue_ahead_at_arrival`) |
+| latencia cero | perfil medido en el VPS y versionado; piso de 5 ms; el replay y el paper se niegan sin perfil |
+| UNRESOLVED excluidos | se contabilizan aparte, se journalizan con contexto y reciben markout sombra; la auditoría compara su distribución con la de los fills confirmados; 10 % es cobertura, no realismo |
+| fees | 10 bps maker como supuesto provisional, escenario adverso 15 bps, tasa verificada sólo cuando se lea de la cuenta |
+| slippage | **sólo** modelado para unwinds por taker; hoy el maker no fuerza unwinds, así que el slippage registrado es cero por construcción, no por supuesto favorable: queda declarado como límite |
+| liquidación | la cuenta del maker es de contado, sin apalancamiento: la liquidación **no puede ocurrir por construcción**; los límites del controller (inventario 0,05 BTC, notional $6.000, pérdida diaria $100, drawdown 3 %) acotan la exposición muy por debajo del capital; si se quisiera una cuenta apalancada con liquidación, es una decisión de diseño separada |
+| sobreoptimización | ningún parámetro se ajusta al resultado; un cambio de parámetros abre una partición temporal nueva |
+| único régimen | regla de concentración por régimen en el veredicto |
+| sobreajuste | veredicto sólo fuera de muestra por tiempo, con intervalo bootstrap |
+
+### 22.2 Estados
+
+El sistema conserva **PAPER_RUNNING + EVIDENCE_PENDING + NO EDGE DETECTED** hasta que
+exista evidencia suficiente. `PROFITABLE` no es un estado del sistema. Resultados
+negativos, estables o ambiguos se reportan exactamente así; un resultado positivo debe
+demostrar primero que sobrevive a fees, latencia, adverse selection, fills realistas y
+OOS.
+
+### 22.3 La costura para la Fase 4 (sin implementarla)
+
+La etapa de ejecución del motor es un objeto con una superficie estrecha:
+`place(decision, t)`, `cancel(order_id, t, reason)`, `cancel_all(t, reason)`,
+`on_event(kind, event, book, t)`, `open_orders()`, `orders`, `last_unresolved`,
+`stats()`. Hoy sólo existe la implementación paper (`tia/mm/sim.py`) y el motor no
+acepta otra. Una Fase 4 definiría un protocolo en esa costura, con su propia auditoría
+(§22) y su propio gate, sin tocar las etapas de datos, features, fair value, riesgo ni
+cotización. Nada de eso se implementa en la Fase 3.

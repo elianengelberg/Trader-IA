@@ -22,7 +22,7 @@ import hashlib
 import json
 from collections import deque
 from collections.abc import Callable
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from typing import Any
 
 from tia.mm.adverse_selection import FillObservation, MarkoutTracker, RegimeConfig, regimes_of
@@ -110,6 +110,8 @@ class MarketMakerEngine:
         self.gate_blocks = 0
         self.data_blocks = 0
         self.unresolved_events = 0
+        self.holds = 0  # resting quotes kept through a pacing denial, each one journaled
+        self.hold_cancels = 0  # pacing denial while the quote had to move: cancelled, not replaced
         self._last_decision_ms: int | None = None
         self._last_event_ms: int | None = None
         self._last_features: FeatureVector | None = None
@@ -256,6 +258,52 @@ class MarketMakerEngine:
         toxicity = max((self.toxicity.reading(regimes_bid), self.toxicity.reading(regimes_ask)), key=lambda r: r.score or 0.0)
         expected_adverse = toxicity.adverse_mean_bps or 0.0
         spread = self.spread.target(features, fee_bps=self.costs.maker_fee_bps, expected_adverse_bps=expected_adverse, toxicity_widen_bps=toxicity.widen_bps)
+        active = [o for o in self._active if o.state in ("pending_arrival", "resting")]
+        if not allowance.allowed and allowance.hold_only and active:
+            # Pacing denial (quote rate / minimum interval) with quotes resting. Nothing new
+            # may be placed; what may be held is decided by re-evaluating the quote as if
+            # pacing allowed it: still within the requote threshold -> HOLD, journaled with
+            # the reason; moved (fair value, inventory, toxicity, spread, a side no longer
+            # allowed) -> cancelled normally, and not replaced. Every hard rule above still
+            # applies: the gate was consulted first and a hard denial never reaches here.
+            probe = replace(allowance, allowed=True)
+            desired = self.quoting.decide(features=features, fair_value=fv, inventory=inventory, spread=spread, toxicity=toxicity, allowance=probe, latency=self.latency, t_ms=t_ms)
+            row = {
+                "t": t_ms,
+                "kind": "decision",
+                "fair_value": fv.fair_value,
+                "fair_value_offset_bps": fv.fair_value_offset_bps,
+                "fair_value_confidence": fv.fair_value_confidence,
+                "bid": desired.bid_price,
+                "ask": desired.ask_price,
+                "bid_size": desired.bid_size,
+                "ask_size": desired.ask_size,
+                "half_spread_bps": desired.half_spread_bps,
+                "spread_binding": spread.binding,
+                "inventory_btc": inventory.inventory_btc,
+                "inventory_adjustment_bps": inventory.inventory_adjustment_bps,
+                "toxicity": toxicity.as_dict(),
+                "allowance": allowance.as_dict(),
+                "features": self._feature_summary(features),
+                "regimes": regimes_bid,
+                "gate": status.state.value,
+                "resting_orders": [o.order_id for o in active],
+            }
+            if desired.is_quote and not self._moved(desired):
+                self.holds += 1
+                row["decision"] = "hold"
+                row["reason"] = f"held through pacing denial ({allowance.reason}): resting quotes still within {self.config.requote_threshold_bps} bps of the desired ones"
+                self._write(row)
+                return
+            cancelled = self.execution.cancel_all(t_ms, reason=f"pacing denial while a requote was due ({allowance.reason})")
+            self.cancels += cancelled
+            self.hold_cancels += 1
+            self._active = []
+            row["decision"] = "no_quote"
+            row["reason"] = f"requote due but pacing denied ({allowance.reason}): {'quotes moved' if desired.is_quote else desired.quote_reason}; cancelled, not replaced"
+            row["cancelled"] = cancelled
+            self._write(row)
+            return
         decision = self.quoting.decide(features=features, fair_value=fv, inventory=inventory, spread=spread, toxicity=toxicity, allowance=allowance, latency=self.latency, t_ms=t_ms)
         self.last_decision = decision
         row = {
@@ -358,6 +406,8 @@ class MarketMakerEngine:
             "gate_blocks": self.gate_blocks,
             "data_blocks": self.data_blocks,
             "unresolved_events": self.unresolved_events,
+            "holds": self.holds,
+            "hold_cancels": self.hold_cancels,
             "no_quote_reasons": dict(self.no_quote_reasons),
             "gate": self.last_gate.as_dict() if self.last_gate else None,
             "last_block_reason": self.last_block_reason,

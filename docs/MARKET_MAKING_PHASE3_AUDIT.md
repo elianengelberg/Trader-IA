@@ -514,3 +514,17 @@ La etapa de ejecución del motor es un objeto con una superficie estrecha:
 acepta otra. Una Fase 4 definiría un protocolo en esa costura, con su propia auditoría
 (§22) y su propio gate, sin tocar las etapas de datos, features, fair value, riesgo ni
 cotización. Nada de eso se implementa en la Fase 3.
+
+### 22.4 Regla HOLD (decisión del operador, 2026-09-18)
+
+Cuando el controller niega **únicamente** por tasa máxima de cotización o por intervalo
+mínimo entre cotizaciones (`RiskAllowance.hold_only`), una cotización que ya descansa en
+el libro paper **no se cancela automáticamente**: el motor recalcula la cotización
+deseada como si el ritmo lo permitiera y, si sigue dentro del umbral de recotización
+(0,5 bps), la mantiene (`decision = hold`, con el motivo en el journal). Si el fair value,
+el inventario, la toxicidad, el spread requerido o los permisos por lado la obligan a
+moverse, se cancela normalmente y **no se reemplaza** hasta que el ritmo lo permita. El
+gate global y toda negativa dura (kill switch, pérdida diaria, drawdown, inventario,
+notional) siguen cancelando. El TTL de la cotización (1 s) y la reevaluación cada 500 ms
+no cambian; un HOLD nunca extiende una orden más allá de su TTL. Ningún límite de ritmo
+se aumentó ni se redujo ninguna protección. Tests en `tests/unit/mm/test_hold.py`.

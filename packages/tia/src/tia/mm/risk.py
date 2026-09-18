@@ -58,10 +58,17 @@ class RiskAllowance:
     allowed: bool
     reason: str
     max_size_btc: float
+    #: Side permissions from inventory and notional, independent of the pacing checks:
+    #: what the maker may *hold* resting even when it may not place anything new.
     bid_allowed: bool
     ask_allowed: bool
     kill_switch: bool
     checks: dict[str, bool] = field(default_factory=dict)
+    #: True when the only failing checks are the quote rate and/or the minimum
+    #: interval: nothing new may be placed, but a resting quote that still fits every
+    #: other rule may be held. Never true when a hard rule (kill switch, loss,
+    #: drawdown, inventory, notional) failed.
+    hold_only: bool = False
 
     def as_dict(self) -> dict[str, Any]:
         return dict(self.__dict__)
@@ -138,17 +145,20 @@ class MarketMakerRiskController:
             reasons.append(f"inventory {inventory:+.5f} BTC / {notional:.0f} USD at a limit: reducing side only")
         max_size = min(lim.max_quote_size_btc, adding_room) if adding_room > 0 else lim.max_quote_size_btc
 
-        allowed = all(checks.values()) or (checks["kill_switch"] and checks["quote_rate"] and checks["quote_interval"] and (bid_allowed or ask_allowed))
+        hard_ok = checks["kill_switch"] and (bid_allowed or ask_allowed)
+        pacing_ok = checks["quote_rate"] and checks["quote_interval"]
+        allowed = hard_ok and pacing_ok
         if not allowed:
             self.denials += 1
         return RiskAllowance(
             allowed=allowed,
             reason="; ".join(reasons) if reasons else "within limits",
             max_size_btc=max_size,
-            bid_allowed=bid_allowed and allowed,
-            ask_allowed=ask_allowed and allowed,
+            bid_allowed=bid_allowed and hard_ok,
+            ask_allowed=ask_allowed and hard_ok,
             kill_switch=self.kill_switch,
             checks=checks,
+            hold_only=hard_ok and not pacing_ok,
         )
 
     def as_dict(self) -> dict[str, Any]:

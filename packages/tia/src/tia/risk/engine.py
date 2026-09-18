@@ -36,7 +36,7 @@ from tia.domain.quality import DataQualityReport
 from tia.domain.risk import PositionSizing, RiskCheck, RiskDecision
 from tia.domain.signals import SignalCandidate
 from tia.quant.features import FeatureSet
-from tia.risk.sizing import compute_size
+from tia.risk.sizing import compute_size, margin_available
 
 _log = get_logger("risk.engine")
 
@@ -82,11 +82,15 @@ class RiskEngine:
         clock: Clock,
         *,
         state: RiskState | None = None,
+        leverage: float = 1.0,
     ) -> None:
         self._limits = limits
         self._universe = universe
         self._clock = clock
         self._state = state or RiskState()
+        #: Margin multiple for sizing. 1.0 is a cash account; above it, notional may
+        #: reach this multiple of equity — the caller scales the exposure limits to match.
+        self._leverage = max(1.0, float(leverage))
 
     @property
     def limits(self) -> RiskLimits:
@@ -272,7 +276,12 @@ class RiskEngine:
             instrument=instrument,
             risk_per_trade_pct=self._limits.max_risk_per_trade_pct,
             max_position_notional_pct=self._limits.max_position_notional_pct,
-            available_capital=portfolio.available_capital(),
+            available_capital=margin_available(
+                equity=portfolio.equity,
+                gross_exposure=portfolio.gross_exposure,
+                cash=portfolio.available_capital(),
+                leverage=self._leverage,
+            ),
         )
         sized = sizing.quantity_after_limits > 0
         checks.append(

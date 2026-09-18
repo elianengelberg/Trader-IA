@@ -198,6 +198,10 @@ class FundingMonitor:
 
     # ------------------------------------------------------------------ reading
 
+    def latest_rate(self) -> float | None:
+        """The last funding rate read, per eight-hour period, or None before the first."""
+        return self._latest.funding_rate if self._latest is not None else None
+
     def report(self) -> dict[str, Any]:
         latest = self._latest
         history = list(self._history)

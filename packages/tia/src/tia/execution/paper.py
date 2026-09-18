@@ -103,6 +103,19 @@ class PaperExecutionProvider(ExecutionProvider):
     async def get_balance(self) -> float:
         return self._portfolio.cash
 
+    def apply_cash_adjustment(self, amount: float, *, reason: str) -> float:
+        """Move cash for something that is not a fill: funding, a liquidation fee.
+
+        A simulated perpetual account pays funding every eight hours and a fee when it
+        is liquidated; neither arrives as a trade, and both must reach the same cash
+        the fills reach, or the books and the venue would disagree by exactly that
+        amount at the next reconciliation. Positive adds, negative charges.
+        """
+        self._portfolio.cash += float(amount)
+        self._portfolio.updated_at = self._clock.now()
+        _log.info("paper_cash_adjustment", amount=round(float(amount), 6), reason=reason)
+        return self._portfolio.cash
+
     async def get_trades(self, *, limit: int = 100) -> list[Fill]:
         return self._fills[-limit:]
 

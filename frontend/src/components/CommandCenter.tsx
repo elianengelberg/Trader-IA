@@ -23,6 +23,19 @@ interface LiveSnap {
   position?: { open?: boolean; stop_price?: number | null; target_price?: number | null; protected?: boolean; stop_kind?: string | null; r_multiple?: number | null };
   trend?: { available?: boolean; bias?: string; mode?: string };
   execution?: { resting_order?: unknown };
+  account?: {
+    simulated?: boolean;
+    starting_capital?: number;
+    prior_realised_pnl?: number;
+    equity?: number;
+    return_pct?: number | null;
+    leverage_max?: number;
+    leverage_used?: number | null;
+    margin_used_pct?: number | null;
+    liquidation_price?: number | null;
+    liquidations?: number;
+    funding?: { payments?: number; paid_usd?: number; last_rate?: number | null };
+  };
 }
 
 const STREAK_LENGTH = 40;
@@ -139,7 +152,8 @@ export function CommandCenter({ subscribe }: { subscribe: Subscribe }) {
   const [rows, setRows] = useState<JournalRow[]>([]);
   const [source, setSource] = useState<"live" | "record">("live");
   const [orders, setOrders] = useState<Order[]>([]);
-  const [startingUsd, setStartingUsd] = useState<number>(100_000);
+  const [startingUsd, setStartingUsd] = useState<number>(10_000);
+  const [persistedEquity, setPersistedEquity] = useState<number | null>(null);
 
   const loadSnap = useCallback(() => {
     api.liveSnapshot().then((s) => setSnap(s as unknown as LiveSnap)).catch(() => undefined);
@@ -169,7 +183,12 @@ export function CommandCenter({ subscribe }: { subscribe: Subscribe }) {
     loadSnap();
     loadTrades();
     loadOrders();
-    api.money().then((m) => { if (m.starting_usd) setStartingUsd(m.starting_usd); }).catch(() => undefined);
+    api.money()
+      .then((m) => {
+        if (m.session_starting_usd) setStartingUsd(m.session_starting_usd);
+        if (m.session && m.session.trades > 0) setPersistedEquity(m.session.ending_usd);
+      })
+      .catch(() => undefined);
     const id = window.setInterval(() => { if (!document.hidden) { loadSnap(); loadOrders(); } }, 10_000);
     return () => window.clearInterval(id);
   }, [loadSnap, loadTrades, loadOrders]);
@@ -182,8 +201,15 @@ export function CommandCenter({ subscribe }: { subscribe: Subscribe }) {
   const cap = snap?.capital ?? {};
   const counters = snap?.counters ?? {};
   const active = snap?.active ?? false;
-  const pnl = (cap.realised_pnl ?? 0) + (cap.unrealised_pnl ?? 0);
-  const equity = cap.equity ?? startingUsd;
+  const account = snap?.account;
+  // One account, simulated, starting from the configured capital. While the session
+  // runs, its ledger is the balance (realised, carried and unrealised together); when it
+  // is offline the persisted record still knows where the account stands.
+  const starting = account?.starting_capital ?? startingUsd;
+  const equity = active ? (account?.equity ?? cap.equity ?? starting) : (persistedEquity ?? starting);
+  const pnl = equity - starting;
+  const returnPct = starting > 0 ? (pnl / starting) * 100 : 0;
+  const leverageUsed = account?.leverage_used ?? null;
   const wins = rows.filter((r) => r.is_win).length;
   const winRate = rows.length > 0 ? (wins / rows.length) * 100 : null;
   const streak = useMemo(() => currentStreak(rows), [rows]);
@@ -197,15 +223,23 @@ export function CommandCenter({ subscribe }: { subscribe: Subscribe }) {
           <div className="cc-kicker">
             <span className={`cc-live ${active && snap?.state === "running" ? "" : "off"}`}><i /> {active ? (snap?.state ?? "").toUpperCase() : "OFFLINE"}</span>
             <span>PAPER · REAL {snap?.symbol ?? "BTC/USDT"} MARKET · 24/7 · simulated fills</span>
+            {account?.leverage_max != null && account.leverage_max > 1 && (
+              <span className="cc-lev">LEVERAGE {account.leverage_max.toFixed(0)}x</span>
+            )}
             {snap?.trend?.mode !== "off" && (
               <span className={`cc-tide ${snap?.trend?.available ? snap.trend.bias : "unknown"}`}>
                 TIDE {snap?.trend?.available ? String(snap.trend.bias).toUpperCase() : "UNKNOWN"}
               </span>
             )}
           </div>
-          <div className={`cc-big ${pnl > 0 ? "pos" : pnl < 0 ? "neg" : "neon"}`}>{signedMoney(pnl)}</div>
+          <div className={`cc-big ${pnl > 0 ? "pos" : pnl < 0 ? "neg" : "neon"}`}>{money(equity, 2)}</div>
           <div className="cc-sub">
-            session P&amp;L · equity {money(equity, 0)} of {money(cap.allocated_capital ?? startingUsd, 0)} · fees {money(cap.fees_paid ?? 0)}
+            <span className={pnl > 0 ? "pos" : pnl < 0 ? "neg" : ""}>{signedMoney(pnl)} ({returnPct >= 0 ? "+" : ""}{returnPct.toFixed(2)}%)</span>
+            {` · started with ${money(starting, 0)} · simulated`}
+            {leverageUsed != null && account?.leverage_max ? ` · leverage ${leverageUsed.toFixed(2)}x of ${account.leverage_max.toFixed(0)}x` : ""}
+            {account?.liquidation_price != null ? ` · liquidation ≈ ${money(account.liquidation_price, 0)}` : ""}
+            {(account?.funding?.payments ?? 0) > 0 ? ` · funding ${signedMoney(-(account?.funding?.paid_usd ?? 0))}` : ""}
+            {(account?.liquidations ?? 0) > 0 ? ` · ${account?.liquidations} liquidation${(account?.liquidations ?? 0) > 1 ? "s" : ""}` : ""}
           </div>
         </div>
         <div className="cc-hero-side">

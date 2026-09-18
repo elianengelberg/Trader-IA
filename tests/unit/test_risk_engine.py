@@ -497,3 +497,19 @@ class TestRiskState:
         state.roll_day(NOW + timedelta(days=1))
         assert state.trades_today == 0
         assert state.trades_today_by_symbol == {}
+
+
+# ------------------------------------------------------------------ margin
+
+
+def test_margin_available_is_cash_at_one_x_and_borrowed_room_above() -> None:
+    from tia.risk.sizing import margin_available
+
+    # A cash account: what is in the till, never negative.
+    assert margin_available(equity=10_000.0, gross_exposure=0.0, cash=10_000.0, leverage=1.0) == 10_000.0
+    assert margin_available(equity=10_000.0, gross_exposure=8_000.0, cash=-3_000.0, leverage=1.0) == 0.0
+    # Five times: up to 50,000 of notional against 10,000 of equity, less what is open.
+    assert margin_available(equity=10_000.0, gross_exposure=0.0, cash=10_000.0, leverage=5.0) == 50_000.0
+    assert margin_available(equity=10_000.0, gross_exposure=30_000.0, cash=-20_000.0, leverage=5.0) == 20_000.0
+    # An account with no equity left has no room, whatever its cash says.
+    assert margin_available(equity=0.0, gross_exposure=0.0, cash=500.0, leverage=5.0) == 0.0

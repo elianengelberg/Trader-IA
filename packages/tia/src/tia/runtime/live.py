@@ -213,6 +213,8 @@ class LiveRuntime:
         on_event: Callable[[dict[str, Any]], None] | None = None,
         prior_outcomes: Sequence[Outcome] = (),
         prior_reviews: Sequence[dict[str, Any]] = (),
+        prior_realised_pnl: float = 0.0,
+        funding_rate: Callable[[], float | None] | None = None,
         symbol_filters: dict[str, Any] | None = None,
         poll_interval_seconds: float = 5.0,
         reconcile_every_cycles: int = 12,
@@ -274,7 +276,28 @@ class LiveRuntime:
         )
         from tia.domain.instruments import DEFAULT_UNIVERSE
 
-        self._risk = RiskEngine(settings.risk, DEFAULT_UNIVERSE, clock)
+        # Leverage is a property of the simulated perpetual account and nothing else: a
+        # real spot venue does not borrow, so over live execution the multiple is 1 and
+        # the configured limits stand exactly as written. In paper the three exposure
+        # limits scale with the multiple; the risk per trade does not — leverage lets a
+        # tight stop carry a bigger position, it never lets a trade lose more.
+        self._leverage = 1.0 if execution.is_live else max(1.0, float(settings.live.leverage))
+        risk_limits = settings.risk
+        if self._leverage > 1.0:
+            risk_limits = settings.risk.model_copy(
+                update={
+                    "max_position_notional_pct": min(
+                        2000.0, settings.risk.max_position_notional_pct * self._leverage
+                    ),
+                    "max_gross_exposure_pct": min(
+                        2000.0, settings.risk.max_gross_exposure_pct * self._leverage
+                    ),
+                    "max_net_exposure_pct": min(
+                        2000.0, settings.risk.max_net_exposure_pct * self._leverage
+                    ),
+                }
+            )
+        self._risk = RiskEngine(risk_limits, DEFAULT_UNIVERSE, clock, leverage=self._leverage)
         self._budget = RiskBudgetEngine(RiskProfileName(settings.live.risk_profile))
         self._costs = CostModel(
             FeeSchedule(
@@ -308,11 +331,16 @@ class LiveRuntime:
             # Real money: the configured ceiling, whose fail-closed default of zero is
             # rejected by CapitalPolicy — exactly the refusal we want.
             ledger_ceiling = settings.live.max_live_capital
+        elif activation is not None:
+            # A token over a simulated venue (dress rehearsals, tests): the token's
+            # ceiling governs, as it would with money; the paper balance is the fallback
+            # for the fail-closed zero default.
+            ledger_ceiling = settings.live.max_live_capital or settings.live.paper_capital
         else:
-            # Paper-realtime: nothing here can spend, so the live ceiling's zero default
-            # must not stop the session. The simulated bankroll bounds the ledger; a
-            # configured live ceiling still binds if one is set.
-            ledger_ceiling = settings.live.max_live_capital or settings.initial_capital
+            # Paper-realtime: nothing here can spend, so the live ceiling governs nothing
+            # here. The simulated account's starting balance bounds the ledger; the
+            # record's carried P&L is booked as realised on top of it, not allocated.
+            ledger_ceiling = settings.live.paper_capital
         self._ledger = CapitalLedger(
             CapitalPolicy(max_live_capital=ledger_ceiling),
             clock=clock,
@@ -321,6 +349,23 @@ class LiveRuntime:
             ClockSkewMonitor(clock, venue_time_ms) if venue_time_ms is not None else None
         )
         self.latency = LatencyTracker(clock)
+
+        #: Realised P&L the persisted record already holds for this account, booked at
+        #: start so the balance keeps moving across restarts as one account would.
+        self._prior_realised = float(prior_realised_pnl)
+        #: The perpetual's latest funding rate, read from the funding monitor when the
+        #: application provides one. None means "no reading": nothing is charged and
+        #: the snapshot says so.
+        self._funding_rate = funding_rate
+        self._funding_period: tuple[str, int] | None = None
+        self.funding: dict[str, Any] = {
+            "payments": 0, "paid_usd": 0.0, "last_rate": None, "last_at": None,
+            "skipped_no_rate": 0,
+        }
+        #: The last portfolio view, for the snapshot: unrealised P&L and the open
+        #: position's size and mark, from which the liquidation price is computed.
+        self._last_unrealised = 0.0
+        self._last_position: tuple[float, float] | None = None
 
         self._consecutive_losses = 0
         for outcome in reversed(list(prior_outcomes)):
@@ -361,6 +406,7 @@ class LiveRuntime:
             "stops_tightened": 0, "exits_breakeven": 0, "exits_trail": 0,
             "spread_rejected": 0, "strategy_muted": 0, "sized_down": 0,
             "htf_rejected": 0, "htf_sized_down": 0,
+            "liquidations": 0, "exits_liquidation": 0, "funding_payments": 0,
         }
         #: The one protective stop covering the open position, if any. Exactly one, sized
         #: to the position: a stop that protects the wrong size is worse than none.
@@ -495,15 +541,30 @@ class LiveRuntime:
                 # Paper-realtime: simulated capital, already capped at construction.
                 # Binding it to the *live* ceiling would make the safe default
                 # (max_live_capital=0) refuse a session that cannot spend anything.
-                allocation = float(balance)
-                note = f"paper-realtime start: simulated balance {balance}"
-            if allocation <= 0:
+                allocation = float(balance) - self._prior_realised
+                note = (
+                    f"paper-realtime start: simulated balance {balance}"
+                    + (
+                        f" (of which {self._prior_realised:+.2f} is realised P&L carried "
+                        "from the record)"
+                        if self._prior_realised
+                        else ""
+                    )
+                )
+            if allocation <= 0 or float(balance) <= 0:
                 raise LiveActivationError(
                     f"venue balance {balance} funds no allocation under the ceiling "
                     f"{self._settings.live.max_live_capital}; nothing to trade with"
+                    + (
+                        " — the simulated account is wiped out; reset it to continue"
+                        if not self._execution.is_live and float(balance) <= 0
+                        else ""
+                    )
                 )
             self._ledger.allocate(allocation, at=self._clock.now(), note=note)
-            self._peak_equity = allocation
+            if self._prior_realised:
+                self._ledger.record_realised_pnl(self._prior_realised, at=self._clock.now())
+            self._peak_equity = allocation + self._prior_realised
         except Exception as exc:
             self.last_error = str(exc)[:500]
             self.machine.transition(LiveState.STOPPING, reason=f"startup failed: {exc}")
@@ -837,6 +898,7 @@ class LiveRuntime:
 
         if self._resting is not None:
             await self._manage_resting()
+        await self._accrue_funding(latest)
         await self._manage_position(latest)
 
         # Watchdog self-heal: data is flowing again. RUNNING is earned back through a
@@ -993,8 +1055,12 @@ class LiveRuntime:
                 ),
                 consecutive_losses=self._consecutive_losses,
                 trades_today=self._trades_today,
+                # In units of the account's leveraged capacity, so the profile's cap
+                # reads the same at 1x and at 5x.
                 open_gross_exposure_pct=(
-                    portfolio.gross_exposure / equity * 100.0 if equity > 0 else 0.0
+                    portfolio.gross_exposure / (equity * self._leverage) * 100.0
+                    if equity > 0
+                    else 0.0
                 ),
             )
         )
@@ -1426,6 +1492,117 @@ class LiveRuntime:
             # against whatever trade comes next.
             self._entry_beliefs = None
 
+    async def _accrue_funding(self, candle: Candle) -> None:
+        """Charge (or receive) the perpetual's funding once per eight-hour settlement.
+
+        A simulated perpetual account that never paid funding would show a carry the
+        market charges for; at the live rate a long pays when funding is positive and a
+        short receives it. Charged only in paper, only through a provider that can move
+        cash outside a fill, and only when the monitor has a reading — a missing rate is
+        counted, never guessed.
+        """
+        cfg = self._settings.live
+        if not cfg.charge_funding or self._execution.is_live or self._funding_rate is None:
+            return
+        adjust = getattr(self._execution, "apply_cash_adjustment", None)
+        if not callable(adjust):
+            return
+        key = (candle.close_time.date().isoformat(), candle.close_time.hour // 8)
+        if self._funding_period is None:
+            self._funding_period = key  # a session does not pay for a period it joined late
+            return
+        if key == self._funding_period:
+            return
+        self._funding_period = key
+        if self._open_trade is None:
+            return
+        try:
+            portfolio = await self._execution.get_portfolio()
+        except Exception:
+            return
+        position = portfolio.positions.get(self._symbol)
+        if position is None or position.is_flat:
+            return
+        rate = self._funding_rate()
+        if rate is None:
+            self.funding["skipped_no_rate"] += 1
+            return
+        notional = position.notional
+        payment = float(rate) * notional * (1.0 if position.quantity > 0 else -1.0)
+        now = self._clock.now()
+        if payment != 0.0:
+            self._ledger.record_realised_pnl(-payment, at=now)
+            adjust(-payment, reason=f"funding {float(rate):+.6f} on {notional:.2f}")
+        self.funding["payments"] += 1
+        self.funding["paid_usd"] = round(self.funding["paid_usd"] + payment, 6)
+        self.funding["last_rate"] = float(rate)
+        self.funding["last_at"] = now.isoformat()
+        self.counters["funding_payments"] += 1
+        self._emit(
+            "live.funding",
+            {"rate": float(rate), "notional": round(notional, 2), "paid_usd": round(payment, 4),
+             "side": "long" if position.quantity > 0 else "short"},
+        )
+
+    async def _check_liquidation(self, position: Any, unrealised_pnl: float) -> bool:
+        """Liquidate the position when equity no longer covers the maintenance margin.
+
+        The simulated account's honesty test: a leveraged position that moves against
+        it far enough is closed by the venue, not by the strategy, and charged for it.
+        Every position carries a stop, so this triggers only on a gap through the stop
+        or a sequence of losses that has already eaten the account. Returns True when
+        the position was liquidated.
+        """
+        cfg = self._settings.live
+        if self._execution.is_live:
+            return False
+        notional = position.notional
+        if notional <= 0:
+            return False
+        equity = self._ledger.snapshot(unrealised_pnl=unrealised_pnl).equity
+        maintenance = notional * cfg.maintenance_margin_pct / 100.0
+        if equity > maintenance:
+            return False
+        fee = notional * cfg.liquidation_fee_bps / 10_000.0
+        now = self._clock.now()
+        self.counters["liquidations"] += 1
+        if fee > 0:
+            self._ledger.record_realised_pnl(-fee, at=now)
+            adjust = getattr(self._execution, "apply_cash_adjustment", None)
+            if callable(adjust):
+                adjust(-fee, reason="liquidation fee")
+        self._emit(
+            "live.liquidation",
+            {"equity": round(equity, 2), "maintenance": round(maintenance, 2),
+             "notional": round(notional, 2), "fee_usd": round(fee, 2)},
+        )
+        _log.warning("position_liquidated", equity=round(equity, 2), notional=round(notional, 2))
+        await self._close_position("liquidated")
+        if equity - fee <= 0:
+            self.halt_new_orders(
+                reason=(
+                    f"simulated account wiped out: equity {equity - fee:,.2f} after "
+                    "liquidation; reset the paper account to continue"
+                )
+            )
+        return True
+
+    def _liquidation_price(self) -> float | None:
+        """Where the open position would be liquidated, from the current equity."""
+        if self._last_position is None or self._execution.is_live:
+            return None
+        quantity, price = self._last_position
+        if quantity == 0 or price <= 0:
+            return None
+        equity = self._ledger.snapshot(unrealised_pnl=self._last_unrealised).equity
+        m = self._settings.live.maintenance_margin_pct / 100.0
+        size = abs(quantity)
+        if quantity > 0:
+            level = (size * price - equity) / (size * (1.0 - m))
+        else:
+            level = (equity + size * price) / (size * (1.0 + m))
+        return max(0.0, level)
+
     async def _refresh_quote(self) -> None:
         """Read the venue's top of book for this bar, if the feed offers one.
 
@@ -1547,12 +1724,21 @@ class LiveRuntime:
             return
         position = portfolio.positions.get(self._symbol)
         holding = position is not None and not position.is_flat
+        self._last_unrealised = float(portfolio.unrealized_pnl)
+        self._last_position = (
+            (float(position.quantity), float(position.last_price or position.average_price))
+            if holding
+            else None
+        )
 
         if not holding:
             if self._protective is not None:
                 await self._cancel_protective()
             return
         if not self.machine.state.accepts_reducing_orders:
+            return
+
+        if await self._check_liquidation(position, portfolio.unrealized_pnl):
             return
 
         long = position.quantity > 0
@@ -1735,6 +1921,7 @@ class LiveRuntime:
             "target reached": "exits_target",
             "time stop": "exits_time",
             "signal reversed": "exits_reversal",
+            "liquidated": "exits_liquidation",
         }.get(reason)
         if key:
             self.counters[key] += 1
@@ -1979,18 +2166,35 @@ class LiveRuntime:
             for extra in venue_open - local_open:
                 divergences.append(f"order {extra} open at the venue but unknown locally")
 
-            balance = float(await self._execution.get_balance())
-            snapshot = self._ledger.snapshot()
-            expected = snapshot.allocated_capital + snapshot.realised_pnl - snapshot.fees_paid
-            reconciliation = self._ledger.classify_external_change(
-                venue_balance=balance,
-                expected_balance=expected,
-                at=self._clock.now(),
-            )
-            if reconciliation.kind.value != "allocation":
-                divergences.append(reconciliation.explanation)
-            if reconciliation.halts_trading:
-                self.halt_new_orders(reason=reconciliation.explanation)
+            if self._execution.is_live or self._activation is not None:
+                # An account someone can deposit into: the venue's cash is classified.
+                balance = float(await self._execution.get_balance())
+                snapshot = self._ledger.snapshot()
+                expected = snapshot.allocated_capital + snapshot.realised_pnl - snapshot.fees_paid
+                reconciliation = self._ledger.classify_external_change(
+                    venue_balance=balance,
+                    expected_balance=expected,
+                    at=self._clock.now(),
+                )
+                if reconciliation.kind.value != "allocation":
+                    divergences.append(reconciliation.explanation)
+                if reconciliation.halts_trading:
+                    self.halt_new_orders(reason=reconciliation.explanation)
+            else:
+                # Paper-realtime. A simulated venue receives no deposits and makes no withdrawals, and
+                # a leveraged position leaves its cash negative by design — classifying
+                # that cash as a movement would halt the session on its own fills. What
+                # can go wrong in a simulator is the two sets of books drifting apart,
+                # so the check is that our equity and the venue's agree.
+                portfolio = await self._execution.get_portfolio()
+                expected = self._ledger.snapshot(unrealised_pnl=portfolio.unrealized_pnl).equity
+                observed = float(portfolio.equity)
+                tolerance = max(1.0, abs(expected) * 0.02)
+                if abs(observed - expected) > tolerance:
+                    divergences.append(
+                        f"simulated account equity {observed:,.2f} differs from the ledger's "
+                        f"{expected:,.2f} by more than {tolerance:,.2f}"
+                    )
         except Exception as exc:
             divergences.append(f"reconciliation itself failed: {exc}")
 
@@ -2206,7 +2410,11 @@ class LiveRuntime:
         }
 
     def snapshot(self) -> dict[str, Any]:
-        ledger = self._ledger.snapshot()
+        ledger = self._ledger.snapshot(unrealised_pnl=self._last_unrealised)
+        gross = (
+            abs(self._last_position[0]) * self._last_position[1] if self._last_position else 0.0
+        )
+        equity = ledger.equity
         return {
             "run_id": self.run_id,
             "mode": "live" if self._execution.is_live else "paper-live",
@@ -2279,6 +2487,36 @@ class LiveRuntime:
                 "last": self._last_size,
             },
             "strategies": self._scoreboard.report(),
+            "account": {
+                "simulated": not self._execution.is_live,
+                "starting_capital": (
+                    self._settings.live.max_live_capital
+                    if self._execution.is_live
+                    else self._settings.live.paper_capital
+                ),
+                "prior_realised_pnl": round(self._prior_realised, 2),
+                "equity": round(equity, 2),
+                "return_pct": (
+                    round((equity / self._settings.live.paper_capital - 1.0) * 100.0, 4)
+                    if not self._execution.is_live and self._settings.live.paper_capital > 0
+                    else None
+                ),
+                "leverage_max": self._leverage,
+                "leverage_used": round(gross / equity, 3) if equity > 0 else None,
+                "margin_used_pct": (
+                    round(gross / (equity * self._leverage) * 100.0, 2) if equity > 0 else None
+                ),
+                "maintenance_margin_pct": self._settings.live.maintenance_margin_pct,
+                "liquidation_fee_bps": self._settings.live.liquidation_fee_bps,
+                "liquidation_price": (
+                    round(self._liquidation_price(), 2)
+                    if self._liquidation_price() is not None
+                    else None
+                ),
+                "liquidations": self.counters["liquidations"],
+                "funding": dict(self.funding),
+                "charge_funding": self._settings.live.charge_funding,
+            },
             "trend": {
                 "mode": self._settings.live.htf_mode,
                 "z_threshold": self._settings.live.htf_z_threshold,

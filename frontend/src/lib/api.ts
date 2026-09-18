@@ -619,6 +619,7 @@ export interface JournalFilters {
 
 /** One source's closed trades, priced in dollars from the configured starting balance. */
 export interface MoneySlice {
+  starting_usd?: number;
   trades: number;
   wins: number;
   win_rate: number;
@@ -634,6 +635,7 @@ export interface MoneyRecord {
   available: boolean;
   reason?: string;
   starting_usd?: number;
+  session_starting_usd?: number;
   simulated?: boolean;
   session?: MoneySlice;
   training?: MoneySlice;

@@ -55,6 +55,19 @@ interface LiveSnap {
   market?: { quote?: { spread_bps?: number } | null; max_spread_bps?: number; spread_source?: string };
   sizing?: { conviction?: boolean; last?: { fraction?: number; reason?: string } | null };
   trend?: { mode?: string; available?: boolean; bias?: string; z_1w?: number | null; z_4w?: number | null; return_4w_pct?: number | null; reason?: string };
+  account?: {
+    starting_capital?: number;
+    prior_realised_pnl?: number;
+    equity?: number;
+    leverage_max?: number;
+    leverage_used?: number | null;
+    margin_used_pct?: number | null;
+    maintenance_margin_pct?: number;
+    liquidation_price?: number | null;
+    liquidations?: number;
+    funding?: { payments?: number; paid_usd?: number; last_rate?: number | null; skipped_no_rate?: number };
+    charge_funding?: boolean;
+  };
 }
 
 /** Every bucket needs this many closed trades before the session will trade it. */
@@ -106,9 +119,13 @@ function LiveSessionPanel({ subscribe }: { subscribe: Subscribe }) {
     >
       <div className="grid cols-4" style={{ gap: 12 }}>
         <MoneyStat
-          label="Equity (simulated)"
-          value={cap.equity ?? 0}
-          sub={`from $${money(cap.allocated_capital ?? 0, 0)} allocated`}
+          label="Account balance (simulated)"
+          value={snap.account?.equity ?? cap.equity ?? 0}
+          sub={
+            `started with $${money(snap.account?.starting_capital ?? cap.allocated_capital ?? 0, 0)}` +
+            ((snap.account?.prior_realised_pnl ?? 0) !== 0 ? ` · ${signedMoney(snap.account?.prior_realised_pnl ?? 0)} carried` : "") +
+            ((snap.account?.leverage_max ?? 1) > 1 ? ` · up to ${snap.account?.leverage_max}x` : "")
+          }
         />
         <MoneyStat
           label="Session P&L"
@@ -161,6 +178,20 @@ function LiveSessionPanel({ subscribe }: { subscribe: Subscribe }) {
           {(counters.strategy_muted ?? 0) > 0 ? ` · ${counters.strategy_muted} refused from a muted strategy` : ""}
           {(counters.spread_rejected ?? 0) > 0 ? ` · ${counters.spread_rejected} waited out a wide spread` : ""}
           {(counters.htf_rejected ?? 0) > 0 ? ` · ${counters.htf_rejected} refused against the tide` : ""}
+        </p>
+      )}
+      {snap.account && (snap.account.leverage_max ?? 1) > 1 && (
+        <p className="footnote" style={{ marginTop: 12 }}>
+          <strong>Leveraged account (simulated perpetual): </strong>
+          {snap.account.leverage_used != null ? `using ${snap.account.leverage_used.toFixed(2)}x of ${snap.account.leverage_max}x` : `up to ${snap.account.leverage_max}x, flat now`}
+          {snap.account.margin_used_pct != null ? ` · margin used ${snap.account.margin_used_pct.toFixed(0)}%` : ""}
+          {snap.account.liquidation_price != null ? ` · liquidation at ≈ $${money(snap.account.liquidation_price, 0)} (maintenance ${snap.account.maintenance_margin_pct}%)` : ""}
+          {snap.account.charge_funding
+            ? ` · funding ${(snap.account.funding?.payments ?? 0)} payments, ${signedMoney(-(snap.account.funding?.paid_usd ?? 0))} net`
+            : " · funding not charged"}
+          {(snap.account.funding?.skipped_no_rate ?? 0) > 0 ? ` (${snap.account.funding?.skipped_no_rate} periods without a rate reading)` : ""}
+          {(snap.account.liquidations ?? 0) > 0 ? ` · ${snap.account.liquidations} liquidation(s)` : ""}
+          . Leverage lets a tight stop carry a bigger position; the risk per trade is unchanged.
         </p>
       )}
       {snap.trend && snap.trend.mode !== "off" && (
@@ -235,6 +266,10 @@ function describe(event: ActivityEvent): { text: string; tone: string } {
       return { text: `Resting ${d.side} order expired after ${d.waited_bars} bars${d.reducing ? " — exit re-sent at market" : ""}`, tone: "warn" };
     case "live.stop_placed":
       return { text: `Protective stop placed at $${money(Number(d.stop_price ?? 0), 0)}`, tone: "" };
+    case "live.funding":
+      return { text: `Funding settled: ${usd(-Number(d.paid_usd ?? 0))} on a $${money(Number(d.notional ?? 0), 0)} ${d.side} position (rate ${(Number(d.rate ?? 0) * 10_000).toFixed(2)} bps)`, tone: Number(d.paid_usd ?? 0) > 0 ? "neg" : "pos" };
+    case "live.liquidation":
+      return { text: `LIQUIDATED: equity $${money(Number(d.equity ?? 0), 0)} fell below the maintenance margin $${money(Number(d.maintenance ?? 0), 0)} on $${money(Number(d.notional ?? 0), 0)} notional · fee ${usd(-Number(d.fee_usd ?? 0))}`, tone: "neg" };
     case "live.trend":
       return { text: `Tide re-read: ${String(d.bias ?? "unknown").toUpperCase()} — ${d.reason ?? ""}`, tone: d.bias === "up" ? "pos" : d.bias === "down" ? "neg" : "faint" };
     case "live.stop_tightened":
@@ -486,7 +521,7 @@ function MoneyPanel() {
         <MoneyStat
           label={label}
           value={data.ending_usd}
-          sub={`${signedMoney(data.pnl_usd)} over ${data.trades.toLocaleString("en-US")} trades · ${(data.win_rate * 100).toFixed(0)}% won`}
+          sub={`${signedMoney(data.pnl_usd)} over ${data.trades.toLocaleString("en-US")} trades · ${(data.win_rate * 100).toFixed(0)}% won · from $${(data.starting_usd ?? base).toLocaleString("en-US")}`}
         />
         <p className="footnote" style={{ marginTop: 8, marginBottom: 0 }}>
           {note} Average trade {signedMoney(data.mean_trade_usd)} on a typical position of $
@@ -497,9 +532,10 @@ function MoneyPanel() {
   };
 
   return (
-    <Card title="If this had been real money — simulated, from $100,000">
+    <Card title="If this had been real money — simulated">
       <p style={{ marginTop: 0, fontSize: 12.5, color: "var(--text-dim)" }}>
-        Starting balance ${money.starting_usd?.toLocaleString("en-US")} (simulated). Every
+        The 24/7 account starts from ${(money.session_starting_usd ?? money.starting_usd)?.toLocaleString("en-US")};
+        the training simulations from ${money.starting_usd?.toLocaleString("en-US")} each (simulated). Every
         trade is priced at the size it actually carried, not an assumed one.
       </p>
       <div className="grid cols-2" style={{ gap: 12 }}>

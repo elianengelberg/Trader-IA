@@ -797,7 +797,9 @@ async def test_the_money_record_keeps_the_session_and_the_simulations_apart(
     assert set(body) >= {"session", "training", "demo", "explanation"}
     # Empty record: no trades, so the balance is exactly the starting balance.
     assert body["session"]["trades"] == 0
-    assert body["session"]["ending_usd"] == body["starting_usd"]
+    assert body["session"]["ending_usd"] == body["session_starting_usd"]
+    assert body["session"]["starting_usd"] == body["session_starting_usd"] == 10_000.0
+    assert body["training"]["starting_usd"] == body["starting_usd"]
     assert "independent" in body["explanation"]
 
 

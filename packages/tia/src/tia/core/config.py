@@ -62,9 +62,13 @@ class RiskLimits(FrozenModel):
     """Hard limits. Frozen by construction; see :meth:`propose_change`."""
 
     max_risk_per_trade_pct: float = Field(0.5, gt=0, le=5, description="% of equity at risk")
-    max_position_notional_pct: float = Field(20.0, gt=0, le=100)
-    max_gross_exposure_pct: float = Field(100.0, gt=0, le=300)
-    max_net_exposure_pct: float = Field(60.0, gt=0, le=300)
+    #: Upper bounds admit leverage: a simulated perpetual account may hold notional
+    #: several times its equity (see LiveConfig.leverage), and the 24/7 session scales
+    #: these three limits by that factor. A spot venue never borrows; the scaling is
+    #: refused over live execution.
+    max_position_notional_pct: float = Field(20.0, gt=0, le=2000)
+    max_gross_exposure_pct: float = Field(100.0, gt=0, le=2000)
+    max_net_exposure_pct: float = Field(60.0, gt=0, le=2000)
     max_concurrent_positions: int = Field(5, ge=1, le=200)
     max_positions_per_cluster: int = Field(2, ge=1, le=50)
     max_cluster_exposure_pct: float = Field(40.0, gt=0, le=200)
@@ -351,6 +355,20 @@ class LiveConfig(FrozenModel):
     htf_timeframe: str = Field("1h", pattern="^(1h|2h|4h)$")
     htf_z_threshold: float = Field(1.0, ge=0.25, le=4.0)
     htf_refresh_minutes: int = Field(60, ge=5, le=1440)
+    #: The 24/7 paper session's account, simulated as a leveraged perpetual account.
+    #: ``paper_capital`` is the balance it starts from — the record's realised P&L is
+    #: carried across restarts, so the balance keeps moving as one account would.
+    #: ``leverage`` caps notional at that multiple of equity (margin); the risk per
+    #: trade is unchanged, so leverage only lets a tight stop carry a bigger position.
+    #: Below ``maintenance_margin_pct`` of the open notional the position is liquidated
+    #: at market and charged ``liquidation_fee_bps``; a wiped account halts. Funding is
+    #: charged every eight hours at the perpetual's live rate when ``charge_funding``.
+    #: All of it is refused over live execution: a real spot venue does not borrow.
+    paper_capital: float = Field(10_000.0, gt=0)
+    leverage: float = Field(5.0, ge=1.0, le=20.0)
+    maintenance_margin_pct: float = Field(0.5, gt=0, le=50)
+    liquidation_fee_bps: float = Field(50.0, ge=0, le=1000)
+    charge_funding: bool = True
     #: Costs may not exceed this fraction of the expected gross edge.
     max_cost_ratio: float = Field(0.6, gt=0, le=1.0)
 

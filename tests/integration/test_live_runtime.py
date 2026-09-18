@@ -105,6 +105,7 @@ class FakeExecution(ExecutionProvider):
         #: once — the case a resting-order manager exists for.
         self.rest_limits = False
         self.cancelled: list[str] = []
+        self.adjustments: list[tuple[float, str]] = []
         self._clock_now = SystemClock().now
 
     async def submit_order(self, intent: OrderIntent) -> Order:
@@ -249,6 +250,12 @@ class FakeExecution(ExecutionProvider):
         return {s: p for s, p in self.positions.items() if not p.is_flat}
 
     async def get_balance(self) -> float:
+        return self.balance
+
+    def apply_cash_adjustment(self, amount: float, *, reason: str) -> float:
+        """Funding and liquidation fees move cash outside a fill, as the paper venue does."""
+        self.balance += amount
+        self.adjustments.append((amount, reason))
         return self.balance
 
     async def get_trades(self, *, limit: int = 100) -> list[Fill]:
@@ -1792,5 +1799,206 @@ async def test_the_tide_is_read_on_a_slow_clock_not_every_bar() -> None:
             await runtime._cycle_once()
         assert reads["n"] == 2
         assert runtime.snapshot()["trend"]["bias"] == "up"
+    finally:
+        await runtime.stop()
+
+
+# --------------------------------------------------------------------------- the account
+
+
+async def test_the_paper_account_starts_from_its_capital_and_carries_the_records_pnl() -> None:
+    """A restart is not a new account: the record's realised P&L is booked as realised on
+    top of the starting capital, never as a deposit, and the balance carries on."""
+    scenario = get_scenario("trend_up")
+    candles = generate_series(
+        scenario, symbol="BTC-USD", timeframe="1m",
+        start=datetime.now(UTC) - timedelta(minutes=scenario.total_bars + 5), seed=9,
+    )
+    clock = SimulatedClock(candles[149].close_time + timedelta(seconds=1))
+    execution = FakeExecution(balance=10_250.0)  # 10,000 of capital plus 250 already made
+    runtime = LiveRuntime(
+        live_settings(paper_capital=10_000.0), activation=None,
+        market_data=FakeMarketData(candles, clock), execution=execution, clock=clock,
+        prior_realised_pnl=250.0, poll_interval_seconds=0.0,
+    )
+    await runtime.start()
+    try:
+        capital = runtime.snapshot()["capital"]
+        assert capital["allocated_capital"] == pytest.approx(10_000.0)
+        assert capital["realised_pnl"] == pytest.approx(250.0)
+        assert capital["equity"] == pytest.approx(10_250.0)
+        account = runtime.snapshot()["account"]
+        assert account["starting_capital"] == 10_000.0
+        assert account["prior_realised_pnl"] == 250.0
+        assert account["equity"] == pytest.approx(10_250.0)
+        assert account["return_pct"] == pytest.approx(2.5)
+        assert account["leverage_max"] == 5.0
+    finally:
+        await runtime.stop()
+
+
+async def test_a_wiped_out_paper_account_refuses_to_start_and_says_why() -> None:
+    from tia.core.errors import LiveActivationError
+
+    scenario = get_scenario("trend_up")
+    candles = generate_series(
+        scenario, symbol="BTC-USD", timeframe="1m",
+        start=datetime.now(UTC) - timedelta(minutes=scenario.total_bars + 5), seed=9,
+    )
+    clock = SimulatedClock(candles[149].close_time + timedelta(seconds=1))
+    runtime = LiveRuntime(
+        live_settings(paper_capital=10_000.0), activation=None,
+        market_data=FakeMarketData(candles, clock), execution=FakeExecution(balance=0.0),
+        clock=clock, prior_realised_pnl=-10_000.0, poll_interval_seconds=0.0,
+    )
+    with pytest.raises(LiveActivationError, match="wiped out"):
+        await runtime.start()
+
+
+async def test_leverage_scales_the_exposure_limits_in_paper_and_never_over_live_execution() -> None:
+    paper, _execution, _market = build_runtime_paper_with(leverage=5.0)
+    assert paper._leverage == 5.0
+    assert paper._risk.limits.max_position_notional_pct == pytest.approx(
+        paper._settings.risk.max_position_notional_pct * 5.0
+    )
+    assert paper._risk.limits.max_gross_exposure_pct == pytest.approx(
+        paper._settings.risk.max_gross_exposure_pct * 5.0
+    )
+    # The configured limits themselves are untouched: a fingerprint bound to them holds.
+    assert paper._settings.risk.max_position_notional_pct == 20.0
+
+    clock = SimulatedClock(datetime.now(UTC))
+    live, _e, _m = build_runtime(
+        execution=FakeExecution(live_token=real_token(clock), clock=clock), clock=clock
+    )
+    assert live._execution.is_live
+    assert live._leverage == 1.0
+    assert live._risk.limits.max_position_notional_pct == 20.0
+
+
+async def test_a_leveraged_account_is_liquidated_below_maintenance_and_charged_for_it() -> None:
+    """Equity eaten down to the maintenance margin: the venue closes the position at
+    market, charges the fee, files the exit as a liquidation, and halts a wiped account."""
+    saved: list[tuple[str, dict[str, Any]]] = []
+    runtime, execution, market = build_runtime_paper_with(
+        leverage=5.0, maintenance_margin_pct=50.0, liquidation_fee_bps=50.0,
+        persist=lambda kind, payload: saved.append((kind, payload)),
+    )
+    await runtime.start()
+    try:
+        await _open_a_position(runtime, execution, market)
+        position = next(iter((await execution.get_positions()).values()))
+        notional = abs(position.quantity) * execution.price
+        # Losses elsewhere have eaten the account down to a sliver of the margin.
+        equity_before = runtime._ledger.snapshot().equity
+        runtime._ledger.record_realised_pnl(-(equity_before - notional * 0.10))
+        reviews_before = runtime._retro.reviews
+
+        market.advance()
+        await runtime._cycle_once()
+
+        assert runtime.counters["liquidations"] == 1
+        assert runtime.counters["exits_liquidation"] == 1
+        assert runtime._retro.reviews == reviews_before + 1
+        assert not (await execution.get_positions())
+        assert any(amount < 0 and "liquidation" in reason for amount, reason in execution.adjustments)
+        outcome = next(p for k, p in saved if k == "edge_outcome")
+        assert outcome["exit_reason"] == "liquidated"
+        # 10% of notional was left; the fee took half a percent of it. Not wiped: still running.
+        assert runtime.state is LiveState.RUNNING
+        assert runtime.snapshot()["account"]["liquidations"] == 1
+    finally:
+        await runtime.stop()
+
+
+async def test_a_liquidation_that_empties_the_account_halts_new_orders() -> None:
+    runtime, execution, market = build_runtime_paper_with(
+        leverage=5.0, maintenance_margin_pct=50.0, liquidation_fee_bps=100.0,
+    )
+    await runtime.start()
+    try:
+        await _open_a_position(runtime, execution, market)
+        equity_before = runtime._ledger.snapshot().equity
+        runtime._ledger.record_realised_pnl(-(equity_before - 1.0))  # one dollar left
+        market.advance()
+        await runtime._cycle_once()
+        assert runtime.counters["liquidations"] == 1
+        assert runtime.state is LiveState.HALT_NEW_ORDERS
+        history = runtime.machine.as_dict()["history"]
+        assert "wiped out" in history[-1]["reason"]
+    finally:
+        await runtime.stop()
+
+
+async def test_funding_is_charged_once_per_settlement_at_the_live_rate() -> None:
+    """Across an eight-hour boundary a long pays positive funding, a short receives it,
+    and a period the session joined late is never charged."""
+    scenario = get_scenario("trend_up")
+    candles = generate_series(
+        scenario, symbol="BTC-USD", timeframe="1m",
+        start=datetime.now(UTC) - timedelta(minutes=scenario.total_bars + 5), seed=9,
+    )
+    clock = SimulatedClock(candles[149].close_time + timedelta(seconds=1))
+    market = FakeMarketData(candles, clock)
+    execution = FakeExecution()
+    rate = {"value": 0.0001}
+    runtime = LiveRuntime(
+        live_settings(charge_funding=True, trail_atr_multiple=0.0, breakeven_after_r=0.0),
+        activation=None, market_data=market, execution=execution, clock=clock,
+        funding_rate=lambda: rate["value"], poll_interval_seconds=0.0,
+    )
+    await runtime.start()
+    try:
+        await _open_a_position(runtime, execution, market)
+        position = next(iter((await execution.get_positions()).values()))
+        long = position.quantity > 0
+        notional = abs(position.quantity) * execution.price
+        # Pin the stop far away so nothing but funding touches the account.
+        runtime._planned_exit["stop"] = execution.price * (0.5 if long else 1.5)
+        paid_before = runtime.funding["payments"]
+        equity_before = runtime._ledger.snapshot().equity
+
+        # The next bar belongs to a new eight-hour period as far as the session knows.
+        runtime._funding_period = ("1970-01-01", 0)
+        market.advance()
+        await runtime._cycle_once()
+        assert runtime._open_trade is not None, "the position closed before funding settled"
+        assert runtime.funding["payments"] == paid_before + 1
+        expected = 0.0001 * notional * (1.0 if long else -1.0)
+        assert runtime.funding["paid_usd"] == pytest.approx(expected, rel=0.05)
+        assert runtime._ledger.snapshot().equity == pytest.approx(equity_before - expected, rel=1e-6)
+        assert execution.adjustments and "funding" in execution.adjustments[-1][1]
+        assert runtime.snapshot()["account"]["funding"]["last_rate"] == 0.0001
+    finally:
+        await runtime.stop()
+
+
+async def test_without_a_funding_reading_nothing_is_charged_and_it_is_counted() -> None:
+    runtime, _execution, market = build_runtime_paper_with(charge_funding=True)
+    runtime._funding_rate = lambda: None
+    await runtime.start()
+    try:
+        await _open_a_position(runtime, _execution, market)
+        runtime._funding_period = ("1970-01-01", 0)  # force the next bar to be a new period
+        market.advance()
+        await runtime._cycle_once()
+        assert runtime.funding["payments"] == 0
+        assert runtime.funding["skipped_no_rate"] == 1
+    finally:
+        await runtime.stop()
+
+
+async def test_paper_reconciliation_tolerates_a_leveraged_open_position() -> None:
+    """A leveraged position leaves cash negative by design; the simulated account is
+    reconciled on equity, so its own fills never read as a withdrawal or a halt."""
+    runtime, execution, market = build_runtime_paper_with(leverage=5.0)
+    await runtime.start()
+    try:
+        await _open_a_position(runtime, execution, market)
+        execution.balance = -25_000.0  # what a 5x long looks like in the till
+        await runtime._reconcile()
+        assert runtime.state is LiveState.RUNNING
+        assert not runtime.ledger.is_halted
+        assert runtime.ledger.snapshot().withdrawals == 0.0
     finally:
         await runtime.stop()

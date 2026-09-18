@@ -145,9 +145,23 @@ def _refuse(
     )
 
 
+def margin_available(*, equity: float, gross_exposure: float, cash: float, leverage: float) -> float:
+    """Capital that may back a new position, with or without leverage.
+
+    At 1x it is the cash on hand — a position cannot be bought with money the account
+    does not have. Above 1x the account borrows against its equity: notional may reach
+    ``leverage`` times equity, and what is left after the open positions is the room.
+    Never negative, and never more than leverage allows: a leveraged account with no
+    equity left has no room, whatever its cash says.
+    """
+    if leverage <= 1.0:
+        return max(0.0, cash)
+    return max(0.0, equity * leverage - gross_exposure)
+
+
 def implied_risk(quantity: float, entry_price: float, stop_price: float) -> float:
     """Currency at risk if the stop is hit exactly. Used to verify sizing after the fact."""
     return quantity * abs(entry_price - stop_price)
 
 
-__all__ = ["MIN_STOP_DISTANCE_PCT", "compute_size", "implied_risk"]
+__all__ = ["MIN_STOP_DISTANCE_PCT", "compute_size", "implied_risk", "margin_available"]

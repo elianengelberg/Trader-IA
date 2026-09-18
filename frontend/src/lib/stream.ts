@@ -42,6 +42,8 @@ const EVENT_TYPES = [
   "live.stop_placed",
   "live.stop_tightened",
   "live.trend",
+  "live.funding",
+  "live.liquidation",
   "live.exit",
   "live.evidence_absorbed",
 ] as const;

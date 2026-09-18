@@ -486,11 +486,14 @@ class AppState:
             _log.warning("money_record_failed", error=str(exc)[:300])
             return {"available": False, "reason": "the trade record could not be read"}
 
-        def shaped(key: str) -> dict[str, Any]:
+        session_base = float(self.settings.live.paper_capital)
+
+        def shaped(key: str, base: float = base) -> dict[str, Any]:
             row = by_source.get(key) or {}
             trades = int(row.get("trades", 0))
             pnl = float(row.get("pnl_usd", 0.0))
             return {
+                "starting_usd": round(base, 2),
                 "trades": trades,
                 "wins": int(row.get("wins", 0)),
                 "win_rate": round(row.get("wins", 0) / trades, 4) if trades else 0.0,
@@ -507,7 +510,8 @@ class AppState:
             "available": True,
             "starting_usd": round(base, 2),
             "simulated": True,
-            "session": {**shaped("live"), "curve": live_curve},
+            "session_starting_usd": round(session_base, 2),
+            "session": {**shaped("live", session_base), "curve": live_curve},
             "training": {**shaped("sim"), "curve": sim_curve},
             "demo": shaped("paper"),
             "explanation": (
@@ -1774,16 +1778,23 @@ class AppState:
         market = BinancePublicProvider(
             base_url=self.settings.live.public_data_url, clock=clock
         )
+        # One account across restarts: the simulated balance starts from the configured
+        # capital plus whatever the record says this account has already realised, and
+        # the runtime books that carried P&L as realised rather than as a deposit.
+        capital = float(self.settings.live.paper_capital)
+        prior_pnl = await self._carried_session_pnl()
         execution = PaperExecutionProvider(
             self.settings.execution,
             DEFAULT_UNIVERSE,
             clock,
             RngRegistry(self.settings.seed),
-            initial_capital=min(
-                self.settings.initial_capital,
-                self.settings.live.max_live_capital or self.settings.initial_capital,
-            ),
+            initial_capital=capital + prior_pnl,
         )
+        funding_rate = None
+        if self.settings.live.charge_funding:
+            monitor = self._get_funding()
+            monitor.start()
+            funding_rate = monitor.latest_rate
         prior_outcomes, prior_reviews = await self._load_live_evidence()
         runtime = LiveRuntime(
             self.settings,
@@ -1796,6 +1807,8 @@ class AppState:
             on_event=self.broadcast,
             prior_outcomes=prior_outcomes,
             prior_reviews=prior_reviews,
+            prior_realised_pnl=prior_pnl,
+            funding_rate=funding_rate,
             poll_interval_seconds=10.0,
         )
         await runtime.start()
@@ -1807,12 +1820,28 @@ class AppState:
                 mode="paper-live",
                 scenario="realtime",
                 started_at=datetime.now(UTC),
-                initial_capital=self.settings.initial_capital,
+                initial_capital=capital,
                 seed=self.settings.seed,
                 symbols=(self.settings.live.symbol,),
             )
         _log.info("paper_realtime_started", run_id=runtime.run_id, actor=actor)
         return runtime.snapshot()
+
+    async def _carried_session_pnl(self) -> float:
+        """Realised P&L the 24/7 account has already made, in dollars, from the record.
+
+        Every closed live round trip is priced at the size it carried; the sum is what
+        one continuous account would hold beyond its starting capital. Zero when the
+        record cannot be read: a session that starts from its base is better than one
+        that does not start.
+        """
+        try:
+            async with self.database.session() as db:
+                record = await EdgeStateRepository(db).dollar_record()
+            return float((record.get("live") or {}).get("pnl_usd", 0.0) or 0.0)
+        except Exception as exc:
+            _log.warning("carried_pnl_unavailable", error=str(exc)[:200])
+            return 0.0
 
     async def stop_realtime_session(self, *, reason: str) -> dict[str, Any]:
         """Stop the live/paper-realtime session AND stamp its run row.

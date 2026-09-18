@@ -379,6 +379,7 @@ class LiveRuntime:
         self._entry_beliefs: dict[str, Any] | None = None
         self._peak_equity = 0.0
         self._trades_today = 0
+        self._trading_day = ""
         self._cycle = 0
         self._task: asyncio.Task[None] | None = None
         self._stop_requested = False
@@ -476,6 +477,19 @@ class LiveRuntime:
             self._settings.live.exploration_trades_per_day > 0
             and not self._execution.is_live
         )
+
+    def _roll_trading_day(self) -> None:
+        """Reset the per-day trade count when the UTC day changes.
+
+        The risk budget caps entries per day; a counter that never rolled over capped
+        them per *session* instead, so a session that used its eight entries on Monday
+        refused every signal until someone restarted it. Keyed on the injected clock,
+        like the exploration budget, so replays and tests behave.
+        """
+        today = self._clock.now().date().isoformat()
+        if today != self._trading_day:
+            self._trading_day = today
+            self._trades_today = 0
 
     def _exploration_budget_left(self) -> bool:
         """Per-UTC-day budget, keyed on the injected clock so replays behave."""
@@ -898,6 +912,7 @@ class LiveRuntime:
         self._buffer.clear()
         self._buffer.extend(candles)
         self.counters["bars"] += 1
+        self._roll_trading_day()
         await self._refresh_quote()
         await self._refresh_trend()
 
@@ -2538,6 +2553,9 @@ class LiveRuntime:
                     "per_day": self._settings.live.exploration_trades_per_day,
                     "used_today": self._exploration_used,
                 },
+                "trades_today": self._trades_today,
+                "trades_per_day_cap": self._budget.profile.max_trades_per_day,
+                "risk_profile": self._settings.live.risk_profile,
             },
             "account": {
                 "simulated": not self._execution.is_live,

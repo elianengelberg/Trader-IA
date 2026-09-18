@@ -2085,3 +2085,25 @@ async def test_exploration_buys_lessons_in_unproven_buckets_but_never_in_disprov
         assert runtime.counters["orders"] == 0
     finally:
         await runtime.stop()
+
+
+async def test_the_daily_trade_count_rolls_over_at_midnight_utc() -> None:
+    """The budget caps entries per DAY. A counter that never reset capped them per
+    session — eight entries on Monday and silence until a restart."""
+    runtime, _execution, market = build_runtime_paper_with()
+    await runtime.start()
+    try:
+        market.advance()
+        await runtime._cycle_once()
+        runtime._trades_today = 8
+        runtime._roll_trading_day()
+        assert runtime._trades_today == 8  # same day: nothing changes
+        runtime._clock.advance_by(timedelta(days=1))
+        runtime._roll_trading_day()
+        assert runtime._trades_today == 0
+        funnel = runtime.snapshot()["funnel"]
+        assert funnel["trades_today"] == 0
+        assert funnel["trades_per_day_cap"] == 8  # the conservative profile's cap
+        assert funnel["risk_profile"] == "conservative"
+    finally:
+        await runtime.stop()

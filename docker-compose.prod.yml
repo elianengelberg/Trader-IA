@@ -81,7 +81,11 @@ services:
       TIA_LLM__MODEL: ${TIA_LLM__MODEL:-claude-opus-5}
       # Paper-only exploration: trades/day the session may take in buckets that LACK
       # evidence, to buy lessons with simulated money. Ignored over live execution.
-      TIA_LIVE__EXPLORATION_TRADES_PER_DAY: ${TIA_LIVE__EXPLORATION_TRADES_PER_DAY:-12}
+      TIA_LIVE__EXPLORATION_TRADES_PER_DAY: ${TIA_LIVE__EXPLORATION_TRADES_PER_DAY:-20}
+      # The risk budget profile: conservative (0.25% per trade, 8 entries a day),
+      # balanced (0.5%, 20 a day) or aggressive (1%, 40 a day). The profile's daily cap
+      # is the tightest throttle on how often the paper account trades.
+      TIA_LIVE__RISK_PROFILE: ${TIA_LIVE__RISK_PROFILE:-balanced}
       # Entries as resting maker orders by default in the paper profile: half the
       # round-trip cost, and paper is exactly where a cheaper execution style should
       # prove itself before anyone considers it with money. Set to market to compare.

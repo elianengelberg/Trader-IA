@@ -41,6 +41,7 @@ from tia.persistence import (
     FillRepository,
     IncidentRepository,
     LogRepository,
+    MarketMakerRepository,
     NewsRepository,
     OrderRepository,
     PortfolioRepository,
@@ -112,6 +113,7 @@ class AppState:
         #: Started at boot only when settings.mm.enabled; quotes nothing.
         self._mm_market: Any | None = None
         self._mm_maker: Any | None = None  # phase 3: the paper market maker, when enabled
+        self._mm_maker_error = ""
         #: Keeps spawned-subprocess reaper tasks alive until they finish.
         self._background_tasks: set[asyncio.Task[Any]] = set()
         #: Evidence rows the running 24/7 session has already been given. Trades it
@@ -134,6 +136,12 @@ class AppState:
         if self.settings.mm.enabled:
             with contextlib.suppress(Exception):
                 self._start_mm_market_data()
+        if self.settings.mm.adaptive_enabled:
+            try:
+                await self._start_market_maker()
+            except Exception as exc:  # never assumed: without its inputs the maker does not run
+                self._mm_maker_error = f"{type(exc).__name__}: {str(exc)[:200]}"
+                _log.error("mm_paper_not_started", error=self._mm_maker_error)
 
     async def shutdown(self) -> None:
         if self._evidence_task is not None:
@@ -153,6 +161,9 @@ class AppState:
         if self._funding is not None:
             with contextlib.suppress(Exception):
                 await self._funding.close()
+        if self._mm_maker is not None:
+            with contextlib.suppress(Exception):
+                await self._mm_maker.close()
         if self._mm_market is not None:
             with contextlib.suppress(Exception):
                 await self._mm_market.close()
@@ -639,6 +650,21 @@ class AppState:
                     await LogRepository(session).append(payload)
                 elif kind == "edge_outcome":
                     await EdgeStateRepository(session).append(payload)
+                elif kind == "mm_journal":
+                    await MarketMakerRepository(session).append_journal(payload["run_id"], int(payload["seq"]), payload["row"])
+                elif kind == "mm_fill":
+                    await MarketMakerRepository(session).upsert_fill(payload["run_id"], payload["fill"])
+                elif kind == "mm_markout":
+                    await MarketMakerRepository(session).set_markout(str(payload["fill_id"]), payload["markout_bps"])
+                elif kind == "mm_ledger":
+                    await MarketMakerRepository(session).save_ledger(
+                        payload["run_id"],
+                        state=payload["state"],
+                        config_id=payload["config_id"],
+                        profile_id=payload["profile_id"],
+                        latency_scenario=payload["latency_scenario"],
+                        at=datetime.now(UTC),
+                    )
                 elif kind == "reconciliation":
                     await ReconciliationRepository(session).record(payload)
                 elif kind == "incident":
@@ -1195,7 +1221,7 @@ class AppState:
             reason = (
                 "paper quoting is not enabled (TIA_MM__ADAPTIVE_ENABLED)"
                 if not self.settings.mm.adaptive_enabled
-                else "paper quoting is enabled but the service did not start; see the logs"
+                else f"paper quoting is enabled but the service did not start: {self._mm_maker_error or 'see the logs'}"
             )
             return {**base, "running": False, "phase3_status": "IMPLEMENTATION", "reason": reason}
         running = bool(getattr(self._mm_maker, "is_running", False))
@@ -1216,6 +1242,64 @@ class AppState:
         if self._mm_maker is None:
             return {"available": False, "reason": "paper quoting is not running", "edge": {"verdict": "NO EDGE DETECTED", "failed_rules": ["no paper run"]}}
         return {"available": True, **self._mm_maker.metrics()}
+
+    async def _start_market_maker(self) -> Any:
+        """Phase 3 live paper mode: the engine on the real feed, simulated orders only.
+
+        Requires the market-data service (TIA_MM__ENABLED) and a latency profile
+        measured on this host; either missing is an error, never a default.
+        """
+        from tia.mm.costs import MarketMakerCostConfig
+        from tia.mm.engine import MarketMakerConfig
+        from tia.mm.latency_model import LatencyProfile
+        from tia.mm.service import MarketMakerService
+
+        cfg = self.settings.mm
+        if self._mm_market is None:
+            raise RuntimeError("market data is not running (TIA_MM__ENABLED=false or it failed to start)")
+        profile = LatencyProfile.load(cfg.latency_profile_path)
+        config = MarketMakerConfig(
+            symbol=cfg.symbol,
+            starting_equity_usd=cfg.paper_capital,
+            costs=MarketMakerCostConfig(
+                maker_fee_bps=cfg.maker_fee_bps,
+                maker_fee_status=cfg.maker_fee_status,
+                maker_fee_verified_bps=cfg.maker_fee_verified_bps,
+                maker_fee_adverse_bps=cfg.maker_fee_adverse_bps,
+            ),
+        )
+
+        def session_risk_state() -> Any | None:
+            # Read-only: the session's RiskEngine state, never the engine itself.
+            runtime = self.live_runtime
+            engine = getattr(runtime, "_risk", None) if runtime is not None else None
+            return getattr(engine, "state", None)
+
+        run_id = f"mm-paper-{cfg.symbol}"
+        service = MarketMakerService(
+            market=self._mm_market,
+            config=config,
+            profile=profile,
+            scenario=cfg.latency_scenario,
+            run_id=run_id,
+            risk_state=session_risk_state,
+            persist=self._persist,
+            broadcast=self.broadcast,
+        )
+        try:
+            async with self.database.session() as session:
+                saved = await MarketMakerRepository(session).load_ledger(run_id)
+            if saved is not None and saved.config_id == config.config_id:
+                service.restore(dict(saved.state))
+            elif saved is not None:
+                _log.warning("mm_paper_ledger_not_restored", reason="configuration changed", saved=saved.config_id, current=config.config_id)
+        except Exception as exc:  # a missing ledger is a fresh start; a broken one is logged
+            _log.warning("mm_paper_ledger_load_failed", error=str(exc)[:160])
+        service.start()
+        self._mm_maker = service
+        self._mm_maker_error = ""
+        _log.info("mm_paper_running", run_id=run_id, scenario=cfg.latency_scenario, profile=profile.profile_id, restored=service.restored_from)
+        return service
 
     def mm_market_snapshot(self) -> dict[str, Any]:
         cfg = self.settings.mm

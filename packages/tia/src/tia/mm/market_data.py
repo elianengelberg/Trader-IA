@@ -76,6 +76,10 @@ class MarketDataService:
         self._held_until_ms: int | None = None
         self.held_events = 0
         self.processing_us = LatencyStats()
+        # Downstream consumers (the paper market maker) receive the same kinds of events
+        # a replay of the tape would: snapshot, depth, trade, book, disconnect.
+        self._subscribers: list[Callable[[str, Any, int], None]] = []
+        self.subscriber_errors = 0
 
     # ------------------------------------------------------------------ lifecycle
 
@@ -106,6 +110,37 @@ class MarketDataService:
         await self.stream.close()
         if self.recorder is not None:
             self.recorder.close()
+
+    # ------------------------------------------------------------------ consumers
+
+    def subscribe(self, callback: Callable[[str, Any, int], None]) -> Callable[[], None]:
+        """``callback(kind, event, received_at_ms)`` after this service has processed the
+        event. A consumer that raises is counted and never stops the feed."""
+        self._subscribers.append(callback)
+        if self.book.is_valid:
+            # A consumer joining a synced feed starts from the book as it stands now —
+            # the same thing a replay would read from the segment's opening checkpoint.
+            bids, asks = self.book.levels()
+            handover = DepthSnapshot(self.book.update_id, tuple(bids), tuple(asks))
+            try:
+                callback("snapshot", handover, self.book.last_received_at_ms or self._now_ms())
+            except Exception as exc:
+                self.subscriber_errors += 1
+                _log.warning("mm_consumer_failed", kind="snapshot", error=str(exc)[:160])
+
+        def unsubscribe() -> None:
+            with contextlib.suppress(ValueError):
+                self._subscribers.remove(callback)
+
+        return unsubscribe
+
+    def _notify(self, kind: str, event: Any, t_ms: int) -> None:
+        for callback in list(self._subscribers):
+            try:
+                callback(kind, event, t_ms)
+            except Exception as exc:  # a broken consumer must not break the book
+                self.subscriber_errors += 1
+                _log.warning("mm_consumer_failed", kind=kind, error=str(exc)[:160])
 
     # ------------------------------------------------------------------ validation aids
 
@@ -194,6 +229,8 @@ class MarketDataService:
                 self.book.invalidate("stream disconnected")
                 self.book.begin_sync()
             self._resync_needed.set()
+        received = getattr(event, "received_at_ms", None) or (event.get("at_ms") if isinstance(event, dict) else None) or self._now_ms()
+        self._notify(kind, event, int(received))
 
     async def _resync_loop(self) -> None:
         while True:
@@ -238,6 +275,7 @@ class MarketDataService:
             self.last_resync_error = ""
             self._last_checkpoint_ms = received_at_ms
             _log.info("mm_book_synced", update_id=self.book.update_id, levels=len(self.book._bids) + len(self.book._asks))
+            self._notify("snapshot", snapshot, received_at_ms)
 
     # ------------------------------------------------------------------ reading
 

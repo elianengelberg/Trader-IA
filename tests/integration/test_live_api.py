@@ -1032,6 +1032,64 @@ async def test_the_paper_market_maker_api_is_off_by_default_and_read_only(tmp_pa
             state._mm_maker = None
 
 
+async def test_paper_quoting_refuses_to_start_without_its_inputs_and_runs_with_them(tmp_path: Path) -> None:
+    """Phase 3 live paper mode: no market data or no measured latency profile means no
+    maker — with the reason on the API — and with both it runs on simulated orders only,
+    persisting to its own tables."""
+    from tia.core.config import MarketMakingConfig
+    from tia.mm.latency import LatencyStats
+    from tia.mm.latency_model import build_latency_profile
+    from tia.persistence import MarketMakerRepository
+
+    def settings_with(**mm: object):  # type: ignore[no-untyped-def]
+        return _settings(tmp_path).model_copy(update={"mm": MarketMakingConfig(**mm)})  # type: ignore[arg-type]
+
+    # 1. Adaptive without market data: refused, reason served.
+    app = create_app(settings_with(adaptive_enabled=True, enabled=False, ticks_dir=str(tmp_path / "ticks")))
+    async with LifespanManager(app):
+        state = app.state.tia
+        assert state._mm_maker is None and "market data is not running" in state._mm_maker_error
+        body = state.mm_maker_snapshot()
+        assert body["running"] is False and body["enabled"] is True and "market data is not running" in body["reason"]
+
+    # 2. Market data on (the stream cannot connect here; that is fine) but no profile: refused.
+    profile_path = tmp_path / "mm" / "latency_profile.json"
+    app = create_app(settings_with(adaptive_enabled=True, enabled=True, record_ticks=False, ticks_dir=str(tmp_path / "ticks"), latency_profile_path=str(profile_path)))
+    async with LifespanManager(app):
+        state = app.state.tia
+        assert state._mm_maker is None and "latency profile not found" in state._mm_maker_error
+        assert "latency profile not found" in state.mm_maker_snapshot()["reason"]
+
+    # 3. Both present: the maker runs, on simulated orders, with the gate reporting the data as invalid.
+    stats = LatencyStats()
+    for v in (40, 50, 60):
+        stats.add(v)
+    build_latency_profile(
+        stream={"latency_depth_ms": stats.as_dict(), "latency_trade_ms": stats.as_dict()},
+        processing_us=stats.as_dict(), measured_at_utc="2026-09-18T00:00:00Z", commit="test", duration_s=60, symbol="BTC-USD",
+    ).write(profile_path)
+    app = create_app(settings_with(adaptive_enabled=True, enabled=True, record_ticks=False, ticks_dir=str(tmp_path / "ticks"), latency_profile_path=str(profile_path)))
+    async with LifespanManager(app):
+        state = app.state.tia
+        assert state._mm_maker is not None and state._mm_maker.is_running
+        transport = httpx.ASGITransport(app=app)
+        async with httpx.AsyncClient(transport=transport, base_url="http://test") as http:
+            await http.post("/api/auth/login", json={"username": USERNAME, "password": PASSWORD})
+            body = (await http.get("/api/mm/state")).json()
+            assert body["running"] is True and body["phase3_status"] == "PAPER_RUNNING" and body["evidence_status"] == "EVIDENCE_PENDING"
+            assert body["real_money"] is False and body["profile"]["commit"] == "test" and body["latency"]["name"] == "baseline"
+            assert body["data_quality"]["usable"] is False  # nothing connected in this test
+            assert body["execution_stats"]["placed"] == 0 and body["ledger"]["fills"] == 0
+        # Persistence goes to the maker's own tables through the application's writer.
+        await state._persist("mm_journal", {"run_id": "mm-paper-BTC-USD", "seq": 1, "row": {"t": 1, "kind": "block", "layer": "data", "reason": "test"}})
+        await state._persist("mm_ledger", {"run_id": "mm-paper-BTC-USD", "state": state._mm_maker.engine.ledger.export(), "config_id": "c", "profile_id": "p", "latency_scenario": "baseline", "t_ms": 1})
+        async with state.database.session() as session:
+            repo = MarketMakerRepository(session)
+            assert await repo.journal_count("mm-paper-BTC-USD") == 1
+            assert (await repo.load_ledger("mm-paper-BTC-USD")).state["starting_equity_usd"] == 10_000.0
+    assert not state._mm_maker.is_running  # closed on shutdown
+
+
 async def test_the_track_record_ignores_exploration_trades(tmp_path: Path) -> None:
     """Lessons bought are not claims held: the real-money gate must not count them."""
     from tia.persistence import EdgeStateRepository

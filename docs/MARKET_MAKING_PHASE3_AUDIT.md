@@ -383,3 +383,68 @@ No se modificó ningún archivo de código en esta etapa. Las 27 verificaciones,
 `RiskEngine`, las estrategias, la cuenta paper existente, la sesión 24/7, la ejecución real
 y el `LiveActivationToken` no se tocan en el diseño. `TIA_MM__ENABLED=false` y
 `TIA_MM__REAL_MONEY=false` siguen siendo los valores por defecto del repositorio.
+
+---
+
+## 21. Estado de implementación (2026-09-18) — PHASE3_STATUS = IMPLEMENTATION
+
+Doce etapas, un commit auditable cada una, en el orden del §19. Ningún commit toca
+`tia/risk/engine.py`, `tia/live/gate.py`, las estrategias, la cuenta paper existente ni la
+sesión 24/7.
+
+| Etapa | Commit | Qué | Tests |
+|---|---|---|---|
+| 1 Decisiones | `23262d0` | Banderas separadas con alias; perfil de latencia medido (`--write-latency-profile`), cargador que se niega sin medición; la imagen conoce su commit | 4 |
+| 2 Tests de datos | `36208b4` | Determinismo, invariancia de prefijo, suficiencia de checkpoints; orden de llegada verificado en el replay | 4 propiedad |
+| 3 Features | `8bf98f2` | Imbalance 1/5/10/20, microprice, OFI con adiciones/cancelaciones separadas de trades, flujo por ventanas, volatilidad corta, spread con percentil y régimen, retornos | 8 |
+| 4 Fair value | `1e8cb8c` | Estimación explícita con contribuciones nombradas, confianza que sólo baja, sin ajuste | 5 |
+| 5 Adverse selection | `9e4c2a8` | Markouts resueltos sólo por mids posteriores (tolerancia, vencidos = no resueltos); toxicidad que sólo amplía o reduce tamaño | 6 |
+| 6 Inventario y spread | `a31b40d` | Skew contra la posición, tamaño del mismo lado a cero en el límite; spread = piso de costos / volatilidad / mercado + toxicidad | 5 |
+| 7 Gate, controller, quoting | `240a6d5` | Gate global de solo lectura; controller propio que sólo restringe (kill switch propio); cotización en grilla de tick, nunca cruzada | 7 |
+| 8 Ejecución paper | `7582ad0` | Cola por cotas (conservadora/optimista), fills sólo por prints reales, UNRESOLVED nunca contabilizado, latencias de orden y cancel, taker rechazado; costos itemizados; ledger propio | 9 |
+| 9 Motor y replay | `0d5e405` | Jerarquía DATA → GATE → CONTROLLER → QUOTING → EXECUTION en código; journal con hash; replay determinista que nombra su perfil | 7 |
+| 10 Métricas y persistencia | `ecb2c89` | Métricas §16 por régimen/escenario, bootstrap por bloques, veredicto que por defecto es NO EDGE DETECTED; tablas `mm_journal`, `mm_fills`, `mm_ledger` (migración 0006) | 3 |
+| 11 API y página | `016e26f` | `/api/mm/state`, `/api/mm/journal`, `/api/mm/metrics` (solo lectura); página `/market-maker` | 1 + smoke |
+| 12 Live paper mode | este commit | `MarketMakerService` sobre el feed real; el consumidor recibe el libro actual al suscribirse; persistencia propia, reanudación del ledger, pushes `mm.state`/`mm.journal`; arranque sólo con datos de mercado **y** perfil medido | 3 |
+
+Verificación completa del repositorio tras la etapa 12: **9/9**.
+
+### 21.1 Cómo se activa el paper real en el VPS (nada de esto envía órdenes)
+
+```
+cd /home/tia/Trader-IA
+git pull origin claude/algo-trading-simulation-platform-ngf7xo
+
+# D2: grabación continua (datos de mercado; no cotiza)
+#   en .env:  TIA_MM__ENABLED=true   TIA_MM__ADAPTIVE_ENABLED=false
+GIT_COMMIT=$(git rev-parse --short HEAD) docker compose -f docker-compose.prod.yml up -d --build backend
+
+# D3: perfil de latencia medido en este host, 5 minutos, escrito al volumen
+docker compose -f docker-compose.prod.yml exec backend python scripts/mm_market_data_check.py --minutes 5 --ticks-dir /app/data/runtime/ticks-profile --write-latency-profile /app/data/runtime/mm/latency_profile.json
+docker compose -f docker-compose.prod.yml cp backend:/app/data/runtime/mm/latency_profile.json data/mm/latency_profile.json
+git add data/mm/latency_profile.json && git commit -m "Latency profile measured on the VPS" && git push origin claude/algo-trading-simulation-platform-ngf7xo
+
+# Paper quoting (simulado): sólo cuando lo anterior existe
+#   en .env:  TIA_MM__ADAPTIVE_ENABLED=true   (TIA_MM__REAL_MONEY queda fijado en "false" en compose y no tiene efecto)
+docker compose -f docker-compose.prod.yml up -d backend
+docker compose -f docker-compose.prod.yml logs backend | grep -E "mm_paper_running|mm_paper_not_started"
+```
+
+Sin `TIA_MM__ENABLED=true` o sin el perfil, el servicio **no arranca** y `/api/mm/state`
+dice por qué. Con ambos, `/market-maker` muestra `PAPER_RUNNING` y
+`EVIDENCE_PENDING`. El ledger del maker se guarda cada 10 s y al cierre en `mm_ledger`
+y se reanuda al reiniciar si la configuración (`config_id`) no cambió.
+
+### 21.2 Límites conocidos de esta implementación
+
+- Las órdenes simuladas no mueven el libro real ni consumen liquidez del libro grabado;
+  el tamaño base (0,005 BTC) se eligió para que esa aproximación sea defendible.
+- La cola se modela por cotas; el informe muestra `unresolved` aparte y el veredicto
+  exige que sea ≤ 10 %.
+- La latencia de orden y cancel se deriva del camino de red medido para los datos
+  (nunca cero); las dos latencias del pipeline se miden desde ahora en el motor
+  (`processing_us`) y se incorporarán al perfil cuando existan corridas reales.
+- No hay historial suficiente para TRAIN/VALIDATION/OOS; el veredicto seguirá siendo
+  NO EDGE DETECTED hasta que lo haya, y no se ajustará ningún parámetro para cambiarlo.
+- El estado pasa a PAPER_RUNNING cuando el operador activa la bandera en el VPS; hasta
+  entonces es IMPLEMENTATION. PROFITABLE no es un estado de este sistema.

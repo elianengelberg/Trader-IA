@@ -10,7 +10,7 @@
  * Read-only public data. Nothing here places an order or reaches the trading pipeline.
  */
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { api, type ArbGap, type ArbVenue, type ArbitrageReport, type FundingReport } from "../lib/api";
+import { api, type ArbGap, type ArbVenue, type ArbitrageReport, type FundingReport, type SpreadCheck } from "../lib/api";
 import { Card, Empty, Pill, Stat } from "../components/ui";
 import { clock, money } from "../lib/format";
 
@@ -170,6 +170,57 @@ function FundingCard() {
   );
 }
 
+/**
+ * "Earn the spread a hundred times a second." Priced against the book as it is: the
+ * spread the venue shows, the maker fee on both legs, the orders per second the venue
+ * accepts, and the market's own volume. A calculation, not a simulation — the paper
+ * engine cannot model a queue and would overstate every fill.
+ */
+function SpreadCaptureCard() {
+  const [check, setCheck] = useState<SpreadCheck | null>(null);
+  const [size, setSize] = useState(0.01);
+
+  useEffect(() => {
+    const load = () => api.spreadCheck(size).then(setCheck).catch(() => undefined);
+    load();
+    const id = window.setInterval(() => { if (!document.hidden) load(); }, 10_000);
+    return () => window.clearInterval(id);
+  }, [size]);
+
+  const usd4 = (v: number | undefined) => (v == null ? "—" : `${v < 0 ? "-" : ""}$${Math.abs(v).toFixed(4)}`);
+  return (
+    <Card
+      title="Spread capture — the idea, priced on the live book"
+      actions={
+        <div className="row" style={{ gap: 6 }}>
+          {[0.01, 0.1, 1].map((s) => (
+            <button key={s} className={`btn small ${size === s ? "primary" : ""}`} onClick={() => setSize(s)}>{s} BTC</button>
+          ))}
+        </div>
+      }
+    >
+      {!check?.available ? (
+        <Empty message={check?.reason ?? "Waiting for the live book…"} />
+      ) : (
+        <>
+          <div className="grid cols-4" style={{ gap: 12 }}>
+            <Stat label="Spread now" value={`$${(check.spread_usd ?? 0).toFixed(2)}`} sub={`${(check.spread_bps ?? 0).toFixed(3)} bps · bid ${check.bid_size} / ask ${check.ask_size} BTC`} />
+            <Stat label={`Round trip on ${check.size_btc} BTC`} value={usd4(check.net_per_round_trip_usd)} sub={`earns ${usd4(check.gross_per_round_trip_usd)} · pays ${usd4(check.fees_per_round_trip_usd)} in fees`} tone={(check.net_per_round_trip_usd ?? 0) > 0 ? "pos" : "neg"} />
+            <Stat label="Spread needed to break even" value={`$${(check.breakeven_spread_usd ?? 0).toFixed(2)}`} sub={`${check.maker_fee_bps_per_leg} bps maker fee per leg`} />
+            <Stat label="Venue order limit" value={`${check.max_round_trips_per_s} round trips / s`} sub={`${check.order_limit_per_10s} orders per 10 s · ${(check.order_limit_per_day ?? 0).toLocaleString("en-US")} per day`} />
+          </div>
+          <p style={{ fontSize: 13, lineHeight: 1.6, marginTop: 14 }}>{check.verdict}</p>
+          <p className="footnote" style={{ marginTop: 10 }}>
+            The market trades about {check.market_btc_per_s} BTC a second (${(check.market_usd_per_s ?? 0).toLocaleString("en-US", { maximumFractionDigits: 0 })}/s) on the last bar
+            {check.share_of_market_at_100_per_s != null ? `; a hundred fills a second at ${check.size_btc} BTC would be the other side of ${(check.share_of_market_at_100_per_s * 100).toFixed(0)}% of it` : ""}.
+            {" "}{(check.caveats ?? []).join(" ")}
+          </p>
+        </>
+      )}
+    </Card>
+  );
+}
+
 export function Arbitrage() {
   const [report, setReport] = useState<ArbitrageReport | null>(null);
   const [loading, setLoading] = useState(false);
@@ -271,6 +322,10 @@ export function Arbitrage() {
 
       <div style={{ marginTop: 16 }}>
         <FundingCard />
+      </div>
+
+      <div style={{ marginTop: 16 }}>
+        <SpreadCaptureCard />
       </div>
 
       <div style={{ marginTop: 16 }}>

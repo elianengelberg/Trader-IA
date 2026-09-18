@@ -132,6 +132,26 @@ edge, because nothing in the literature licenses one.
 
 ---
 
+## 3.1 Latency, and the trade it does not buy
+
+The session now takes its market data over Binance's public WebSocket streams
+(`tia.data.providers.binance_stream`): the one-minute bar arrives the moment it closes
+and the best bid and ask arrive on every change, so a decision follows the close by the
+network's latency instead of a ten-second poll's. Every kline event carries the
+exchange's own timestamp, and the dashboard shows the measured lag. From a server in
+Frankfurt to Binance's matching engine that lag is on the order of two hundred
+milliseconds, and it is a floor: nothing in software here moves the server closer.
+
+What that latency does **not** make possible, so nobody expects it to: reacting to
+news before the market has. A headline reaches a public feed minutes after the event,
+a paid terminal seconds after, and the firms that trade headlines parse them in
+microseconds from colocated machines. By the time any process here could read a
+headline, its price effect is in the tape — trading on it is trading on the past. The
+same holds for latency arbitrage against other algorithms: the participants that win
+that race are the ones with the shortest wire, and a virtual server on the public
+internet is not in it. The streams buy this system a cleaner picture of the bar it
+already trades on; they do not buy it a race it cannot enter.
+
 ## 4. What would be next, and why it is not here yet
 
 1. **A basket, not a symbol.** Cross-sectional momentum and the size factor need several

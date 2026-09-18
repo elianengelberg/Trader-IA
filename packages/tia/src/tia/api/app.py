@@ -769,6 +769,19 @@ def _register_routes(app: FastAPI, settings: Settings) -> None:
         Read-only public data; nothing here places an order or reaches the pipeline."""
         return await tia(request).arbitrage_report(force=force)
 
+    @app.get("/api/live/spread-check")
+    async def spread_check(
+        request: Request,
+        _user: User = Depends(current_user),
+        size_btc: float = Query(0.01, gt=0, le=100),
+    ) -> dict[str, Any]:
+        """The spread-capture idea priced against the live book, the fees and the
+        venue's order limits. A calculation, not a strategy."""
+        live = tia(request).live_runtime
+        if live is None:
+            return {"available": False, "reason": "no 24/7 session is running"}
+        return live.spread_check(size_btc=size_btc)
+
     @app.get("/api/funding")
     async def funding(
         request: Request,

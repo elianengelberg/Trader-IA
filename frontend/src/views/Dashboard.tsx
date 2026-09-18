@@ -55,6 +55,20 @@ interface LiveSnap {
   market?: { quote?: { spread_bps?: number } | null; max_spread_bps?: number; spread_source?: string };
   sizing?: { conviction?: boolean; last?: { fraction?: number; reason?: string } | null };
   trend?: { mode?: string; available?: boolean; bias?: string; z_1w?: number | null; z_4w?: number | null; return_4w_pct?: number | null; reason?: string };
+  feed?: {
+    transport?: string;
+    connected?: boolean;
+    latency_ms?: number | null;
+    latency_ema_ms?: number | null;
+    last_event_age_s?: number | null;
+    messages?: number;
+    closed_bars?: number;
+    reconnects?: number;
+    buffered_bars?: number;
+    last_error?: string;
+    poll_seconds?: number;
+    quote_age_s?: number | null;
+  };
   funnel?: {
     stages?: Record<string, number>;
     risk_reasons?: Record<string, number>;
@@ -184,6 +198,27 @@ function LiveSessionPanel({ subscribe }: { subscribe: Subscribe }) {
           {(counters.strategy_muted ?? 0) > 0 ? ` · ${counters.strategy_muted} refused from a muted strategy` : ""}
           {(counters.spread_rejected ?? 0) > 0 ? ` · ${counters.spread_rejected} waited out a wide spread` : ""}
           {(counters.htf_rejected ?? 0) > 0 ? ` · ${counters.htf_rejected} refused against the tide` : ""}
+        </p>
+      )}
+      {snap.feed && (
+        <p className="footnote" style={{ marginTop: 12 }}>
+          <strong>Feed: </strong>
+          {snap.feed.transport === "websocket" ? (
+            <>
+              <span className="pos">WebSocket</span>
+              {snap.feed.latency_ema_ms != null ? ` · ${Math.round(snap.feed.latency_ema_ms)} ms behind Binance (last ${snap.feed.latency_ms ?? "—"} ms)` : " · latency not measured yet"}
+              {` · ${(snap.feed.messages ?? 0).toLocaleString("en-US")} messages · ${snap.feed.closed_bars ?? 0} bars · ${snap.feed.reconnects ?? 0} reconnects`}
+              {snap.feed.quote_age_s != null ? ` · book ${snap.feed.quote_age_s.toFixed(1)}s old` : ""}
+              . Each bar is acted on the moment it closes. Latency is network distance plus clock offset; a colocated participant sees the same book that much earlier.
+            </>
+          ) : snap.feed.transport === "rest-fallback" ? (
+            <>
+              <span className="warn">REST fallback</span>
+              {` — the stream is ${snap.feed.connected ? "silent" : "down"}${snap.feed.last_error ? ` (${snap.feed.last_error})` : ""}; polling until it returns · ${snap.feed.reconnects ?? 0} reconnects`}
+            </>
+          ) : (
+            <>REST polling every {snap.feed.poll_seconds ?? 10}s.</>
+          )}
         </p>
       )}
       {snap.funnel?.stages && (

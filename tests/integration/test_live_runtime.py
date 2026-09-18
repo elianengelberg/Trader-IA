@@ -2107,3 +2107,58 @@ async def test_the_daily_trade_count_rolls_over_at_midnight_utc() -> None:
         assert funnel["risk_profile"] == "conservative"
     finally:
         await runtime.stop()
+
+
+# --------------------------------------------------------------------------- the feed
+
+
+async def test_the_loop_waits_on_the_feed_when_it_can_wake_on_a_bar() -> None:
+    """A streaming feed replaces the poll sleep: the loop asks the feed to wake it on
+    the next close, with the poll interval as the ceiling, and the snapshot names the
+    transport in use."""
+    runtime, _execution, market = build_runtime_paper_with()
+    waits: list[float] = []
+
+    async def wait_for_bar(timeout_seconds: float) -> bool:
+        waits.append(timeout_seconds)
+        market.advance()
+        if len(waits) >= 3:
+            runtime._stop_requested = True
+        return True
+
+    market.wait_for_bar = wait_for_bar  # type: ignore[attr-defined]
+    market.feed_state = lambda: {"transport": "websocket", "latency_ms": 210}  # type: ignore[attr-defined]
+    await runtime.start()
+    try:
+        await runtime._task  # the loop runs until the fake feed stops it
+        assert waits == [0.0, 0.0, 0.0]
+        assert runtime.snapshot()["feed"] == {"transport": "websocket", "latency_ms": 210}
+    finally:
+        await runtime.stop()
+
+
+async def test_a_polling_feed_is_reported_as_such() -> None:
+    runtime, _execution, _market = build_runtime_paper_with()
+    assert runtime.snapshot()["feed"] == {"transport": "rest", "poll_seconds": 0.0}
+
+
+async def test_the_spread_check_prices_the_idea_against_the_live_book() -> None:
+    runtime, _execution, market = build_runtime_paper_with(quoting=True)
+    market.spread_bps = 0.3  # about two dollars on a 60k coin
+    await runtime.start()
+    try:
+        assert runtime.spread_check()["available"] is False  # no quote before the first bar
+        market.advance()
+        await runtime._cycle_once()
+        check = runtime.spread_check(size_btc=0.01)
+        assert check["available"] is True
+        assert check["spread_usd"] == pytest.approx(check["mid"] * 0.3 / 10_000, rel=1e-3)
+        assert check["gross_per_round_trip_usd"] == pytest.approx(check["spread_usd"] * 0.01, rel=1e-6)
+        fee = check["notional_usd"] * 2 * check["maker_fee_bps_per_leg"] / 10_000
+        assert check["fees_per_round_trip_usd"] == pytest.approx(fee, rel=1e-3)
+        assert check["net_per_round_trip_usd"] < 0  # 0.3 bps of spread cannot pay two maker legs
+        assert check["max_round_trips_per_s"] == 5.0
+        assert "cover the fees" in check["verdict"]
+        assert check["caveats"]
+    finally:
+        await runtime.stop()

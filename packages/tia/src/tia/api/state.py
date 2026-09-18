@@ -1775,9 +1775,19 @@ class AppState:
         clock = SystemClock()
         # Mainnet public data on purpose, whatever use_testnet says: paper's execution
         # is simulated, and a track record needs real spreads, not testnet's thin market.
-        market = BinancePublicProvider(
-            base_url=self.settings.live.public_data_url, clock=clock
-        )
+        rest = BinancePublicProvider(base_url=self.settings.live.public_data_url, clock=clock)
+        market: Any = rest
+        if self.settings.live.market_stream:
+            from tia.data.providers.binance_stream import BinanceStreamProvider
+
+            market = BinanceStreamProvider(
+                rest,
+                symbol=self.settings.live.symbol,
+                timeframe=self.settings.market_data.timeframe,
+                stream_url=self.settings.live.stream_url,
+                clock=clock,
+            )
+            market.start()
         # One account across restarts: the simulated balance starts from the configured
         # capital plus whatever the record says this account has already realised, and
         # the runtime books that carried P&L as realised rather than as a deposit.
@@ -1811,7 +1821,15 @@ class AppState:
             funding_rate=funding_rate,
             poll_interval_seconds=10.0,
         )
-        await runtime.start()
+        try:
+            await runtime.start()
+        except Exception:
+            # A refused start must not leave a feed task reconnecting in the background.
+            closer = getattr(market, "close", None)
+            if callable(closer):
+                with contextlib.suppress(Exception):
+                    await closer()
+            raise
         self.live_runtime = runtime
         self._start_evidence_refresh()
         async with self.database.session() as session:

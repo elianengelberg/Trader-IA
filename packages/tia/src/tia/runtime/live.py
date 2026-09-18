@@ -614,6 +614,10 @@ class LiveRuntime:
                 await self._task
         with contextlib.suppress(Exception):
             await self._execution.close()
+        closer = getattr(self._market_data, "close", None)
+        if callable(closer):
+            with contextlib.suppress(Exception):
+                await closer()
         self.machine.transition(LiveState.STOPPED, reason="loop stopped")
         self._emit("live.state", self.machine.as_dict())
 
@@ -815,7 +819,13 @@ class LiveRuntime:
     async def _loop(self) -> None:
         while not self._stop_requested:
             await self._loop_iteration()
-            await asyncio.sleep(self._poll_interval)
+            # A streaming feed wakes the loop the moment a bar closes; a polling feed
+            # is asked again after the interval. Same loop either way.
+            waiter = getattr(self._market_data, "wait_for_bar", None)
+            if callable(waiter):
+                await waiter(timeout_seconds=self._poll_interval)
+            else:
+                await asyncio.sleep(self._poll_interval)
 
     async def _loop_body_once_for_tests(self) -> None:
         """One loop iteration, no sleep. For tests that drive the loop by hand."""
@@ -2362,6 +2372,99 @@ class LiveRuntime:
             "regime": regime,
         }
 
+    #: Binance spot order rate limits, from exchangeInfo's rateLimits (documented):
+    #: 100 orders per 10 seconds and 200,000 per day, per account.
+    ORDER_LIMIT_PER_10S = 100
+    ORDER_LIMIT_PER_DAY = 200_000
+
+    def spread_check(self, *, size_btc: float = 0.01) -> dict[str, Any]:
+        """Price the spread-capture idea against the book and the rules as they are.
+
+        The idea: rest a bid and an ask around the price and earn the gap between
+        them, many times a second. Three facts decide it, and all three are measured
+        or documented rather than assumed: the spread the book is actually showing, the
+        maker fee paid on both legs, and how many orders the venue accepts per second.
+        The fourth — being first in the queue when someone crosses — is not something
+        a server on the public internet gets to have, and the verdict says so.
+        """
+        quote = self._last_quote
+        last = self._buffer[-1] if self._buffer else None
+        if quote is None or last is None:
+            return {"available": False, "reason": "no live quote yet"}
+        bid, ask = float(quote["bid"]), float(quote["ask"])
+        mid = (bid + ask) / 2.0
+        spread_usd = ask - bid
+        size = max(0.0, float(size_btc))
+        notional = size * mid
+        fees = self._costs.fees
+        maker_round_trip_bps = fees.round_trip_bps(entry_maker=True, exit_maker=True)
+        gross = spread_usd * size
+        fee_usd = notional * maker_round_trip_bps / 10_000.0
+        net = gross - fee_usd
+        market_btc_per_s = float(last.volume) / 60.0
+        orders_per_s = self.ORDER_LIMIT_PER_10S / 10.0
+        max_round_trips_per_s = orders_per_s / 2.0
+        share_at_100 = (100.0 * size / market_btc_per_s) if market_btc_per_s > 0 else None
+        breakeven_spread_usd = mid * maker_round_trip_bps / 10_000.0
+
+        if net <= 0:
+            verdict = (
+                f"At the book's spread of ${spread_usd:.2f} a round trip on {size:g} BTC "
+                f"earns ${gross:.4f} and pays ${fee_usd:.4f} in maker fees: "
+                f"${net:+.4f} per round trip. The spread would have to exceed "
+                f"${breakeven_spread_usd:.2f} just to cover the fees, before the trade "
+                "that fills you is the one running you over."
+            )
+        else:
+            verdict = (
+                f"At the book's spread of ${spread_usd:.2f} a round trip on {size:g} BTC "
+                f"nets ${net:+.4f} after maker fees — when both legs fill, which needs a "
+                "buyer and a seller to cross into you while you are at the front of the "
+                "queue. The venue accepts about "
+                f"{orders_per_s:.0f} orders a second, so at most {max_round_trips_per_s:.0f} "
+                "round trips a second, not a hundred; and the market itself trades about "
+                f"{market_btc_per_s:.3f} BTC a second right now, so a hundred fills a "
+                "second at this size would need to be the other side of "
+                f"{(share_at_100 or 0) * 100:.0f}% of everything traded."
+            )
+        return {
+            "available": True,
+            "as_of": self._clock.now().isoformat(),
+            "bid": bid,
+            "ask": ask,
+            "mid": round(mid, 2),
+            "spread_usd": round(spread_usd, 4),
+            "spread_bps": round(float(quote["spread_bps"]), 4),
+            "bid_size": float(quote["bid_size"]),
+            "ask_size": float(quote["ask_size"]),
+            "size_btc": size,
+            "notional_usd": round(notional, 2),
+            "maker_fee_bps_per_leg": fees.maker_bps,
+            "gross_per_round_trip_usd": round(gross, 6),
+            "fees_per_round_trip_usd": round(fee_usd, 6),
+            "net_per_round_trip_usd": round(net, 6),
+            "breakeven_spread_usd": round(breakeven_spread_usd, 4),
+            "order_limit_per_10s": self.ORDER_LIMIT_PER_10S,
+            "order_limit_per_day": self.ORDER_LIMIT_PER_DAY,
+            "max_round_trips_per_s": max_round_trips_per_s,
+            "market_btc_per_s": round(market_btc_per_s, 4),
+            "market_usd_per_s": round(market_btc_per_s * mid, 2),
+            "share_of_market_at_100_per_s": (
+                round(share_at_100, 4) if share_at_100 is not None else None
+            ),
+            "verdict": verdict,
+            "caveats": [
+                "Both legs fill only when someone crosses the spread into you, and only "
+                "after everyone ahead of you in the queue at that price.",
+                "The order that fills you is, more often than not, the one that knows "
+                "where the price is going next (adverse selection).",
+                "Fees are the retail maker tier; a firm doing this pays a fraction of "
+                "them and sits in the venue's data centre.",
+                "This is a calculation on the live book, not a simulation: the paper "
+                "engine cannot model a queue and would overstate fills.",
+            ],
+        }
+
     def learning_report(self) -> dict[str, Any]:
         """What this session has learned from its own closed trades, for the Learning view.
 
@@ -2542,6 +2645,11 @@ class LiveRuntime:
                 "last": self._last_size,
             },
             "strategies": self._scoreboard.report(),
+            "feed": (
+                self._market_data.feed_state()
+                if callable(getattr(self._market_data, "feed_state", None))
+                else {"transport": "rest", "poll_seconds": self._poll_interval}
+            ),
             "funnel": {
                 "stages": dict(self.funnel),
                 "risk_reasons": dict(

@@ -891,6 +891,35 @@ export interface FundingReport {
   verdict: string;
 }
 
+/** The spread-capture idea priced against the live book. A calculation, not a strategy. */
+export interface SpreadCheck {
+  available: boolean;
+  reason?: string;
+  as_of?: string;
+  bid?: number;
+  ask?: number;
+  mid?: number;
+  spread_usd?: number;
+  spread_bps?: number;
+  bid_size?: number;
+  ask_size?: number;
+  size_btc?: number;
+  notional_usd?: number;
+  maker_fee_bps_per_leg?: number;
+  gross_per_round_trip_usd?: number;
+  fees_per_round_trip_usd?: number;
+  net_per_round_trip_usd?: number;
+  breakeven_spread_usd?: number;
+  order_limit_per_10s?: number;
+  order_limit_per_day?: number;
+  max_round_trips_per_s?: number;
+  market_btc_per_s?: number;
+  market_usd_per_s?: number;
+  share_of_market_at_100_per_s?: number | null;
+  verdict?: string;
+  caveats?: string[];
+}
+
 /** The higher-timeframe tide the 24/7 session reads from hourly bars. */
 export interface TrendContext {
   mode?: string;
@@ -1036,6 +1065,7 @@ export const api = {
   intel: (force = false) => get<IntelReport>(`/intel?force=${force}`),
   arbitrage: (force = false) => get<ArbitrageReport>(`/arbitrage?force=${force}`),
   funding: (force = false) => get<FundingReport>(`/funding?force=${force}`),
+  spreadCheck: (sizeBtc = 0.01) => get<SpreadCheck>(`/live/spread-check?size_btc=${sizeBtc}`),
   training: () => get<TrainingStatus>("/training"),
   trainingStart: (runs: number) =>
     post<{ started: boolean; runs: number; pid: number }>("/training/start", { runs }),

@@ -468,6 +468,7 @@ h1 { font-size: 19px; margin: 0 0 4px; font-weight: 600; letter-spacing: -0.01em
 .cc-live.off { color: var(--text-faint); }
 .cc-tide { font-weight: 700; letter-spacing: 0.12em; }
 .cc-lev { color: var(--neon-2); font-weight: 700; letter-spacing: 0.12em; }
+.cc-feed { color: var(--info); font-weight: 700; letter-spacing: 0.12em; }
 .cc-tide.up { color: var(--pos); }
 .cc-tide.down { color: var(--neg); }
 .cc-tide.flat, .cc-tide.unknown { color: var(--text-faint); }

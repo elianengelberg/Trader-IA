@@ -107,6 +107,8 @@ services:
       TIA_LIVE__HTF_Z_THRESHOLD: ${TIA_LIVE__HTF_Z_THRESHOLD:-1.0}
       # The simulated leveraged account: $10,000 start, 5x margin, liquidation and
       # funding modelled. Paper only.
+      # Market data over WebSocket (kline + bookTicker), REST as fallback.
+      TIA_LIVE__MARKET_STREAM: ${TIA_LIVE__MARKET_STREAM:-true}
       TIA_LIVE__PAPER_CAPITAL: ${TIA_LIVE__PAPER_CAPITAL:-10000}
       TIA_LIVE__LEVERAGE: ${TIA_LIVE__LEVERAGE:-5}
       TIA_LIVE__MAINTENANCE_MARGIN_PCT: ${TIA_LIVE__MAINTENANCE_MARGIN_PCT:-0.5}

@@ -22,6 +22,7 @@ interface LiveSnap {
   counters?: Record<string, number>;
   position?: { open?: boolean; stop_price?: number | null; target_price?: number | null; protected?: boolean; stop_kind?: string | null; r_multiple?: number | null };
   trend?: { available?: boolean; bias?: string; mode?: string };
+  feed?: { transport?: string; latency_ema_ms?: number | null };
   execution?: { resting_order?: unknown };
   account?: {
     simulated?: boolean;
@@ -225,6 +226,9 @@ export function CommandCenter({ subscribe }: { subscribe: Subscribe }) {
             <span>PAPER · REAL {snap?.symbol ?? "BTC/USDT"} MARKET · 24/7 · simulated fills</span>
             {account?.leverage_max != null && account.leverage_max > 1 && (
               <span className="cc-lev">LEVERAGE {account.leverage_max.toFixed(0)}x</span>
+            )}
+            {snap?.feed?.transport === "websocket" && (
+              <span className="cc-feed">FEED {snap.feed.latency_ema_ms != null ? `${Math.round(snap.feed.latency_ema_ms)}ms` : "WS"}</span>
             )}
             {snap?.trend?.mode !== "off" && (
               <span className={`cc-tide ${snap?.trend?.available ? snap.trend.bias : "unknown"}`}>

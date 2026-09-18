@@ -364,6 +364,12 @@ class LiveConfig(FrozenModel):
     #: at market and charged ``liquidation_fee_bps``; a wiped account halts. Funding is
     #: charged every eight hours at the perpetual's live rate when ``charge_funding``.
     #: All of it is refused over live execution: a real spot venue does not borrow.
+    #: Market data over Binance's public WebSocket streams (kline + bookTicker) with the
+    #: REST client as history and fallback. The session then decides within the
+    #: network's latency of a bar's close instead of the poll interval's. Off falls
+    #: back to polling REST.
+    market_stream: bool = True
+    stream_url: str = "wss://stream.binance.com:9443/stream"
     paper_capital: float = Field(10_000.0, gt=0)
     leverage: float = Field(5.0, ge=1.0, le=20.0)
     maintenance_margin_pct: float = Field(0.5, gt=0, le=50)

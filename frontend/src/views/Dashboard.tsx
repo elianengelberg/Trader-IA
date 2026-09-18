@@ -55,6 +55,12 @@ interface LiveSnap {
   market?: { quote?: { spread_bps?: number } | null; max_spread_bps?: number; spread_source?: string };
   sizing?: { conviction?: boolean; last?: { fraction?: number; reason?: string } | null };
   trend?: { mode?: string; available?: boolean; bias?: string; z_1w?: number | null; z_4w?: number | null; return_4w_pct?: number | null; reason?: string };
+  funnel?: {
+    stages?: Record<string, number>;
+    risk_reasons?: Record<string, number>;
+    recent_refusals?: { at: string; stage: string; reason: string }[];
+    exploration?: { enabled?: boolean; per_day?: number; used_today?: number };
+  };
   account?: {
     starting_capital?: number;
     prior_realised_pnl?: number;
@@ -179,6 +185,57 @@ function LiveSessionPanel({ subscribe }: { subscribe: Subscribe }) {
           {(counters.spread_rejected ?? 0) > 0 ? ` · ${counters.spread_rejected} waited out a wide spread` : ""}
           {(counters.htf_rejected ?? 0) > 0 ? ` · ${counters.htf_rejected} refused against the tide` : ""}
         </p>
+      )}
+      {snap.funnel?.stages && (
+        <div style={{ marginTop: 12 }}>
+          <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--text-faint)", marginBottom: 6 }}>
+            Why no trade — since the session started
+          </div>
+          <div className="row" style={{ gap: 6 }}>
+            {(() => {
+              const s = snap.funnel?.stages ?? {};
+              const items: [string, number, string][] = [
+                ["bars evaluated", s.evaluated ?? 0, ""],
+                ["no signal", s.not_actionable ?? 0, ""],
+                ["signals", s.actionable ?? 0, "info"],
+                ["risk engine", s.risk ?? 0, "warn"],
+                ["against the tide", s.tide ?? 0, "warn"],
+                ["muted strategy", s.muted ?? 0, "warn"],
+                ["wide spread", s.spread ?? 0, "warn"],
+                ["position already open", s.position_open ?? 0, ""],
+                ["order resting", s.resting ?? 0, ""],
+                ["budget", s.budget ?? 0, "warn"],
+                ["no proven edge", s.expected_value ?? 0, "bad"],
+                ["guardrail", s.guardrail ?? 0, "bad"],
+                ["halted", s.halted ?? 0, "bad"],
+                ["exploration", s.exploration ?? 0, "info"],
+                ["orders", s.orders ?? 0, "ok"],
+              ];
+              return items
+                .filter(([, n]) => n > 0)
+                .map(([label, n, tone]) => <Pill key={label} value={`${label} ${n}`} tone={tone} />);
+            })()}
+          </div>
+          {Object.keys(snap.funnel?.risk_reasons ?? {}).length > 0 && (
+            <p className="footnote" style={{ marginTop: 8 }}>
+              Risk engine refusals: {Object.entries(snap.funnel?.risk_reasons ?? {}).map(([r, n]) => `${r} (${n})`).join(" · ")}
+            </p>
+          )}
+          {(snap.funnel?.recent_refusals?.length ?? 0) > 0 && (
+            <p className="footnote" style={{ marginTop: 8 }}>
+              Last refusal: <span className="mono">{snap.funnel?.recent_refusals?.[0]?.reason}</span>
+            </p>
+          )}
+          {snap.funnel?.exploration?.enabled ? (
+            <p className="footnote" style={{ marginTop: 8 }}>
+              Exploration: {snap.funnel.exploration.used_today ?? 0} of {snap.funnel.exploration.per_day} lessons bought today — trades in buckets with no evidence or an unproven edge, at reduced size, never counted toward the real-money track record.
+            </p>
+          ) : (
+            <p className="footnote" style={{ marginTop: 8 }}>
+              Exploration is off: the session trades only on a proven edge. With most buckets unproven that can mean days without a trade — set <span className="mono">TIA_LIVE__EXPLORATION_TRADES_PER_DAY</span> to let it buy lessons with simulated money.
+            </p>
+          )}
+        </div>
       )}
       {snap.account && (snap.account.leverage_max ?? 1) > 1 && (
         <p className="footnote" style={{ marginTop: 12 }}>

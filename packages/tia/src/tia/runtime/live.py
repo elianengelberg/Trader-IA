@@ -407,6 +407,7 @@ class LiveRuntime:
             "spread_rejected": 0, "strategy_muted": 0, "sized_down": 0,
             "htf_rejected": 0, "htf_sized_down": 0,
             "liquidations": 0, "exits_liquidation": 0, "funding_payments": 0,
+            "ev_unknown": 0, "ev_unproven": 0, "ev_disproven": 0,
         }
         #: The one protective stop covering the open position, if any. Exactly one, sized
         #: to the position: a stop that protects the wrong size is worse than none.
@@ -436,6 +437,17 @@ class LiveRuntime:
         #: newest first. The database has the durable copy; this is the live window.
         self.recent_orders: deque[dict[str, Any]] = deque(maxlen=200)
         self.recent_fills: deque[dict[str, Any]] = deque(maxlen=200)
+        #: Why signals did not become orders, by stage, since start — the answer to "is
+        #: it really trading?" when the account has not moved. Every refusal lands here
+        #: with its reason; the last few are kept whole for the dashboard.
+        self.funnel: dict[str, int] = {
+            "evaluated": 0, "not_actionable": 0, "actionable": 0, "resting": 0,
+            "risk": 0, "position_open": 0, "halted": 0, "budget": 0, "capital": 0,
+            "spread": 0, "tide": 0, "muted": 0, "expected_value": 0, "guardrail": 0,
+            "orders": 0, "exploration": 0,
+        }
+        self._risk_reasons: dict[str, int] = {}
+        self.recent_refusals: deque[dict[str, Any]] = deque(maxlen=50)
         #: The one order allowed to rest at a time, if entries are limit orders. While it
         #: rests, no new entry is considered — stacking resting orders is how a session
         #: ends up long three times on one signal.
@@ -949,10 +961,13 @@ class LiveRuntime:
             correlation_id=correlation_id,
         )
         self.counters["signals"] += 1
+        self.funnel["evaluated"] += 1
         self.latency.stamp(correlation_id, "decision_finished")
 
         if not signal.direction.is_actionable:
+            self.funnel["not_actionable"] += 1
             return
+        self.funnel["actionable"] += 1
 
         # The higher-timeframe tide. Against an agreed one-to-four-week trend an entry
         # is refused (hard) or halved (soft); with it, or with no tide known, nothing
@@ -968,16 +983,12 @@ class LiveRuntime:
         if agrees is False:
             if self._settings.live.htf_mode == "hard":
                 self.counters["htf_rejected"] += 1
-                self._emit(
-                    "live.no_trade",
-                    {
-                        "correlation_id": correlation_id,
-                        "reason": (
-                            f"against the tide — the {trend.timeframe} record says "
-                            f"{trend.bias} ({trend.reason}); a {signal.direction.value} "
-                            "entry is not taken against a one-to-four-week trend"
-                        ),
-                    },
+                self._refuse(
+                    "tide",
+                    f"against the tide — the {trend.timeframe} record says "
+                    f"{trend.bias} ({trend.reason}); a {signal.direction.value} "
+                    "entry is not taken against a one-to-four-week trend",
+                    correlation_id,
                 )
                 return
             htf_fraction = 0.5
@@ -987,19 +998,14 @@ class LiveRuntime:
             # expected value: a proposal from a source that has proven itself wrong is
             # not a proposal this session considers.
             self.counters["strategy_muted"] += 1
-            self._emit(
-                "live.no_trade",
-                {
-                    "correlation_id": correlation_id,
-                    "reason": self._scoreboard.reason(signal.strategy_id),
-                },
-            )
+            self._refuse("muted", self._scoreboard.reason(signal.strategy_id), correlation_id)
             return
 
         if self._resting is not None:
             # An order is already working. A second one on the next bar would not be a
             # second opinion, it would be a second position.
             self.counters["resting_skipped"] += 1
+            self.funnel["resting"] += 1
             return
 
         self.latency.stamp(correlation_id, "risk_started")
@@ -1018,6 +1024,10 @@ class LiveRuntime:
         self.latency.stamp(correlation_id, "risk_finished")
         if not decision.allows_execution:
             self.counters["risk_rejected"] += 1
+            why = "; ".join(decision.reasons) if decision.reasons else decision.verdict.value
+            key = (decision.reasons[0] if decision.reasons else decision.verdict.value)[:80]
+            self._risk_reasons[key] = self._risk_reasons.get(key, 0) + 1
+            self._refuse("risk", f"risk engine — {why}", correlation_id)
             return
 
         position = portfolio.positions.get(self._symbol)
@@ -1032,9 +1042,11 @@ class LiveRuntime:
                 await self._close_position("signal reversed")
             else:
                 self.counters["suppressed_position_open"] += 1
+                self.funnel["position_open"] += 1
             return
 
         if not self.machine.state.accepts_new_orders:
+            self.funnel["halted"] += 1
             return
 
         snapshot = self._ledger.snapshot(used_capital=portfolio.gross_exposure)
@@ -1066,12 +1078,15 @@ class LiveRuntime:
         )
         if not budget.allows_new_trades:
             self.counters["budget_rejected"] += 1
+            self._refuse("budget", f"risk budget — {budget.binding_constraint}", correlation_id)
             return
 
         if self._ledger.loss_breached(unrealised_pnl=portfolio.unrealized_pnl):
+            self.funnel["capital"] += 1
             self.halt_new_orders(reason="total loss limit breached")
             return
         if self._ledger.is_halted:
+            self.funnel["capital"] += 1
             self.halt_new_orders(reason=self._ledger.halted_reason)
             return
 
@@ -1090,15 +1105,11 @@ class LiveRuntime:
         max_spread = self._settings.live.max_spread_bps
         if quote and max_spread > 0 and spread_bps > max_spread:
             self.counters["spread_rejected"] += 1
-            self._emit(
-                "live.no_trade",
-                {
-                    "correlation_id": correlation_id,
-                    "reason": (
-                        f"spread gate — the book is {spread_bps:.1f} bps wide, over the "
-                        f"{max_spread:.1f} bps ceiling; the entry waits for it to close"
-                    ),
-                },
+            self._refuse(
+                "spread",
+                f"spread gate — the book is {spread_bps:.1f} bps wide, over the "
+                f"{max_spread:.1f} bps ceiling; the entry waits for it to close",
+                correlation_id,
             )
             return
         conditions = MarketConditions(
@@ -1137,26 +1148,35 @@ class LiveRuntime:
         )
 
         exploring = False
+        exploration_kind = ""
         if not evaluation.is_tradeable:
-            # Paper-only exploration: a bucket the estimator knows NOTHING about may be
-            # traded a bounded number of times per day, purely to buy evidence with
-            # simulated money. Three refusals stand regardless: evidence that says the
-            # bucket loses (edge_estimate present) is respected, an active guardrail is
-            # respected, and a live execution provider disables exploration entirely —
-            # with real money, "I don't know yet" is a reason not to trade.
+            # Paper-only exploration: a bucket the estimator knows nothing about, or one
+            # whose edge is UNPROVEN — a positive mean that has not cleared its own
+            # uncertainty — may be traded a bounded number of times per day, purely to
+            # buy evidence with simulated money. Three refusals stand regardless: a
+            # bucket the evidence says LOSES (mean at or below zero, or an edge that has
+            # decayed) is respected, an active guardrail is respected, and a live
+            # execution provider disables exploration entirely — with real money,
+            # "not proven" is a reason not to trade.
+            estimate = evaluation.edge_estimate
+            if estimate is None:
+                self.counters["ev_unknown"] += 1
+                exploration_kind = "unknown"
+            elif estimate.mean_bps > 0.0 and not estimate.decayed:
+                self.counters["ev_unproven"] += 1
+                exploration_kind = "unproven"
+            else:
+                self.counters["ev_disproven"] += 1
             if (
-                self.exploration_enabled
-                and evaluation.edge_estimate is None
+                exploration_kind
+                and self.exploration_enabled
                 and not guard.is_active
                 and self._exploration_budget_left()
             ):
                 exploring = True
             else:
                 self.counters["ev_rejected"] += 1
-                self._emit(
-                    "live.no_trade",
-                    {"correlation_id": correlation_id, "reason": evaluation.explain()},
-                )
+                self._refuse("expected_value", evaluation.explain(), correlation_id)
                 return
 
         if not exploring and guard.is_active and evaluation.net_edge_bps < (
@@ -1177,23 +1197,31 @@ class LiveRuntime:
                     f"learning guardrail — net edge {evaluation.net_edge_bps:.1f} bps "
                     f"below the raised bar of {raised_bar:.1f} bps. {guard.reason}"
                 )
-            self._emit(
-                "live.no_trade",
-                {"correlation_id": correlation_id, "reason": reason},
-            )
+            self._refuse("guardrail", reason, correlation_id)
             return
 
         if exploring:
             self._exploration_used += 1
             self.counters["exploration_trades"] += 1
+            self.funnel["exploration"] += 1
+            estimate = evaluation.edge_estimate
+            basis = (
+                "no evidence exists"
+                if exploration_kind == "unknown" or estimate is None
+                else (
+                    f"the edge is unproven — {estimate.mean_bps:+.1f} bps on average over "
+                    f"{estimate.samples} trades, not yet clear of its own uncertainty"
+                )
+            )
             self._emit(
                 "live.exploration",
                 {
                     "correlation_id": correlation_id,
+                    "kind": exploration_kind,
                     "reason": (
-                        "exploration trade — no evidence exists for "
+                        f"exploration trade — {basis} for "
                         f"{regime.regime.value}/{signal.direction.value} at this "
-                        f"confidence yet; buying a lesson with simulated money "
+                        f"confidence; buying a lesson with simulated money "
                         f"({self._exploration_used} of "
                         f"{self._settings.live.exploration_trades_per_day} today)"
                     ),
@@ -1381,6 +1409,7 @@ class LiveRuntime:
         self.latency.stamp(correlation_id, "order_ack")
 
         self.counters["orders"] += 1
+        self.funnel["orders"] += 1
         self._trades_today += 1
         fills = list(order.fills)
         if fills:
@@ -1631,6 +1660,17 @@ class LiveRuntime:
             "spread_bps": (quote.ask - quote.bid) / mid * 10_000.0,
             "at": self._clock.now().isoformat(),
         }
+
+    def _refuse(self, stage: str, reason: str, correlation_id: str = "") -> None:
+        """Count a refusal by stage, keep its reason, and announce it on the stream."""
+        self.funnel[stage] = self.funnel.get(stage, 0) + 1
+        self.recent_refusals.appendleft(
+            {"at": self._clock.now().isoformat(), "stage": stage, "reason": reason[:400]}
+        )
+        self._emit(
+            "live.no_trade",
+            {"correlation_id": correlation_id, "stage": stage, "reason": reason},
+        )
 
     async def _refresh_trend(self) -> None:
         """Re-read the higher-timeframe context when its refresh interval has passed.
@@ -2487,6 +2527,18 @@ class LiveRuntime:
                 "last": self._last_size,
             },
             "strategies": self._scoreboard.report(),
+            "funnel": {
+                "stages": dict(self.funnel),
+                "risk_reasons": dict(
+                    sorted(self._risk_reasons.items(), key=lambda kv: -kv[1])[:8]
+                ),
+                "recent_refusals": list(self.recent_refusals)[:20],
+                "exploration": {
+                    "enabled": self.exploration_enabled,
+                    "per_day": self._settings.live.exploration_trades_per_day,
+                    "used_today": self._exploration_used,
+                },
+            },
             "account": {
                 "simulated": not self._execution.is_live,
                 "starting_capital": (

@@ -960,3 +960,27 @@ async def test_the_funding_report_is_served_and_a_dead_endpoint_is_a_health_row(
             assert body["latest"] is None
             assert body["running"] is True
     assert not state._funding.is_running
+
+
+async def test_the_track_record_ignores_exploration_trades(tmp_path: Path) -> None:
+    """Lessons bought are not claims held: the real-money gate must not count them."""
+    from tia.persistence import EdgeStateRepository
+
+    app = create_app(_settings(tmp_path))
+    async with LifespanManager(app):
+        state = app.state.tia
+        base = {
+            "run_id": "r", "signal_id": "s", "symbol": "BTC-USD", "regime": "trending_up",
+            "direction": "long", "confidence": 0.6, "entry_price": 100.0, "exit_price": 101.0,
+            "quantity": 1.0, "gross_bps": 100.0, "fees_bps": 10.0, "net_bps": 90.0,
+            "expected_net_bps": 5.0, "closed_at": datetime.now(UTC), "source": "live",
+        }
+        async with state.database.session() as db:
+            repo = EdgeStateRepository(db)
+            await repo.append({**base, "outcome_id": "claim-1", "exploratory": False})
+            await repo.append({**base, "outcome_id": "lesson-1", "exploratory": True})
+            await repo.append({**base, "outcome_id": "lesson-2", "exploratory": True})
+            await db.commit()
+        async with state.database.session() as db:
+            record = await EdgeStateRepository(db).track_record()
+        assert record["closed_trades"] == 1

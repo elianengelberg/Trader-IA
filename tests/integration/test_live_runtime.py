@@ -2002,3 +2002,86 @@ async def test_paper_reconciliation_tolerates_a_leveraged_open_position() -> Non
         assert runtime.ledger.snapshot().withdrawals == 0.0
     finally:
         await runtime.stop()
+
+
+# --------------------------------------------------------------------------- the funnel
+
+
+def _seed_unproven(runtime: LiveRuntime, mean_bps: float = 6.0, spread: float = 90.0) -> None:
+    """Evidence with a positive mean that cannot clear its own uncertainty: unproven."""
+    from tia.domain.enums import Direction, MarketRegime
+    from tia.economics.expected_value import Outcome
+
+    # Every confidence band, so no signal can land in a bucket the estimator knows
+    # nothing about — the verdict under test is "unproven", not "unknown".
+    runtime._edges.record_many(
+        [
+            Outcome(
+                regime=regime, direction=direction, confidence=confidence,
+                net_return_bps=mean_bps + (spread if i % 2 else -spread),
+            )
+            for regime in MarketRegime
+            for direction in (Direction.LONG, Direction.SHORT)
+            for confidence in (0.50, 0.65, 0.78, 0.90)
+            for i in range(40)
+        ]
+    )
+
+
+async def test_the_funnel_says_where_every_signal_went() -> None:
+    runtime, _execution, market = build_runtime_paper_with()
+    await runtime.start()
+    try:
+        for _ in range(120):
+            market.advance()
+            await runtime._cycle_once()
+        funnel = runtime.snapshot()["funnel"]
+        stages = funnel["stages"]
+        assert stages["evaluated"] == runtime.counters["signals"] > 0
+        assert stages["evaluated"] == stages["not_actionable"] + stages["actionable"]
+        # No evidence at all and exploration off: every actionable signal that reached
+        # the expected-value gate was refused there, and each refusal kept its reason.
+        assert stages["expected_value"] > 0
+        assert runtime.counters["ev_unknown"] == stages["expected_value"]
+        assert funnel["recent_refusals"] and funnel["recent_refusals"][0]["stage"] in {
+            "expected_value", "risk", "budget", "spread"
+        }
+        assert funnel["exploration"] == {"enabled": False, "per_day": 0, "used_today": 0}
+    finally:
+        await runtime.stop()
+
+
+async def test_exploration_buys_lessons_in_unproven_buckets_but_never_in_disproven_ones() -> None:
+    """A positive mean that has not cleared its noise is worth a cheap lesson in paper;
+    a bucket whose mean is at or below zero is respected and never traded."""
+    runtime, _execution, market = build_runtime_paper_with(exploration_trades_per_day=3)
+    await runtime.start()
+    try:
+        _seed_unproven(runtime)
+        for _ in range(300):
+            market.advance()
+            await runtime._cycle_once()
+            if runtime.counters["exploration_trades"] >= 1:
+                break
+        assert runtime.counters["ev_unproven"] > 0
+        assert runtime.counters["exploration_trades"] >= 1
+        assert runtime.snapshot()["funnel"]["stages"]["exploration"] >= 1
+        beliefs = runtime._entry_beliefs
+        if beliefs is not None:
+            assert beliefs["exploratory"] is True
+            assert beliefs["size_fraction"] == pytest.approx(0.25)
+    finally:
+        await runtime.stop()
+
+    runtime, _execution, market = build_runtime_paper_with(exploration_trades_per_day=3)
+    await runtime.start()
+    try:
+        _seed_unproven(runtime, mean_bps=-5.0)  # disproven: the mean itself is red
+        for _ in range(200):
+            market.advance()
+            await runtime._cycle_once()
+        assert runtime.counters["ev_disproven"] > 0
+        assert runtime.counters["exploration_trades"] == 0
+        assert runtime.counters["orders"] == 0
+    finally:
+        await runtime.stop()

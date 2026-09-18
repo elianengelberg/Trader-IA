@@ -45,4 +45,12 @@
 		X-Content-Type-Options "nosniff"
 		-Server
 	}
+
+	# While the backend restarts (a deploy takes it down for a few seconds) the proxy
+	# has nothing to forward to. An empty error body is what some browsers offer as a
+	# blank download; a sentence that says what is happening is not.
+	handle_errors {
+		header Content-Type "text/html; charset=utf-8"
+		respond `<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="5"><title>Trader-IA</title><body style="font-family:sans-serif;background:#0b0e14;color:#e4e9f2;display:grid;place-items:center;height:100vh;margin:0"><p>Trader-IA is restarting &mdash; this page retries by itself in a few seconds.</p></body>` {err.status_code}
+	}
 }

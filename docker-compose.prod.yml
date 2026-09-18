@@ -81,7 +81,7 @@ services:
       TIA_LLM__MODEL: ${TIA_LLM__MODEL:-claude-opus-5}
       # Paper-only exploration: trades/day the session may take in buckets that LACK
       # evidence, to buy lessons with simulated money. Ignored over live execution.
-      TIA_LIVE__EXPLORATION_TRADES_PER_DAY: ${TIA_LIVE__EXPLORATION_TRADES_PER_DAY:-0}
+      TIA_LIVE__EXPLORATION_TRADES_PER_DAY: ${TIA_LIVE__EXPLORATION_TRADES_PER_DAY:-12}
       # Entries as resting maker orders by default in the paper profile: half the
       # round-trip cost, and paper is exactly where a cheaper execution style should
       # prove itself before anyone considers it with money. Set to market to compare.

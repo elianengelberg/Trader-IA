@@ -764,7 +764,9 @@ class EdgeStateRepository:
         the 24/7 runtime writes, paper fills included). Demo scenarios and training
         simulations feed the edge estimator, but a track record padded with synthetic
         trades would let the activation gate be satisfied by a market that never existed —
-        so they are excluded here by construction, not by convention.
+        so they are excluded here by construction, not by convention. Exploration trades
+        are excluded too: they were taken to buy evidence, not on a measured edge, and a
+        track record is a record of claims that held.
         """
         result = await self._session.execute(
             select(
@@ -772,7 +774,7 @@ class EdgeStateRepository:
                 func.min(EdgeOutcomeRow.closed_at),
                 func.max(EdgeOutcomeRow.closed_at),
                 func.sum(EdgeOutcomeRow.net_bps),
-            ).where(EdgeOutcomeRow.source == source)
+            ).where(EdgeOutcomeRow.source == source, ~EdgeOutcomeRow.exploratory)
         )
         count, first, last, net_sum = result.one()
         days = 0.0

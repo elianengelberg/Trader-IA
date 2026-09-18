@@ -567,6 +567,7 @@ class EdgeStateRepository:
                 "expected_usd": round(notional * float(row.expected_net_bps) / 10_000.0, 2),
                 "exploratory": bool(getattr(row, "exploratory", False)),
                 "exit_reason": getattr(row, "exit_reason", None),
+                "strategy_id": getattr(row, "strategy_id", None),
                 "is_win": float(row.net_bps) > 0,
             }
 
@@ -709,6 +710,48 @@ class EdgeStateRepository:
                 }
             )
         shaped.sort(key=lambda row: row["pnl_usd"], reverse=True)
+        return shaped
+
+    async def exits(self, *, source: str | None = None) -> list[dict[str, Any]]:
+        """How round trips end, and what each way of ending is worth.
+
+        The exit discipline — protective, break-even and trailing stops, targets,
+        reversals, time stops — is a set of rules whose value is an empirical question.
+        This is the table that answers it: a stop kind that closes many trades for a
+        loss is a stop too tight; a target that never triggers is a target too far.
+        """
+        pnl = (
+            EdgeOutcomeRow.net_bps
+            * EdgeOutcomeRow.entry_price
+            * EdgeOutcomeRow.quantity
+            / 10_000.0
+        )
+        reason = func.coalesce(EdgeOutcomeRow.exit_reason, "unrecorded")
+        query = select(
+            reason,
+            func.count(EdgeOutcomeRow.outcome_id),
+            func.sum(case((EdgeOutcomeRow.net_bps > 0, 1), else_=0)),
+            func.sum(pnl),
+            func.avg(EdgeOutcomeRow.net_bps),
+        ).group_by(reason)
+        if source:
+            query = query.where(EdgeOutcomeRow.source == source)
+        rows = (await self._session.execute(query)).all()
+        shaped = []
+        for exit_reason, count, wins, total_pnl, mean_bps in rows:
+            count = int(count or 0)
+            shaped.append(
+                {
+                    "exit_reason": exit_reason,
+                    "trades": count,
+                    "wins": int(wins or 0),
+                    "win_rate": round(int(wins or 0) / count, 4) if count else 0.0,
+                    "pnl_usd": round(float(total_pnl or 0.0), 2),
+                    "mean_trade_usd": round(float(total_pnl or 0.0) / count, 2) if count else 0.0,
+                    "mean_net_bps": round(float(mean_bps or 0.0), 2),
+                }
+            )
+        shaped.sort(key=lambda row: row["trades"], reverse=True)
         return shaped
 
     async def track_record(self, *, source: str = "live") -> dict[str, Any]:

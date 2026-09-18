@@ -89,6 +89,15 @@ services:
       TIA_LIVE__ENTRY_LIMIT_TIMEOUT_BARS: ${TIA_LIVE__ENTRY_LIMIT_TIMEOUT_BARS:-3}
       # Time stop, in bars; 0 keeps parity with the evidence-producing engine (off).
       TIA_LIVE__MAX_HOLDING_BARS: ${TIA_LIVE__MAX_HOLDING_BARS:-0}
+      # Stop management (break-even after N R, ATR trailing), the live-spread gate and
+      # conviction sizing. Same rules in the paper engine and the 24/7 session.
+      TIA_LIVE__BREAKEVEN_AFTER_R: ${TIA_LIVE__BREAKEVEN_AFTER_R:-1.0}
+      TIA_LIVE__TRAIL_ATR_MULTIPLE: ${TIA_LIVE__TRAIL_ATR_MULTIPLE:-2.0}
+      TIA_LIVE__MAX_SPREAD_BPS: ${TIA_LIVE__MAX_SPREAD_BPS:-10}
+      TIA_LIVE__CONVICTION_SIZING: ${TIA_LIVE__CONVICTION_SIZING:-true}
+      TIA_LIVE__MIN_SIZE_FRACTION: ${TIA_LIVE__MIN_SIZE_FRACTION:-0.35}
+      TIA_LIVE__EXPLORATION_SIZE_FRACTION: ${TIA_LIVE__EXPLORATION_SIZE_FRACTION:-0.25}
+      TIA_LIVE__POOLED_SIZE_CAP: ${TIA_LIVE__POOLED_SIZE_CAP:-0.6}
       # Venue credentials are OPTIONAL and only ever read from the environment.
       # The 24/7 paper session needs none. Live trading additionally requires the
       # activation gate's 27 checks — a key alone arms nothing.

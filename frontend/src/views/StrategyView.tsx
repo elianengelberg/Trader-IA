@@ -9,7 +9,7 @@
  * like a strategy right up until you see the 22 bps of costs beside it.
  */
 import { useCallback, useEffect, useState } from "react";
-import { api, type Economics } from "../lib/api";
+import { api, type Economics, type StrategyScore } from "../lib/api";
 import type { Subscribe } from "../lib/stream";
 import { useStreamEvent } from "../lib/stream";
 import { Bar, Card, Empty, Pill, SimulationFootnote, Stat } from "../components/ui";
@@ -22,6 +22,78 @@ const COST_LABELS: Record<string, string> = {
   latency_bps: "Latency",
   impact_bps: "Impact",
 };
+
+/**
+ * Each strategy answers for its own closed trades in the 24/7 session. The estimator
+ * does not split evidence by strategy (it would take three times as long to fill), so
+ * this is the only place a bad strategy can be told apart from a good one firing in the
+ * same regime — and where it is muted when its record says so.
+ */
+function ScoreboardPanel({ subscribe }: { subscribe: Subscribe }) {
+  const [rows, setRows] = useState<StrategyScore[] | null>(null);
+  const [active, setActive] = useState(false);
+
+  const load = useCallback(() => {
+    api.liveSnapshot()
+      .then((snap) => {
+        setActive(Boolean(snap.active));
+        setRows(((snap as { strategies?: StrategyScore[] }).strategies ?? []) as StrategyScore[]);
+      })
+      .catch(() => undefined);
+  }, []);
+  useEffect(load, [load]);
+  useStreamEvent(subscribe, "trade.closed", load);
+  useStreamEvent(subscribe, "live.evidence_absorbed", load);
+
+  if (!active) return null;
+  return (
+    <Card title="Strategy scoreboard — each strategy answers for its own trades">
+      {!rows || rows.length === 0 ? (
+        <Empty message="No strategy has a credited trade yet. Trades closed from now on name the strategy that proposed them." />
+      ) : (
+        <table>
+          <thead>
+            <tr>
+              <th>Strategy</th>
+              <th className="num">Trades</th>
+              <th className="num">Win rate</th>
+              <th className="num">Mean net</th>
+              <th className="num">t</th>
+              <th>Standing</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row) => (
+              <tr key={row.strategy_id}>
+                <td className="mono">{row.strategy_id}</td>
+                <td className="num mono">{row.trades}{row.exploratory > 0 ? <span className="faint"> ({row.exploratory} expl.)</span> : null}</td>
+                <td className={`num mono ${(row.win_rate ?? 0) >= 0.5 ? "pos" : ""}`}>{row.win_rate == null ? "—" : `${(row.win_rate * 100).toFixed(0)}%`}</td>
+                <td className={`num mono ${(row.mean_net_bps ?? 0) > 0 ? "pos" : (row.mean_net_bps ?? 0) < 0 ? "neg" : ""}`}>
+                  {row.mean_net_bps == null ? "—" : `${row.mean_net_bps >= 0 ? "+" : ""}${row.mean_net_bps.toFixed(1)} bps`}
+                </td>
+                <td className="num mono">{row.t_statistic == null ? "—" : row.t_statistic.toFixed(1)}</td>
+                <td>
+                  {row.muted ? (
+                    <Pill value="muted" tone="bad" />
+                  ) : row.needed_to_judge > 0 ? (
+                    <span className="faint" style={{ fontSize: 11.5 }}>{row.needed_to_judge} more to judge</span>
+                  ) : (
+                    <Pill value="trading" tone="ok" />
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+      <p className="footnote">
+        A strategy is muted when its own record — at least 30 judged trades — averages
+        below zero by more than one standard error. Muting can only refuse a proposal; it
+        never authorises one. Exploration trades are counted but judge nobody.
+      </p>
+    </Card>
+  );
+}
 
 export function StrategyView({ subscribe }: { subscribe: Subscribe }) {
   const [data, setData] = useState<Economics | null>(null);
@@ -202,6 +274,10 @@ export function StrategyView({ subscribe }: { subscribe: Subscribe }) {
             </div>
           )}
         </Card>
+      </div>
+
+      <div style={{ marginTop: 16 }}>
+        <ScoreboardPanel subscribe={subscribe} />
       </div>
 
       <div className="grid cols-2" style={{ marginTop: 16 }}>

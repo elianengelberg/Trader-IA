@@ -20,7 +20,7 @@ interface LiveSnap {
   symbol?: string;
   capital?: { equity?: number; allocated_capital?: number; realised_pnl?: number; unrealised_pnl?: number; fees_paid?: number };
   counters?: Record<string, number>;
-  position?: { open?: boolean; stop_price?: number | null; target_price?: number | null; protected?: boolean };
+  position?: { open?: boolean; stop_price?: number | null; target_price?: number | null; protected?: boolean; stop_kind?: string | null; r_multiple?: number | null };
   execution?: { resting_order?: unknown };
 }
 
@@ -216,7 +216,14 @@ export function CommandCenter({ subscribe }: { subscribe: Subscribe }) {
           <div className="stat">
             <span className="label">Signals → orders</span>
             <span className="value">{counters.signals ?? 0} → {counters.orders ?? 0}</span>
-            <span className="sub">{snap?.position?.open ? (snap.position.protected ? "in a trade · stop set" : "in a trade · NO STOP") : "flat"}{snap?.execution?.resting_order ? " · order resting" : ""}</span>
+            <span className="sub">
+              {snap?.position?.open
+                ? snap.position.protected
+                  ? `in a trade · ${snap.position.stop_kind && snap.position.stop_kind !== "protective" ? snap.position.stop_kind : "protective"} stop${snap.position.r_multiple != null ? ` · ${snap.position.r_multiple.toFixed(1)}R` : ""}`
+                  : "in a trade · NO STOP"
+                : "flat"}
+              {snap?.execution?.resting_order ? " · order resting" : ""}
+            </span>
           </div>
         </div>
       </div>

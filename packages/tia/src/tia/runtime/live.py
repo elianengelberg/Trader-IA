@@ -53,10 +53,13 @@ from tia.data.quality import DataQualityEngine
 from tia.domain.enums import Direction, MarketRegime, OrderType, Side, TimeInForce
 from tia.domain.market import Candle
 from tia.domain.orders import Fill, Order, OrderIntent
+from tia.economics.conviction import conviction_fraction
 from tia.economics.costs import CostModel, FeeSchedule, MarketConditions
 from tia.economics.expected_value import EdgeEstimator, ExpectedValueEngine, Outcome
+from tia.execution.exits import r_multiple, tighten_stop
 from tia.execution.provider import ExecutionProvider
 from tia.learning.retrospective import RetrospectiveEngine
+from tia.learning.scoreboard import StrategyScoreboard
 from tia.live.gate import LiveActivationToken, configuration_fingerprint
 from tia.portfolio.capital import CapitalLedger, CapitalPolicy
 from tia.quant.features import FeatureBuilder
@@ -295,6 +298,11 @@ class LiveRuntime:
         # persisted trade record so a restart keeps the lessons, exactly like the estimator.
         self._retro = RetrospectiveEngine()
         self._retro.record_many(list(prior_reviews))
+        #: Each strategy answers for its own closed trades; one whose record is negative
+        #: with enough trades to mean it is muted before risk sees its signals. Rebuilt
+        #: from the same persisted rows as the estimator, where they name a strategy.
+        self._scoreboard = StrategyScoreboard()
+        self._scoreboard.record_many(list(prior_reviews))
         if execution.is_live:
             # Real money: the configured ceiling, whose fail-closed default of zero is
             # rejected by CapitalPolicy — exactly the refusal we want.
@@ -349,6 +357,8 @@ class LiveRuntime:
             "stops_placed": 0, "exits_stop": 0, "exits_target": 0,
             "exits_reversal": 0, "exits_time": 0, "suppressed_position_open": 0,
             "unprotected_positions": 0,
+            "stops_tightened": 0, "exits_breakeven": 0, "exits_trail": 0,
+            "spread_rejected": 0, "strategy_muted": 0, "sized_down": 0,
         }
         #: The one protective stop covering the open position, if any. Exactly one, sized
         #: to the position: a stop that protects the wrong size is worse than none.
@@ -357,6 +367,16 @@ class LiveRuntime:
         #: position, and the bar the position opened on (for the optional time stop).
         self._planned_exit: dict[str, Any] = {}
         self._position_opened_bar: int | None = None
+        #: The most favourable price seen since entry (highest high for a long, lowest
+        #: low for a short) — what the trailing stop follows — and the last bar's ATR in
+        #: price units, which sets the trailing distance.
+        self._best_price: float | None = None
+        self._last_atr: float = 0.0
+        #: The venue's live top of book on the latest bar, when the feed can supply it.
+        #: Prices the costs the estimate is measured against and gates dislocated books.
+        self._last_quote: dict[str, Any] | None = None
+        #: How the last entry was sized relative to the risk engine's approval, and why.
+        self._last_size: dict[str, Any] | None = None
         #: Why the round trip in progress is ending, for the record. Set by whichever
         #: path closes it; read once by the scorer.
         self._exit_reason: str | None = None
@@ -563,11 +583,13 @@ class LiveRuntime:
             return {"absorbed_outcomes": 0, "absorbed_reviews": 0, "buckets_ready": 0}
         self._edges.record_many(outcomes)
         self._retro.record_many(reviews)
+        credited = self._scoreboard.record_many(reviews)
         self._evidence_absorbed += len(outcomes)
         self._evidence_absorbed_at = self._clock.now()
         result = {
             "absorbed_outcomes": len(outcomes),
             "absorbed_reviews": len(reviews),
+            "strategies_credited": credited,
             "buckets_ready": sum(
                 1
                 for count in self._edges.coverage().values()
@@ -797,6 +819,7 @@ class LiveRuntime:
         self._buffer.clear()
         self._buffer.extend(candles)
         self.counters["bars"] += 1
+        await self._refresh_quote()
 
         # Paper-realtime: the simulated matching engine fills resting orders against the
         # bar the way the live venue would have filled them against the tape.
@@ -845,6 +868,9 @@ class LiveRuntime:
 
         self.latency.stamp(correlation_id, "decision_started")
         features = self._features.build(self._symbol, self._timeframe, window)
+        values = features.finite_values()
+        # ATR in price units, kept for the trailing stop on the bars that follow.
+        self._last_atr = max(0.0, values.get("atr_pct", 0.0) / 100.0) * candle.close
         regime = self._regimes.classify(features, now=candle.close_time)
         signal, _ = self._strategies.evaluate(
             features=features,
@@ -857,6 +883,20 @@ class LiveRuntime:
         self.latency.stamp(correlation_id, "decision_finished")
 
         if not signal.direction.is_actionable:
+            return
+
+        if self._scoreboard.is_muted(signal.strategy_id):
+            # The strategy's own record says it loses. Refused before risk, before
+            # expected value: a proposal from a source that has proven itself wrong is
+            # not a proposal this session considers.
+            self.counters["strategy_muted"] += 1
+            self._emit(
+                "live.no_trade",
+                {
+                    "correlation_id": correlation_id,
+                    "reason": self._scoreboard.reason(signal.strategy_id),
+                },
+            )
             return
 
         if self._resting is not None:
@@ -939,12 +979,36 @@ class LiveRuntime:
             self._settings.execution.submit_latency_ms
             + self._settings.execution.ack_latency_ms
         )
-        values = features.finite_values()
+        # The spread the market is showing, when the feed supplies a quote; the
+        # configured constant when it cannot. A book wider than the configured ceiling
+        # is a cost the estimate never priced, and the entry waits for it to close.
+        quote = self._last_quote
+        spread_bps = float(quote["spread_bps"]) if quote else float(
+            self._settings.execution.base_slippage_bps
+        )
+        max_spread = self._settings.live.max_spread_bps
+        if quote and max_spread > 0 and spread_bps > max_spread:
+            self.counters["spread_rejected"] += 1
+            self._emit(
+                "live.no_trade",
+                {
+                    "correlation_id": correlation_id,
+                    "reason": (
+                        f"spread gate — the book is {spread_bps:.1f} bps wide, over the "
+                        f"{max_spread:.1f} bps ceiling; the entry waits for it to close"
+                    ),
+                },
+            )
+            return
         conditions = MarketConditions(
             price=max(candle.close, 1e-9),
-            spread_bps=self._settings.execution.base_slippage_bps,
+            spread_bps=spread_bps,
             volatility_per_bar=max(0.0, values.get("atr_pct", 0.0) / 100.0),
-            top_of_book_quantity=0.0,  # no depth feed yet — priced as ignorance, not zero
+            # Depth at the touch when the feed shows it; zero — priced as ignorance,
+            # not as plenty — when it does not.
+            top_of_book_quantity=(
+                min(float(quote["bid_size"]), float(quote["ask_size"])) if quote else 0.0
+            ),
             bar_volume=candle.volume,
             latency_ms=measured_latency,
             bar_seconds=60.0,
@@ -1035,8 +1099,38 @@ class LiveRuntime:
                 },
             )
 
+        # Conviction sizing: the risk engine's approval is the ceiling; the evidence
+        # decides how much of it this entry deserves. Only ever downward.
+        size_fraction = 1.0
+        if self._settings.live.conviction_sizing:
+            sizing = conviction_fraction(
+                evaluation.edge_estimate,
+                exploring=exploring,
+                min_fraction=self._settings.live.min_size_fraction,
+                exploration_fraction=self._settings.live.exploration_size_fraction,
+                pooled_cap=self._settings.live.pooled_size_cap,
+            )
+            size_fraction = sizing.fraction
+            if size_fraction < 1.0:
+                scaled = decision.approved_quantity * size_fraction
+                min_notional = self._filters.get("min_notional")
+                if min_notional and candle.close > 0:
+                    # Never below the venue's minimum: the lesson is cheap, not refused.
+                    floor_quantity = float(min_notional) * 1.02 / candle.close
+                    scaled = min(decision.approved_quantity, max(scaled, floor_quantity))
+                decision = decision.model_copy(update={"approved_quantity": scaled})
+                self.counters["sized_down"] += 1
+            self._last_size = {
+                "fraction": round(size_fraction, 4),
+                "reason": sizing.reason,
+                "quantity": decision.approved_quantity,
+                "at": self._clock.now().isoformat(),
+            }
+
         self._planned_exit = {
             "stop": decision.stop_price,
+            "initial_stop": decision.stop_price,
+            "kind": "protective",
             "target": decision.target_price,
             "direction": signal.direction,
         }
@@ -1046,6 +1140,8 @@ class LiveRuntime:
             "direction": signal.direction,
             "confidence": signal.confidence,
             "signal_id": signal.signal_id,
+            "strategy_id": signal.strategy_id,
+            "size_fraction": size_fraction,
             "expected_net_bps": evaluation.net_edge_bps,
             # An exploration entry carries no claim about its own outcome: it was taken
             # *because* the bucket has no evidence. Recording it as an expectation the
@@ -1290,6 +1386,81 @@ class LiveRuntime:
             # against whatever trade comes next.
             self._entry_beliefs = None
 
+    async def _refresh_quote(self) -> None:
+        """Read the venue's top of book for this bar, if the feed offers one.
+
+        A quote prices the costs the expected-value engine subtracts with the spread the
+        market is actually showing instead of a configured constant, and lets a
+        dislocated book refuse an entry the estimate never priced. A feed without quotes
+        (the test fakes, a CSV replay) leaves the constant in place — said so in the
+        snapshot, never silently.
+        """
+        get_quote = getattr(self._market_data, "get_quote", None)
+        if not callable(get_quote):
+            return
+        try:
+            quote = await get_quote(self._symbol)
+        except Exception:  # a missing quote is a missing quote, never a halted session
+            quote = None
+        if quote is None or quote.bid <= 0 or quote.ask < quote.bid:
+            self._last_quote = None
+            return
+        mid = (quote.bid + quote.ask) / 2.0
+        self._last_quote = {
+            "bid": float(quote.bid),
+            "ask": float(quote.ask),
+            "bid_size": float(quote.bid_size),
+            "ask_size": float(quote.ask_size),
+            "spread_bps": (quote.ask - quote.bid) / mid * 10_000.0,
+            "at": self._clock.now().isoformat(),
+        }
+
+    def _track_best_price(self, candle: Candle, *, long: bool) -> None:
+        extreme = candle.high if long else candle.low
+        if self._best_price is None:
+            self._best_price = extreme
+        else:
+            self._best_price = max(self._best_price, extreme) if long else min(self._best_price, extreme)
+
+    def _tighten_stop(self, candle: Candle, *, long: bool) -> None:
+        """Move the planned stop to break-even or along the trail — tighter only.
+
+        The rules live in :mod:`tia.execution.exits`, shared with the paper engine so
+        the evidence describes the game this session plays. A moved stop changes
+        ``_planned_exit`` and the next :meth:`_sync_protective_stop` replaces the resting
+        order; nothing here touches the venue directly.
+        """
+        stop = self._planned_exit.get("stop")
+        if not stop or stop <= 0 or self._open_trade is None:
+            return
+        cfg = self._settings.live
+        update = tighten_stop(
+            direction=Direction.LONG if long else Direction.SHORT,
+            entry_price=float(self._open_trade["price"]),
+            initial_stop=float(self._planned_exit.get("initial_stop") or stop),
+            current_stop=float(stop),
+            best_price=self._best_price or candle.close,
+            last_close=candle.close,
+            atr=self._last_atr,
+            breakeven_after_r=cfg.breakeven_after_r,
+            trail_atr_multiple=cfg.trail_atr_multiple,
+            fee_buffer_bps=self._costs.fees.round_trip_bps(entry_maker=self.entry_is_limit),
+        )
+        if update is None:
+            return
+        self._planned_exit["stop"] = update.stop_price
+        self._planned_exit["kind"] = update.kind
+        self.counters["stops_tightened"] += 1
+        self._emit(
+            "live.stop_tightened",
+            {
+                "stop_price": update.stop_price,
+                "kind": update.kind,
+                "reason": update.reason,
+                "best_price": self._best_price,
+            },
+        )
+
     async def _manage_position(self, candle: Candle) -> None:
         """Every bar, for the open position: target, time stop, and exactly one stop.
 
@@ -1331,6 +1502,8 @@ class LiveRuntime:
             await self._close_position("time stop")
             return
 
+        self._track_best_price(candle, long=long)
+        self._tighten_stop(candle, long=long)
         await self._sync_protective_stop(position.quantity)
 
     async def _sync_protective_stop(self, position_quantity: float) -> None:
@@ -1358,7 +1531,9 @@ class LiveRuntime:
                 pass  # gone or filled: fall through and place a fresh one if still held
             else:
                 covered = order.quantity - order.filled_quantity
-                if abs(covered - quantity) <= max(quantity * 1e-6, 1e-9):
+                same_size = abs(covered - quantity) <= max(quantity * 1e-6, 1e-9)
+                same_level = abs(float(existing.get("stop_price") or 0.0) - float(stop_price)) <= 1e-9
+                if same_size and same_level:
                     return
                 await self._cancel_protective()
 
@@ -1557,8 +1732,16 @@ class LiveRuntime:
         )
         self._emit("order.fill_simulated", self.recent_fills[0])
         if self._protective is not None and fill.order_id == self._protective["order_id"]:
-            self._exit_reason = "protective stop"
+            kind = self._planned_exit.get("kind", "protective")
+            self._exit_reason = {
+                "break-even": "break-even stop",
+                "trailing": "trailing stop",
+            }.get(kind, "protective stop")
             self.counters["exits_stop"] += 1
+            if kind == "break-even":
+                self.counters["exits_breakeven"] += 1
+            elif kind == "trailing":
+                self.counters["exits_trail"] += 1
         self.counters["fills"] += 1
         if fill.liquidity == "maker":
             self.counters["maker_fills"] += 1
@@ -1570,6 +1753,7 @@ class LiveRuntime:
         if self._open_trade is None:
             self._exit_reason = None
             self._position_opened_bar = self.counters["bars"]
+            self._best_price = fill.price
             self._open_trade = {
                 "price": fill.price,
                 "quantity": fill.quantity,
@@ -1602,6 +1786,7 @@ class LiveRuntime:
         self._entry_beliefs = None
         self._position_opened_bar = None
         self._planned_exit = {}
+        self._best_price = None
         if trade is None or beliefs is None or trade["exit_quantity"] <= 0:
             return
 
@@ -1637,6 +1822,10 @@ class LiveRuntime:
             notional_usd=notional,
             exploratory=bool(beliefs.get("exploratory")),
         )
+        self._scoreboard.record(
+            str(beliefs.get("strategy_id") or ""), net_bps,
+            exploratory=bool(beliefs.get("exploratory")),
+        )
         self._consecutive_losses = 0 if net_bps > 0 else self._consecutive_losses + 1
         self._ledger.record_realised_pnl(
             notional * net_bps / 10_000.0, at=exit_fill.filled_at
@@ -1660,6 +1849,8 @@ class LiveRuntime:
                 "expected_net_bps": beliefs["expected_net_bps"],
                 "exploratory": bool(beliefs.get("exploratory")),
                 "exit_reason": self._exit_reason or "signal reversed",
+                "strategy_id": beliefs.get("strategy_id"),
+                "size_fraction": beliefs.get("size_fraction"),
                 "closed_at": exit_fill.filled_at.isoformat(),
                 "source": "live",
             },
@@ -1686,6 +1877,7 @@ class LiveRuntime:
                 "expected_net_bps": beliefs["expected_net_bps"],
                 "exploratory": bool(beliefs.get("exploratory")),
                 "exit_reason": self._exit_reason or "signal reversed",
+                "strategy_id": beliefs.get("strategy_id"),
                 "closed_at": exit_fill.filled_at,
                 "source": "live",
             },
@@ -1976,12 +2168,47 @@ class LiveRuntime:
             "evidence": self.evidence_state(),
             "position": {
                 "open": self._open_trade is not None,
+                "entry_price": self._open_trade["price"] if self._open_trade else None,
                 "stop_price": self._planned_exit.get("stop"),
+                "initial_stop": self._planned_exit.get("initial_stop"),
+                "stop_kind": self._planned_exit.get("kind"),
                 "target_price": self._planned_exit.get("target"),
+                "best_price": self._best_price,
+                "r_multiple": (
+                    round(
+                        r_multiple(
+                            direction=self._planned_exit["direction"],
+                            entry_price=float(self._open_trade["price"]),
+                            initial_stop=float(self._planned_exit.get("initial_stop") or 0.0),
+                            price=self._best_price or float(self._open_trade["price"]),
+                        ),
+                        2,
+                    )
+                    if self._open_trade and self._planned_exit.get("direction") is not None
+                    else None
+                ),
                 "protected": bool(self._protective and self._protective.get("order_id")),
                 "opened_bar": self._position_opened_bar,
                 "max_holding_bars": self._settings.live.max_holding_bars,
             },
+            "exits": {
+                "breakeven_after_r": self._settings.live.breakeven_after_r,
+                "trail_atr_multiple": self._settings.live.trail_atr_multiple,
+                "last_atr": round(self._last_atr, 4),
+            },
+            "market": {
+                "quote": self._last_quote,
+                "max_spread_bps": self._settings.live.max_spread_bps,
+                "spread_source": "venue top of book" if self._last_quote else "configured constant",
+            },
+            "sizing": {
+                "conviction": self._settings.live.conviction_sizing,
+                "min_fraction": self._settings.live.min_size_fraction,
+                "exploration_fraction": self._settings.live.exploration_size_fraction,
+                "pooled_cap": self._settings.live.pooled_size_cap,
+                "last": self._last_size,
+            },
+            "strategies": self._scoreboard.report(),
             "execution": {
                 "entry_order_type": self._settings.live.entry_order_type,
                 "limit_timeout_bars": self._settings.live.entry_limit_timeout_bars,

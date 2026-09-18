@@ -923,3 +923,10 @@ async def test_the_arbitrage_report_is_served_and_survives_dead_venues(tmp_path:
             forced = await http.get("/api/arbitrage?force=true")
             assert forced.json()["polls"] == 2
     assert not state._arbitrage.is_running  # shutdown closed the sampler
+
+
+async def test_the_journal_breaks_the_record_down_by_exit_reason(client: httpx.AsyncClient) -> None:
+    response = await client.get("/api/journal/exits")
+    assert response.status_code == 200, response.text
+    assert isinstance(response.json(), list)
+    assert (await client.get("/api/journal/exits?source=bogus")).status_code == 422

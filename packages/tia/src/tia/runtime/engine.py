@@ -63,6 +63,7 @@ from tia.economics.expected_value import (
     ExpectedValueEngine,
     Outcome,
 )
+from tia.execution.exits import tighten_stop
 from tia.execution.paper import PaperExecutionProvider
 from tia.execution.reconciliation import LedgerSnapshot, ReconciliationEngine
 from tia.learning.retrospective import RetrospectiveEngine
@@ -156,6 +157,7 @@ class Counters:
     #: strategy does not clear its costs.
     ev_no_evidence: int = 0
     suppressed_position_open: int = 0
+    stops_tightened: int = 0
     intents: int = 0
     orders_rejected: int = 0
     fills: int = 0
@@ -243,6 +245,15 @@ class RuntimeEngine:
         #: which would make every drawdown number on the dashboard meaningless.
         self._protective: dict[str, str] = {}
         self._stop_price: dict[str, float] = {}
+        #: Stop management after entry, the same rules the 24/7 session applies (see
+        #: tia.execution.exits): the initial stop the trade was sized on, what kind of
+        #: stop currently protects it, the best price seen since entry, the last bar's
+        #: ATR in price units, and how the round trip in progress is ending.
+        self._initial_stop: dict[str, float] = {}
+        self._stop_kind: dict[str, str] = {}
+        self._best_price: dict[str, float] = {}
+        self._last_atr: dict[str, float] = {}
+        self._exit_reason: dict[str, str] = {}
         self._task: asyncio.Task[None] | None = None
         self._stop_requested = False
         self._pause_requested = False
@@ -556,9 +567,11 @@ class RuntimeEngine:
         fills = self._execution.on_bar(candle)
         for fill in fills:
             self._risk.record_execution(fill.symbol, fill.filled_at)
+            self._note_exit_reason(fill)
             self._record_fill(fill)
 
-        if fills:
+        tightened = self._manage_stop(symbol, candle)
+        if fills or tightened:
             await self._sync_protective_stop(symbol)
 
         self._update_market_state(symbol, candle)
@@ -588,6 +601,9 @@ class RuntimeEngine:
             return
 
         features = self._features.build(symbol, self._config.timeframe, window)
+        self._last_atr[symbol] = (
+            max(0.0, features.finite_values().get("atr_pct", 0.0) / 100.0) * candle.close
+        )
         regime = self._regimes.classify(features, now=candle.close_time)
 
         # 3. Context layer. Advisory, bounded in time, and never on the critical path.
@@ -694,11 +710,15 @@ class RuntimeEngine:
             )
 
         self._stop_price[symbol] = decision.stop_price or 0.0
+        self._initial_stop[symbol] = decision.stop_price or 0.0
+        self._stop_kind[symbol] = "protective"
+        self._best_price.pop(symbol, None)
         self._entry_beliefs[symbol] = {
             "regime": regime.regime,
             "direction": signal.direction,
             "confidence": signal.confidence,
             "signal_id": signal.signal_id,
+            "strategy_id": signal.strategy_id,
             "expected_net_bps": evaluation.net_edge_bps if evaluation else 0.0,
         }
         await self._submit(decision, signal, candle)
@@ -806,6 +826,10 @@ class RuntimeEngine:
         """
         entry = self._open_trades.pop(symbol, None)
         beliefs = self._entry_beliefs.pop(symbol, None)
+        exit_reason = self._exit_reason.pop(symbol, None) or "unrecorded"
+        self._best_price.pop(symbol, None)
+        self._stop_kind.pop(symbol, None)
+        self._initial_stop.pop(symbol, None)
         if entry is None or beliefs is None:
             return
 
@@ -865,6 +889,8 @@ class RuntimeEngine:
             "fees_bps": fees_bps,
             "net_bps": net_bps,
             "expected_net_bps": beliefs["expected_net_bps"],
+            "exit_reason": exit_reason,
+            "strategy_id": beliefs.get("strategy_id"),
             "closed_at": closed_at,
             "samples_now": self._edges.sample_count(
                 regime=beliefs["regime"],
@@ -895,6 +921,8 @@ class RuntimeEngine:
                 "fees_bps": fees_bps,
                 "net_bps": net_bps,
                 "expected_net_bps": beliefs["expected_net_bps"],
+                "exit_reason": exit_reason,
+                "strategy_id": beliefs.get("strategy_id"),
                 "closed_at": closed_at,
                 "source": "paper",
             },
@@ -953,10 +981,64 @@ class RuntimeEngine:
         self._record_assessment(symbol, outcome, candle)
         return (outcome.assessment, outcome.reason, outcome.used)
 
+    def _note_exit_reason(self, fill: Fill) -> None:
+        """A fill on the protective stop names the exit before the round trip is scored."""
+        if fill.order_id and fill.order_id == self._protective.get(fill.symbol):
+            kind = self._stop_kind.get(fill.symbol, "protective")
+            self._exit_reason[fill.symbol] = {
+                "break-even": "break-even stop",
+                "trailing": "trailing stop",
+            }.get(kind, "protective stop")
+
+    def _manage_stop(self, symbol: str, candle: Candle) -> bool:
+        """Track the best price since entry and tighten the stop when the rules say so.
+
+        The rules are the session's rules (tia.execution.exits, from the same settings),
+        so the evidence this engine produces describes the game the session plays. A
+        tightened stop is a new ``_stop_price``; the caller re-syncs the resting order.
+        """
+        position = self._execution.portfolio.positions.get(symbol)
+        if position is None or position.is_flat:
+            self._best_price.pop(symbol, None)
+            return False
+        long = position.quantity > 0
+        extreme = candle.high if long else candle.low
+        previous = self._best_price.get(symbol)
+        best = extreme if previous is None else (max(previous, extreme) if long else min(previous, extreme))
+        self._best_price[symbol] = best
+
+        stop = self._stop_price.get(symbol, 0.0)
+        trade = self._open_trades.get(symbol)
+        if stop <= 0 or trade is None:
+            return False
+        update = tighten_stop(
+            direction=Direction.LONG if long else Direction.SHORT,
+            entry_price=float(trade["price"]),
+            initial_stop=float(self._initial_stop.get(symbol) or stop),
+            current_stop=float(stop),
+            best_price=best,
+            last_close=candle.close,
+            atr=self._last_atr.get(symbol, 0.0),
+            breakeven_after_r=self._settings.live.breakeven_after_r,
+            trail_atr_multiple=self._settings.live.trail_atr_multiple,
+            fee_buffer_bps=self._costs.fees.round_trip_bps(),
+        )
+        if update is None:
+            return False
+        self._stop_price[symbol] = update.stop_price
+        self._stop_kind[symbol] = update.kind
+        self.counters.stops_tightened += 1
+        self._log(
+            "INFO", "risk", symbol,
+            f"stop tightened to {update.stop_price:.2f} ({update.kind}: {update.reason})",
+        )
+        return True
+
     async def _sync_protective_stop(self, symbol: str) -> None:
         """Keep exactly one protective stop matching the open position.
 
-        Cancelled when flat, replaced when a partial fill changed the quantity it covers.
+        Cancelled when flat, replaced when a partial fill changed the quantity it covers
+        or the stop was tightened to a new level.
         A stop that protects the wrong size is worse than none: the dashboard would show
         a bounded loss that was not actually bounded.
         """
@@ -975,7 +1057,9 @@ class RuntimeEngine:
             existing = await self._execution.get_order(existing_id)
             if existing is not None and not existing.state.is_terminal:
                 covered = existing.quantity - existing.filled_quantity
-                if abs(covered - quantity) <= max(quantity * 1e-6, 1e-9):
+                same_size = abs(covered - quantity) <= max(quantity * 1e-6, 1e-9)
+                same_level = abs(float(existing.stop_price or 0.0) - stop_price) <= 1e-9
+                if same_size and same_level:
                     return
                 await self._execution.cancel_order(existing_id)
             self._protective.pop(symbol, None)
@@ -1018,6 +1102,7 @@ class RuntimeEngine:
         if position is None or position.is_flat:
             return
 
+        self._exit_reason[symbol] = reason
         existing_id = self._protective.pop(symbol, None)
         if existing_id:
             await self._execution.cancel_order(existing_id)

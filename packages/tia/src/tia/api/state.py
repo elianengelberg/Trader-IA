@@ -317,6 +317,7 @@ class AppState:
             "entry_price": row.entry_price,
             "quantity": row.quantity,
             "exploratory": bool(getattr(row, "exploratory", False)),
+            "strategy_id": getattr(row, "strategy_id", None),
         }
 
     async def _load_prior_reviews(self) -> list[dict[str, Any]]:
@@ -420,6 +421,15 @@ class AppState:
                 return await EdgeStateRepository(db).setups(source=source)
         except Exception as exc:
             _log.warning("journal_setups_failed", error=str(exc)[:300])
+            return []
+
+    async def journal_exits(self, *, source: str | None = None) -> list[dict[str, Any]]:
+        """Per-exit-reason record — see EdgeStateRepository.exits."""
+        try:
+            async with self.database.session() as db:
+                return await EdgeStateRepository(db).exits(source=source)
+        except Exception as exc:
+            _log.warning("journal_exits_failed", error=str(exc)[:300])
             return []
 
     async def journal(self, **filters: Any) -> dict[str, Any]:

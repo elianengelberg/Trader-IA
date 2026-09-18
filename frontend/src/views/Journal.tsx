@@ -8,7 +8,7 @@
  * filtered set on the server, so they mean what they say regardless of the page shown.
  */
 import { useCallback, useEffect, useState } from "react";
-import { api, type JournalFilters, type JournalPage, type SetupRow } from "../lib/api";
+import { api, type ExitRow, type JournalFilters, type JournalPage, type SetupRow } from "../lib/api";
 import { Card, Empty, Pill, SimulationFootnote, Stat } from "../components/ui";
 import { dateTime, money, signedMoney } from "../lib/format";
 
@@ -25,6 +25,7 @@ const SOURCE_LABEL: Record<string, string> = {
 export function Journal() {
   const [page, setPage] = useState<JournalPage | null>(null);
   const [setups, setSetups] = useState<SetupRow[]>([]);
+  const [exits, setExits] = useState<ExitRow[]>([]);
   const [filters, setFilters] = useState<JournalFilters>({ limit: PAGE, offset: 0 });
   const [loading, setLoading] = useState(false);
 
@@ -32,6 +33,7 @@ export function Journal() {
     setLoading(true);
     api.journal(filters).then(setPage).catch(() => undefined).finally(() => setLoading(false));
     api.journalSetups(filters.source).then(setSetups).catch(() => undefined);
+    api.journalExits(filters.source).then(setExits).catch(() => undefined);
   }, [filters]);
 
   useEffect(load, [load]);
@@ -166,6 +168,48 @@ export function Journal() {
             Best net result first, over the selected source. A setup that is green here is
             one the expected-value engine can already price; a red one with many trades is
             evidence of where <em>not</em> to be — which is also learning.
+          </p>
+        </Card>
+      )}
+
+      {exits.length > 0 && (
+        <Card title="By exit — how the round trips ended, and what each ending was worth">
+          <div className="scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Exit</th>
+                  <th className="num">Trades</th>
+                  <th className="num">Win rate</th>
+                  <th className="num">Net</th>
+                  <th className="num">Mean / trade</th>
+                </tr>
+              </thead>
+              <tbody>
+                {exits.map((row) => (
+                  <tr key={row.exit_reason}>
+                    <td className="mono">{row.exit_reason}</td>
+                    <td className="num mono">{row.trades.toLocaleString("en-US")}</td>
+                    <td className={`num mono ${row.win_rate >= 0.5 ? "pos" : ""}`}>
+                      {(row.win_rate * 100).toFixed(0)}%
+                    </td>
+                    <td className={`num mono ${row.pnl_usd > 0 ? "pos" : "neg"}`}>
+                      {signedMoney(row.pnl_usd)}
+                    </td>
+                    <td className={`num mono ${row.mean_trade_usd > 0 ? "pos" : "neg"}`}>
+                      {signedMoney(row.mean_trade_usd)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="footnote">
+            The exit rules — protective, break-even and trailing stops, targets, reversals,
+            time stops — are a hypothesis each. This is where they answer for themselves: a
+            stop kind that closes many trades red is a stop too tight; a target that never
+            fires is a target too far. &ldquo;unrecorded&rdquo; is evidence written before
+            exits were named.
           </p>
         </Card>
       )}

@@ -321,6 +321,26 @@ class LiveConfig(FrozenModel):
     #: paper engine that produced the evidence has no such clock, so the default keeps
     #: parity with the evidence and the operator turns it on deliberately.
     max_holding_bars: int = Field(0, ge=0, le=100_000)
+    #: Stop management after entry — see :mod:`tia.execution.exits`. Once a trade has
+    #: moved ``breakeven_after_r`` multiples of its initial risk in its favour, the stop
+    #: moves to entry plus fees; the stop then trails the best price at
+    #: ``trail_atr_multiple`` average true ranges. Zero switches either rule off. Both
+    #: engines apply the same rules from the same settings, so the evidence the paper
+    #: engine produces describes the game the session plays.
+    breakeven_after_r: float = Field(1.0, ge=0, le=10)
+    trail_atr_multiple: float = Field(2.0, ge=0, le=20)
+    #: An entry is refused while the venue's live top-of-book spread is wider than this.
+    #: A dislocated book is a cost the estimate did not price. Zero disables the gate;
+    #: the measured spread still prices the costs whenever a quote is available.
+    max_spread_bps: float = Field(10.0, ge=0, le=500)
+    #: Conviction sizing — see :mod:`tia.economics.conviction`. The risk engine's approved
+    #: size is the ceiling; how much of it a trade takes follows the evidence: strong,
+    #: exact evidence takes it all, barely-significant evidence the floor, a pooled
+    #: estimate is capped, and an exploration trade is a cheap lesson. Never above 1.0.
+    conviction_sizing: bool = True
+    min_size_fraction: float = Field(0.35, gt=0, le=1.0)
+    exploration_size_fraction: float = Field(0.25, gt=0, le=1.0)
+    pooled_size_cap: float = Field(0.6, gt=0, le=1.0)
     #: Costs may not exceed this fraction of the expected gross edge.
     max_cost_ratio: float = Field(0.6, gt=0, le=1.0)
 

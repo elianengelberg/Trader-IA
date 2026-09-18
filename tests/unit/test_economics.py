@@ -532,3 +532,61 @@ def test_a_pooled_trade_says_so_in_its_own_explanation() -> None:
     )
     assert result.edge_estimate is not None and result.edge_estimate.is_pooled
     assert "pooled from every confidence band" in result.explain()
+
+
+# ------------------------------------------------------------------ the decay guard
+
+
+def test_a_bucket_whose_recent_trades_stopped_working_is_not_traded() -> None:
+    """A thousand old winners cannot carry sixty fresh losers. The whole record still
+    averages positive; the estimate is cut to what the last window supports."""
+    from tia.economics.expected_value import RECENT_WINDOW
+
+    estimator = EdgeEstimator()
+    estimator.record_many(_varied(400, 30.0, confidence=0.60))
+    healthy = estimator.estimate(
+        regime=MarketRegime.TRENDING_UP, direction=Direction.LONG, confidence=0.60
+    )
+    assert healthy is not None and healthy.is_positive
+    assert healthy.recent_samples == RECENT_WINDOW
+    assert healthy.decayed is False
+
+    estimator.record_many(_varied(RECENT_WINDOW, -25.0, confidence=0.60))
+    decayed = estimator.estimate(
+        regime=MarketRegime.TRENDING_UP, direction=Direction.LONG, confidence=0.60
+    )
+    assert decayed is not None
+    assert decayed.mean_bps > 0  # the whole record still looks fine — that is the trap
+    assert decayed.adjusted_bps < 0.0  # cut to the window's verdict: it loses now
+    assert decayed.is_positive is False
+    assert decayed.decayed is True
+    assert decayed.recent_mean_bps == pytest.approx(-25.0)
+    assert "decayed" in decayed.basis
+    assert decayed.as_dict()["decayed"] is True
+
+
+def test_a_record_too_shallow_for_a_window_is_judged_whole() -> None:
+    estimator = EdgeEstimator()
+    estimator.record_many(_varied(45, 20.0, confidence=0.60))
+    estimate = estimator.estimate(
+        regime=MarketRegime.TRENDING_UP, direction=Direction.LONG, confidence=0.60
+    )
+    assert estimate is not None and estimate.is_positive
+    assert estimate.recent_samples == 0 and estimate.decayed is False
+
+
+def test_the_window_can_only_cut_an_estimate_never_raise_it() -> None:
+    """Sixty recent winners after four hundred losers: the whole record is still red and
+    the recent window does not get to overrule it — the guard is pessimistic both ways."""
+    from tia.economics.expected_value import RECENT_WINDOW
+
+    estimator = EdgeEstimator()
+    estimator.record_many(_varied(400, -30.0, confidence=0.60))
+    estimator.record_many(_varied(RECENT_WINDOW, 40.0, confidence=0.60))
+    estimate = estimator.estimate(
+        regime=MarketRegime.TRENDING_UP, direction=Direction.LONG, confidence=0.60
+    )
+    assert estimate is not None
+    assert estimate.is_positive is False
+    assert estimate.recent_mean_bps == pytest.approx(40.0)
+    assert estimate.decayed is False

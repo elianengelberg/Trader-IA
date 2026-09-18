@@ -56,6 +56,14 @@ POOLED_MIN_MULTIPLE = 2
 #: a source of error, and it is charged for, not waved through.
 POOLED_SHRINK_SE = 2.0
 
+#: The most recent samples of a bucket are fitted separately once the bucket holds at
+#: least twice the floor. An edge is a claim about the *next* trade, and a record whose
+#: last sixty trades disagree with its first thousand is a record whose edge has moved on.
+#: The estimate is then the more pessimistic of the two fits — the whole record and the
+#: recent window — so a bucket that stopped working stops being traded before the full
+#: mean has noticed. Sixty: enough for the window's own mean to mean something.
+RECENT_WINDOW = 60
+
 #: Confidence bands. Coarse on purpose: finer bands fill more slowly, and a bucket that
 #: never reaches the sample floor is a bucket that never trades.
 CONFIDENCE_BANDS: tuple[tuple[float, float], ...] = (
@@ -104,6 +112,14 @@ class EdgeEstimate:
     level: str = "bucket"
     #: One sentence naming what the number rests on, for the decision's explanation.
     basis: str = ""
+    #: The most recent :data:`RECENT_WINDOW` samples fitted on their own, when the record
+    #: was deep enough to fit them. ``decayed`` says the whole record supports an edge
+    #: that the recent window does not — the estimate has already been cut to the
+    #: window's verdict, and the caller is told why.
+    recent_mean_bps: float | None = None
+    recent_adjusted_bps: float | None = None
+    recent_samples: int = 0
+    decayed: bool = False
 
     @property
     def is_positive(self) -> bool:
@@ -124,6 +140,16 @@ class EdgeEstimate:
             "confidence_band": list(self.confidence_band),
             "level": self.level,
             "basis": self.basis,
+            "recent_mean_bps": (
+                round(self.recent_mean_bps, 4) if self.recent_mean_bps is not None else None
+            ),
+            "recent_adjusted_bps": (
+                round(self.recent_adjusted_bps, 4)
+                if self.recent_adjusted_bps is not None
+                else None
+            ),
+            "recent_samples": self.recent_samples,
+            "decayed": self.decayed,
         }
 
 
@@ -181,14 +207,18 @@ class EdgeEstimator:
         band = band_of(confidence)
         exact = self._buckets.get((regime.value, direction.value, band), [])
         if len(exact) >= self._min_samples:
-            return self._fit(
+            return self._with_recent(
+                self._fit(
+                    exact,
+                    regime=regime,
+                    direction=direction,
+                    band=band,
+                    level="bucket",
+                    shrink_se=1.0,
+                    basis=f"{len(exact)} closed trades in this exact bucket",
+                ),
                 exact,
-                regime=regime,
-                direction=direction,
-                band=band,
-                level="bucket",
                 shrink_se=1.0,
-                basis=f"{len(exact)} closed trades in this exact bucket",
             )
 
         pooled: list[float] = []
@@ -199,18 +229,77 @@ class EdgeEstimator:
         if len(pooled) < self._min_samples * POOLED_MIN_MULTIPLE:
             return None
 
-        return self._fit(
-            pooled,
-            regime=regime,
-            direction=direction,
-            band=band,
-            level="regime",
-            shrink_se=POOLED_SHRINK_SE,
-            basis=(
-                f"pooled {len(pooled)} trades across every confidence band of "
-                f"{regime.value}/{direction.value} — the exact band has only "
-                f"{len(exact)} — priced at double the uncertainty discount"
+        return self._with_recent(
+            self._fit(
+                pooled,
+                regime=regime,
+                direction=direction,
+                band=band,
+                level="regime",
+                shrink_se=POOLED_SHRINK_SE,
+                basis=(
+                    f"pooled {len(pooled)} trades across every confidence band of "
+                    f"{regime.value}/{direction.value} — the exact band has only "
+                    f"{len(exact)} — priced at double the uncertainty discount"
+                ),
             ),
+            pooled,
+            shrink_se=POOLED_SHRINK_SE,
+        )
+
+    def _with_recent(
+        self, full: EdgeEstimate, samples: list[float], *, shrink_se: float
+    ) -> EdgeEstimate:
+        """Cut the estimate to what the recent window supports, when there is one.
+
+        Samples are in the order they were recorded — a session's own trades in time
+        order, absorbed evidence in ingestion order — so the tail is "the latest this
+        system has seen of this bucket". Only a record at least twice the floor deep
+        has a tail worth fitting separately; below that the whole record IS the window.
+        """
+        if len(samples) < max(RECENT_WINDOW, self._min_samples * 2):
+            return full
+        recent = samples[-RECENT_WINDOW:]
+        tail = self._fit(
+            recent,
+            regime=full.regime,
+            direction=full.direction,
+            band=full.confidence_band,
+            level=full.level,
+            shrink_se=shrink_se,
+            basis="",
+        )
+        # The window overrules the record only when it is *inconsistent* with it: when
+        # even the window's optimistic bound (its mean plus the same discount) sits below
+        # the edge the whole record claims. A healthy bucket's window has the same mean
+        # and clears that bar with room; a window that merely has fewer samples, and so
+        # more noise, does not get to cut a good bucket for being small.
+        window_upper = tail.mean_bps + shrink_se * tail.standard_error_bps
+        inconsistent = full.adjusted_bps > 0.0 and window_upper < full.adjusted_bps
+        adjusted = tail.adjusted_bps if inconsistent else full.adjusted_bps
+        decayed = inconsistent and adjusted <= 0.0
+        basis = full.basis + (
+            f"; the last {len(recent)} average {tail.mean_bps:+.1f} bps"
+            + (
+                " — the edge has decayed and is not traded"
+                if decayed
+                else (" — cut to what the recent window supports" if inconsistent else "")
+            )
+        )
+        return EdgeEstimate(
+            mean_bps=full.mean_bps,
+            adjusted_bps=adjusted,
+            standard_error_bps=full.standard_error_bps,
+            samples=full.samples,
+            regime=full.regime,
+            direction=full.direction,
+            confidence_band=full.confidence_band,
+            level=full.level,
+            basis=basis,
+            recent_mean_bps=tail.mean_bps,
+            recent_adjusted_bps=tail.adjusted_bps,
+            recent_samples=len(recent),
+            decayed=decayed,
         )
 
     @staticmethod
@@ -460,6 +549,7 @@ class ExpectedValueEngine:
 __all__ = [
     "CONFIDENCE_BANDS",
     "MIN_SAMPLES_FOR_EDGE",
+    "RECENT_WINDOW",
     "EVDecision",
     "EdgeEstimate",
     "EdgeEstimator",

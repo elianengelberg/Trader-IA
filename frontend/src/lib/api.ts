@@ -551,7 +551,34 @@ export interface JournalRow {
   expected_usd: number;
   exploratory: boolean;
   exit_reason?: string | null;
+  strategy_id?: string | null;
   is_win: boolean;
+}
+
+/** How round trips end, per exit reason — the exit discipline's own scorecard. */
+export interface ExitRow {
+  exit_reason: string;
+  trades: number;
+  wins: number;
+  win_rate: number;
+  pnl_usd: number;
+  mean_trade_usd: number;
+  mean_net_bps: number;
+}
+
+/** One strategy's own record in the 24/7 session, and whether it is muted by it. */
+export interface StrategyScore {
+  strategy_id: string;
+  trades: number;
+  judged: number;
+  wins: number;
+  win_rate: number | null;
+  exploratory: number;
+  mean_net_bps: number | null;
+  standard_error_bps: number | null;
+  t_statistic: number | null;
+  muted: boolean;
+  needed_to_judge: number;
 }
 
 /** One (regime, direction) setup's whole record. */
@@ -971,6 +998,8 @@ export const api = {
   securityPosture: () => get<SecurityPosture>("/security/posture"),
   journalSetups: (source?: string) =>
     get<SetupRow[]>(`/journal/setups${source ? `?source=${source}` : ""}`),
+  journalExits: (source?: string) =>
+    get<ExitRow[]>(`/journal/exits${source ? `?source=${source}` : ""}`),
   journal: (filters: JournalFilters = {}) => {
     const params = new URLSearchParams();
     for (const [key, value] of Object.entries(filters)) {

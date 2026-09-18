@@ -1378,3 +1378,289 @@ async def test_the_session_announces_closed_trades_and_orders_on_the_stream() ->
     assert all("data" in e for e in seen), "every event carries its payload under data"
     assert runtime.recent_orders and runtime.recent_fills
     assert runtime.recent_orders[0]["order_type"] in {"market", "limit", "stop"}
+
+
+# --------------------------------------------------------------------------- the upgrades
+
+
+class QuotingMarketData(FakeMarketData):
+    """A feed that also shows a top of book, at a spread the test controls."""
+
+    def __init__(self, candles: list[Candle], clock: SimulatedClock | None = None) -> None:
+        super().__init__(candles, clock)
+        self.spread_bps = 1.0
+
+    async def get_quote(self, symbol: str):  # type: ignore[no-untyped-def]
+        from tia.domain.market import Quote
+
+        mid = self._candles[self.cursor - 1].close
+        half = mid * self.spread_bps / 10_000.0 / 2.0
+        return Quote(
+            symbol=symbol, timestamp=SystemClock().now(), bid=mid - half, ask=mid + half,
+            bid_size=5.0, ask_size=5.0, provider="fake-book",
+        )
+
+
+def build_runtime_paper_with(  # type: ignore[no-untyped-def]
+    *, quoting: bool = False, persist=None, **live_overrides: Any
+):
+    """A paper-realtime runtime with live-config overrides and, optionally, a quoting feed."""
+    scenario = get_scenario("trend_up")
+    span_minutes = scenario.total_bars + 5
+    candles = generate_series(
+        scenario, symbol="BTC-USD", timeframe="1m",
+        start=datetime.now(UTC) - timedelta(minutes=span_minutes), seed=9,
+    )
+    clock = SimulatedClock(candles[149].close_time + timedelta(seconds=1))
+    market = (QuotingMarketData if quoting else FakeMarketData)(candles, clock)
+    execution = FakeExecution()
+    runtime = LiveRuntime(
+        live_settings(**live_overrides),
+        activation=None,
+        market_data=market,
+        execution=execution,
+        clock=clock,
+        persist=persist,
+        poll_interval_seconds=0.0,
+    )
+    return runtime, execution, market
+
+
+def _working_stops(execution: FakeExecution) -> list[Order]:
+    return [
+        o for o in execution.orders.values()
+        if o.order_type is OrderType.STOP and not o.state.is_terminal
+    ]
+
+
+async def test_the_trailing_stop_follows_the_best_price_and_never_loosens() -> None:
+    """The stop tightens along the trail, the resting order is replaced at the new level,
+    and a wider trail on the next bar changes nothing — tighter only, ever."""
+    runtime, execution, market = build_runtime_paper_with(trail_atr_multiple=2.0, breakeven_after_r=0.0)
+    await runtime.start()
+    try:
+        await _open_a_position(runtime, execution, market)
+        position = next(iter((await execution.get_positions()).values()))
+        long = position.quantity > 0
+        entry = runtime._open_trade["price"]
+        # A stop far away and a tiny ATR: the trail must pull the stop right up behind
+        # the best price on the very next bar.
+        runtime._planned_exit["stop"] = entry * (0.90 if long else 1.10)
+        runtime._planned_exit["initial_stop"] = runtime._planned_exit["stop"]
+        runtime._last_atr = entry * 0.0001
+
+        market.advance()
+        await runtime._cycle_once()
+        assert runtime.counters["stops_tightened"] == 1
+        assert runtime._planned_exit["kind"] == "trailing"
+        tightened = runtime._planned_exit["stop"]
+        assert (tightened > entry * 0.90) if long else (tightened < entry * 1.10)
+        stops = _working_stops(execution)
+        assert len(stops) == 1 and stops[0].stop_price == pytest.approx(tightened)
+        assert runtime.snapshot()["position"]["stop_kind"] == "trailing"
+        assert runtime.snapshot()["position"]["best_price"] is not None
+
+        # A huge ATR: the trail would now sit far behind. The stop stays where it is.
+        runtime._last_atr = entry * 0.5
+        market.advance()
+        await runtime._cycle_once()
+        assert runtime.counters["stops_tightened"] == 1
+        assert runtime._planned_exit["stop"] == tightened
+
+        # A planned level that changed is a resting order that must be replaced.
+        old_stop = _working_stops(execution)[0]
+        tighter = tightened * (1.001 if long else 0.999)
+        runtime._planned_exit["stop"] = tighter
+        runtime._last_atr = entry * 0.5  # the rules propose nothing; the level alone changed
+        market.advance()
+        await runtime._cycle_once()
+        assert old_stop.order_id in execution.cancelled
+        replaced = _working_stops(execution)
+        assert len(replaced) == 1 and replaced[0].stop_price == pytest.approx(tighter)
+    finally:
+        await runtime.stop()
+
+
+async def test_a_break_even_stop_names_its_exit_and_the_record_credits_the_strategy() -> None:
+    saved: list[tuple[str, dict[str, Any]]] = []
+    runtime, execution, market = build_runtime_paper_with(
+        breakeven_after_r=1.0, trail_atr_multiple=0.0,
+        persist=lambda kind, payload: saved.append((kind, payload)),
+    )
+    await runtime.start()
+    try:
+        await _open_a_position(runtime, execution, market)
+        position = next(iter((await execution.get_positions()).values()))
+        long = position.quantity > 0
+        entry = runtime._open_trade["price"]
+        # One R is 5% away; the best price is already 2R in favour.
+        runtime._planned_exit["stop"] = entry * (0.95 if long else 1.05)
+        runtime._planned_exit["initial_stop"] = runtime._planned_exit["stop"]
+        runtime._best_price = entry * (1.10 if long else 0.90)
+
+        market.advance()
+        await runtime._cycle_once()
+        assert runtime._planned_exit["kind"] == "break-even"
+        stop = _working_stops(execution)[0]
+        assert (stop.stop_price > entry * 0.95) if long else (stop.stop_price < entry * 1.05)
+
+        reviews_before = runtime._retro.reviews
+        execution.fill_resting(stop)  # the market came back through the moved stop
+        market.advance()
+        await runtime._cycle_once()
+
+        assert runtime._retro.reviews == reviews_before + 1
+        assert runtime.counters["exits_breakeven"] == 1
+        assert runtime.counters["exits_stop"] == 1
+        outcome = next(p for k, p in saved if k == "edge_outcome")
+        assert outcome["exit_reason"] == "break-even stop"
+        assert outcome["strategy_id"]  # the strategy that proposed the entry is on record
+        board = runtime.snapshot()["strategies"]
+        assert board and board[0]["strategy_id"] == outcome["strategy_id"]
+        assert board[0]["trades"] == 1
+    finally:
+        await runtime.stop()
+
+
+async def test_a_wide_spread_waits_and_a_normal_one_prices_the_costs() -> None:
+    runtime, _execution, market = build_runtime_paper_with(quoting=True, max_spread_bps=10.0)
+    market.spread_bps = 50.0
+    await runtime.start()
+    try:
+        _seed_every_bucket(runtime)
+        for _ in range(120):
+            market.advance()
+            await runtime._cycle_once()
+        assert runtime.counters["spread_rejected"] > 0
+        assert runtime.counters["orders"] == 0
+        market_view = runtime.snapshot()["market"]
+        assert market_view["spread_source"] == "venue top of book"
+        assert market_view["quote"]["spread_bps"] == pytest.approx(50.0, rel=1e-3)
+
+        market.spread_bps = 1.0
+        for _ in range(200):
+            market.advance()
+            await runtime._cycle_once()
+            if runtime.counters["orders"] > 0:
+                break
+        assert runtime.counters["orders"] > 0
+        assert runtime.snapshot()["market"]["quote"]["spread_bps"] == pytest.approx(1.0, rel=1e-3)
+    finally:
+        await runtime.stop()
+
+
+async def test_a_feed_without_quotes_keeps_the_configured_spread_and_says_so() -> None:
+    runtime, _execution, market = build_runtime_paper_with(max_spread_bps=10.0)
+    await runtime.start()
+    try:
+        market.advance()
+        await runtime._cycle_once()
+        market_view = runtime.snapshot()["market"]
+        assert market_view["quote"] is None
+        assert market_view["spread_source"] == "configured constant"
+        assert runtime.counters["spread_rejected"] == 0
+    finally:
+        await runtime.stop()
+
+
+def _seed_weakly(runtime: LiveRuntime) -> None:
+    """Evidence that clears the threshold and the cost ratio but is far from sure:
+    mean 120 bps with a standard error near 47, so t is about 2.5."""
+    from tia.domain.enums import Direction, MarketRegime
+    from tia.economics.expected_value import Outcome
+
+    runtime._edges.record_many(
+        [
+            Outcome(
+                regime=regime, direction=direction, confidence=0.65,
+                net_return_bps=120.0 + (300.0 if i % 2 else -300.0),
+            )
+            for regime in MarketRegime
+            for direction in (Direction.LONG, Direction.SHORT)
+            for i in range(40)
+        ]
+    )
+
+
+async def test_conviction_sizing_takes_less_than_the_approval_when_the_evidence_is_unsure() -> None:
+    runtime, _execution, market = build_runtime_paper_with(conviction_sizing=True)
+    await runtime.start()
+    try:
+        _seed_weakly(runtime)
+        for _ in range(300):
+            market.advance()
+            await runtime._cycle_once()
+            if runtime.counters["orders"] > 0:
+                break
+        assert runtime.counters["orders"] > 0
+        assert runtime.counters["sized_down"] >= 1
+        last = runtime.snapshot()["sizing"]["last"]
+        assert 0.35 <= last["fraction"] < 1.0
+        assert "t = " in last["reason"]
+        if runtime._entry_beliefs is not None:
+            assert runtime._entry_beliefs["size_fraction"] == pytest.approx(last["fraction"], abs=1e-4)
+    finally:
+        await runtime.stop()
+
+
+async def test_sure_evidence_takes_the_full_approved_size_and_never_more() -> None:
+    runtime, execution, market = build_runtime_paper_with(conviction_sizing=True)
+    await runtime.start()
+    try:
+        await _open_a_position(runtime, execution, market)  # seeds t >> 3
+        assert runtime.counters["sized_down"] == 0
+        last = runtime.snapshot()["sizing"]["last"]
+        assert last["fraction"] == 1.0
+    finally:
+        await runtime.stop()
+
+
+async def test_a_strategy_with_a_losing_record_is_muted_and_its_signals_refused() -> None:
+    runtime, execution, market = build_runtime_paper_with()
+    await runtime.start()
+    try:
+        await _open_a_position(runtime, execution, market)
+        strategy_id = runtime._entry_beliefs["strategy_id"]
+        assert strategy_id
+        # Its own record, thirty-plus losers: worse than its noise, well past the floor.
+        for i in range(40):
+            runtime._scoreboard.record(strategy_id, -30.0 + (2.0 if i % 2 else -2.0))
+        assert runtime._scoreboard.is_muted(strategy_id)
+
+        refusals: list[dict[str, Any]] = []
+        runtime._on_event = lambda e: refusals.append(e) if e["type"] == "live.no_trade" else None
+        for _ in range(200):
+            market.advance()
+            await runtime._cycle_once()
+        assert runtime.counters["strategy_muted"] > 0
+        assert any("muted" in str(e["data"].get("reason", "")) for e in refusals)
+        row = next(r for r in runtime.snapshot()["strategies"] if r["strategy_id"] == strategy_id)
+        assert row["muted"] is True
+    finally:
+        await runtime.stop()
+
+
+async def test_absorbed_evidence_credits_the_strategies_it_names() -> None:
+    runtime, _execution, _market = build_runtime_paper_with()
+    result = runtime.absorb_evidence(
+        outcomes=[],
+        reviews=[
+            {
+                "regime": "trending_up", "direction": "long", "confidence": 0.6,
+                "expected_net_bps": 5.0, "net_bps": 12.0, "fees_bps": 4.0,
+                "closed_at": datetime.now(UTC), "signal_id": "s1", "symbol": "BTC-USD",
+                "entry_price": 100.0, "quantity": 1.0, "exploratory": False,
+                "strategy_id": "trend_following",
+            },
+            {
+                "regime": "trending_up", "direction": "long", "confidence": 0.6,
+                "expected_net_bps": 5.0, "net_bps": -3.0, "fees_bps": 4.0,
+                "closed_at": datetime.now(UTC), "signal_id": "s2", "symbol": "BTC-USD",
+                "entry_price": 100.0, "quantity": 1.0, "exploratory": False,
+                "strategy_id": None,  # written before strategies were credited
+            },
+        ],
+    )
+    assert result["strategies_credited"] == 1
+    board = runtime.snapshot()["strategies"]
+    assert [r["strategy_id"] for r in board] == ["trend_following"]

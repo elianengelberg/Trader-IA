@@ -41,11 +41,19 @@ interface LiveSnap {
   evidence?: { absorbed_since_start?: number; buckets_ready?: number };
   position?: {
     open?: boolean;
+    entry_price?: number | null;
     stop_price?: number | null;
+    initial_stop?: number | null;
+    stop_kind?: string | null;
     target_price?: number | null;
+    best_price?: number | null;
+    r_multiple?: number | null;
     protected?: boolean;
   };
   execution?: { entry_order_type?: string; resting_order?: unknown };
+  exits?: { breakeven_after_r?: number; trail_atr_multiple?: number };
+  market?: { quote?: { spread_bps?: number } | null; max_spread_bps?: number; spread_source?: string };
+  sizing?: { conviction?: boolean; last?: { fraction?: number; reason?: string } | null };
 }
 
 /** Every bucket needs this many closed trades before the session will trade it. */
@@ -79,7 +87,9 @@ function LiveSessionPanel({ subscribe }: { subscribe: Subscribe }) {
     (counters.ev_rejected ?? 0) +
     (counters.risk_rejected ?? 0) +
     (counters.budget_rejected ?? 0) +
-    (counters.guardrail_rejected ?? 0);
+    (counters.guardrail_rejected ?? 0) +
+    (counters.spread_rejected ?? 0) +
+    (counters.strategy_muted ?? 0);
   const starving = (counters.signals ?? 0) > 0 && (counters.orders ?? 0) === 0;
   // Why the session is not RUNNING is the whole content of the news that it is not.
   // The reason lives in the state machine's last transition; showing it here saves a
@@ -124,16 +134,30 @@ function LiveSessionPanel({ subscribe }: { subscribe: Subscribe }) {
       {(snap.position?.open || snap.execution?.entry_order_type) && (
         <p className="footnote" style={{ marginTop: 12 }}>
           {snap.position?.open
-            ? `Open position: ${snap.position.protected ? "protected by a stop" : "NOT protected"}` +
+            ? `Open position: ${
+                snap.position.protected
+                  ? `protected by a ${snap.position.stop_kind && snap.position.stop_kind !== "protective" ? snap.position.stop_kind + " " : ""}stop`
+                  : "NOT protected"
+              }` +
               (snap.position.stop_price ? ` at $${money(snap.position.stop_price, 0)}` : "") +
+              (snap.position.r_multiple != null ? ` · ${snap.position.r_multiple.toFixed(1)}R in favour at best` : "") +
               (snap.position.target_price ? ` · target $${money(snap.position.target_price, 0)}` : "") +
               ". "
             : "Flat. "}
           Entries: {snap.execution?.entry_order_type === "limit" ? "resting maker orders" : "market"}
           {snap.execution?.resting_order ? " · one order resting now" : ""}
-          {(counters.exits_stop ?? 0) + (counters.exits_target ?? 0) + (counters.exits_reversal ?? 0) > 0
-            ? ` · exits: ${counters.exits_stop ?? 0} by stop, ${counters.exits_target ?? 0} at target, ${counters.exits_reversal ?? 0} on reversal`
+          {snap.sizing?.last?.fraction != null && snap.sizing.last.fraction < 1
+            ? ` · last entry sized at ${Math.round(snap.sizing.last.fraction * 100)}% of the approved size (${snap.sizing.last.reason ?? "conviction"})`
             : ""}
+          {snap.market?.quote?.spread_bps != null
+            ? ` · live spread ${snap.market.quote.spread_bps.toFixed(2)} bps`
+            : ""}
+          {(counters.exits_stop ?? 0) + (counters.exits_target ?? 0) + (counters.exits_reversal ?? 0) > 0
+            ? ` · exits: ${counters.exits_stop ?? 0} by stop (${counters.exits_breakeven ?? 0} break-even, ${counters.exits_trail ?? 0} trailing), ${counters.exits_target ?? 0} at target, ${counters.exits_reversal ?? 0} on reversal`
+            : ""}
+          {(counters.stops_tightened ?? 0) > 0 ? ` · stops tightened ${counters.stops_tightened}` : ""}
+          {(counters.strategy_muted ?? 0) > 0 ? ` · ${counters.strategy_muted} refused from a muted strategy` : ""}
+          {(counters.spread_rejected ?? 0) > 0 ? ` · ${counters.spread_rejected} waited out a wide spread` : ""}
         </p>
       )}
       {stateReason && (
@@ -189,6 +213,8 @@ function describe(event: ActivityEvent): { text: string; tone: string } {
       return { text: `Resting ${d.side} order expired after ${d.waited_bars} bars${d.reducing ? " — exit re-sent at market" : ""}`, tone: "warn" };
     case "live.stop_placed":
       return { text: `Protective stop placed at $${money(Number(d.stop_price ?? 0), 0)}`, tone: "" };
+    case "live.stop_tightened":
+      return { text: `Stop tightened to $${money(Number(d.stop_price ?? 0), 0)} (${d.kind}: ${d.reason ?? ""})`, tone: "info" };
     case "live.exit":
       return { text: `Exit at market: ${d.reason}`, tone: "warn" };
     case "live.evidence_absorbed":

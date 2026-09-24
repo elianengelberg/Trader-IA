@@ -27,7 +27,7 @@ from pathlib import Path
 from typing import Any
 
 from tia.data.providers.binance_public import BinancePublicProvider
-from tia.mm.consistency import TopOfBookSample, summarise
+from tia.mm.consistency import CausalTopOfBookMatcher, TopOfBookSample, feed_from_service, summarise
 from tia.mm.latency_model import LatencyProfileError, build_latency_profile
 from tia.mm.market_data import MarketDataService
 from tia.mm.order_book import snapshot_from_levels
@@ -153,6 +153,10 @@ async def main() -> int:
         fetch_snapshot=fetch_snapshot,
         recorder=recorder,
     )
+    # The causal comparison with the venue's bookTicker: fed per event, in arrival
+    # order, after the service has applied each one (see tia.mm.consistency).
+    matcher = CausalTopOfBookMatcher(tick_size=args.tick_size)
+    service.subscribe(lambda kind, event, t_ms: feed_from_service(matcher, service.book, kind, event, t_ms))
     ticks_bytes_start = _dir_bytes(ticks_dir)
     cpu_start = time.process_time()
     wall_start = time.time()
@@ -287,7 +291,17 @@ async def main() -> int:
     stalls = 1 if stale_test.get("exercised") else 0
     unexplained_gaps = max(0, metrics["gaps"] - disconnects - stalls)
     silent_loss = (final["recorder"] or {}).get("events_dropped", 0) + stream["dropped_events"]
-    comparison_summary = summarise(comparisons)
+    # Instant sampling every --sample-seconds: descriptive. The verdict comes from the
+    # causal ledger, which pairs each local state with the venue's top at the same id.
+    instant_sampling = summarise(comparisons)
+    for verdict_key in ("persistent_inconsistency", "impossible_state", "rule"):
+        instant_sampling.pop(verdict_key, None)
+    instant_sampling["note"] = (
+        "sampled at one instant from two separate streams: informational only, "
+        "not read by criterion 12"
+    )
+    causal = matcher.summary()
+    comparison_summary = {**causal, "instant_sampling": instant_sampling}
     replay_ok = [r for r in replays if r["ok"]]
     clean = [s for s in segments if s["replayable"]]
 
@@ -430,7 +444,7 @@ async def main() -> int:
             "9_stale_detected": stale_test.get("stale_detected_after_s") is not None if stale_test.get("exercised") else "not exercised (--inject-stall 0)",
             "10_real_execution_enabled": False,
             "11_invented_data": False,
-            "12_book_ticker_consistent": not comparison_summary["persistent_inconsistency"] and not comparison_summary["impossible_state"],
+            "12_book_ticker_consistent": causal["consistent"],
         },
         "execution": "none — no execution provider was constructed",
     }

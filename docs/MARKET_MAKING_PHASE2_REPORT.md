@@ -189,6 +189,16 @@ secuencia del venue que dice cuál es más fresco. Por eso:
 - El reporte informa además `venue_ahead_samples` (el ticker tenía un id mayor que el
   libro) y `id_lag` por muestra, para que la explicación por timing sea verificable y no
   asumida.
+- **Desde 2026-09-24 el criterio 12 no lee el muestreo por instante.** Lo decide la
+  comparación causal sobre el `updateId` del venue (`CausalTopOfBookMatcher`,
+  `tia/mm/consistency.py`; §22.6 del documento de auditoría de la Fase 3): cada estado
+  local tras un lote de depth que termina en `L` se compara con el último `bookTicker` de
+  id ≤ `L`, recién cuando llegó un `bookTicker` de id > `L`. Los desacuerdos por instante
+  quedan como `timing_disagreement`, medidos (adelanto en updates, tiempo hasta alcanzar)
+  y nunca juzgados; la inconsistencia real es la que sobrevive a esa ventana causal
+  (`persistent_true_inconsistency`), además de `impossible_state`. El bloque
+  `book_ticker_comparison.instant_sampling` conserva las cifras por instante como
+  descripción.
 
 ---
 

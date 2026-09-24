@@ -566,3 +566,47 @@ p95 118 / p99 120 ms; trade p50 121 / p95 136 / p99 163 ms; procesamiento local 
 con **máximo 161,902 ms identificado como outlier** (no es latencia típica y no se usa como
 tal). `bookTicker` no se usa como fuente de latencia exchange→local. Los escenarios derivan
 la latencia de orden y cancelación del camino depth (p50 / p95 / 2×p99).
+
+### 22.6 Comparación causal del libro local con el `bookTicker` (2026-09-24)
+
+**El problema.** La comparación de la Fase 2 muestreaba cada 5 s el tope del libro local
+contra el último `bookTicker` recibido, en el mismo instante de recepción. Son dos streams
+independientes: `depth@100ms` llega en lotes y `bookTicker` en cada cambio del tope. En la
+corrida de validación del 2026-09-24 eso produjo 120 muestras de 592 con más de un tick de
+diferencia, `id_lag` de hasta -828 updates y `persistent_inconsistency=true`, con el libro
+íntegro por todos los demás criterios. El desacuerdo era de ordenamiento, no del libro.
+
+**La regla causal.** Los dos streams comparten el `updateId` del libro del venue: un lote
+de depth termina en `u`; un `bookTicker` lleva el `u` del cambio que informa. Ese id es el
+reloj causal. El tope del venue en el id `L` es el último `bookTicker` con id ≤ `L`
+(`bookTicker` se emite en cada cambio del mejor bid o ask, así que ningún cambio cabe
+entre ese ticker y `L`), y se sabe que es el último cuando llegó un `bookTicker` con id
+> `L`. Por eso cada estado local (el tope del libro tras aplicar el lote que termina en
+`L`) se compara con ese ticker, y solo entonces (`CausalTopOfBookMatcher`,
+`tia/mm/consistency.py`, alimentado por `MarketDataService.subscribe` a través de
+`feed_from_service`).
+
+**Tres veredictos, separados.** `timing_disagreement`: en el instante en que llega un
+ticker su id difiere del id del libro y los topes difieren; se mide (adelanto en updates:
+p50/p95/p99/máximo; tiempo hasta que el libro alcanza el id del ticker, en tiempo de
+recepción local; cantidad con `venue_ahead`) y no se juzga. `true_inconsistency`: un
+estado local que difiere del tope del venue en su propio id, cerrada la ventana causal; es
+`persistent_true_inconsistency` con 3 estados resueltos consecutivos en desacuerdo, y
+`isolated` si no llega a 3 (se informa y conserva ejemplo). `impossible_state`: ask local
+≤ bid local, tope del venue cruzado, secuencia de `bookTicker` hacia atrás. Cada ejemplo
+guarda timestamp, bid/ask local y del venue, `update_id` de ambos, `id_lag`, edad del
+estado local, ticks de diferencia, clasificación, motivo y el id del ticker que cerró la
+ventana. El criterio 12 es falso ante cualquier `impossible_state` o una
+`persistent_true_inconsistency`; es `NOT MEASURED` si ningún estado pudo resolverse; los
+`timing_disagreement` nunca lo hacen fallar. El muestreo por instante se conserva como
+`instant_sampling`, descriptivo.
+
+**Lo que falta y no se inventa.** El `bookTicker` de Spot no trae event time: el adelanto
+en tiempo se mide en recepción local, que es lo que el emparejamiento necesita; la latencia
+exchange→local del ticker no se puede medir. Los tamaños en el tope se comparan y se
+informan (`resolved_price_match_size_mismatch`) sin decidir el criterio, hasta verificar en
+el VPS que la semántica de cantidad del `bookTicker` coincide con el fin del lote. La
+regla supone que ambos streams comparten el espacio de `updateId` y que el `bookTicker` es
+completo entre dos tickers recibidos; una tasa sistemática de desacuerdos resueltos
+delataría cualquiera de las dos suposiciones, y una desconexión descarta los
+emparejamientos pendientes en vez de juzgarlos.

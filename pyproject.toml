@@ -37,7 +37,10 @@ api = [
   "pyjwt>=2.8",
 ]
 db = [
-  "SQLAlchemy>=2.0.30",
+  # The asyncio extension needs greenlet. SQLAlchemy 2.1 (2026-09-25) stopped installing
+  # it by default, so the extra is stated; 2.1 itself stays out until it is validated
+  # against the models, the migrations and the async sessions.
+  "SQLAlchemy[asyncio]>=2.0.30,<2.1",
   "alembic>=1.13",
   "aiosqlite>=0.20",
 ]

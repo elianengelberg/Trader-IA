@@ -296,3 +296,50 @@ def test_a_recorded_segment_is_judged_by_the_same_causal_comparison_read_only(tm
     assert c["lag"]["catch_up_ms"]["max"] == 80 and c["lag"]["catch_up_updates"]["max"] == 3
     assert c["lag"]["tickers_awaiting_catch_up_at_end"] == 1
     assert c["consistent"] is True
+
+
+# ------------------------------------------------------ intermediate tickers and unresolved
+
+
+def test_a_ticker_intermediate_inside_a_batch_never_becomes_an_inconsistency() -> None:
+    # The VPS case of 2026-09-24: the venue's top moved four times inside one 763-update
+    # batch. Each intermediate ticker described a state the batch itself left behind; the
+    # book at the end of the batch must equal the last ticker at or below its final id.
+    m = CausalTopOfBookMatcher(tick_size=TICK)
+    m.on_ticker(_venue(100580224185, 84318.00, 84318.01, 1000))
+    m.on_local_state(_local(100580224185, 84318.00, 84318.01, 1005))
+    for u, bid, ask, t in (
+        (100580224189, 84318.00, 84318.01, 1010),  # inside the next batch, same top
+        (100580224347, 84319.98, 84319.99, 1100),
+        (100580224369, 84319.98, 84320.01, 1110),
+        (100580224464, 84320.00, 84320.01, 1250),
+        (100580224945, 84320.00, 84320.01, 1580),  # the last change at or below the batch end
+    ):
+        m.on_ticker(_venue(u, bid, ask, t))
+    assert m.true_inconsistencies == 0 and m.summary()["instant"]["venue_ahead_samples"] == 5
+    # The batch 224186..224948 arrives and leaves the local top at 84320.00/84320.01.
+    m.on_local_state(_local(100580224948, 84320.00, 84320.01, 1640))
+    m.on_ticker(_venue(100580224950, 84320.00, 84320.01, 1645))  # proof: nothing else fits before 224948
+    s = m.summary()
+    assert s["resolved"] == 2 and s["resolved_consistent"] == 2 and s["true_inconsistencies"] == 0
+    assert s["instant"]["timing_disagreements"] == 4  # 224347, 224369, 224464, 224945 differed at their instants
+    assert s["persistent_true_inconsistency"] is False and s["consistent"] is True
+    # Had the batch-end state been paired with the intermediate ticker 224189 instead, the
+    # 200-tick move inside the batch would have read as an inconsistency. It is not paired.
+    assert all(ex["classification"] == "timing_disagreement" for ex in s["examples"]["timing_disagreement"])
+
+
+def test_states_without_a_proof_ticker_stay_unresolved_and_are_never_judged() -> None:
+    m = CausalTopOfBookMatcher(tick_size=TICK)
+    m.on_ticker(_venue(99, 100.00, 100.01, 990))
+    m.on_local_state(_local(100, 100.05, 100.06, 1000))  # differs from ticker 99: the venue may have moved at 100
+    m.on_local_state(_local(101, 100.05, 100.06, 1100))
+    s = m.summary()
+    assert s["unresolved_at_end"] == 2 and s["resolved"] == 0 and s["true_inconsistencies"] == 0
+    assert s["persistent_true_inconsistency"] is False and str(s["consistent"]).startswith(NOT_MEASURED)
+    # The proof ticker arrives with the venue's own move at 100: both states resolve consistent.
+    m.on_ticker(_venue(100, 100.05, 100.06, 1005))  # arrives late, in venue order
+    m.on_ticker(_venue(102, 100.05, 100.06, 1150))
+    s = m.summary()
+    assert s["resolved"] == 2 and s["resolved_consistent"] == 2 and s["unresolved_at_end"] == 0
+    assert s["true_inconsistencies"] == 0 and s["consistent"] is True

@@ -35,6 +35,7 @@ description of what an observer sees at one instant; it decides nothing.
 
 from __future__ import annotations
 
+import bisect
 import math
 from collections import deque
 from dataclasses import dataclass
@@ -255,7 +256,12 @@ class CausalTopOfBookMatcher:
         self._max_examples = max_examples
         self._max_lag_samples = max_lag_samples
 
-        self._tickers: deque[VenueTop] = deque()  # ascending ids, arrival order
+        # Tickers kept for resolution, ascending ids, with a parallel id list so the
+        # reference for a state is one bisect. Pruned by slicing once the dead prefix is
+        # long enough: amortised O(1) per ticker, never a scan of the history.
+        self._tickers: list[VenueTop] = []
+        self._ticker_ids: list[int] = []
+        self._prune_batch = 256
         self._pending_states: deque[LocalTop] = deque()  # ids >= last ticker id
         self._pending_tickers: deque[tuple[VenueTop, int, dict[str, Any] | None]] = deque()
         self._last_local: LocalTop | None = None
@@ -311,6 +317,7 @@ class CausalTopOfBookMatcher:
         self._pending_states.clear()
         self._pending_tickers.clear()
         self._tickers.clear()
+        self._ticker_ids.clear()
         self._last_ticker_id = None
         self._end_run()
 
@@ -331,7 +338,9 @@ class CausalTopOfBookMatcher:
             if ticker.update_id == self._last_ticker_id:
                 self.ticker_duplicates += 1
                 self._tickers.pop()  # the later report of the same id is the one kept
+                self._ticker_ids.pop()
         self._tickers.append(ticker)
+        self._ticker_ids.append(ticker.update_id)
         self._last_ticker_id = ticker.update_id
         self._prune_tickers()
 
@@ -414,12 +423,9 @@ class CausalTopOfBookMatcher:
         self._prune_tickers()
 
     def _reference_for(self, update_id: int) -> VenueTop | None:
-        reference: VenueTop | None = None
-        for ticker in self._tickers:  # ascending; the deque is pruned, so this stays short
-            if ticker.update_id > update_id:
-                break
-            reference = ticker
-        return reference
+        """The venue's last top-of-book change at or below ``update_id``: one bisect."""
+        i = bisect.bisect_right(self._ticker_ids, update_id) - 1
+        return self._tickers[i] if i >= 0 else None
 
     def _resolve(self, state: LocalTop, *, proof_id: int, at_ms: int) -> None:
         reference = self._reference_for(state.update_id)
@@ -460,19 +466,23 @@ class CausalTopOfBookMatcher:
             self._current_run = 0
 
     def _prune_tickers(self) -> None:
-        """Keep only what a resolution can still need: the last ticker at or below the
-        oldest state still to be resolved, and everything after it. With nothing pending,
-        the next state's id is above the last local id, so that is the floor."""
+        """Drop tickers no resolution can still need: everything before the last ticker at
+        or below the oldest state still to be resolved (with nothing pending, the next
+        state's id is above the last local id, so that is the floor). Slices only once the
+        dead prefix is long enough, so the cost is amortised over many events."""
         if self._pending_states:
             floor = self._pending_states[0].update_id
         elif self._last_local is not None:
             floor = self._last_local.update_id
         else:
-            while len(self._tickers) > self._max_pending:  # no book yet: bounded, nothing else
-                self._tickers.popleft()
+            if len(self._tickers) > self._max_pending:  # no book yet: bounded, nothing else
+                del self._tickers[: len(self._tickers) - self._max_pending]
+                del self._ticker_ids[: len(self._ticker_ids) - self._max_pending]
             return
-        while len(self._tickers) >= 2 and self._tickers[1].update_id <= floor:
-            self._tickers.popleft()
+        keep_from = max(0, bisect.bisect_right(self._ticker_ids, floor) - 1)
+        if keep_from >= self._prune_batch:
+            del self._tickers[:keep_from]
+            del self._ticker_ids[:keep_from]
 
     # ------------------------------------------------------------------ helpers
 

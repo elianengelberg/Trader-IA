@@ -610,3 +610,53 @@ regla supone que ambos streams comparten el espacio de `updateId` y que el `book
 completo entre dos tickers recibidos; una tasa sistemática de desacuerdos resueltos
 delataría cualquiera de las dos suposiciones, y una desconexión descarta los
 emparejamientos pendientes en vez de juzgarlos.
+
+### 22.7 Latencia y frescura: un objetivo del proyecto, separado de la integridad (2026-09-27)
+
+**Por qué es un objetivo y no un detalle.** El segmento `20260924-01` del VPS reconstruyó el
+libro sin un solo error (continuidad de ids, cero gaps, replay con digest coincidente) y a la
+vez mostró latencia exchange→local del depth con p50 254 ms, p95 4.245 ms, p99 8.940 ms y
+máximo 10.935 ms, frente al perfil del 2026-09-18 (p50 117 / p99 120 ms). Un libro
+históricamente correcto y varios segundos atrasado describe un mercado que ya no existe:
+para cotizar es inútil o peligroso, y cualquier PnL simulado sobre él no es evidencia de
+nada. Integridad y frescura son dos veredictos distintos y el sistema los reporta por
+separado. Mejorar la latencia física es un objetivo abierto del proyecto; **esta sección
+no la da por resuelta**: la causa de los 4 a 11 segundos (red, emisión tardía del venue,
+CPU o memoria del droplet, cola de la librería) sigue pendiente de investigación en el VPS.
+
+**Dos edades, nunca confundidas.** `receive_age = ahora − R` del último evento aplicado:
+detecta silencio de recepción; es lo que medía `max_data_age_s` (2 s) y se conserva.
+`venue_age = ahora − E` del último lote de depth aplicado, neto del offset host-venue si se
+midió: detecta el dato que llegó recién pero ya era viejo cuando el venue lo emitió. El
+`bookTicker` de Spot no trae `E` y no se le inventa: su aporte es el **adelanto** sobre el
+libro, en updates (último `u` de ticker menos `u` del lote) y en milisegundos (desde que
+llegó el primer ticker con id superior al lote), medidos en cada lote aplicado y sin
+necesitar ningún reloj. Tras un snapshot REST, que tampoco trae `E`, la edad de venue es
+desconocida hasta el primer lote siguiente: se reporta `None`, no cero.
+
+**Estados de frescura** (`MarketDataService.freshness()`, en este orden): `disconnected`;
+`gap` (integridad: hueco de secuencia o libro cruzado) o `syncing` (reconstrucción) cuando
+el libro no es válido; `stale_receive` cuando `receive_age > max_data_age_s`; `stale_venue`
+cuando `venue_age > max_venue_age_s`; `fresh`. Sólo `fresh` es `usable`, y `usable` es lo
+que lee el `GlobalTradingSafetyGate` (`DATA_INVALID` en cualquier otro estado). Cada estado
+lleva su razón en texto; las transiciones y los episodios `stale_receive` /
+`stale_venue` se cuentan.
+
+**Umbral provisional.** `TIA_MM__MAX_VENUE_AGE_S = 1.0` (`PROVISIONAL_MAX_VENUE_AGE_S`):
+diez lotes de 100 ms de atraso. Elegido para que la lateza de segundos observada no pueda
+pasar por fresca y para no disparar con el tránsito medido el 18/09. **No es un valor
+definitivo**: se calibra con la distribución real de `venue_age` medida en el servidor, y
+`None` lo deja en modo informe. El offset de reloj host-venue no se estima: vale 0 hasta
+que se mida, y mientras tanto `venue_age` lo incluye.
+
+**Métricas expuestas** (`snapshot()["freshness"]` y `snapshot()["latency"]`, acotadas:
+ventanas móviles de 4.000 muestras): estado y razón, `receive_age_s`, `venue_age_s` con su
+fuente, `trade_venue_age_s`, `R − E` de depth y de trade (ya en el stream),
+`ticker_lead_updates_at_batch_arrival`, `ticker_lead_ms_at_batch_arrival`, transiciones,
+episodios. El `MarketMakerService` las copia en `data_quality`; el script de chequeo las
+escribe en el reporte y en la línea de tiempo del stall.
+
+**Comparación causal con el `bookTicker` (§22.6), rendimiento.** La referencia del venue
+para un estado es una búsqueda binaria sobre la lista de ids de tickers; la poda del
+prefijo muerto se hace por rebanadas amortizadas; todas las colas están acotadas. Ningún
+evento recorre el historial.

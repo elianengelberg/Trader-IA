@@ -1195,6 +1195,8 @@ class AppState:
             fetch_snapshot=fetch_snapshot,
             recorder=recorder,
             max_data_age_s=cfg.max_data_age_s,
+            max_venue_age_s=cfg.max_venue_age_s,
+            venue_clock_offset_ms=cfg.venue_clock_offset_ms,
         )
         service.start()
         self._mm_market = service

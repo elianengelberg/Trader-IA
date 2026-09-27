@@ -13,13 +13,19 @@ from tia.mm.order_book import BookState, snapshot_from_levels
 from tia.mm.recorder import TickRecorder
 from tia.mm.streams import MarketDataStream
 
+BASE_MS = 1_700_000_000_000
+#: The scripted clock the frame builders read: E sits a realistic 100 ms behind receipt.
+CLOCK = {"ms": BASE_MS}
 
-def _depth(U: int, u: int, bids=(), asks=()) -> str:  # type: ignore[no-untyped-def]
-    return json.dumps({"stream": "s@depth@100ms", "data": {"e": "depthUpdate", "E": 1_000 + u, "s": "BTCUSDT", "U": U, "u": u, "b": [[str(p), str(q)] for p, q in bids], "a": [[str(p), str(q)] for p, q in asks]}})
+
+def _depth(U: int, u: int, bids=(), asks=(), E: int | None = None) -> str:  # type: ignore[no-untyped-def]
+    E = CLOCK["ms"] - 100 if E is None else E
+    return json.dumps({"stream": "s@depth@100ms", "data": {"e": "depthUpdate", "E": E, "s": "BTCUSDT", "U": U, "u": u, "b": [[str(p), str(q)] for p, q in bids], "a": [[str(p), str(q)] for p, q in asks]}})
 
 
 def _trade(t: int, price: float) -> str:
-    return json.dumps({"stream": "s@trade", "data": {"e": "trade", "E": 2_000 + t, "s": "BTCUSDT", "t": t, "p": str(price), "q": "0.1", "T": 1_990 + t, "m": False, "M": True}})
+    E = CLOCK["ms"] - 50
+    return json.dumps({"stream": "s@trade", "data": {"e": "trade", "E": E, "s": "BTCUSDT", "t": t, "p": str(price), "q": "0.1", "T": E - 5, "m": False, "M": True}})
 
 
 class Scripted:
@@ -59,7 +65,8 @@ async def _service(tmp_path: Path, snapshots: list):  # type: ignore[no-untyped-
 
     module.BACKOFF = (0.01,)
     scripted = Scripted()
-    clock = {"ms": 1_700_000_000_000}
+    clock = CLOCK
+    clock["ms"] = BASE_MS
     calls = {"n": 0}
 
     async def fetch_snapshot():  # type: ignore[no-untyped-def]

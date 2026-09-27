@@ -462,6 +462,14 @@ class MarketMakingConfig(BaseModel):
     depth_speed: str = Field("100ms", pattern="^(100ms|1000ms)$")
     depth_snapshot_limit: int = Field(1000, ge=5, le=5000)
     max_data_age_s: float = Field(2.0, gt=0, le=60)
+    #: PROVISIONAL_THRESHOLD for the venue age of the book (seconds between the venue event
+    #: time of the last applied depth batch and now). A book whose last batch was already
+    #: this old when the venue emitted it is stale even if it arrived a moment ago. The
+    #: definitive value must be calibrated from venue_age measured on the server.
+    max_venue_age_s: float = Field(1.0, gt=0, le=60)
+    #: Host clock minus venue clock, in ms, when measured. 0 means not measured: venue_age
+    #: then includes the offset. Never estimated by the code.
+    venue_clock_offset_ms: float = Field(0.0, ge=-60_000, le=60_000)
     record_ticks: bool = True
     ticks_dir: str = "data/ticks"
     ticks_retention_days: int = Field(14, ge=1, le=365)

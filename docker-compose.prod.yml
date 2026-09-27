@@ -128,6 +128,10 @@ services:
       TIA_MM__TICKS_DIR: /app/data/runtime/ticks
       TIA_MM__TICKS_RETENTION_DAYS: ${TIA_MM__TICKS_RETENTION_DAYS:-14}
       TIA_MM__TICKS_MAX_GB: ${TIA_MM__TICKS_MAX_GB:-2}
+      # PROVISIONAL_THRESHOLD: seconds between the venue event time of the last applied
+      # depth batch and now above which the book is stale even if it just arrived.
+      # Calibrate from the venue_age distribution measured on this server.
+      TIA_MM__MAX_VENUE_AGE_S: ${TIA_MM__MAX_VENUE_AGE_S:-1.0}
       TIA_MM__MAKER_FEE_BPS: ${TIA_MM__MAKER_FEE_BPS:-10}
       TIA_MM__MAKER_FEE_ADVERSE_BPS: ${TIA_MM__MAKER_FEE_ADVERSE_BPS:-15}
       TIA_LIVE__PAPER_CAPITAL: ${TIA_LIVE__PAPER_CAPITAL:-10000}

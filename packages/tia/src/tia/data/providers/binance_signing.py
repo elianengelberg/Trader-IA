@@ -95,8 +95,9 @@ class BinanceCredentials:
     def from_values(cls, *, api_key: str, secret: str) -> BinanceCredentials:
         if not api_key.strip() or not secret.strip():
             raise ValueError(
-                "both an API key and a secret are required. Configure them in the process "
-                "environment (TIA_BINANCE_API_KEY / TIA_BINANCE_API_SECRET) or a secret "
+                "both an API key and a secret are required and neither may be empty. Configure "
+                "them in the process environment as TIA_LIVE__BINANCE_API_KEY / "
+                "TIA_LIVE__BINANCE_API_SECRET (the names the configuration reads) or a secret "
                 "manager — never in a config file that is committed, and never through the "
                 "web interface."
             )

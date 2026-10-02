@@ -387,6 +387,24 @@ def test_credentials_refuse_to_be_built_from_blanks() -> None:
         BinanceCredentials.from_values(api_key="k", secret="   ")  # noqa: S106 - blank on purpose
 
 
+def test_empty_environment_values_count_as_no_credentials() -> None:
+    """A compose ``${VAR:-}`` with nothing behind it hands the process two empty strings.
+    That is the absence of a credential — reported with the variable names the
+    configuration actually reads — not a malformed one."""
+    from pydantic import SecretStr
+
+    from tia.core.config import LiveConfig
+    from tia.data.providers.binance_signing import signer_from_live_config
+
+    live = LiveConfig(binance_api_key=SecretStr(""), binance_api_secret=SecretStr(" "))
+    assert live.has_credentials is False
+    with pytest.raises(ValueError, match="TIA_LIVE__BINANCE_API_KEY"):
+        signer_from_live_config(live, FrozenClock(START))
+
+    present = LiveConfig(binance_api_key=SecretStr("k"), binance_api_secret=SecretStr(SECRET))
+    assert present.has_credentials is True
+
+
 # --------------------------------------------------------------------------- formatting
 
 

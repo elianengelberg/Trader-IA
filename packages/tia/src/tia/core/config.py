@@ -418,7 +418,15 @@ class LiveConfig(FrozenModel):
 
     @property
     def has_credentials(self) -> bool:
-        return self.binance_api_key is not None and self.binance_api_secret is not None
+        """Both values present and non-empty. An environment variable that expanded to ""
+        (a compose ``${VAR:-}`` with nothing behind it) is the absence of a credential, and
+        is reported as such rather than as a malformed one."""
+        return bool(
+            self.binance_api_key is not None
+            and self.binance_api_secret is not None
+            and self.binance_api_key.get_secret_value().strip()
+            and self.binance_api_secret.get_secret_value().strip()
+        )
 
     @model_validator(mode="after")
     def _coherent(self) -> LiveConfig:

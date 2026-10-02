@@ -17,8 +17,8 @@ output, and both fail closed until they are.
     python scripts/validate_binance.py
 
     # Add account checks. Reads permissions and the real fee tier.
-    export TIA_BINANCE_API_KEY=...          # never pass these as arguments:
-    export TIA_BINANCE_API_SECRET=...       # arguments land in your shell history
+    export TIA_LIVE__BINANCE_API_KEY=...    # never pass these as arguments:
+    export TIA_LIVE__BINANCE_API_SECRET=... # arguments land in your shell history
     python scripts/validate_binance.py --account
 
     # Add a live order round trip. TESTNET ONLY, and it says so.
@@ -429,12 +429,13 @@ async def run(args: argparse.Namespace) -> Results:
         await validate_public(client, results, symbol)
 
         if args.account or args.order:
-            api_key = os.environ.get("TIA_BINANCE_API_KEY", "")
-            api_secret = os.environ.get("TIA_BINANCE_API_SECRET", "")
+            # The configuration reads TIA_LIVE__*; the flat names are the older spelling.
+            api_key = os.environ.get("TIA_LIVE__BINANCE_API_KEY", "") or os.environ.get("TIA_BINANCE_API_KEY", "")
+            api_secret = os.environ.get("TIA_LIVE__BINANCE_API_SECRET", "") or os.environ.get("TIA_BINANCE_API_SECRET", "")
             if not api_key or not api_secret:
                 results.skip(
                     "account checks",
-                    "set TIA_BINANCE_API_KEY and TIA_BINANCE_API_SECRET in the environment",
+                    "set TIA_LIVE__BINANCE_API_KEY and TIA_LIVE__BINANCE_API_SECRET in the environment",
                 )
             else:
                 signer = BinanceSigner(

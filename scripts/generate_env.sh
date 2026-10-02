@@ -50,8 +50,8 @@ TIA_ANTHROPIC_API_KEY=
 # Venue credentials: NOT needed for the 24/7 paper session. When the time comes,
 # paste them HERE on this machine (never into a chat), key restricted to:
 # reading + spot trading only, withdrawals disabled, IP-locked to this server.
-TIA_BINANCE_API_KEY=
-TIA_BINANCE_API_SECRET=
+TIA_LIVE__BINANCE_API_KEY=
+TIA_LIVE__BINANCE_API_SECRET=
 EOF
 
 echo "PASS  .env written (mode 600). Your dashboard login: operator / <see the file>."

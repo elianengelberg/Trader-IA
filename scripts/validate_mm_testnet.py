@@ -18,8 +18,9 @@ Rails, each of them checked before any request:
   False, no activation token exists and none can be minted here;
 * the only order type the script can send is ``LIMIT_MAKER``; there is no MARKET, no plain
   LIMIT and no fallback in this file;
-* the order is placed ``--ticks-away`` ticks below the best bid, so it rests and does not
-  fill (a partial fill is therefore NOT TESTED by design: Testnet's book is not ours to move);
+* the order is placed ``--percent-away`` percent below the best bid (2% by default, on the
+  tick grid), so it rests and does not fill (a partial fill is therefore NOT TESTED by
+  design: Testnet's book is not ours to move);
 * on exit, success or failure, every open order with this run's prefix is cancelled and the
   cancellation is confirmed against the venue.
 
@@ -179,8 +180,13 @@ class Validation:
         return BinanceUserDataStream(self.provider, now_ms=self.now_ms, on_report=self._on_report, on_balances=self._on_balances, on_status=self._on_status, base_url=self.args.ws_url)
 
     async def _wait(self, predicate: Any, seconds: float, what: str) -> bool:
+        """Poll ``predicate`` for up to ``seconds``, ticking the execution each time so the
+        worker's answers (REST acks, cancels, polls) are applied as the engine would apply
+        them on a market event. The stream's reports need no tick: they apply themselves."""
         deadline = time.monotonic() + seconds
         while time.monotonic() < deadline:
+            if self.execution is not None:
+                self.execution.on_event("tick", None, self.book, self.now_ms())
             if predicate():
                 return True
             await asyncio.sleep(0.05)
@@ -215,7 +221,7 @@ class Validation:
         ev.command("provider.create_listen_key()  [POST /api/v3/userDataStream, key header only]")
         try:
             key = await self.provider.create_listen_key()
-            ev.responses["listen_key"] = {"length": len(key), "prefix": key[:6] + "..."}
+            ev.responses["listen_key"] = {"length": len(key)}  # the key itself is never recorded
             ev.mark("1.listen_key_created", "PASS", f"{len(key)} characters")
             ev.command("provider.keepalive_listen_key(key)  [PUT]")
             await self.provider.keepalive_listen_key(key)
@@ -227,11 +233,23 @@ class Validation:
             ev.mark("1.listen_key_created", "FAIL", f"{type(exc).__name__}: {str(exc)[:160]}")
             raise
 
+        venue_symbol = BinanceExecutionProvider.to_venue_symbol(self.args.symbol)
+        ev.command(f"provider.get_exchange_info({self.args.symbol})  [GET /api/v3/exchangeInfo?symbol={venue_symbol}]")
+        info = await self.provider.get_exchange_info(self.args.symbol)
+        self.filters = SymbolFilters.from_exchange_info(info, symbol=self.args.symbol, venue_symbol=venue_symbol)
+        ev.responses["filters"] = self.filters.as_dict()
+        ev.mark("1.exchange_info_read", "PASS", f"status TRADING, orderTypes {list(self.filters.order_types)}")
+        self.execution = LiveMarketMakerExecution(
+            self.provider, clock=self.clock, filters=self.filters, symbol=self.args.symbol, run_tag="validate", now_ms=self.now_ms,
+            trades_poll_interval_ms=3_000, idle_trades_poll_interval_ms=30_000, open_sync_interval_ms=10_000,
+            on_critical=lambda kind, reason: self.criticals.append((kind, reason)),
+        )
+        self.execution.fill_sink = lambda fill, t: self.booked.append((fill, t, self.ledger.apply_fill(fill)))
         self.stream = self._build_stream()
         ev.command(f"BinanceUserDataStream.start()  [{self.args.ws_url}/<listenKey>]")
         self.stream.start()
         up = await self._wait(lambda: self.stream is not None and self.stream.connected, 20, "the account stream to connect")
-        ev.mark("1.user_stream_connected", "PASS" if up else "FAIL", f"status events: {self.stream_status}")
+        ev.mark("1.user_stream_connected", "PASS" if up else "FAIL", f"status events: {[(c, r) for c, r, _ in self.stream_status]}")
         if not up:
             raise RuntimeError("the account stream did not connect")
         # Reception of events is proven in phases 3 and 4 (the order's own reports); the
@@ -272,13 +290,9 @@ class Validation:
 
     async def phase_3_maker_order(self) -> Any:
         print("\nPHASE 3 — one post-only order, far from the market")
-        assert self.provider is not None
+        assert self.provider is not None and self.execution is not None and self.filters is not None
         ev = self.ev
         venue_symbol = BinanceExecutionProvider.to_venue_symbol(self.args.symbol)
-        ev.command(f"provider.get_exchange_info({self.args.symbol})")
-        info = await self.provider.get_exchange_info(self.args.symbol)
-        self.filters = SymbolFilters.from_exchange_info(info, symbol=self.args.symbol, venue_symbol=venue_symbol)
-        ev.responses["filters"] = self.filters.as_dict()
         ev.mark("3.exchange_info_filters", "PASS", f"tick {self.filters.tick_size} step {self.filters.step_size} minQty {self.filters.min_qty} minNotional {self.filters.min_notional} orderTypes {list(self.filters.order_types)}")
         ev.command(f"GET /api/v3/ticker/bookTicker?symbol={venue_symbol}")
         ticker = (await self.http.get("/api/v3/ticker/bookTicker", params={"symbol": venue_symbol})).json()
@@ -287,24 +301,14 @@ class Validation:
         self.book.begin_sync()
         self.book.apply_snapshot(snapshot_from_levels(1, [(best_bid, float(ticker["bidQty"]))], [(best_ask, float(ticker["askQty"]))]), received_at_ms=self.now_ms())
 
-        price = _round_down(best_bid - self.args.ticks_away * self.filters.tick_size, self.filters.tick_size)
+        price = _round_down(best_bid * (1.0 - self.args.percent_away / 100.0), self.filters.tick_size)
         quantity = self.args.size if self.args.size > 0 else _round_up(max(self.filters.min_qty, self.filters.min_notional * 1.2 / price), self.filters.step_size)
         check = validate_maker_order("buy", price, quantity, self.filters, best_bid=best_bid, best_ask=best_ask)
-        ev.responses["intended_order"] = {"side": "buy", "price": price, "quantity": quantity, "notional": round(price * quantity, 4), "best_bid": best_bid, "best_ask": best_ask, "check": check.as_dict()}
-        ev.mark("3.price_is_on_the_maker_side_and_on_the_grid", "PASS" if check.ok else "FAIL", check.reason or f"bid {price} < best ask {best_ask}, {self.args.ticks_away} ticks under the best bid {best_bid}")
+        ev.responses["intended_order"] = {"side": "buy", "price": price, "quantity": quantity, "notional": round(price * quantity, 4), "best_bid": best_bid, "best_ask": best_ask, "percent_away": self.args.percent_away, "check": check.as_dict()}
+        ev.mark("3.price_is_on_the_maker_side_and_on_the_grid", "PASS" if check.ok else "FAIL", check.reason or f"bid {price} < best ask {best_ask}, {self.args.percent_away}% under the best bid {best_bid}")
         if not check.ok:
             raise RuntimeError("the intended order fails the maker-only validation; nothing was sent")
 
-        self.execution = LiveMarketMakerExecution(
-            self.provider, clock=self.clock, filters=self.filters, symbol=self.args.symbol, run_tag="validate", now_ms=self.now_ms,
-            trades_poll_interval_ms=3_000, idle_trades_poll_interval_ms=30_000, open_sync_interval_ms=10_000,
-            on_critical=lambda kind, reason: self.criticals.append((kind, reason)),
-        )
-        self.execution.fill_sink = lambda fill, t: self.booked.append((fill, t, self.ledger.apply_fill(fill)))
-        if self.stream is not None:
-            # The stream was built before the execution existed; its callbacks reach the
-            # execution through this object, so the report path is now live.
-            pass
         await self.execution.start()
         baseline = await self.execution.fetch_trades()
         self.execution.set_trade_baseline(baseline, at_ms=self.now_ms())
@@ -455,6 +459,9 @@ class Validation:
         print("\nPHASE 8 — safety")
         assert self.provider is not None
         ev = self.ev
+        hot = ("on_event", "place", "cancel", "cancel_all")
+        sync = all(not asyncio.iscoroutinefunction(getattr(LiveMarketMakerExecution, name)) for name in hot)
+        ev.mark("8.hot_path_is_synchronous_no_http_no_db", "PASS" if sync else "FAIL", "a property of the code (UNIT TESTED: test_the_hot_path_never_awaits_the_network); the market-data callback never ran in this script")
         ev.mark("8.testnet_hosts_only", "PASS" if TESTNET_HOST in self.args.rest_url and TESTNET_HOST in self.args.ws_url else "FAIL", f"{self.args.rest_url} / {self.args.ws_url}")
         ev.mark("8.no_mainnet_order", "PASS", "no request left this process for api.binance.com; the rails refuse the host before connecting")
         ev.mark("8.no_activation_token", "PASS" if self.provider.activation is None and not self.provider.is_live else "FAIL", f"is_live={self.provider.is_live}, activation={self.provider.activation}")
@@ -549,7 +556,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--symbol", default="BTC-USD")
     parser.add_argument("--size", type=float, default=0.0, help="base quantity; 0 derives the smallest size above minNotional with a margin")
-    parser.add_argument("--ticks-away", type=int, default=200, help="how many ticks under the best bid the bid rests (never at or above the ask)")
+    parser.add_argument("--percent-away", type=float, default=2.0, help="how far under the best bid the bid rests, in percent (never at or above the ask)")
     parser.add_argument("--rest-url", default=REST_URL)
     parser.add_argument("--ws-url", default=WS_URL)
     parser.add_argument("--json-out", default="")

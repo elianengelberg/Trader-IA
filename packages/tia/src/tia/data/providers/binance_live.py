@@ -52,7 +52,7 @@ from tia.data.providers.binance_budget import BinanceRequestBudget
 from tia.data.providers.binance_signing import BinanceSigner
 from tia.domain.enums import OrderState, OrderType, Side, TimeInForce
 from tia.domain.orders import Fill, Order, OrderIntent
-from tia.domain.portfolio import PortfolioState, Position
+from tia.domain.portfolio import AccountBalance, PortfolioState, Position
 from tia.execution.provider import ExecutionCapabilities, ExecutionProvider
 
 if TYPE_CHECKING:  # pragma: no cover - typing only
@@ -67,6 +67,9 @@ _OPEN_ORDERS_PATH = "/api/v3/openOrders"
 _ACCOUNT_PATH = "/api/v3/account"
 _MY_TRADES_PATH = "/api/v3/myTrades"
 _EXCHANGE_INFO_PATH = "/api/v3/exchangeInfo"
+#: The account stream's listen key: created, kept alive and closed with the API key alone
+#: (no signature; the key identifies, it does not authorise anything). REQUIRES VALIDATION.
+_USER_STREAM_PATH = "/api/v3/userDataStream"
 
 #: Our order-type vocabulary to the venue's. REQUIRES VALIDATION.
 _ORDER_TYPE_MAP = {
@@ -97,6 +100,12 @@ _STATUS_MAP = {
     "EXPIRED": OrderState.EXPIRED,
     "EXPIRED_IN_MATCH": OrderState.EXPIRED,
 }
+
+
+def venue_status_to_state(status: str) -> OrderState | None:
+    """The venue's order status word to ours; ``None`` when the adapter does not know it.
+    Shared with the account-stream parser so both read a status the same way."""
+    return _STATUS_MAP.get(str(status).upper())
 
 
 class BinanceExecutionProvider(ExecutionProvider):
@@ -513,6 +522,61 @@ class BinanceExecutionProvider(ExecutionProvider):
     def request_budget(self) -> BinanceRequestBudget:
         return self._budget
 
+    @property
+    def quote_asset(self) -> str:
+        return self._quote_asset
+
+    async def get_balances(self) -> dict[str, AccountBalance]:
+        """Every asset with a free or locked amount, as the venue reports it.
+
+        The venue is the source of truth for balances; nothing here is computed from fills.
+        A spot market maker needs both figures for both of its assets: a resting bid locks
+        the quote asset, a resting ask locks the base asset.
+        """
+        payload = await self._signed_get(_ACCOUNT_PATH, {})
+        out: dict[str, AccountBalance] = {}
+        for entry in payload.get("balances", []):
+            asset = str(entry.get("asset", "")).upper()
+            free = float(entry.get("free", 0.0) or 0.0)
+            locked = float(entry.get("locked", 0.0) or 0.0)
+            if asset and (free > 0 or locked > 0):
+                out[asset] = AccountBalance(asset=asset, free=free, locked=locked)
+        return out
+
+    # ------------------------------------------------------------------ account stream
+
+    async def _listen_key_request(self, method: str, params: dict[str, Any]) -> Any:
+        """Keyed, unsigned (the documented security type for listen keys). The key travels
+        in the header the signer builds; this module never names it."""
+        await self._budget.acquire(_USER_STREAM_PATH)
+        client = await self._http()
+        try:
+            response = await client.request(method, _USER_STREAM_PATH, params=params, headers=self._signer.key_header())
+        except httpx.TimeoutException as exc:
+            raise ProviderUnavailableError(f"{method} listen key timed out", provider=self.name) from exc
+        except httpx.HTTPError as exc:
+            raise ProviderUnavailableError(f"binance transport error on {method} listen key: {exc}", provider=self.name) from exc
+        if response.status_code >= 400:
+            self._raise_venue_error(response, _USER_STREAM_PATH)
+        try:
+            return response.json() if response.content else {}
+        except ValueError as exc:
+            raise ExecutionError("binance returned a non-JSON body for the listen key", received=response.text[:300]) from exc
+
+    async def create_listen_key(self) -> str:
+        payload = await self._listen_key_request("POST", {})
+        key = str(payload.get("listenKey", "") or "") if isinstance(payload, dict) else ""
+        if not key:
+            raise ExecutionError("binance returned no listenKey", received=str(payload)[:200])
+        _log.info("binance_listen_key_created", key=self._signer.key_fingerprint)
+        return key
+
+    async def keepalive_listen_key(self, listen_key: str) -> None:
+        await self._listen_key_request("PUT", {"listenKey": listen_key})
+
+    async def close_listen_key(self, listen_key: str) -> None:
+        await self._listen_key_request("DELETE", {"listenKey": listen_key})
+
     # ------------------------------------------------------------------ parsing
 
     def _parse_order(
@@ -584,6 +648,14 @@ class BinanceExecutionProvider(ExecutionProvider):
         return order
 
     def _parse_embedded_fill(self, row: dict[str, Any], order: Order, index: int) -> Fill:
+        """A fill embedded in the submit response (newOrderRespType=FULL).
+
+        The response says nothing about which side made the market, so ``liquidity`` here
+        is a placeholder, not an attribution. A consumer that books fees by maker/taker
+        must take the attribution from the account stream's execution report or from the
+        trade history, both of which carry it; the market maker does exactly that and
+        never books an embedded fill.
+        """
         return Fill(
             fill_id=str(row.get("tradeId", f"{order.order_id}-{index}")),
             order_id=order.order_id,

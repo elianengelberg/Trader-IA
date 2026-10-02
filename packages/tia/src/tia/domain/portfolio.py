@@ -11,6 +11,23 @@ from tia.domain.enums import Side
 from tia.domain.orders import Fill
 
 
+class AccountBalance(BaseModel):
+    """One asset's balance at the venue, as the venue reports it: what is free to use and
+    what resting orders have locked. Spot has balances, not positions; a market maker
+    needs both numbers for both assets, because a resting bid locks the quote asset and
+    a resting ask locks the base asset."""
+
+    model_config = ConfigDict(frozen=True)
+
+    asset: str
+    free: float = Field(0.0, ge=0)
+    locked: float = Field(0.0, ge=0)
+
+    @property
+    def total(self) -> float:
+        return self.free + self.locked
+
+
 class Position(BaseModel):
     """A net position in one instrument.
 
@@ -253,4 +270,4 @@ class PortfolioSnapshot(BaseModel):
         )
 
 
-__all__ = ["PortfolioSnapshot", "PortfolioState", "Position", "Side"]
+__all__ = ["AccountBalance", "PortfolioSnapshot", "PortfolioState", "Position", "Side"]

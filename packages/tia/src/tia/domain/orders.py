@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
@@ -168,4 +169,76 @@ class Order(BaseModel):
         self.updated_at = fill.filled_at
 
 
-__all__ = ["Fill", "Order", "OrderIntent"]
+@dataclass(frozen=True, slots=True)
+class ExecutionReport:
+    """One report from a venue's account stream about one order: an acknowledgement, a
+    trade, a cancel, an expiry or a rejection.
+
+    Venue-neutral: the adapter that owns the socket parses the venue's own shape into this,
+    and the consumer never sees a raw frame. A plain dataclass rather than a model because
+    it is built and read on a latency-sensitive path and carries no untrusted input past
+    the parser. ``status`` is the order's state *after* this report; ``execution_type`` says
+    what happened (``new``, ``trade``, ``canceled``, ``rejected``, ``expired``, ``replaced``
+    or ``other``). ``is_maker`` is the venue's own attribution of a trade when it gives one,
+    and ``None`` when it does not; nothing here guesses it.
+    """
+
+    event_time_ms: int
+    transaction_time_ms: int
+    symbol: str
+    client_order_id: str
+    #: The id of the order a cancel refers to; "" for every other report.
+    orig_client_order_id: str
+    venue_order_id: str
+    side: Side
+    status: OrderState
+    execution_type: str
+    order_quantity: float
+    cumulative_quantity: float
+    last_quantity: float = 0.0
+    last_price: float = 0.0
+    cumulative_quote_quantity: float = 0.0
+    trade_id: str | None = None
+    is_maker: bool | None = None
+    commission: float = 0.0
+    commission_asset: str = ""
+    reject_reason: str = ""
+    raw_status: str = ""
+
+    @property
+    def order_ref(self) -> str:
+        """The client id of the order this report is about."""
+        return self.orig_client_order_id or self.client_order_id
+
+    @property
+    def is_trade(self) -> bool:
+        return self.execution_type == "trade" and self.trade_id is not None and self.last_quantity > 0
+
+    def dedupe_key(self) -> tuple[str, str, str, float, str | None, int]:
+        return (self.order_ref, self.execution_type, self.raw_status or self.status.value, round(self.cumulative_quantity, 12), self.trade_id, self.transaction_time_ms)
+
+    def as_dict(self) -> dict[str, object]:
+        return {
+            "event_time_ms": self.event_time_ms,
+            "transaction_time_ms": self.transaction_time_ms,
+            "symbol": self.symbol,
+            "client_order_id": self.client_order_id,
+            "orig_client_order_id": self.orig_client_order_id,
+            "venue_order_id": self.venue_order_id,
+            "side": self.side.value,
+            "status": self.status.value,
+            "execution_type": self.execution_type,
+            "order_quantity": self.order_quantity,
+            "cumulative_quantity": self.cumulative_quantity,
+            "last_quantity": self.last_quantity,
+            "last_price": self.last_price,
+            "trade_id": self.trade_id,
+            "is_maker": self.is_maker,
+            "commission": self.commission,
+            "commission_asset": self.commission_asset,
+            "reject_reason": self.reject_reason,
+            "raw_status": self.raw_status,
+        }
+
+
+__all__ = ["ExecutionReport", "Fill", "Order", "OrderIntent"]

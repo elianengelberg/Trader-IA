@@ -382,6 +382,10 @@ class LiveConfig(FrozenModel):
     binance_api_secret: SecretStr | None = None
     binance_base_url: str = "https://api.binance.com"
     binance_testnet_url: str = "https://testnet.binance.vision"
+    #: The account (user data) stream: execution reports and balance updates for the key's
+    #: account, opened with a listen key. Follows ``use_testnet`` like ``base_url`` does.
+    binance_user_stream_url: str = "wss://stream.binance.com:9443/ws"
+    binance_testnet_user_stream_url: str = "wss://testnet.binance.vision/ws"
     #: Default True. Pointing at the real venue is a deliberate act, not a default.
     use_testnet: bool = True
 
@@ -394,6 +398,10 @@ class LiveConfig(FrozenModel):
     @property
     def base_url(self) -> str:
         return self.binance_testnet_url if self.use_testnet else self.binance_base_url
+
+    @property
+    def user_stream_url(self) -> str:
+        return self.binance_testnet_user_stream_url if self.use_testnet else self.binance_user_stream_url
 
     @property
     def public_data_url(self) -> str:

@@ -487,6 +487,20 @@ class MarketMakingConfig(BaseModel):
     #: a latency the system did not measure is a latency it must not assume.
     latency_profile_path: str = "data/mm/latency_profile.json"
     latency_scenario: str = Field("baseline", pattern="^(optimistic|baseline|conservative)$")
+    #: Tuning of the live market maker (Phase 4). None of these starts anything: the live
+    #: maker starts only from an explicit operator action through the API, with the
+    #: confirmation phrase, and on the real venue only after the activation gate passed.
+    live_reconcile_interval_s: float = Field(30.0, ge=5, le=600)
+    live_trades_poll_interval_s: float = Field(3.0, ge=0.5, le=60)
+    live_open_orders_sync_interval_s: float = Field(10.0, ge=2, le=300)
+    #: New orders stop and resting ones are cancelled this long before the activation
+    #: token expires, so the cancels still carry a valid token.
+    live_activation_expiry_margin_s: float = Field(120.0, ge=10, le=3600)
+    #: Net expected edge (bps) a quoted side must clear after every itemised cost.
+    live_min_net_edge_bps: float = Field(0.0, ge=-100, le=100)
+    live_max_api_errors_per_minute: int = Field(10, ge=1, le=1000)
+    #: A side is not re-quoted until the venue confirmed the previous order's cancel.
+    live_strict_cancel_replace: bool = True
 
     def fee_scenarios(self) -> dict[str, float | None]:
         return {

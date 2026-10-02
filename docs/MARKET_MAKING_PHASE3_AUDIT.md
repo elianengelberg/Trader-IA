@@ -660,3 +660,15 @@ escribe en el reporte y en la línea de tiempo del stall.
 para un estado es una búsqueda binaria sobre la lista de ids de tickers; la poda del
 prefijo muerto se hace por rebanadas amortizadas; todas las colas están acotadas. Ningún
 evento recorre el historial.
+
+## 23. Fase 4: arquitectura para ejecución real, implementada sin activar (2026-10-02)
+
+El código que permitiría cotizar en Binance Spot con órdenes post-only existe en el
+repositorio y **no está activado**: no hay token, no hay cambio de `.env`, no hay despliegue,
+y `TIA_MM__REAL_MONEY` sigue sin lectores. El paper MM no cambia (mismo journal, mismo hash).
+El diseño completo — abstracción `MMExecution`, `LiveMarketMakerExecution` sobre el
+`ExecutionProvider` abstracto, `OrderType.LIMIT_MAKER` (que no existía), autorización de
+riesgo y de economía, kill switch propio, ledger desde balances reales, reconciliación
+previa a la primera cotización, endpoints `/api/mm/live/*`, frontera de código y lo que sólo
+el Testnet puede confirmar — está en `docs/MARKET_MAKING_PHASE4_LIVE_ARCHITECTURE.md`.
+

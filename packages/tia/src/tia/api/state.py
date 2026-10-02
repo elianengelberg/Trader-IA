@@ -23,6 +23,7 @@ import os
 import signal
 import sys
 from collections import deque
+from collections.abc import Awaitable, Callable
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -114,6 +115,12 @@ class AppState:
         self._mm_market: Any | None = None
         self._mm_maker: Any | None = None  # phase 3: the paper market maker, when enabled
         self._mm_maker_error = ""
+        #: Phase 4: the live market maker. Never built at boot; only by start_mm_live from
+        #: an operator's explicit request. Tests inject an in-memory venue through the
+        #: factory; production builds the Binance adapter inside _build_mm_live_provider.
+        self._mm_live: Any | None = None
+        self._mm_live_error = ""
+        self._mm_live_provider_factory: Callable[..., Awaitable[Any]] | None = None
         #: Keeps spawned-subprocess reaper tasks alive until they finish.
         self._background_tasks: set[asyncio.Task[Any]] = set()
         #: Evidence rows the running 24/7 session has already been given. Trades it
@@ -161,6 +168,9 @@ class AppState:
         if self._funding is not None:
             with contextlib.suppress(Exception):
                 await self._funding.close()
+        if self._mm_live is not None:
+            with contextlib.suppress(Exception):
+                await self._mm_live.close()  # cancels what rests, reconciles, closes the provider
         if self._mm_maker is not None:
             with contextlib.suppress(Exception):
                 await self._mm_maker.close()
@@ -1211,7 +1221,7 @@ class AppState:
             "enabled": cfg.adaptive_enabled,
             "market_data_enabled": cfg.enabled,
             "real_money": False,  # by construction; nothing in tia/mm reads the flag
-            "execution": "simulated only — no execution provider exists in the market maker",
+            "execution": "simulated only — the paper maker holds no execution provider; live quoting is a separate service behind /api/mm/live",
             "latency": {"profile_path": cfg.latency_profile_path, "scenario": cfg.latency_scenario},
             "fees": {"status": cfg.maker_fee_status, "scenarios_bps": cfg.fee_scenarios()},
             "paper_capital": cfg.paper_capital,
@@ -1251,8 +1261,6 @@ class AppState:
         Requires the market-data service (TIA_MM__ENABLED) and a latency profile
         measured on this host; either missing is an error, never a default.
         """
-        from tia.mm.costs import MarketMakerCostConfig
-        from tia.mm.engine import MarketMakerConfig
         from tia.mm.latency_model import LatencyProfile
         from tia.mm.service import MarketMakerService
 
@@ -1260,23 +1268,7 @@ class AppState:
         if self._mm_market is None:
             raise RuntimeError("market data is not running (TIA_MM__ENABLED=false or it failed to start)")
         profile = LatencyProfile.load(cfg.latency_profile_path)
-        config = MarketMakerConfig(
-            symbol=cfg.symbol,
-            starting_equity_usd=cfg.paper_capital,
-            costs=MarketMakerCostConfig(
-                maker_fee_bps=cfg.maker_fee_bps,
-                maker_fee_status=cfg.maker_fee_status,
-                maker_fee_verified_bps=cfg.maker_fee_verified_bps,
-                maker_fee_adverse_bps=cfg.maker_fee_adverse_bps,
-            ),
-        )
-
-        def session_risk_state() -> Any | None:
-            # Read-only: the session's RiskEngine state, never the engine itself.
-            runtime = self.live_runtime
-            engine = getattr(runtime, "_risk", None) if runtime is not None else None
-            return getattr(engine, "state", None)
-
+        config = self._mm_config()
         run_id = f"mm-paper-{cfg.symbol}"
         service = MarketMakerService(
             market=self._mm_market,
@@ -1284,7 +1276,7 @@ class AppState:
             profile=profile,
             scenario=cfg.latency_scenario,
             run_id=run_id,
-            risk_state=session_risk_state,
+            risk_state=self._session_risk_state,
             persist=self._persist,
             broadcast=self.broadcast,
         )
@@ -1302,6 +1294,225 @@ class AppState:
         self._mm_maker_error = ""
         _log.info("mm_paper_running", run_id=run_id, scenario=cfg.latency_scenario, profile=profile.profile_id, restored=service.restored_from)
         return service
+
+    def _mm_config(self) -> Any:
+        """The maker's configuration from settings; the paper and the live maker share it."""
+        from tia.mm.costs import MarketMakerCostConfig
+        from tia.mm.engine import MarketMakerConfig
+
+        cfg = self.settings.mm
+        return MarketMakerConfig(
+            symbol=cfg.symbol,
+            starting_equity_usd=cfg.paper_capital,
+            costs=MarketMakerCostConfig(
+                maker_fee_bps=cfg.maker_fee_bps,
+                maker_fee_status=cfg.maker_fee_status,
+                maker_fee_verified_bps=cfg.maker_fee_verified_bps,
+                maker_fee_adverse_bps=cfg.maker_fee_adverse_bps,
+            ),
+        )
+
+    def _session_risk_state(self) -> Any | None:
+        # Read-only: the session's RiskEngine state, never the engine itself.
+        runtime = self.live_runtime
+        engine = getattr(runtime, "_risk", None) if runtime is not None else None
+        return getattr(engine, "state", None)
+
+    # ------------------------------------------------------------------ market maker (live)
+
+    def mm_live_status(self) -> dict[str, Any]:
+        """The live market maker, as it is. Never started at boot; ``real_money`` is True
+        only while a service runs over a live (non-simulated) provider, which requires an
+        activation token the gate minted."""
+        live = self.settings.live
+        base = {
+            "mode": "live",
+            "market_data_enabled": self.settings.mm.enabled,
+            "live_path_enabled": live.enabled,
+            "use_testnet": live.use_testnet,
+            "real_money_flag": "TIA_MM__REAL_MONEY is read by nothing; it cannot start or arm anything",
+            "how_to_start": (
+                "POST /api/mm/live/start as an operator with the confirmation phrase. On the real "
+                "venue every activation check must pass first; on the testnet the provider is "
+                "simulated by construction."
+            ),
+        }
+        if self._mm_live is None:
+            return {
+                **base,
+                "running": False,
+                "real_money": False,
+                "state": "not_started",
+                "reason": self._mm_live_error or "the live market maker has not been started",
+                "activation": None,
+            }
+        status = self._mm_live.status()
+        return {**base, **status, "real_money": bool(status.get("is_live"))}
+
+    async def start_mm_live(self, *, operator: str, confirmation: str) -> dict[str, Any]:
+        """Start the live market maker from an explicit operator action.
+
+        Requirements, in order: the live path enabled in configuration; the exact
+        confirmation phrase; no live maker already running; market data running and
+        usable; the latency profile measured on this host. On the **real venue** the
+        activation gate then has to pass every check (the same gate, probes and phrase as
+        the directional session), and the token it mints goes to the provider and to the
+        maker's risk authorization; the attempt is recorded either way. On the **testnet**
+        the provider is simulated by construction and no token exists. The venue's symbol
+        filters are read, the quoting grid is checked against them, and the service
+        reconciles the account before its first quote.
+        """
+        from tia.core.clock import SystemClock
+        from tia.core.errors import LiveActivationError
+        from tia.core.ids import new_ulid
+        from tia.live.gate import CONFIRMATION_PHRASE, LiveActivationGate, configuration_fingerprint
+        from tia.mm.authorization import EconomicsConfig
+        from tia.mm.execution import SymbolFilters
+        from tia.mm.latency_model import LatencyProfile
+        from tia.mm.live_service import LiveMarketMakerService
+
+        live = self.settings.live
+        cfg = self.settings.mm
+        if not live.enabled:
+            raise PermissionError(
+                "the live path is disabled in configuration (TIA_LIVE__ENABLED=false); the live "
+                "market maker cannot start. Enabling it is a deliberate configuration change, "
+                "and it still only permits the gate to be consulted."
+            )
+        if confirmation != CONFIRMATION_PHRASE:
+            raise PermissionError("the confirmation phrase does not match; nothing was started")
+        if self._mm_live is not None and self._mm_live.is_running:
+            raise LiveActivationError("the live market maker is already running; stop it before starting another")
+        if self._mm_market is None or not self._mm_market.is_running:
+            raise RuntimeError("market data is not running (TIA_MM__ENABLED=false or it failed to start)")
+        if not self._mm_market.usable:
+            raise RuntimeError(f"market data is not usable: {self._mm_market.snapshot(levels=1)['not_usable_reason']}")
+        profile = LatencyProfile.load(cfg.latency_profile_path)
+        config = self._mm_config()
+        clock = SystemClock()
+        token: Any | None = None
+        fingerprint: str | None = None
+        attempt_id = ""
+        if not live.use_testnet:
+            from tia.api.gate_probes import build_probes
+
+            gate = LiveActivationGate(clock, environment=self.settings.env.value, ttl_seconds=live.activation_ttl_seconds)
+            probes = build_probes(self, **await self._gate_inputs())
+            fingerprint = configuration_fingerprint(self.settings.risk, self.settings.live)
+            attempt_id = f"arm_mm_{new_ulid(clock)}"
+            try:
+                token = gate.arm(
+                    probes,
+                    operator=operator,
+                    confirmation=confirmation,
+                    max_live_capital=live.max_live_capital,
+                    fingerprint=fingerprint,
+                )
+            except LiveActivationError as exc:
+                report = gate.last_report
+                await self._record_activation(
+                    attempt_id=attempt_id,
+                    operator=operator,
+                    passed=False,
+                    report=report.as_dict() if report else {},
+                    failed_checks=[c.name.value for c in report.failures] if report else ["unknown"],
+                    fingerprint=fingerprint,
+                    token_fingerprint="",
+                    runtime_started=False,
+                    runtime_state="mm-live",
+                    detail=str(exc)[:1000],
+                )
+                raise
+        venue_label = "binance-spot-testnet" if live.use_testnet else "binance-spot"
+        provider = await self._build_mm_live_provider(token, clock)
+        try:
+            info = await provider.get_exchange_info(cfg.symbol)
+            filters = SymbolFilters.from_exchange_info(info, symbol=cfg.symbol, venue_symbol=provider.to_venue_symbol(cfg.symbol))
+            service = LiveMarketMakerService(
+                market=self._mm_market,
+                config=config,
+                profile=profile,
+                scenario=cfg.latency_scenario,
+                run_id=f"mm-{'testnet' if live.use_testnet else 'live'}-{cfg.symbol}",
+                risk_state=self._session_risk_state,
+                provider=provider,
+                clock=clock,
+                filters=filters,
+                activation=token,
+                fingerprint=fingerprint,
+                capital_cap_usd=live.max_live_capital if live.max_live_capital > 0 else None,
+                economics=EconomicsConfig(min_net_edge_bps=cfg.live_min_net_edge_bps),
+                expiry_margin_s=cfg.live_activation_expiry_margin_s,
+                reconcile_interval_s=cfg.live_reconcile_interval_s,
+                trades_poll_interval_s=cfg.live_trades_poll_interval_s,
+                open_sync_interval_s=cfg.live_open_orders_sync_interval_s,
+                max_api_errors_per_minute=cfg.live_max_api_errors_per_minute,
+                strict_cancel_replace=cfg.live_strict_cancel_replace,
+                venue_label=venue_label,
+                persist=self._persist,
+                broadcast=self.broadcast,
+            )
+            report = await service.start_live()
+        except Exception as exc:
+            with contextlib.suppress(Exception):
+                await provider.close()
+            self._mm_live_error = f"{type(exc).__name__}: {str(exc)[:200]}"
+            if token is not None:
+                await self._record_activation(
+                    attempt_id=attempt_id, operator=operator, passed=True, report=token.report.as_dict(), failed_checks=[],
+                    fingerprint=fingerprint, token_fingerprint=_hash_token(token), runtime_started=False, runtime_state="mm-live-error",
+                    detail=f"gate passed but the live market maker did not start: {exc}"[:1000],
+                )
+            raise
+        self._mm_live = service
+        self._mm_live_error = ""
+        if token is not None:
+            await self._record_activation(
+                attempt_id=attempt_id, operator=operator, passed=True, report=token.report.as_dict(), failed_checks=[],
+                fingerprint=fingerprint, token_fingerprint=_hash_token(token), runtime_started=True, runtime_state=f"mm-live-{service.state_label}",
+                detail=f"live market maker started; initial reconciliation {report.summary}",
+            )
+        _log.info("mm_live_started_by_operator", operator=operator, venue=venue_label, state=service.state_label, reconciliation=report.summary)
+        return {"started": True, "operator": operator, "initial_reconciliation": report.as_dict(), **self.mm_live_status()}
+
+    async def _build_mm_live_provider(self, token: Any | None, clock: Any) -> Any:
+        """The execution provider for the live maker: the Binance adapter, over the testnet
+        (simulated, no token) or the real venue (the gate's token). Tests inject a venue."""
+        if self._mm_live_provider_factory is not None:
+            return await self._mm_live_provider_factory(token, clock)
+        from tia.data.providers.binance_live import BinanceExecutionProvider
+        from tia.data.providers.binance_signing import signer_from_live_config
+
+        live = self.settings.live
+        try:
+            signer = signer_from_live_config(live, clock)
+        except ValueError as exc:
+            raise PermissionError(str(exc)) from exc
+        return BinanceExecutionProvider(
+            signer=signer,
+            clock=clock,
+            activation=None if live.use_testnet else token,
+            base_url=live.base_url,
+            simulated=live.use_testnet,
+        )
+
+    async def stop_mm_live(self, *, reason: str, actor: str) -> dict[str, Any]:
+        if self._mm_live is None:
+            return {**self.mm_live_status(), "stopped": False}
+        status = await self._mm_live.stop(reason=reason, actor=actor)
+        return {**self.mm_live_status(), "stopped": True, "final": status}
+
+    async def kill_mm_live(self, *, reason: str, actor: str) -> dict[str, Any]:
+        if self._mm_live is None or not self._mm_live.is_running:
+            return {**self.mm_live_status(), "engaged": False}
+        await self._mm_live.engage_kill_switch(reason=reason, actor=actor)
+        return {**self.mm_live_status(), "engaged": True}
+
+    async def reconcile_mm_live(self) -> dict[str, Any]:
+        if self._mm_live is None or not self._mm_live.is_running:
+            return {**self.mm_live_status(), "reconciled": False}
+        report = await self._mm_live.reconcile()
+        return {**self.mm_live_status(), "reconciled": True, "report": report.as_dict()}
 
     def mm_market_snapshot(self) -> dict[str, Any]:
         cfg = self.settings.mm

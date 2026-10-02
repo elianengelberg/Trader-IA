@@ -105,6 +105,14 @@ class BacktestRequest(BaseModel):
     seed: int = Field(default=20260812, ge=0)
 
 
+class MMLiveStartRequest(BaseModel):
+    """The confirmation phrase and nothing else — no key, no secret, no capital, no flag
+    (see :class:`ArmLiveRequest` for why). The live market maker starts from this request
+    only; no configuration value and no other route can start it."""
+
+    confirmation: str = Field(min_length=1, max_length=120)
+
+
 class ArmLiveRequest(BaseModel):
     """Note what is *not* here: no API key, no secret, no capital amount.
 
@@ -798,7 +806,7 @@ def _register_routes(app: FastAPI, settings: Settings) -> None:
     async def mm_journal(
         request: Request,
         limit: int = Query(100, ge=1, le=1000),
-        kind: str | None = Query(None, pattern="^(decision|fill|markout|block|hold)$"),
+        kind: str | None = Query(None, pattern="^(decision|fill|markout|block|hold|unresolved|reconciliation|kill_switch|operator)$"),
         _user: User = Depends(current_user),
     ) -> list[dict[str, Any]]:
         """The explainable journal: timestamp, decision, fair value, bid, ask, inventory,
@@ -810,6 +818,56 @@ def _register_routes(app: FastAPI, settings: Settings) -> None:
         """Counts, P&L decomposition, ratios, markouts, regime splits and the edge
         verdict — which is NO EDGE DETECTED until the audit's rules hold out of sample."""
         return tia(request).mm_maker_metrics()
+
+    @app.get("/api/mm/live/status")
+    async def mm_live_status(request: Request, _user: User = Depends(current_user)) -> dict[str, Any]:
+        """The live market maker as it is: not started, or its venue, activation, kill
+        switch, reconciliation, execution and real ledger. Read-only."""
+        return tia(request).mm_live_status()
+
+    @app.post("/api/mm/live/start")
+    async def mm_live_start(
+        body: MMLiveStartRequest, request: Request, user: User = Depends(require_operator)
+    ) -> dict[str, Any]:
+        """Start the live market maker. Operator only, with the confirmation phrase.
+
+        Refuses while the live path is disabled, on a wrong phrase, without market data,
+        without a measured latency profile, when the quoting grid disagrees with the
+        venue's filters, and — on the real venue — unless every activation check passes.
+        The service reconciles the account before its first quote and starts in a safe,
+        non-quoting state if the reconciliation finds anything it cannot explain.
+        """
+        try:
+            return await tia(request).start_mm_live(operator=user.username, confirmation=body.confirmation)
+        except PermissionError as exc:
+            raise HTTPException(403, str(exc)) from exc
+        except LiveActivationError as exc:
+            raise HTTPException(409, str(exc)) from exc
+        except (RuntimeError, ValueError) as exc:
+            # Well-formed request; the system is not in a state to grant it (no feed, no
+            # profile, a grid mismatch). 409, not 400: nothing in the body was wrong.
+            raise HTTPException(409, str(exc)) from exc
+        except ProviderUnavailableError as exc:
+            raise HTTPException(503, str(exc)) from exc
+
+    @app.post("/api/mm/live/stop")
+    async def mm_live_stop(request: Request, user: User = Depends(require_operator)) -> dict[str, Any]:
+        """Cancel every resting order, wait for the venue to confirm, reconcile, close."""
+        return await tia(request).stop_mm_live(reason="operator stop", actor=user.username)
+
+    @app.post("/api/mm/live/kill-switch")
+    async def mm_live_kill_switch(
+        body: KillRequest, request: Request, user: User = Depends(require_operator)
+    ) -> dict[str, Any]:
+        """The maker's own emergency stop: no new quotes, cancel what rests, reconcile.
+        Sticky until the service is stopped and started again by an operator. It sits
+        below the global kill switch and can never release it."""
+        return await tia(request).kill_mm_live(reason=body.reason, actor=user.username)
+
+    @app.post("/api/mm/live/reconcile")
+    async def mm_live_reconcile(request: Request, _user: User = Depends(require_operator)) -> dict[str, Any]:
+        """Reconcile now: open orders, balances and trades against the maker's own picture."""
+        return await tia(request).reconcile_mm_live()
 
     @app.get("/api/funding")
     async def funding(

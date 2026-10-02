@@ -1112,3 +1112,149 @@ async def test_the_track_record_ignores_exploration_trades(tmp_path: Path) -> No
         async with state.database.session() as db:
             record = await EdgeStateRepository(db).track_record()
         assert record["closed_trades"] == 1
+
+
+# --------------------------------------------------------------------------- the live market maker
+
+
+async def test_the_live_market_maker_is_never_started_at_boot_and_refuses_without_the_live_path(tmp_path: Path) -> None:
+    """Phase 4: the live maker exists only behind an operator's explicit request. With the
+    live path disabled every mutation refuses or answers "nothing running"."""
+    app = create_app(_settings(tmp_path))
+    async with LifespanManager(app):
+        state = app.state.tia
+        assert state._mm_live is None
+        transport = httpx.ASGITransport(app=app)
+        async with httpx.AsyncClient(transport=transport, base_url="http://test") as http:
+            assert (await http.get("/api/mm/live/status")).status_code == 401
+            assert (await http.post("/api/mm/live/start", json={"confirmation": CONFIRMATION_PHRASE})).status_code == 401
+            await http.post("/api/auth/login", json={"username": USERNAME, "password": PASSWORD})
+            body = (await http.get("/api/mm/live/status")).json()
+            assert body["running"] is False and body["real_money"] is False and body["state"] == "not_started"
+            assert "read by nothing" in body["real_money_flag"] and body["live_path_enabled"] is False
+            start = await http.post("/api/mm/live/start", json={"confirmation": CONFIRMATION_PHRASE})
+            assert start.status_code == 403 and "TIA_LIVE__ENABLED" in start.json()["detail"]
+            assert (await http.post("/api/mm/live/stop")).json()["stopped"] is False
+            assert (await http.post("/api/mm/live/kill-switch", json={"reason": "x"})).json()["engaged"] is False
+            assert (await http.post("/api/mm/live/reconcile")).json()["reconciled"] is False
+            assert (await http.post("/api/mm/live/start", json={})).status_code == 422
+            assert state._mm_live is None
+            # The paper maker's view is unchanged: still simulated, still no provider.
+            paper = (await http.get("/api/mm/state")).json()
+            assert paper["real_money"] is False and "simulated only" in paper["execution"]
+
+
+async def test_the_live_market_maker_start_needs_an_operator_the_exact_phrase_and_a_feed_and_ignores_the_flag(tmp_path: Path) -> None:
+    from tia.core.config import MarketMakingConfig
+
+    live = LiveConfig(enabled=True, max_live_capital=500.0, binance_api_key=SecretStr(API_KEY), binance_api_secret=SecretStr(API_SECRET))
+    settings = _settings(tmp_path, live=live).model_copy(update={"mm": MarketMakingConfig(real_money=True)})  # the flag changes nothing
+    app = create_app(settings)
+    app.state.auth.add_user("viewer", "viewer-password-not-a-secret", role="viewer")
+    async with LifespanManager(app):
+        state = app.state.tia
+        transport = httpx.ASGITransport(app=app)
+        async with httpx.AsyncClient(transport=transport, base_url="http://test") as http:
+            await http.post("/api/auth/login", json={"username": "viewer", "password": "viewer-password-not-a-secret"})
+            assert (await http.post("/api/mm/live/start", json={"confirmation": CONFIRMATION_PHRASE})).status_code == 403
+            await http.post("/api/auth/login", json={"username": USERNAME, "password": PASSWORD})
+            wrong = await http.post("/api/mm/live/start", json={"confirmation": "yes please"})
+            assert wrong.status_code == 403 and "confirmation phrase" in wrong.json()["detail"]
+            no_feed = await http.post("/api/mm/live/start", json={"confirmation": CONFIRMATION_PHRASE})
+            assert no_feed.status_code == 409 and "market data is not running" in no_feed.json()["detail"]
+            status = (await http.get("/api/mm/live/status")).json()
+            assert status["running"] is False and status["real_money"] is False and status["live_path_enabled"] is True
+            assert state._mm_live is None
+            assert (await http.get("/api/live/history")).json() == []  # no arming attempt was made on the testnet path
+
+
+async def test_the_live_market_maker_runs_a_full_cycle_over_an_injected_venue_without_a_token(tmp_path: Path) -> None:
+    """Start (reconcile first), status, reconcile, kill switch, stop — over the in-memory
+    venue and a scripted feed. use_testnet is True, so the provider is simulated by
+    construction, no token exists and real_money stays False throughout."""
+    import json as _json
+
+    from tests.unit.mm.fake_venue import FakeVenue
+    from tests.unit.mm.test_replay import Scripted
+    from tia.core.clock import SystemClock
+    from tia.core.config import MarketMakingConfig
+    from tia.mm.latency import LatencyStats
+    from tia.mm.latency_model import build_latency_profile
+    from tia.mm.market_data import MarketDataService
+    from tia.mm.order_book import snapshot_from_levels
+    from tia.mm.streams import MarketDataStream
+
+    stats = LatencyStats()
+    for v in (40, 50, 60):
+        stats.add(v)
+    profile_path = tmp_path / "mm" / "latency_profile.json"
+    build_latency_profile(stream={"latency_depth_ms": stats.as_dict(), "latency_trade_ms": stats.as_dict()}, processing_us=stats.as_dict(), measured_at_utc="2026-10-02T00:00:00Z", commit="test", duration_s=60, symbol="BTC-USD").write(profile_path)
+    live = LiveConfig(enabled=True, max_live_capital=500.0, binance_api_key=SecretStr(API_KEY), binance_api_secret=SecretStr(API_SECRET))
+    settings = _settings(tmp_path, live=live).model_copy(update={"mm": MarketMakingConfig(latency_profile_path=str(profile_path), live_trades_poll_interval_s=0.5, live_open_orders_sync_interval_s=2.0)})
+    app = create_app(settings)
+    clock = SystemClock()
+
+    def depth(uid: int) -> str:
+        now = clock.timestamp_ms()
+        return _json.dumps({"stream": "s@depth@100ms", "data": {"e": "depthUpdate", "E": now - 30, "s": "BTCUSDT", "U": uid, "u": uid, "b": [["99993.00", "1.50000"]], "a": []}})
+
+    async with LifespanManager(app):
+        state = app.state.tia
+        import tia.mm.streams as streams_module
+
+        streams_module.BACKOFF = (0.01,)
+        scripted = Scripted()
+        bids = [(round(100_000.0 - i * 0.1, 1), 1.0) for i in range(80)]
+        asks = [(round(100_000.2 + i * 0.1, 1), 1.0) for i in range(80)]
+
+        async def fetch_snapshot():  # type: ignore[no-untyped-def]
+            return snapshot_from_levels(100, bids, asks)
+
+        market = MarketDataService("BTC-USD", stream=MarketDataStream("BTC-USD", connector=scripted.connector()), fetch_snapshot=fetch_snapshot, resync_cooldown_s=0.01)
+        market.start()
+        await asyncio.sleep(0.05)
+        assert market.usable
+        state._mm_market = market
+        venues: list[FakeVenue] = []
+
+        async def factory(token, provider_clock):  # type: ignore[no-untyped-def]
+            assert token is None  # testnet: the provider is simulated, no token exists
+            venue = FakeVenue(provider_clock, quote_balance=5_000.0, base_balance=0.05)
+            venues.append(venue)
+            return venue
+
+        state._mm_live_provider_factory = factory
+        transport = httpx.ASGITransport(app=app)
+        try:
+            async with httpx.AsyncClient(transport=transport, base_url="http://test") as http:
+                await http.post("/api/auth/login", json={"username": USERNAME, "password": PASSWORD})
+                started = await http.post("/api/mm/live/start", json={"confirmation": CONFIRMATION_PHRASE})
+                assert started.status_code == 200, started.text
+                body = started.json()
+                assert body["started"] is True and body["running"] is True and body["real_money"] is False and body["is_live"] is False
+                assert body["initial_reconciliation"]["ok"] is True and body["initial_reconciliation"]["initial"] is True and body["reconciliation"]["count"] == 1
+                assert body["state"] in ("quoting", "no_quote") and body["activation"] is None and body["venue"] == "binance-spot-testnet"
+                assert body["ledger"]["starting_equity_usd"] == 5_000.0 and body["ledger"]["baseline_base_btc"] == 0.05
+                again = await http.post("/api/mm/live/start", json={"confirmation": CONFIRMATION_PHRASE})
+                assert again.status_code == 409 and "already running" in again.json()["detail"]
+                for uid in range(101, 109):
+                    await scripted.send(depth(uid))
+                    await asyncio.sleep(0.02)
+                status = (await http.get("/api/mm/live/status")).json()
+                assert status["running"] is True and status["counts"]["events"] >= 8 and status["execution"]["worker_running"] is True
+                assert all(i.order_type.value == "limit_maker" for i in venues[0].submits)
+                reconciled = (await http.post("/api/mm/live/reconcile")).json()
+                assert reconciled["reconciled"] is True and reconciled["report"]["critical"] is False
+                killed = (await http.post("/api/mm/live/kill-switch", json={"reason": "drill"})).json()
+                assert killed["engaged"] is True and killed["state"] == "safe" and killed["kill_switch"]["actor"] == USERNAME
+                assert all(o.state.is_terminal for o in venues[0].orders.values())
+                journal = (await http.get("/api/mm/journal?kind=reconciliation")).json()  # the paper journal: untouched
+                assert journal == []
+                stopped = (await http.post("/api/mm/live/stop")).json()
+                assert stopped["stopped"] is True and stopped["running"] is False and stopped["state"] == "stopped"
+                assert "operator stop" in stopped["stop_reason"] and stopped["final"]["open_orders"] == []
+                assert (await http.get("/api/live/history")).json() == []  # testnet: the gate was not consulted
+                assert (await http.get("/api/mm/live/status")).json()["running"] is False
+        finally:
+            state._mm_market = None
+            await market.close()

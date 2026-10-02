@@ -1427,7 +1427,9 @@ class AppState:
         provider = await self._build_mm_live_provider(token, clock)
         try:
             info = await provider.get_exchange_info(cfg.symbol)
-            filters = SymbolFilters.from_exchange_info(info, symbol=cfg.symbol, venue_symbol=provider.to_venue_symbol(cfg.symbol))
+            to_venue = getattr(provider, "to_venue_symbol", None)
+            venue_symbol = to_venue(cfg.symbol) if to_venue is not None else cfg.symbol.replace("-USD", "USDT").replace("-", "")
+            filters = SymbolFilters.from_exchange_info(info, symbol=cfg.symbol, venue_symbol=venue_symbol)
             service = LiveMarketMakerService(
                 market=self._mm_market,
                 config=config,

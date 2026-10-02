@@ -211,6 +211,26 @@ async def test_a_timeout_after_the_venue_accepted_is_adopted_not_duplicated() ->
     await h.execution.close()
 
 
+async def test_a_cancel_asked_for_while_the_order_was_unknown_goes_out_once_it_is_known_to_rest() -> None:
+    h = await _harness(resolve_attempts=1)
+    h.venue.next_submit = ["timeout_after_accept"]
+    h.venue.fail_queries = "hang"
+    h.venue.hang_seconds = 0.15
+    [order] = h.execution.place(_quote(ask=None, t_ms=h.t), h.t)
+    await asyncio.sleep(0.02)
+    h.execution.on_event("depth", None, h.book, h.tick())
+    assert order.state == "unknown"
+    h.execution.cancel(order.order_id, h.t, reason="requote")  # nothing can be sent yet
+    assert h.venue.cancels == []
+    await asyncio.sleep(0.2)
+    h.venue.fail_queries = None
+    await h.settle()
+    await h.settle()  # the worker first finishes the polls that were queued while the venue hung
+    assert h.venue.cancels == [order.order_id] and order.state == "cancelled"
+    assert h.execution.counters["resolved_present"] == 1 and h.execution.blocked_reason == ""
+    await h.execution.close()
+
+
 async def test_a_resolution_that_keeps_failing_leaves_the_order_blocked_and_trips_the_error_budget() -> None:
     h = await _harness(resolve_attempts=2, max_api_errors_per_minute=1)
     h.venue.next_submit = ["timeout"]

@@ -293,10 +293,12 @@ class LiveMarketMakerService(MarketMakerService):
     async def _drain_until_quiet(self) -> int:
         """Let the worker finish the cancels, applying each answer through the engine."""
         deadline = self._now_ms() + int(self._cancel_wait_s * 1000)
-        while self._now_ms() < deadline:
+        for _ in range(max(1, int(self._cancel_wait_s / 0.1))):
+            if self._now_ms() >= deadline:
+                break
             await asyncio.sleep(0.1)
             self.engine.on_event("tick", None, self._now_ms())
-            if not any(o.t_cancel_requested_ms is not None for o in self.execution.open_orders()) and not self.execution.open_orders():
+            if not self.execution.open_orders():
                 break
         return len(self.execution.open_orders())
 

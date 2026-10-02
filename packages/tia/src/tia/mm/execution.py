@@ -533,18 +533,21 @@ class LiveMarketMakerExecution:
         return out
 
     def cancel(self, order_id: str, t_ms: int, *, reason: str) -> None:
+        """Ask the venue to cancel. An order whose fate is unknown cannot be cancelled yet;
+        the request is remembered and sent as soon as the venue says the order rests."""
         order = self.orders.get(order_id)
-        if order is None or not order.is_open or order.t_cancel_requested_ms is not None:
+        if order is None or order.t_cancel_requested_ms is not None or not (order.is_open or order.state == "unknown"):
             return
         order.t_cancel_requested_ms = t_ms
         order.cancel_reason = reason
         self.counters["cancel_requests"] += 1
-        self._enqueue("cancel", order)
+        if order.is_open:
+            self._enqueue("cancel", order)
 
     def cancel_all(self, t_ms: int, *, reason: str) -> int:
         count = 0
         for order in list(self.orders.values()):
-            if order.is_open and order.t_cancel_requested_ms is None:
+            if (order.is_open or order.state == "unknown") and order.t_cancel_requested_ms is None:
                 self.cancel(order.order_id, t_ms, reason=reason)
                 count += 1
         return count
@@ -687,10 +690,11 @@ class LiveMarketMakerExecution:
             self._close(order, t_ms)
 
     def _apply_ack(self, order: LiveOrder, venue: Order, t_ms: int) -> None:
-        self.counters["acked"] += 1
-        order.t_ack_ms = t_ms
-        if order.t_submitted_ms is not None:
-            self.submit_to_ack_ms.add(t_ms - order.t_submitted_ms)
+        if order.t_ack_ms is None:
+            self.counters["acked"] += 1
+            order.t_ack_ms = t_ms
+            if order.t_submitted_ms is not None:
+                self.submit_to_ack_ms.add(t_ms - order.t_submitted_ms)
         self._adopt_venue_state(order, venue, t_ms)
 
     def _apply_reject(self, order: LiveOrder, code: Any, message: str, t_ms: int) -> None:
@@ -723,6 +727,9 @@ class LiveMarketMakerExecution:
         if order.t_ack_ms is None:
             order.t_ack_ms = t_ms
         self._adopt_venue_state(order, venue, t_ms)
+        if order.is_open and order.t_cancel_requested_ms is not None:
+            # Asked to cancel while its fate was unknown: now that it is known to rest, cancel.
+            self._enqueue("cancel", order)
         if order.is_open and not self.unknown_orders() and self.blocked_reason.startswith("order "):
             self.blocked_reason = ""
 

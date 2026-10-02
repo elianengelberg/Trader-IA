@@ -200,7 +200,7 @@ def test_replay_from_a_recorded_segment_is_deterministic_and_names_its_profile(t
 #: The only market-maker modules that may name the *abstract* execution provider: the
 #: adapter that speaks to it and the live service that wires it. Everything else in the
 #: package — the engine, the quoting, the ledger, the risk — stays provider-blind.
-EXECUTION_BOUNDARY = {"execution.py"}
+EXECUTION_BOUNDARY = {"execution.py", "live_service.py"}
 
 
 def test_nothing_in_the_market_maker_can_reach_a_concrete_venue_or_mint_an_activation() -> None:

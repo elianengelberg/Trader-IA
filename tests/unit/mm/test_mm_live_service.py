@@ -1,0 +1,284 @@
+"""The live market-making service end to end over the in-memory venue: reconciliation
+before the first quote, post-only orders from the engine's decisions, fills booked from
+the venue's trades with its fees, the kill switch and its triggers, stop with a cancel of
+everything and a final reconciliation. No network, no token unless the test mints one.
+
+The economics floor is lowered in these tests so the plumbing can be exercised; nothing
+here says anything about whether quoting is worth doing."""
+
+from __future__ import annotations
+
+import asyncio
+import re
+from datetime import timedelta
+from types import SimpleNamespace
+
+import pytest
+
+from tests.unit.mm.fake_venue import FakeVenue, exchange_info
+from tests.unit.mm.test_mm_execution_live import START, _live_token
+from tests.unit.mm.test_replay import Scripted
+from tests.unit.mm.test_service import PROFILE, _config, _depth, _trade
+from tia.core.clock import SimulatedClock
+from tia.core.errors import LiveActivationError
+from tia.domain.enums import OrderType
+from tia.mm.authorization import EconomicsConfig
+from tia.mm.engine import MarketMakerConfig
+from tia.mm.execution import SymbolFilters
+from tia.mm.live_service import LiveMarketMakerService
+from tia.mm.market_data import MarketDataService
+from tia.mm.order_book import snapshot_from_levels
+from tia.mm.quoting import QuotingConfig
+from tia.mm.streams import MarketDataStream
+from tia.risk.engine import RiskState
+
+FILTERS = SymbolFilters.from_exchange_info(exchange_info(), symbol="BTC-USD", venue_symbol="BTCUSDT")
+
+
+async def _market(clock: SimulatedClock) -> tuple[MarketDataService, Scripted]:
+    import tia.mm.streams as module
+
+    module.BACKOFF = (0.01,)
+    scripted = Scripted()
+    bids = [(round(100_000.0 - i * 0.1, 1), 1.0) for i in range(80)]
+    asks = [(round(100_000.2 + i * 0.1, 1), 1.0) for i in range(80)]
+
+    async def fetch_snapshot():  # type: ignore[no-untyped-def]
+        return snapshot_from_levels(100, bids, asks)
+
+    stream = MarketDataStream("BTC-USD", connector=scripted.connector(), now_ms=clock.timestamp_ms)
+    market = MarketDataService("BTC-USD", stream=stream, fetch_snapshot=fetch_snapshot, resync_cooldown_s=0.01, now_ms=clock.timestamp_ms)
+    market.start()
+    await asyncio.sleep(0.05)
+    assert market.usable
+    return market, scripted
+
+
+class Live:
+    def __init__(self, clock: SimulatedClock, market: MarketDataService, scripted: Scripted, venue: FakeVenue, service: LiveMarketMakerService) -> None:
+        self.clock, self.market, self.scripted, self.venue, self.service = clock, market, scripted, venue, service
+        self.uid = 101
+        self.tid = 500
+        self.risk_state = RiskState()
+
+    async def until_resting(self, rounds: int = 12) -> list[str]:
+        """Feed until the venue holds a resting order of ours (quotes expire after their
+        TTL and the strict cancel/replace defers the replacement by a cycle)."""
+        for _ in range(rounds):
+            resting = [cid for cid, o in self.venue.orders.items() if not o.state.is_terminal]
+            if resting:
+                return resting
+            await self.feed(2)
+        raise AssertionError("no order came to rest at the venue")
+
+    async def feed(self, events: int = 8, *, step_ms: int = 150) -> None:
+        for i in range(events):
+            self.clock.advance_by(timedelta(milliseconds=step_ms))
+            await self.scripted.send(_depth(self.uid, self.uid, self.clock.timestamp_ms(), bids=[(99_993.0, 1.0 + (i % 3))]))
+            self.uid += 1
+            if i % 2:
+                self.clock.advance_by(timedelta(milliseconds=10))
+                self.tid += 1
+                await self.scripted.send(_trade(self.tid, self.clock.timestamp_ms(), 99_995.0, 0.002, seller=True))
+            await asyncio.sleep(0.01)
+
+
+async def _live(*, venue: FakeVenue | None = None, config: MarketMakerConfig | None = None, activation=None, **kw) -> Live:  # type: ignore[no-untyped-def]
+    clock = SimulatedClock(START)
+    market, scripted = await _market(clock)
+    venue = venue or FakeVenue(clock, quote_balance=5_000.0, base_balance=0.05)
+    persisted: list[tuple[str, dict]] = []  # type: ignore[type-arg]
+
+    async def persist(kind: str, payload: dict) -> None:  # type: ignore[type-arg]
+        persisted.append((kind, payload))
+
+    state = RiskState()
+    settings = {
+        "economics": EconomicsConfig(min_net_edge_bps=-10.0),  # plumbing, not profitability
+        "reconcile_interval_s": 1_000.0,
+        "trades_poll_interval_s": 0.0,
+        "open_sync_interval_s": 0.0,
+        "cancel_wait_s": 2.0,
+        "heartbeat_s": 0.02,
+    }
+    settings.update(kw)
+    service = LiveMarketMakerService(
+        market=market, config=config or _config(), profile=PROFILE, scenario="optimistic", run_id="mm-live-test",
+        risk_state=lambda: state, provider=venue, clock=clock, filters=FILTERS, activation=activation,
+        persist=persist, broadcast=lambda _e: None, now_ms=clock.timestamp_ms, state_push_interval_ms=500, ledger_save_interval_ms=1_000,
+        **settings,
+    )
+    live = Live(clock, market, scripted, venue, service)
+    live.risk_state = state
+    live.persisted = persisted  # type: ignore[attr-defined]
+    return live
+
+
+async def _teardown(live: Live) -> None:
+    if live.service.is_running:
+        await live.service.stop(reason="test teardown", actor="test")
+    await live.market.close()
+
+
+# ------------------------------------------------------------------ the whole path
+
+
+async def test_the_service_reconciles_first_quotes_post_only_books_venue_fills_and_stops_clean() -> None:
+    live = await _live()
+    service, venue = live.service, live.venue
+    with pytest.raises(RuntimeError, match="start_live"):
+        service.start()
+    report = await service.start_live()
+    assert report.ok and report.initial and service.is_running and service.state_label == "quoting"
+    assert service.live_ledger.seeded and service.live_ledger.state.starting_equity_usd == 5_000.0 and service.live_ledger.baseline_base_btc == 0.05
+    assert service.status()["is_live"] is False and service.status()["venue"] == "fake-venue" and service.status()["activation"] is None
+
+    await live.feed(10)
+    assert venue.submits, "the engine's decisions should have reached the venue"
+    assert all(i.order_type is OrderType.LIMIT_MAKER and i.limit_price is not None for i in venue.submits)
+    status = service.status()
+    assert status["execution"]["acked"] >= 1 and status["state"] in ("quoting", "no_quote")
+    decisions = [r for r in service.engine.journal if r.get("kind") == "decision" and r.get("decision") == "quote"]
+    assert decisions and [a["stage"] for a in decisions[0]["authorizations"]] == ["risk", "economics"]
+
+    resting = await live.until_resting()
+    venue.venue_fill(resting[0], venue.orders[resting[0]].quantity)
+    await live.feed(6)
+    assert service.live_ledger.state.fills == 1 and service.live_ledger.fees_venue_usd > 0
+    fill_rows = [r for r in service.engine.journal if r.get("kind") == "fill"]
+    assert fill_rows and fill_rows[0]["fee_status"] == "venue" and fill_rows[0]["liquidity"] == "maker" and fill_rows[0]["resolution"] == "confirmed"
+    assert service.metrics()["counts"]["fills"] == 1 and service.metrics()["edge"]["verdict"] == "NO EDGE DETECTED"
+    kinds = {k for k, _ in live.persisted}  # type: ignore[attr-defined]
+    assert {"mm_journal", "mm_fill"} <= kinds
+
+    again = await service.reconcile()
+    assert again.ok, again.as_dict()
+    assert service.reconciliations == 2 and any(r.get("kind") == "reconciliation" for r in service.engine.journal)
+
+    stopped = await service.stop(reason="done", actor="elian")
+    assert stopped["state"] == "stopped" and stopped["running"] is False and "done (by elian)" in stopped["stop_reason"]
+    assert all(o.state.is_terminal for o in venue.orders.values()), "every order was cancelled or filled at the venue"
+    assert service.execution.open_orders() == [] and stopped["kill_switch"]["trigger"] == "stop"
+    assert stopped["operator_events"][-1]["action"] == "stop"
+    await live.market.close()
+
+
+async def test_a_discrepancy_at_start_leaves_the_service_up_in_a_safe_state_that_never_quotes() -> None:
+    live = await _live()
+    live.venue.add_foreign_open_order()
+    report = await live.service.start_live()
+    assert report.critical and live.service.state_label == "safe" and live.service.kill.engaged
+    assert live.service.kill.trigger == "reconciliation" and "foreign_open_order" in live.service.kill.reason
+    await live.feed(8)
+    assert live.venue.submits == [] and live.service.engine.gate_blocks >= 1
+    assert live.service.status()["gate"]["state"] == "system_unsafe"
+    await _teardown(live)
+
+
+async def test_the_operators_kill_switch_cancels_everything_and_reconciles() -> None:
+    live = await _live()
+    await live.service.start_live()
+    await live.until_resting()
+    status = await live.service.engage_kill_switch(reason="operator says stop", actor="elian")
+    assert status["state"] == "safe" and status["kill_switch"]["actor"] == "elian" and status["kill_switch"]["sticky"]
+    assert all(o.state.is_terminal for o in live.venue.orders.values()) and status["open_orders"] == []
+    assert live.service.reconciliations >= 2
+    await live.feed(4)
+    assert all(o.state.is_terminal for o in live.venue.orders.values())  # nothing new while engaged
+    with pytest.raises(ValueError, match="named actor"):
+        await live.service.engage_kill_switch(reason="x", actor=" ")
+    await _teardown(live)
+
+
+async def test_a_silent_feed_is_seen_by_the_heartbeat_which_cancels_and_the_switch_clears_on_fresh_data() -> None:
+    live = await _live()
+    await live.service.start_live()
+    await live.until_resting()
+    live.clock.advance_by(timedelta(seconds=5))  # the feed goes silent: no event arrives
+    await asyncio.sleep(0.15)  # the heartbeat ticks the engine on its own
+    assert live.service.heartbeats >= 1
+    assert live.service.kill.engaged and "data" in live.service.kill.as_dict()["transient"]
+    assert live.service.engine.data_blocks >= 1
+    await asyncio.sleep(0.1)
+    assert all(o.state.is_terminal for o in live.venue.orders.values()), "what rested was cancelled at the venue"
+    await live.feed(3, step_ms=100)  # fresh data again
+    assert not live.service.kill.sticky and "data" not in live.service.kill.as_dict()["transient"]
+    assert any(e.action == "clear" for e in live.service.kill.history)
+    await _teardown(live)
+
+
+async def test_a_breached_limit_of_the_makers_own_controller_is_mirrored_and_sticky() -> None:
+    live = await _live()
+    await live.service.start_live()
+    await live.feed(4)
+    live.service.engine.controller.engage_kill_switch("daily loss 100.00 USD reached the limit 100.00")
+    await live.feed(3)
+    assert live.service.kill.sticky and live.service.kill.trigger == "risk_limit" and "daily loss" in live.service.kill.reason
+    await _teardown(live)
+
+
+async def test_an_unknown_fill_on_the_account_is_critical_and_cancels() -> None:
+    live = await _live()
+    await live.service.start_live()
+    await live.feed(6)
+    live.clock.advance_by(timedelta(seconds=90))
+    live.venue.foreign_trade(price=100_000.1, quantity=0.01)
+    await live.feed(6)
+    assert live.service.kill.sticky and live.service.kill.trigger == "unknown_fill"
+    assert all(o.state.is_terminal for o in live.venue.orders.values())
+    await _teardown(live)
+
+
+# ------------------------------------------------------------------ activation and refusals
+
+
+async def test_the_activations_expiry_margin_stops_quoting_before_the_token_lapses() -> None:
+    clock = SimulatedClock(START)
+    token = _live_token(clock)  # one hour, minted by the gate
+    venue = FakeVenue(clock, simulated=False, activation=token, name="fake-live", quote_balance=5_000.0, base_balance=0.05)
+    live = await _live(venue=venue, activation=token, expiry_margin_s=120.0)
+    assert live.clock is not clock  # the harness has its own clock; align the token's view on it
+    live.service.activation = token
+    await live.service.start_live()
+    status = live.service.status()
+    assert status["is_live"] is True and status["activation"]["present"] and status["activation"]["issued_by"] == "elian"
+    await live.feed(6)
+    assert live.venue.submits, "with the whole hour left the maker quotes"
+    live.clock.advance_by(timedelta(minutes=59))  # inside the 120 s margin
+    before = len(live.venue.submits)
+    await live.feed(6)
+    assert len(live.venue.submits) == before
+    blocks = [r for r in live.service.engine.journal if r.get("kind") == "block" and r.get("layer") == "authorization"]
+    assert blocks and "expires in" in blocks[-1]["reason"]
+    assert live.service.engine.authorization_blocks >= 1
+    await _teardown(live)
+
+
+def test_a_live_provider_without_a_token_cannot_reach_the_service() -> None:
+    impostor = SimpleNamespace(is_live=True, activation=None, name="impostor", get_trades=lambda **k: None, get_orders=lambda **k: None)
+    with pytest.raises((ValueError, LiveActivationError), match="activation token"):
+        LiveMarketMakerService(
+            market=SimpleNamespace(), config=_config(), profile=PROFILE, scenario="optimistic", run_id="x", risk_state=lambda: None,
+            provider=impostor, clock=SimulatedClock(START), filters=FILTERS,  # type: ignore[arg-type]
+        )
+
+
+async def test_a_quoting_grid_that_disagrees_with_the_venue_refuses_to_start() -> None:
+    config = MarketMakerConfig(quoting=QuotingConfig(tick_size=0.1))
+    live = await _live(config=config)
+    with pytest.raises(ValueError, match=re.escape("tick_size 0.1 != venue tick 0.01")):
+        await live.service.start_live()
+    assert not live.service.is_running and live.venue.calls == []
+    await live.market.close()
+
+
+async def test_a_reconciliation_that_fails_mid_run_engages_the_switch_and_is_reported() -> None:
+    live = await _live()
+    await live.service.start_live()
+    live.venue.fail_queries = "transport"
+    report = await live.service.reconcile()
+    assert report.critical and report.discrepancies[0]["kind"] == "reconciliation_failed"
+    assert live.service.reconciliation_failures == 1 and live.service.kill.sticky and live.service.kill.trigger == "reconciliation"
+    assert live.service.status()["reconciliation"]["failures"] == 1
+    live.venue.fail_queries = None
+    await _teardown(live)

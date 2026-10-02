@@ -15,6 +15,7 @@ import time
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from types import SimpleNamespace
+from typing import Any
 
 import pytest
 
@@ -502,3 +503,250 @@ async def test_stats_carry_what_the_metrics_module_reads() -> None:
     assert stats["mode"] == "live" and stats["is_live"] is False and stats["worker_running"] is True
     await h.execution.close()
     assert h.execution.stats()["worker_running"] is False
+
+
+# ------------------------------------------------------------------ the account stream
+
+
+async def _streamed(**kw):  # type: ignore[no-untyped-def]
+    """A harness whose venue also speaks over the account stream."""
+    from tests.unit.mm.fake_venue import FakeUserStream
+
+    h = await _harness(**kw)
+    stream = FakeUserStream(h.venue, now_ms=lambda: h.t, on_report=h.execution.absorb_execution_report, on_balances=h.execution.absorb_balances, on_status=h.execution.absorb_stream_status)
+    stream.start()
+    h.execution.accepting_reports = True
+    return h, stream
+
+
+async def test_a_new_report_acknowledges_the_order_before_the_rest_response_and_only_once() -> None:
+    from tia.domain.enums import OrderState
+
+    h, stream = await _streamed()
+    h.venue.hang_seconds = 0.2
+    h.venue.next_submit = ["hang"]  # the REST answer is slow; the stream is not
+    [order] = h.execution.place(_quote(ask=None, t_ms=h.t), h.t)
+    await asyncio.sleep(0.02)
+    stream.report(order.order_id, execution_type="new", status=OrderState.ACKNOWLEDGED, venue_order_id="4242")
+    assert order.state == "resting" and order.ack_source == "stream" and order.venue_order_id == "4242"  # immediately, no settle
+    c = h.execution.counters
+    assert c["acked"] == 1 and c["reports_before_rest_ack"] == 1 and c["reports"] == 1
+    await asyncio.sleep(0.25)
+    await h.settle()
+    assert order.state == "resting" and order.rest_acked and c["acked"] == 1  # the REST answer confirmed, it did not count again
+    lat = h.execution.stats()["latency"]
+    assert lat["submit_to_first_ack_ms"]["count"] == 1 and lat["submit_to_ack_ms"]["count"] == 1 and lat["rest_submit_rtt_ms"]["count"] == 1
+    assert lat["decision_to_enqueue_ms"]["count"] == 1 and lat["enqueue_to_submit_ms"]["count"] == 1 and lat["report_to_local_ms"]["count"] == 1
+    await h.execution.close()
+
+
+async def test_partial_and_full_fills_arrive_as_reports_book_once_each_and_the_poll_finds_nothing_new() -> None:
+    h, stream = await _streamed()
+    [order] = h.execution.place(_quote(ask=None, t_ms=h.t), h.t)
+    await h.settle()
+    stream.fill_with_report(order.order_id, 0.0004)
+    assert order.filled == 0.0004 and order.state == "resting"  # applied the instant the venue said so
+    fills = h.execution.on_event("depth", None, h.book, h.tick())  # handed to the engine on its next event
+    assert len(fills) == 1 and fills[0].attribution_source == "report" and fills[0].liquidity == "maker" and fills[0].fee_status == "venue"
+    assert fills[0].fill_id == "5001" and fills[0].venue_trade_ids == (5001,) and fills[0].fee_usd > 0
+    stream.fill_with_report(order.order_id, 0.0006)
+    assert order.state == "filled" and order.order_id not in h.execution.orders
+    assert [f.quantity for f in h.execution.on_event("depth", None, h.book, h.tick())] == [0.0006]
+    await h.settle()  # the trade-history poll sees the same two trades: nothing booked twice
+    c = h.execution.counters
+    assert c["fills"] == 2 and c["report_fills"] == 2 and c["trade_poll_fills"] == 0 and c["duplicate_trades"] >= 2
+    assert h.execution.stats()["states"]["filled"] == 1 and h.execution.on_event("depth", None, h.book, h.tick()) == []
+    await h.execution.close()
+
+
+async def test_a_duplicate_report_and_a_duplicate_trade_book_nothing_twice() -> None:
+    h, stream = await _streamed()
+    [order] = h.execution.place(_quote(ask=None, t_ms=h.t), h.t)
+    await h.settle()
+    report = stream.fill_with_report(order.order_id, 0.001)
+    h.execution.absorb_execution_report(report)  # the venue resent it
+    h.execution.absorb_execution_report(report)
+    c = h.execution.counters
+    assert c["fills"] == 1 and c["duplicate_reports"] == 2
+    trade = h.venue.trades[-1]
+    h.execution.absorb_trades([trade, trade])  # the history poll describes the same trade
+    h.execution.on_event("depth", None, h.book, h.tick())
+    assert c["fills"] == 1 and c["duplicate_trades"] >= 2 and order.filled == 0.001
+    await h.execution.close()
+
+
+async def test_a_fill_reported_after_the_rest_ack_books_normally_and_the_rest_cancel_cannot_undo_it() -> None:
+    h, stream = await _streamed()
+    [order] = h.execution.place(_quote(ask=None, t_ms=h.t), h.t)
+    await h.settle()  # REST ack first
+    assert order.ack_source == "rest"
+    stream.fill_with_report(order.order_id, 0.001)  # then the fill, as a report
+    assert order.state == "filled" and h.execution.counters["fills"] == 1
+    h.execution.cancel(order.order_id, h.t, reason="requote")  # too late: already closed here
+    await h.settle()
+    assert h.venue.cancels == [] and order.state == "filled"
+    await h.execution.close()
+
+
+async def test_canceled_expired_and_rejected_reports_close_the_order_as_the_venue_says() -> None:
+    from tia.domain.enums import OrderState
+
+    h, stream = await _streamed()
+    orders = h.execution.place(_quote(t_ms=h.t), h.t)
+    await h.settle()
+    buy = next(o for o in orders if o.side == "buy")
+    sell = next(o for o in orders if o.side == "sell")
+    h.execution.cancel(buy.order_id, h.t, reason="requote")
+    # The venue's report of the cancel refers to the original id; the cancel request's own id differs.
+    stream.report("web_cancel_1", execution_type="canceled", status=OrderState.CANCELLED, orig_client_order_id=buy.order_id, venue_order_id=buy.venue_order_id)
+    assert buy.state == "cancelled" and h.execution.counters["cancelled"] == 1
+    await h.settle()  # the REST cancel response arrives afterwards: the order stays cancelled, counted once
+    assert buy.state == "cancelled" and h.execution.counters["cancelled"] == 1
+    stream.report(sell.order_id, execution_type="expired", status=OrderState.EXPIRED)
+    assert sell.state == "cancelled" and h.execution.open_orders() == []
+    # A rejection reported by the stream before any REST answer refuses the order with the venue's reason.
+    h.venue.hang_seconds = 0.2
+    h.venue.next_submit = ["hang"]
+    [late] = h.execution.place(_quote(ask=None, t_ms=h.t), h.t)
+    await asyncio.sleep(0.02)
+    stream.report(late.order_id, execution_type="rejected", status=OrderState.REJECTED, reject_reason="INSUFFICIENT_BALANCE")
+    assert late.state == "refused" and "INSUFFICIENT_BALANCE" in late.reject_reason and h.execution.blocked_reason == ""
+    await asyncio.sleep(0.25)
+    await h.settle()
+    assert late.state == "refused" and h.execution.stats()["states"]["refused"] == 1
+    await h.execution.close()
+
+
+async def test_a_report_about_an_order_this_run_does_not_know_is_critical_and_old_or_early_reports_are_not() -> None:
+    from tia.domain.enums import OrderState
+
+    h, stream = await _streamed()
+    h.execution.accepting_reports = False
+    stream.report("someone-else-7", execution_type="new", status=OrderState.ACKNOWLEDGED, venue_order_id="555")
+    assert h.execution.counters["reports_before_start"] == 1 and h.criticals == []
+    h.execution.accepting_reports = True
+    h.execution.set_trade_baseline([], at_ms=h.t)
+    stream.report("someone-else-8", execution_type="trade", status=OrderState.FILLED, last_qty=0.01, last_price=100_000.0, trade_id="9", at=START - timedelta(hours=2))
+    assert h.criticals == [] and h.execution.counters["historical_trades"] == 1  # about the account's past
+    h.clock.advance_by(timedelta(seconds=90))
+    stream.report("someone-else-9", execution_type="new", status=OrderState.ACKNOWLEDGED, venue_order_id="556")
+    assert h.execution.counters["unknown_reports"] == 1 and h.criticals[-1][0] == "unknown_execution_report"
+    stream.report(f"{CLIENT_ID_PREFIX}oldrun00-1-000001", execution_type="trade", status=OrderState.FILLED, last_qty=0.001, last_price=100_000.0, trade_id="10", venue_order_id="557")
+    assert h.execution.counters["venue_orders_unknown_locally"] == 1 and h.criticals[-1][0] == "venue_order_unknown_locally"
+    assert h.execution.counters["fills"] == 0  # nothing of someone else's was ever booked
+    await h.execution.close()
+
+
+async def test_attribution_follows_the_venue_and_is_unknown_when_the_venue_does_not_say() -> None:
+    h, stream = await _streamed()
+    orders = h.execution.place(_quote(t_ms=h.t), h.t)
+    await h.settle()
+    buy = next(o for o in orders if o.side == "buy")
+    sell = next(o for o in orders if o.side == "sell")
+    stream.fill_with_report(buy.order_id, 0.0005, is_maker=False)
+    stream.fill_with_report(buy.order_id, 0.0005, is_maker=None)
+    stream.fill_with_report(sell.order_id, 0.001, is_maker=True)
+    fills = h.execution.on_event("depth", None, h.book, h.tick())
+    assert [f.liquidity for f in fills] == ["taker", "unknown", "maker"]
+    c = h.execution.counters
+    assert c["taker_fills"] == 1 and c["unknown_attribution_fills"] == 1 and c["maker_fills"] == 1
+    await h.execution.close()
+
+
+async def test_a_dropped_account_stream_invents_no_state_asks_for_the_trade_history_and_is_critical() -> None:
+    h, stream = await _streamed(trades_poll_interval_ms=10**9, idle_trades_poll_interval_ms=10**9)
+    [order] = h.execution.place(_quote(ask=None, t_ms=h.t), h.t)
+    await h.settle()
+    assert h.execution.stream_connected is True and h.venue.calls.count("trades") == 0  # the stream is up: no polling
+    stream.drop("socket closed by the venue")
+    assert h.execution.stream_connected is False and h.execution.counters["stream_drops"] == 1
+    assert h.criticals[-1][0] == "user_stream_down" and order.state == "resting"  # nothing invented about the order
+    await h.settle()
+    assert h.venue.calls.count("trades") == 1  # the history was read at once to cover the gap
+    stream.reconnect()
+    assert h.execution.stream_connected is True and h.execution.stats()["stream"]["connected"] is True
+    await h.execution.close()
+
+
+async def test_with_the_stream_up_the_trade_history_is_a_slow_cross_check_and_a_fast_fallback_when_it_is_down() -> None:
+    h, stream = await _streamed(trades_poll_interval_ms=0, idle_trades_poll_interval_ms=10**9)
+    h.execution.place(_quote(ask=None, t_ms=h.t), h.t)
+    await h.settle()
+    await h.settle()
+    assert h.venue.calls.count("trades") == 0  # up: idle cadence (never, here)
+    stream.drop()
+    await h.settle()
+    await h.settle()
+    polls_after_drop = h.venue.calls.count("trades")
+    assert polls_after_drop >= 2  # down with an open order: every event polls
+    await h.execution.close()
+
+
+async def test_a_fill_embedded_in_the_submit_response_is_never_booked_the_report_is() -> None:
+    from tia.domain.enums import OrderState
+    from tia.domain.orders import Fill
+
+    h, stream = await _streamed()
+    venue = h.venue
+    real_submit = venue.submit_order
+
+    async def submit_with_embedded_fill(intent):  # type: ignore[no-untyped-def]
+        order = await real_submit(intent)
+        # The venue matched 0.0004 on arrival and says so in the FULL response, with a
+        # fill that carries no maker attribution. The order rests for the remainder.
+        stored = venue.orders[intent.client_order_id]
+        stored.filled_quantity = 0.0004
+        stored.state = OrderState.PARTIALLY_FILLED
+        embedded = Fill(fill_id="emb-1", order_id=order.order_id, sequence=0, symbol="BTC-USD", side=order.side, quantity=0.0004, price=order.limit_price or 0.0, fee=0.04, liquidity="taker", filled_at=venue.clock.now())
+        copy = stored.model_copy()
+        copy.fills.append(embedded)
+        return copy
+
+    venue.submit_order = submit_with_embedded_fill  # type: ignore[method-assign]
+    [order] = h.execution.place(_quote(ask=None, t_ms=h.t), h.t)
+    await h.settle()
+    assert order.state == "resting" and order.venue_executed_qty == 0.0004 and order.filled == 0.0 and h.execution.counters["fills"] == 0
+    assert h.venue.calls.count("trades") >= 1  # the gap between executed and booked asked the history
+    stream.fill_with_report(order.order_id, 0.0004, is_maker=True)  # the venue's attribution arrives
+    assert order.filled == 0.0004 and h.execution.counters["fills"] == 1 and order.fills[0].liquidity == "maker"
+    await h.execution.close()
+
+
+async def test_balances_from_the_stream_are_recorded_and_handed_to_the_sink() -> None:
+    h, stream = await _streamed()
+    seen: list[dict] = []  # type: ignore[type-arg]
+    h.execution.balances_sink = lambda balances, t: seen.append(balances)
+    h.execution.place(_quote(ask=None, t_ms=h.t), h.t)
+    await h.settle()
+    stream.push_balances()
+    assert h.execution.counters["balance_updates"] == 1 and seen and set(seen[-1]) == {"USDT", "BTC"}
+    usdt = h.execution.venue_balances["USDT"]
+    assert usdt.locked == pytest.approx(99_999.9 * 0.001) and usdt.free == pytest.approx(5_000.0 - 99_999.9 * 0.001)  # the resting bid locks its notional
+    assert h.execution.stats()["venue_balances"]["USDT"]["locked"] == pytest.approx(99_999.9 * 0.001)
+    await h.execution.close()
+
+
+async def test_the_fill_sink_books_the_moment_the_venue_reports_and_on_event_then_hands_nothing() -> None:
+    h, stream = await _streamed()
+    booked: list[tuple[Any, int]] = []
+    h.execution.fill_sink = lambda fill, t: booked.append((fill, t))
+    [order] = h.execution.place(_quote(ask=None, t_ms=h.t), h.t)
+    await h.settle()
+    stream.fill_with_report(order.order_id, 0.001)
+    assert len(booked) == 1 and booked[0][0].order_id == order.order_id
+    assert h.execution.on_event("depth", None, h.book, h.tick()) == [] and h.execution.stats()["fill_sink_installed"] is True
+    assert h.execution.stats()["latency"]["fill_to_ledger_ms"]["count"] == 1
+    await h.execution.close()
+
+
+async def test_a_timeout_still_ends_unknown_and_is_never_resent_even_with_the_stream_up() -> None:
+    h, _stream = await _streamed(resolve_attempts=1)
+    h.venue.next_submit = ["timeout"]
+    h.venue.fail_queries = "transport"
+    [order] = h.execution.place(_quote(ask=None, t_ms=h.t), h.t)
+    await h.settle()
+    assert order.state == "unknown" and h.execution.blocked_reason.startswith("order ") and h.venue.calls.count("submit") == 1
+    assert h.execution.place(_quote(t_ms=h.t), h.t) == []
+    await h.settle()
+    assert h.venue.calls.count("submit") == 1  # the stream being up changes nothing about resending
+    await h.execution.close()

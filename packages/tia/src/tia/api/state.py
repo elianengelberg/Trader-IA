@@ -121,6 +121,7 @@ class AppState:
         self._mm_live: Any | None = None
         self._mm_live_error = ""
         self._mm_live_provider_factory: Callable[..., Awaitable[Any]] | None = None
+        self._mm_user_stream_factory: Callable[..., Awaitable[Any]] | None = None
         #: Keeps spawned-subprocess reaper tasks alive until they finish.
         self._background_tasks: set[asyncio.Task[Any]] = set()
         #: Evidence rows the running 24/7 session has already been given. Trades it
@@ -1454,6 +1455,9 @@ class AppState:
                 persist=self._persist,
                 broadcast=self.broadcast,
             )
+            stream = await self._build_mm_user_stream(provider, service, clock)
+            if stream is not None:
+                service.attach_user_stream(stream)
             report = await service.start_live()
         except Exception as exc:
             with contextlib.suppress(Exception):
@@ -1496,6 +1500,26 @@ class AppState:
             activation=None if live.use_testnet else token,
             base_url=live.base_url,
             simulated=live.use_testnet,
+        )
+
+    async def _build_mm_user_stream(self, provider: Any, service: Any, clock: Any) -> Any | None:
+        """The account stream (execution reports, balances) for the live maker: the
+        venue's, when the provider can mint a listen key; a test's, through the factory;
+        none otherwise (the maker then relies on the trade-history poll alone)."""
+        if self._mm_user_stream_factory is not None:
+            return await self._mm_user_stream_factory(provider, service, clock)
+        if not hasattr(provider, "create_listen_key"):
+            return None
+        from tia.data.providers.binance_user_stream import BinanceUserDataStream
+
+        execution = service.execution
+        return BinanceUserDataStream(
+            provider,
+            now_ms=clock.timestamp_ms,
+            on_report=execution.absorb_execution_report,
+            on_balances=execution.absorb_balances,
+            on_status=execution.absorb_stream_status,
+            base_url=self.settings.live.user_stream_url,
         )
 
     async def stop_mm_live(self, *, reason: str, actor: str) -> dict[str, Any]:

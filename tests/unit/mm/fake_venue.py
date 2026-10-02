@@ -22,8 +22,8 @@ from tia.core.errors import (
     ReconciliationError,
 )
 from tia.domain.enums import OrderState, OrderType, Side
-from tia.domain.orders import Fill, Order, OrderIntent
-from tia.domain.portfolio import PortfolioState, Position
+from tia.domain.orders import ExecutionReport, Fill, Order, OrderIntent
+from tia.domain.portfolio import AccountBalance, PortfolioState, Position
 from tia.execution.provider import ExecutionCapabilities, ExecutionProvider
 
 
@@ -232,6 +232,39 @@ class FakeVenue(ExecutionProvider):
             await self._behave(self.fail_queries, "account")
         return self.quote_balance
 
+    @property
+    def quote_asset(self) -> str:
+        return "USDT"
+
+    def locked(self) -> tuple[float, float]:
+        """(quote locked by resting bids, base locked by resting asks): the venue's rule."""
+        quote = base = 0.0
+        for order in self.orders.values():
+            if order.state.is_terminal:
+                continue
+            remaining = order.remaining_quantity
+            if order.side is Side.BUY:
+                quote += remaining * (order.limit_price or 0.0)
+            else:
+                base += remaining
+        return quote, base
+
+    async def get_balances(self) -> dict[str, AccountBalance]:
+        """Both assets, free and locked, as the venue would report them."""
+        self.calls.append("balances")
+        if self.fail_queries:
+            await self._behave(self.fail_queries, "account")
+        return self.balances_now()
+
+    def balances_now(self) -> dict[str, AccountBalance]:
+        quote_locked, base_locked = self.locked()
+        # ``base_locked`` given at construction stands for base the account already had
+        # locked by something else (as a foreign resting ask would); it is reported as such.
+        return {
+            "USDT": AccountBalance(asset="USDT", free=max(0.0, self.quote_balance - quote_locked), locked=quote_locked),
+            "BTC": AccountBalance(asset="BTC", free=max(0.0, self.base_balance - base_locked), locked=base_locked + self.base_locked),
+        }
+
     async def get_trades(self, *, limit: int = 100, symbol: str | None = None) -> list[Fill]:
         self.calls.append("trades")
         if self.fail_queries:
@@ -275,4 +308,126 @@ def exchange_info(*, tick: str = "0.01000000", step: str = "0.00001000", min_qty
 
 Behaviour = Callable[[], str]
 
-__all__ = ["FakeVenue", "exchange_info"]
+
+class FakeUserStream:
+    """The account stream, scripted: the test decides what the venue reports and when.
+
+    Mirrors the real stream's contract (``start``, ``close``, ``connected``, ``as_dict``)
+    and delivers :class:`ExecutionReport` objects to the same callbacks, so the adapter
+    cannot tell the difference and the tests can replay every ordering the venue could
+    produce: a report before the REST acknowledgement, a duplicate, a drop.
+    """
+
+    def __init__(self, venue: FakeVenue, *, now_ms: Callable[[], int], on_report: Callable[[ExecutionReport, int], None], on_balances: Callable[[list[AccountBalance], int], None] | None = None, on_status: Callable[[bool, str, int], None] | None = None) -> None:
+        self.venue = venue
+        self._now_ms = now_ms
+        self._on_report = on_report
+        self._on_balances = on_balances
+        self._on_status = on_status
+        self.connected = False
+        self.started = False
+        self.closed = False
+        self.reports: list[ExecutionReport] = []
+
+    def start(self) -> None:
+        self.started = True
+        self.connected = True
+        if self._on_status is not None:
+            self._on_status(True, "connected", self._now_ms())
+
+    async def close(self) -> None:
+        was_up = self.connected
+        self.connected = False
+        self.closed = True
+        if was_up and self._on_status is not None:
+            self._on_status(False, "closed", self._now_ms())
+
+    def drop(self, reason: str = "socket closed by the venue") -> None:
+        self.connected = False
+        if self._on_status is not None:
+            self._on_status(False, reason, self._now_ms())
+
+    def reconnect(self) -> None:
+        self.connected = True
+        if self._on_status is not None:
+            self._on_status(True, "reconnected", self._now_ms())
+
+    def push_balances(self) -> None:
+        if self._on_balances is not None:
+            self._on_balances(list(self.venue.balances_now().values()), self._now_ms())
+
+    def report(
+        self,
+        client_order_id: str,
+        *,
+        execution_type: str,
+        status: OrderState,
+        last_qty: float = 0.0,
+        last_price: float | None = None,
+        trade_id: str | None = None,
+        is_maker: bool | None = True,
+        commission: float = 0.0,
+        commission_asset: str = "USDT",
+        reject_reason: str = "",
+        orig_client_order_id: str = "",
+        venue_order_id: str | None = None,
+        at: datetime | None = None,
+        cumulative_qty: float | None = None,
+    ) -> ExecutionReport:
+        """Deliver one report as the venue would word it. Unknown orders are allowed on
+        purpose: that is how a test says 'something this maker did not place'."""
+        order = self.venue.orders.get(client_order_id)
+        when = at or self.venue.clock.now()
+        ms = int(when.timestamp() * 1000)
+        report = ExecutionReport(
+            event_time_ms=ms,
+            transaction_time_ms=ms,
+            symbol="BTCUSDT",
+            client_order_id=client_order_id,
+            orig_client_order_id=orig_client_order_id,
+            venue_order_id=venue_order_id if venue_order_id is not None else (order.order_id if order is not None else "999999"),
+            side=order.side if order is not None else Side.BUY,
+            status=status,
+            execution_type=execution_type,
+            order_quantity=order.quantity if order is not None else last_qty,
+            cumulative_quantity=cumulative_qty if cumulative_qty is not None else (order.filled_quantity if order is not None else last_qty),
+            last_quantity=last_qty,
+            last_price=last_price if last_price is not None else (order.limit_price or 0.0 if order is not None else 0.0),
+            cumulative_quote_quantity=0.0,
+            trade_id=trade_id,
+            is_maker=is_maker,
+            commission=commission,
+            commission_asset=commission_asset,
+            reject_reason=reject_reason,
+            raw_status=status.value.upper(),
+        )
+        self.reports.append(report)
+        self._on_report(report, self._now_ms())
+        return report
+
+    def fill_with_report(self, client_order_id: str, quantity: float, *, price: float | None = None, is_maker: bool | None = True, fee_asset: str | None = None, push_balances: bool = True) -> ExecutionReport:
+        """The venue matches part or all of a resting order and reports it, as it would:
+        the trade appears in the history too, so a later poll sees the same trade id."""
+        fill = self.venue.venue_fill(client_order_id, quantity, price=price, is_maker=bool(is_maker), fee_asset=fee_asset)
+        order = self.venue.orders[client_order_id]
+        report = self.report(
+            client_order_id,
+            execution_type="trade",
+            status=order.state,
+            last_qty=quantity,
+            last_price=fill.price,
+            trade_id=fill.fill_id,
+            is_maker=is_maker,
+            commission=fill.fee,
+            commission_asset=fill.fee_asset,
+            at=fill.filled_at,
+        )
+        if push_balances:
+            self.push_balances()
+        return report
+
+    def as_dict(self) -> dict[str, Any]:
+        return {"fake": True, "connected": self.connected, "started": self.started, "closed": self.closed, "reports": len(self.reports)}
+
+
+__all__ = ["FakeUserStream", "FakeVenue", "exchange_info"]

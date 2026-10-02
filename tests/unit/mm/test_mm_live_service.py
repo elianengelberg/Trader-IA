@@ -83,10 +83,10 @@ class Live:
             await asyncio.sleep(0.01)
 
 
-async def _live(*, venue: FakeVenue | None = None, config: MarketMakerConfig | None = None, activation=None, **kw) -> Live:  # type: ignore[no-untyped-def]
+async def _live(*, venue: FakeVenue | None = None, venue_kwargs: dict | None = None, config: MarketMakerConfig | None = None, activation=None, **kw) -> Live:  # type: ignore[no-untyped-def, type-arg]
     clock = SimulatedClock(START)
     market, scripted = await _market(clock)
-    venue = venue or FakeVenue(clock, quote_balance=5_000.0, base_balance=0.05)
+    venue = venue or FakeVenue(clock, **(venue_kwargs or {"quote_balance": 5_000.0, "base_balance": 0.05}))
     persisted: list[tuple[str, dict]] = []  # type: ignore[type-arg]
 
     async def persist(kind: str, payload: dict) -> None:  # type: ignore[type-arg]
@@ -281,4 +281,71 @@ async def test_a_reconciliation_that_fails_mid_run_engages_the_switch_and_is_rep
     assert live.service.reconciliation_failures == 1 and live.service.kill.sticky and live.service.kill.trigger == "reconciliation"
     assert live.service.status()["reconciliation"]["failures"] == 1
     live.venue.fail_queries = None
+    await _teardown(live)
+
+
+# ------------------------------------------------------------------ the account stream in the service
+
+
+def _attach_stream(live: Live):  # type: ignore[no-untyped-def]
+    from tests.unit.mm.fake_venue import FakeUserStream
+
+    execution = live.service.execution
+    stream = FakeUserStream(live.venue, now_ms=live.clock.timestamp_ms, on_report=execution.absorb_execution_report, on_balances=execution.absorb_balances, on_status=execution.absorb_stream_status)
+    live.service.attach_user_stream(stream)
+    return stream
+
+
+async def test_fills_reported_by_the_stream_are_booked_at_once_and_balances_follow_the_venue() -> None:
+    live = await _live(venue_kwargs={"quote_balance": 5_000.0, "base_balance": 0.04, "base_locked": 0.01})
+    stream = _attach_stream(live)
+    report = await live.service.start_live()
+    assert stream.started and live.service.execution.accepting_reports and report.ok
+    ledger = live.service.live_ledger
+    assert ledger.state.starting_equity_usd == 5_000.0 and ledger.baseline_base_btc == pytest.approx(0.05)
+    assert ledger.venue_base_locked == pytest.approx(0.01) and ledger.balances() == (5_000.0, pytest.approx(0.04))
+    assert report.balances["venue_base_locked"] == pytest.approx(0.01) and report.balances["capital_cap_usd"] is None
+    resting = await live.until_resting()
+    stream.fill_with_report(resting[0], live.venue.orders[resting[0]].quantity)
+    # Booked on the stream's turn, before any market event: ledger, journal, counters.
+    assert ledger.state.fills == 1 and ledger.fees_venue_usd > 0
+    rows = [r for r in live.service.engine.journal if r.get("kind") == "fill"]
+    assert rows and rows[0]["attribution_source"] == "report" and rows[0]["liquidity"] == "maker"
+    assert ledger.venue_balances_at_ms is not None and ledger.venue_quote_free < 5_000.0  # the venue's balances after the fill
+    status = live.service.status()
+    assert status["user_stream"]["connected"] is True and status["execution"]["report_fills"] == 1 and status["execution"]["fill_sink_installed"]
+    assert status["latency"]["market_event_to_processed_ms"]["count"] > 0 and status["latency"]["callback_ms"]["count"] > 0
+    assert "report_to_local_ms" in status["latency"] and "decision_to_enqueue_ms" in status["latency"]
+    stopped = await live.service.stop(reason="done", actor="elian")
+    assert stream.closed and stopped["state"] == "stopped"
+    await live.market.close()
+
+
+async def test_a_dropped_account_stream_degrades_to_a_safe_state_until_a_reconciliation_after_it_is_back() -> None:
+    live = await _live()
+    stream = _attach_stream(live)
+    await live.service.start_live()
+    await live.until_resting()
+    stream.drop("socket closed by the venue")
+    await live.feed(2)
+    kill = live.service.kill
+    assert kill.engaged and not kill.sticky and "user_stream_down" in kill.as_dict()["transient"]
+    assert all(o.state.is_terminal for o in live.venue.orders.values()), "what rested was cancelled: nothing is assumed about it"
+    stream.reconnect()
+    await live.feed(2)
+    assert "user_stream_down" in kill.as_dict()["transient"], "back online is not enough: the account has to be read first"
+    await live.service.reconcile()
+    await live.feed(2)
+    assert "user_stream_down" not in kill.as_dict()["transient"] and not kill.engaged
+    await _teardown(live)
+
+
+async def test_the_initial_reconciliation_notes_when_an_asset_cannot_fund_a_side() -> None:
+    live = await _live(venue_kwargs={"quote_balance": 5_000.0, "base_balance": 0.0})
+    report = await live.service.start_live()
+    assert report.ok and "funding_note_ask" in report.balances and "no ask can be funded" in report.balances["funding_note_ask"]
+    assert live.service.live_ledger.balances() == (5_000.0, 0.0)
+    await live.feed(6)
+    quotes = [r for r in live.service.engine.journal if r.get("kind") == "decision" and r.get("decision") == "quote"]
+    assert quotes and all(r["ask"] is None for r in quotes), "with no base asset the risk authorizer removes the ask"
     await _teardown(live)

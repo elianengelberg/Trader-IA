@@ -39,9 +39,13 @@ class LiveLedger(MarketMakerLedger):
         self.seeded = False
         self.seeded_at_ms: int | None = None
         self.baseline_base_btc = 0.0
-        self.venue_quote_usd: float | None = None
-        self.venue_base_btc: float | None = None
-        self.venue_base_locked_btc: float | None = None
+        #: Balances as the venue last reported them: the source of truth for what a new
+        #: order can be funded with. Free is usable; locked is held by resting orders.
+        self.venue_quote_free: float | None = None
+        self.venue_quote_locked: float | None = None
+        self.venue_base_free: float | None = None
+        self.venue_base_locked: float | None = None
+        self.venue_balances_at_ms: int | None = None
         self.fees_venue_usd = 0.0
         self.fees_converted_usd = 0.0
         self.fees_assumed_usd = 0.0
@@ -55,29 +59,46 @@ class LiveLedger(MarketMakerLedger):
 
     # ------------------------------------------------------------------ seeding
 
-    def seed(self, *, quote_usd: float, base_btc: float, base_locked_btc: float, mark_price: float, t_ms: int) -> None:
-        """Start from the account as the venue reports it. May be called once per run."""
+    def seed(self, *, quote_free: float, quote_locked: float, base_free: float, base_locked: float, mark_price: float, t_ms: int) -> None:
+        """Start from the account as the venue reports it, both assets, free and locked.
+        May be called once per run. The quote total is the capital at work (the risk
+        authorizer caps it further by the activation's ceiling); the base total held
+        before the run is a baseline, not inventory."""
         if self.seeded:
             raise ValueError("the live ledger is seeded once per run; a restart rebuilds it from the venue")
+        quote_total = quote_free + quote_locked
         s = self.state
-        s.starting_equity_usd = quote_usd
-        s.cash_usd = quote_usd
+        s.starting_equity_usd = quote_total
+        s.cash_usd = quote_total
         s.inventory_btc = 0.0
         s.average_cost = 0.0
-        s.peak_equity_usd = quote_usd
-        s.day_start_equity_usd = quote_usd
+        s.peak_equity_usd = quote_total
+        s.day_start_equity_usd = quote_total
         s.mark_price = mark_price
         s.mark_bid = s.mark_ask = mark_price
         s.last_mark_ms = t_ms
-        self.baseline_base_btc = base_btc + base_locked_btc
-        self.venue_quote_usd, self.venue_base_btc, self.venue_base_locked_btc = quote_usd, base_btc, base_locked_btc
+        self.baseline_base_btc = base_free + base_locked
+        self.note_venue_balances(quote_free=quote_free, quote_locked=quote_locked, base_free=base_free, base_locked=base_locked, t_ms=t_ms)
         self.seeded = True
         self.seeded_at_ms = t_ms
 
+    def note_venue_balances(self, *, quote_free: float, quote_locked: float, base_free: float, base_locked: float, t_ms: int) -> None:
+        """The venue's latest word on the balances (account stream or reconciliation).
+        Recorded, never computed here; it is what :meth:`balances` answers with."""
+        self.venue_quote_free, self.venue_quote_locked = quote_free, quote_locked
+        self.venue_base_free, self.venue_base_locked = base_free, base_locked
+        self.venue_balances_at_ms = t_ms
+
     def balances(self) -> tuple[float | None, float | None]:
-        """(quote available for bids, base available for asks), for the risk authorizer."""
+        """(quote free for a new bid, base free for a new ask), for the risk authorizer.
+
+        The venue's reported free balances when it has reported them, because the amounts
+        resting orders have locked are not available to a new order and only the venue
+        knows them exactly; the booked figures only before the first report."""
         if not self.seeded:
             return None, None
+        if self.venue_quote_free is not None and self.venue_base_free is not None:
+            return self.venue_quote_free, self.venue_base_free
         return self.state.cash_usd, self.baseline_base_btc + self.state.inventory_btc - self.base_fees_btc
 
     # ------------------------------------------------------------------ fills
@@ -116,28 +137,36 @@ class LiveLedger(MarketMakerLedger):
     def reconcile_balances(
         self,
         *,
-        quote_usd: float,
-        base_btc: float,
-        base_locked_btc: float,
+        quote_free: float,
+        quote_locked: float,
+        base_free: float,
+        base_locked: float,
         t_ms: int,
         quote_tolerance_usd: float,
         base_tolerance_btc: float,
     ) -> dict[str, Any]:
+        """Totals (free + locked) against what the booked fills imply; the venue's figures
+        are recorded whatever the verdict, and adopted when they disagree beyond tolerance."""
         expected_quote, expected_base = self.expected_balances()
-        actual_base = base_btc + base_locked_btc
-        dq, db = quote_usd - expected_quote, actual_base - expected_base
+        quote_total = quote_free + quote_locked
+        actual_base = base_free + base_locked
+        dq, db = quote_total - expected_quote, actual_base - expected_base
         ok = abs(dq) <= quote_tolerance_usd and abs(db) <= base_tolerance_btc
         self.reconciliations += 1
-        self.venue_quote_usd, self.venue_base_btc, self.venue_base_locked_btc = quote_usd, base_btc, base_locked_btc
+        self.note_venue_balances(quote_free=quote_free, quote_locked=quote_locked, base_free=base_free, base_locked=base_locked, t_ms=t_ms)
         result = {
             "t_ms": t_ms,
             "ok": ok,
             "expected_quote_usd": round(expected_quote, 6),
-            "venue_quote_usd": quote_usd,
+            "venue_quote_usd": quote_total,
+            "venue_quote_free": quote_free,
+            "venue_quote_locked": quote_locked,
             "quote_delta_usd": round(dq, 6),
             "quote_tolerance_usd": quote_tolerance_usd,
             "expected_base_btc": round(expected_base, 8),
             "venue_base_btc": actual_base,
+            "venue_base_free": base_free,
+            "venue_base_locked": base_locked,
             "base_delta_btc": round(db, 8),
             "base_tolerance_btc": base_tolerance_btc,
             "adopted": False,
@@ -146,7 +175,7 @@ class LiveLedger(MarketMakerLedger):
             # The venue is the fact. Adopt its figures, keep the record of the difference.
             self.discrepancies += 1
             s = self.state
-            s.cash_usd = quote_usd - self.fees_converted_usd - self.fees_assumed_usd
+            s.cash_usd = quote_total - self.fees_converted_usd - self.fees_assumed_usd
             new_inventory = actual_base - self.baseline_base_btc + self.base_fees_btc
             if abs(new_inventory) < 1e-12:
                 new_inventory, s.average_cost = 0.0, 0.0
@@ -172,9 +201,13 @@ class LiveLedger(MarketMakerLedger):
             "baseline_base_btc": round(self.baseline_base_btc, 8),
             "base_held_btc": round(held, 8),
             "account_equity_usd": round(s.cash_usd + held * (s.mark_price or 0.0), 6),
-            "venue_quote_usd": self.venue_quote_usd,
-            "venue_base_btc": self.venue_base_btc,
-            "venue_base_locked_btc": self.venue_base_locked_btc,
+            "venue_quote_free": self.venue_quote_free,
+            "venue_quote_locked": self.venue_quote_locked,
+            "venue_base_free": self.venue_base_free,
+            "venue_base_locked": self.venue_base_locked,
+            "venue_balances_at_ms": self.venue_balances_at_ms,
+            "available_for_bid_usd": self.balances()[0],
+            "available_for_ask_btc": self.balances()[1],
             "fees_venue_usd": round(self.fees_venue_usd, 6),
             "fees_converted_usd": round(self.fees_converted_usd, 6),
             "fees_assumed_usd": round(self.fees_assumed_usd, 6),
@@ -185,7 +218,7 @@ class LiveLedger(MarketMakerLedger):
             "discrepancies": self.discrepancies,
             "last_reconciliation": self.last_reconciliation,
             "adjustments": list(self.adjustments)[-5:],
-            "note": "starting equity is the quote balance at seed; inventory and P&L are this maker's fills only; the base held before the run is a baseline, not inventory",
+            "note": "starting equity is the quote total (free + locked) at seed; inventory and P&L are this maker's fills only; the base held before the run is a baseline, not inventory; free balances are the venue's word and size new orders",
         }
 
     def export(self) -> dict[str, Any]:

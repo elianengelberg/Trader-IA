@@ -31,6 +31,7 @@ from typing import Any
 
 from tia.core.clock import Clock, utc_from_millis
 from tia.core.logging import get_logger
+from tia.domain.portfolio import AccountBalance
 from tia.execution.provider import ExecutionProvider
 from tia.mm.authorization import (
     ActivationView,
@@ -42,6 +43,7 @@ from tia.mm.costs import MarketMakerCostModel
 from tia.mm.engine import MarketMakerConfig
 from tia.mm.execution import LiveMarketMakerExecution, SymbolFilters
 from tia.mm.kill_switch import KillSeverity, MMKillSwitch
+from tia.mm.latency import LatencyStats
 from tia.mm.latency_model import LatencyProfile
 from tia.mm.live_ledger import LiveLedger
 from tia.mm.market_data import MarketDataService
@@ -65,10 +67,23 @@ CRITICAL_RESPONSE: dict[str, tuple[KillSeverity, bool]] = {
     "excessive_api_errors": (KillSeverity.NO_NEW_QUOTES, True),
     "activation": (KillSeverity.NO_NEW_QUOTES, True),
     "unknown_fill": (KillSeverity.CANCEL_OPEN, True),
+    "unknown_execution_report": (KillSeverity.CANCEL_OPEN, True),
     "foreign_open_order": (KillSeverity.CANCEL_OPEN, True),
     "venue_order_unknown_locally": (KillSeverity.CANCEL_OPEN, True),
     "outcome_apply_failed": (KillSeverity.CANCEL_OPEN, True),
+    # The account stream dropped: no state is invented. What rests is cancelled, nothing
+    # new is quoted, and the condition clears when the stream is back and a reconciliation
+    # has read the account.
+    "user_stream_down": (KillSeverity.CANCEL_OPEN, False),
 }
+
+
+def _assets(symbol: str, provider: Any) -> tuple[str, str]:
+    base, _, quote = symbol.partition("-")
+    venue_quote = str(getattr(provider, "quote_asset", "") or "")
+    if not venue_quote:
+        venue_quote = "USDT" if quote.upper() == "USD" else quote.upper()
+    return base.upper(), venue_quote.upper()
 
 
 def _run_tag(run_id: str, at_ms: int) -> str:
@@ -186,6 +201,16 @@ class LiveMarketMakerService(MarketMakerService):
         self.live_ledger = ledger
         self.risk_authorizer = risk_authorizer
         self.economics_authorizer = economics_authorizer
+        self._base_asset, self._quote_asset = _assets(config.symbol, provider)
+        # Fills are booked the moment the venue reports them, on the stream's task; the
+        # venue's balances are recorded as they arrive.
+        execution.fill_sink = self._on_live_fill
+        execution.balances_sink = self._on_venue_balances
+        #: The account stream, attached by the API layer (or a test); started before the
+        #: initial reconciliation so no report falls between the snapshot and the socket.
+        self.user_stream: Any | None = None
+        self.event_to_processed_ms = LatencyStats()
+        self.callback_ms = LatencyStats()
         self._reconcile_task: asyncio.Task[Any] | None = None
         self._reconciling = False
         self._balance_mismatch_streak = 0
@@ -246,12 +271,23 @@ class LiveMarketMakerService(MarketMakerService):
         if problems:
             raise ValueError("quoting configuration disagrees with the venue's filters: " + "; ".join(problems))
 
+    def attach_user_stream(self, stream: Any) -> None:
+        """A started-later account stream whose callbacks already point at the execution."""
+        if self._running:
+            raise RuntimeError("attach the account stream before start_live()")
+        self.user_stream = stream
+
     async def start_live(self) -> MMReconciliationReport:
         if self._running:
             return self.last_report or await self.reconcile()
         self.check_grid()
         await self.execution.start()
+        if self.user_stream is not None:
+            self.user_stream.start()
         report = await self.reconcile(initial=True)
+        # From here on the account stream is the primary source of execution facts; what
+        # it said before this instant is covered by the reconciliation just made.
+        self.execution.accepting_reports = True
         if report.critical:
             self.kill.engage("reconciliation", f"initial reconciliation: {report.summary}", severity=KillSeverity.CANCEL_OPEN, sticky=True)
         MarketMakerService.start(self)
@@ -323,6 +359,9 @@ class LiveMarketMakerService(MarketMakerService):
         with contextlib.suppress(Exception):
             await self.reconcile(final=True)
         await MarketMakerService.close(self)
+        if self.user_stream is not None:
+            with contextlib.suppress(Exception):
+                await self.user_stream.close()
         await self.execution.close()
         with contextlib.suppress(Exception):
             await self.provider.close()
@@ -350,8 +389,36 @@ class LiveMarketMakerService(MarketMakerService):
 
     def _on_market_event(self, kind: str, event: Any, t_ms: int) -> None:
         self._last_event_ms = t_ms
+        started = self._now_ms()
         super()._on_market_event(kind, event, t_ms)
+        done = self._now_ms()
+        # Receive stamp to decision applied (features, fair value, authorization, quoting,
+        # local validation, enqueue) and the callback's own duration. No network in it.
+        self.event_to_processed_ms.add(done - t_ms)
+        self.callback_ms.add(done - started)
         self._watch(t_ms)
+
+    def _on_live_fill(self, fill: Any, t_ms: int) -> None:
+        """A fill the venue confirmed, booked now through the engine (ledger, markouts,
+        journal). Called on the stream's or the worker's turn, never on the feed."""
+        try:
+            self.engine._on_fill(fill, t_ms)
+        except Exception as exc:
+            self.engine_errors += 1
+            self.last_engine_error = f"{type(exc).__name__}: {str(exc)[:160]}"
+            _log.error("mm_live_fill_booking_failed", error=self.last_engine_error)
+
+    def _on_venue_balances(self, balances: dict[str, AccountBalance], t_ms: int) -> None:
+        quote = balances.get(self._quote_asset)
+        base = balances.get(self._base_asset)
+        ledger = self.live_ledger
+        ledger.note_venue_balances(
+            quote_free=quote.free if quote is not None else (ledger.venue_quote_free or 0.0),
+            quote_locked=quote.locked if quote is not None else (ledger.venue_quote_locked or 0.0),
+            base_free=base.free if base is not None else (ledger.venue_base_free or 0.0),
+            base_locked=base.locked if base is not None else (ledger.venue_base_locked or 0.0),
+            t_ms=t_ms,
+        )
 
     def _watch(self, t_ms: int) -> None:  # noqa: ARG002 - time is read from the kill switch's clock
         # Data: a stream that dropped or data that is not usable cancels what rests, and
@@ -366,6 +433,9 @@ class LiveMarketMakerService(MarketMakerService):
         # An unknown order resolved: the execution unblocked itself; the transient clears.
         if not self.execution.blocked_reason and not self.execution.unknown_orders():
             self.kill.clear("unknown_order_state")
+        # The account stream is back and a reconciliation has read the account since.
+        if self.execution.stream_connected is True and self.last_report is not None and self.last_report.t_ms >= (self.execution.stream_last_change_ms or 0):
+            self.kill.clear("user_stream_down")
         # The maker's own controller tripped (daily loss, drawdown): mirrored, sticky.
         controller = self.engine.controller
         if controller.kill_switch and not self._risk_kill_mirrored:
@@ -402,17 +472,28 @@ class LiveMarketMakerService(MarketMakerService):
         t = self._now_ms()
         try:
             venue_open = await self.execution.fetch_open_orders()
-            quote = float(await self.provider.get_balance())
-            positions = await self.provider.get_positions()
-            position = positions.get(self.config.symbol)
-            base_total = float(position.quantity) if position is not None else 0.0
+            quote_free, quote_locked, base_free, base_locked = await self._fetch_balances()
+            quote = quote_free + quote_locked
+            base_total = base_free + base_locked
             trades = await self.execution.fetch_trades()
             mark = self.market.book.mid if self.market.book.is_valid else None
-            balances: dict[str, Any] = {"venue_quote_usd": quote, "venue_base_btc": base_total, "mark_price": mark}
+            balances: dict[str, Any] = {
+                "venue_quote_usd": quote, "venue_quote_free": quote_free, "venue_quote_locked": quote_locked,
+                "venue_base_btc": base_total, "venue_base_free": base_free, "venue_base_locked": base_locked,
+                "mark_price": mark, "capital_cap_usd": self.capital_cap_usd, "max_inventory_btc": self.config.limits.max_inventory_btc,
+            }
+            self.execution.absorb_balances(
+                [AccountBalance(asset=self._quote_asset, free=quote_free, locked=quote_locked), AccountBalance(asset=self._base_asset, free=base_free, locked=base_locked)],
+                t,
+            )
             balance_issue: dict[str, Any] | None = None
             if initial:
-                self.live_ledger.seed(quote_usd=quote, base_btc=base_total, base_locked_btc=0.0, mark_price=mark or 0.0, t_ms=t)
+                self.live_ledger.seed(quote_free=quote_free, quote_locked=quote_locked, base_free=base_free, base_locked=base_locked, mark_price=mark or 0.0, t_ms=t)
                 balances["historical_trades"] = self.execution.set_trade_baseline(trades, at_ms=t)
+                if quote_free < self.filters.min_notional:
+                    balances["funding_note_bid"] = f"quote free {quote_free} below the minimum notional {self.filters.min_notional}: no bid can be funded"
+                if base_free < self.filters.min_qty:
+                    balances["funding_note_ask"] = f"base free {base_free} below the minimum quantity {self.filters.min_qty}: no ask can be funded"
             else:
                 self.execution.absorb_trades(trades)
                 if not final:
@@ -431,9 +512,10 @@ class LiveMarketMakerService(MarketMakerService):
                     if self._balance_mismatch_streak < 2:
                         balance_issue = {**balance_issue, "severity": "warning", "detail": "first mismatch: re-checked at the next reconciliation before anything is adopted"}
                     else:
-                        self.live_ledger.reconcile_balances(quote_usd=quote, base_btc=base_total, base_locked_btc=0.0, t_ms=t, quote_tolerance_usd=self._quote_tolerance_usd, base_tolerance_btc=self._base_tolerance_btc)
+                        self.live_ledger.reconcile_balances(quote_free=quote_free, quote_locked=quote_locked, base_free=base_free, base_locked=base_locked, t_ms=t, quote_tolerance_usd=self._quote_tolerance_usd, base_tolerance_btc=self._base_tolerance_btc)
                 else:
                     self._balance_mismatch_streak = 0
+                    self.live_ledger.note_venue_balances(quote_free=quote_free, quote_locked=quote_locked, base_free=base_free, base_locked=base_locked, t_ms=t)
             order_issues = compare_orders(
                 local_open=self.execution.open_orders(),
                 local_unknown=self.execution.unknown_orders(),
@@ -470,6 +552,26 @@ class LiveMarketMakerService(MarketMakerService):
         if report.critical and not initial and not final:
             self.kill.engage("reconciliation", report.summary, severity=KillSeverity.CANCEL_OPEN, sticky=True)
         return report
+
+    async def _fetch_balances(self) -> tuple[float, float, float, float]:
+        """(quote free, quote locked, base free, base locked) from the venue. A provider
+        that reports free and locked per asset is asked for both; one that only reports a
+        free quote balance and a base position is read as free with nothing locked."""
+        per_asset = getattr(self.provider, "get_balances", None)
+        if per_asset is not None:
+            balances = await per_asset()
+            quote = balances.get(self._quote_asset)
+            base = balances.get(self._base_asset)
+            return (
+                float(quote.free) if quote is not None else 0.0,
+                float(quote.locked) if quote is not None else 0.0,
+                float(base.free) if base is not None else 0.0,
+                float(base.locked) if base is not None else 0.0,
+            )
+        quote_free = float(await self.provider.get_balance())
+        positions = await self.provider.get_positions()
+        position = positions.get(self.config.symbol)
+        return quote_free, 0.0, float(position.quantity) if position is not None else 0.0, 0.0
 
     # ------------------------------------------------------------------ reading
 
@@ -519,6 +621,12 @@ class LiveMarketMakerService(MarketMakerService):
             "authorization_side_removals": engine.authorization_side_removals,
             "ledger": self.live_ledger.snapshot(),
             "heartbeats": self.heartbeats,
+            "user_stream": self.user_stream.as_dict() if self.user_stream is not None and hasattr(self.user_stream, "as_dict") else {"wired": self.user_stream is not None},
+            "latency": {
+                "market_event_to_processed_ms": self.event_to_processed_ms.as_dict(),
+                "callback_ms": self.callback_ms.as_dict(),
+                **self.execution.stats()["latency"],
+            },
             "counts": {"events": engine.events, "decisions": engine.decisions, "quotes": engine.quotes, "requotes": engine.requotes, "cancels": engine.cancels, "gate_blocks": engine.gate_blocks, "data_blocks": engine.data_blocks},
             "data": {"usable": self.market.usable, "freshness": self.market.freshness()[0].value},
             "economics": self.economics_config.as_dict(),

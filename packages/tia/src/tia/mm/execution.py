@@ -19,10 +19,14 @@ venue, with four rules that a simulator never needed:
 * **A timeout is an unknown state, not a failure.** The order is marked ``unknown``, new
   orders are blocked, and the worker *asks* the venue by client order id. Present: adopted.
   Absent: the intent is dropped (a later decision may quote afresh); it is never resent.
-* **Fills come from the venue's trade history**, with the trade id, the order id, the
-  maker flag, the fee and the fee asset. A trade for an order this adapter does not know
-  is a critical discrepancy; so is an open order it did not place. Binance wins every
-  disagreement, and the adapter says so rather than papering over it.
+* **Fills come from the venue**, never from a response we sent. The account stream's
+  execution reports are the primary source (each carries the trade id, the order id, the
+  maker flag, the fee and its asset); the trade history, polled, is the fallback and the
+  cross-check, and both are deduplicated on the venue's trade id so a report and a poll
+  that describe the same trade book it once. A fill embedded in a submit response is never
+  booked: it does not say who made the market. A trade for an order this adapter does not
+  know is a critical discrepancy; so is an open order it did not place. Binance wins
+  every disagreement, and the adapter says so rather than papering over it.
 
 Nothing in this module names a venue, a URL, a credential or a concrete provider class; the
 boundary tests check that it never does.
@@ -47,7 +51,8 @@ from tia.core.errors import (
 )
 from tia.core.logging import get_logger
 from tia.domain.enums import OrderState, OrderType, Side
-from tia.domain.orders import Fill, Order, OrderIntent
+from tia.domain.orders import ExecutionReport, Fill, Order, OrderIntent
+from tia.domain.portfolio import AccountBalance
 from tia.execution.provider import ExecutionProvider
 from tia.mm.latency import LatencyStats
 from tia.mm.order_book import LocalOrderBook
@@ -242,7 +247,10 @@ class LiveFill:
     #: valued at the trade price) or "unconverted:<asset>" (a third asset: the ledger
     #: applies its assumed fee instead and counts the case).
     fee_status: str = "venue"
+    #: "maker" / "taker" as the venue attributed it, or "unknown" when the venue did not say.
     liquidity: str = "maker"
+    #: "report" (account stream) or "trades" (trade history poll).
+    attribution_source: str = "trades"
     venue_order_id: str = ""
     received_at_ms: int = 0
 
@@ -266,8 +274,12 @@ class LiveOrder:
     venue_order_id: str = ""
     venue_state: str = ""
     venue_executed_qty: float = 0.0
+    t_enqueued_ms: int | None = None
     t_submitted_ms: int | None = None
+    t_rest_response_ms: int | None = None
     t_ack_ms: int | None = None
+    ack_source: str = ""  # rest | stream | sync | resolve
+    rest_acked: bool = False
     t_cancel_requested_ms: int | None = None
     t_cancel_effective_ms: int | None = None
     cancel_reason: str = ""
@@ -310,9 +322,12 @@ class LiveOrder:
             "state": self.state,
             "venue_state": self.venue_state,
             "t_decision_ms": self.t_decision_ms,
+            "t_enqueued_ms": self.t_enqueued_ms,
             "t_submitted_ms": self.t_submitted_ms,
+            "t_rest_response_ms": self.t_rest_response_ms,
             "t_arrival_ms": self.t_arrival_ms,
             "t_ack_ms": self.t_ack_ms,
+            "ack_source": self.ack_source,
             "t_cancel_requested_ms": self.t_cancel_requested_ms,
             "t_cancel_effective_ms": self.t_cancel_effective_ms,
             "cancel_reason": self.cancel_reason,
@@ -428,7 +443,29 @@ class LiveMarketMakerExecution:
         self.submit_to_ack_ms = LatencyStats()
         self.cancel_to_ack_ms = LatencyStats()
         self.recent_fills: deque[LiveFill] = deque(maxlen=5_000)
-        self.counters: dict[str, int] = dict.fromkeys(("placed", "submitted", "acked", "rejected", "rejected_would_cross", "refused_validation", "refused_blocked", "deferred_cancel_pending", "cancel_requests", "cancelled", "cancelled_before_submit", "cancel_raced_fill", "expired", "unknown", "resolved_present", "resolved_absent", "unresolved", "fills", "maker_fills", "taker_fills", "unknown_fills", "historical_trades", "api_errors", "activation_refusals", "venue_orders_unknown_locally", "foreign_open_orders", "missing_at_venue", "worker_errors"), 0)
+        #: Fills not yet handed to the engine when no sink is installed: on_event returns them.
+        self._pending_fills: list[LiveFill] = []
+        #: Installed by the live service: a fill is booked the moment the venue reports it.
+        self.fill_sink: Callable[[LiveFill, int], None] | None = None
+        self.balances_sink: Callable[[dict[str, AccountBalance], int], None] | None = None
+        #: The account stream: None when none is wired; else its last reported state.
+        self.stream_connected: bool | None = None
+        self.stream_reason = ""
+        self.stream_last_change_ms: int | None = None
+        #: Reports are applied only once the service has reconciled and subscribed; before
+        #: that the reconciliation is the truth and a report would describe the past.
+        self.accepting_reports = False
+        self._seen_report_keys: set[tuple[Any, ...]] = set()
+        self._seen_report_order: deque[tuple[Any, ...]] = deque()
+        self.venue_balances: dict[str, AccountBalance] = {}
+        self.venue_balances_at_ms: int | None = None
+        self.decision_to_enqueue_ms = LatencyStats()
+        self.enqueue_to_submit_ms = LatencyStats()
+        self.rest_submit_rtt_ms = LatencyStats()
+        self.submit_to_first_ack_ms = LatencyStats()
+        self.report_to_local_ms = LatencyStats()
+        self.fill_to_ledger_ms = LatencyStats()
+        self.counters: dict[str, int] = dict.fromkeys(("placed", "submitted", "acked", "rejected", "rejected_would_cross", "refused_validation", "refused_blocked", "deferred_cancel_pending", "cancel_requests", "cancelled", "cancelled_before_submit", "cancel_raced_fill", "expired", "unknown", "resolved_present", "resolved_absent", "unresolved", "fills", "maker_fills", "taker_fills", "unknown_fills", "historical_trades", "api_errors", "activation_refusals", "venue_orders_unknown_locally", "foreign_open_orders", "missing_at_venue", "worker_errors", "reports", "duplicate_reports", "reports_before_start", "reports_before_rest_ack", "report_fills", "trade_poll_fills", "duplicate_trades", "unknown_reports", "unknown_attribution_fills", "stream_drops", "stream_resolved", "balance_updates"), 0)
 
     # ------------------------------------------------------------------ identity
 
@@ -528,6 +565,9 @@ class LiveMarketMakerExecution:
             self.orders[order.order_id] = order
             self._all[order.order_id] = order
             self.counters["placed"] += 1
+            order.t_enqueued_ms = self._now_ms()
+            if decision.t_ms > 0:
+                self.decision_to_enqueue_ms.add(order.t_enqueued_ms - decision.t_ms)
             self._enqueue("submit", order)
             out.append(order)
         return out
@@ -563,7 +603,7 @@ class LiveMarketMakerExecution:
         Returns the fills confirmed by the venue since the last call."""
         self._book = book
         self._last_t_ms = t_ms
-        produced = self._drain(t_ms)
+        self._drain(t_ms)
         for order in list(self.orders.values()):
             if order.state == "resting" and order.t_cancel_requested_ms is None and order.t_ack_ms is not None and t_ms >= order.t_ack_ms + order.ttl_ms:
                 self.counters["expired"] += 1
@@ -573,16 +613,22 @@ class LiveMarketMakerExecution:
             self._last_trade_poll_ms = self._last_open_sync_ms = t_ms
         elif self._commands is not None:
             recently_closed = self._last_close_ms is not None and t_ms - self._last_close_ms <= self.closed_poll_grace_ms
-            busy = self._poll_due or bool(self.orders) or recently_closed
-            interval = self.trades_poll_interval_ms if busy else self.idle_trades_poll_interval_ms
-            if t_ms - self._last_trade_poll_ms >= interval:
+            busy = bool(self.orders) or recently_closed
+            # With the account stream up, the trade history is a cross-check and is read at
+            # the idle cadence; without it (or down), it is the only source and is read fast.
+            interval = self.trades_poll_interval_ms if (busy and self.stream_connected is not True) else self.idle_trades_poll_interval_ms
+            if self._poll_due or t_ms - self._last_trade_poll_ms >= interval:
                 self._last_trade_poll_ms = t_ms
                 self._poll_due = False
                 self._enqueue("poll_trades", None)
             if t_ms - self._last_open_sync_ms >= self.open_sync_interval_ms:
                 self._last_open_sync_ms = t_ms
                 self._enqueue("sync_open", None)
-        return produced
+        return self._take_pending()
+
+    def _take_pending(self) -> list[LiveFill]:
+        out, self._pending_fills = self._pending_fills, []
+        return out
 
     # ------------------------------------------------------------------ absorbing venue facts
 
@@ -592,6 +638,87 @@ class LiveMarketMakerExecution:
 
     def absorb_trades(self, trades: list[Fill]) -> None:
         self._outcomes.append(("trades", trades))
+
+    def absorb_execution_report(self, report: ExecutionReport, received_at_ms: int | None = None) -> None:
+        """One report from the account stream, applied now (this is called on the stream's
+        task, never on the market-data callback). Correlated by client order id (the
+        original one for a cancel) or by the venue's order id; deduplicated; a trade it
+        carries is booked once, on the venue's trade id, whichever source said it first;
+        the order's state follows the report. A report about an order this run does not
+        know is critical. Reports that arrive before the service has reconciled are
+        counted and ignored: the reconciliation is the truth at that moment."""
+        t = received_at_ms if received_at_ms is not None else self._now_ms()
+        self.counters["reports"] += 1
+        if report.event_time_ms > 0:
+            self.report_to_local_ms.add(t - report.event_time_ms)
+        if not self.accepting_reports:
+            self.counters["reports_before_start"] += 1
+            return
+        key = report.dedupe_key()
+        if key in self._seen_report_keys:
+            self.counters["duplicate_reports"] += 1
+            return
+        self._remember_report_key(key)
+        order = self._all.get(report.order_ref) or self._all.get(report.client_order_id)
+        if order is None and report.venue_order_id:
+            cid = self._by_venue_id.get(report.venue_order_id)
+            order = self._all.get(cid) if cid else None
+        if order is None:
+            if self.trade_baseline_ms is not None and 0 < report.transaction_time_ms < self.trade_baseline_ms:
+                self.counters["historical_trades"] += 1  # about the account's past, before this run
+                return
+            ref = report.order_ref or report.venue_order_id
+            if ref.startswith(CLIENT_ID_PREFIX):
+                self.counters["venue_orders_unknown_locally"] += 1
+                self._critical("venue_order_unknown_locally", f"the account stream reports market-maker order {ref} this run does not know ({report.execution_type}, {report.raw_status})")
+            else:
+                self.counters["unknown_reports"] += 1
+                if self.foreign_orders_critical:
+                    self._critical("unknown_execution_report", f"the account stream reports an order this maker did not place: {ref} ({report.execution_type}, {report.raw_status})")
+            return
+        if report.is_trade:
+            trade_id = str(report.trade_id)
+            if trade_id in self._seen_trade_ids:
+                self.counters["duplicate_trades"] += 1
+            else:
+                self._remember_trade(trade_id)
+                self._book_fill(order, self._fill_from_report(order, report, t), t, source="report")
+        self._adopt(order, venue_order_id=report.venue_order_id, state=report.status, executed_qty=report.cumulative_quantity, t_ms=t, reject_reason=report.reject_reason, source="stream")
+
+    def absorb_balances(self, balances: list[AccountBalance], received_at_ms: int | None = None) -> None:
+        """Balances as the venue reports them (the account stream or a reconciliation)."""
+        t = received_at_ms if received_at_ms is not None else self._now_ms()
+        for balance in balances:
+            self.venue_balances[balance.asset.upper()] = balance
+        self.venue_balances_at_ms = t
+        self.counters["balance_updates"] += 1
+        if self.balances_sink is not None and balances:
+            with contextlib.suppress(Exception):
+                self.balances_sink(dict(self.venue_balances), t)
+
+    def absorb_stream_status(self, connected: bool, reason: str = "", at_ms: int | None = None) -> None:
+        """The account stream's health. A drop invents no state: it asks for the trade
+        history now and tells the service, which stops quoting until a reconciliation
+        says what the account holds."""
+        t = at_ms if at_ms is not None else self._now_ms()
+        previous = self.stream_connected
+        self.stream_connected = connected
+        self.stream_reason = reason
+        self.stream_last_change_ms = t
+        if reason.startswith("unparseable"):
+            self._critical("unknown_execution_report", reason)
+        if previous is True and not connected:
+            self.counters["stream_drops"] += 1
+            self._poll_due = True
+            self._critical("user_stream_down", f"account stream dropped: {reason or 'no reason given'}")
+        elif connected and previous is False:
+            self._poll_due = True  # whatever happened while it was down is in the trade history
+
+    def _remember_report_key(self, key: tuple[Any, ...]) -> None:
+        self._seen_report_keys.add(key)
+        self._seen_report_order.append(key)
+        while len(self._seen_report_order) > 50_000:
+            self._seen_report_keys.discard(self._seen_report_order.popleft())
 
     def set_trade_baseline(self, trades: list[Fill], *, at_ms: int) -> int:
         """Trades that existed before this run: remembered by id so they are never booked,
@@ -612,8 +739,7 @@ class LiveMarketMakerExecution:
 
     # ------------------------------------------------------------------ applying outcomes
 
-    def _drain(self, t_ms: int) -> list[LiveFill]:
-        produced: list[LiveFill] = []
+    def _drain(self, t_ms: int) -> None:
         while self._outcomes:
             kind, payload = self._outcomes.popleft()
             try:
@@ -638,7 +764,7 @@ class LiveMarketMakerExecution:
                 elif kind == "activation_refused":
                     self._apply_activation_refused(payload[0], payload[1], t_ms)
                 elif kind == "trades":
-                    produced.extend(self._apply_trades(payload, t_ms))
+                    self._apply_trades(payload, t_ms)
                 elif kind == "open_orders":
                     self._apply_open_orders(payload, t_ms)
                 elif kind == "api_error":
@@ -646,7 +772,10 @@ class LiveMarketMakerExecution:
             except Exception as exc:  # an outcome that cannot be applied is a critical fact, not a crash
                 self.counters["worker_errors"] += 1
                 self._critical("outcome_apply_failed", f"{kind}: {type(exc).__name__}: {str(exc)[:160]}")
-        return produced
+
+    def _unblock_if_clear(self) -> None:
+        if not self.unknown_orders() and self.blocked_reason.startswith("order "):
+            self.blocked_reason = ""
 
     def _close(self, order: LiveOrder, t_ms: int) -> None:
         if order.closed:
@@ -660,27 +789,45 @@ class LiveMarketMakerExecution:
             self._all.pop(gone.order_id, None)
             if gone.venue_order_id:
                 self._by_venue_id.pop(gone.venue_order_id, None)
-        if not self.unknown_orders() and self.blocked_reason.startswith("order "):
-            self.blocked_reason = ""
+        self._unblock_if_clear()
 
-    def _adopt_venue_state(self, order: LiveOrder, venue: Order, t_ms: int) -> None:
-        if venue.order_id:
-            order.venue_order_id = str(venue.order_id)
-            self._by_venue_id[order.venue_order_id] = order.order_id
-        order.venue_state = venue.state.value
-        if venue.filled_quantity > order.venue_executed_qty:
-            order.venue_executed_qty = venue.filled_quantity
+    def _adopt_venue_state(self, order: LiveOrder, venue: Order, t_ms: int, *, source: str = "rest") -> None:
+        self._adopt(order, venue_order_id=str(venue.order_id or ""), state=venue.state, executed_qty=venue.filled_quantity, t_ms=t_ms, reject_reason=venue.reject_reason or "", source=source)
+
+    def _adopt(self, order: LiveOrder, *, venue_order_id: str, state: OrderState, executed_qty: float, t_ms: int, reject_reason: str = "", source: str) -> None:
+        """The venue said this about the order (a response, a report, a reading): the local
+        picture follows. Idempotent: a terminal order stays terminal, an acknowledgement is
+        counted once, and a reading that says less than we know changes nothing."""
+        if venue_order_id:
+            order.venue_order_id = venue_order_id
+            self._by_venue_id[venue_order_id] = order.order_id
+            self._worker_acked.add(order.order_id)  # the venue has it: a cancel can address it
+        order.venue_state = state.value
+        if executed_qty > order.venue_executed_qty:
+            order.venue_executed_qty = executed_qty
         if order.venue_executed_qty > order.filled + 1e-12:
             self._poll_due = True  # the venue says more filled than we have booked: ask for the trades
         if order.closed:
             return  # already terminal here; the venue's later readings cannot reopen it
-        local = _VENUE_TO_LOCAL.get(venue.state)
+        local = _VENUE_TO_LOCAL.get(state)
         if local is None:
-            self._apply_unknown(order, f"venue state {venue.state.value} has no local meaning", t_ms)
+            self._apply_unknown(order, f"venue state {state.value} has no local meaning", t_ms)
             return
+        was_unknown = order.state == "unknown"
         if local == "refused":
-            order.reject_reason = venue.reject_reason or venue.state.value
+            order.reject_reason = reject_reason or state.value
         order.state = local
+        if local in OPEN_STATES:
+            self._mark_ack(order, t_ms, source)
+        if was_unknown:
+            order.unknown_reason = ""
+            if source == "stream":
+                self.counters["stream_resolved"] += 1
+            if order.is_open and order.t_cancel_requested_ms is not None:
+                # Asked to cancel while its fate was unknown: now that it is known to rest, cancel.
+                self._enqueue("cancel", order)
+            if order.is_open:
+                self._unblock_if_clear()
         if local in TERMINAL_STATES:
             if local == "cancelled":
                 self.counters["cancelled"] += 1
@@ -689,13 +836,23 @@ class LiveMarketMakerExecution:
                     self.cancel_to_ack_ms.add(t_ms - order.t_cancel_requested_ms)
             self._close(order, t_ms)
 
-    def _apply_ack(self, order: LiveOrder, venue: Order, t_ms: int) -> None:
-        if order.t_ack_ms is None:
-            self.counters["acked"] += 1
-            order.t_ack_ms = t_ms
+    def _mark_ack(self, order: LiveOrder, t_ms: int, source: str) -> None:
+        if order.t_ack_ms is not None:
+            return
+        order.t_ack_ms = t_ms
+        order.ack_source = source
+        self.counters["acked"] += 1
+        if order.t_submitted_ms is not None:
+            self.submit_to_first_ack_ms.add(t_ms - order.t_submitted_ms)
+        if source == "stream" and order.t_rest_response_ms is None:
+            self.counters["reports_before_rest_ack"] += 1
+
+    def _apply_ack(self, order: LiveOrder, venue: Order, t_ms: int, *, source: str = "rest") -> None:
+        if source == "rest" and not order.rest_acked:
+            order.rest_acked = True
             if order.t_submitted_ms is not None:
                 self.submit_to_ack_ms.add(t_ms - order.t_submitted_ms)
-        self._adopt_venue_state(order, venue, t_ms)
+        self._adopt_venue_state(order, venue, t_ms, source=source)
 
     def _apply_reject(self, order: LiveOrder, code: Any, message: str, t_ms: int) -> None:
         self.counters["rejected"] += 1
@@ -724,14 +881,8 @@ class LiveMarketMakerExecution:
             return
         self.counters["resolved_present"] += 1
         order.unknown_reason = ""
-        if order.t_ack_ms is None:
-            order.t_ack_ms = t_ms
-        self._adopt_venue_state(order, venue, t_ms)
-        if order.is_open and order.t_cancel_requested_ms is not None:
-            # Asked to cancel while its fate was unknown: now that it is known to rest, cancel.
-            self._enqueue("cancel", order)
-        if order.is_open and not self.unknown_orders() and self.blocked_reason.startswith("order "):
-            self.blocked_reason = ""
+        self._adopt_venue_state(order, venue, t_ms, source="resolve")
+        self._unblock_if_clear()
 
     def _apply_unresolved(self, order: LiveOrder, detail: str, t_ms: int) -> None:  # noqa: ARG002
         self.counters["unresolved"] += 1
@@ -779,10 +930,10 @@ class LiveMarketMakerExecution:
         while len(self._seen_trade_order) > 50_000:
             self._seen_trade_ids.discard(self._seen_trade_order.popleft())
 
-    def _apply_trades(self, trades: list[Fill], t_ms: int) -> list[LiveFill]:
-        produced: list[LiveFill] = []
+    def _apply_trades(self, trades: list[Fill], t_ms: int) -> None:
         for fill in sorted(trades, key=_ms):
             if fill.fill_id in self._seen_trade_ids:
+                self.counters["duplicate_trades"] += 1
                 continue
             self._remember_trade(fill.fill_id)
             when = _ms(fill)
@@ -795,30 +946,68 @@ class LiveMarketMakerExecution:
                 self.counters["unknown_fills"] += 1
                 self._critical("unknown_fill", f"venue trade {fill.fill_id} on order {fill.order_id} this maker did not place")
                 continue
-            live = self._live_fill(order, fill, t_ms)
-            order.fills.append(live)
-            self.recent_fills.append(live)
-            self.counters["fills"] += 1
-            self.counters["maker_fills" if live.liquidity == "maker" else "taker_fills"] += 1
-            if live.liquidity != "maker":
-                _log.error("mm_live_taker_fill", order=order.order_id, trade=live.fill_id)
-            produced.append(live)
-            if order.is_open and order.remaining <= self.filters.step_size / 2.0:
-                order.state = "filled"
-                order.venue_state = OrderState.FILLED.value
-                self._close(order, t_ms)
-        return produced
+            self._book_fill(order, self._live_fill(order, fill, t_ms), t_ms, source="trades")
 
-    def _live_fill(self, order: LiveOrder, fill: Fill, t_ms: int) -> LiveFill:
-        asset = (fill.fee_asset or "").upper()
+    def _book_fill(self, order: LiveOrder, fill: LiveFill, t_ms: int, *, source: str) -> None:
+        """The one door every fill goes through, whichever source said it first."""
+        order.fills.append(fill)
+        self.recent_fills.append(fill)
+        self.counters["fills"] += 1
+        self.counters["report_fills" if source == "report" else "trade_poll_fills"] += 1
+        if fill.liquidity == "maker":
+            self.counters["maker_fills"] += 1
+        elif fill.liquidity == "taker":
+            self.counters["taker_fills"] += 1
+            _log.error("mm_live_taker_fill", order=order.order_id, trade=fill.fill_id, source=source)
+        else:
+            self.counters["unknown_attribution_fills"] += 1
+        if order.is_open and order.remaining <= self.filters.step_size / 2.0:
+            order.state = "filled"
+            order.venue_state = OrderState.FILLED.value
+            self._close(order, t_ms)
+        if self.fill_sink is not None:
+            started = self._now_ms()
+            self.fill_sink(fill, t_ms)
+            self.fill_to_ledger_ms.add(self._now_ms() - max(started, fill.received_at_ms or started))
+        else:
+            self._pending_fills.append(fill)
+
+    def _fee(self, asset: str, fee: float, price: float) -> tuple[float, str]:
+        asset = (asset or "").upper()
         base, _, quote = self.symbol.partition("-")
         quote_names = {quote.upper(), "USDT"} if quote.upper() == "USD" else {quote.upper()}
         if not asset or asset in quote_names:
-            fee_usd, status = fill.fee, "venue"
-        elif asset == base.upper():
-            fee_usd, status = fill.fee * fill.price, "converted_from_base"
-        else:
-            fee_usd, status = 0.0, f"unconverted:{asset}"
+            return fee, "venue"
+        if asset == base.upper():
+            return fee * price, "converted_from_base"
+        return 0.0, f"unconverted:{asset}"
+
+    def _fill_from_report(self, order: LiveOrder, report: ExecutionReport, t_ms: int) -> LiveFill:
+        fee_usd, status = self._fee(report.commission_asset, report.commission, report.last_price)
+        book = self._book
+        trade_id = str(report.trade_id)
+        return LiveFill(
+            fill_id=trade_id,
+            order_id=order.order_id,
+            side=order.side,
+            price=report.last_price,
+            quantity=report.last_quantity,
+            t_ms=report.transaction_time_ms or t_ms,
+            venue_trade_ids=(int(trade_id),) if trade_id.isdigit() else (),
+            mid_at_fill=book.mid if book is not None and book.is_valid else None,
+            fee=report.commission,
+            fee_asset=(report.commission_asset or "").upper(),
+            fee_usd=fee_usd,
+            fee_status=status,
+            liquidity="maker" if report.is_maker is True else ("taker" if report.is_maker is False else "unknown"),
+            attribution_source="report",
+            venue_order_id=report.venue_order_id or order.venue_order_id,
+            received_at_ms=t_ms,
+        )
+
+    def _live_fill(self, order: LiveOrder, fill: Fill, t_ms: int) -> LiveFill:
+        fee_usd, status = self._fee(fill.fee_asset, fill.fee, fill.price)
+        asset = (fill.fee_asset or "").upper()
         book = self._book
         return LiveFill(
             fill_id=str(fill.fill_id),
@@ -834,6 +1023,7 @@ class LiveMarketMakerExecution:
             fee_usd=fee_usd,
             fee_status=status,
             liquidity=fill.liquidity,
+            attribution_source="trades",
             venue_order_id=str(fill.order_id),
             received_at_ms=t_ms,
         )
@@ -845,11 +1035,9 @@ class LiveMarketMakerExecution:
             venue_ids.add(cid)
             local = self._all.get(cid)
             if local is not None:
-                if local.state == "pending_arrival" and local.venue_order_id == "":
-                    # Acked at the venue before the submit response reached us.
-                    self._apply_ack(local, venue, t_ms)
-                elif local.is_open:
-                    self._adopt_venue_state(local, venue, t_ms)
+                if local.is_open:
+                    # Possibly acked at the venue before the submit response reached us.
+                    self._adopt_venue_state(local, venue, t_ms, source="sync")
                 continue
             if cid.startswith(CLIENT_ID_PREFIX):
                 self.counters["venue_orders_unknown_locally"] += 1
@@ -929,8 +1117,12 @@ class LiveMarketMakerExecution:
         try:
             self._provider.assert_may_trade(fingerprint=self._fingerprint)
             order.t_submitted_ms = self._now_ms()
+            if order.t_enqueued_ms is not None:
+                self.enqueue_to_submit_ms.add(order.t_submitted_ms - order.t_enqueued_ms)
             self.counters["submitted"] += 1
             venue = await self._provider.submit_order(intent)
+            order.t_rest_response_ms = self._now_ms()
+            self.rest_submit_rtt_ms.add(order.t_rest_response_ms - order.t_submitted_ms)
         except LiveActivationError as exc:
             self._outcomes.append(("activation_refused", (order, str(exc))))
         except OrderRejectedError as exc:
@@ -1030,10 +1222,32 @@ class LiveMarketMakerExecution:
             "trade_baseline_ms": self.trade_baseline_ms,
             "filters": self.filters.as_dict(),
             "strict_cancel_replace": self.strict_cancel_replace,
+            "fill_sink_installed": self.fill_sink is not None,
+            "pending_fills": len(self._pending_fills),
+            "stream": {
+                "wired": self.stream_connected is not None,
+                "connected": self.stream_connected,
+                "reason": self.stream_reason,
+                "last_change_ms": self.stream_last_change_ms,
+                "accepting_reports": self.accepting_reports,
+                "fills_source_note": "account stream first, trade history as fallback and cross-check; one booking per venue trade id",
+            },
+            "venue_balances": {asset: {"free": b.free, "locked": b.locked} for asset, b in sorted(self.venue_balances.items())},
+            "venue_balances_at_ms": self.venue_balances_at_ms,
             "latency": {
+                "decision_to_enqueue_ms": self.decision_to_enqueue_ms.as_dict(),
+                "enqueue_to_submit_ms": self.enqueue_to_submit_ms.as_dict(),
+                "rest_submit_rtt_ms": self.rest_submit_rtt_ms.as_dict(),
                 "submit_to_ack_ms": self.submit_to_ack_ms.as_dict(),
+                "submit_to_first_ack_ms": self.submit_to_first_ack_ms.as_dict(),
+                "report_to_local_ms": self.report_to_local_ms.as_dict(),
+                "fill_to_ledger_ms": self.fill_to_ledger_ms.as_dict(),
                 "cancel_to_ack_ms": self.cancel_to_ack_ms.as_dict(),
-                "note": "measured on this host between the command leaving and the venue's answer being applied",
+                "note": (
+                    "host clock throughout; submit_to_ack is the REST response applied, submit_to_first_ack the "
+                    "first acknowledgement from any source (stream or REST); report_to_local includes the host-venue "
+                    "clock offset; fill_to_ledger is measured only with the fill sink installed"
+                ),
             },
         }
 

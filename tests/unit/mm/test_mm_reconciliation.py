@@ -25,7 +25,7 @@ def _fill(side: str = "buy", qty: float = 0.001, price: float = 100_000.0, *, fe
 
 def _ledger() -> LiveLedger:
     ledger = LiveLedger(MarketMakerCostModel(MarketMakerCostConfig(maker_fee_bps=10.0)))
-    ledger.seed(quote_usd=5_000.0, base_btc=0.04, base_locked_btc=0.01, mark_price=100_000.0, t_ms=T0)
+    ledger.seed(quote_free=5_000.0, quote_locked=0.0, base_free=0.04, base_locked=0.01, mark_price=100_000.0, t_ms=T0)
     return ledger
 
 
@@ -36,12 +36,13 @@ def test_the_ledger_starts_from_the_account_and_the_base_held_before_is_a_baseli
     ledger = _ledger()
     s = ledger.state
     assert ledger.seeded and s.starting_equity_usd == 5_000.0 and s.cash_usd == 5_000.0 and s.inventory_btc == 0.0
-    assert ledger.baseline_base_btc == pytest.approx(0.05) and ledger.balances() == (5_000.0, pytest.approx(0.05))
+    assert ledger.baseline_base_btc == pytest.approx(0.05)
+    assert ledger.balances() == (5_000.0, pytest.approx(0.04))  # the venue's free figures: the locked 0.01 funds nothing new
     assert ledger.equity_usd == 5_000.0 and ledger.net_pnl_usd == 0.0
     snap = ledger.snapshot()
     assert snap["mode"] == "live" and snap["account_equity_usd"] == pytest.approx(5_000.0 + 0.05 * 100_000.0) and snap["base_held_btc"] == pytest.approx(0.05)
     with pytest.raises(ValueError, match="seeded once"):
-        ledger.seed(quote_usd=1.0, base_btc=0.0, base_locked_btc=0.0, mark_price=1.0, t_ms=T0)
+        ledger.seed(quote_free=1.0, quote_locked=0.0, base_free=0.0, base_locked=0.0, mark_price=1.0, t_ms=T0)
     with pytest.raises(ValueError, match="never restored"):
         LiveLedger.restore({"starting_equity_usd": 1.0})
     assert LiveLedger().balances() == (None, None)
@@ -63,7 +64,9 @@ def test_a_fee_charged_in_the_base_asset_is_valued_at_the_fill_and_reduces_the_b
     assert ledger.fees_converted_usd == 0.1 and ledger.base_fees_btc == 0.000001
     quote, base = ledger.expected_balances()
     assert quote == pytest.approx(4_899.9 + 0.1) and base == pytest.approx(0.051 - 0.000001)  # the venue kept the quote, took base
-    assert ledger.balances()[1] == pytest.approx(0.051 - 0.000001)
+    assert ledger.balances()[1] == pytest.approx(0.04)  # still the venue's last word, until it reports again
+    ledger.note_venue_balances(quote_free=4_900.0, quote_locked=0.0, base_free=0.050999, base_locked=0.0, t_ms=T0 + 1)
+    assert ledger.balances() == (4_900.0, 0.050999) and ledger.venue_balances_at_ms == T0 + 1
 
 
 def test_a_fee_in_a_third_asset_is_not_booked_as_quote_currency_but_at_the_assumed_rate_and_counted() -> None:
@@ -78,22 +81,24 @@ def test_a_fee_in_a_third_asset_is_not_booked_as_quote_currency_but_at_the_assum
 def test_reconciliation_within_tolerance_adopts_nothing_and_beyond_it_the_venue_wins() -> None:
     ledger = _ledger()
     ledger.apply_fill(_fill())
-    clean = ledger.reconcile_balances(quote_usd=4_899.9, base_btc=0.041, base_locked_btc=0.01, t_ms=T0 + 1, quote_tolerance_usd=0.5, base_tolerance_btc=0.00002)
+    clean = ledger.reconcile_balances(quote_free=4_899.9, quote_locked=0.0, base_free=0.041, base_locked=0.01, t_ms=T0 + 1, quote_tolerance_usd=0.5, base_tolerance_btc=0.00002)
     assert clean["ok"] and not clean["adopted"] and ledger.discrepancies == 0 and ledger.reconciliations == 1
     # The venue says we hold 0.002 more base and 120 USD less than the fills explain.
-    off = ledger.reconcile_balances(quote_usd=4_779.9, base_btc=0.043, base_locked_btc=0.01, t_ms=T0 + 2, quote_tolerance_usd=0.5, base_tolerance_btc=0.00002)
+    off = ledger.reconcile_balances(quote_free=4_679.9, quote_locked=100.0, base_free=0.043, base_locked=0.01, t_ms=T0 + 2, quote_tolerance_usd=0.5, base_tolerance_btc=0.00002)  # totals are what count
     assert not off["ok"] and off["adopted"] and off["quote_delta_usd"] == pytest.approx(-120.0) and off["base_delta_btc"] == pytest.approx(0.002)
     assert ledger.discrepancies == 1 and ledger.state.cash_usd == pytest.approx(4_779.9) and ledger.state.inventory_btc == pytest.approx(0.003)
     assert ledger.last_reconciliation is off and ledger.adjustments[-1]["note"].startswith("venue wins")
-    assert ledger.snapshot()["venue_quote_usd"] == 4_779.9 and ledger.export()["discrepancies"] == 1
+    snap = ledger.snapshot()
+    assert snap["venue_quote_free"] == 4_679.9 and snap["venue_quote_locked"] == 100.0 and snap["available_for_bid_usd"] == 4_679.9
+    assert ledger.export()["discrepancies"] == 1
 
 
 def test_an_adjustment_that_flips_or_opens_inventory_costs_it_at_the_mark() -> None:
     ledger = _ledger()
     ledger.mark(T0 + 1, bid=99_999.0, ask=100_001.0)
-    ledger.reconcile_balances(quote_usd=5_000.0, base_btc=0.052, base_locked_btc=0.0, t_ms=T0 + 2, quote_tolerance_usd=0.5, base_tolerance_btc=0.00002)
+    ledger.reconcile_balances(quote_free=5_000.0, quote_locked=0.0, base_free=0.052, base_locked=0.0, t_ms=T0 + 2, quote_tolerance_usd=0.5, base_tolerance_btc=0.00002)
     assert ledger.state.inventory_btc == pytest.approx(0.002) and ledger.state.average_cost == 100_000.0
-    ledger.reconcile_balances(quote_usd=5_000.0, base_btc=0.05, base_locked_btc=0.0, t_ms=T0 + 3, quote_tolerance_usd=0.5, base_tolerance_btc=0.00002)
+    ledger.reconcile_balances(quote_free=5_000.0, quote_locked=0.0, base_free=0.05, base_locked=0.0, t_ms=T0 + 3, quote_tolerance_usd=0.5, base_tolerance_btc=0.00002)
     assert ledger.state.inventory_btc == 0.0 and ledger.state.average_cost == 0.0
 
 

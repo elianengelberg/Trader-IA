@@ -129,9 +129,87 @@ Piezas nuevas, todas en `tia/mm/` salvo el tipo de orden:
 - **Frontera** (`test_live_boundary.py`): imports por AST; provider `is_live` sin token rechazado.
 - **API** (`tests/integration/test_live_api.py`): 401 sin sesión, 403 viewer, 403 con live deshabilitado, 403 con frase incorrecta, `real_money=True` sin efecto, status/stop/kill/reconcile sin servicio, ciclo completo start→status→reconcile→kill→stop con un venue falso inyectado.
 
+## 8b. Fuente de ejecución: el account stream primero, `myTrades` como respaldo (2026-10-02, segunda iteración)
+
+**Antes.** `LiveMarketMakerExecution` conocía los fills sondeando `/myTrades` cada ~3 s: hasta
+tres segundos de inventario sin contabilizar, y una lectura de peso 20 por sondeo.
+
+**Ahora.** El *user data stream* de Binance (`tia/data/providers/binance_user_stream.py`,
+en la capa de providers) abre el socket con un *listen key* que el adaptador crea sólo con
+la cabecera de la API key (sin firma; `keepalive` cada 30 min, la venue lo expira a los 60),
+y traduce cada `executionReport` al tipo neutral `ExecutionReport` (`tia/domain/orders.py`)
+y cada `outboundAccountPosition` a `AccountBalance` (free/locked por activo). `tia/mm` no
+importa el módulo: el stream entrega a tres callbacks del adaptador
+(`absorb_execution_report`, `absorb_balances`, `absorb_stream_status`), cableados por la capa
+API en `start_mm_live` (o por un `FakeUserStream` en tests).
+
+**Qué hace el adaptador con un reporte** (`absorb_execution_report`, síncrono, en el task
+del stream, nunca en el callback de market data):
+
+1. Lo ignora y lo cuenta si llega antes de que la reconciliación inicial haya terminado
+   (`accepting_reports`): en ese instante la reconciliación es la verdad.
+2. Lo deduplica por `(orden, tipo, estado, cantidad acumulada, trade id, hora)`.
+3. Lo correlaciona por `clientOrderId` (para un cancel, por el `C` original) o por `orderId`.
+   Si no corresponde a ninguna orden local: histórico si es anterior a la línea base; si
+   lleva nuestro prefijo, `venue_order_unknown_locally` (crítico); si no, `unknown_execution_report`
+   (crítico por defecto).
+4. Si es un trade (`x = TRADE`, `t ≥ 0`, `l > 0`): lo contabiliza **una sola vez** por trade id,
+   compartido con el sondeo de `myTrades` (`_book_fill` es la única puerta para todo fill).
+   La atribución sale de `m`: `maker`, `taker` o `unknown` si la venue no lo dice; nunca se adivina.
+   Comisión y activo de comisión vienen del reporte (`n`, `N`).
+5. Adopta el estado (`X`): NEW → `resting` (y cuenta el ack si el REST no respondió aún:
+   `reports_before_rest_ack`), PARTIALLY_FILLED → `resting`, FILLED → `filled`,
+   CANCELED/EXPIRED/EXPIRED_IN_MATCH → `cancelled`, REJECTED → `refused` con `r`. Idempotente:
+   una orden terminal no se reabre; un ack se cuenta una vez venga del stream, del REST, de la
+   sincronización de órdenes abiertas o de una resolución.
+6. Una orden `UNKNOWN` que el stream describe queda resuelta (`stream_resolved`), y un cancel
+   pedido mientras era desconocida sale entonces.
+
+**Fills al ledger sin esperar al próximo evento.** El servicio instala `fill_sink`
+(`engine._on_fill`): el fill se contabiliza en el instante en que la venue lo reporta
+(ledger, markouts, journal). Sin sink, `on_event` los entrega en el siguiente tick.
+
+**Fills embebidos en la respuesta de `POST /order`.** No se contabilizan nunca: la respuesta
+no dice quién hizo el mercado (`_parse_embedded_fill` lo documenta). Sólo actualizan
+`venue_executed_qty`, lo que fuerza una lectura inmediata de `myTrades`. La atribución
+definitiva llega por el reporte o por `myTrades` (ambos con `isMaker`), y el trade id
+garantiza que entre respuesta FULL, reporte y `myTrades` se contabilice una sola vez.
+
+**`myTrades` sigue.** Con el stream arriba es verificación cruzada a la cadencia lenta
+(`idle`, 30 s); con el stream caído o ausente es la única fuente y vuelve a la cadencia
+rápida (3 s) mientras haya órdenes. `venue_executed_qty > filled` fuerza una lectura.
+
+**Si el stream se cae** (`absorb_stream_status(False)`): no se inventa ningún estado. El
+adaptador pide `myTrades` ya, y declara `user_stream_down`; el servicio lo convierte en un
+kill **transitorio** con `cancel_open` (lo que descansa se cancela, nada nuevo se cotiza), que
+sólo se limpia cuando el stream volvió **y** una reconciliación posterior leyó la cuenta.
+Un reporte con estado desconocido no se adivina: `unknown_execution_report` (crítico).
+
+**Balances.** `BinanceExecutionProvider.get_balances()` devuelve free y locked por activo;
+`LiveLedger.seed()` recibe los cuatro números; `balances()` responde con los **free** que la
+venue reportó por último (stream o reconciliación), nunca con un cálculo local: un bid nuevo
+sólo puede financiarse con USDT libre, un ask nuevo con BTC libre. La reconciliación compara
+totales (free + locked, porque lo bloqueado son nuestras propias órdenes descansando). La
+reconciliación inicial deja constancia de `capital_cap_usd` y `max_inventory_btc` y anota
+si un activo no alcanza para financiar un lado.
+
+**Telemetría de latencia** (`stats()["latency"]` del adaptador y `status()["latency"]` del
+servicio, todas `LatencyStats` con p50/p95/p99): `market_event_to_processed_ms` (R → decisión
+aplicada, incluye features, fair value, autorización, validación y enqueue; sin red),
+`callback_ms`, `decision_to_enqueue_ms`, `enqueue_to_submit_ms`, `rest_submit_rtt_ms`,
+`submit_to_ack_ms` (REST aplicado), `submit_to_first_ack_ms` (primer ack, stream o REST),
+`report_to_local_ms` (E del reporte → procesado; incluye el offset host-venue),
+`fill_to_ledger_ms` (sólo con el sink instalado), `cancel_to_ack_ms`.
+
+**Lo que esto no cambia.** El camino caliente sigue sin HTTP ni DB; submit y cancel siguen en
+el worker; el timeout sigue siendo UNKNOWN sin reenvío; el paper MM no toca nada de esto
+(mismo hash de journal, test explícito). **Nada de esto se ejecutó contra Binance Testnet**:
+las formas de `executionReport`, `outboundAccountPosition`, el listen key y su keepalive
+están escritas desde la documentación.
+
 ## 9. Lo que sólo Binance Testnet puede confirmar
 
-Formato exacto de `exchangeInfo.filters` (`NOTIONAL` vs `MIN_NOTIONAL`), `orderTypes` con `LIMIT_MAKER`;
+Forma y campos de `executionReport` (`c`/`C` en cancels, `t = -1` sin trade, `m`, `n`/`N`), de `outboundAccountPosition`, creación/keepalive/cierre del listen key con la cabecera de la key sola, URL del stream en Testnet (`wss://testnet.binance.vision/ws`); formato exacto de `exchangeInfo.filters` (`NOTIONAL` vs `MIN_NOTIONAL`), `orderTypes` con `LIMIT_MAKER`;
 rechazo -2010 y su `msg`; que `timeInForce` efectivamente sea rechazado para `LIMIT_MAKER`;
 `commissionAsset` en `myTrades` y si la cuenta paga en BNB; latencia real de submit/cancel y
 cuántos ciclos de requote cuesta el cancel/replace estricto; comportamiento de `openOrders`

@@ -1,6 +1,10 @@
 """The market-maker engine: one event at a time, in this order and never another.
 
-    DATA VALIDITY  ->  GLOBAL SAFETY GATE  ->  RISK CONTROLLER  ->  QUOTING  ->  PAPER EXECUTION
+    DATA VALIDITY  ->  GLOBAL SAFETY GATE  ->  RISK CONTROLLER  ->  [AUTHORIZATION]  ->  QUOTING  ->  EXECUTION
+
+The execution behind the last arrow is the paper simulator unless one is injected; the
+authorization stages exist only when authorizers are injected (the live market maker). With
+neither, the engine is byte for byte the paper engine: same journal rows, same hash.
 
 The engine owns its own local book (mirroring the venue's sync procedure from the
 snapshots and diffs it is fed), the feature engine, the fair-value engine, the markout
@@ -21,11 +25,12 @@ from __future__ import annotations
 import hashlib
 import json
 from collections import deque
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field, replace
 from typing import Any
 
 from tia.mm.adverse_selection import FillObservation, MarkoutTracker, RegimeConfig, regimes_of
+from tia.mm.authorization import Authorization, AuthorizationContext, Verdict
 from tia.mm.costs import MarketMakerCostConfig, MarketMakerCostModel
 from tia.mm.fair_value import FairValueConfig, FairValueEngine
 from tia.mm.features import FeatureConfig, FeatureEngine, FeatureVector
@@ -81,6 +86,9 @@ class MarketMakerEngine:
         gate: GlobalTradingSafetyGate,
         journal_sink: Callable[[dict[str, Any]], None] | None = None,
         journal_keep: int = 5_000,
+        execution: Any | None = None,
+        ledger: MarketMakerLedger | None = None,
+        authorizers: Sequence[Any] = (),
     ) -> None:
         self.config = config
         self.latency = latency
@@ -94,9 +102,17 @@ class MarketMakerEngine:
         self.spread = SpreadEngine(config.spread)
         self.controller = MarketMakerRiskController(config.limits)
         self.quoting = AdaptiveQuotingEngine(config.quoting)
-        self.execution = PaperMarketMakerExecution(latency)
+        #: Paper by default. A live execution is injected by the live service, never
+        #: constructed here: this module knows no provider.
+        self.execution = execution if execution is not None else PaperMarketMakerExecution(latency)
         self.costs = MarketMakerCostModel(config.costs)
-        self.ledger = MarketMakerLedger(config.starting_equity_usd, self.costs)
+        self.ledger = ledger if ledger is not None else MarketMakerLedger(config.starting_equity_usd, self.costs)
+        #: Extra readers inside the hierarchy (risk before quoting, economics after). Empty
+        #: in paper mode, where they add nothing to the journal.
+        self.authorizers: tuple[Any, ...] = tuple(authorizers)
+        self.authorization_blocks = 0
+        self.authorization_side_removals = 0
+        self.last_authorizations: list[dict[str, Any]] = []
         self._journal_sink = journal_sink
         self.journal: deque[dict[str, Any]] = deque(maxlen=journal_keep)
         self._hasher = hashlib.sha256()
@@ -218,6 +234,8 @@ class MarketMakerEngine:
             self.gate_blocks += 1
         elif layer == "data":
             self.data_blocks += 1
+        elif layer == "authorization":
+            self.authorization_blocks += 1
         if reason != self.last_block_reason or cancelled:
             self._write({"t": t_ms, "kind": "block", "layer": layer, "reason": reason, "cancelled": cancelled})
         self.last_block_reason = reason
@@ -245,6 +263,14 @@ class MarketMakerEngine:
         self.last_block_reason = ""
         # 3. The maker's own risk controller.
         allowance = self.controller.allowance(self.ledger.view(), t_ms)
+        # 3b. Risk authorization (live only; the paper engine has no authorizers).
+        authorizations: list[Authorization] = []
+        if self.authorizers:
+            allowance, denied = self._authorize_risk(t_ms, status, allowance, authorizations)
+            self.last_authorizations = [a.as_dict() for a in authorizations]
+            if denied is not None:
+                self._block(t_ms, "authorization", denied)
+                return
         # 4. Quoting.
         features = self.features.compute(self.book, t_ms)
         if features is None:
@@ -305,6 +331,10 @@ class MarketMakerEngine:
             self._write(row)
             return
         decision = self.quoting.decide(features=features, fair_value=fv, inventory=inventory, spread=spread, toxicity=toxicity, allowance=allowance, latency=self.latency, t_ms=t_ms)
+        # 4b. Economics authorization (live only): each quoted side must clear its costs.
+        if self.authorizers and decision.is_quote:
+            decision = self._authorize_economics(t_ms, status, allowance, features, fv, inventory, spread, toxicity, decision, authorizations)
+            self.last_authorizations = [a.as_dict() for a in authorizations]
         self.last_decision = decision
         row = {
             "t": t_ms,
@@ -329,7 +359,9 @@ class MarketMakerEngine:
             "reason": decision.quote_reason,
             "gate": status.state.value,
         }
-        # 5. Paper execution.
+        if authorizations:
+            row["authorizations"] = [a.as_dict() for a in authorizations]
+        # 5. Execution (paper by default; live when injected).
         if not decision.is_quote:
             self.no_quote_reasons[decision.quote_reason.split(":")[0]] = self.no_quote_reasons.get(decision.quote_reason.split(":")[0], 0) + 1
             cancelled = self.execution.cancel_all(t_ms, reason=decision.quote_reason)
@@ -358,6 +390,65 @@ class MarketMakerEngine:
         self.quotes += 1
         row["orders"] = [o.order_id for o in placed]
         self._write(row)
+
+    # ------------------------------------------------------------------ authorization (live)
+
+    def _context(self, t_ms: int, stage: str, status: SafetyStatus, allowance: Any, **extra: Any) -> AuthorizationContext:
+        balances = getattr(self.ledger, "balances", None)
+        cash, base = (None, None) if balances is None else balances()
+        return AuthorizationContext(t_ms=t_ms, stage=stage, gate=status, allowance=allowance, ledger=self.ledger.view(), latency=self.latency, cash_usd=cash, base_balance_btc=base, **extra)
+
+    def _authorize_risk(self, t_ms: int, status: SafetyStatus, allowance: Any, out: list[Authorization]) -> tuple[Any, str | None]:
+        """Risk-stage authorizers can only remove: a side, size, or the whole quote."""
+        ctx = self._context(t_ms, "risk", status, allowance)
+        bid_ok, ask_ok, max_size = allowance.bid_allowed, allowance.ask_allowed, allowance.max_size_btc
+        reasons: list[str] = []
+        for authorizer in self.authorizers:
+            if getattr(authorizer, "stage", "") != "risk":
+                continue
+            verdict = authorizer.authorize(ctx)
+            out.append(verdict)
+            if verdict.verdict is Verdict.DENY:
+                reasons.append(f"{verdict.authorizer}: " + "; ".join(verdict.reasons))
+                continue
+            bid_ok = bid_ok and verdict.bid_allowed
+            ask_ok = ask_ok and verdict.ask_allowed
+            if verdict.max_size_btc is not None:
+                max_size = min(max_size, verdict.max_size_btc)
+        if reasons:
+            return allowance, "; ".join(reasons)
+        if allowance.allowed and not (bid_ok or ask_ok):
+            return allowance, "authorization left no side allowed: " + "; ".join(r for a in out for r in a.reasons)
+        return replace(allowance, bid_allowed=bid_ok, ask_allowed=ask_ok, max_size_btc=max_size), None
+
+    def _authorize_economics(self, t_ms: int, status: SafetyStatus, allowance: Any, features: FeatureVector, fv: Any, inventory: Any, spread: Any, toxicity: Any, decision: QuoteDecision, out: list[Authorization]) -> QuoteDecision:
+        """Economics-stage authorizers judge the quote itself, side by side."""
+        ctx = self._context(t_ms, "economics", status, allowance, features=features, fair_value=fv, inventory=inventory, spread=spread, toxicity=toxicity, decision=decision)
+        bid_ok, ask_ok = decision.bid_price is not None, decision.ask_price is not None
+        reasons: list[str] = []
+        for authorizer in self.authorizers:
+            if getattr(authorizer, "stage", "") != "economics":
+                continue
+            verdict = authorizer.authorize(ctx)
+            out.append(verdict)
+            bid_ok = bid_ok and verdict.bid_allowed
+            ask_ok = ask_ok and verdict.ask_allowed
+            if verdict.verdict is Verdict.DENY or not (verdict.bid_allowed and verdict.ask_allowed):
+                reasons.append(f"{verdict.authorizer}: " + "; ".join(verdict.reasons))
+        changes: dict[str, Any] = {}
+        if decision.bid_price is not None and not bid_ok:
+            changes.update(bid_price=None, bid_size=0.0)
+            self.authorization_side_removals += 1
+        if decision.ask_price is not None and not ask_ok:
+            changes.update(ask_price=None, ask_size=0.0)
+            self.authorization_side_removals += 1
+        if not changes:
+            return decision
+        if not bid_ok and not ask_ok:
+            changes["quote_reason"] = "economics: " + "; ".join(reasons)
+        else:
+            changes["quote_reason"] = decision.quote_reason + " | economics removed a side: " + "; ".join(reasons)
+        return replace(decision, **changes)
 
     def _moved(self, decision: QuoteDecision) -> bool:
         threshold = self.config.requote_threshold_bps
@@ -408,6 +499,10 @@ class MarketMakerEngine:
             "unresolved_events": self.unresolved_events,
             "holds": self.holds,
             "hold_cancels": self.hold_cancels,
+            "authorization_blocks": self.authorization_blocks,
+            "authorization_side_removals": self.authorization_side_removals,
+            "authorizations": self.last_authorizations,
+            "execution_mode": getattr(self.execution, "mode", "paper"),
             "no_quote_reasons": dict(self.no_quote_reasons),
             "gate": self.last_gate.as_dict() if self.last_gate else None,
             "last_block_reason": self.last_block_reason,

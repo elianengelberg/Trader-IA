@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import asyncio
 import contextlib
-from collections.abc import Awaitable, Callable
+from collections.abc import Awaitable, Callable, Sequence
 from typing import Any
 
 from tia.core.clock import SystemClock
@@ -51,6 +51,9 @@ class MarketMakerService:
         now_ms: Callable[[], int] | None = None,
         state_push_interval_ms: int = 3_000,
         ledger_save_interval_ms: int = 10_000,
+        execution: Any | None = None,
+        ledger: Any | None = None,
+        authorizers: Sequence[Any] = (),
     ) -> None:
         self.market = market
         self.config = config
@@ -68,7 +71,15 @@ class MarketMakerService:
             data_usable=self._data_usable,
             system_unsafe=system_unsafe,
         )
-        self.engine = MarketMakerEngine(config, latency=self.latency, gate=self.gate, journal_sink=self._on_journal)
+        self.engine = MarketMakerEngine(
+            config,
+            latency=self.latency,
+            gate=self.gate,
+            journal_sink=self._on_journal,
+            execution=execution,
+            ledger=ledger,
+            authorizers=authorizers,
+        )
         self._unsubscribe: Callable[[], None] | None = None
         self._queue: asyncio.Queue[tuple[str, dict[str, Any]] | None] = asyncio.Queue(maxsize=50_000)
         self._writer: asyncio.Task[Any] | None = None
@@ -222,6 +233,7 @@ class MarketMakerService:
         return {
             **snap,
             "run_id": self.run_id,
+            "mode": getattr(self.engine.execution, "mode", "paper"),
             "profile": {"id": self.profile.profile_id, "commit": self.profile.commit, "measured_at_utc": self.profile.measured_at_utc, "scenario": self.scenario},
             "data_quality": {
                 "usable": market["usable"],

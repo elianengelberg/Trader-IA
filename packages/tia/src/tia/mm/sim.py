@@ -93,6 +93,8 @@ class SimulatedOrder:
 
 
 class PaperMarketMakerExecution:
+    mode = "paper"
+
     def __init__(self, latency: LatencyScenario, *, keep_closed: int = 2_000) -> None:
         self.latency = latency
         #: Orders still in flight or resting. Terminal orders move to ``closed`` so a

@@ -197,14 +197,45 @@ def test_replay_from_a_recorded_segment_is_deterministic_and_names_its_profile(t
 # ------------------------------------------------------------------ 20. no real execution
 
 
-def test_nothing_in_the_market_maker_can_reach_an_execution_provider() -> None:
-    forbidden = re.compile(r"tia\.execution|ExecutionProvider|submit_order|LiveActivationToken|binance_live|ccxt|api_key|API_KEY")
-    offenders = [p.name for p in MM_SRC.glob("*.py") if forbidden.search(p.read_text(encoding="utf-8"))]
+#: The only market-maker modules that may name the *abstract* execution provider: the
+#: adapter that speaks to it and the live service that wires it. Everything else in the
+#: package — the engine, the quoting, the ledger, the risk — stays provider-blind.
+EXECUTION_BOUNDARY = {"execution.py"}
+
+
+def test_nothing_in_the_market_maker_can_reach_a_concrete_venue_or_mint_an_activation() -> None:
+    """The boundary after Phase 4. A live path exists, through the abstraction only.
+
+    No file in tia/mm may name the Binance adapter, the signing module, an HTTP client, a
+    broker SDK, a credential, the activation gate or the token's constructor. Only the two
+    files whose job it is may name the abstract ``ExecutionProvider``; ``real_money`` is
+    still read by nothing; and the paper engine still holds no object that can submit.
+    """
+    concrete = re.compile(r"binance_live|BinanceExecutionProvider|binance_signing|binance_public|httpx|ccxt|api_key|API_KEY|LiveActivationGate|LiveActivationToken\(|_ISSUER|tia\.live\b|tia\.data\.providers")
+    offenders = [p.name for p in MM_SRC.glob("*.py") if concrete.search(p.read_text(encoding="utf-8"))]
     assert offenders == []
+    abstract = re.compile(r"tia\.execution|ExecutionProvider|submit_order")
+    leaks = [p.name for p in MM_SRC.glob("*.py") if p.name not in EXECUTION_BOUNDARY and abstract.search(p.read_text(encoding="utf-8"))]
+    assert leaks == []
+    assert all((MM_SRC / name).is_file() for name in EXECUTION_BOUNDARY)
     reads_real_money = [p.name for p in MM_SRC.glob("*.py") if "real_money" in p.read_text(encoding="utf-8")]
     assert reads_real_money == []  # the flag is read by nothing in the package
     engine = _run(_tape(2))
+    assert engine.execution.mode == "paper" and engine.authorizers == ()
     assert not any(hasattr(v, "submit_order") or getattr(v, "is_live", False) for v in vars(engine).values())
+
+
+def test_an_engine_without_authorizers_writes_the_same_journal_as_before_them() -> None:
+    """The injection points exist for the live maker; the paper engine must not notice
+    them. Same tape, explicit empty authorizers and default execution: identical hash."""
+    tape = _tape(6)
+    plain = MarketMakerEngine(_config(), latency=PROFILE.scenario("baseline"), gate=_gate())
+    explicit = MarketMakerEngine(_config(), latency=PROFILE.scenario("baseline"), gate=_gate(), execution=None, ledger=None, authorizers=())
+    for engine in (plain, explicit):
+        for kind, event, t in tape:
+            engine.on_event(kind, event, t)
+    assert plain.journal_hash() == explicit.journal_hash()
+    assert "authorizations" not in {k for row in plain.journal for k in row}
 
 
 def test_unresolved_quantity_is_journaled_and_shadowed_but_never_booked_or_taught() -> None:

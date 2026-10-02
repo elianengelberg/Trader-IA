@@ -55,9 +55,14 @@ class MarketMakerLedger:
     # ------------------------------------------------------------------ fills
 
     def apply_fill(self, fill: SimulatedFill, *, fee_scenario: str | None = None) -> dict[str, float]:
+        notional = fill.quantity * fill.price
+        return self._book(fill, fee=self.costs.maker_fee_usd(notional, fee_scenario))
+
+    def _book(self, fill: Any, *, fee: float) -> dict[str, float]:
+        """Book one fill at the given fee. The fill needs ``side``, ``price``,
+        ``quantity`` and ``t_ms``; the paper simulator's and the live adapter's both do."""
         s = self.state
         notional = fill.quantity * fill.price
-        fee = self.costs.maker_fee_usd(notional, fee_scenario)
         realised = 0.0
         signed = fill.quantity if fill.side == "buy" else -fill.quantity
         if s.inventory_btc == 0.0 or (s.inventory_btc > 0) == (signed > 0):

@@ -407,10 +407,14 @@ class BinanceExecutionProvider(ExecutionProvider):
         self._orders[order.client_order_id] = refreshed
         return refreshed
 
-    async def get_orders(self, *, open_only: bool = False) -> list[Order]:
+    async def get_orders(self, *, open_only: bool = False, symbol: str | None = None) -> list[Order]:
+        """Open orders are read from the venue, for the whole account or for ``symbol``
+        (REQUIRES VALIDATION: the per-symbol query is documented as far cheaper in request
+        weight, which matters to a consumer that asks every few seconds)."""
         if not open_only:
             return list(self._orders.values())
-        payload = await self._signed_get(_OPEN_ORDERS_PATH, {})
+        params = {"symbol": self.to_venue_symbol(symbol)} if symbol else {}
+        payload = await self._signed_get(_OPEN_ORDERS_PATH, params)
         if not isinstance(payload, list):
             raise ExecutionError("expected an array of open orders", received=str(payload)[:200])
         return [self._parse_order(row) for row in payload]

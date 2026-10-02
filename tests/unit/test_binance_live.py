@@ -451,3 +451,96 @@ async def test_pnl_is_not_asked_of_a_venue_that_does_not_compute_it() -> None:
         return httpx.Response(200, json={"balances": []})
 
     assert await provider(handler).get_pnl() == {"realized": 0.0, "unrealized": 0.0}
+
+
+# --------------------------------------------------------------------------- post-only
+
+
+def limit_maker_intent(*, price: float = 49_900.0, quantity: float = 0.01) -> OrderIntent:
+    return OrderIntent(
+        intent_id="int-lm",
+        client_order_id="tiamm-test-000001",
+        signal_id="mm-1",
+        risk_decision_id="auth-1",
+        symbol="BTC-USD",
+        side=Side.BUY,
+        order_type=OrderType.LIMIT_MAKER,
+        quantity=quantity,
+        limit_price=price,
+        created_at=START,
+    )
+
+
+async def test_a_post_only_order_is_sent_as_limit_maker_with_a_price_and_no_time_in_force() -> None:
+    """The market maker's only order type. REQUIRES VALIDATION on the venue: the
+    documented contract is type=LIMIT_MAKER, quantity, price, and no timeInForce."""
+    captured: dict[str, str] = {}
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        captured.update(dict(httpx.QueryParams(request.url.query.decode())))
+        return httpx.Response(
+            200,
+            json={
+                **FILLED_RESPONSE,
+                "status": "NEW",
+                "executedQty": "0",
+                "cummulativeQuoteQty": "0",
+                "price": "49900.00000000",
+                "fills": [],
+                "clientOrderId": captured["newClientOrderId"],
+            },
+        )
+
+    adapter = provider(handler)
+    order = await adapter.submit_order(limit_maker_intent())
+
+    assert captured["type"] == "LIMIT_MAKER"
+    assert captured["price"] == "49900"
+    assert "timeInForce" not in captured
+    assert captured["newClientOrderId"] == "tiamm-test-000001"
+    assert order.state is OrderState.ACKNOWLEDGED and order.order_type is OrderType.LIMIT_MAKER
+
+
+async def test_a_post_only_order_that_would_take_is_rejected_and_never_retried_as_anything_else() -> None:
+    """The venue's refusal (-2010) is the point of the order type. The adapter reports it
+    as a rejection with the code; it does not resend as LIMIT, MARKET or anything."""
+    attempts: list[str] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        attempts.append(dict(httpx.QueryParams(request.url.query.decode()))["type"])
+        return httpx.Response(
+            400, json={"code": -2010, "msg": "Order would immediately match and take."}
+        )
+
+    adapter = provider(handler)
+    with pytest.raises(OrderRejectedError, match="immediately match") as excinfo:
+        await adapter.submit_order(limit_maker_intent())
+    assert excinfo.value.context.get("code") == -2010
+    assert attempts == ["LIMIT_MAKER"]
+
+
+async def test_trades_can_be_read_for_a_symbol_before_any_order_was_placed_and_carry_the_fee_asset() -> None:
+    """A reconciliation at start needs the account's trades for the symbol it is about to
+    quote, before the mirror holds a single order; and a fee charged in BNB is not a
+    quote-currency amount, so the asset travels with the fill."""
+    seen: list[str] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        params = dict(httpx.QueryParams(request.url.query.decode()))
+        seen.append(params["symbol"])
+        return httpx.Response(
+            200,
+            json=[
+                {
+                    "id": 501, "orderId": 987654, "price": "50000.00", "qty": "0.01",
+                    "commission": "0.00001", "commissionAsset": "BNB", "time": int(START.timestamp() * 1000),
+                    "isBuyer": True, "isMaker": True,
+                }
+            ],
+        )
+
+    adapter = provider(handler)
+    assert await adapter.get_trades(limit=10) == []  # nothing in the mirror: nothing to ask for
+    fills = await adapter.get_trades(limit=10, symbol="BTC-USD")
+    assert seen == ["BTCUSDT"]
+    assert fills[0].fill_id == "501" and fills[0].liquidity == "maker" and fills[0].fee_asset == "BNB"

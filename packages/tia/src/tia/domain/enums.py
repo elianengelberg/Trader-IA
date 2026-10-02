@@ -51,6 +51,10 @@ class Direction(StrEnum):
 class OrderType(StrEnum):
     MARKET = "market"
     LIMIT = "limit"
+    #: A post-only limit order: rests or is rejected, never takes. The venue refuses it
+    #: outright if it would match on arrival, so it can never pay the taker fee or cross
+    #: the spread. The only order type the market maker is allowed to send.
+    LIMIT_MAKER = "limit_maker"
     STOP = "stop"
     STOP_LIMIT = "stop_limit"
     TAKE_PROFIT = "take_profit"

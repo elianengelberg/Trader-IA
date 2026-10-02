@@ -72,6 +72,9 @@ _EXCHANGE_INFO_PATH = "/api/v3/exchangeInfo"
 _ORDER_TYPE_MAP = {
     OrderType.MARKET: "MARKET",
     OrderType.LIMIT: "LIMIT",
+    # Post-only. The venue rejects it (code -2010, "would immediately match and take")
+    # rather than letting it take liquidity; it carries no timeInForce parameter.
+    OrderType.LIMIT_MAKER: "LIMIT_MAKER",
     OrderType.STOP_LIMIT: "STOP_LOSS_LIMIT",
     OrderType.TAKE_PROFIT: "TAKE_PROFIT_LIMIT",
 }
@@ -298,7 +301,9 @@ class BinanceExecutionProvider(ExecutionProvider):
             "newClientOrderId": intent.client_order_id,
             "newOrderRespType": "FULL",
         }
-        if intent.order_type is not OrderType.MARKET:
+        if intent.order_type not in (OrderType.MARKET, OrderType.LIMIT_MAKER):
+            # REQUIRES VALIDATION: the venue refuses a timeInForce on MARKET and on
+            # LIMIT_MAKER ("parameter sent when not required"), so neither carries one.
             params["timeInForce"] = _TIF_MAP.get(intent.time_in_force, "GTC")
         if intent.limit_price is not None:
             params["price"] = _format_decimal(intent.limit_price)
@@ -445,15 +450,17 @@ class BinanceExecutionProvider(ExecutionProvider):
             positions[symbol] = Position(symbol=symbol, quantity=quantity, average_price=0.0)
         return positions
 
-    async def get_trades(self, *, limit: int = 100) -> list[Fill]:
+    async def get_trades(self, *, limit: int = 100, symbol: str | None = None) -> list[Fill]:
         """Executed trades, read back from the venue rather than remembered.
 
         REQUIRES VALIDATION: ``myTrades`` requires a symbol, so this returns trades for the
-        symbols this adapter has orders for. A symbol traded by something else on the same
-        account will not appear, which is stated here rather than discovered during a
-        reconciliation mismatch.
+        symbols this adapter has orders for, or for ``symbol`` alone when one is named (a
+        consumer that must see trades *before* it has placed anything, such as a
+        reconciliation at start, names the symbol it is about to trade). A symbol traded by
+        something else on the same account will not appear, which is stated here rather
+        than discovered during a reconciliation mismatch.
         """
-        symbols = {order.symbol for order in self._orders.values()}
+        symbols = {symbol} if symbol else {order.symbol for order in self._orders.values()}
         fills: list[Fill] = []
         for symbol in sorted(symbols):
             payload = await self._signed_get(
@@ -582,6 +589,7 @@ class BinanceExecutionProvider(ExecutionProvider):
             quantity=float(row["qty"]),
             price=float(row["price"]),
             fee=float(row.get("commission", 0.0) or 0.0),
+            fee_asset=str(row.get("commissionAsset", "") or ""),
             liquidity="taker",
             filled_at=order.updated_at,
         )
@@ -596,6 +604,7 @@ class BinanceExecutionProvider(ExecutionProvider):
             quantity=float(row["qty"]),
             price=float(row["price"]),
             fee=float(row.get("commission", 0.0) or 0.0),
+            fee_asset=str(row.get("commissionAsset", "") or ""),
             liquidity="maker" if row.get("isMaker") else "taker",
             filled_at=utc_from_millis(int(row["time"])),
         )

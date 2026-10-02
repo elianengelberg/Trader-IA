@@ -44,7 +44,7 @@ class OrderIntent(BaseModel):
 
     @model_validator(mode="after")
     def _prices_present(self) -> OrderIntent:
-        if self.order_type in (OrderType.LIMIT, OrderType.STOP_LIMIT) and self.limit_price is None:
+        if self.order_type in (OrderType.LIMIT, OrderType.LIMIT_MAKER, OrderType.STOP_LIMIT) and self.limit_price is None:
             raise ValueError(f"{self.order_type} requires limit_price")
         if self.order_type in (OrderType.STOP, OrderType.STOP_LIMIT) and self.stop_price is None:
             raise ValueError(f"{self.order_type} requires stop_price")
@@ -83,6 +83,10 @@ class Fill(BaseModel):
     slippage_bps: float = 0.0
     latency_ms: int = Field(0, ge=0)
     liquidity: str = Field("taker", pattern="^(maker|taker)$")
+    #: The asset the venue charged the fee in, when it says ("" when unknown or simulated).
+    #: A fee in a third asset (BNB) is not a quote-currency amount and must not be booked
+    #: as one; the consumer converts or flags it.
+    fee_asset: str = ""
     filled_at: datetime
 
     @field_validator("filled_at")

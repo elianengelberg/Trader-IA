@@ -42,6 +42,11 @@ from tia.execution.state_machine import resolve_fill_state, transition
 
 _log = get_logger("execution.paper")
 
+#: Order types that rest and are paid the maker fee when they fill. A post-only limit
+#: behaves exactly like a limit here: the simulator has no concept of "would immediately
+#: match on arrival" per bar, so the venue-side refusal is the live adapter's business.
+_MAKER_TYPES = (OrderType.LIMIT, OrderType.LIMIT_MAKER)
+
 
 class PaperExecutionProvider(ExecutionProvider):
     """Deterministic simulated execution against bar data."""
@@ -279,7 +284,7 @@ class PaperExecutionProvider(ExecutionProvider):
             return None
 
         price, slippage_bps = self._apply_slippage(order, trigger, quantity, candle, instrument)
-        liquidity = "maker" if order.order_type is OrderType.LIMIT else "taker"
+        liquidity = "maker" if order.order_type in _MAKER_TYPES else "taker"
         fee_bps = (
             self._config.maker_fee_bps if liquidity == "maker" else self._config.taker_fee_bps
         )
@@ -323,7 +328,7 @@ class PaperExecutionProvider(ExecutionProvider):
         if order.order_type is OrderType.MARKET:
             return candle.open
 
-        if order.order_type is OrderType.LIMIT:
+        if order.order_type in _MAKER_TYPES:
             limit = order.limit_price
             if limit is None:
                 return None

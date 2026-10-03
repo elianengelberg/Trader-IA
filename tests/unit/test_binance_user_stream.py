@@ -1,9 +1,11 @@
-"""The Binance account stream: parsing the documented frames, the listen-key discipline
-and the reconnect behaviour, against a scripted socket and a scripted key source.
+"""The Binance account stream: parsing the documented frames, the signed subscription on the
+WebSocket API and the reconnect behaviour, against a scripted socket and a scripted signer.
 
-REQUIRES VALIDATION on the venue: the frame shapes below are the documentation's. What is
-proven here is ours: a known status maps, an unknown one is refused rather than guessed,
-a dropped socket is reported as a drop, and the listen key is created with the key alone.
+REQUIRES VALIDATION on the venue: the frame shapes below are the documentation's
+(``web-socket-api.md``, ``user-data-stream.md``). What is proven here is ours: the request
+carries the key and a signature and nothing else, ``connected`` means the venue said 200, a
+known status maps, an unknown one is refused rather than guessed, a refusal or a dropped
+socket is reported as what it is, and a venue-ended subscription is a reconnect.
 """
 
 from __future__ import annotations
@@ -93,123 +95,178 @@ def test_an_account_position_lists_the_assets_that_changed_free_and_locked() -> 
 # ------------------------------------------------------------------ the socket and the key
 
 
+SUBSCRIBE_METHOD = "userDataStream.subscribe.signature"
+
+
+class _Conn:
+    """One scripted connection: frames in through a queue, frames out recorded. The
+    subscription request is answered the way the venue documents it, unless told to refuse."""
+
+    def __init__(self, owner: ScriptedSocket) -> None:
+        self.owner = owner
+        self.queue: asyncio.Queue[str | None] = asyncio.Queue()
+        self.sent: list[dict[str, Any]] = []
+
+    async def send(self, message: str) -> None:
+        frame = json.loads(message)
+        self.sent.append(frame)
+        self.owner.sent.append(frame)
+        if frame.get("method") == SUBSCRIBE_METHOD and self.owner.answer_subscriptions:
+            if self.owner.refuse is not None:
+                status, code, msg = self.owner.refuse
+                await self.queue.put(json.dumps({"id": frame["id"], "status": status, "error": {"code": code, "msg": msg}}))
+            else:
+                self.owner.subscriptions += 1
+                await self.queue.put(json.dumps({"id": frame["id"], "status": 200, "result": {"subscriptionId": self.owner.subscriptions - 1}}))
+
+    async def recv(self) -> str:
+        item = await self.queue.get()
+        if item is None:
+            raise ConnectionError("scripted drop")
+        return item
+
+
 class ScriptedSocket:
     def __init__(self) -> None:
-        self.queues: list[asyncio.Queue[str | None]] = []
+        self.conns: list[_Conn] = []
         self.urls: list[str] = []
+        self.sent: list[dict[str, Any]] = []
+        self.subscriptions = 0
+        self.refuse: tuple[int, int, str] | None = None
+        self.answer_subscriptions = True
 
     def connector(self):  # type: ignore[no-untyped-def]
         @asynccontextmanager
         async def connect(url: str):  # type: ignore[no-untyped-def]
             self.urls.append(url)
-            queue: asyncio.Queue[str | None] = asyncio.Queue()
-            self.queues.append(queue)
-
-            async def frames():  # type: ignore[no-untyped-def]
-                while True:
-                    item = await queue.get()
-                    if item is None:
-                        return
-                    yield item
-
-            yield frames()
+            conn = _Conn(self)
+            self.conns.append(conn)
+            yield conn
 
         return connect
 
     async def send(self, frame: dict[str, Any] | str) -> None:
-        await self.queues[-1].put(frame if isinstance(frame, str) else json.dumps(frame))
+        await self.conns[-1].queue.put(frame if isinstance(frame, str) else json.dumps(frame))
         await asyncio.sleep(0.01)
 
+    async def event(self, data: dict[str, Any], subscription_id: int = 0) -> None:
+        """A venue event, in the WebSocket API's wrapped shape."""
+        await self.send({"subscriptionId": subscription_id, "event": data})
+
     async def drop(self) -> None:
-        await self.queues[-1].put(None)
+        await self.conns[-1].queue.put(None)
         await asyncio.sleep(0.03)
 
 
-class ScriptedKeys:
+class ScriptedSigner:
     def __init__(self) -> None:
-        self.created: list[str] = []
-        self.kept_alive: list[str] = []
-        self.closed: list[str] = []
-        self.fail_create = False
+        self.calls = 0
+        self.fail = False
 
-    async def create_listen_key(self) -> str:
-        if self.fail_create:
-            raise ConnectionError("no key for you")
-        key = f"key-{len(self.created) + 1}"
-        self.created.append(key)
-        return key
-
-    async def keepalive_listen_key(self, listen_key: str) -> None:
-        self.kept_alive.append(listen_key)
-
-    async def close_listen_key(self, listen_key: str) -> None:
-        self.closed.append(listen_key)
+    def user_stream_subscribe_params(self) -> dict[str, Any]:
+        if self.fail:
+            raise RuntimeError("no signer for you")
+        self.calls += 1
+        return {"apiKey": "pub-key-abc", "timestamp": T_MS + self.calls, "recvWindow": 5000, "signature": f"sig-{self.calls}"}
 
 
-async def _stream(*, keepalive_s: float = 3600.0):  # type: ignore[no-untyped-def]
+WS_URL = "wss://ws-api.testnet.binance.vision/ws-api/v3"
+
+
+async def _stream(*, socket: ScriptedSocket | None = None, signer: ScriptedSigner | None = None):  # type: ignore[no-untyped-def]
     import tia.data.providers.binance_user_stream as module
 
     module.BACKOFF = (0.01,)
-    socket, keys = ScriptedSocket(), ScriptedKeys()
+    socket, signer = socket or ScriptedSocket(), signer or ScriptedSigner()
     clock = {"ms": T_MS}
     reports: list[tuple[Any, int]] = []
     balances: list[tuple[list[Any], int]] = []
     statuses: list[tuple[bool, str, int]] = []
     stream = BinanceUserDataStream(
-        keys, now_ms=lambda: clock["ms"], on_report=lambda r, t: reports.append((r, t)), on_balances=lambda b, t: balances.append((b, t)),
-        on_status=lambda c, reason, t: statuses.append((c, reason, t)), base_url="wss://testnet.binance.vision/ws", connector=socket.connector(), keepalive_s=keepalive_s,
+        signer, now_ms=lambda: clock["ms"], on_report=lambda r, t: reports.append((r, t)), on_balances=lambda b, t: balances.append((b, t)),
+        on_status=lambda c, reason, t: statuses.append((c, reason, t)), base_url=WS_URL, connector=socket.connector(), subscribe_timeout_s=0.5,
     )
     stream.start()
-    await asyncio.sleep(0.03)
-    return stream, socket, keys, clock, reports, balances, statuses
+    await asyncio.sleep(0.05)
+    return stream, socket, signer, clock, reports, balances, statuses
 
 
-async def test_the_stream_opens_with_a_listen_key_delivers_reports_and_balances_and_reports_its_status() -> None:
-    stream, socket, keys, clock, reports, balances, statuses = await _stream()
-    assert keys.created == ["key-1"] and socket.urls == ["wss://testnet.binance.vision/ws/key-1"]
-    assert stream.connected and statuses == [(True, "connected", T_MS)]
+async def test_the_stream_subscribes_with_a_signed_request_delivers_reports_and_balances_and_reports_its_status() -> None:
+    stream, socket, signer, clock, reports, balances, statuses = await _stream()
+    assert socket.urls == [WS_URL] and signer.calls == 1
+    request = socket.sent[0]
+    assert request["method"] == SUBSCRIBE_METHOD and request["id"]
+    assert set(request["params"]) == {"apiKey", "timestamp", "recvWindow", "signature"}
+    assert "secret" not in json.dumps(request).lower()
+    assert stream.connected and stream.subscription_id == 0 and statuses == [(True, "connected", T_MS)]
     clock["ms"] += 7
-    await socket.send(_report(x="TRADE", X="FILLED", l="0.00100000", z="0.00100000", L="99990.0", t=42, m=True))
-    await socket.send({"e": "outboundAccountPosition", "E": T_MS, "u": T_MS, "B": [{"a": "USDT", "f": "10", "l": "0"}]})
-    await socket.send({"e": "balanceUpdate", "a": "USDT", "d": "1"})  # another event kind: counted, not delivered
+    await socket.event(_report(x="TRADE", X="FILLED", l="0.00100000", z="0.00100000", L="99990.0", t=42, m=True))
+    await socket.event({"e": "outboundAccountPosition", "E": T_MS, "u": T_MS, "B": [{"a": "USDT", "f": "10", "l": "0"}]})
+    await socket.event({"e": "balanceUpdate", "a": "USDT", "d": "1"})  # another event kind: counted, not delivered
+    await socket.send({"id": "stray", "status": 200, "result": {}})  # an answer nobody waits for: counted, not interpreted
     await socket.send("not json")
     assert len(reports) == 1 and reports[0][0].trade_id == "42" and reports[0][1] == T_MS + 7
     assert len(balances) == 1 and balances[0][0][0].asset == "USDT"
     snap = stream.as_dict()
     assert snap["reports"] == 1 and snap["balance_updates"] == 1 and snap["other_events"] == 1 and snap["parse_errors"] == 1 and snap["connected"]
+    assert snap["responses"] == 2 and snap["subscription_id"] == 0
     await stream.close()
-    assert not stream.connected and keys.closed == ["key-1"] and statuses[-1][0] is False and statuses[-1][1] == "closed"
+    assert not stream.connected and stream.subscription_id is None and statuses[-1][0] is False and statuses[-1][1] == "closed"
 
 
-async def test_a_dropped_socket_is_reported_as_a_drop_and_a_new_key_is_minted_on_reconnect() -> None:
-    stream, socket, keys, _clock, _reports, _balances, statuses = await _stream()
+async def test_a_dropped_socket_is_reported_as_a_drop_and_a_fresh_signature_is_sent_on_reconnect() -> None:
+    stream, socket, signer, _clock, _reports, _balances, statuses = await _stream()
     await socket.drop()
-    await asyncio.sleep(0.05)
-    assert any(s[0] is False and "account stream ended" in s[1] for s in statuses)
-    assert stream.disconnects == 1 and stream.reconnects >= 1 and keys.created == ["key-1", "key-2"]
+    await asyncio.sleep(0.08)
+    assert any(s[0] is False and "scripted drop" in s[1] for s in statuses)
+    assert stream.disconnects == 1 and stream.reconnects >= 1 and signer.calls == 2 and len(socket.urls) == 2
+    assert [f["params"]["signature"] for f in socket.sent] == ["sig-1", "sig-2"]
     assert stream.connected and statuses[-1][0] is True
     await stream.close()
 
 
-async def test_a_key_that_cannot_be_created_keeps_retrying_without_pretending_to_be_connected() -> None:
-    import tia.data.providers.binance_user_stream as module
-
-    module.BACKOFF = (0.01,)
-    keys = ScriptedKeys()
-    keys.fail_create = True
-    statuses: list[tuple[bool, str, int]] = []
-    stream = BinanceUserDataStream(keys, now_ms=lambda: T_MS, on_report=lambda r, t: None, on_status=lambda c, reason, t: statuses.append((c, reason, t)), connector=ScriptedSocket().connector())
-    stream.start()
+async def test_a_refused_subscription_is_never_reported_as_connected_and_names_the_venue_code_only() -> None:
+    socket = ScriptedSocket()
+    socket.refuse = (401, -2015, "Invalid API-key, IP, or permissions for action.")
+    stream, socket, _signer, _clock, _reports, _balances, statuses = await _stream(socket=socket)
     await asyncio.sleep(0.06)
-    assert not stream.connected and stream.connect_failures >= 2 and statuses == [] and "no key for you" in stream.last_error
+    assert not stream.connected and stream.subscription_id is None and stream.connect_failures >= 2 and statuses == []
+    assert "status 401" in stream.last_error and "-2015" in stream.last_error
+    assert "pub-key-abc" not in stream.last_error and "sig-" not in stream.last_error
     await stream.close()
 
 
-async def test_the_listen_key_is_kept_alive_and_an_unreadable_report_is_reported_not_guessed() -> None:
-    stream, socket, keys, _clock, reports, _balances, statuses = await _stream(keepalive_s=0.02)
-    await asyncio.sleep(0.07)
-    assert keys.kept_alive and set(keys.kept_alive) == {"key-1"} and stream.keepalives >= 1
-    await socket.send(_report(X="SOMETHING_NEW"))
+async def test_a_venue_that_does_not_answer_the_subscription_is_a_failed_attempt_not_a_connection() -> None:
+    socket = ScriptedSocket()
+    socket.answer_subscriptions = False
+    stream, socket, _signer, _clock, _reports, _balances, statuses = await _stream(socket=socket)
+    await asyncio.sleep(0.7)
+    assert not stream.connected and stream.connect_failures >= 1 and statuses == [] and "TimeoutError" in stream.last_error
+    await stream.close()
+
+
+async def test_a_signer_that_cannot_sign_keeps_retrying_without_pretending_to_be_connected() -> None:
+    signer = ScriptedSigner()
+    signer.fail = True
+    stream, socket, _signer, _clock, _reports, _balances, statuses = await _stream(signer=signer)
+    await asyncio.sleep(0.06)
+    assert not stream.connected and stream.connect_failures >= 2 and statuses == [] and "no signer for you" in stream.last_error
+    assert socket.sent == []  # nothing left the process without a signature
+    await stream.close()
+
+
+async def test_a_subscription_the_venue_terminates_is_a_drop_followed_by_a_new_subscription() -> None:
+    stream, socket, signer, _clock, _reports, _balances, statuses = await _stream()
+    await socket.event({"e": "eventStreamTerminated", "E": T_MS})
+    await asyncio.sleep(0.08)
+    assert any(s[0] is False and "terminated" in s[1] for s in statuses)
+    assert stream.disconnects == 1 and signer.calls == 2 and stream.connected and stream.subscription_id == 1
+    await stream.close()
+
+
+async def test_an_unreadable_report_is_reported_not_guessed() -> None:
+    stream, socket, _signer, _clock, reports, _balances, statuses = await _stream()
+    await socket.event(_report(X="SOMETHING_NEW"))
     assert reports == [] and stream.parse_errors == 1
     assert statuses[-1][0] is True and statuses[-1][1].startswith("unparseable report")
     await stream.close()
@@ -218,25 +275,29 @@ async def test_the_listen_key_is_kept_alive_and_an_unreadable_report_is_reported
 # ------------------------------------------------------------------ the adapter's side of it
 
 
-async def test_the_adapter_creates_keeps_alive_and_closes_a_listen_key_with_the_key_header_alone() -> None:
+async def test_the_adapter_signs_the_subscription_locally_with_the_key_as_a_parameter_and_no_request() -> None:
+    """The WebSocket API's rule: the key is the ``apiKey`` parameter, the signature covers
+    every parameter sorted by name. No REST request is made to obtain it."""
+    import hashlib
+    import hmac
+
+    from tests.unit.test_binance_live import SECRET
+
     seen: list[httpx.Request] = []
 
     def handler(request: httpx.Request) -> httpx.Response:
         seen.append(request)
-        if request.method == "POST":
-            return httpx.Response(200, json={"listenKey": "pqia91ma19a5s61cv6a81va65sdf19v8a65a1a5s61cv6a81va65sdf19v8a65a1"})
-        return httpx.Response(200, json={})
+        return httpx.Response(500, json={})
 
     adapter = provider(handler, simulated=True, clock=SimulatedClock(START))
-    key = await adapter.create_listen_key()
-    await adapter.keepalive_listen_key(key)
-    await adapter.close_listen_key(key)
-    assert [r.method for r in seen] == ["POST", "PUT", "DELETE"]
-    for request in seen:
-        assert request.url.path == "/api/v3/userDataStream"
-        assert request.headers.get("X-MBX-APIKEY") == "pub-key-abc"
-        assert "signature" not in request.url.query.decode() and "timestamp" not in request.url.query.decode()
-    assert seen[1].url.params["listenKey"] == key and seen[2].url.params["listenKey"] == key
+    params = adapter.user_stream_subscribe_params()
+    assert seen == []
+    assert params["apiKey"] == "pub-key-abc" and params["timestamp"] == int(START.timestamp() * 1000) and 0 < params["recvWindow"] <= 60_000
+    canonical = "&".join(f"{k}={params[k]}" for k in sorted(k for k in params if k != "signature"))
+    assert canonical.startswith("apiKey=pub-key-abc&recvWindow=")
+    assert params["signature"] == hmac.new(SECRET.encode(), canonical.encode(), hashlib.sha256).hexdigest()
+    assert SECRET not in json.dumps(params)
+    assert not hasattr(adapter, "create_listen_key")
 
 
 async def test_balances_are_read_per_asset_free_and_locked_from_the_venue() -> None:

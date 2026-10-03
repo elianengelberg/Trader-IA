@@ -35,6 +35,7 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import contextlib
 import json
 import os
 import sys
@@ -278,34 +279,47 @@ async def validate_account(
         return
 
     section("User data stream")
+    # The listen key (POST /api/v3/userDataStream) was retired by the venue on 2026-02-20 and
+    # answers HTTP 410. The account stream is a signed subscription on the WebSocket API; the
+    # check below subscribes once with this key and closes, recording nothing but the outcome.
+    from tia.data.providers.binance_user_stream import (
+        DEFAULT_USER_STREAM_URL,
+        TESTNET_USER_STREAM_URL,
+        BinanceUserDataStream,
+    )
+
+    ws_url = TESTNET_USER_STREAM_URL if "testnet" in str(client.base_url) else DEFAULT_USER_STREAM_URL
+
+    class _Source:
+        def user_stream_subscribe_params(self) -> dict[str, Any]:
+            return signer.sign_ws_params()
+
+    subscribed = asyncio.Event()
+
+    def _on_status(connected: bool, _reason: str, _at_ms: int) -> None:
+        if connected:
+            subscribed.set()
+
+    def _ignore_report(_report: Any, _at_ms: int) -> None:
+        return None
+
+    stream = BinanceUserDataStream(
+        _Source(), now_ms=lambda: int(datetime.now(UTC).timestamp() * 1000), on_report=_ignore_report, on_status=_on_status, base_url=ws_url,
+    )
     try:
-        listen = await client.post(
-            "/api/v3/userDataStream", headers=signer.key_header()
-        )
-        if listen.status_code < 400 and "listenKey" in listen.json():
-            key = listen.json()["listenKey"]
-            closed = await client.delete(
-                f"/api/v3/userDataStream?listenKey={key}",
-                headers=signer.key_header(),
-            )
-            results.facts["user_data_stream_ok"] = closed.status_code < 400
-            if closed.status_code < 400:
-                results.ok("user data stream", "listenKey opened and closed cleanly")
-            else:
-                results.bad(
-                    "user data stream",
-                    f"listenKey opened but close returned HTTP {closed.status_code}",
-                )
+        stream.start()
+        with contextlib.suppress(TimeoutError):
+            await asyncio.wait_for(subscribed.wait(), 15.0)
+        results.facts["user_data_stream_ok"] = stream.connected
+        if stream.connected:
+            results.ok("user data stream", f"subscribed on the WebSocket API (subscriptionId {stream.subscription_id}) and closed cleanly")
         else:
-            results.facts["user_data_stream_ok"] = False
             results.bad(
                 "user data stream",
-                f"HTTP {listen.status_code}: {listen.text[:200]} — without it, fills are "
-                "discovered only by polling",
+                f"no subscription within 15 s: {stream.last_error or 'no answer'} — without it, fills are discovered only by polling",
             )
-    except httpx.HTTPError as exc:
-        results.facts["user_data_stream_ok"] = False
-        results.bad("user data stream", str(exc))
+    finally:
+        await stream.close()
 
     report = check_permissions(restrictions, verified_at_source=True)
     results.facts["permissions"] = report.as_dict()

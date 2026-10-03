@@ -68,7 +68,7 @@ from tia.mm.quoting import QuoteDecision
 
 TESTNET_HOST = "testnet.binance.vision"
 REST_URL = "https://testnet.binance.vision"
-WS_URL = "wss://testnet.binance.vision/ws"
+WS_URL = "wss://ws-api.testnet.binance.vision/ws-api/v3"
 
 
 @dataclass
@@ -103,7 +103,7 @@ class Rails:
         for name, url in (("REST", rest_url), ("account stream", ws_url)):
             if TESTNET_HOST not in url:
                 raise SystemExit(f"REFUSED: the {name} URL {url!r} is not a Testnet host")
-        if "api.binance.com" in rest_url or "stream.binance.com" in ws_url:
+        if "api.binance.com" in rest_url or "stream.binance.com" in ws_url or "ws-api.binance.com" in ws_url:
             raise SystemExit("REFUSED: a mainnet host was configured")
         if os.environ.get("TIA_LIVE__USE_TESTNET", "true").strip().lower() in {"0", "false", "no"}:
             raise SystemExit("REFUSED: TIA_LIVE__USE_TESTNET=false in the environment")
@@ -218,20 +218,17 @@ class Validation:
             raise
 
         assert self.provider is not None
-        ev.command("provider.create_listen_key()  [POST /api/v3/userDataStream, key header only]")
-        try:
-            key = await self.provider.create_listen_key()
-            ev.responses["listen_key"] = {"length": len(key)}  # the key itself is never recorded
-            ev.mark("1.listen_key_created", "PASS", f"{len(key)} characters")
-            ev.command("provider.keepalive_listen_key(key)  [PUT]")
-            await self.provider.keepalive_listen_key(key)
-            ev.mark("1.listen_key_keepalive", "PASS")
-            ev.command("provider.close_listen_key(key)  [DELETE]")
-            await self.provider.close_listen_key(key)
-            ev.mark("1.listen_key_closed", "PASS")
-        except Exception as exc:
-            ev.mark("1.listen_key_created", "FAIL", f"{type(exc).__name__}: {str(exc)[:160]}")
-            raise
+        # The listen key (POST /api/v3/userDataStream) was retired by the venue on 2026-02-20
+        # and answers HTTP 410. The account stream is a signed subscription on the WebSocket
+        # API; the signature is computed locally here and sent by the stream when it connects.
+        ev.command("provider.user_stream_subscribe_params()  [local HMAC over apiKey, recvWindow, timestamp; nothing sent]")
+        params = self.provider.user_stream_subscribe_params()
+        names = sorted(params)
+        ev.responses["subscribe_request"] = {"method": "userDataStream.subscribe.signature", "param_names": names, "signature_length": len(str(params.get("signature", "")))}
+        signed = {"apiKey", "timestamp", "signature"} <= set(names)
+        ev.mark("1.subscribe_request_signed", "PASS" if signed else "FAIL", f"params {names} (values never recorded)")
+        if not signed:
+            raise RuntimeError("the subscription request is not signed; nothing was sent")
 
         venue_symbol = BinanceExecutionProvider.to_venue_symbol(self.args.symbol)
         ev.command(f"provider.get_exchange_info({self.args.symbol})  [GET /api/v3/exchangeInfo?symbol={venue_symbol}]")
@@ -246,14 +243,15 @@ class Validation:
         )
         self.execution.fill_sink = lambda fill, t: self.booked.append((fill, t, self.ledger.apply_fill(fill)))
         self.stream = self._build_stream()
-        ev.command(f"BinanceUserDataStream.start()  [{self.args.ws_url}/<listenKey>]")
+        ev.command(f"BinanceUserDataStream.start()  [{self.args.ws_url} -> userDataStream.subscribe.signature]")
         self.stream.start()
-        up = await self._wait(lambda: self.stream is not None and self.stream.connected, 20, "the account stream to connect")
-        ev.mark("1.user_stream_connected", "PASS" if up else "FAIL", f"status events: {[(c, r) for c, r, _ in self.stream_status]}")
+        up = await self._wait(lambda: self.stream is not None and self.stream.connected, 20, "the account stream to subscribe")
+        ev.responses["subscription"] = {"subscription_id": self.stream.subscription_id, "last_error": self.stream.last_error}
+        ev.mark("1.user_stream_subscribed", "PASS" if up else "FAIL", f"subscriptionId {self.stream.subscription_id}; status events: {[(c, r) for c, r, _ in self.stream_status]}; last_error {self.stream.last_error!r}")
         if not up:
-            raise RuntimeError("the account stream did not connect")
+            raise RuntimeError("the account stream did not subscribe")
         # Reception of events is proven in phases 3 and 4 (the order's own reports); the
-        # renewal of the key and the reconnect are exercised in phase 6.
+        # reconnect with a fresh signed subscription is exercised in phase 6.
 
     # ------------------------------------------------------------------ phase 2
 
@@ -416,12 +414,11 @@ class Validation:
         self.execution.on_event("tick", None, self.book, self.now_ms())
         ev.mark("6.rest_reconciliation_sees_the_order", "PASS" if still_there else "FAIL", f"{len(venue_open)} open at the venue")
         self.stream = self._build_stream()
-        ev.command("BinanceUserDataStream.start()  [reconnect: a new listen key]")
+        ev.command("BinanceUserDataStream.start()  [reconnect: a new signed subscription]")
         self.stream.start()
         back = await self._wait(lambda: self.stream is not None and self.stream.connected, 20, "the reconnect")
-        ev.mark("6.reconnected_with_new_listen_key", "PASS" if back else "FAIL")
+        ev.mark("6.reconnected_with_new_subscription", "PASS" if back else "FAIL", f"subscriptionId {self.stream.subscription_id}; last_error {self.stream.last_error!r}")
         ev.mark("6.recovery_only_after_reconciliation", "PASS" if back and still_there else "NOT TESTED", "the service clears user_stream_down only after a reconciliation that follows the reconnect (rule unit-tested); here the reconciliation is the open-orders read above")
-        ev.mark("6.listen_key_renewed", "PASS" if back and self.stream.connections >= 1 else "FAIL")
         t_cancel = self.now_ms()
         self.execution.cancel(order.order_id, t_cancel, reason="validation: cancel the disconnect-test bid")
         done = await self._wait(lambda: order.state == "cancelled", 20, "the second cancellation")

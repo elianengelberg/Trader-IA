@@ -334,11 +334,11 @@ def _user_data_stream(record: BinanceValidationRecord | None) -> GateCheck:
         return failing(
             CheckName.USER_DATA_STREAM,
             "never exercised",
-            "run scripts/validate_binance.py --account, which opens a listenKey",
+            "run scripts/validate_mm_testnet.py, which subscribes to the account stream",
         )
     ok = record.facts.get("user_data_stream_ok")
     if ok is True:
-        return passing(CheckName.USER_DATA_STREAM, "listenKey opened and closed cleanly")
+        return passing(CheckName.USER_DATA_STREAM, "account stream subscribed and closed cleanly")
     return failing(
         CheckName.USER_DATA_STREAM,
         "the user-data stream was not successfully exercised",

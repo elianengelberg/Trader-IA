@@ -67,9 +67,10 @@ _OPEN_ORDERS_PATH = "/api/v3/openOrders"
 _ACCOUNT_PATH = "/api/v3/account"
 _MY_TRADES_PATH = "/api/v3/myTrades"
 _EXCHANGE_INFO_PATH = "/api/v3/exchangeInfo"
-#: The account stream's listen key: created, kept alive and closed with the API key alone
-#: (no signature; the key identifies, it does not authorise anything). REQUIRES VALIDATION.
-_USER_STREAM_PATH = "/api/v3/userDataStream"
+#: The account stream is no longer opened through REST. ``POST /api/v3/userDataStream``
+#: (the listen key) was retired by the venue on 2026-02-20 and answers HTTP 410; the stream
+#: is a subscription on the WebSocket API, signed with :meth:`BinanceSigner.sign_ws_params`.
+USER_STREAM_SUBSCRIBE_METHOD = "userDataStream.subscribe.signature"
 
 #: Our order-type vocabulary to the venue's. REQUIRES VALIDATION.
 _ORDER_TYPE_MAP = {
@@ -545,37 +546,15 @@ class BinanceExecutionProvider(ExecutionProvider):
 
     # ------------------------------------------------------------------ account stream
 
-    async def _listen_key_request(self, method: str, params: dict[str, Any]) -> Any:
-        """Keyed, unsigned (the documented security type for listen keys). The key travels
-        in the header the signer builds; this module never names it."""
-        await self._budget.acquire(_USER_STREAM_PATH)
-        client = await self._http()
-        try:
-            response = await client.request(method, _USER_STREAM_PATH, params=params, headers=self._signer.key_header())
-        except httpx.TimeoutException as exc:
-            raise ProviderUnavailableError(f"{method} listen key timed out", provider=self.name) from exc
-        except httpx.HTTPError as exc:
-            raise ProviderUnavailableError(f"binance transport error on {method} listen key: {exc}", provider=self.name) from exc
-        if response.status_code >= 400:
-            self._raise_venue_error(response, _USER_STREAM_PATH)
-        try:
-            return response.json() if response.content else {}
-        except ValueError as exc:
-            raise ExecutionError("binance returned a non-JSON body for the listen key", received=response.text[:300]) from exc
+    def user_stream_subscribe_params(self) -> dict[str, Any]:
+        """The signed ``params`` for one ``userDataStream.subscribe.signature`` request.
 
-    async def create_listen_key(self) -> str:
-        payload = await self._listen_key_request("POST", {})
-        key = str(payload.get("listenKey", "") or "") if isinstance(payload, dict) else ""
-        if not key:
-            raise ExecutionError("binance returned no listenKey", received=str(payload)[:200])
-        _log.info("binance_listen_key_created", key=self._signer.key_fingerprint)
-        return key
-
-    async def keepalive_listen_key(self, listen_key: str) -> None:
-        await self._listen_key_request("PUT", {"listenKey": listen_key})
-
-    async def close_listen_key(self, listen_key: str) -> None:
-        await self._listen_key_request("DELETE", {"listenKey": listen_key})
+        Local work only (a clock read and an HMAC): no request leaves here, so the account
+        stream can call it on every reconnect without touching the REST budget. The result
+        carries the key and a signature valid for ``recvWindow`` milliseconds; the stream
+        sends it as JSON and never logs it.
+        """
+        return self._signer.sign_ws_params()
 
     # ------------------------------------------------------------------ parsing
 

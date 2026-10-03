@@ -383,9 +383,10 @@ class LiveConfig(FrozenModel):
     binance_base_url: str = "https://api.binance.com"
     binance_testnet_url: str = "https://testnet.binance.vision"
     #: The account (user data) stream: execution reports and balance updates for the key's
-    #: account, opened with a listen key. Follows ``use_testnet`` like ``base_url`` does.
-    binance_user_stream_url: str = "wss://stream.binance.com:9443/ws"
-    binance_testnet_user_stream_url: str = "wss://testnet.binance.vision/ws"
+    #: account, a signed subscription on the venue's WebSocket API (the listen-key stream
+    #: was retired by the venue on 2026-02-20). Follows ``use_testnet`` like ``base_url``.
+    binance_user_stream_url: str = "wss://ws-api.binance.com:443/ws-api/v3"
+    binance_testnet_user_stream_url: str = "wss://ws-api.testnet.binance.vision/ws-api/v3"
     #: Default True. Pointing at the real venue is a deliberate act, not a default.
     use_testnet: bool = True
 

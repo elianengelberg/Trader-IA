@@ -157,12 +157,36 @@ class BinanceSigner:
         return self._credentials.key_fingerprint
 
     def key_header(self) -> dict[str, str]:
-        """The API-key header alone, for keyed-but-unsigned endpoints (listenKey).
+        """The API-key header alone, for keyed-but-unsigned endpoints.
 
         The *key* identifies; only the signature authorises. Endpoints that take the key
-        without a signature can open a market-data stream and nothing else.
+        without a signature can read what the key is allowed to read and nothing else.
         """
         return {"X-MBX-APIKEY": self._credentials.api_key}
+
+    def sign_ws_params(self, params: dict[str, Any] | None = None) -> dict[str, Any]:
+        """Sign a WebSocket API request's ``params`` (HMAC), returning the dict to send.
+
+        The venue's rule for the WebSocket API differs from REST in one way that matters:
+        the key travels as the ``apiKey`` *parameter* (there is no header on a socket) and the
+        signature payload is every parameter except ``signature``, **sorted alphabetically by
+        name** and joined as ``name=value&...``. ``timestamp`` and ``recvWindow`` are added
+        here, from the injected clock, for the same reasons as :meth:`sign`.
+
+        The returned dict is the whole request body for ``params``; it carries the key and the
+        signature and nothing of the secret. Callers send it as JSON and never log it.
+        """
+        payload: dict[str, Any] = dict(params or {})
+        payload["apiKey"] = self._credentials.api_key
+        payload["timestamp"] = self._clock.timestamp_ms()
+        payload["recvWindow"] = self._recv_window
+        canonical = "&".join(f"{name}={payload[name]}" for name in sorted(payload))
+        payload["signature"] = hmac.new(
+            self._credentials._secret.reveal().encode("utf-8"),
+            canonical.encode("utf-8"),
+            hashlib.sha256,
+        ).hexdigest()
+        return payload
 
     def sign(self, params: dict[str, Any]) -> SignedRequest:
         """Sign ``params``, adding ``timestamp`` and ``recvWindow``.

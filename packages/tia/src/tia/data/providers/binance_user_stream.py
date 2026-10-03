@@ -1,20 +1,30 @@
 """Binance's account stream (the "user data stream"): execution reports and balances.
 
-A keyed WebSocket, opened with a listen key the REST adapter creates with the API key alone
-and keeps alive every thirty minutes (the venue drops it after sixty). It delivers, for the
-key's account only, one ``executionReport`` per order event (acknowledged, traded, cancelled,
-expired, rejected) and an ``outboundAccountPosition`` after every balance change.
+A signed subscription on the venue's **WebSocket API**. One socket is opened to the API
+endpoint, one ``userDataStream.subscribe.signature`` request is sent (any API key type; no
+session logon), and from the venue's ``status: 200`` answer onwards every event of the key's
+account arrives on that same connection, wrapped as ``{"subscriptionId": n, "event": {...}}``:
+one ``executionReport`` per order event (acknowledged, traded, cancelled, expired, rejected)
+and an ``outboundAccountPosition`` after every balance change.
 
-This module parses those frames into the venue-neutral :class:`~tia.domain.orders.ExecutionReport`
+The listen-key stream this module first spoke (``POST /api/v3/userDataStream`` and a keyed
+``wss://.../ws/<listenKey>`` socket) was deprecated by the venue on 2025-04-07 and retired on
+2026-02-20; the endpoint now answers HTTP 410. There is no keepalive any more: the
+subscription lives exactly as long as the connection, which the venue closes at the 24-hour
+mark and on ``serverShutdown``. Both are reconnects here, and a reconnect is reported as a
+drop first — the consumer stops trusting the stream until a reconciliation says what the
+account really holds.
+
+This module parses the frames into the venue-neutral :class:`~tia.domain.orders.ExecutionReport`
 and :class:`~tia.domain.portfolio.AccountBalance` and hands them to callbacks. It knows
 nothing about orders, ledgers or quoting: the market maker consumes the reports behind its
-own execution contract and never imports this module.
+own execution contract and never imports this module. The signature comes from the signing
+module through the subscription source; this file never sees the secret.
 
-Integration status: **REQUIRES VALIDATION.** Field names follow the venue's documentation;
-no frame has been received from a Binance host in this build environment. What is proven
-here is the parser against documented shapes and the reconnect discipline: a dropped socket
-is reported as such, never papered over, and the consumer is told so it can stop trusting
-the stream until a reconciliation says what the account really holds.
+Integration status: **REQUIRES VALIDATION.** Field names follow the venue's documentation
+(``web-socket-api.md``, ``user-data-stream.md``, 2026-09); the request shape, the wrapped
+event shape and the parser are proven against documented frames, the subscription against
+the venue only by ``scripts/validate_mm_testnet.py``.
 """
 
 from __future__ import annotations
@@ -22,23 +32,31 @@ from __future__ import annotations
 import asyncio
 import contextlib
 import json
-from collections.abc import AsyncIterator, Callable
+import uuid
+from collections.abc import Callable
 from contextlib import AbstractAsyncContextManager
 from typing import Any, Protocol
 
 from tia.core.logging import get_logger
-from tia.data.providers.binance_live import venue_status_to_state
+from tia.data.providers.binance_live import USER_STREAM_SUBSCRIBE_METHOD, venue_status_to_state
 from tia.domain.enums import Side
 from tia.domain.orders import ExecutionReport
 from tia.domain.portfolio import AccountBalance
 
 _log = get_logger("execution.binance_user_stream")
 
-DEFAULT_USER_STREAM_URL = "wss://stream.binance.com:9443/ws"
-TESTNET_USER_STREAM_URL = "wss://testnet.binance.vision/ws"
-#: The venue expires a listen key after sixty minutes without a keepalive.
-LISTEN_KEY_KEEPALIVE_S = 1_800.0
+DEFAULT_USER_STREAM_URL = "wss://ws-api.binance.com:443/ws-api/v3"
+TESTNET_USER_STREAM_URL = "wss://ws-api.testnet.binance.vision/ws-api/v3"
+#: How long the venue gets to answer the subscription request before the attempt is a failure.
+SUBSCRIBE_TIMEOUT_S = 10.0
 BACKOFF = (1.0, 2.0, 4.0, 8.0, 15.0, 30.0)
+
+#: Events that end the subscription or announce the connection's end. Each one is a drop:
+#: the loop reconnects and re-subscribes, and the consumer is told in between.
+_ENDING_EVENTS = {
+    "eventStreamTerminated": "subscription terminated by the venue",
+    "serverShutdown": "venue announced a server shutdown",
+}
 
 #: The venue's execution types to ours. ``TRADE_PREVENTION`` is the venue expiring an order
 #: under self-trade prevention: for us it expired.
@@ -52,24 +70,33 @@ _EXECUTION_TYPES = {
     "TRADE_PREVENTION": "expired",
 }
 
-Connector = Callable[[str], AbstractAsyncContextManager[AsyncIterator[str | bytes]]]
+
+class Socket(Protocol):
+    """What the stream needs from a connection: text frames out, frames in."""
+
+    async def send(self, message: str) -> None: ...
+
+    async def recv(self) -> str | bytes: ...
+
+
+Connector = Callable[[str], AbstractAsyncContextManager[Socket]]
 ReportSink = Callable[[ExecutionReport, int], None]
 BalanceSink = Callable[[list[AccountBalance], int], None]
 StatusSink = Callable[[bool, str, int], None]
 
 
-def _default_connector(url: str) -> AbstractAsyncContextManager[AsyncIterator[str | bytes]]:
+def _default_connector(url: str) -> AbstractAsyncContextManager[Socket]:
     import websockets
 
+    # The venue pings every 20 s and drops a connection that owes a pong for a minute; the
+    # library answers pings itself. ``ping_interval`` adds our own liveness check on top.
     return websockets.connect(url, ping_interval=20, ping_timeout=20, max_size=2**20)
 
 
-class ListenKeySource(Protocol):
-    async def create_listen_key(self) -> str: ...
+class SubscriptionSource(Protocol):
+    """Whoever can sign the subscription: the live adapter, over the signing module."""
 
-    async def keepalive_listen_key(self, listen_key: str) -> None: ...
-
-    async def close_listen_key(self, listen_key: str) -> None: ...
+    def user_stream_subscribe_params(self) -> dict[str, Any]: ...
 
 
 class UnknownReportStatusError(ValueError):
@@ -129,16 +156,18 @@ def parse_account_position(data: dict[str, Any]) -> list[AccountBalance]:
 
 
 class BinanceUserDataStream:
-    """Owns the socket and the listen key; delivers parsed events to the callbacks.
+    """Owns the socket and the subscription; delivers parsed events to the callbacks.
 
     ``on_report(report, received_at_ms)`` for each execution report, ``on_balances``
     for each balance update, ``on_status(connected, reason, at_ms)`` on every transition.
-    Callbacks are synchronous and are called on this task; they must not block.
+    ``connected`` means *subscribed*: the socket alone, before the venue's acknowledgement,
+    delivers nothing and is not reported as up. Callbacks are synchronous and are called on
+    this task; they must not block.
     """
 
     def __init__(
         self,
-        keys: ListenKeySource,
+        source: SubscriptionSource,
         *,
         now_ms: Callable[[], int],
         on_report: ReportSink,
@@ -146,18 +175,19 @@ class BinanceUserDataStream:
         on_status: StatusSink | None = None,
         base_url: str = DEFAULT_USER_STREAM_URL,
         connector: Connector | None = None,
-        keepalive_s: float = LISTEN_KEY_KEEPALIVE_S,
+        subscribe_timeout_s: float = SUBSCRIBE_TIMEOUT_S,
     ) -> None:
-        self._keys = keys
+        self._source = source
         self._now_ms = now_ms
         self._on_report = on_report
         self._on_balances = on_balances
         self._on_status = on_status
         self._base_url = base_url.rstrip("/")
         self._connector = connector or _default_connector
-        self._keepalive_s = keepalive_s
+        self._subscribe_timeout_s = subscribe_timeout_s
         self._task: asyncio.Task[Any] | None = None
-        self._listen_key: str | None = None
+        self._ending: str = ""
+        self.subscription_id: int | None = None
         self.connected = False
         self.connections = 0
         self.disconnects = 0
@@ -167,9 +197,8 @@ class BinanceUserDataStream:
         self.reports = 0
         self.balance_updates = 0
         self.other_events = 0
+        self.responses = 0
         self.parse_errors = 0
-        self.keepalives = 0
-        self.keepalive_failures = 0
         self.last_error = ""
         self._connected_at_ms: int | None = None
         self._last_message_ms: int | None = None
@@ -192,35 +221,33 @@ class BinanceUserDataStream:
                 await self._task
             self._task = None
         self._mark_down("closed")
-        if self._listen_key is not None:
-            with contextlib.suppress(Exception):
-                await self._keys.close_listen_key(self._listen_key)
-            self._listen_key = None
+        self.subscription_id = None
 
     async def _run(self) -> None:
         attempt = 0
         while True:
-            keepalive: asyncio.Task[Any] | None = None
             try:
-                self._listen_key = await self._keys.create_listen_key()
-                async with self._connector(f"{self._base_url}/{self._listen_key}") as socket:
+                async with self._connector(self._base_url) as socket:
+                    self.subscription_id = await self._subscribe(socket)
                     self.connected = True
                     self.connections += 1
                     self._connected_at_ms = self._now_ms()
                     self.last_error = ""
+                    self._ending = ""
                     attempt = 0
-                    keepalive = asyncio.get_running_loop().create_task(self._keepalive_loop(self._listen_key), name="binance-user-stream-keepalive")
                     self._status(True, "connected")
-                    _log.info("binance_user_stream_connected")
-                    async for raw in socket:
-                        self.on_message(raw)
-                    raise ConnectionError("account stream ended")
+                    _log.info("binance_user_stream_subscribed", subscription_id=self.subscription_id)
+                    while True:
+                        self.on_message(await socket.recv())
+                        if self._ending:
+                            raise ConnectionError(self._ending)
             except asyncio.CancelledError:
                 raise
             except Exception as exc:
                 was_up = self.connected
-                self.last_error = f"{type(exc).__name__}: {str(exc)[:160]}"
+                self.last_error = f"{type(exc).__name__}: {str(exc)[:200]}"
                 self._mark_down(self.last_error)
+                self.subscription_id = None
                 self.reconnects += 1
                 delay = BACKOFF[min(attempt, len(BACKOFF) - 1)]
                 attempt += 1
@@ -231,23 +258,38 @@ class BinanceUserDataStream:
                     self.connect_failures += 1
                     _log.warning("binance_user_stream_connect_failed", error=self.last_error, retry_in=delay)
                 await asyncio.sleep(delay)
-            finally:
-                if keepalive is not None:
-                    keepalive.cancel()
-                    with contextlib.suppress(asyncio.CancelledError, Exception):
-                        await keepalive
 
-    async def _keepalive_loop(self, listen_key: str) -> None:
+    async def _subscribe(self, socket: Socket) -> int:
+        """Send the signed subscription and wait for the venue's answer to *this* request.
+
+        Anything else that arrives meanwhile is handled as a message. A refusal carries the
+        venue's status and error code (``-1022`` bad signature, ``-2015`` key/IP/permission,
+        ``-1021`` timestamp) and nothing from the request: the parameters hold the key.
+        """
+        request_id = str(uuid.uuid4())
+        params = self._source.user_stream_subscribe_params()
+        await socket.send(json.dumps({"id": request_id, "method": USER_STREAM_SUBSCRIBE_METHOD, "params": params}))
+        loop = asyncio.get_running_loop()
+        deadline = loop.time() + self._subscribe_timeout_s
         while True:
-            await asyncio.sleep(self._keepalive_s)
-            try:
-                await self._keys.keepalive_listen_key(listen_key)
-                self.keepalives += 1
-            except asyncio.CancelledError:
-                raise
-            except Exception as exc:
-                self.keepalive_failures += 1
-                _log.warning("binance_user_stream_keepalive_failed", error=str(exc)[:160])
+            remaining = deadline - loop.time()
+            if remaining <= 0:
+                raise TimeoutError(f"no answer to the subscription request within {self._subscribe_timeout_s:g} s")
+            raw = await asyncio.wait_for(socket.recv(), remaining)
+            frame = self._decode(raw)
+            if isinstance(frame, dict) and frame.get("id") == request_id:
+                self.responses += 1
+                status = frame.get("status")
+                if status == 200:
+                    result = frame.get("result") or {}
+                    return int(result.get("subscriptionId", 0)) if isinstance(result, dict) else 0
+                error = frame.get("error") or {}
+                code = error.get("code") if isinstance(error, dict) else None
+                message = str(error.get("msg", ""))[:160] if isinstance(error, dict) else ""
+                raise ConnectionError(f"subscription refused: status {status} code {code} {message}".rstrip())
+            self.on_message(raw)
+            if self._ending:
+                raise ConnectionError(self._ending)
 
     def _mark_down(self, reason: str) -> None:
         was_up = self.connected
@@ -263,20 +305,39 @@ class BinanceUserDataStream:
 
     # ------------------------------------------------------------------ messages
 
+    @staticmethod
+    def _decode(raw: str | bytes) -> Any:
+        try:
+            return json.loads(raw)
+        except (TypeError, ValueError):
+            return None
+
     def on_message(self, raw: str | bytes) -> None:
         received_at_ms = self._now_ms()
         self.messages += 1
         self._last_message_ms = received_at_ms
-        try:
-            frame = json.loads(raw)
-        except (TypeError, ValueError):
+        frame = self._decode(raw)
+        if not isinstance(frame, dict):
             self.parse_errors += 1
             return
-        data = frame.get("data", frame) if isinstance(frame, dict) else None
+        if "event" in frame:
+            # The WebSocket API's shape: {"subscriptionId": n, "event": {...}}.
+            data = frame["event"]
+        elif "id" in frame and "status" in frame:
+            # An answer to a request nobody is waiting for; counted, never interpreted.
+            self.responses += 1
+            return
+        else:
+            data = frame.get("data", frame)
         if not isinstance(data, dict):
             self.parse_errors += 1
             return
         kind = str(data.get("e", ""))
+        if kind in _ENDING_EVENTS:
+            self.other_events += 1
+            self._ending = _ENDING_EVENTS[kind]
+            _log.warning("binance_user_stream_ending", venue_event=kind)
+            return
         try:
             if kind == "executionReport":
                 self.reports += 1
@@ -304,6 +365,7 @@ class BinanceUserDataStream:
         return {
             "connected": self.connected,
             "running": self.is_running,
+            "subscription_id": self.subscription_id,
             "connections": self.connections,
             "disconnects": self.disconnects,
             "connect_failures": self.connect_failures,
@@ -313,22 +375,21 @@ class BinanceUserDataStream:
             "reports": self.reports,
             "balance_updates": self.balance_updates,
             "other_events": self.other_events,
+            "responses": self.responses,
             "parse_errors": self.parse_errors,
-            "keepalives": self.keepalives,
-            "keepalive_failures": self.keepalive_failures,
             "last_message_age_s": round((now - self._last_message_ms) / 1000.0, 1) if self._last_message_ms is not None else None,
             "last_error": self.last_error,
-            "note": "REQUIRES VALIDATION: frame shapes follow the documentation; none has been received from the venue in this build",
         }
 
 
 __all__ = [
     "BACKOFF",
     "DEFAULT_USER_STREAM_URL",
-    "LISTEN_KEY_KEEPALIVE_S",
+    "SUBSCRIBE_TIMEOUT_S",
     "TESTNET_USER_STREAM_URL",
     "BinanceUserDataStream",
-    "ListenKeySource",
+    "Socket",
+    "SubscriptionSource",
     "UnknownReportStatusError",
     "parse_account_position",
     "parse_execution_report",

@@ -135,9 +135,17 @@ Piezas nuevas, todas en `tia/mm/` salvo el tipo de orden:
 tres segundos de inventario sin contabilizar, y una lectura de peso 20 por sondeo.
 
 **Ahora.** El *user data stream* de Binance (`tia/data/providers/binance_user_stream.py`,
-en la capa de providers) abre el socket con un *listen key* que el adaptador crea sólo con
-la cabecera de la API key (sin firma; `keepalive` cada 30 min, la venue lo expira a los 60),
-y traduce cada `executionReport` al tipo neutral `ExecutionReport` (`tia/domain/orders.py`)
+en la capa de providers) es una suscripción firmada sobre la **WebSocket API** de la venue
+(`wss://ws-api.binance.com:443/ws-api/v3`; Testnet `wss://ws-api.testnet.binance.vision/ws-api/v3`):
+un socket, un request `userDataStream.subscribe.signature` cuyos parámetros firma
+`BinanceSigner.sign_ws_params` (HMAC sobre `apiKey`, `recvWindow`, `timestamp` ordenados
+alfabéticamente; sirve cualquier tipo de key, sin `session.logon`), y desde el `status: 200`
+los eventos llegan envueltos como `{"subscriptionId": n, "event": {...}}`. El *listen key*
+(`POST /api/v3/userDataStream`) que usaba la primera versión fue retirado por Binance el
+2026-02-20 (anuncio 2026-01-21; deprecado desde 2025-04-07) y responde HTTP 410; ya no hay
+keepalive: la suscripción vive lo que vive la conexión, que la venue cierra a las 24 h y ante
+`serverShutdown`, y ambas cosas son una caída reportada seguida de reconexión. Traduce cada
+`executionReport` al tipo neutral `ExecutionReport` (`tia/domain/orders.py`)
 y cada `outboundAccountPosition` a `AccountBalance` (free/locked por activo). `tia/mm` no
 importa el módulo: el stream entrega a tres callbacks del adaptador
 (`absorb_execution_report`, `absorb_balances`, `absorb_stream_status`), cableados por la capa
@@ -204,12 +212,12 @@ aplicada, incluye features, fair value, autorización, validación y enqueue; si
 **Lo que esto no cambia.** El camino caliente sigue sin HTTP ni DB; submit y cancel siguen en
 el worker; el timeout sigue siendo UNKNOWN sin reenvío; el paper MM no toca nada de esto
 (mismo hash de journal, test explícito). **Nada de esto se ejecutó contra Binance Testnet**:
-las formas de `executionReport`, `outboundAccountPosition`, el listen key y su keepalive
-están escritas desde la documentación.
+las formas de `executionReport`, `outboundAccountPosition` y la suscripción firmada están
+escritas desde la documentación oficial (`web-socket-api.md`, `user-data-stream.md`, 2026-09).
 
 ## 9. Lo que sólo Binance Testnet puede confirmar
 
-Forma y campos de `executionReport` (`c`/`C` en cancels, `t = -1` sin trade, `m`, `n`/`N`), de `outboundAccountPosition`, creación/keepalive/cierre del listen key con la cabecera de la key sola, URL del stream en Testnet (`wss://testnet.binance.vision/ws`); formato exacto de `exchangeInfo.filters` (`NOTIONAL` vs `MIN_NOTIONAL`), `orderTypes` con `LIMIT_MAKER`;
+Forma y campos de `executionReport` (`c`/`C` en cancels, `t = -1` sin trade, `m`, `n`/`N`), de `outboundAccountPosition`, aceptación de `userDataStream.subscribe.signature` con una key HMAC en Testnet (`wss://ws-api.testnet.binance.vision/ws-api/v3`) y el `subscriptionId` devuelto; formato exacto de `exchangeInfo.filters` (`NOTIONAL` vs `MIN_NOTIONAL`), `orderTypes` con `LIMIT_MAKER`;
 rechazo -2010 y su `msg`; que `timeInForce` efectivamente sea rechazado para `LIMIT_MAKER`;
 `commissionAsset` en `myTrades` y si la cuenta paga en BNB; latencia real de submit/cancel y
 cuántos ciclos de requote cuesta el cancel/replace estricto; comportamiento de `openOrders`

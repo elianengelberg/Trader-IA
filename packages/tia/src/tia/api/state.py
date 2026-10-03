@@ -1504,11 +1504,11 @@ class AppState:
 
     async def _build_mm_user_stream(self, provider: Any, service: Any, clock: Any) -> Any | None:
         """The account stream (execution reports, balances) for the live maker: the
-        venue's, when the provider can mint a listen key; a test's, through the factory;
-        none otherwise (the maker then relies on the trade-history poll alone)."""
+        venue's, when the provider can sign a stream subscription; a test's, through the
+        factory; none otherwise (the maker then relies on the trade-history poll alone)."""
         if self._mm_user_stream_factory is not None:
             return await self._mm_user_stream_factory(provider, service, clock)
-        if not hasattr(provider, "create_listen_key"):
+        if not hasattr(provider, "user_stream_subscribe_params"):
             return None
         from tia.data.providers.binance_user_stream import BinanceUserDataStream
 

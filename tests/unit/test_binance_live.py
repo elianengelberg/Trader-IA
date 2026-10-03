@@ -361,6 +361,20 @@ def test_the_signature_covers_the_exact_string_that_is_sent() -> None:
     assert signature == expected
 
 
+def test_websocket_api_parameters_are_signed_over_the_alphabetically_sorted_payload() -> None:
+    """The venue's WebSocket API rule: every parameter but ``signature``, sorted by name,
+    joined as name=value with ``&``; the key travels as the ``apiKey`` parameter."""
+    import hashlib
+    import hmac
+
+    params = signer().sign_ws_params({"symbol": "BTCUSDT"})
+    assert set(params) == {"apiKey", "recvWindow", "symbol", "timestamp", "signature"}
+    assert params["apiKey"] == "pub-key-abc" and params["timestamp"] == int(START.timestamp() * 1000)
+    canonical = f"apiKey=pub-key-abc&recvWindow={params['recvWindow']}&symbol=BTCUSDT&timestamp={params['timestamp']}"
+    assert params["signature"] == hmac.new(SECRET.encode(), canonical.encode(), hashlib.sha256).hexdigest()
+    assert SECRET not in repr(params)
+
+
 def test_signing_is_deterministic_under_a_frozen_clock() -> None:
     """Which is what lets the validation script compare against a known vector."""
     assert signer().sign({"a": 1}).query_string == signer().sign({"a": 1}).query_string

@@ -75,8 +75,8 @@ binance-account: ## Validate signing, fees, key permissions (TIA_BINANCE_API_KEY
 
 .PHONY: binance-testnet
 binance-testnet: ## Full testnet validation incl. one resting order (testnet keys required)
-	@test -n "$$TIA_BINANCE_API_KEY" || { echo "FAIL: TIA_BINANCE_API_KEY is not set in the environment (its value is never printed)"; exit 2; }
-	@test -n "$$TIA_BINANCE_API_SECRET" || { echo "FAIL: TIA_BINANCE_API_SECRET is not set in the environment (its value is never printed)"; exit 2; }
+	@test -n "$$TIA_LIVE__BINANCE_API_KEY$$TIA_BINANCE_API_KEY" || { echo "FAIL: TIA_LIVE__BINANCE_API_KEY is not set in the environment (its value is never printed)"; exit 2; }
+	@test -n "$$TIA_LIVE__BINANCE_API_SECRET$$TIA_BINANCE_API_SECRET" || { echo "FAIL: TIA_LIVE__BINANCE_API_SECRET is not set in the environment (its value is never printed)"; exit 2; }
 	@mkdir -p data/runtime
 	@$(PY) scripts/validate_binance.py --testnet --account --order --json-out data/runtime/binance_validation.json
 

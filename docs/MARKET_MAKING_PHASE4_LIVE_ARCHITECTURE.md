@@ -274,6 +274,21 @@ adapter conoce; aporta valor porque la contabilidad del P&L real depende exactam
 campos que ninguna corrida ha observado. Comando, desde el VPS, con el mismo `docker run`
 de la validación anterior más `--fill-probe 300`.
 
+**Segunda corrida, 2026-10-03 22:41 UTC, commit `9cac585`, con `--fill-probe 300`.** Mismo
+resultado en todos los items anteriores, sin FAIL. La sonda descansó un bid post-only de
+8e-05 BTC a 84792.00, el mejor bid de Testnet en ese instante, durante 300 s; ningún print
+llegó a ese precio; el bid se canceló. `4.partial_fill`, `5.report_plus_myTrades_single_booking`,
+`6b.fill_observed` y `7.fill_to_ledger_ms` quedaron NOT TESTED, que es el resultado correcto:
+nada se forzó. Evidencia: `/home/tia/tia-testnet/mm_testnet_20261003T224159Z.json` en el VPS,
+pendiente de copiar a `docs/evidence/`.
+
+**Lo que las dos corridas prueban sobre el parser, con reportes reales.** El `executionReport`
+CANCELED de Binance llega con `c` igual al id del cancel (`TyvZa3BffgIWPTmCc5oZgi` en la
+evidencia) y `C` igual a nuestro `clientOrderId`; `t` es −1 y `m` no viene en NEW/CANCELED. El
+parser los traduce a `orig_client_order_id` nuestro, `trade_id` None e `is_maker` None, y la
+correlación cierra la orden correcta una sola vez. Los campos de TRADE (`t`, `m`, `l`, `L`, `n`,
+`N`) siguen sin observarse.
+
 ### 10.2 Lo que esta validación no cubre
 
 El camino completo del servicio (`LiveMarketMakerService.start_live` → reconciliación inicial

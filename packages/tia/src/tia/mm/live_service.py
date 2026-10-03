@@ -30,6 +30,7 @@ from collections.abc import Callable
 from typing import Any
 
 from tia.core.clock import Clock, utc_from_millis
+from tia.core.ids import deterministic_id
 from tia.core.logging import get_logger
 from tia.domain.portfolio import AccountBalance
 from tia.execution.provider import ExecutionProvider
@@ -358,6 +359,10 @@ class LiveMarketMakerService(MarketMakerService):
         left_open = await self._drain_until_quiet()
         with contextlib.suppress(Exception):
             await self.reconcile(final=True)
+        # Whatever the worker answered during the final reconciliation (a resolve, a poll)
+        # is applied before the worker is closed, so the status the operator reads holds it.
+        with contextlib.suppress(Exception):
+            self.engine.on_event("tick", None, self._now_ms())
         await MarketMakerService.close(self)
         if self.user_stream is not None:
             with contextlib.suppress(Exception):
@@ -454,6 +459,27 @@ class LiveMarketMakerService(MarketMakerService):
     def _journal_event(self, row: dict[str, Any]) -> None:
         with contextlib.suppress(Exception):
             self.engine._write(row)
+        # A sticky engagement of the maker's kill switch is an incident like the session's
+        # own: persisted in the incidents table and pushed to the alert webhook, so an
+        # operator away from the dashboard hears about it. An operator stop is not one.
+        if row.get("kind") == "kill_switch" and row.get("action") == "engage" and row.get("sticky") and row.get("trigger") != "stop":
+            with contextlib.suppress(Exception):
+                self._incident(f"mm_{row.get('trigger', 'kill_switch')}", reason=str(row.get("reason", ""))[:500], actor=str(row.get("actor", "system")), detail={"severity": row.get("severity"), "cancelled": row.get("cancelled", 0), "venue": self.venue_label, "is_live": self.is_live})
+
+    def _incident(self, kind: str, *, reason: str, actor: str, detail: dict[str, Any]) -> None:
+        now = self.clock.now()
+        self._enqueue(
+            "incident",
+            {
+                "incident_id": deterministic_id("inc", self.run_id, kind, now),
+                "at": now,
+                "kind": kind[:32],
+                "actor": actor[:120],
+                "reason": reason,
+                "run_id": self.run_id,
+                "detail": detail,
+            },
+        )
 
     def _note_operator(self, action: str, reason: str, actor: str) -> None:
         row = {"t": self._now_ms(), "kind": "operator", "action": action, "reason": reason, "actor": actor}
@@ -496,8 +522,13 @@ class LiveMarketMakerService(MarketMakerService):
                     balances["funding_note_ask"] = f"base free {base_free} below the minimum quantity {self.filters.min_qty}: no ask can be funded"
             else:
                 self.execution.absorb_trades(trades)
-                if not final:
-                    self.engine.on_event("tick", None, t)  # book the trades in hand before judging balances
+                # Book the trades in hand before judging balances — on the final pass too: a
+                # fill the stream never reported (a partial fill under a dropped stream, a
+                # cancel response that carried executed quantity) is in this history and in
+                # nothing else, and after stop() there is no next reconciliation to catch it.
+                # The engine's tick applies the adapter's outcomes; with the stop engaged the
+                # gate blocks, so the tick places nothing.
+                self.engine.on_event("tick", None, t)
                 expected_quote, expected_base = self.live_ledger.expected_balances()
                 balances.update({"expected_quote_usd": round(expected_quote, 6), "expected_base_btc": round(expected_base, 8)})
                 balance_issue = compare_balances(
@@ -507,9 +538,10 @@ class LiveMarketMakerService(MarketMakerService):
                 )
                 if balance_issue is not None:
                     # Trades the venue has not listed yet make a one-off mismatch; two in a
-                    # row is a fact, and the venue's figures are adopted.
+                    # row is a fact, and the venue's figures are adopted. The final pass has
+                    # no next reconciliation: a mismatch there is adopted and reported as such.
                     self._balance_mismatch_streak += 1
-                    if self._balance_mismatch_streak < 2:
+                    if self._balance_mismatch_streak < 2 and not final:
                         balance_issue = {**balance_issue, "severity": "warning", "detail": "first mismatch: re-checked at the next reconciliation before anything is adopted"}
                     else:
                         self.live_ledger.reconcile_balances(quote_free=quote_free, quote_locked=quote_locked, base_free=base_free, base_locked=base_locked, t_ms=t, quote_tolerance_usd=self._quote_tolerance_usd, base_tolerance_btc=self._base_tolerance_btc)

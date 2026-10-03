@@ -184,3 +184,36 @@ Of the "Remaining, honestly" list: item 1 is closed for the public and Testnet p
 open for Mainnet account facts (`make binance-account` with real keys has not been run);
 item 2 is closed (WebSockets are implemented and validated); items 3–5 stand.
 
+## Addendum, 2026-10-04 — market maker, live path: validation matrix
+
+Levels, in order of strength: IMPLEMENTED → UNIT TESTED (fake venue, fake stream) →
+INTEGRATION TESTED (API and service wired together, still fake venue) → TESTNET VALIDATED
+(observed against Binance Spot Testnet; evidence in `docs/evidence/`) → PRODUCTION VALIDATED
+(never, by rule: no Mainnet, no real money).
+
+| Component | Unit | Integration | Testnet | Production | State |
+|---|---|---|---|---|---|
+| Binance REST adapter: signing, account, filters, LIMIT_MAKER place/cancel/query by orderId | yes | yes | **yes** (2026-10-03, two runs) | no | VALIDATED on Testnet |
+| Account stream: signed WebSocket API subscription, NEW and CANCELED reports, reconnect | yes | yes | **yes** | no | VALIDATED on Testnet |
+| Account stream: TRADE report fields (`t`, `m`, `l`, `L`, `n`, `N`), `outboundAccountPosition` after a fill | yes | yes | **no** (no print in 300 s at the best bid) | no | NOT TESTED on the venue |
+| Execution state machine: NEW, PARTIALLY_FILLED, FILLED, CANCELED, REJECTED, EXPIRED, UNKNOWN; idempotent cancel; -2013; duplicate reports; REST and stream coexisting | yes (+ synthetic adversarial suite) | yes | partly (NEW, CANCELED, duplicate reports, stream cut and reconnect) | no | PARTIALLY VALIDATED |
+| Fills: report → correlation → single booking (report + myTrades) → LiveLedger → P&L → balances | yes (+ adversarial) | yes | **no** | no | NOT TESTED on the venue |
+| LiveLedger: seed from venue balances, fees in quote/base/third asset, reconciliation with adoption | yes | yes | seed and no-fill reconciliation only | no | PARTIALLY VALIDATED |
+| LiveMarketMakerService: start_live → reconcile → quote → stop, periodic reconciliation, heartbeat, kill switch | yes | yes | **no** (`scripts/validate_mm_live_service_testnet.py` written, not run) | no | NOT TESTED on the venue |
+| `/api/mm/live/*`: status, start, stop, kill-switch, reconcile | yes | yes | no | no | INTEGRATION TESTED |
+| Market data (Phase 2): depth, trade, bookTicker, book integrity, recorder, replay | yes | yes | Mainnet public streams, 2026-09-18 | no | VALIDATED (public data) |
+| Safety rails: Testnet-only hosts, no token, no MARKET or plain LIMIT path, `TIA_MM__REAL_MONEY` unread | yes (boundary tests) | yes | **yes** (both runs) | no | VALIDATED |
+
+Defects found and fixed in this pass (2026-10-04, see the commit): the final reconciliation at
+`stop()` did not book a fill known only to the trade history (ledger short by the fill, mismatch
+deferred to a reconciliation that never comes); a TRADE report arriving before any
+acknowledgement left the order filled but never acknowledged. Observability gap closed: a
+sticky engagement of the maker's kill switch is now an incident (alert webhook), not only a
+journal row.
+
+What the market maker does **not** do, by the operator's decision of 2026-09-18 (Phase 3 §17 D1):
+it does not call `RiskEngine.evaluate` nor `ExpectedValueEngine.evaluate` with an invented
+directional signal. It reads the session risk engine's *state* through the global safety gate
+(halted, safe mode, degraded → no quoting), has its own risk controller and economics
+authorizer, and nothing in `tia/learning` is consulted on the quoting path.
+

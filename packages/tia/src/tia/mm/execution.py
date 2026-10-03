@@ -982,6 +982,11 @@ class LiveMarketMakerExecution:
             _log.error("mm_live_taker_fill", order=order.order_id, trade=fill.fill_id, source=source)
         else:
             self.counters["unknown_attribution_fills"] += 1
+        if order.t_ack_ms is None:
+            # A fill is the venue's acknowledgement too: a TRADE that arrives before any NEW
+            # (or before the REST answer) must leave the order acknowledged, with its source
+            # and latency recorded, not filled-but-never-acked.
+            self._mark_ack(order, t_ms, "stream" if source == "report" else "trades")
         if order.is_open and order.remaining <= self.filters.step_size / 2.0:
             order.state = "filled"
             order.venue_state = OrderState.FILLED.value

@@ -38,4 +38,5 @@ Then reference the file from the section of the phase document that claims the r
 
 | Date (UTC) | File | Commit validated | Documented in |
 |---|---|---|---|
-| 2026-10-03 21:51 | `mm_testnet_20261003T215105Z.json` — **still on the VPS** at `/home/tia/tia-testnet/`, not yet copied here | `1ebc584` | `docs/MARKET_MAKING_PHASE4_LIVE_ARCHITECTURE.md` §10 |
+| 2026-10-03 21:51 | `mm_testnet_20261003T215105Z.json` | `1ebc584` | `docs/MARKET_MAKING_PHASE4_LIVE_ARCHITECTURE.md` §10. Block validation; no fill by design |
+| 2026-10-03 22:41 | `mm_testnet_20261003T224159Z.json` — **still on the VPS** at `/home/tia/tia-testnet/`, not yet copied here | `9cac585` | `docs/MARKET_MAKING_PHASE4_LIVE_ARCHITECTURE.md` §10.1. Block validation plus `--fill-probe 300`: bid 8e-05 BTC @ 84792.00 at the best bid, no print in 300 s, fill items NOT TESTED |

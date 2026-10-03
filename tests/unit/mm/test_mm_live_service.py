@@ -340,6 +340,54 @@ async def test_a_dropped_account_stream_degrades_to_a_safe_state_until_a_reconci
     await _teardown(live)
 
 
+async def test_a_partial_fill_the_stream_never_reported_is_booked_by_the_final_reconciliation_at_stop() -> None:
+    """Found by trying to falsify stop(): a partial fill known only to the trade history,
+    then an immediate stop. The cancel response closes the order, the trade poll it
+    triggers answers after the drain loop has already seen no open orders, and the final
+    reconciliation used to absorb the trades without applying them — so the ledger ended
+    without the fill and the final report downgraded the mismatch to "re-checked next
+    time", when there is no next time. Now the final pass books what the history holds
+    and adopts the venue's figures if anything still differs."""
+    live = await _live()
+    service, venue = live.service, live.venue
+    await service.start_live()
+    [cid, *_] = await live.until_resting()
+    order = venue.orders[cid]
+    part = round(order.quantity / 2, 5)
+    venue.venue_fill(cid, part)  # no stream is wired: the history is the only witness
+    assert venue.orders[cid].state.value == "partially_filled"
+    status = await service.stop(reason="test", actor="test")
+    report = service.last_report
+    assert report is not None and report.ok and not report.critical, report.as_dict()
+    ledger = status["ledger"]
+    assert ledger["fills"] == 1 and abs(ledger["inventory_btc"] - part) < 1e-12
+    assert abs(report.balances["expected_base_btc"] - report.balances["venue_base_btc"]) <= 2e-5
+    assert status["execution"]["trade_poll_fills"] == 1 and status["execution"]["fills"] == 1
+    assert not status["open_orders"] and not venue.get_open_orders_sync() if hasattr(venue, "get_open_orders_sync") else not status["open_orders"]
+    await live.market.close()
+
+
+async def test_a_sticky_kill_of_the_maker_is_persisted_as_an_incident_and_an_operator_stop_is_not() -> None:
+    """Observability, not just a journal row: a sticky engagement reaches the incidents
+    table (and from there the alert webhook) with its trigger, reason and severity. The
+    operator's own stop engages the switch too, and is deliberately not an incident."""
+    live = await _live()
+    service = live.service
+    await service.start_live()
+    await live.feed(4)
+    await service.engage_kill_switch(reason="operator hit the button", actor="elian")
+    incidents = [payload for kind, payload in live.persisted if kind == "incident"]  # type: ignore[attr-defined]
+    assert len(incidents) == 1
+    inc = incidents[0]
+    assert inc["kind"] == "mm_operator" and inc["actor"] == "elian" and "operator hit the button" in inc["reason"]
+    assert inc["run_id"] == service.run_id and inc["detail"]["severity"] == "cancel_open" and inc["detail"]["is_live"] is False
+    assert inc["incident_id"].startswith("inc") and inc["at"] is not None
+    await service.stop(reason="done", actor="elian")
+    incidents_after = [payload for kind, payload in live.persisted if kind == "incident"]  # type: ignore[attr-defined]
+    assert len(incidents_after) == 1  # the stop is not an incident
+    await live.market.close()
+
+
 async def test_the_initial_reconciliation_notes_when_an_asset_cannot_fund_a_side() -> None:
     live = await _live(venue_kwargs={"quote_balance": 5_000.0, "base_balance": 0.0})
     report = await live.service.start_live()

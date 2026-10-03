@@ -281,3 +281,27 @@ El camino completo del servicio (`LiveMarketMakerService.start_live` → reconci
 `/api/mm/live/*` contra la venue: siguen INTEGRATION TESTED con un venue falso. Mainnet: no
 tocado, por regla.
 
+### 10.3 La validación del servicio (`scripts/validate_mm_live_service_testnet.py`, no ejecutada todavía)
+
+Arma exactamente lo que arma `POST /api/mm/live/start` en Testnet, sin la API, sin la base de
+datos y sin la configuración de producción: `BinanceExecutionProvider` simulado y sin token,
+`MarketDataService` sobre los streams de **Testnet** (`wss://stream.testnet.binance.vision/stream`,
+snapshot de `testnet.binance.vision`), `LiveMarketMakerService` con el perfil de latencia
+medido en el host, un tope de capital como el que impondría el token, el `BinanceUserDataStream`
+firmado, y corre `start_live()` → N minutos → `stop()`. Rails: los tres hosts deben ser Testnet;
+cualquier host de Mainnet es rechazo antes de conectar. Verifica: datos usables, reconciliación
+inicial no crítica, ledger sembrado desde balances reales, stream suscripto vía el servicio,
+engine procesando eventos, órdenes colocadas y reconocidas por el adapter real (o la razón exacta
+por la que el engine no cotizó: gate, controller, autorización de riesgo o de economía, todas
+registradas), cancel/replace sin UNKNOWN, fills contabilizados una vez si los hubo, reconciliación
+periódica, kill switch no enganchado al final, `stop()` con cero órdenes abiertas localmente y
+en la venue preguntada con un cliente nuevo. El libro de Testnet es fino y sus precios son
+propios: que la economía niegue cotizaciones es un resultado, no un fallo. Requiere el perfil de
+latencia del host: en el VPS vive en el volumen `tia-data`, montado sólo lectura en el contenedor
+efímero.
+
+Nota de diseño que esta validación hace visible: en la API, el servicio live usa el
+`MarketDataService` de la Fase 2, que lee los streams públicos de **Mainnet**, con ejecución en
+Testnet cuando `use_testnet=true`. Para Mainnet real los dos coinciden; para validar en Testnet
+el script usa datos de Testnet para que cotización y ejecución miren el mismo libro.
+

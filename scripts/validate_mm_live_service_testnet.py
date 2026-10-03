@@ -325,8 +325,22 @@ class ServiceValidation:
             ev.mark("S8.fills_booked_once_into_the_ledger", "NOT TESTED", "no fill occurred (not provoked)")
         rec = st["reconciliation"]
         ev.mark("S9.periodic_reconciliation_ran", "PASS" if rec["count"] >= 2 and rec["failures"] == 0 else ("FAIL" if rec["failures"] else "NOT TESTED"), f"reconciliations {rec['count']} failures {rec['failures']} interval {rec['interval_s']} s last ok={((rec.get('last') or {}).get('ok'))} critical={((rec.get('last') or {}).get('critical'))}")
+        # The kill switch, in two readings. Before stop(): a sticky engagement means a critical
+        # finding stopped the maker for good during the run — that is what the item judges;
+        # transient engagements (stale market data, a stream drop) are the rails working and
+        # are recorded, not failed. After stop(): the stop itself engages the switch, sticky,
+        # by design (cancel everything, no new quotes); it must be the only sticky cause,
+        # and no transient condition may still be hanging off a stopped service.
+        kill_before = (last or {}).get("kill") or {}
+        history = (st["kill_switch"].get("history") or [])
+        engagements = [(h.get("trigger"), h.get("sticky"), h.get("action")) for h in history if h.get("action") == "engage"]
+        ev.responses["kill_switch_engagements"] = history
+        if kill_before.get("sticky"):
+            ev.mark("S10.no_sticky_kill_during_the_run", "FAIL", f"sticky before stop: trigger={kill_before.get('trigger')!r} reason={kill_before.get('reason')!r}; engagements {engagements}")
+        else:
+            ev.mark("S10.no_sticky_kill_during_the_run", "PASS", f"transient engagements during the run: {[t for t, sticky, _ in engagements if not sticky]}; none sticky")
         kill = st["kill_switch"]
-        ev.mark("S10.kill_switch_not_engaged_at_the_end", "PASS" if not kill.get("engaged") else "FAIL", json.dumps(kill, default=str)[:300])
+        ev.mark("S10b.stop_is_the_only_sticky_cause_at_the_end", "PASS" if kill.get("engaged") and kill.get("sticky") and kill.get("trigger") == "stop" and not kill.get("transient") else "FAIL", json.dumps({k: kill.get(k) for k in ("engaged", "sticky", "trigger", "reason", "severity", "transient")}, default=str)[:300])
         ev.mark("S11.no_unknown_orders", "PASS" if not st["unknown_orders"] and c["unknown"] == 0 else "FAIL", f"unknown counter {c['unknown']} open unknown {len(st['unknown_orders'])}")
         stream = st["user_stream"]
         ev.mark("S3b.account_stream_reports_received", "PASS" if (stream.get("reports") or 0) > 0 else ("NOT TESTED" if c["placed"] == 0 else "FAIL"), f"reports {stream.get('reports')} balance_updates {stream.get('balance_updates')} disconnects {stream.get('disconnects')} reconnects {stream.get('reconnects')}")

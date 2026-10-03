@@ -108,7 +108,7 @@ any real account), add them to `.env` **on this machine, never in a chat**
 
 ```bash
 set -a && source .env && set +a
-make binance-testnet         # signing, permissions, fees, listenKey, and one order:
+make binance-testnet         # signing, permissions, fees, the account-stream subscription, and one order:
                              # place → duplicate rejected → cancel → final state
 docker compose -f docker-compose.local.yml up -d   # restart so the backend sees the keys
 ```

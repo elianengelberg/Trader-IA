@@ -155,7 +155,7 @@ rather than failing to start.
 
 ## Going live
 
-Paper is the default and stays the default until fourteen activation checks pass and a
+Paper is the default and stays the default until twenty-seven activation checks pass and a
 human types a confirmation phrase. Read [`docs/LIVE_TRADING.md`](docs/LIVE_TRADING.md)
 before you get there — all of it.
 
@@ -206,12 +206,14 @@ Three properties of the activation token are worth knowing up front:
 
 Stated here rather than discovered later.
 
-* **The Binance integration has never made a request.** Every Binance host is blocked by
-  the build environment's egress proxy, so every endpoint path, parameter name and response
-  field in it was written from documentation and confirmed against nothing. It is labelled
-  `REQUIRES VALIDATION` in three places and `scripts/validate_binance.py` exists to close
-  the gap. **Run it before trusting anything in that adapter.**
-  See [`docs/BINANCE_INTEGRATION.md`](docs/BINANCE_INTEGRATION.md).
+* **The Binance integration is validated as far as a Testnet account allows, and no
+  further.** Public market data was confirmed against the real venue (2026-08-18); the
+  signed account path, the WebSocket API account stream, one post-only order and its
+  cancellation were confirmed on Spot **Testnet** (2026-10-03, `scripts/validate_mm_testnet.py`).
+  What no run has observed yet: a fill reported by the venue and booked, and the full live
+  market-making service against a venue. Real-money execution has never happened.
+  See [`docs/BINANCE_INTEGRATION.md`](docs/BINANCE_INTEGRATION.md) and
+  [`docs/MARKET_MAKING_PHASE4_LIVE_ARCHITECTURE.md`](docs/MARKET_MAKING_PHASE4_LIVE_ARCHITECTURE.md) §10.
 * **The paper simulator has no order book.** Fills are matched against bar OHLCV, so queue
   position and book depletion do not exist. There are no halts, auctions, funding or borrow
   costs. `docs/ARCHITECTURE.md` §12.1.
@@ -219,12 +221,13 @@ Stated here rather than discovered later.
   there is a deadlock — it refuses to trade without a measured edge, and an edge is measured
   from closed trades. Paper trading is how that evidence gets produced. The `ev_would_reject`
   counter shows what enforcing would cost. `docs/LIVE_TRADING.md` §4.
-* **No WebSocket market data.** Prices are polled, which is adequate for 1-minute bars and
-  not for anything faster.
-* **No database migrations.** A clean install creates the schema correctly; there is no
-  automated upgrade path, and the version guard refuses to open a mismatched database
-  rather than misreading it.
-* **Docker is untested here** — see above.
+* **Market data over WebSocket exists for the directional session (kline, bookTicker) and
+  for the market maker (depth, trades, bookTicker); the account stream is a signed
+  WebSocket API subscription.** The polling path remains as the fallback.
+* **Database migrations are Alembic revisions 0001–0006.** Empty→head is exercised in CI;
+  upgrading a populated PostgreSQL has been exercised only from empty.
+* **Docker was executed on a real VPS for the production stack** (2026-08-18); the demo
+  and local stacks share the image but have not themselves been run.
 * **The mock LLM is not a model of Claude's judgement.** It is a stand-in that exercises
   the pipeline, and every assessment it produces says so in its own text.
 

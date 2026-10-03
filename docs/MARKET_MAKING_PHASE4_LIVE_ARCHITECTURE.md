@@ -224,3 +224,60 @@ cuántos ciclos de requote cuesta el cancel/replace estricto; comportamiento de 
 con órdenes de otras sesiones; `-2011` al cancelar una orden ya cerrada; que `myTrades` con
 `limit` devuelva los más recientes; el límite de 36 caracteres y el charset de
 `newClientOrderId`.
+
+## 10. Validación en Binance Spot Testnet (2026-10-03, commit `1ebc584`)
+
+Ejecutada por el operador desde el VPS con `scripts/validate_mm_testnet.py --symbol BTC-USD
+--percent-away 2.0`, en un contenedor efímero sobre la imagen de producción con el checkout
+montado sólo lectura, credenciales de Testnet pasadas por entorno sin persistirlas, sin
+tocar el backend de producción. Resultado reportado por el operador; el JSON completo quedó
+en el VPS en `/home/tia/tia-testnet/mm_testnet_20261003T215105Z.json` y su copia al repo
+(`docs/evidence/`, ver el índice en `docs/evidence/README.md`) está pendiente.
+
+**PASS.** REST Testnet y hora de la venue; firma HMAC de la WebSocket API y
+`userDataStream.subscribe.signature` aceptado (`subscriptionId` 0); cuenta y balances free y
+locked de USDT y BTC, parser igual al payload; `exchangeInfo` y filtros; un `LIMIT_MAKER`
+colocado 2 % bajo el mejor bid, reconocido por REST y por `executionReport` NEW;
+correlación `clientOrderId` ↔ `orderId`; cancelación por REST, `executionReport` CANCELED
+con `C` igual al id original, confirmación REST por `orderId` con estado CANCELED; ledger
+sin fill fantasma; deduplicación de reportes; corte del account stream con una orden
+abierta → estado seguro señalado (`user_stream_down`), estado local no inventado,
+reconciliación REST que ve la orden, reconexión con una suscripción nueva, cancelación de
+la segunda orden; latencias por tramo con el offset de reloj declarado aparte; rails sólo
+Testnet; ningún request a Mainnet; `is_live=False`, `activation=None`,
+`TIA_MM__REAL_MONEY=false`; limpieza con cero órdenes abiertas.
+
+**NOT TESTED, por diseño de la prueba.** Partial fill, `report + myTrades` con un solo
+booking y `fill_to_ledger_ms`: la orden descansó lejos del mercado y no se produjo ningún
+fill. El shape del `executionReport` TRADE (`t`, `m`, `n`, `N`, `l`, `L`), la contabilidad del
+fill en el `LiveLedger`, el `outboundAccountPosition` posterior y la reconciliación de
+balances tras un fill siguen UNIT TESTED con el venue falso y no observados en la venue.
+
+**Dos defectos reales encontrados por correr, corregidos antes de este resultado.** El
+listen key retirado por Binance (HTTP 410; commit `a2d050e`, §8b) y la consulta de
+confirmación por el `clientOrderId` del cancel en vez del `orderId` (-2013; commit
+`1ebc584`), que además destapó dos huecos de idempotencia en el adapter de ejecución.
+
+### 10.1 La sonda de fill (`--fill-probe SEGUNDOS`, opcional, no ejecutada todavía)
+
+Para cerrar lo NOT TESTED sin forzar nada: una fase opcional del harness descansa un bid
+post-only del tamaño mínimo **en** el mejor bid (nunca en el ask, nunca MARKET, nunca
+persigue el precio) y espera hasta N segundos a que el mercado de Testnet opere contra él.
+Si llega un print: verifica los campos del `executionReport` TRADE, el booking único contra
+`myTrades`, el `fill_to_ledger_ms`, el `outboundAccountPosition` posterior y una
+reconciliación de balances REST contra lo que implican los fills contabilizados; después
+deshace la posición con un ask post-only en el mejor ask bajo las mismas reglas, cancela lo
+que no se llene y reporta el inventario residual de Testnet (activos sin valor). Si no llega
+ningún print, los items quedan NOT TESTED y el bid se cancela. Es segura porque sólo existe
+en Testnet, con los rails del script, en tamaño mínimo y con los dos tipos de orden que el
+adapter conoce; aporta valor porque la contabilidad del P&L real depende exactamente de los
+campos que ninguna corrida ha observado. Comando, desde el VPS, con el mismo `docker run`
+de la validación anterior más `--fill-probe 300`.
+
+### 10.2 Lo que esta validación no cubre
+
+El camino completo del servicio (`LiveMarketMakerService.start_live` → reconciliación inicial
+→ siembra del ledger → cotización del engine → fills → `stop`) y los endpoints
+`/api/mm/live/*` contra la venue: siguen INTEGRATION TESTED con un venue falso. Mainnet: no
+tocado, por regla.
+

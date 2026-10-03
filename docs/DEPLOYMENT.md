@@ -299,7 +299,7 @@ order, by a human:
 
 1. `make binance-public` — from any machine with venue egress: validates endpoint
    shapes, kline layout, filters. Writes the fingerprinted validation record.
-2. Testnet keys → `make binance-testnet` — signing, permissions, fees, listenKey, one
+2. Testnet keys → `make binance-testnet` — signing, permissions, fees, the account-stream subscription, one
    resting order placed/duplicated/cancelled on **testnet**.
 3. Real keys (withdrawals disabled, IP-locked) → `make binance-account` — the record is
    bound to that key's fingerprint; validating one key and trading another is refused.

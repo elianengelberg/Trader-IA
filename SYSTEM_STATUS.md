@@ -163,3 +163,24 @@ Unchanged from the Part I audit (all rechecked green in this run), plus:
    as ground truth). Real-market accuracy remains UNVALIDATED; no metrics were invented.
 5. Inherited: single-operator sizing; simulation layers stay float by design (Decimal
    governs settlement paths); the paper simulator has no order book.
+
+---
+
+## Addendum, 2026-10-03 — what changed since the table above was written
+
+The table and the lists above are the 2026-08-14 state and are kept as written. The rows
+below supersede them where they differ. Each entry names the run that moved it.
+
+| Area | Status now | Evidence |
+|---|---|---|
+| **MARKET DATA (WebSocket)** | **PASS (verified against the venue)** | directional session: kline + bookTicker stream with REST fallback (commit `de315fc`); market maker: depth@100ms + trade + bookTicker with the official snapshot/sequence procedure, recorder and replay — Phase 2 declared PASS by the operator on the VPS, 2026-09-18 (`docs/MARKET_MAKING_PHASE2_REPORT.md`) |
+| **MIGRATIONS** | **PASS** | Alembic 0001–0006; empty→head in CI on every push |
+| **BINANCE EXECUTION** | **PASS (Spot Testnet, building blocks) · NOT VERIFIED (fills; the full live service against a venue; Mainnet)** | 2026-10-03, commit `1ebc584`, `scripts/validate_mm_testnet.py` from the VPS: REST + venue time, signed WebSocket API account-stream subscription, account and balances, exchange filters, one LIMIT_MAKER placed and acknowledged (REST and `executionReport` NEW), clientOrderId↔orderId correlation, cancel confirmed by `executionReport` CANCELED and by REST (by orderId), no phantom fill, deduplication, stream cut → safe state → REST reconciliation → reconnect, latency legs, Testnet-only rails, no activation token, cleanup with zero open orders. NOT TESTED: partial fill, report+myTrades single booking, fill→ledger latency (no fill was produced by design). Evidence file: `docs/evidence/README.md` index |
+| **USER DATA STREAM** | **PASS (Testnet)** | the listen-key stream was retired by the venue on 2026-02-20 (HTTP 410); replaced by `userDataStream.subscribe.signature` on the WebSocket API (commit `a2d050e`), confirmed on Testnet the same day |
+| **MARKET MAKER, paper (Phase 3)** | **IMPLEMENTED · running only when the operator enables it on the VPS** | `docs/MARKET_MAKING_PHASE3_AUDIT.md` §21–22: the verdict is NO EDGE DETECTED until TRAIN/VALIDATION/OOS history exists; PROFITABLE is not a state |
+| **MARKET MAKER, live architecture (Phase 4)** | **IMPLEMENTED, NOT ACTIVATED · Testnet-validated as above** | `docs/MARKET_MAKING_PHASE4_LIVE_ARCHITECTURE.md`; no token, no `.env` change, `TIA_MM__REAL_MONEY` has no readers |
+
+Of the "Remaining, honestly" list: item 1 is closed for the public and Testnet paths and
+open for Mainnet account facts (`make binance-account` with real keys has not been run);
+item 2 is closed (WebSockets are implemented and validated); items 3–5 stand.
+

@@ -145,6 +145,96 @@ async def test_an_expired_activation_stops_the_next_order_not_the_next_restart()
 # --------------------------------------------------------------------------- idempotency
 
 
+ACK_RESPONSE = {
+    "symbol": "BTCUSDT",
+    "orderId": 987654,
+    "orderListId": -1,
+    "clientOrderId": "",
+    "transactTime": int(START.timestamp() * 1000),
+    "price": "50000.00",
+    "origQty": "0.01000000",
+    "executedQty": "0.00000000",
+    "cummulativeQuoteQty": "0.00000000",
+    "status": "NEW",
+    "timeInForce": "GTC",
+    "type": "LIMIT",
+    "side": "BUY",
+}
+
+
+async def test_cancel_and_query_name_the_order_by_the_venue_id_and_keep_our_client_id() -> None:
+    """The venue re-keys a cancelled order's ``clientOrderId`` to the cancel's own id (its
+    cancel response says so: ``origClientOrderId`` is ours, ``clientOrderId`` is the cancel's).
+    Observed on Testnet: a query by that id answered -2013 for an order that had just been
+    cancelled. So once the venue has given us an orderId, every cancel and query uses it,
+    and the local mirror keeps the client id *we* chose."""
+    seen: list[httpx.Request] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        seen.append(request)
+        params = dict(httpx.QueryParams(request.url.query.decode()))
+        ours = intent().client_order_id
+        if request.method == "POST":
+            return httpx.Response(200, json={**ACK_RESPONSE, "clientOrderId": ours})
+        if request.method == "DELETE":
+            assert params["orderId"] == "987654" and "origClientOrderId" not in params
+            return httpx.Response(200, json={**ACK_RESPONSE, "status": "CANCELED", "origClientOrderId": ours, "clientOrderId": "cancel-auto-7f3a"})
+        assert params["orderId"] == "987654" and "origClientOrderId" not in params
+        return httpx.Response(200, json={**ACK_RESPONSE, "status": "CANCELED", "clientOrderId": "cancel-auto-7f3a"})
+
+    adapter = provider(handler, simulated=True)
+    placed = await adapter.submit_order(intent())
+    assert placed.order_id == "987654" and placed.client_order_id == intent().client_order_id
+
+    cancelled = await adapter.cancel_order(placed.client_order_id)
+    assert cancelled.state is OrderState.CANCELLED
+    assert cancelled.client_order_id == placed.client_order_id  # not the cancel's id
+    assert cancelled.order_id == "987654"
+
+    confirmed = await adapter.get_order(placed.client_order_id)
+    assert confirmed is not None and confirmed.state is OrderState.CANCELLED and confirmed.client_order_id == placed.client_order_id
+    assert [r.method for r in seen] == ["POST", "DELETE", "GET"]
+
+
+async def test_before_any_acknowledgement_the_order_is_named_by_our_client_id() -> None:
+    """Without an orderId there is nothing else to name it by; ``origClientOrderId`` is the
+    documented handle, and -2013 then means the venue never saw it."""
+    seen: list[httpx.Request] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        seen.append(request)
+        return httpx.Response(400, json={"code": -2013, "msg": "Order does not exist."})
+
+    adapter = provider(handler, simulated=True)
+    resolved = await adapter.resolve_unknown_order(symbol="BTC-USD", client_order_id="tiamm-never-sent-1")
+    assert resolved is None
+    params = dict(httpx.QueryParams(seen[0].url.query.decode()))
+    assert params["origClientOrderId"] == "tiamm-never-sent-1" and "orderId" not in params
+
+
+async def test_resolving_an_acknowledged_order_the_venue_now_denies_is_unknown_not_absent() -> None:
+    """-2013 after an acknowledgement is a contradiction, not a confirmation: the order
+    existed. It is reported as unknown so nothing retries the intent and nothing assumes
+    a cancel or a fill."""
+    from tia.core.errors import ExecutionError
+
+    seen: list[httpx.Request] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        seen.append(request)
+        if request.method == "POST":
+            return httpx.Response(200, json={**ACK_RESPONSE, "clientOrderId": intent().client_order_id})
+        return httpx.Response(400, json={"code": -2013, "msg": "Order does not exist."})
+
+    adapter = provider(handler, simulated=True)
+    placed = await adapter.submit_order(intent())
+    with pytest.raises(ExecutionError, match="UNKNOWN, not absent"):
+        await adapter.resolve_unknown_order(symbol="BTC-USD", client_order_id=placed.client_order_id)
+    params = dict(httpx.QueryParams(seen[-1].url.query.decode()))
+    assert params["orderId"] == "987654" and "origClientOrderId" not in params
+
+
+
 async def test_a_resubmitted_intent_does_not_send_a_second_order() -> None:
     """The failure mode that turns one signal into two positions.
 

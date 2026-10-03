@@ -465,7 +465,7 @@ class LiveMarketMakerExecution:
         self.submit_to_first_ack_ms = LatencyStats()
         self.report_to_local_ms = LatencyStats()
         self.fill_to_ledger_ms = LatencyStats()
-        self.counters: dict[str, int] = dict.fromkeys(("placed", "submitted", "acked", "rejected", "rejected_would_cross", "refused_validation", "refused_blocked", "deferred_cancel_pending", "cancel_requests", "cancelled", "cancelled_before_submit", "cancel_raced_fill", "expired", "unknown", "resolved_present", "resolved_absent", "unresolved", "fills", "maker_fills", "taker_fills", "unknown_fills", "historical_trades", "api_errors", "activation_refusals", "venue_orders_unknown_locally", "foreign_open_orders", "missing_at_venue", "worker_errors", "reports", "duplicate_reports", "reports_before_start", "reports_before_rest_ack", "report_fills", "trade_poll_fills", "duplicate_trades", "unknown_reports", "unknown_attribution_fills", "stream_drops", "stream_resolved", "balance_updates"), 0)
+        self.counters: dict[str, int] = dict.fromkeys(("placed", "submitted", "acked", "rejected", "rejected_would_cross", "refused_validation", "refused_blocked", "deferred_cancel_pending", "cancel_requests", "cancelled", "cancelled_before_submit", "cancel_raced_fill", "expired", "unknown", "resolved_present", "resolved_absent", "resolved_absent_after_close", "cancel_rejected_after_close", "unresolved", "fills", "maker_fills", "taker_fills", "unknown_fills", "historical_trades", "api_errors", "activation_refusals", "venue_orders_unknown_locally", "foreign_open_orders", "missing_at_venue", "worker_errors", "reports", "duplicate_reports", "reports_before_start", "reports_before_rest_ack", "report_fills", "trade_poll_fills", "duplicate_trades", "unknown_reports", "unknown_attribution_fills", "stream_drops", "stream_resolved", "balance_updates"), 0)
 
     # ------------------------------------------------------------------ identity
 
@@ -874,6 +874,19 @@ class LiveMarketMakerExecution:
 
     def _apply_resolved(self, order: LiveOrder, venue: Order | None, t_ms: int) -> None:
         if venue is None:
+            if order.closed:
+                # The venue already told us how it ended (a CANCELED or FILLED report, a
+                # response); a later "does not exist" adds nothing and changes nothing.
+                self.counters["resolved_absent_after_close"] += 1
+                return
+            if order.venue_order_id:
+                # The venue acknowledged this order and now says it does not exist. That is
+                # not "never arrived": it was cancelled or filled without a word reaching us,
+                # or the venue is inconsistent. Either way its state is unknown until a
+                # report or a reconciliation says otherwise; nothing is assumed.
+                self.counters["resolved_absent"] += 1
+                self._apply_unknown(order, f"the venue acknowledged this order as {order.venue_order_id} and now says it does not exist", t_ms)
+                return
             self.counters["resolved_absent"] += 1
             order.state = "refused"
             order.reject_reason = "never reached the venue (resolved absent); the intent is not resent"
@@ -900,8 +913,16 @@ class LiveMarketMakerExecution:
             self._enqueue("resolve", order)
 
     def _apply_cancel_rejected(self, order: LiveOrder, code: Any, message: str, t_ms: int) -> None:  # noqa: ARG002
-        # The venue refused to cancel: the order is most likely already closed there.
         order.cancel_reason = f"{order.cancel_reason} | cancel rejected (code {code}): {message[:120]}"
+        if order.closed:
+            # The account stream (or an earlier response) already closed it — the usual
+            # race: the CANCELED report lands before the REST cancel's own answer, and the
+            # venue then says there is nothing left to cancel. The terminal state is the
+            # evidence; the rejection is expected and asks for nothing.
+            self.counters["cancel_rejected_after_close"] += 1
+            return
+        # Still open here and the venue refused to cancel: it most likely closed there
+        # without a report reaching us. Ask; never assume which way.
         self._enqueue("resolve", order)
 
     def _apply_cancelled_before_submit(self, order: LiveOrder, t_ms: int) -> None:

@@ -68,6 +68,9 @@ class FakeVenue(ExecutionProvider):
         self.fee_bps = 1.0
         self.fee_asset = "USDT"
         self.reject_cancel_of_closed = True
+        #: Client ids the venue denies on a resolve (-2013 by client id) although it holds
+        #: the order: what Binance does once a cancel has re-keyed the clientOrderId.
+        self.resolve_absent: set[str] = set()
 
     # ------------------------------------------------------------------ helpers for tests
 
@@ -187,6 +190,8 @@ class FakeVenue(ExecutionProvider):
         self.calls.append("resolve")
         if self.fail_queries:
             await self._behave(self.fail_queries, "order")
+        if client_order_id in self.resolve_absent:
+            return None
         order = self.orders.get(client_order_id)
         return order.model_copy() if order is not None else None
 

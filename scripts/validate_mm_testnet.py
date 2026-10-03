@@ -50,6 +50,7 @@ import httpx
 
 from tia.core.clock import SystemClock
 from tia.core.config import LiveConfig
+from tia.core.errors import OrderRejectedError
 from tia.data.providers.binance_live import BinanceExecutionProvider
 from tia.data.providers.binance_signing import signer_from_live_config
 from tia.data.providers.binance_user_stream import BinanceUserDataStream
@@ -356,9 +357,17 @@ class Validation:
         got_canceled = await self._wait(lambda: any(r.order_ref == order.order_id and r.execution_type == "canceled" for r, _, _ in self.reports), 10, "the CANCELED execution report")
         canceled_reports = [r for r, _, _ in self.reports if r.order_ref == order.order_id and r.execution_type == "canceled"]
         ev.mark("4.execution_report_CANCELED_received", "PASS" if got_canceled else "FAIL", f"{len(canceled_reports)} CANCELED report(s); C={canceled_reports[0].orig_client_order_id if canceled_reports else '-'}")
-        venue_order = await self.provider.get_order(order.order_id)
-        ev.responses["order_after_cancel"] = {"state": venue_order.state.value if venue_order else None, "filled": venue_order.filled_quantity if venue_order else None}
-        ev.mark("4.venue_confirms_CANCELED", "PASS" if venue_order is not None and venue_order.state is OrderState.CANCELLED else "FAIL", f"REST status {venue_order.state.value if venue_order else 'none'}")
+        ev.command(f"provider.get_order({order.order_id})  [GET /api/v3/order orderId={order.venue_order_id}]  — the REST confirmation, by the venue's id")
+        try:
+            venue_order = await self.provider.get_order(order.order_id)
+        except OrderRejectedError as exc:
+            # A -2013 here is not evidence of anything: the report above is the evidence of
+            # the cancel, and a query the venue refuses is a failed confirmation, not a PASS.
+            ev.responses["order_after_cancel"] = {"error": f"{type(exc).__name__}: {str(exc)[:200]}"}
+            ev.mark("4.venue_confirms_CANCELED", "FAIL", f"the venue refused the query: {str(exc)[:160]}")
+        else:
+            ev.responses["order_after_cancel"] = {"state": venue_order.state.value if venue_order else None, "filled": venue_order.filled_quantity if venue_order else None}
+            ev.mark("4.venue_confirms_CANCELED", "PASS" if venue_order is not None and venue_order.state is OrderState.CANCELLED else "FAIL", f"REST status {venue_order.state.value if venue_order else 'none'}")
         ev.mark("4.ledger_consistent_no_fill", "PASS" if self.ledger.state.fills == 0 and self.execution.counters["fills"] == 0 and order.filled == 0.0 else "FAIL", f"ledger fills {self.ledger.state.fills}, execution fills {self.execution.counters['fills']}")
         ev.mark("4.partial_fill", "NOT TESTED", "the order rests far from the market by design; a fill cannot be produced safely on a book that is not ours")
         ev.orders.append(order.as_dict())

@@ -349,18 +349,35 @@ class BinanceExecutionProvider(ExecutionProvider):
         of that intent is safe. A transport failure during *this* call re-raises: an
         unknown state does not resolve into a known one by failing to check.
         """
+        known = self._orders.get(client_order_id)
+        acknowledged = known is not None and self._has_venue_id(known)
         try:
-            payload = await self._signed_get(
-                _ORDER_PATH,
-                {
-                    "symbol": self.to_venue_symbol(symbol),
-                    "origClientOrderId": client_order_id,
-                },
-            )
+            if acknowledged:
+                # The venue acknowledged this order once (we hold its orderId): ask by that
+                # handle. It is the only one that survives a cancel — cancelling re-keys
+                # the order's clientOrderId to the cancel's own id, so the original client
+                # id can answer -2013 for an order that very much existed.
+                payload = await self._signed_get(_ORDER_PATH, self._locator(known))  # type: ignore[arg-type]
+            else:
+                payload = await self._signed_get(
+                    _ORDER_PATH,
+                    {
+                        "symbol": self.to_venue_symbol(symbol),
+                        "origClientOrderId": client_order_id,
+                    },
+                )
         except OrderRejectedError as exc:
-            # Documented "order does not exist" code. REQUIRES VALIDATION: -2013 is the
-            # documented value; anything else stays unknown and is re-raised.
+            # -2013 NO_SUCH_ORDER. Before any acknowledgement it means what it says: the
+            # venue never saw the id, so a retry is safe. After an acknowledgement it is a
+            # contradiction the venue has to explain — the order is UNKNOWN, not absent.
             if exc.context.get("code") == -2013:
+                if acknowledged:
+                    raise ExecutionError(
+                        f"the venue acknowledged {client_order_id} as orderId {known.order_id} and now "  # type: ignore[union-attr]
+                        "answers -2013 (order does not exist); its state is UNKNOWN, not absent",
+                        order_id=client_order_id,
+                        code=-2013,
+                    ) from exc
                 _log.info(
                     "unknown_order_resolved_absent",
                     client_order_id=client_order_id,
@@ -369,7 +386,7 @@ class BinanceExecutionProvider(ExecutionProvider):
                 return None
             raise
 
-        order = self._parse_order(payload)
+        order = self._parse_order(payload, existing=known)
         self._orders[order.client_order_id] = order
         self._by_venue_id[str(order.order_id)] = order.client_order_id
         _log.warning(
@@ -388,14 +405,7 @@ class BinanceExecutionProvider(ExecutionProvider):
         if order is None:
             raise ExecutionError(f"unknown order {order_id}", order_id=order_id)
 
-        payload = await self._request(
-            "DELETE",
-            _ORDER_PATH,
-            {
-                "symbol": self.to_venue_symbol(order.symbol),
-                "origClientOrderId": order.client_order_id,
-            },
-        )
+        payload = await self._request("DELETE", _ORDER_PATH, self._locator(order))
         updated = self._parse_order(payload, existing=order)
         self._orders[order.client_order_id] = updated
         return updated
@@ -406,16 +416,32 @@ class BinanceExecutionProvider(ExecutionProvider):
         )
         if order is None:
             return None
-        payload = await self._signed_get(
-            _ORDER_PATH,
-            {
-                "symbol": self.to_venue_symbol(order.symbol),
-                "origClientOrderId": order.client_order_id,
-            },
-        )
+        payload = await self._signed_get(_ORDER_PATH, self._locator(order))
         refreshed = self._parse_order(payload, existing=order)
         self._orders[order.client_order_id] = refreshed
         return refreshed
+
+    @staticmethod
+    def _has_venue_id(order: Order) -> bool:
+        """The venue's numeric orderId is known (an acknowledgement has been seen). Before
+        that, ``order_id`` is our own client id standing in for it."""
+        return bool(order.order_id) and order.order_id != order.client_order_id and order.order_id.isdigit()
+
+    def _locator(self, order: Order) -> dict[str, Any]:
+        """How a cancel or a query names the order to the venue.
+
+        ``orderId`` whenever we hold it: the venue documents it as the faster path, and it is
+        the only handle that survives a cancellation — a cancel re-keys the order's
+        ``clientOrderId`` to the cancel's own (auto-generated) id, after which the original
+        client id is no longer a reliable key. ``origClientOrderId`` only before any
+        acknowledgement, when our own id is all there is.
+        """
+        params: dict[str, Any] = {"symbol": self.to_venue_symbol(order.symbol)}
+        if self._has_venue_id(order):
+            params["orderId"] = int(order.order_id)
+        else:
+            params["origClientOrderId"] = order.client_order_id
+        return params
 
     async def get_orders(self, *, open_only: bool = False, symbol: str | None = None) -> list[Order]:
         """Open orders are read from the venue, for the whole account or for ``symbol``
@@ -582,7 +608,14 @@ class BinanceExecutionProvider(ExecutionProvider):
                 order=str(payload.get("clientOrderId")),
             )
 
-        client_order_id = str(payload.get("clientOrderId", ""))
+        # Our identity for the order is the client id *we* chose. A cancel response carries
+        # it as ``origClientOrderId`` and puts the cancel's own id in ``clientOrderId``;
+        # adopting the latter would re-key the local mirror to an id the venue does not
+        # answer to. The venue's orderId is the handle for everything that follows.
+        if existing is not None:
+            client_order_id = existing.client_order_id
+        else:
+            client_order_id = str(payload.get("origClientOrderId") or payload.get("clientOrderId") or "")
         base = existing or (self._orders.get(client_order_id) if client_order_id else None)
         now = self._clock.now() if self._clock else None
         transact_ms = payload.get("transactTime") or payload.get("updateTime") or payload.get("time")

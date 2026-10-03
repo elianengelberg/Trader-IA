@@ -317,7 +317,10 @@ async def test_a_cancel_the_venue_rejects_as_already_closed_resolves_the_true_st
     h.execution.cancel(order.order_id, h.t, reason="requote")  # the venue answers -2011: unknown order
     await h.settle()
     await h.settle()
-    assert order.state == "filled" and h.execution.counters["resolved_present"] == 1
+    c = h.execution.counters
+    # Two legitimate paths to the same truth: the trade poll booked the fill first (the
+    # rejection then asks nothing), or the rejection came first and the resolve read FILLED.
+    assert order.state == "filled" and c["resolved_present"] + c["cancel_rejected_after_close"] == 1
     assert "cancel rejected (code -2011)" in order.cancel_reason
     await h.execution.close()
 
@@ -614,6 +617,62 @@ async def test_canceled_expired_and_rejected_reports_close_the_order_as_the_venu
     await asyncio.sleep(0.25)
     await h.settle()
     assert late.state == "refused" and h.execution.stats()["states"]["refused"] == 1
+    await h.execution.close()
+
+
+async def test_a_rest_cancel_rejected_after_the_stream_reported_canceled_changes_nothing_and_asks_nothing() -> None:
+    """The race: the CANCELED report lands first, then the REST cancel's own answer is a
+    rejection (the venue has nothing left to cancel). The report is the evidence; the order
+    stays cancelled, counted once, and no resolve goes out for it."""
+    from tia.domain.enums import OrderState
+
+    h, stream = await _streamed()
+    [order] = h.execution.place(_quote(ask=None, t_ms=h.t), h.t)
+    await h.settle()
+    assert order.state == "resting"
+    h.venue.hang_seconds = 0.15
+    h.venue.next_cancel = ["hang"]  # the REST cancel is slow
+    h.execution.cancel(order.order_id, h.t, reason="requote")
+    await asyncio.sleep(0.02)
+    h.venue.venue_cancel(order.order_id)  # the venue cancels, and reports it before answering the REST call
+    stream.report("web_cancel_9", execution_type="canceled", status=OrderState.CANCELLED, orig_client_order_id=order.order_id, venue_order_id=order.venue_order_id)
+    assert order.state == "cancelled" and order.closed and h.execution.counters["cancelled"] == 1
+    calls_before = h.venue.calls.count("resolve")
+    await asyncio.sleep(0.2)  # the hanging DELETE now answers: -2011, the order is already closed there
+    await h.settle()
+    c = h.execution.counters
+    assert order.state == "cancelled" and c["cancelled"] == 1 and c["cancel_rejected_after_close"] == 1
+    assert "cancel rejected (code -2011)" in order.cancel_reason
+    assert h.venue.calls.count("resolve") == calls_before  # nothing to ask: the venue already said
+    assert h.execution.blocked_reason == "" and not any(k == "unknown_order_state" for k, _ in h.criticals)
+    await h.execution.close()
+
+
+async def test_a_venue_that_denies_an_order_it_acknowledged_leaves_it_unknown_until_a_report_says_otherwise() -> None:
+    """-2013 without evidence: the venue refused the cancel and then says the order does not
+    exist, although it acknowledged it. Nothing is assumed in either direction; the order is
+    unknown, quoting blocks, and the first unequivocal report resolves it."""
+    from tia.domain.enums import OrderState
+
+    h, stream = await _streamed()
+    [order] = h.execution.place(_quote(ask=None, t_ms=h.t), h.t)
+    await h.settle()
+    assert order.state == "resting" and order.venue_order_id
+    h.venue.venue_cancel(order.order_id)  # cancelled at the venue, no report reached us
+    h.venue.resolve_absent.add(order.order_id)  # and a resolve by client id answers -2013
+    h.execution.cancel(order.order_id, h.t, reason="requote")
+    await h.settle()
+    await h.settle()
+    c = h.execution.counters
+    # The rejection and the open-orders sync each asked once; both answers were "absent".
+    assert order.state == "unknown" and not order.closed and c["resolved_absent"] >= 1 and c["unknown"] == 1
+    assert "now says it does not exist" in order.unknown_reason
+    assert h.execution.blocked_reason and any(k == "unknown_order_state" for k, _ in h.criticals)
+    assert c["cancelled"] == 0 and h.execution.stats()["states"].get("refused", 0) == 0
+    # The venue's own word, when it arrives, is what resolves it: cancelled, counted once, unblocked.
+    stream.report("web_cancel_10", execution_type="canceled", status=OrderState.CANCELLED, orig_client_order_id=order.order_id, venue_order_id=order.venue_order_id)
+    assert order.state == "cancelled" and order.closed and c["cancelled"] == 1 and c["stream_resolved"] == 1
+    assert h.execution.blocked_reason == ""
     await h.execution.close()
 
 

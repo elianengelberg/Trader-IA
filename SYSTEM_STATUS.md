@@ -199,7 +199,7 @@ INTEGRATION TESTED (API and service wired together, still fake venue) → TESTNE
 | Execution state machine: NEW, PARTIALLY_FILLED, FILLED, CANCELED, REJECTED, EXPIRED, UNKNOWN; idempotent cancel; -2013; duplicate reports; REST and stream coexisting | yes (+ synthetic adversarial suite) | yes | partly (NEW, CANCELED, duplicate reports, stream cut and reconnect) | no | PARTIALLY VALIDATED |
 | Fills: report → correlation → single booking (report + myTrades) → LiveLedger → P&L → balances | yes (+ adversarial) | yes | **no** | no | NOT TESTED on the venue |
 | LiveLedger: seed from venue balances, fees in quote/base/third asset, reconciliation with adoption | yes | yes | seed and no-fill reconciliation only | no | PARTIALLY VALIDATED |
-| LiveMarketMakerService: start_live → reconcile → quote → stop, periodic reconciliation, heartbeat, kill switch | yes | yes | **no** (`scripts/validate_mm_live_service_testnet.py` written, not run) | no | NOT TESTED on the venue |
+| LiveMarketMakerService: start_live → reconcile → quote → stop, periodic reconciliation, heartbeat, kill switch | yes | yes | **yes, 3 min on 2026-10-04** (33 quotes placed, acknowledged and cancelled through the venue; 13 reconciliations; stream 65 reports; clean shutdown) — with one FAIL: a sticky kill from a reconciliation false positive, root-caused and fixed (`docs/MARKET_MAKING_PHASE4_LIVE_ARCHITECTURE.md` §10.4); the fixed code has not been re-run on the venue yet | no | PARTIALLY VALIDATED |
 | `/api/mm/live/*`: status, start, stop, kill-switch, reconcile | yes | yes | no | no | INTEGRATION TESTED |
 | Market data (Phase 2): depth, trade, bookTicker, book integrity, recorder, replay | yes | yes | Mainnet public streams, 2026-09-18 | no | VALIDATED (public data) |
 | Safety rails: Testnet-only hosts, no token, no MARKET or plain LIMIT path, `TIA_MM__REAL_MONEY` unread | yes (boundary tests) | yes | **yes** (both runs) | no | VALIDATED |
@@ -216,4 +216,11 @@ it does not call `RiskEngine.evaluate` nor `ExpectedValueEngine.evaluate` with a
 directional signal. It reads the session risk engine's *state* through the global safety gate
 (halted, safe mode, degraded → no quoting), has its own risk controller and economics
 authorizer, and nothing in `tia/learning` is consulted on the quoting path.
+
+Addendum 2026-10-04, later the same day: the service run on Testnet exposed a reconciliation
+false positive (the venue's open-orders snapshot compared against a local picture read later,
+with the maker's own cancels in between classified as orders nobody manages) that engaged the
+sticky kill switch; fixed with the snapshot's age told apart from real findings, a two-strike
+rule for orders the venue keeps listing open, and a resolve-by-id path that reopens and cancels a
+genuine zombie. The safety state model is now written down (§11 of the Phase 4 document).
 

@@ -320,3 +320,85 @@ Nota de diseño que esta validación hace visible: en la API, el servicio live u
 Testnet cuando `use_testnet=true`. Para Mainnet real los dos coinciden; para validar en Testnet
 el script usa datos de Testnet para que cotización y ejecución miren el mismo libro.
 
+### 10.4 Corrida del servicio en Testnet (2026-10-04, commit `8e058f7`, 3 minutos): S10 y su causa raíz
+
+Resultado reportado por el operador: S0 a S7, S9, S11, S12, S12b y S13 PASS; S8 NOT TESTED (ningún
+fill, no provocado); **S10 FAIL**. Cifras: 620 eventos de mercado, 285 decisiones, 196 heartbeats, 0
+errores del engine; 33 órdenes colocadas, 33 reconocidas, 0 rechazadas, 0 UNKNOWN, 33 canceladas (19
+por TTL); 13 reconciliaciones, 0 fallidas; 65 reportes y 65 actualizaciones de balance por el account
+stream, 0 desconexiones; cero órdenes abiertas al final, local y en la venue con un cliente nuevo. El
+kill switch terminó enganchado, sticky, `trigger=reconciliation`, `reason="venue_order_unknown_locally x2"`,
+más un transitorio `user_stream_down: account stream dropped: closed`.
+
+**Causa raíz, demostrada por reproducción (`tests/unit/mm/test_mm_live_service.py::test_a_quote_cancelled_while_the_reconciliation_was_reading_the_venue_is_the_snapshots_age_not_a_zombie`).**
+`reconcile()` lee las órdenes abiertas de la venue en un instante T1 y después lee balances y
+trades (dos requests más, 100 a 300 ms cada uno en Testnet). La comparación con el estado local
+ocurre en T2 > T1. Entre T1 y T2 el maker siguió cotizando: TTL de 1 s, requote cada 500 ms, 33
+cancelaciones en 3 minutos. Dos cotizaciones que la foto de T1 listaba abiertas fueron canceladas
+y confirmadas por la venue antes de T2. `compare_orders` recibía solo las órdenes locales abiertas
+y las desconocidas, no las que el run conocía y había cerrado, así que clasificó esas dos como
+"órdenes de este maker que el run no administra" — crítico — y el servicio enganchó el kill
+sticky. No hubo ninguna ventana en la que el sistema no supiera dónde estaba una orden: ambas
+estaban cerradas localmente con la confirmación CANCELED de la venue. Fue un **falso positivo del
+clasificador de la reconciliación** (categoría A, bug de producción), y el kill switch respondió
+correctamente a lo que se le dijo (categoría C para el switch). El transitorio `user_stream_down`
+era el propio `stop()` cerrando el stream que él mismo abrió, leído como caída (categoría A,
+cosmético pero engañoso). Y S10 tal como estaba escrito habría fallado también en una corrida
+limpia: `stop()` engancha el switch sticky por diseño (categoría B, bug del validador).
+
+**Corrección.** `compare_orders` recibe además las órdenes cerradas que el run conoce y el
+instante de la foto. Una orden cerrada aquí y abierta en la foto es `local_closed_venue_open`,
+aviso, con un contador de apariciones consecutivas; a la segunda reconciliación consecutiva es
+crítica (una orden que la venue sostiene y nadie administra). Una orden reconocida después de la
+foto no puede estar en ella y no se reporta como faltante. El adapter, al ver una orden cerrada
+listada abierta, distingue: si la venue misma la cerró (reporte o respuesta CANCELED o FILLED) la
+foto es vieja y no pregunta nada; si el cierre fue solo nuestro (una submission resuelta como
+"nunca llegó", un cancel antes del submit) pregunta por `orderId`, y si la venue la sostiene
+abierta la reabre localmente, la cancela de nuevo y eleva el crítico `closed_order_open_at_venue`.
+`stop()` ya no trata el cierre de su propio stream como caída. El validador juzga el kill switch
+en dos lecturas: antes de `stop()` ningún enganche sticky (S10), y después de `stop()` el stop es
+la única causa sticky y no queda ningún transitorio (S10b).
+
+Esta corrida no está en `docs/evidence/`: el JSON quedó en el VPS. Debe copiarse como las dos
+anteriores.
+
+## 11. Modelo de estados de seguridad del maker live
+
+El kill switch del maker (`tia/mm/kill_switch.py`) alimenta el `system_unsafe` del gate global;
+el engine no cotiza mientras el switch esté enganchado y, con severidad `cancel_open`, cancela lo
+que descansa en el momento del enganche. Hay tres clases de condición, y la clase la decide quién
+puede saber que la condición terminó.
+
+| Clase | Trigger | Entrada | Severidad | Recuperación | Quién la decide |
+|---|---|---|---|---|---|
+| **Transitoria** | `data` | market data no usable (stale, desconectado, libro inválido) | cancel_open | se limpia sola cuando los datos vuelven a ser usables | el sistema, leyendo el feed |
+| **Transitoria** | `unknown_order_state` | una orden en UNKNOWN (timeout en submit o cancel) | no_new_quotes | se limpia sola cuando ninguna orden queda UNKNOWN: la resolución por consulta (`orderId` si se conoce, si no `origClientOrderId`) la cierra como presente o como nunca llegada; -2013 sobre una orden reconocida no es "ausente", es UNKNOWN | el sistema, preguntando a la venue |
+| **Transitoria** | `user_stream_down` | el account stream cayó con órdenes abiertas o sin ellas | cancel_open | se limpia sola cuando el stream volvió **y** una reconciliación posterior leyó la cuenta | el sistema, tras reconciliar |
+| **Sticky** | `reconciliation` | hallazgo crítico: orden ajena, orden del maker que el run no conoce, orden cerrada aquí que la venue sostiene abierta dos veces seguidas, desajuste de balances adoptado, reconciliación fallida | cancel_open / no_new_quotes | **stop y start por un operador** | una persona |
+| **Sticky** | `unknown_fill`, `unknown_execution_report`, `foreign_open_order`, `venue_order_unknown_locally`, `closed_order_open_at_venue`, `outcome_apply_failed` | la cuenta no es lo que creíamos | cancel_open | stop y start por un operador | una persona |
+| **Sticky** | `unresolved_order`, `excessive_api_errors`, `activation` | la venue no contesta o rechaza la autorización | no_new_quotes | stop y start por un operador | una persona |
+| **Sticky** | `risk_limit` | el controller del maker disparó (pérdida diaria, drawdown) | cancel_open | stop y start por un operador | una persona |
+| **Sticky** | `operator`, `stop` | acción explícita de un operador | cancel_open | start por un operador | una persona |
+
+Reglas que el modelo garantiza y que los tests sintéticos atacan:
+
+1. Una condición transitoria la limpia únicamente la evidencia que la contradice: datos usables,
+   cero órdenes UNKNOWN, stream arriba más reconciliación. Nunca el paso del tiempo.
+2. Un estado UNKNOWN jamás se interpreta como seguro: bloquea nuevas órdenes hasta que la venue
+   responda; una orden UNKNOWN nunca se reenvía; su cancel se recuerda y sale cuando la venue dice
+   que descansa.
+3. Un enganche sticky conserva su **primera causa**; las siguientes quedan en el historial y
+   solo pueden subir la severidad. `stop()` engancha sticky por diseño y queda como única causa en
+   una corrida limpia.
+4. Una reconciliación limpia posterior **no** libera un sticky: el hallazgo crítico fue una
+   afirmación sobre la cuenta ("alguien más opera", "una orden nuestra que nadie administra") que
+   una persona debe mirar aunque haya desaparecido. Lo que sí se exige del clasificador es que
+   no produzca hallazgos críticos a partir de la edad de la foto; de ahí §10.4.
+5. Un enganche sticky se persiste como incidente y llega al webhook de alertas; un stop del
+   operador no.
+
+Lo que una persona debe hacer ante un sticky: leer `GET /api/mm/live/status` (`kill_switch`,
+`reconciliation.last`, `open_orders`, `unknown_orders`), confirmar en la venue, y recién después
+`POST /api/mm/live/stop` y, si corresponde, `start`. No existe ningún endpoint que libere el
+switch sin parar el servicio.
+

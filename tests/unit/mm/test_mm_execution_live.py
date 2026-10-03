@@ -336,6 +336,46 @@ async def test_an_order_that_vanishes_at_the_venue_is_asked_about_not_assumed() 
     await h.execution.close()
 
 
+async def test_an_order_we_closed_that_the_venue_still_holds_open_is_reopened_cancelled_again_and_critical() -> None:
+    """The realistic zombie: a submission times out after the venue accepted it, the venue
+    denies knowing the id when asked (a transient -2013), the adapter closes the order as
+    never arrived — and the next open-orders sync lists it. Closed here without the venue's
+    word, open there: asked by id, the venue now has it, so the local picture follows (it
+    rests), it is cancelled again, and the fact is critical. A close the venue itself
+    confirmed (CANCELED, FILLED) that a stale snapshot still lists is only counted."""
+    from tia.domain.enums import OrderState
+
+    h = await _harness()
+    h.venue.next_submit = ["timeout_after_accept"]
+    [order] = h.execution.place(_quote(ask=None, t_ms=h.t), h.t)
+    h.venue.resolve_absent.add(order.order_id)  # the venue denies the id while the order is still propagating
+    await h.settle()
+    await h.settle()
+    assert order.state == "refused" and order.closed and "never reached" in order.reject_reason
+    assert h.venue.orders[order.order_id].state is OrderState.ACKNOWLEDGED  # and yet it rests there
+    h.venue.resolve_absent.clear()
+    c = h.execution.counters
+    # The periodic open-orders sync lists it: closed here without the venue's word, open there.
+    h.execution.absorb_open_orders(await h.venue.get_orders(open_only=True))
+    await h.settle()
+    await h.settle()
+    assert c["closed_open_at_venue"] >= 1 and c["reopened_from_venue"] == 1
+    assert any(k == "closed_order_open_at_venue" for k, _ in h.criticals)
+    assert h.venue.cancels.count(order.order_id) == 1 and order.state == "cancelled" and order.closed
+    assert h.venue.orders[order.order_id].state is OrderState.CANCELLED and h.execution.open_orders() == []
+    # A close the venue confirmed, listed by a stale snapshot: counted, nothing asked, nothing reopened.
+    [second] = h.execution.place(_quote(ask=None, t_ms=h.t), h.t)
+    await h.settle()
+    h.execution.cancel(second.order_id, h.t, reason="requote")
+    await h.settle()
+    assert second.state == "cancelled" and second.venue_state == "cancelled"
+    resolves_before = h.venue.calls.count("resolve")
+    h.execution.absorb_open_orders([h.venue.orders[second.order_id].model_copy(update={"state": OrderState.ACKNOWLEDGED})])
+    await h.settle()
+    assert c["closed_open_at_venue"] >= 2 and c["reopened_from_venue"] == 1 and h.venue.calls.count("resolve") == resolves_before
+    await h.execution.close()
+
+
 async def test_a_quote_past_its_ttl_is_cancelled_through_the_venue() -> None:
     h = await _harness()
     [order] = h.execution.place(_quote(ask=None, t_ms=h.t, ttl_ms=1_000), h.t)

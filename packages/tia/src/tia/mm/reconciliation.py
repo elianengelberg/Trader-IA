@@ -27,6 +27,12 @@ class MMDiscrepancy(StrEnum):
     #: We believe an order rests; the venue does not list it. Resolved by asking; a
     #: warning until the answer arrives.
     LOCAL_ORDER_MISSING_AT_VENUE = "local_order_missing_at_venue"
+    #: We hold an order closed (its cancel was confirmed, or it filled); the venue's
+    #: snapshot still lists it open. Once, it is the snapshot being older than the cancel
+    #: that landed while balances and trades were being read — a warning, and the adapter
+    #: asks the venue about that order by its id. Twice in a row it is a zombie order the
+    #: venue holds and nobody manages: critical.
+    LOCAL_CLOSED_VENUE_OPEN = "local_closed_venue_open"
     #: The venue reports more executed quantity than we have booked from trades.
     EXECUTED_QUANTITY_AHEAD = "executed_quantity_ahead"
     #: An order whose submission or cancel ended in a timeout and is not resolved yet.
@@ -88,14 +94,25 @@ def compare_orders(
     local_open: list[Any],
     local_unknown: list[Any],
     venue_open: list[Any],
+    local_closed: list[Any] = (),  # type: ignore[assignment]
+    snapshot_t_ms: int | None = None,
     own_prefix: str = OWN_PREFIX,
     foreign_is_critical: bool = True,
 ) -> list[dict[str, Any]]:
     """Local orders carry ``order_id`` (the client id), ``state``, ``filled`` and
     ``venue_executed_qty``; venue orders carry ``client_order_id``, ``order_id`` and
-    ``filled_quantity`` (the domain ``Order``)."""
+    ``filled_quantity`` (the domain ``Order``).
+
+    ``venue_open`` is a snapshot taken at ``snapshot_t_ms``; the local lists are read later,
+    and the maker keeps quoting in between. Two consequences are not discrepancies: an order
+    the snapshot lists open that the run has since closed (``local_closed``) is the snapshot
+    being older than the cancel, and an order acknowledged after the snapshot cannot be
+    expected in it. Both are told apart from the real findings — an open order this run
+    never knew, a foreign order, an order resting here and absent there.
+    """
     issues: list[dict[str, Any]] = []
     local_by_id = {o.order_id: o for o in local_open}
+    closed_by_id = {o.order_id: o for o in local_closed}
     venue_ids: set[str] = set()
     for venue in venue_open:
         cid = str(getattr(venue, "client_order_id", "") or "")
@@ -106,13 +123,21 @@ def compare_orders(
             if executed > float(getattr(local, "filled", 0.0)) + 1e-12:
                 issues.append({"kind": MMDiscrepancy.EXECUTED_QUANTITY_AHEAD.value, "severity": "warning", "order_id": cid, "venue_executed": executed, "booked": float(getattr(local, "filled", 0.0)), "detail": "the venue reports executed quantity the trade history has not delivered yet"})
             continue
+        closed = closed_by_id.get(cid)
+        if closed is not None:
+            issues.append({"kind": MMDiscrepancy.LOCAL_CLOSED_VENUE_OPEN.value, "severity": "warning", "order_id": cid, "venue_order_id": str(getattr(venue, "order_id", "")), "local_state": str(getattr(closed, "state", "")), "detail": "closed here, listed open in the venue's snapshot: the snapshot predates the close, or the venue still holds it — asked by id; critical if it persists"})
+            continue
         if cid.startswith(own_prefix):
             issues.append({"kind": MMDiscrepancy.VENUE_ORDER_UNKNOWN_LOCALLY.value, "severity": "critical", "order_id": cid, "venue_order_id": str(getattr(venue, "order_id", "")), "detail": "an open market-maker order this run does not manage"})
         else:
             issues.append({"kind": MMDiscrepancy.FOREIGN_OPEN_ORDER.value, "severity": "critical" if foreign_is_critical else "warning", "order_id": cid, "venue_order_id": str(getattr(venue, "order_id", "")), "detail": "an open order on the account not placed by this market maker"})
     for local in local_open:
-        if getattr(local, "state", "") == "resting" and local.order_id not in venue_ids:
-            issues.append({"kind": MMDiscrepancy.LOCAL_ORDER_MISSING_AT_VENUE.value, "severity": "warning", "order_id": local.order_id, "detail": "resting here, absent from the venue's open orders: resolved by asking"})
+        if getattr(local, "state", "") != "resting" or local.order_id in venue_ids:
+            continue
+        acked = getattr(local, "t_ack_ms", None)
+        if snapshot_t_ms is not None and (acked is None or acked >= snapshot_t_ms):
+            continue  # acknowledged after the snapshot was taken: it could not be in it
+        issues.append({"kind": MMDiscrepancy.LOCAL_ORDER_MISSING_AT_VENUE.value, "severity": "warning", "order_id": local.order_id, "detail": "resting here, absent from the venue's open orders: resolved by asking"})
     for local in local_unknown:
         issues.append({"kind": MMDiscrepancy.UNKNOWN_ORDER_STATE.value, "severity": "critical", "order_id": local.order_id, "detail": str(getattr(local, "unknown_reason", "")) or "unknown"})
     return issues

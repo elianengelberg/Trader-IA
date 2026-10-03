@@ -342,6 +342,9 @@ class LiveOrder:
 # ---------------------------------------------------------------------------- live adapter
 
 
+#: Venue statuses that are the venue's own word that an order is over.
+_TERMINAL_VENUE_STATES = frozenset({OrderState.FILLED.value, OrderState.CANCELLED.value, OrderState.REJECTED.value, OrderState.EXPIRED.value})
+
 _VENUE_TO_LOCAL = {
     OrderState.ACKNOWLEDGED: "resting",
     OrderState.SUBMITTED: "resting",
@@ -465,7 +468,7 @@ class LiveMarketMakerExecution:
         self.submit_to_first_ack_ms = LatencyStats()
         self.report_to_local_ms = LatencyStats()
         self.fill_to_ledger_ms = LatencyStats()
-        self.counters: dict[str, int] = dict.fromkeys(("placed", "submitted", "acked", "rejected", "rejected_would_cross", "refused_validation", "refused_blocked", "deferred_cancel_pending", "cancel_requests", "cancelled", "cancelled_before_submit", "cancel_raced_fill", "expired", "unknown", "resolved_present", "resolved_absent", "resolved_absent_after_close", "cancel_rejected_after_close", "unresolved", "fills", "maker_fills", "taker_fills", "unknown_fills", "historical_trades", "api_errors", "activation_refusals", "venue_orders_unknown_locally", "foreign_open_orders", "missing_at_venue", "worker_errors", "reports", "duplicate_reports", "reports_before_start", "reports_before_rest_ack", "report_fills", "trade_poll_fills", "duplicate_trades", "unknown_reports", "unknown_attribution_fills", "stream_drops", "stream_resolved", "balance_updates"), 0)
+        self.counters: dict[str, int] = dict.fromkeys(("placed", "submitted", "acked", "rejected", "rejected_would_cross", "refused_validation", "refused_blocked", "deferred_cancel_pending", "cancel_requests", "cancelled", "cancelled_before_submit", "cancel_raced_fill", "expired", "unknown", "resolved_present", "resolved_absent", "resolved_absent_after_close", "cancel_rejected_after_close", "unresolved", "fills", "maker_fills", "taker_fills", "unknown_fills", "historical_trades", "api_errors", "activation_refusals", "venue_orders_unknown_locally", "foreign_open_orders", "missing_at_venue", "closed_open_at_venue", "reopened_from_venue", "worker_errors", "reports", "duplicate_reports", "reports_before_start", "reports_before_rest_ack", "report_fills", "trade_poll_fills", "duplicate_trades", "unknown_reports", "unknown_attribution_fills", "stream_drops", "stream_resolved", "balance_updates"), 0)
 
     # ------------------------------------------------------------------ identity
 
@@ -894,6 +897,22 @@ class LiveMarketMakerExecution:
             return
         self.counters["resolved_present"] += 1
         order.unknown_reason = ""
+        if order.closed and _VENUE_TO_LOCAL.get(venue.state) in OPEN_STATES:
+            # We hold it closed; the venue, asked by id, holds it open. A zombie: the local
+            # picture follows the venue (it rests), the order is cancelled, and the fact is
+            # critical — a person looks at how a confirmed close came to be undone.
+            self.counters["reopened_from_venue"] += 1
+            order.closed = False
+            order.state = "resting"
+            order.t_cancel_requested_ms = None
+            order.t_cancel_effective_ms = None
+            with contextlib.suppress(ValueError):
+                self.closed.remove(order)
+            self.orders[order.order_id] = order
+            self._adopt_venue_state(order, venue, t_ms, source="resolve")
+            self.cancel(order.order_id, t_ms, reason="closed here, open at the venue: cancelling")
+            self._critical("closed_order_open_at_venue", f"order {order.order_id} was closed here ({order.venue_state or 'cancelled'}) and the venue still holds it open (orderId {venue.order_id}); cancelled again")
+            return
         self._adopt_venue_state(order, venue, t_ms, source="resolve")
         self._unblock_if_clear()
 
@@ -1064,6 +1083,16 @@ class LiveMarketMakerExecution:
                 if local.is_open:
                     # Possibly acked at the venue before the submit response reached us.
                     self._adopt_venue_state(local, venue, t_ms, source="sync")
+                elif local.closed and local.state != "unknown":
+                    # Closed here, open in the venue's snapshot. When the venue itself closed it
+                    # (a CANCELED or FILLED report or response), the snapshot is simply older
+                    # than that word and nothing is asked. When the close was ours alone (a
+                    # submission resolved as never arrived, a cancel before the submit), the
+                    # venue is asked by the order's id, and if it really holds the order,
+                    # _apply_resolved reopens it, cancels it and raises the critical fact.
+                    self.counters["closed_open_at_venue"] += 1
+                    if local.venue_state not in _TERMINAL_VENUE_STATES:
+                        self._enqueue("resolve", local)
                 continue
             if cid.startswith(CLIENT_ID_PREFIX):
                 self.counters["venue_orders_unknown_locally"] += 1

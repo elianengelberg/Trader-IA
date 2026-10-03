@@ -49,6 +49,7 @@ from tia.mm.latency_model import LatencyProfile
 from tia.mm.live_ledger import LiveLedger
 from tia.mm.market_data import MarketDataService
 from tia.mm.reconciliation import (
+    MMDiscrepancy,
     MMReconciliationReport,
     build_report,
     compare_balances,
@@ -71,6 +72,9 @@ CRITICAL_RESPONSE: dict[str, tuple[KillSeverity, bool]] = {
     "unknown_execution_report": (KillSeverity.CANCEL_OPEN, True),
     "foreign_open_order": (KillSeverity.CANCEL_OPEN, True),
     "venue_order_unknown_locally": (KillSeverity.CANCEL_OPEN, True),
+    # An order this run closed that the venue, asked by its id, still holds open: a zombie
+    # the adapter reopens locally and cancels; a person looks at why it existed.
+    "closed_order_open_at_venue": (KillSeverity.CANCEL_OPEN, True),
     "outcome_apply_failed": (KillSeverity.CANCEL_OPEN, True),
     # The account stream dropped: no state is invented. What rests is cancelled, nothing
     # new is quoted, and the condition clears when the stream is back and a reconciliation
@@ -215,6 +219,9 @@ class LiveMarketMakerService(MarketMakerService):
         self._reconcile_task: asyncio.Task[Any] | None = None
         self._reconciling = False
         self._balance_mismatch_streak = 0
+        #: Orders closed here that the venue's snapshot listed open, by id, with how many
+        #: consecutive reconciliations saw them so: one is the snapshot's age, two is a fact.
+        self._closed_open_streak: dict[str, int] = {}
         self.last_report: MMReconciliationReport | None = None
         self.reconciliations = 0
         self.reconciliation_failures = 0
@@ -453,6 +460,8 @@ class LiveMarketMakerService(MarketMakerService):
         return cancelled
 
     def _on_execution_critical(self, kind: str, reason: str) -> None:
+        if kind == "user_stream_down" and self._stopping:
+            return  # the stop closes the stream itself; its own close is not a drop
         severity, sticky = CRITICAL_RESPONSE.get(kind, (KillSeverity.CANCEL_OPEN, True))
         self.kill.engage(kind, reason, severity=severity, sticky=sticky)
 
@@ -497,6 +506,7 @@ class LiveMarketMakerService(MarketMakerService):
         self._reconciling = True
         t = self._now_ms()
         try:
+            snapshot_t = self._now_ms()  # the venue's open orders are a picture taken now, read later
             venue_open = await self.execution.fetch_open_orders()
             quote_free, quote_locked, base_free, base_locked = await self._fetch_balances()
             quote = quote_free + quote_locked
@@ -552,8 +562,26 @@ class LiveMarketMakerService(MarketMakerService):
                 local_open=self.execution.open_orders(),
                 local_unknown=self.execution.unknown_orders(),
                 venue_open=venue_open,
+                local_closed=list(self.execution.closed),
+                snapshot_t_ms=snapshot_t,
                 foreign_is_critical=self.execution.foreign_orders_critical,
             )
+            # An order closed here and open in the snapshot: once is the snapshot's age (the
+            # adapter asks the venue by id on the next drain); seen in two consecutive
+            # reconciliations it is a zombie the venue holds, and that is critical.
+            seen_now: set[str] = set()
+            for issue in order_issues:
+                if issue["kind"] == MMDiscrepancy.LOCAL_CLOSED_VENUE_OPEN.value:
+                    cid = str(issue["order_id"])
+                    seen_now.add(cid)
+                    streak = self._closed_open_streak.get(cid, 0) + 1
+                    self._closed_open_streak[cid] = streak
+                    issue["consecutive"] = streak
+                    if streak >= 2:
+                        issue["severity"] = "critical"
+                        issue["detail"] = "closed here, still open at the venue in two consecutive reconciliations: an order nobody manages"
+            for cid in [c for c in self._closed_open_streak if c not in seen_now]:
+                self._closed_open_streak.pop(cid, None)
             self.execution.absorb_open_orders(venue_open)
             report = build_report(
                 t_ms=t, order_issues=order_issues, balance_issue=balance_issue,

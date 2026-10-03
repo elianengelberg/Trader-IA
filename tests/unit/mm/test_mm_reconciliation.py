@@ -109,8 +109,8 @@ def _venue(cid: str, *, order_id: str = "77", filled: float = 0.0) -> Order:
     return Order(order_id=order_id, client_order_id=cid, intent_id="", signal_id="", symbol="BTC-USD", side=Side.BUY, order_type=OrderType.LIMIT_MAKER, quantity=0.001, limit_price=99_000.0, state=OrderState.ACKNOWLEDGED, filled_quantity=filled, created_at=NOW, updated_at=NOW)
 
 
-def _local(cid: str, *, state: str = "resting", filled: float = 0.0, unknown_reason: str = "") -> SimpleNamespace:
-    return SimpleNamespace(order_id=cid, state=state, filled=filled, venue_executed_qty=0.0, unknown_reason=unknown_reason)
+def _local(cid: str, *, state: str = "resting", filled: float = 0.0, unknown_reason: str = "", t_ack_ms: int | None = T0 - 5_000) -> SimpleNamespace:
+    return SimpleNamespace(order_id=cid, state=state, filled=filled, venue_executed_qty=0.0, unknown_reason=unknown_reason, t_ack_ms=t_ack_ms)
 
 
 def test_orders_are_classified_by_who_placed_them_and_who_still_knows_them() -> None:
@@ -129,6 +129,31 @@ def test_orders_are_classified_by_who_placed_them_and_who_still_knows_them() -> 
     lenient = compare_orders(local_open=[], local_unknown=[], venue_open=[_venue("someone-else")], foreign_is_critical=False)
     assert lenient[0]["severity"] == "warning"
     assert compare_orders(local_open=[_local("tiamm-run-1-000001")], local_unknown=[], venue_open=[_venue("tiamm-run-1-000001")]) == []
+
+
+def test_the_snapshots_age_is_told_apart_from_a_real_discrepancy() -> None:
+    """The venue's open orders are a picture taken at one instant; the local lists are read
+    later, and the maker kept quoting in between. An order the picture lists open that the
+    run has since closed is the picture's age, not an order nobody manages; an order
+    acknowledged after the picture cannot be expected in it. Both were classified as
+    findings before, and the first one as critical — the false positive that engaged the
+    sticky kill switch on Testnet (2026-10-04)."""
+    closed_since = _local("tiamm-run-1-000007", state="cancelled")
+    issues = compare_orders(
+        local_open=[_local("tiamm-run-1-000008", state="resting", t_ack_ms=T0 + 10)],  # acked after the snapshot
+        local_unknown=[],
+        venue_open=[_venue("tiamm-run-1-000007")],  # open in the snapshot, closed here since
+        local_closed=[closed_since],
+        snapshot_t_ms=T0,
+    )
+    assert [(i["kind"], i["severity"]) for i in issues] == [(MMDiscrepancy.LOCAL_CLOSED_VENUE_OPEN.value, "warning")]
+    assert issues[0]["order_id"] == "tiamm-run-1-000007" and issues[0]["local_state"] == "cancelled"
+    # Without the closed list the same picture is an order this run does not know: critical.
+    strict = compare_orders(local_open=[], local_unknown=[], venue_open=[_venue("tiamm-run-1-000007")])
+    assert [(i["kind"], i["severity"]) for i in strict] == [(MMDiscrepancy.VENUE_ORDER_UNKNOWN_LOCALLY.value, "critical")]
+    # A resting order acknowledged before the snapshot and absent from it is still asked about.
+    older = compare_orders(local_open=[_local("tiamm-run-1-000008", t_ack_ms=T0 - 10)], local_unknown=[], venue_open=[], snapshot_t_ms=T0)
+    assert [i["kind"] for i in older] == [MMDiscrepancy.LOCAL_ORDER_MISSING_AT_VENUE.value]
 
 
 def test_balances_within_tolerance_are_clean_and_beyond_it_critical() -> None:

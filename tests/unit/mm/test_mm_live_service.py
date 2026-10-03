@@ -388,6 +388,103 @@ async def test_a_sticky_kill_of_the_maker_is_persisted_as_an_incident_and_an_ope
     await live.market.close()
 
 
+async def _delayed_snapshot(venue: FakeVenue, delay_s: float, *, replay: list | None = None):  # type: ignore[no-untyped-def, type-arg]
+    """The venue answers openOrders at once, then the balances and trades reads take time
+    (as they do on Testnet); the maker keeps quoting meanwhile. With ``replay`` the same
+    stale picture is served again on later calls."""
+    original = venue.get_orders
+
+    async def slow(**kw):  # type: ignore[no-untyped-def]
+        if replay is not None and replay:
+            snapshot = list(replay[0])
+        else:
+            snapshot = await original(**kw)
+            if replay is not None:
+                replay.append(snapshot)
+        await asyncio.sleep(delay_s)
+        return snapshot
+
+    venue.get_orders = slow  # type: ignore[method-assign]
+
+
+async def test_a_quote_cancelled_while_the_reconciliation_was_reading_the_venue_is_the_snapshots_age_not_a_zombie() -> None:
+    """The S10 FAIL of the Testnet service run (2026-10-04): between the venue's open-orders
+    snapshot and the comparison, the maker cancelled both quotes (TTL 1 s, requote 500 ms);
+    the comparison saw two orders the venue listed open that the local picture no longer
+    held open, called them orders this run does not manage — critical — and engaged the
+    sticky kill switch. Now the orders the run closed are known to the comparison: the
+    picture's age is a warning, the venue is asked by id, and quoting goes on."""
+    live = await _live()
+    service, venue = live.service, live.venue
+    await service.start_live()
+    await live.until_resting()
+    await _delayed_snapshot(venue, 0.15)
+    task = asyncio.create_task(service.reconcile())
+    await asyncio.sleep(0.02)  # the snapshot is taken; the maker requotes while balances are read
+    assert service.execution.cancel_all(live.clock.timestamp_ms(), reason="requote") == 2
+    for _ in range(8):
+        await asyncio.sleep(0.01)
+        service.engine.on_event("tick", None, live.clock.timestamp_ms())
+    assert service.execution.open_orders() == [] and len(service.execution.closed) == 2
+    report = await task
+    assert not report.critical and report.summary == "local_closed_venue_open x2"
+    assert all(i["severity"] == "warning" and i["consecutive"] == 1 for i in report.discrepancies)
+    assert not service.kill.engaged and service.state_label in ("quoting", "no_quote")
+    await live.feed(2)  # the venue confirmed both cancels itself: the stale picture is only counted
+    c = service.execution.counters
+    assert c["closed_open_at_venue"] == 2 and c["reopened_from_venue"] == 0
+    assert not service.kill.engaged
+    await _teardown(live)
+
+
+async def test_an_order_the_venue_keeps_listing_open_after_we_closed_it_is_critical_on_the_second_sighting() -> None:
+    """Once is the picture's age. Twice in a row is an order the venue holds and nobody
+    manages — the finding the critical classification was meant for."""
+    live = await _live()
+    service, venue = live.service, live.venue
+    await service.start_live()
+    await live.until_resting()
+    replay: list = []  # type: ignore[type-arg]
+    await _delayed_snapshot(venue, 0.05, replay=replay)
+    task = asyncio.create_task(service.reconcile())
+    await asyncio.sleep(0.01)
+    service.execution.cancel_all(live.clock.timestamp_ms(), reason="requote")
+    for _ in range(6):
+        await asyncio.sleep(0.01)
+        service.engine.on_event("tick", None, live.clock.timestamp_ms())
+    first = await task
+    assert not first.critical and all(i["consecutive"] == 1 for i in first.discrepancies)
+    second = await service.reconcile()  # the venue serves the same picture again: still open there
+    assert second.critical and all(i["kind"] == "local_closed_venue_open" and i["severity"] == "critical" and i["consecutive"] == 2 for i in second.discrepancies)
+    assert service.kill.engaged and service.kill.sticky and service.kill.trigger == "reconciliation"
+    assert "local_closed_venue_open" in service.kill.reason and service.state_label == "safe"
+    await _teardown(live)
+
+
+async def test_the_stops_own_close_of_the_account_stream_is_not_a_drop_and_leaves_no_transient_condition() -> None:
+    """Seen on Testnet: after stop() the status carried a transient ``user_stream_down``
+    ("account stream dropped: closed") — the stop closing the stream it owns, read as the
+    venue dropping it. The stop is the only cause left engaged, and nothing transient."""
+    from tests.unit.mm.fake_venue import FakeUserStream
+
+    live = await _live()
+    service, venue = live.service, live.venue
+    stream = FakeUserStream(venue, now_ms=live.clock.timestamp_ms, on_report=service.execution.absorb_execution_report, on_balances=service.execution.absorb_balances, on_status=service.execution.absorb_stream_status)
+    service.attach_user_stream(stream)
+    await service.start_live()
+    await live.until_resting()
+    status = await service.stop(reason="done", actor="test")
+    kill = status["kill_switch"]
+    assert kill["engaged"] and kill["sticky"] and kill["trigger"] == "stop" and kill["transient"] == {}
+    assert service.execution.stream_connected is False and service.execution.counters["stream_drops"] == 1  # counted, not escalated
+    assert status["open_orders"] == [] and not venue_has_open(venue)
+    await live.market.close()
+
+
+def venue_has_open(venue: FakeVenue) -> bool:
+    return any(not o.state.is_terminal for o in venue.orders.values())
+
+
 async def test_the_initial_reconciliation_notes_when_an_asset_cannot_fund_a_side() -> None:
     live = await _live(venue_kwargs={"quote_balance": 5_000.0, "base_balance": 0.0})
     report = await live.service.start_live()

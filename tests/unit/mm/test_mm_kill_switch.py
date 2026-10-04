@@ -99,3 +99,40 @@ def test_the_snapshot_is_complete_and_bounded() -> None:
     snap = switch.as_dict()
     assert len(switch.history) == 200 and len(snap["history"]) == 20 and snap["engagements"] == 300 and snap["engaged"] is False
     assert "never remove one" in snap["note"]
+
+
+def test_a_shutdown_is_its_own_state_not_a_safety_engagement() -> None:
+    """Seen on Testnet (S10b): a stale-data transient engaged in the last heartbeat before
+    stop() survived the stop as a ghost, and the stop itself was recorded as a sticky kill.
+    A deliberate stop closes quoting through the gate, cancels what rests, clears the
+    transient conditions (nothing will observe them again) and is reported as a shutdown;
+    ``engaged`` stays what the safety conditions make it. A sticky engagement that preceded
+    the stop is kept visible with its first cause, and a safety finding after the shutdown
+    is still recorded."""
+    clock = {"ms": T0}
+    switch, cancels, events = _switch(clock)
+    switch.engage("data", "market data not usable: venue data 1.1s old", severity=KillSeverity.CANCEL_OPEN, sticky=False)
+    assert switch.engaged and not switch.shut_down
+    clock["ms"] += 10
+    event = switch.shutdown("validation window elapsed", actor="validator")
+    assert event.action == "shutdown" and event.trigger == "stop" and event.cancelled == 2 and len(cancels) == 2  # the fake cancels 2 each time: once for the transient, once for the stop
+    assert cancels[-1][1] == "shutdown: validation window elapsed" and switch.cancelled_total == 4
+    assert switch.shut_down and not switch.engaged and not switch.sticky and switch.severity is None
+    assert switch.status().startswith("shutdown: validation window elapsed")  # the gate still says no
+    snap = switch.as_dict()
+    assert snap["engaged"] is False and snap["sticky"] is False and snap["transient"] == {} and snap["blocks_quoting"] is True
+    assert snap["shutdown"] == {"reason": "validation window elapsed", "actor": "validator", "at_ms": T0 + 10}
+    cleared = [e for e in switch.history if e.action == "clear" and e.trigger == "data"]
+    assert len(cleared) == 1 and "shut down" in cleared[0].reason
+    assert [e["action"] for e in events][-2:] == ["clear", "shutdown"]
+
+    # A sticky safety engagement before the stop stays visible after it, first cause kept.
+    switch2, _, _ = _switch({"ms": T0})
+    switch2.engage("reconciliation", "foreign_open_order x1", severity=KillSeverity.CANCEL_OPEN, sticky=True)
+    switch2.shutdown("operator stop", actor="elian")
+    assert switch2.engaged and switch2.sticky and switch2.trigger == "reconciliation" and switch2.shut_down
+    assert switch2.status() == "reconciliation: foreign_open_order x1"
+    # A safety finding during the final drain, after the shutdown, is recorded as what it is.
+    switch2.engage("unknown_fill", "venue trade 9 on an order this maker did not place", sticky=True)
+    assert switch2.sticky and switch2.trigger == "reconciliation" and len([e for e in switch2.history if e.trigger == "unknown_fill"]) == 1
+

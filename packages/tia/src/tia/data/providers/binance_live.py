@@ -389,11 +389,15 @@ class BinanceExecutionProvider(ExecutionProvider):
         order = self._parse_order(payload, existing=known)
         self._orders[order.client_order_id] = order
         self._by_venue_id[str(order.order_id)] = order.client_order_id
-        _log.warning(
-            "unknown_order_resolved_present",
+        # This resolution serves every "ask the venue about this order" — a submission whose
+        # answer timed out, an order the open-orders picture did not list, a cancel the venue
+        # rejected — so the line says what is known: the order exists there, with this state,
+        # and it is adopted into the local mirror; nothing is ever resent on the strength of it.
+        _log.info(
+            "order_resolved_present",
             client_order_id=client_order_id,
             state=order.state.value,
-            detail="the timed-out submission DID reach the venue; adopted, not retried",
+            detail="the venue holds this order; adopted into the local mirror, never resent",
         )
         return order
 

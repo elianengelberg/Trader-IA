@@ -13,6 +13,13 @@ service is stopped and started again, which is a person too). **Transient** ones
 condition and clear themselves when that condition clears — a stream that reconnects, data
 that is fresh again — while remaining in the history with their timestamps.
 
+A third state is not an engagement: **shutdown**. A deliberate stop closes quoting for good
+through the same gate (so the engine cancels and places nothing while the service drains),
+but it is not a safety finding and is never reported as one. It clears the transient
+conditions — a stopped service has no live readings, and a condition nobody can observe any
+more must not survive as a ghost — and leaves a sticky engagement, if one preceded it,
+visible with its first cause: that is the fact the operator still has to look at.
+
 It never touches the session's ``RiskEngine``, the global kill switch, or the gate.
 """
 
@@ -72,12 +79,20 @@ class MMKillSwitch:
         self._transient: dict[str, str] = {}
         self.engagements = 0
         self.cancelled_total = 0
+        self.shutdown_reason = ""
+        self.shutdown_actor = ""
+        self.shutdown_at_ms: int | None = None
 
     # ------------------------------------------------------------------ state
 
     @property
     def engaged(self) -> bool:
+        """A safety engagement holds: sticky or transient. A shutdown alone is not one."""
         return self.sticky or bool(self._transient)
+
+    @property
+    def shut_down(self) -> bool:
+        return bool(self.shutdown_reason)
 
     def status(self) -> str:
         """Empty when quoting may proceed; otherwise the reason, for the safety gate."""
@@ -86,6 +101,8 @@ class MMKillSwitch:
         if self._transient:
             trigger, reason = next(iter(self._transient.items()))
             return f"{trigger}: {reason}"
+        if self.shutdown_reason:
+            return f"shutdown: {self.shutdown_reason}"
         return ""
 
     # ------------------------------------------------------------------ actions
@@ -133,6 +150,25 @@ class MMKillSwitch:
         self._record(KillEvent(self._now_ms(), "clear", trigger, reason, "", False, "system"))
         return True
 
+    def shutdown(self, reason: str, *, actor: str) -> KillEvent:
+        """A deliberate stop. Cancels what rests, closes quoting for good, clears the
+        transient conditions (recorded as cleared by the shutdown), and leaves a sticky
+        engagement untouched and visible. Not a safety engagement: ``engaged`` stays what
+        the safety conditions make it."""
+        t = self._now_ms()
+        cancelled = 0
+        if self._cancel_open is not None:
+            cancelled = int(self._cancel_open(t, f"shutdown: {reason}"))
+            self.cancelled_total += cancelled
+        for trigger, why in list(self._transient.items()):
+            self._record(KillEvent(t, "clear", trigger, f"{why} — service shut down; the condition can no longer be observed", "", False, actor))
+        self._transient.clear()
+        if not self.sticky:
+            self.severity = None
+            self.engaged_at_ms = None
+        self.shutdown_reason, self.shutdown_actor, self.shutdown_at_ms = reason, actor, t
+        return self._record(KillEvent(t, "shutdown", "stop", reason, KillSeverity.CANCEL_OPEN.value, False, actor, cancelled))
+
     def release(self, *, approved_by: str) -> KillEvent:
         """Releases the sticky engagement only, and only for a named person."""
         if not approved_by.strip():
@@ -163,6 +199,8 @@ class MMKillSwitch:
             "actor": self.actor,
             "engaged_at_ms": self.engaged_at_ms,
             "transient": dict(self._transient),
+            "shutdown": {"reason": self.shutdown_reason, "actor": self.shutdown_actor, "at_ms": self.shutdown_at_ms} if self.shutdown_reason else None,
+            "blocks_quoting": bool(self.status()),
             "engagements": self.engagements,
             "cancelled_total": self.cancelled_total,
             "history": [e.as_dict() for e in list(self.history)[-20:]],

@@ -57,8 +57,8 @@ async def test_a_sticky_kill_from_a_critical_finding_survives_to_stop_with_its_f
     assert service.execution.counters["placed"] == placed_before
     status = await service.stop(reason="operator", actor="test")
     kill = status["kill_switch"]
-    assert kill["trigger"] == "reconciliation" and kill["sticky"]  # the first cause is kept; the stop is in the history
-    assert any(h["trigger"] == "stop" for h in kill["history"])
+    assert kill["trigger"] == "reconciliation" and kill["sticky"] and kill["engaged"]  # the safety finding stays visible, first cause kept
+    assert kill["shutdown"]["reason"] == "operator (by test)" and any(h["action"] == "shutdown" for h in kill["history"])
     assert status["open_orders"] == [] and not any(not o.state.is_terminal for o in venue.orders.values())
     await live.market.close()
 
@@ -98,3 +98,55 @@ async def test_a_fill_the_venue_reports_reconciles_clean_and_the_ledger_agrees_w
     assert abs(report.balances["expected_quote_usd"] - report.balances["venue_quote_usd"]) <= 0.5
     assert not service.kill.engaged
     await _teardown(live)
+
+
+async def test_the_whole_life_of_a_submission_whose_answer_timed_out_after_the_venue_accepted_it() -> None:
+    """SUBMIT UNKNOWN → RESOLVE → FOUND → ADOPT, and never SUBMIT UNKNOWN → RETRY. The venue
+    accepted the order and the answer never came back: the order is UNKNOWN, quoting is
+    blocked, the venue is asked by our client id, the order is found resting, adopted with
+    the venue's orderId, acknowledged once, and later cancelled through the venue like any
+    other. One submission at the venue, one order, no duplicate."""
+    live = await _live()
+    service, venue = live.service, live.venue
+    await service.start_live()
+    venue.next_submit = ["timeout_after_accept"]
+    await live.feed(2)
+    await asyncio.sleep(0.05)
+    service.engine.on_event("tick", None, live.clock.timestamp_ms())
+    c = service.execution.counters
+    assert c["unknown"] >= 1 and c["resolved_present"] >= 1
+    assert venue.calls.count("submit") == c["submitted"] and len(venue.submits) == c["submitted"]
+    adopted = list(service.execution.closed) + list(service.execution.orders.values())
+    first = min(adopted, key=lambda o: o.t_enqueued_ms or 0)
+    assert first.venue_order_id and first.ack_source in ("resolve", "stream", "rest", "sync")
+    await live.feed(8)  # TTL and requotes: the adopted order is cancelled through the venue
+    assert first.state in ("cancelled", "filled") and first.closed
+    assert venue.cancels.count(first.order_id) <= 1
+    assert not service.kill.engaged and service.execution.blocked_reason == "" and service.execution.unknown_orders() == []
+    assert len({o.client_order_id for o in venue.orders.values()}) == len(venue.orders)  # one venue order per client id
+    await _teardown(live)
+
+
+async def test_a_just_acknowledged_order_absent_from_an_older_open_orders_picture_is_not_asked_about() -> None:
+    """The open-orders sync is a picture with an instant. An order acknowledged after that
+    instant cannot be in it and is not 'missing'; one acknowledged before it and absent is
+    asked about once, found resting, and nothing changes."""
+    from tests.unit.mm.test_mm_execution_live import _harness, _quote
+
+    h = await _harness()
+    [older] = h.execution.place(_quote(ask=None, t_ms=h.t), h.t)
+    await h.settle()
+    snapshot_t = h.tick(50)
+    [newer] = h.execution.place(_quote(bid=99_990.0, ask=None, t_ms=h.t), h.t)
+    await h.settle()
+    assert older.state == "resting" and newer.state == "resting" and newer.t_ack_ms >= snapshot_t
+    c = h.execution.counters
+    resolves_before = h.venue.calls.count("resolve")
+    h.execution.absorb_open_orders([], snapshot_t_ms=snapshot_t)  # a picture from before both were... only the older one should have been in it
+    await h.settle()
+    assert c["missing_at_venue"] == 1  # the older one is asked about; the newer one is not
+    assert h.venue.calls.count("resolve") == resolves_before + 1
+    assert older.state == "resting" and newer.state == "resting" and c["resolved_present"] == 1
+    assert h.execution.open_orders() and h.execution.blocked_reason == ""
+    await h.execution.close()
+

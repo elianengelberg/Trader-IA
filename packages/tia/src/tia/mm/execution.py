@@ -467,6 +467,7 @@ class LiveMarketMakerExecution:
         self.rest_submit_rtt_ms = LatencyStats()
         self.submit_to_first_ack_ms = LatencyStats()
         self.report_to_local_ms = LatencyStats()
+        self.report_received_to_applied_ms = LatencyStats()
         self.fill_to_ledger_ms = LatencyStats()
         self.counters: dict[str, int] = dict.fromkeys(("placed", "submitted", "acked", "rejected", "rejected_would_cross", "refused_validation", "refused_blocked", "deferred_cancel_pending", "cancel_requests", "cancelled", "cancelled_before_submit", "cancel_raced_fill", "expired", "unknown", "resolved_present", "resolved_absent", "resolved_absent_after_close", "cancel_rejected_after_close", "unresolved", "fills", "maker_fills", "taker_fills", "unknown_fills", "historical_trades", "api_errors", "activation_refusals", "venue_orders_unknown_locally", "foreign_open_orders", "missing_at_venue", "closed_open_at_venue", "reopened_from_venue", "worker_errors", "reports", "duplicate_reports", "reports_before_start", "reports_before_rest_ack", "report_fills", "trade_poll_fills", "duplicate_trades", "unknown_reports", "unknown_attribution_fills", "stream_drops", "stream_resolved", "balance_updates"), 0)
 
@@ -635,9 +636,10 @@ class LiveMarketMakerExecution:
 
     # ------------------------------------------------------------------ absorbing venue facts
 
-    def absorb_open_orders(self, venue_open: list[Order]) -> None:
-        """Hand the venue's open orders (read elsewhere) to the next drain."""
-        self._outcomes.append(("open_orders", venue_open))
+    def absorb_open_orders(self, venue_open: list[Order], snapshot_t_ms: int | None = None) -> None:
+        """Hand the venue's open orders (read elsewhere) to the next drain, with the instant
+        the picture was taken: an order acknowledged after it cannot be expected in it."""
+        self._outcomes.append(("open_orders", (venue_open, snapshot_t_ms)))
 
     def absorb_trades(self, trades: list[Fill]) -> None:
         self._outcomes.append(("trades", trades))
@@ -687,6 +689,7 @@ class LiveMarketMakerExecution:
                 self._remember_trade(trade_id)
                 self._book_fill(order, self._fill_from_report(order, report, t), t, source="report")
         self._adopt(order, venue_order_id=report.venue_order_id, state=report.status, executed_qty=report.cumulative_quantity, t_ms=t, reject_reason=report.reject_reason, source="stream")
+        self.report_received_to_applied_ms.add(self._now_ms() - t)
 
     def absorb_balances(self, balances: list[AccountBalance], received_at_ms: int | None = None) -> None:
         """Balances as the venue reports them (the account stream or a reconciliation)."""
@@ -769,7 +772,7 @@ class LiveMarketMakerExecution:
                 elif kind == "trades":
                     self._apply_trades(payload, t_ms)
                 elif kind == "open_orders":
-                    self._apply_open_orders(payload, t_ms)
+                    self._apply_open_orders(payload[0], t_ms, snapshot_t_ms=payload[1])
                 elif kind == "api_error":
                     self._note_api_error(payload[0], payload[1], t_ms)
             except Exception as exc:  # an outcome that cannot be applied is a critical fact, not a crash
@@ -1073,7 +1076,7 @@ class LiveMarketMakerExecution:
             received_at_ms=t_ms,
         )
 
-    def _apply_open_orders(self, venue_open: list[Order], t_ms: int) -> None:
+    def _apply_open_orders(self, venue_open: list[Order], t_ms: int, *, snapshot_t_ms: int | None = None) -> None:
         venue_ids: set[str] = set()
         for venue in venue_open:
             cid = venue.client_order_id or ""
@@ -1102,10 +1105,13 @@ class LiveMarketMakerExecution:
                 if self.foreign_orders_critical:
                     self._critical("foreign_open_order", f"an open order not placed by this market maker is on the account: {cid or venue.order_id}")
         for order in list(self.orders.values()):
-            if order.state == "resting" and order.order_id not in venue_ids:
-                # Resting here, absent there: filled, cancelled or expired meanwhile. Ask.
-                self.counters["missing_at_venue"] += 1
-                self._enqueue("resolve", order)
+            if order.state != "resting" or order.order_id in venue_ids:
+                continue
+            if snapshot_t_ms is not None and (order.t_ack_ms is None or order.t_ack_ms >= snapshot_t_ms):
+                continue  # acknowledged after the picture was taken: it could not be in it
+            # Resting here, absent there: filled, cancelled or expired meanwhile. Ask.
+            self.counters["missing_at_venue"] += 1
+            self._enqueue("resolve", order)
 
     def _note_api_error(self, what: str, message: str, t_ms: int) -> None:
         self.counters["api_errors"] += 1
@@ -1143,7 +1149,8 @@ class LiveMarketMakerExecution:
                 elif kind == "poll_trades":
                     self._outcomes.append(("trades", await self.fetch_trades()))
                 elif kind == "sync_open":
-                    self._outcomes.append(("open_orders", await self.fetch_open_orders()))
+                    snapshot_t = self._now_ms()
+                    self._outcomes.append(("open_orders", (await self.fetch_open_orders(), snapshot_t)))
             except asyncio.CancelledError:
                 raise
             except Exception as exc:
@@ -1296,6 +1303,7 @@ class LiveMarketMakerExecution:
                 "submit_to_ack_ms": self.submit_to_ack_ms.as_dict(),
                 "submit_to_first_ack_ms": self.submit_to_first_ack_ms.as_dict(),
                 "report_to_local_ms": self.report_to_local_ms.as_dict(),
+                "report_received_to_applied_ms": self.report_received_to_applied_ms.as_dict(),
                 "fill_to_ledger_ms": self.fill_to_ledger_ms.as_dict(),
                 "cancel_to_ack_ms": self.cancel_to_ack_ms.as_dict(),
                 "note": (

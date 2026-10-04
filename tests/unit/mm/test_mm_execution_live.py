@@ -574,6 +574,7 @@ async def test_a_new_report_acknowledges_the_order_before_the_rest_response_and_
     assert order.state == "resting" and order.ack_source == "stream" and order.venue_order_id == "4242"  # immediately, no settle
     c = h.execution.counters
     assert c["acked"] == 1 and c["reports_before_rest_ack"] == 1 and c["reports"] == 1
+    assert h.execution.stats()["latency"]["report_received_to_applied_ms"]["count"] == 1  # received -> applied, measured per report
     await asyncio.sleep(0.25)
     await h.settle()
     assert order.state == "resting" and order.rest_acked and c["acked"] == 1  # the REST answer confirmed, it did not count again

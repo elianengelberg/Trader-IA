@@ -158,7 +158,8 @@ async def test_the_service_reconciles_first_quotes_post_only_books_venue_fills_a
     stopped = await service.stop(reason="done", actor="elian")
     assert stopped["state"] == "stopped" and stopped["running"] is False and "done (by elian)" in stopped["stop_reason"]
     assert all(o.state.is_terminal for o in venue.orders.values()), "every order was cancelled or filled at the venue"
-    assert service.execution.open_orders() == [] and stopped["kill_switch"]["trigger"] == "stop"
+    assert service.execution.open_orders() == [] and stopped["kill_switch"]["shutdown"]["reason"] == "done (by elian)"
+    assert stopped["kill_switch"]["engaged"] is False and stopped["kill_switch"]["blocks_quoting"] is True
     assert stopped["operator_events"][-1]["action"] == "stop"
     await live.market.close()
 
@@ -475,7 +476,7 @@ async def test_the_stops_own_close_of_the_account_stream_is_not_a_drop_and_leave
     await live.until_resting()
     status = await service.stop(reason="done", actor="test")
     kill = status["kill_switch"]
-    assert kill["engaged"] and kill["sticky"] and kill["trigger"] == "stop" and kill["transient"] == {}
+    assert kill["shutdown"]["actor"] == "test" and not kill["engaged"] and not kill["sticky"] and kill["transient"] == {}
     assert service.execution.stream_connected is False and service.execution.counters["stream_drops"] == 1  # counted, not escalated
     assert status["open_orders"] == [] and not venue_has_open(venue)
     await live.market.close()
@@ -483,6 +484,66 @@ async def test_the_stops_own_close_of_the_account_stream_is_not_a_drop_and_leave
 
 def venue_has_open(venue: FakeVenue) -> bool:
     return any(not o.state.is_terminal for o in venue.orders.values())
+
+
+async def test_a_stale_data_condition_engaged_just_before_stop_does_not_survive_the_shutdown() -> None:
+    """The Testnet S10b FAIL of 2026-10-04: market data went stale in the last heartbeat
+    before stop(); _watch — the only thing that clears the transient — never ran again,
+    and the final status carried a ghost ``data`` condition next to a stop recorded as a
+    sticky kill. The shutdown now clears what nothing can observe any more and is reported
+    as a shutdown, with no safety engagement left."""
+    live = await _live()
+    service = live.service
+    await service.start_live()
+    await live.until_resting()
+    live.clock.advance_by(timedelta(seconds=5))  # the feed goes silent
+    await asyncio.sleep(0.15)  # the heartbeat sees it: transient data kill, quotes cancelled
+    assert service.kill.engaged and "data" in service.kill.as_dict()["transient"]
+    status = await service.stop(reason="validation window elapsed", actor="validator")
+    kill = status["kill_switch"]
+    assert kill["shutdown"]["reason"].startswith("validation window elapsed") and kill["transient"] == {}
+    assert kill["engaged"] is False and kill["sticky"] is False and kill["blocks_quoting"] is True
+    assert status["state"] == "stopped" and status["open_orders"] == []
+    assert any(e.action == "clear" and e.trigger == "data" and "shut down" in e.reason for e in service.kill.history)
+    await live.market.close()
+
+
+async def test_repeated_stale_and_recovery_cycles_leave_no_residue_and_quoting_resumes_each_time() -> None:
+    live = await _live()
+    service = live.service
+    await service.start_live()
+    await live.until_resting()
+    for cycle in range(3):
+        live.clock.advance_by(timedelta(seconds=5))
+        await asyncio.sleep(0.15)
+        assert service.kill.engaged and not service.kill.sticky and "data" in service.kill.as_dict()["transient"], cycle
+        assert all(o.state.is_terminal for o in live.venue.orders.values()), "stale data: what rested was cancelled"
+        placed_before = service.execution.counters["placed"]
+        await asyncio.sleep(0.1)
+        assert service.execution.counters["placed"] == placed_before, "nothing is placed on stale data"
+        await live.feed(3, step_ms=100)  # fresh data
+        assert not service.kill.engaged and service.kill.as_dict()["transient"] == {} and service.kill.severity is None
+        await live.until_resting()  # quoting resumed through the real path
+    history = service.kill.history
+    assert sum(1 for e in history if e.action == "engage" and e.trigger == "data") == 3
+    assert sum(1 for e in history if e.action == "clear" and e.trigger == "data") == 3
+    assert service.kill.engagements == 3 and not service.kill.sticky and not service.kill.shut_down
+    await _teardown(live)
+
+
+async def test_a_stop_with_nothing_open_is_a_clean_shutdown_too() -> None:
+    """An account that cannot fund either side: the authorizer removes both, nothing is ever
+    placed, and the stop has nothing to cancel. Still a shutdown, still clean."""
+    live = await _live(venue_kwargs={"quote_balance": 0.0, "base_balance": 0.0})
+    service = live.service
+    await service.start_live()
+    await live.feed(6)
+    assert service.execution.counters["placed"] == 0 and service.execution.open_orders() == []
+    status = await service.stop(reason="nothing to do", actor="test")
+    kill = status["kill_switch"]
+    assert kill["shutdown"] and not kill["engaged"] and kill["transient"] == {} and status["open_orders"] == []
+    assert service.last_report is not None and service.last_report.ok and status["state"] == "stopped"
+    await live.market.close()
 
 
 async def test_the_initial_reconciliation_notes_when_an_asset_cannot_fund_a_side() -> None:

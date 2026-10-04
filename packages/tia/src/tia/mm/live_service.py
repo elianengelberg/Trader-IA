@@ -247,6 +247,8 @@ class LiveMarketMakerService(MarketMakerService):
             return "stopped" if self.stopped_at_ms is not None else "created"
         if self.kill.engaged:
             return "safe"
+        if self.kill.shut_down:
+            return "stopping"
         if self.engine.last_block_reason:
             return "no_quote"
         return "quoting"
@@ -362,7 +364,11 @@ class LiveMarketMakerService(MarketMakerService):
         if self._unsubscribe is not None:
             self._unsubscribe()
             self._unsubscribe = None
-        self.kill.engage("stop", self.stop_reason, severity=KillSeverity.CANCEL_OPEN, sticky=True, actor=actor)
+        # A deliberate stop, not a safety finding: quoting closes through the same gate (the
+        # engine cancels and places nothing while the service drains), the transient
+        # conditions are cleared because nothing will observe them again, and a sticky
+        # engagement that preceded the stop stays visible with its first cause.
+        self.kill.shutdown(self.stop_reason, actor=actor)
         left_open = await self._drain_until_quiet()
         with contextlib.suppress(Exception):
             await self.reconcile(final=True)
@@ -470,8 +476,9 @@ class LiveMarketMakerService(MarketMakerService):
             self.engine._write(row)
         # A sticky engagement of the maker's kill switch is an incident like the session's
         # own: persisted in the incidents table and pushed to the alert webhook, so an
-        # operator away from the dashboard hears about it. An operator stop is not one.
-        if row.get("kind") == "kill_switch" and row.get("action") == "engage" and row.get("sticky") and row.get("trigger") != "stop":
+        # operator away from the dashboard hears about it. A deliberate stop is recorded as a
+        # ``shutdown`` action, never as an engagement, so it does not reach this branch.
+        if row.get("kind") == "kill_switch" and row.get("action") == "engage" and row.get("sticky"):
             with contextlib.suppress(Exception):
                 self._incident(f"mm_{row.get('trigger', 'kill_switch')}", reason=str(row.get("reason", ""))[:500], actor=str(row.get("actor", "system")), detail={"severity": row.get("severity"), "cancelled": row.get("cancelled", 0), "venue": self.venue_label, "is_live": self.is_live})
 
@@ -582,7 +589,7 @@ class LiveMarketMakerService(MarketMakerService):
                         issue["detail"] = "closed here, still open at the venue in two consecutive reconciliations: an order nobody manages"
             for cid in [c for c in self._closed_open_streak if c not in seen_now]:
                 self._closed_open_streak.pop(cid, None)
-            self.execution.absorb_open_orders(venue_open)
+            self.execution.absorb_open_orders(venue_open, snapshot_t_ms=snapshot_t)
             report = build_report(
                 t_ms=t, order_issues=order_issues, balance_issue=balance_issue,
                 venue_open=len(venue_open), local_open=len(self.execution.open_orders()),

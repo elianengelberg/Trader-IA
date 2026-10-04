@@ -243,3 +243,11 @@ sweeps the previous run's orders by id before placing anything, journals and rai
 the venue's refusal still ends in a sticky kill. The block validator's fill probe rests both sides
 at the best and re-pegs, maker-only; the service validator gained a recovery drill. Both Testnet
 runs are still pending: nothing after `8608db6` has run on Testnet. Phase 4 §10.8 to §10.11.
+
+Addendum 2026-10-04 16:27Z, full runbook on `f85b3ef` (Phase 4 §10.12): latency profile measured
+against Testnet; service run 180 s with 183 orders, 0 unknown, 12 clean reconciliations; S10b PASS
+with the shutdown state; recovery drill R1 FAIL caused by the drill counting an order with a cancel
+in flight as left behind (harness defect, fixed next; R2/R4/R7 had nothing to sweep and are now
+NOT TESTED in that case); the first real Testnet fill through the block harness: maker, booked once,
+reconciled with zero delta, unwound flat. S8 at the service level and the orphan sweep against the
+venue remain NOT TESTED. Nothing here is a claim about production readiness or profitability.

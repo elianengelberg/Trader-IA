@@ -21,7 +21,7 @@ from tests.unit.mm.test_replay import Scripted
 from tests.unit.mm.test_service import PROFILE, _config, _depth, _trade
 from tia.core.clock import SimulatedClock
 from tia.core.errors import LiveActivationError
-from tia.domain.enums import OrderType
+from tia.domain.enums import OrderType, Side
 from tia.mm.authorization import EconomicsConfig
 from tia.mm.engine import MarketMakerConfig
 from tia.mm.execution import SymbolFilters
@@ -83,7 +83,7 @@ class Live:
             await asyncio.sleep(0.01)
 
 
-async def _live(*, venue: FakeVenue | None = None, venue_kwargs: dict | None = None, config: MarketMakerConfig | None = None, activation=None, **kw) -> Live:  # type: ignore[no-untyped-def, type-arg]
+async def _live(*, venue: FakeVenue | None = None, venue_kwargs: dict | None = None, config: MarketMakerConfig | None = None, activation=None, run_id: str = "mm-live-test", **kw) -> Live:  # type: ignore[no-untyped-def, type-arg]
     clock = SimulatedClock(START)
     market, scripted = await _market(clock)
     venue = venue or FakeVenue(clock, **(venue_kwargs or {"quote_balance": 5_000.0, "base_balance": 0.05}))
@@ -103,7 +103,7 @@ async def _live(*, venue: FakeVenue | None = None, venue_kwargs: dict | None = N
     }
     settings.update(kw)
     service = LiveMarketMakerService(
-        market=market, config=config or _config(), profile=PROFILE, scenario="optimistic", run_id="mm-live-test",
+        market=market, config=config or _config(), profile=PROFILE, scenario="optimistic", run_id=run_id,
         risk_state=lambda: state, provider=venue, clock=clock, filters=FILTERS, activation=activation,
         persist=persist, broadcast=lambda _e: None, now_ms=clock.timestamp_ms, state_push_interval_ms=500, ledger_save_interval_ms=1_000,
         **settings,
@@ -554,4 +554,62 @@ async def test_the_initial_reconciliation_notes_when_an_asset_cannot_fund_a_side
     await live.feed(6)
     quotes = [r for r in live.service.engine.journal if r.get("kind") == "decision" and r.get("decision") == "quote"]
     assert quotes and all(r["ask"] is None for r in quotes), "with no base asset the risk authorizer removes the ask"
+    await _teardown(live)
+
+
+# ------------------------------------------------------------------ orders a previous run left open
+
+
+async def test_orders_of_a_previous_run_found_open_at_start_are_cancelled_before_quoting_and_reported() -> None:
+    """A run that died with orders resting: the next run finds them at the venue under its own
+    prefix, cancels each by id before placing anything, records the sweep in the journal and
+    as an incident, and quotes. Nothing is adopted, nothing is resent."""
+    from tia.mm.execution import CLIENT_ID_PREFIX
+
+    live = await _live()
+    service, venue = live.service, live.venue
+    old = [venue.add_orphan_open_order(f"{CLIENT_ID_PREFIX}oldrun00-1790000000000-00000{i}", side=side) for i, side in ((1, Side.BUY), (2, Side.SELL))]
+    old_ids = [o.client_order_id for o in old]
+    report = await service.start_live()
+    assert not report.critical and not service.kill.engaged, report.as_dict()
+    sweep = service.orphan_sweep
+    assert sweep is not None and sweep["found"] == old_ids and [c["order_id"] for c in sweep["cancelled"]] == old_ids and sweep["failed"] == []
+    assert all(venue.orders[cid].state.is_terminal for cid in old_ids) and all(venue.cancels.count(cid) == 1 for cid in old_ids)
+    assert service.status()["orphan_sweep"]["found"] == old_ids
+    assert any(r.get("kind") == "orphan_sweep" and r.get("found") == old_ids for r in service.engine.journal)
+    await live.until_resting()  # quoting proceeds through the real path
+    incidents = [p for k, p in live.persisted if k == "incident"]  # type: ignore[attr-defined]  # the writer runs once the service is started
+    assert len(incidents) == 1 and incidents[0]["kind"] == "mm_orphans_swept" and incidents[0]["detail"]["cancelled"] == old_ids
+    assert all(i.client_order_id.startswith(f"{CLIENT_ID_PREFIX}{service.execution.run_tag[:8]}") for i in venue.submits)  # only this run submits
+    assert service.execution.counters["venue_orders_unknown_locally"] == 0
+    await _teardown(live)
+
+
+async def test_an_orphan_the_venue_will_not_cancel_is_left_to_the_initial_reconciliation_which_is_critical() -> None:
+    from tia.mm.execution import CLIENT_ID_PREFIX
+
+    live = await _live()
+    service, venue = live.service, live.venue
+    cid = f"{CLIENT_ID_PREFIX}oldrun00-1790000000000-000007"
+    venue.add_orphan_open_order(cid)
+    venue.next_cancel = ["transport"]  # the venue does not take the cancel
+    report = await service.start_live()
+    sweep = service.orphan_sweep
+    assert sweep is not None and sweep["found"] == [cid] and sweep["cancelled"] == [] and sweep["failed"][0]["order_id"] == cid
+    assert report.critical and "venue_order_unknown_locally" in report.summary
+    assert service.kill.engaged and service.kill.sticky and service.state_label == "safe"
+    await live.feed(4)
+    assert service.execution.counters["placed"] == 0  # nothing is placed over an order nobody manages
+    assert not venue.orders[cid].state.is_terminal  # still the venue's fact; a person decides
+    await _teardown(live)
+
+
+async def test_a_foreign_open_order_at_start_is_not_swept_and_stays_critical() -> None:
+    live = await _live()
+    service, venue = live.service, live.venue
+    foreign = venue.add_foreign_open_order("someone-else-3")
+    report = await service.start_live()
+    assert service.orphan_sweep == {"t_ms": service.orphan_sweep["t_ms"], "found": [], "cancelled": [], "failed": []}  # type: ignore[index]
+    assert venue.cancels == [] and not foreign.state.is_terminal
+    assert report.critical and "foreign_open_order" in report.summary and service.kill.sticky
     await _teardown(live)

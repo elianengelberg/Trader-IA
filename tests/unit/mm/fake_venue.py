@@ -137,6 +137,17 @@ class FakeVenue(ExecutionProvider):
         self.foreign_open.append(order)
         return order
 
+    def add_orphan_open_order(self, client_order_id: str, *, side: Side = Side.BUY, quantity: float = 0.0002) -> Order:
+        """An order of THIS maker (its prefix) that a previous run left resting: the venue
+        holds it like any other of ours, lists it open, answers a resolve and a cancel by id."""
+        now = self.clock.now()
+        self._venue_seq += 1
+        price = self.best_bid - 50 if side is Side.BUY else self.best_ask + 50
+        order = Order(order_id=str(self._venue_seq), client_order_id=client_order_id, intent_id="", signal_id="", symbol="BTC-USD", side=side, order_type=OrderType.LIMIT_MAKER, quantity=quantity, limit_price=price, state=OrderState.ACKNOWLEDGED, created_at=now, updated_at=now)
+        self.orders[client_order_id] = order
+        self.by_venue_id[order.order_id] = client_order_id
+        return order
+
     def venue_cancel(self, client_order_id: str) -> None:
         order = self.orders[client_order_id]
         if not order.state.is_terminal:

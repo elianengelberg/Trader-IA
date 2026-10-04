@@ -150,3 +150,43 @@ async def test_a_just_acknowledged_order_absent_from_an_older_open_orders_pictur
     assert h.execution.open_orders() and h.execution.blocked_reason == ""
     await h.execution.close()
 
+
+async def test_a_restart_after_a_run_died_with_orders_open_leaves_no_orphan_and_duplicates_nothing() -> None:
+    """The first run is killed with quotes resting: no stop(), no cancel. The second run on the
+    same account finds them under its own prefix, cancels them before quoting, reconciles
+    clean, quotes with its own ids, and stops with nothing open. No client id is ever
+    submitted twice; no order of the dead run is adopted or resent."""
+    from tia.mm.execution import CLIENT_ID_PREFIX
+
+    first = await _live(run_id="run-one")
+    venue = first.venue
+    await first.service.start_live()
+    left = await first.until_resting()
+    # The process dies: the engine stops hearing the market, the loops end, the worker goes.
+    if first.service._unsubscribe is not None:
+        first.service._unsubscribe()
+        first.service._unsubscribe = None
+    for task in (first.service._reconcile_task, first.service._heartbeat_task):
+        if task is not None:
+            task.cancel()
+    await first.service.execution.close()
+    assert [cid for cid, o in venue.orders.items() if not o.state.is_terminal] == left  # the venue still holds them
+
+    second = await _live(venue=venue, run_id="run-two")
+    report = await second.service.start_live()
+    sweep = second.service.orphan_sweep
+    assert sweep is not None and sweep["found"] == left and [c["order_id"] for c in sweep["cancelled"]] == left and sweep["failed"] == []
+    assert not report.critical and not second.service.kill.engaged, report.as_dict()
+    assert all(venue.orders[cid].state.is_terminal for cid in left)
+    await second.until_resting()
+    own = f"{CLIENT_ID_PREFIX}{second.service.execution.run_tag[:8]}"
+    resting = [cid for cid, o in venue.orders.items() if not o.state.is_terminal]
+    assert resting and all(cid.startswith(own) for cid in resting)
+    submitted = [i.client_order_id for i in venue.submits]
+    assert len(submitted) == len(set(submitted))  # no client id submitted twice across both runs
+    assert second.service.execution.counters["venue_orders_unknown_locally"] == 0
+    status = await second.service.stop(reason="drill", actor="test")
+    assert status["open_orders"] == [] and not any(not o.state.is_terminal for o in venue.orders.values())
+    assert status["kill_switch"]["shutdown"] and not status["kill_switch"]["engaged"]
+    await first.market.close()
+    await second.market.close()

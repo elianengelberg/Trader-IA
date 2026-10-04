@@ -49,6 +49,7 @@ from tia.mm.latency_model import LatencyProfile
 from tia.mm.live_ledger import LiveLedger
 from tia.mm.market_data import MarketDataService
 from tia.mm.reconciliation import (
+    OWN_PREFIX,
     MMDiscrepancy,
     MMReconciliationReport,
     build_report,
@@ -225,6 +226,7 @@ class LiveMarketMakerService(MarketMakerService):
         self.last_report: MMReconciliationReport | None = None
         self.reconciliations = 0
         self.reconciliation_failures = 0
+        self.orphan_sweep: dict[str, Any] | None = None  # what start_live found open from a previous run, and what it did
         self.started_at_ms: int | None = None
         self.stopped_at_ms: int | None = None
         self.stop_reason = ""
@@ -294,6 +296,7 @@ class LiveMarketMakerService(MarketMakerService):
         await self.execution.start()
         if self.user_stream is not None:
             self.user_stream.start()
+        await self._sweep_orphans()
         report = await self.reconcile(initial=True)
         # From here on the account stream is the primary source of execution facts; what
         # it said before this instant is covered by the reconciliation just made.
@@ -307,6 +310,52 @@ class LiveMarketMakerService(MarketMakerService):
         self._heartbeat_task = loop.create_task(self._heartbeat_loop(), name="mm-live-heartbeat")
         _log.info("mm_live_started", run_id=self.run_id, venue=self.venue_label, live=self.is_live, state=self.state_label, reconciliation=report.summary)
         return report
+
+    async def _sweep_orphans(self) -> dict[str, Any]:
+        """Before this run has placed anything: open orders at the venue that carry this
+        maker's client-id prefix belong to a previous run that ended without cancelling them
+        (a crash, a kill, a host that died), and nobody manages them. Each is asked about by
+        id, so the provider knows it, and cancelled through the venue; the sweep is journaled
+        and raised as an incident, because a run that died with orders open is something the
+        operator must hear about. Nothing is adopted, nothing is resent. An orphan the venue
+        would not cancel is left to the initial reconciliation, which finds it open and
+        unknown and engages the kill switch sticky, as before. Foreign orders are not touched:
+        someone else trading the account stays critical. During the run this sweep does not
+        apply: an own-prefix order the venue lists that this run does not know could then be
+        a duplicate submission, and stays critical."""
+        t = self._now_ms()
+        sweep: dict[str, Any] = {"t_ms": t, "found": [], "cancelled": [], "failed": []}
+        self.orphan_sweep = sweep
+        try:
+            venue_open = await self.execution.fetch_open_orders()
+        except Exception as exc:
+            sweep["failed"].append({"order_id": None, "error": f"open orders could not be read: {type(exc).__name__}: {str(exc)[:160]}"})
+            return sweep
+        resolve = getattr(self.provider, "resolve_unknown_order", None)
+        for venue in venue_open:
+            cid = str(getattr(venue, "client_order_id", "") or "")
+            if not cid.startswith(OWN_PREFIX):
+                continue
+            sweep["found"].append(cid)
+            try:
+                if resolve is not None:
+                    await resolve(symbol=self.config.symbol, client_order_id=cid)
+                cancelled = await self.provider.cancel_order(cid)
+                state = getattr(getattr(cancelled, "state", None), "value", None) or str(getattr(cancelled, "state", ""))
+                sweep["cancelled"].append({"order_id": cid, "venue_order_id": str(getattr(venue, "order_id", "")), "state": state})
+            except Exception as exc:
+                sweep["failed"].append({"order_id": cid, "error": f"{type(exc).__name__}: {str(exc)[:160]}"})
+        if sweep["found"]:
+            _log.warning("mm_live_orphans_swept", run_id=self.run_id, found=len(sweep["found"]), cancelled=len(sweep["cancelled"]), failed=len(sweep["failed"]))
+            self._journal_event({"t": t, "kind": "orphan_sweep", **sweep})
+            with contextlib.suppress(Exception):
+                self._incident(
+                    "mm_orphans_swept",
+                    reason=f"{len(sweep['found'])} open order(s) of a previous run found at start; cancelled {len(sweep['cancelled'])}, not cancelled {len(sweep['failed'])}",
+                    actor="system",
+                    detail={"found": sweep["found"], "cancelled": [c["order_id"] for c in sweep["cancelled"]], "failed": sweep["failed"], "venue": self.venue_label, "is_live": self.is_live},
+                )
+        return sweep
 
     async def _reconcile_loop(self) -> None:
         while self._running:
@@ -673,6 +722,7 @@ class LiveMarketMakerService(MarketMakerService):
             "kill_switch": self.kill.as_dict(),
             "gate": engine.last_gate.as_dict() if engine.last_gate else None,
             "last_block_reason": engine.last_block_reason,
+            "orphan_sweep": self.orphan_sweep,
             "reconciliation": {
                 "last": self.last_report.as_dict() if self.last_report else None,
                 "count": self.reconciliations,

@@ -92,6 +92,19 @@ def _check_stream_rail(stream_url: str) -> None:
         raise SystemExit("REFUSED: a mainnet market data host was configured")
 
 
+def _left_resting(open_orders: list[Any]) -> tuple[list[str], list[str]]:
+    """What a dying run leaves at the venue, read from its local picture at the instant it
+    dies: the orders resting with NO cancel in flight are what the venue will still hold;
+    an order whose cancel was already requested is on its way out and the venue may well
+    have closed it by the time anyone asks, so it is listed apart and never counted as
+    'left'. Seen on Testnet (R1, 2026-10-04): the one resting order at death carried a
+    cancel the data gate had just requested; the venue completed it, and a harness that
+    counted it as left reported a discrepancy that was not one."""
+    left = sorted(o.order_id for o in open_orders if o.state == "resting" and getattr(o, "t_cancel_requested_ms", None) is None)
+    in_flight = sorted(o.order_id for o in open_orders if o.state == "resting" and getattr(o, "t_cancel_requested_ms", None) is not None)
+    return left, in_flight
+
+
 class ServiceValidation:
     def __init__(self, args: argparse.Namespace, live: Any) -> None:
         self.args = args
@@ -259,13 +272,11 @@ class ServiceValidation:
         first = self.service
         assert first is not None and self.provider is not None
         print("\nRECOVERY DRILL — the first run dies with orders resting; a second run starts on the same account")
-        await _wait_until(lambda: any(o.state == "resting" for o in first.execution.open_orders()), 60.0)
-        left = sorted(o.order_id for o in first.execution.open_orders() if o.state == "resting")
-        drill: dict[str, Any] = {"left_by_first_run": left}
-        ev.responses["recovery_drill"] = drill
-        if not left:
-            ev.mark("R1.first_run_died_with_orders_resting", "NOT TESTED", f"nothing was resting to leave behind: {first.engine.last_block_reason!r}")
-            return
+        # Die at an instant when something rests with no cancel in flight: a quote the engine
+        # is already taking off the book is not 'left', the venue is about to close it.
+        await _wait_until(lambda: bool(_left_resting(first.execution.open_orders())[0]), 90.0)
+        # From here nothing new may be asked of the venue by the dying run: the engine stops
+        # hearing the market and the loops end, synchronously, before the picture is read.
         ev.command("first run dies: market subscription dropped, loops cancelled, account stream and worker cut — no stop(), no cancel")
         if first._unsubscribe is not None:
             first._unsubscribe()
@@ -273,6 +284,9 @@ class ServiceValidation:
         for task in (first._reconcile_task, first._heartbeat_task):
             if task is not None:
                 task.cancel()
+        left, in_flight = _left_resting(first.execution.open_orders())
+        drill: dict[str, Any] = {"left_by_first_run": left, "cancel_in_flight_at_death": in_flight}
+        ev.responses["recovery_drill"] = drill
         with contextlib.suppress(Exception):
             if first.user_stream is not None:
                 await first.user_stream.close()
@@ -284,7 +298,11 @@ class ServiceValidation:
         still = await self._own_open_at_venue()
         drill["open_at_venue_after_death"] = still
         ev.command(f"GET /api/v3/openOrders  [fresh client]  — the venue still holds the dead run's orders: {still}")
-        ev.mark("R1.first_run_died_with_orders_resting", "PASS" if set(left) <= set(still) else "FAIL", f"resting locally when it died {left}; open at the venue {still}")
+        if not left:
+            ev.mark("R1.first_run_died_with_orders_resting", "NOT TESTED", f"nothing rested without a cancel in flight when the run died (in flight: {in_flight}); the venue lists {still}; last block {first.engine.last_block_reason!r}")
+        else:
+            ev.mark("R1.first_run_died_with_orders_resting", "PASS" if set(left) <= set(still) else "FAIL", f"left resting, no cancel in flight: {left}; cancel in flight (not counted): {in_flight}; open at the venue: {still}")
+        nothing_to_sweep = not still
 
         # The second run: a fresh provider, a fresh account stream, the same market data.
         with contextlib.suppress(Exception):
@@ -298,11 +316,18 @@ class ServiceValidation:
         drill["sweep"] = sweep
         drill["initial_reconciliation_second_run"] = report.as_dict()
         cancelled = sorted(c["order_id"] for c in sweep.get("cancelled", []))
-        ev.mark("R2.orphans_found_and_cancelled_before_quoting", "PASS" if sorted(sweep.get("found", [])) == still and cancelled == still and not sweep.get("failed") else "FAIL", f"found {sweep.get('found')} cancelled {cancelled} failed {sweep.get('failed')}")
+        if nothing_to_sweep:
+            # A sweep of nothing proves nothing: the items that judge it are not passed in a vacuum.
+            ev.mark("R2.orphans_found_and_cancelled_before_quoting", "NOT TESTED", f"the venue held nothing of the dead run when the second run started; the sweep found {sweep.get('found')}")
+        else:
+            ev.mark("R2.orphans_found_and_cancelled_before_quoting", "PASS" if sorted(sweep.get("found", [])) == still and cancelled == still and not sweep.get("failed") else "FAIL", f"found {sweep.get('found')} cancelled {cancelled} failed {sweep.get('failed')}")
         ev.mark("R3.initial_reconciliation_clean_after_the_sweep", "PASS" if not report.critical else "FAIL", report.summary)
         after = await self._own_open_at_venue()
         drill["open_at_venue_after_sweep"] = after
-        ev.mark("R4.no_order_of_the_dead_run_open_at_the_venue", "PASS" if not (set(after) & set(left)) else "FAIL", f"open at the venue after the sweep {after}")
+        if nothing_to_sweep:
+            ev.mark("R4.no_order_of_the_dead_run_open_at_the_venue", "NOT TESTED", "nothing of the dead run was open to begin with")
+        else:
+            ev.mark("R4.no_order_of_the_dead_run_open_at_the_venue", "PASS" if not (set(after) & set(still)) else "FAIL", f"open at the venue after the sweep {after}")
         up = await _wait_until(lambda: bool(second.user_stream is not None and second.user_stream.connected), 20.0)
         ev.mark("R5.second_run_account_stream_subscribed", "PASS" if up else "FAIL", f"connected={up} subscriptionId={getattr(second.user_stream, 'subscription_id', None)}")
         await self._observe(min(60.0, max(20.0, self.args.minutes * 60.0 / 3)))
@@ -313,7 +338,11 @@ class ServiceValidation:
         not_ours = [cid for cid in open_now if not cid.startswith(own)]
         ev.mark("R6.second_run_quotes_with_its_own_ids_only", "PASS" if placed > 0 and not not_ours else ("NOT TESTED" if placed == 0 and not not_ours else "FAIL"), f"placed {placed}; open at the venue {open_now}; not this run's {not_ours}")
         known = {o.order_id for o in list(second.execution.closed) + list(second.execution.orders.values())}
-        ev.mark("R7.no_client_id_of_the_dead_run_adopted_or_resubmitted", "PASS" if not (known & set(left)) and second.execution.counters["venue_orders_unknown_locally"] == 0 else "FAIL", f"dead run's ids known to the second run {sorted(known & set(left))}; venue_orders_unknown_locally {second.execution.counters['venue_orders_unknown_locally']}")
+        dead_ids = set(still) | set(left) | set(in_flight)
+        if nothing_to_sweep:
+            ev.mark("R7.no_client_id_of_the_dead_run_adopted_or_resubmitted", "NOT TESTED", "nothing of the dead run was at the venue for the second run to meet")
+        else:
+            ev.mark("R7.no_client_id_of_the_dead_run_adopted_or_resubmitted", "PASS" if not (known & dead_ids) and second.execution.counters["venue_orders_unknown_locally"] == 0 else "FAIL", f"dead run's ids known to the second run {sorted(known & dead_ids)}; venue_orders_unknown_locally {second.execution.counters['venue_orders_unknown_locally']}")
 
     async def _observe(self, seconds: float) -> None:
         assert self.service is not None

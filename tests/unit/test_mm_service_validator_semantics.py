@@ -92,3 +92,18 @@ def test_a_stop_recorded_as_a_sticky_kill_instead_of_a_shutdown_fails(validator_
     after = {"engaged": True, "sticky": True, "trigger": "stop", "reason": "stop: done", "severity": "cancel_open", "transient": {}, "shutdown": None, "blocks_quoting": True, "history": []}
     results = _judge(validator_module, before={"engaged": False, "sticky": False, "transient": {}}, after=after)
     assert results["S10b.shutdown_recorded_as_shutdown_no_safety_engagement_left"] == "FAIL"
+
+
+def test_a_dying_run_leaves_only_the_orders_with_no_cancel_in_flight(validator_module) -> None:  # type: ignore[no-untyped-def]
+    """Seen on Testnet (R1, 2026-10-04): the one resting order at death carried a cancel the
+    data gate had just requested; the venue completed it. Such an order is on its way out and
+    is never counted as left behind; it is listed apart so the evidence says what happened."""
+
+    class Local:
+        def __init__(self, order_id: str, state: str, cancel_at: int | None) -> None:
+            self.order_id, self.state, self.t_cancel_requested_ms = order_id, state, cancel_at
+
+    left, in_flight = validator_module._left_resting([Local("b", "resting", None), Local("a", "resting", None), Local("c", "resting", 1791131737654), Local("d", "pending_arrival", None), Local("e", "cancelled", 5)])
+    assert left == ["a", "b"] and in_flight == ["c"]
+    assert validator_module._left_resting([Local("c", "resting", 1)]) == ([], ["c"])  # nothing left: the drill says NOT TESTED, not FAIL
+    assert validator_module._left_resting([]) == ([], [])

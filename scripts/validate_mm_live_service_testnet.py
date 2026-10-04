@@ -35,6 +35,11 @@ Usage (from the VPS, in the same one-off container as the block validation):
 
 The latency profile is the one measured on that host (``mm_market_data_check.py
 --write-latency-profile``); the engine refuses to run without a measured one, by design.
+For a Testnet run, measure it against Testnet (``--rest-url https://testnet.binance.vision
+--stream-url wss://stream.testnet.binance.vision/stream``) into a directory of its own and
+bind-mount that directory at ``/app/data/runtime`` read-only; the production data volume
+holds the profile the paper maker measured against Mainnet public data and is not the
+place for it. ``scripts/run_mm_service_testnet_validation.sh`` does the whole sequence.
 """
 
 from __future__ import annotations
@@ -122,7 +127,7 @@ class ServiceValidation:
         except LatencyProfileError as exc:
             ev.mark("S0.latency_profile_measured_on_this_host", "NOT TESTED", str(exc)[:200])
             raise SystemExit(f"NOT TESTED: {exc}") from exc
-        ev.mark("S0.latency_profile_measured_on_this_host", "PASS", f"profile {profile.profile_id} commit {profile.commit} measured {profile.measured_at_utc}")
+        ev.mark("S0.latency_profile_measured_on_this_host", "PASS", f"profile {profile.profile_id} commit {profile.commit} measured {profile.measured_at_utc} source {profile.source or 'not recorded'}")
 
         ev.command(f"provider.get_exchange_info({args.symbol})  [GET /api/v3/exchangeInfo]")
         info = await self.provider.get_exchange_info(args.symbol)

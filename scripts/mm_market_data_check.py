@@ -12,6 +12,14 @@ what happened; a metric that could not be measured is reported as "NOT MEASURED"
 
     python scripts/mm_market_data_check.py --minutes 5 --ticks-dir /app/data/runtime/ticks-check
     python scripts/mm_market_data_check.py --minutes 2 --inject-stall 4 --ticks-dir /tmp/ticks-stall
+
+The venue is Binance's public market data: Mainnet by default (paper mode reads it), or
+Spot Testnet with ``--rest-url https://testnet.binance.vision --stream-url
+wss://stream.testnet.binance.vision/stream``. Snapshots and stream must come from the same
+venue or the book cannot be kept in sync; the script refuses a mix. A latency profile
+written here records the venue it was measured against in its ``source``, so a validation
+can tell a Testnet-measured profile from a Mainnet one. Public data only: no credentials
+are read, nothing is sent.
 """
 
 from __future__ import annotations
@@ -33,9 +41,27 @@ from tia.mm.market_data import MarketDataService
 from tia.mm.order_book import snapshot_from_levels
 from tia.mm.recorder import RecorderBusyError, TickRecorder
 from tia.mm.replay import replay_segment
-from tia.mm.streams import MarketDataStream
+from tia.mm.streams import DEFAULT_STREAM_URL, MarketDataStream
 
 NOT_MEASURED = "NOT MEASURED"
+
+
+DEFAULT_REST_URL = "https://api.binance.com"
+TESTNET_HOST = "testnet.binance.vision"
+
+
+def _same_venue(rest_url: str, stream_url: str) -> bool:
+    """Snapshots and stream must come from the same venue: both Spot Testnet or neither.
+    A Testnet book fed by Mainnet diffs (or the reverse) would never sync, and a profile
+    measured that way would describe no venue at all."""
+    return (TESTNET_HOST in rest_url) == (TESTNET_HOST in stream_url)
+
+
+def _venue_label(rest_url: str, stream_url: str) -> str:
+    """What the profile records as its source: the hosts it was measured against."""
+    from urllib.parse import urlparse
+
+    return f"scripts/mm_market_data_check.py @ stream {urlparse(stream_url).hostname} snapshots {urlparse(rest_url).hostname}"
 
 
 def _commit() -> str:
@@ -128,9 +154,14 @@ async def main() -> int:
     parser.add_argument("--no-record", action="store_true")
     parser.add_argument("--write-latency-profile", metavar="PATH", help="write the measured latency profile (timestamp, commit, duration, samples, percentiles) to this JSON file")
     parser.add_argument("--json", action="store_true", help="print only the final report as JSON")
+    parser.add_argument("--rest-url", default=DEFAULT_REST_URL, help="public REST base for depth snapshots (Mainnet by default; https://testnet.binance.vision for Spot Testnet)")
+    parser.add_argument("--stream-url", default=DEFAULT_STREAM_URL, help="market data WebSocket (Mainnet by default; wss://stream.testnet.binance.vision/stream for Spot Testnet)")
     args = parser.parse_args()
+    if not _same_venue(args.rest_url, args.stream_url):
+        print(f"REFUSED: --rest-url and --stream-url must name the same venue (both {TESTNET_HOST} or neither); the book cannot be kept in sync across venues")
+        return 2
 
-    rest = BinancePublicProvider()
+    rest = BinancePublicProvider(base_url=args.rest_url)
     started_utc = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
 
     async def fetch_snapshot():  # type: ignore[no-untyped-def]
@@ -149,7 +180,7 @@ async def main() -> int:
         return 2
     service = MarketDataService(
         args.symbol,
-        stream=MarketDataStream(args.symbol, depth_speed=args.depth_speed),
+        stream=MarketDataStream(args.symbol, stream_url=args.stream_url, depth_speed=args.depth_speed),
         fetch_snapshot=fetch_snapshot,
         recorder=recorder,
     )
@@ -463,6 +494,7 @@ async def main() -> int:
                 commit=_commit(),
                 duration_s=wall,
                 symbol=args.symbol,
+                source=_venue_label(args.rest_url, args.stream_url),
             )
             written = profile.write(args.write_latency_profile)
             report["latency_profile"] = {"path": str(written), "profile_id": profile.profile_id, "commit": profile.commit, "measured_at_utc": profile.measured_at_utc}

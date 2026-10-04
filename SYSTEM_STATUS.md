@@ -231,3 +231,8 @@ recorded as a sticky kill and a stale-data transient engaged in the last heartbe
 stop. Resolved as a state-model decision: a deliberate shutdown is its own state, clears what
 nothing can observe any more, and leaves any real safety engagement visible (Phase 4 §10.5, §11).
 
+Addendum 2026-10-04, third service run attempt (commit `7b748d2`): stopped at S0, latency profile
+not found. The profile lives in the production data volume and was measured against Mainnet public
+data; a Testnet run now measures its own profile against Testnet into a separate directory
+(`mm_market_data_check.py --rest-url/--stream-url`, `scripts/run_mm_service_testnet_validation.sh`).
+Phase 4 §10.7. The run itself is still pending.

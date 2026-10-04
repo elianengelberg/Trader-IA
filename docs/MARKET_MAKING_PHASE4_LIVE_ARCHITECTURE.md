@@ -466,6 +466,39 @@ cruza por definición y provocar el cruce con una orden agresiva está prohibido
 de esta validación), y el comportamiento del servidor de Binance ante cualquiera de estos
 órdenes de llegada.
 
+### 10.7 El perfil de latencia para Testnet (2026-10-04, sobre `7b748d2`)
+
+**Lo que pasó.** La corrida del servicio sobre `7b748d2` terminó en S0 NOT TESTED: "latency
+profile not found at /app/data/runtime/mm/latency_profile.json". No es un bug: el perfil
+`39096a455e3a46c1` (commit `710d0ac`, medido 2026-09-18) vive en el volumen Docker de
+producción `trader-ia_tia-data`, que las dos corridas anteriores montaban en `/app/data/runtime`
+y esta no. `find /home/tia` no lo encuentra porque los volúmenes Docker no están bajo `/home`.
+
+**Por qué no se reutiliza para Testnet.** Ese perfil fue medido en este host, pero contra los
+streams públicos de Mainnet: hasta hoy `scripts/mm_market_data_check.py` no sabía medir contra
+otra venue (`BinancePublicProvider()` y `DEFAULT_STREAM_URL` apuntan a `api.binance.com` y
+`stream.binance.com`). Es el perfil correcto para el paper, que lee Mainnet; para validar el
+servicio contra Testnet, el entorno es otro (otros hosts, otra latencia). Las corridas §10.4 y
+§10.5 pasaron S0 con ese perfil; el item decía "measured on this host", y era cierto, pero no
+decía contra qué venue. Desde este commit el detalle de S0 incluye el `source` del perfil.
+
+**Cambio mínimo.** `mm_market_data_check.py` acepta `--rest-url` y `--stream-url` (por defecto,
+Mainnet público: el paper no cambia), rechaza mezclar venues (snapshots de una y diffs de otra
+no sincronizan nunca), y graba en `source` los hosts contra los que midió. Solo datos públicos:
+no lee credenciales, no envía nada. Test: `tests/unit/test_mm_market_data_check_cli.py`.
+
+**Dónde vive el perfil Testnet.** Nunca en el volumen de producción (el paper lo usa). En un
+directorio propio del host, `/home/tia/tia-testnet/runtime/mm/latency_profile.json`, montado en
+`/app/data/runtime` solo lectura durante la validación. `scripts/run_mm_service_testnet_validation.sh`
+hace la secuencia completa con verificación entre pasos: repo en fast-forward, imagen con el
+commit, presencia de claves sin imprimirlas, medición de 5 min contra Testnet, carga del perfil
+con el mismo código del validator dentro del contenedor (debe nombrar Testnet y tener muestras
+en los tres componentes), corrida de 3 min, evidencia escaneada y copiada sin modificar.
+
+**Evidencia histórica.** Las corridas §10.4 y §10.5 montaron `$HOME/tia-testnet` desde una
+shell root: sus JSON están en `/root/tia-testnet/`, no en `/home/tia/tia-testnet/`. El runbook
+los copia a `docs/evidence/` si los encuentra, sin editarlos.
+
 ## 11. Modelo de estados de seguridad del maker live
 
 El kill switch del maker (`tia/mm/kill_switch.py`) alimenta el `system_unsafe` del gate global;

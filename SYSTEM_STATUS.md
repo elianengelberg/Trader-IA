@@ -224,3 +224,10 @@ sticky kill switch; fixed with the snapshot's age told apart from real findings,
 rule for orders the venue keeps listing open, and a resolve-by-id path that reopens and cancels a
 genuine zombie. The safety state model is now written down (§11 of the Phase 4 document).
 
+Addendum 2026-10-04, second service run (180 s, commit `8608db6`): the reconciliation fix held
+(0 unknown orders, 13 clean reconciliations, 62 quotes placed and cancelled through the venue,
+transient stale-data blocks that recovered on their own). One FAIL remained, S10b: the stop was
+recorded as a sticky kill and a stale-data transient engaged in the last heartbeat survived the
+stop. Resolved as a state-model decision: a deliberate shutdown is its own state, clears what
+nothing can observe any more, and leaves any real safety engagement visible (Phase 4 §10.5, §11).
+

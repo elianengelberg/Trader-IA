@@ -39,5 +39,6 @@ Then reference the file from the section of the phase document that claims the r
 | Date (UTC) | File | Commit validated | Documented in |
 |---|---|---|---|
 | 2026-10-03 21:51 | `mm_testnet_20261003T215105Z.json` | `1ebc584` | `docs/MARKET_MAKING_PHASE4_LIVE_ARCHITECTURE.md` §10. Block validation; no fill by design |
+| 2026-10-04 | `mm_service_testnet_20261003T235710Z.json` — **still on the VPS** at `/home/tia/tia-testnet/`, not yet copied here | `8608db6` | `docs/MARKET_MAKING_PHASE4_LIVE_ARCHITECTURE.md` §10.5. Service run, 180 s: every item PASS except S8 NOT TESTED (no fill) and S10b FAIL (a ghost transient after the stop and the stop recorded as a sticky kill), root-caused as a state-model ambiguity and fixed in the following commit |
 | 2026-10-04 | `mm_service_testnet_<stamp>.json` — **still on the VPS** at `/home/tia/tia-testnet/`, not yet copied here | `8e058f7` | `docs/MARKET_MAKING_PHASE4_LIVE_ARCHITECTURE.md` §10.4. Service run, 3 min: every item PASS except S8 NOT TESTED (no fill) and S10 FAIL, whose root cause (a reconciliation false positive) is fixed in the following commit |
 | 2026-10-03 22:41 | `mm_testnet_20261003T224159Z.json` | `9cac585` | `docs/MARKET_MAKING_PHASE4_LIVE_ARCHITECTURE.md` §10.1. Block validation plus `--fill-probe 300`: bid 8e-05 BTC @ 84792.00 at the best bid, no print in 300 s, fill items NOT TESTED |

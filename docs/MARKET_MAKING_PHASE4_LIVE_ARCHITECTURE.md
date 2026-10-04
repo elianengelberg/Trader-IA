@@ -362,6 +362,110 @@ la única causa sticky y no queda ningún transitorio (S10b).
 Esta corrida no está en `docs/evidence/`: el JSON quedó en el VPS. Debe copiarse como las dos
 anteriores.
 
+### 10.5 Segunda corrida del servicio (2026-10-04, commit `8608db6`, 180 s): S10b y la decisión de modelo
+
+Resultado reportado por el operador: todos los items PASS salvo S8 NOT TESTED (ningún fill, no
+provocado) y **S10b FAIL**. Cifras: 765 eventos, 272 decisiones, 153 heartbeats, 0 errores del
+engine; 62 colocadas, 62 reconocidas, 0 rechazadas, 0 UNKNOWN, 62 canceladas (19 por TTL); 13
+reconciliaciones, 0 fallidas, la última `ok`; 123 reportes y 123 balances por el stream, 0
+desconexiones; 0 abiertas al final, local y en la venue. Varios bloqueos transitorios por datos
+stale (`venue data 1.6s old`, `last event 4151 ms ago`, `last event 5106 ms ago`) que **no**
+quedaron sticky y volvieron a `kill=False gate=safe` al recuperarse los datos. El estado final
+del switch: `engaged=true, sticky=true, trigger=stop`, más un transitorio
+`data: market data not usable: venue data 1.1s old...`.
+
+**Diagnóstico: B más C.** El shutdown fue correcto (categoría C): canceló, esperó, reconcilió,
+cero abiertas. Pero el modelo de estado era ambiguo (categoría B) en dos puntos. Primero,
+`stop()` se registraba como un kill **sticky** con trigger `stop`, indistinguible en los campos
+del switch de un hallazgo crítico salvo por el nombre del trigger; `state_label` ya decía
+"stopped", el puente de incidentes tenía que excluir `stop` a mano, y todo consumidor de
+`as_dict()` (API, frontend, validador, operador) veía `engaged=true`. Segundo, los transitorios
+son lecturas vivas que solo mantiene `_watch`, ejecutado en cada evento de mercado y en cada
+heartbeat; `stop()` cancela el heartbeat y desuscribe el feed, así que un `data` enganchado en
+el último heartbeat antes del stop no tenía quién lo limpiara y sobrevivía como fantasma. No
+fue un bug del kill switch (sus mecánicas hicieron lo especificado) ni del validador en sentido
+estricto: el validador detectó un estado final genuinamente ambiguo.
+
+**Decisión de semántica.** Un shutdown deliberado es un estado propio, no un kill de
+seguridad: `MMKillSwitch.shutdown(reason, actor)` cancela lo que descansa, cierra la cotización
+por el mismo gate (el engine no coloca nada mientras el servicio drena), limpia los transitorios
+registrando cada limpieza en el historial, y deja intacto y visible cualquier sticky previo con
+su primera causa. `engaged` pasa a significar exclusivamente "hay un enganche de seguridad".
+Justificación: la arquitectura ya trataba el stop como algo distinto en tres lugares
+(`state_label`, el puente de incidentes, la regla de primera causa); el modelo solo lo hace
+explícito. El validador lee ahora: S10, ningún sticky antes del stop; S10b, shutdown registrado,
+sin sticky, sin transitorios, `engaged=false`. Tests en `tests/unit/mm/test_mm_kill_switch.py`,
+`tests/unit/mm/test_mm_live_service.py` y `tests/unit/test_mm_service_validator_semantics.py`.
+
+**Sobre `unknown_order_resolved_present` en esta corrida.** Ese log lo emite el adapter en
+`resolve_unknown_order`, que sirve a toda consulta "preguntale a la venue por esta orden": una
+submission con timeout, una orden que la foto de `openOrders` no listó, un cancel rechazado. El
+texto afirmaba "the timed-out submission DID reach the venue" sin saberlo. Con `unknown = 0` en
+los contadores, la resolución **no** vino de un timeout de submit (ese camino incrementa
+`unknown` antes de resolver); vino de la edad de la foto del sync de órdenes abiertas, que
+reportaba como "missing at venue" una orden reconocida después de la foto. El sync del adapter
+recibe ahora el instante de la foto y no pregunta por órdenes reconocidas después; el log dice
+lo que sabe. La propiedad SUBMIT UNKNOWN → RESOLVE → FOUND → ADOPT, nunca RETRY, está cubierta
+por `test_a_timeout_after_the_venue_accepted_is_adopted_not_duplicated` y por el escenario
+adversarial de la vida completa de una submission con timeout. El JSON de esta corrida,
+`mm_service_testnet_20261003T235710Z.json`, quedó en el VPS; debe copiarse a `docs/evidence/`
+sin editar su FAIL.
+
+**Latencias.** El perfil usado es el medido en el host (`39096a455e3a46c1`, commit `710d0ac`);
+el servicio lo carga desde el volumen y el autorizador de economía lo usa para el riesgo de
+latencia de la orden. Tramos medidos en `status().latency`: decisión → enqueue, enqueue →
+submit, RTT del submit, submit → ack REST, submit → primer ack de cualquier fuente, `E` del
+reporte → recepción (incluye el offset de reloj), recepción del reporte → aplicado (nuevo),
+fill → ledger, cancel → ack, evento de mercado → procesado, duración del callback. Falta y
+queda documentado: un reloj de la venue para `bookTicker` (Spot no lo trae) y el offset de reloj
+host-venue dentro del servicio (el harness por bloques lo mide; el servicio no lo corrige).
+
+### 10.6 Matriz de cobertura sintética (objetivos 3, 4, 6 y 7 de la revisión del 2026-10-04)
+
+Todo lo de esta tabla es **UNIT/ADVERSARIAL TESTED** contra `FakeVenue` y `FakeUserStream`:
+evidencia sobre nuestros invariantes bajo órdenes hostiles, no sobre Binance. Archivos:
+`E` = `tests/unit/mm/test_mm_execution_live.py`, `S` = `tests/unit/mm/test_mm_live_service.py`,
+`K` = `tests/unit/mm/test_mm_kill_switch.py`, `R` = `tests/unit/mm/test_mm_reconciliation.py`,
+`AF` = `tests/adversarial/test_mm_fill_paths_synthetic.py`,
+`AS` = `tests/adversarial/test_mm_service_safety_synthetic.py`,
+`AI` = `tests/adversarial/test_mm_order_identity_synthetic.py` (nuevo),
+`U` = `tests/unit/test_binance_user_stream.py`, `V` = `tests/unit/test_mm_service_validator_semantics.py`.
+
+| Escenario | Test |
+|---|---|
+| Datos stale con órdenes abiertas: nada nuevo, lo que descansa se cancela, ningún estado inventado | S `a_silent_feed_is_seen_by_the_heartbeat...`, S `repeated_stale_and_recovery_cycles...` |
+| Recuperación de datos: vuelve a safe, sin sticky | S `a_silent_feed...`, S `repeated_stale...`, K `a_transient_condition_clears_itself...` |
+| Stale/recuperación repetidos: sin residuo, sin kills falsos acumulados | S `repeated_stale_and_recovery_cycles_leave_no_residue...` (3 ciclos, 3 engage, 3 clear, no sticky, no shutdown) |
+| Kill realmente crítico queda sticky | S `a_breached_limit...`, S `an_unknown_fill...`, S `a_reconciliation_that_fails_mid_run...`, AS `a_sticky_kill_from_a_critical_finding_survives_to_stop...` |
+| Shutdown deliberado ≠ safety kill | K `a_shutdown_is_its_own_state...`, S `a_stale_data_condition_engaged_just_before_stop...`, V (5 casos: limpio, transitorio durante la corrida, sticky, transitorio fantasma, stop como sticky) |
+| Shutdown con órdenes abiertas: cancela, espera, reconcilia, 0 abiertas | S `the_service_reconciles_first_quotes_post_only...stops_clean`, S `a_partial_fill_the_stream_never_reported_is_booked_by_the_final_reconciliation_at_stop`, AS `a_sticky_kill...nothing_open` |
+| Shutdown sin órdenes abiertas | S `a_stop_with_nothing_open_is_a_clean_shutdown_too` |
+| Reconciliación 1: local + venue presente | R `orders_are_classified_by_who_placed_them...`, S `the_service_reconciles_first...` |
+| Reconciliación 2: local + venue ausente | E `an_order_that_vanishes_at_the_venue_is_asked_about_not_assumed`, R `the_snapshots_age_is_told_apart_from_a_real_discrepancy` |
+| Reconciliación 3: desaparición temporal (edad de la foto) | AS `a_just_acknowledged_order_absent_from_an_older_open_orders_picture_is_not_asked_about`, AS `an_order_acknowledged_after_the_venue_snapshot_is_not_reported_missing` |
+| Reconciliación 4: desaparición confirmada | E `an_order_that_vanishes_at_the_venue...` (resuelta al estado real), E `a_cancel_the_venue_rejects_as_already_closed_resolves_the_true_state` |
+| Reconciliación 5: orden cancelándose | S `a_quote_cancelled_while_the_reconciliation_was_reading_the_venue_is_the_snapshots_age_not_a_zombie`, E `cancel_and_cancel_all_wait_for_the_venue...` |
+| Reconciliación 6: respuesta REST del cancel antes del `executionReport` | AI `a_canceled_report_that_arrives_after_the_rest_cancel_answered_changes_nothing_and_asks_nothing` (nuevo) |
+| Reconciliación 7: `executionReport` antes de la respuesta del cancel | E `canceled_expired_and_rejected_reports_close_the_order_as_the_venue_says`, E `a_rest_cancel_rejected_after_the_stream_reported_canceled_changes_nothing_and_asks_nothing` |
+| Reconciliación 8: `executionReport` duplicado | E `a_duplicate_report_and_a_duplicate_trade_book_nothing_twice`, AF `a_trade_the_history_booked_first_is_not_booked_again...` |
+| Reconciliación 9: report demorado | AF `a_fill_during_a_stream_outage...late_report_after_reconnect_is_a_duplicate`, E `a_fill_reported_after_the_rest_ack_books_normally...` |
+| Reconciliación 10: después de un cancel | S `an_order_the_venue_keeps_listing_open_after_we_closed_it_is_critical_on_the_second_sighting`, E `an_order_we_closed_that_the_venue_still_holds_open_is_reopened_cancelled_again_and_critical` |
+| Reconciliación 11: durante cancel/replace | AS `an_order_acknowledged_after_the_venue_snapshot_is_not_reported_missing` |
+| Reconciliación 12: UNKNOWN → resuelto | E `a_timeout_is_unknown_blocks_new_orders_and_is_resolved_by_asking_never_by_resending`, E `a_timeout_after_the_venue_accepted_is_adopted_not_duplicated`, AS `an_unknown_order_the_venue_confirms_never_arrived...`, AS `the_whole_life_of_a_submission_whose_answer_timed_out_after_the_venue_accepted_it` |
+| Reconciliación 13: orden en la venue con identidad local distinta | E `a_market_maker_order_the_venue_holds_but_this_run_does_not_know_is_critical`, E `a_report_about_an_order_this_run_does_not_know_is_critical...`, AI `the_venue_id_fallback_never_adopts_an_order_whose_ids_match_nothing_we_hold` (nuevo) |
+| Reconciliación 14: `orderId`/`clientOrderId` no coinciden | AI `a_report_named_only_by_our_venue_order_id_is_correlated_by_it_and_applied` (nuevo), U `a_cancel_report_refers_to_the_original_order_id`, `tests/unit/test_binance_live.py` (cancel re-keyed, -2013 por `origClientOrderId`) |
+| Reconciliación 15: -2013 sobre orden conocida | E `a_cancel_the_venue_rejects_as_already_closed_resolves_the_true_state`, E `a_rest_cancel_rejected_after_the_stream_reported_canceled...`, `tests/unit/test_binance_live.py` (-2013 tras ack es contradicción, no confirmación) |
+| Stream: disconnect / reconnect | U `a_dropped_socket_is_reported_as_a_drop_and_a_fresh_signature_is_sent_on_reconnect`, U `a_subscription_the_venue_terminates_is_a_drop_followed_by_a_new_subscription`, E `a_dropped_account_stream_invents_no_state_asks_for_the_trade_history_and_is_critical` |
+| Stream: reconnect con órdenes abiertas y reconciliación antes de volver a operar | S `a_dropped_account_stream_degrades_to_a_safe_state_until_a_reconciliation_after_it_is_back`, AF `a_fill_during_a_stream_outage_is_booked_from_the_history...` |
+| Stream: report después / antes del cancel | AF `a_replayed_new_report_never_reopens_a_cancelled_order`, AI (6), E (7) |
+| Stream: fill report, balance update | E `partial_and_full_fills_arrive_as_reports_book_once_each...`, E `balances_from_the_stream_are_recorded_and_handed_to_the_sink`, S `fills_reported_by_the_stream_are_booked_at_once_and_balances_follow_the_venue` |
+| Fills: parcial, total, duplicado, fill + cancel race, TRADE report, `myTrades`, report demorado, `fill_to_ledger_ms`, reconciliación tras fill | E `partial_and_full_fills...`, E `a_duplicate_report_and_a_duplicate_trade...`, E `a_fill_that_races_the_cancel_is_booked_and_the_order_ends_filled`, E `fills_come_only_from_the_venue_trade_history...`, AF (5 escenarios), E `the_fill_sink_books_the_moment_the_venue_reports...`, AS `a_fill_the_venue_reports_reconciles_clean_and_the_ledger_agrees_with_the_account` |
+
+Lo que esta matriz **no** prueba: un fill real en Testnet (S8 sigue NOT TESTED; un LIMIT_MAKER no
+cruza por definición y provocar el cruce con una orden agresiva está prohibido por las reglas
+de esta validación), y el comportamiento del servidor de Binance ante cualquiera de estos
+órdenes de llegada.
+
 ## 11. Modelo de estados de seguridad del maker live
 
 El kill switch del maker (`tia/mm/kill_switch.py`) alimenta el `system_unsafe` del gate global;
@@ -378,7 +482,8 @@ puede saber que la condición terminó.
 | **Sticky** | `unknown_fill`, `unknown_execution_report`, `foreign_open_order`, `venue_order_unknown_locally`, `closed_order_open_at_venue`, `outcome_apply_failed` | la cuenta no es lo que creíamos | cancel_open | stop y start por un operador | una persona |
 | **Sticky** | `unresolved_order`, `excessive_api_errors`, `activation` | la venue no contesta o rechaza la autorización | no_new_quotes | stop y start por un operador | una persona |
 | **Sticky** | `risk_limit` | el controller del maker disparó (pérdida diaria, drawdown) | cancel_open | stop y start por un operador | una persona |
-| **Sticky** | `operator`, `stop` | acción explícita de un operador | cancel_open | start por un operador | una persona |
+| **Sticky** | `operator` | parada de emergencia explícita de un operador (`POST /api/mm/live/kill-switch`) | cancel_open | stop y start por un operador | una persona |
+| **Shutdown** | `stop()` | parada deliberada: `POST /api/mm/live/stop`, el cierre del proceso, el fin de una validación | cancela lo que descansa y cierra la cotización por el mismo gate | no es un enganche de seguridad: `engaged` queda en lo que digan las condiciones de seguridad; los transitorios se limpian y quedan en el historial como "limpiado por el shutdown"; un sticky previo sigue visible con su primera causa | start por un operador |
 
 Reglas que el modelo garantiza y que los tests sintéticos atacan:
 
@@ -388,8 +493,12 @@ Reglas que el modelo garantiza y que los tests sintéticos atacan:
    responda; una orden UNKNOWN nunca se reenvía; su cancel se recuerda y sale cuando la venue dice
    que descansa.
 3. Un enganche sticky conserva su **primera causa**; las siguientes quedan en el historial y
-   solo pueden subir la severidad. `stop()` engancha sticky por diseño y queda como única causa en
-   una corrida limpia.
+   solo pueden subir la severidad. `stop()` **no** es un enganche: es un estado de shutdown
+   propio (`kill_switch.shutdown`), que bloquea la cotización por el gate mientras el servicio
+   drena y se reporta como shutdown. En una corrida limpia el estado final es
+   `engaged=false`, `sticky=false`, `transient={}`, `shutdown={reason, actor, at_ms}`.
+   Un transitorio engancha solo mientras alguien pueda observar la condición; un servicio
+   parado no puede, así que el shutdown limpia los transitorios y lo registra.
 4. Una reconciliación limpia posterior **no** libera un sticky: el hallazgo crítico fue una
    afirmación sobre la cuenta ("alguien más opera", "una orden nuestra que nadie administra") que
    una persona debe mirar aunque haya desaparecido. Lo que sí se exige del clasificador es que

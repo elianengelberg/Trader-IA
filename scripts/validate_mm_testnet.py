@@ -21,13 +21,19 @@ Rails, each of them checked before any request:
 * the order is placed ``--percent-away`` percent below the best bid (2% by default, on the
   tick grid), so it rests and does not fill (a partial fill is therefore NOT TESTED by
   design: Testnet's book is not ours to move);
-* ``--fill-probe SECONDS`` (off by default) adds one phase that rests a minimal post-only
-  bid AT the best bid and waits that long for the market to trade into it. Nothing is
-  forced: no MARKET order, no crossing, no price chasing. If a print comes, the TRADE
-  report, the single booking against ``myTrades``, the ledger, the balance report and a
-  balance reconciliation are checked, and the position is unwound with a post-only ask
-  under the same rules; whatever does not fill is cancelled and the residual Testnet
-  inventory is reported. If no print comes, the items stay NOT TESTED;
+* ``--fill-probe SECONDS`` (off by default) adds one phase that rests minimal post-only
+  probe(s) AT the best — a bid at the best bid, an ask at the best ask, or both with
+  ``--fill-probe-sides both`` — and waits that long for the market to trade into one.
+  Nothing is forced: no MARKET order, no crossing. With ``--fill-probe-repeg SECONDS`` a
+  probe the best moved away from is cancelled (confirmed) and rested again at the new best,
+  which is what a maker does and is as post-only as the first order; a best that moved
+  through our price is a fill, not a re-peg. If a print comes, the TRADE report and its
+  correlation (clientOrderId and orderId), the single booking against ``myTrades``, the
+  ledger, the balance report and a balance reconciliation are checked, the other side is
+  cancelled, and what the probes netted is unwound with one post-only order under the same
+  rules; whatever does not fill is cancelled and the residual Testnet inventory is reported.
+  The evidence is labelled ``real_testnet_fill``; the synthetic fill tests are never
+  evidence about Binance. If no print comes, the items stay NOT TESTED;
 * on exit, success or failure, every open order with this run's prefix is cancelled and the
   cancellation is confirmed against the venue.
 
@@ -136,6 +142,24 @@ def _env_live_config(args: argparse.Namespace) -> LiveConfig | None:
 
 def _round_down(value: float, step: float) -> float:
     return round(math.floor(value / step + 1e-9) * step, 10)
+
+
+def _repeg_target(side: str, our_price: float, best_bid: float, best_ask: float, tick: float) -> float | None:
+    """Where a resting probe moves so it is AT the best again, or None when it already is.
+    A bid re-pegs up to the best bid when the best bid rose above it; an ask re-pegs down to
+    the best ask when the best ask fell below it. Never across the spread: the target stays
+    on the maker side, so a re-pegged probe is as post-only as the first one. A best that
+    moved through our price is not a re-peg: the probe traded, or is about to."""
+    if side == "buy":
+        target = _round_down(best_bid, tick)
+        return target if target > our_price + tick / 2 and target < best_ask else None
+    target = _round_up(best_ask, tick)
+    return target if target < our_price - tick / 2 and target > best_bid else None
+
+
+def _net_inventory(fills: list[tuple[str, float]]) -> float:
+    """What the probes netted: bought minus sold, in base units."""
+    return sum(q if side == "buy" else -q for side, q in fills)
 
 
 def _round_up(value: float, step: float) -> float:
@@ -474,79 +498,132 @@ class Validation:
         self.ev.mark(f"6b.{side}_probe_accepted_locally", "PASS", f"orderId {order.venue_order_id}, state {order.state}")
         return order
 
+    async def _rest_at_best(self, side: str, quantity: float, best_bid: float, best_ask: float) -> Any | None:
+        """One post-only probe AT the best of its side: a bid at the best bid, an ask at the
+        best ask. Validated by the same maker-only check the engine's quotes pass; refused,
+        not re-priced, when the venue's picture makes it a taker."""
+        assert self.filters is not None
+        f = self.filters
+        price = _round_down(best_bid, f.tick_size) if side == "buy" else _round_up(best_ask, f.tick_size)
+        check = validate_maker_order(side, price, quantity, f, best_bid=best_bid, best_ask=best_ask)
+        self.ev.responses[f"fill_probe_{'bid' if side == 'buy' else 'ask'}"] = {"price": price, "quantity": quantity, "notional": round(price * quantity, 4), "best_bid": best_bid, "best_ask": best_ask, "check": check.as_dict()}
+        if not check.ok:
+            self.ev.mark(f"6b.{side}_probe_accepted_locally", "NOT TESTED", f"the probe failed the maker-only check: {check.reason}")
+            return None
+        return await self._rest_probe_order(side, price, quantity, (best_bid + best_ask) / 2, f"testnet fill probe: join the best {'bid' if side == 'buy' else 'ask'}, maker-only")
+
     async def phase_6b_fill_probe(self) -> None:
-        print(f"\nPHASE 6b — fill probe: a post-only bid AT the best bid, up to {self.args.fill_probe:g} s for the market to come")
+        sides = {"bid": ["buy"], "ask": ["sell"], "both": ["buy", "sell"]}[self.args.fill_probe_sides]
+        window = float(self.args.fill_probe)
+        repeg_s = float(self.args.fill_probe_repeg)
+        print(f"\nPHASE 6b — fill probe: post-only {' and '.join('bid at the best bid' if s == 'buy' else 'ask at the best ask' for s in sides)}, up to {window:g} s for the market to come" + (f", re-pegged to the best every {repeg_s:g} s" if repeg_s > 0 else ""))
         assert self.execution is not None and self.provider is not None and self.filters is not None
         ev = self.ev
         f = self.filters
         c = self.execution.counters
-        window = float(self.args.fill_probe)
+        fills_before, booked_before, balances_before = c["fills"], len(self.booked), len(self.balances_seen)
+        probe: dict[str, Any] = {"kind": "real_testnet_fill", "sides": list(sides), "window_s": window, "repeg_s": repeg_s, "repegs": 0, "orders": []}
+        ev.responses["fill_probe"] = probe
 
         best_bid, best_ask = await self._top_of_book()
-        price = _round_down(best_bid, f.tick_size)
-        quantity = self.args.size if self.args.size > 0 else _round_up(max(f.min_qty, f.min_notional * 1.2 / price), f.step_size)
-        check = validate_maker_order("buy", price, quantity, f, best_bid=best_bid, best_ask=best_ask)
-        ev.responses["fill_probe_bid"] = {"price": price, "quantity": quantity, "notional": round(price * quantity, 4), "best_bid": best_bid, "best_ask": best_ask, "check": check.as_dict()}
-        if not check.ok:
-            ev.mark("6b.fill_observed", "NOT TESTED", f"the probe bid failed the maker-only check: {check.reason}")
+        quantity = self.args.size if self.args.size > 0 else _round_up(max(f.min_qty, f.min_notional * 1.2 / best_bid), f.step_size)
+        placed: list[Any] = []  # every probe order, re-pegs included
+        resting: dict[str, Any] = {}  # side -> the probe currently on the book
+        for side in sides:
+            order = await self._rest_at_best(side, quantity, best_bid, best_ask)
+            if order is not None:
+                resting[side] = order
+                placed.append(order)
+        if not resting:
+            ev.mark("6b.fill_observed", "NOT TESTED", "no probe rested")
             return
-        fills_before, booked_before, balances_before = c["fills"], len(self.booked), len(self.balances_seen)
-        order = await self._rest_probe_order("buy", price, quantity, (best_bid + best_ask) / 2, "testnet fill probe: join the best bid, maker-only")
-        if order is None:
-            ev.mark("6b.fill_observed", "NOT TESTED", "the probe bid did not rest")
-            return
+        side_of = {o.order_id: o.side for o in placed}
 
         def probe_fills() -> list[Any]:
-            return [b for b in self.booked[booked_before:] if b[0].order_id == order.order_id]
+            return [b for b in self.booked[booked_before:] if b[0].order_id in side_of]
 
-        await self._wait(lambda: order.state in ("filled", "cancelled", "unknown") or bool(probe_fills()), window, "a print at our price")
-        if order.state == "unknown":
-            ev.mark("6b.fill_observed", "FAIL", f"the probe order went UNKNOWN: {order.unknown_reason}")
-            return
-        if not probe_fills():
+        deadline = time.monotonic() + window
+        while time.monotonic() < deadline and not probe_fills():
+            remaining = deadline - time.monotonic()
+            slice_s = min(repeg_s, remaining) if repeg_s > 0 else remaining
+            await self._wait(lambda: bool(probe_fills()) or any(o.state == "unknown" for o in resting.values()), slice_s, "a print at our price")
+            if probe_fills():
+                break
+            if any(o.state == "unknown" for o in resting.values()):
+                ev.mark("6b.fill_observed", "FAIL", f"a probe order went UNKNOWN: {[o.unknown_reason for o in resting.values() if o.state == 'unknown']}")
+                return
+            if repeg_s > 0 and time.monotonic() < deadline:
+                best_bid, best_ask = await self._top_of_book()
+                for side, order in list(resting.items()):
+                    if not order.is_open:
+                        continue  # closed by the venue meanwhile (expired, cancelled at the console): left as it is
+                    target = _repeg_target(side, order.price, best_bid, best_ask, f.tick_size)
+                    if target is None:
+                        continue
+                    ev.command(f"execution.cancel({order.order_id})  [re-peg: the best {'bid' if side == 'buy' else 'ask'} moved to {target}]")
+                    self.execution.cancel(order.order_id, self.now_ms(), reason="fill probe: re-peg to the best")
+                    await self._wait(lambda o=order: not o.is_open, 20, "the re-peg's cancellation")
+                    ev.orders.append(order.as_dict())
+                    if probe_fills():
+                        break  # it traded while the cancel was in flight: the race, booked below
+                    fresh = await self._rest_at_best(side, quantity, best_bid, best_ask)
+                    if fresh is not None:
+                        resting[side] = fresh
+                        placed.append(fresh)
+                        side_of[fresh.order_id] = fresh.side
+                        probe["repegs"] += 1
+
+        # Take everything still open off the book: the other side after a fill, or every probe
+        # when nothing traded. Then let the venue's last words arrive.
+        for order in resting.values():
             if order.is_open:
-                ev.command(f"execution.cancel({order.order_id})  [no print within the window]")
-                self.execution.cancel(order.order_id, self.now_ms(), reason="fill probe: window elapsed")
-                await self._wait(lambda: order.state == "cancelled", 20, "the probe's cancellation")
-            ev.mark("6b.fill_observed", "NOT TESTED", f"no print at {price} within {window:g} s; final state {order.state}")
+                ev.command(f"execution.cancel({order.order_id})  [{'the other side after a fill' if probe_fills() else 'no print within the window'}]")
+                self.execution.cancel(order.order_id, self.now_ms(), reason="fill probe: window elapsed or the other side traded")
+        await self._wait(lambda: all(not o.is_open for o in resting.values()), 20, "the probes' cancellation")
+        await asyncio.sleep(0.5)
+        for order in placed:
             ev.orders.append(order.as_dict())
+        probe["orders"] = [{"order_id": o.order_id, "side": o.side, "price": o.price, "quantity": o.quantity, "state": o.state, "venue_order_id": o.venue_order_id, "filled": sum(fl.quantity for fl in o.fills)} for o in placed]
+        booked_now = probe_fills()
+        if not booked_now:
+            ev.mark("6b.fill_observed", "NOT TESTED", f"no print at our price within {window:g} s ({probe['repegs']} re-pegs, {len(placed)} probe order(s)); final states {[o.state for o in resting.values()]}")
             return
 
         # The venue traded with us. Everything below is read from what arrived, not assumed.
-        await asyncio.sleep(0.5)  # let the balance report that follows a trade arrive
-        if order.is_open:
-            # A partial fill with the remainder still resting: take the remainder off the book
-            # before reading balances and unwinding, so what is held is what was filled.
-            ev.command(f"execution.cancel({order.order_id})  [the remainder after a partial fill]")
-            self.execution.cancel(order.order_id, self.now_ms(), reason="fill probe: remainder after a partial fill")
-            await self._wait(lambda: not order.is_open, 20, "the remainder's cancellation")
-        trade_reports = [r for r, _, _ in self.reports if r.order_ref == order.order_id and r.is_trade]
-        booked_now = probe_fills()
-        filled_qty = sum(fl.quantity for fl, _, _ in booked_now)
-        partial = filled_qty < quantity - 1e-12
-        ev.mark("6b.fill_observed", "PASS", f"{'partial' if partial else 'full'} fill: {filled_qty} of {quantity} @ {price}; state {order.state}; {len(trade_reports)} TRADE report(s)")
-        ev.mark("4.partial_fill", "PASS" if partial else "NOT TESTED", "the probe filled in more than one print" if partial else "the probe filled in one print; a partial fill did not occur")
+        filled_orders = [o for o in placed if any(fl.order_id == o.order_id for fl, _, _ in booked_now)]
+        bought = sum(fl.quantity for fl, _, _ in booked_now if side_of[fl.order_id] == "buy")
+        sold = sum(fl.quantity for fl, _, _ in booked_now if side_of[fl.order_id] == "sell")
+        net = _net_inventory([(side_of[fl.order_id], fl.quantity) for fl, _, _ in booked_now])
+        partial = any(sum(fl.quantity for fl in o.fills) < o.quantity - 1e-12 for o in filled_orders)
+        ev.mark("6b.fill_observed", "PASS", f"real_testnet_fill: bought {bought} sold {sold} on {len(filled_orders)} order(s) {[(o.side, o.price, o.state) for o in filled_orders]}; {len(booked_now)} print(s); {probe['repegs']} re-pegs")
+        ev.mark("4.partial_fill", "PASS" if partial else "NOT TESTED", "a probe filled in more than one print, or closed with part of it filled" if partial else "every filled probe filled whole; a partial fill did not occur")
+        trade_reports = [r for r, _, _ in self.reports if r.is_trade and r.order_ref in {o.order_id for o in filled_orders}]
         if trade_reports:
             r = trade_reports[0]
             fields_ok = bool(r.trade_id) and str(r.trade_id) != "-1" and r.is_maker is True and r.last_quantity > 0 and r.last_price > 0 and bool(r.commission_asset)
             ev.mark("6b.execution_report_TRADE_fields", "PASS" if fields_ok else "FAIL", f"t={r.trade_id} m={r.is_maker} l={r.last_quantity} L={r.last_price} n={r.commission} N={r.commission_asset!r} X={r.raw_status}")
+            matched = next((o for o in filled_orders if o.order_id == r.order_ref), None)
+            correlated = matched is not None and str(r.venue_order_id) == str(matched.venue_order_id)
+            ev.mark("6b.fill_report_correlation_clientOrderId_orderId", "PASS" if correlated else "FAIL", f"report c/C={r.order_ref} i={r.venue_order_id}; local orderId={getattr(matched, 'venue_order_id', None)}")
         else:
             ev.mark("6b.execution_report_TRADE_fields", "FAIL", "the fill was booked without a TRADE report having arrived (so it came from myTrades): the stream missed it")
+            ev.mark("6b.fill_report_correlation_clientOrderId_orderId", "NOT TESTED", "no TRADE report to correlate")
         ev.mark("6b.fill_booked_to_ledger_once", "PASS" if booked_now and len(booked_now) == c["fills"] - fills_before == len({fl.fill_id for fl, _, _ in booked_now}) else "FAIL", f"booked {len(booked_now)}, counted {c['fills'] - fills_before}, distinct trade ids {len({fl.fill_id for fl, _, _ in booked_now})}, ledger fills {self.ledger.state.fills}")
         for fl, _, booked in booked_now:
-            ev.responses.setdefault("fill_probe_fills", []).append({**fl.as_dict(), "booked": booked} if hasattr(fl, "as_dict") else {"fill_id": fl.fill_id, "quantity": fl.quantity, "price": fl.price, "fee": fl.fee, "fee_asset": fl.fee_asset, "fee_status": fl.fee_status, "liquidity": fl.liquidity, "booked": booked})
+            ev.responses.setdefault("fill_probe_fills", []).append({**fl.as_dict(), "booked": booked, "kind": "real_testnet_fill"} if hasattr(fl, "as_dict") else {"fill_id": fl.fill_id, "order_id": fl.order_id, "quantity": fl.quantity, "price": fl.price, "fee": fl.fee, "fee_asset": fl.fee_asset, "fee_status": fl.fee_status, "liquidity": fl.liquidity, "booked": booked, "kind": "real_testnet_fill"})
 
-        # The cross-check: the same trade from myTrades must not book twice.
+        # The cross-check: the same trades from myTrades must not book twice.
         ev.command("execution.fetch_trades()  [GET /api/v3/myTrades]  — the same prints, second source")
         trades = await self.execution.fetch_trades()
-        mine = [t for t in trades if str(t.order_id) == order.venue_order_id]
+        venue_ids = {str(o.venue_order_id) for o in filled_orders}
+        mine = [t for t in trades if str(t.order_id) in venue_ids]
         dups_before = c["duplicate_trades"]
         self.execution.absorb_trades(trades)
         self.execution.on_event("tick", None, self.book, self.now_ms())
         if mine:
-            ev.mark("5.report_plus_myTrades_single_booking", "PASS" if c["fills"] - fills_before == len(booked_now) and c["duplicate_trades"] - dups_before >= len(mine) else "FAIL", f"myTrades shows {len(mine)} print(s) for orderId {order.venue_order_id}; fills stayed {c['fills'] - fills_before}; duplicates recognised {c['duplicate_trades'] - dups_before}")
+            ev.mark("5.report_plus_myTrades_single_booking", "PASS" if c["fills"] - fills_before == len(booked_now) and c["duplicate_trades"] - dups_before >= len(mine) else "FAIL", f"myTrades shows {len(mine)} print(s) for orderIds {sorted(venue_ids)}; fills stayed {c['fills'] - fills_before}; duplicates recognised {c['duplicate_trades'] - dups_before}")
         else:
-            ev.mark("5.report_plus_myTrades_single_booking", "FAIL", f"myTrades does not list orderId {order.venue_order_id} although the stream reported a trade on it")
+            ev.mark("5.report_plus_myTrades_single_booking", "FAIL", f"myTrades does not list orderIds {sorted(venue_ids)} although the stream reported a trade on them")
 
         got_balances = await self._wait(lambda: len(self.balances_seen) > balances_before, 10, "outboundAccountPosition after the fill")
         ev.mark("6b.outboundAccountPosition_after_fill", "PASS" if got_balances else "FAIL", f"balance reports after the fill: {len(self.balances_seen) - balances_before}")
@@ -555,37 +632,45 @@ class Validation:
         ev.command("provider.get_balances()  [GET /api/v3/account]  — reconciliation after the fill")
         balances = await self.provider.get_balances()
         quote, base = balances.get("USDT"), balances.get("BTC")
+        mark_price = filled_orders[0].price
         if quote is not None and base is not None:
-            result = self.ledger.reconcile_balances(quote_free=quote.free, quote_locked=quote.locked, base_free=base.free, base_locked=base.locked, t_ms=self.now_ms(), quote_tolerance_usd=max(0.05, price * quantity * 0.002), base_tolerance_btc=2 * f.step_size)
+            result = self.ledger.reconcile_balances(quote_free=quote.free, quote_locked=quote.locked, base_free=base.free, base_locked=base.locked, t_ms=self.now_ms(), quote_tolerance_usd=max(0.05, mark_price * quantity * 0.002), base_tolerance_btc=2 * f.step_size)
             ev.responses["fill_probe_reconciliation"] = result
             ev.mark("6b.balances_reconcile_after_fill", "PASS" if result["ok"] else "FAIL", f"quote delta {result['quote_delta_usd']} USD (tol {result['quote_tolerance_usd']}), base delta {result['base_delta_btc']} BTC (tol {result['base_tolerance_btc']}); adopted={result['adopted']}")
         else:
             ev.mark("6b.balances_reconcile_after_fill", "FAIL", "the account no longer lists USDT or BTC")
 
-        # Unwind, maker-only: an ask at the best ask for what we hold from this probe.
+        # Unwind, maker-only: what the probes netted is taken back to flat with one post-only
+        # order on the other side, at the best. Bought more than sold: an ask at the best ask.
+        # Sold more than bought: a bid at the best bid. Equal: nothing to do.
+        if abs(net) < f.step_size:
+            ev.mark("6b.unwind_filled", "PASS", f"flat: bought {bought} sold {sold}; nothing to unwind")
+            return
         best_bid2, best_ask2 = await self._top_of_book()
-        sell_price = _round_up(best_ask2, f.tick_size)
-        holdable = base.free if base is not None else filled_qty
-        sell_qty = _round_down(min(filled_qty, holdable), f.step_size)
-        check = validate_maker_order("sell", sell_price, sell_qty, f, best_bid=best_bid2, best_ask=best_ask2)
-        ev.responses["fill_probe_ask"] = {"price": sell_price, "quantity": sell_qty, "best_bid": best_bid2, "best_ask": best_ask2, "check": check.as_dict()}
+        unwind_side = "sell" if net > 0 else "buy"
+        unwind_price = _round_up(best_ask2, f.tick_size) if unwind_side == "sell" else _round_down(best_bid2, f.tick_size)
+        holdable = (base.free if base is not None else abs(net)) if unwind_side == "sell" else ((quote.free / unwind_price) if quote is not None else abs(net))
+        unwind_qty = _round_down(min(abs(net), holdable), f.step_size)
+        check = validate_maker_order(unwind_side, unwind_price, unwind_qty, f, best_bid=best_bid2, best_ask=best_ask2)
+        ev.responses["fill_probe_unwind"] = {"side": unwind_side, "price": unwind_price, "quantity": unwind_qty, "net_before": net, "best_bid": best_bid2, "best_ask": best_ask2, "check": check.as_dict()}
         if not check.ok:
-            ev.mark("6b.unwind_filled", "NOT TESTED", f"no maker-only ask possible: {check.reason}; residual Testnet inventory {filled_qty} BTC (Testnet assets, no value)")
+            ev.mark("6b.unwind_filled", "NOT TESTED", f"no maker-only {unwind_side} possible: {check.reason}; residual Testnet inventory {net:+.8f} BTC (Testnet assets, no value)")
             return
-        ask = await self._rest_probe_order("sell", sell_price, sell_qty, (best_bid2 + best_ask2) / 2, "testnet fill probe: unwind with a post-only ask")
-        if ask is None:
-            ev.mark("6b.unwind_filled", "NOT TESTED", f"the ask did not rest; residual Testnet inventory {filled_qty} BTC")
+        unwind = await self._rest_probe_order(unwind_side, unwind_price, unwind_qty, (best_bid2 + best_ask2) / 2, f"testnet fill probe: unwind with a post-only {unwind_side}")
+        if unwind is None:
+            ev.mark("6b.unwind_filled", "NOT TESTED", f"the unwind {unwind_side} did not rest; residual Testnet inventory {net:+.8f} BTC")
             return
-        await self._wait(lambda: ask.state in ("filled", "cancelled", "unknown"), window, "the ask to fill")
-        if ask.state == "filled":
-            ev.mark("6b.unwind_filled", "PASS", f"sold {sell_qty} @ {sell_price}; inventory from the probe is flat")
+        await self._wait(lambda: unwind.state in ("filled", "cancelled", "unknown"), window, "the unwind to fill")
+        if unwind.state == "filled":
+            ev.mark("6b.unwind_filled", "PASS", f"{unwind_side} {unwind_qty} @ {unwind_price}; inventory from the probe is flat")
         else:
-            if ask.state not in ("cancelled", "unknown"):
-                self.execution.cancel(ask.order_id, self.now_ms(), reason="fill probe: unwind window elapsed")
-                await self._wait(lambda: ask.state == "cancelled", 20, "the ask's cancellation")
-            sold_qty = sum(fl.quantity for fl in ask.fills)
-            ev.mark("6b.unwind_filled", "NOT TESTED" if ask.state == "cancelled" else "FAIL", f"ask ended {ask.state} with {sold_qty} sold; residual Testnet inventory {filled_qty - sold_qty:.8f} BTC (Testnet assets, no value)")
-        ev.orders.append(ask.as_dict())
+            if unwind.state not in ("cancelled", "unknown"):
+                self.execution.cancel(unwind.order_id, self.now_ms(), reason="fill probe: unwind window elapsed")
+                await self._wait(lambda: unwind.state == "cancelled", 20, "the unwind's cancellation")
+            done = sum(fl.quantity for fl in unwind.fills)
+            residual = net - done if unwind_side == "sell" else net + done
+            ev.mark("6b.unwind_filled", "NOT TESTED" if unwind.state == "cancelled" else "FAIL", f"{unwind_side} ended {unwind.state} with {done} done; residual Testnet inventory {residual:+.8f} BTC (Testnet assets, no value)")
+        ev.orders.append(unwind.as_dict())
 
     # ------------------------------------------------------------------ phase 7
 
@@ -711,6 +796,8 @@ class Validation:
             "criticals": self.criticals,
             "execution_stats": self.execution.stats() if self.execution else None,
             "ledger": self.ledger.snapshot() if self.ledger.seeded else None,
+            "fill_evidence_kind": "real_testnet_fill" if self.ev.responses.get("fill_probe_fills") else None,
+            "fill_evidence_note": "a fill here is the venue trading with a post-only probe of ours; the synthetic fill tests under tests/unit/mm and tests/adversarial are evidence about our invariants, never about Binance",
         }
 
 
@@ -721,7 +808,9 @@ def main() -> int:
     parser.add_argument("--percent-away", type=float, default=2.0, help="how far under the best bid the bid rests, in percent (never at or above the ask)")
     parser.add_argument("--rest-url", default=REST_URL)
     parser.add_argument("--ws-url", default=WS_URL)
-    parser.add_argument("--fill-probe", type=float, default=0.0, help="seconds to rest a minimal post-only bid AT the best bid, waiting for the market to trade into it (0 = off); the position is unwound with a post-only ask and anything left is reported")
+    parser.add_argument("--fill-probe", type=float, default=0.0, help="seconds to rest minimal post-only probe(s) AT the best, waiting for the market to trade into them (0 = off); what the probes net is unwound with one post-only order on the other side and anything left is reported")
+    parser.add_argument("--fill-probe-sides", default="bid", choices=("bid", "ask", "both"), help="which side(s) rest: a bid at the best bid, an ask at the best ask, or both at once (whichever the market comes to; the other is cancelled)")
+    parser.add_argument("--fill-probe-repeg", type=float, default=0.0, help="seconds between re-pegs: when the best moved away from a resting probe it is cancelled (confirmed) and rested again at the new best, maker-only (0 = never)")
     parser.add_argument("--json-out", default="")
     args = parser.parse_args()
 

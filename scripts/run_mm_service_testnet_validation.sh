@@ -20,6 +20,11 @@
 # Usage, as the shell that holds the Testnet keys (exported, never pasted):
 #   bash scripts/run_mm_service_testnet_validation.sh
 # Knobs (environment): MINUTES=3 PROFILE_MINUTES=5 CAP_USD=200 OUT=/home/tia/tia-testnet
+#   RECOVERY_DRILL=1   after the window the service dies with quotes resting and a second one
+#                      starts on the same account (items R1-R7: sweep, clean reconciliation, own ids)
+#   FILL_PROBE=1800    then the block validator rests a post-only bid AT the best bid and an ask AT
+#                      the best ask for that many seconds, re-pegged to the best every 30 s, and
+#                      checks a real fill if the market comes (never forced; NOT TESTED otherwise)
 
 set -euo pipefail
 
@@ -32,6 +37,8 @@ PROFILE_IN_CONTAINER=/app/data/runtime/mm/latency_profile.json
 MINUTES="${MINUTES:-3}"
 PROFILE_MINUTES="${PROFILE_MINUTES:-5}"
 CAP_USD="${CAP_USD:-200}"
+RECOVERY_DRILL="${RECOVERY_DRILL:-0}"
+FILL_PROBE="${FILL_PROBE:-0}"
 REST_URL=https://testnet.binance.vision
 STREAM_URL=wss://stream.testnet.binance.vision/stream
 WS_URL=wss://ws-api.testnet.binance.vision/ws-api/v3
@@ -95,7 +102,9 @@ assert "testnet.binance.vision" in p.source, "this profile was not measured agai
 assert all(s.count > 0 for s in p.measured.values()), "a measured component has no samples"
 PY
 
-say "6. the service validation: $MINUTES min on Spot Testnet, capital cap $CAP_USD USD, profile measured above"
+DRILL=()
+[ "$RECOVERY_DRILL" = "1" ] && DRILL=(--recovery-drill)
+say "6. the service validation: $MINUTES min on Spot Testnet, capital cap $CAP_USD USD, profile measured above${DRILL:+, then the recovery drill}"
 JSON_NAME="mm_service_testnet_${HEAD}_$STAMP.json"
 [ -e "$OUT/$JSON_NAME" ] && die "$OUT/$JSON_NAME already exists; evidence is never overwritten"
 status=0
@@ -107,10 +116,27 @@ docker run --rm --name tia-mm-service-testnet --user "$RUN_AS" \
   "$IMAGE" python scripts/validate_mm_live_service_testnet.py \
     --minutes "$MINUTES" --capital-cap-usd "$CAP_USD" --profile "$PROFILE_IN_CONTAINER" \
     --rest-url "$REST_URL" --ws-url "$WS_URL" --stream-url "$STREAM_URL" \
-    --json-out "/out/$JSON_NAME" \
+    --json-out "/out/$JSON_NAME" "${DRILL[@]}" \
   2>&1 | tee "$OUT/${JSON_NAME%.json}.log" || status=$?
 echo "validator exit status: $status (0 = no FAIL; anything else is kept as it is)"
 [ -s "$OUT/$JSON_NAME" ] || die "the validator wrote no evidence file"
+
+if [ "$FILL_PROBE" != "0" ]; then
+  say "6b. fill probe: post-only bid AT the best bid and ask AT the best ask for $FILL_PROBE s, re-pegged every 30 s; a fill is checked if the market comes, never forced"
+  PROBE_NAME="mm_testnet_fillprobe_${HEAD}_$STAMP.json"
+  pstatus2=0
+  docker run --rm --name tia-mm-fill-probe --user "$RUN_AS" \
+    -e TIA_COMMIT="$HEAD" \
+    --env TIA_LIVE__BINANCE_API_KEY --env TIA_LIVE__BINANCE_API_SECRET \
+    --env TIA_LIVE__USE_TESTNET=true --env TIA_MM__REAL_MONEY=false \
+    -v "$OUT:/out" \
+    "$IMAGE" python scripts/validate_mm_testnet.py --symbol BTC-USD --percent-away 2.0 \
+      --rest-url "$REST_URL" --ws-url "$WS_URL" \
+      --fill-probe "$FILL_PROBE" --fill-probe-sides both --fill-probe-repeg 30 \
+      --json-out "/out/$PROBE_NAME" \
+    2>&1 | tee "$OUT/${PROBE_NAME%.json}.log" || pstatus2=$?
+  echo "fill probe exit status: $pstatus2 (0 = no FAIL; NOT TESTED items mean the market did not come)"
+fi
 
 say "7. evidence: scanned for sensitive keys, copied unmodified (FAIL stays FAIL)"
 copy_evidence() {
@@ -125,6 +151,7 @@ copy_evidence() {
   fi
 }
 copy_evidence "$OUT/$JSON_NAME"
+[ "$FILL_PROBE" != "0" ] && copy_evidence "$OUT/$PROBE_NAME"
 # The two earlier service runs wrote to the $HOME/tia-testnet of the shell that ran them.
 for earlier in /root/tia-testnet/mm_service_testnet_*.json "$OUT"/mm_service_testnet_2026*.json; do
   case "$earlier" in *"$JSON_NAME") ;; *) copy_evidence "$earlier";; esac

@@ -1,0 +1,3302 @@
+{
+ "generated_at_ms": 1791131918672,
+ "rest_url": "https://testnet.binance.vision",
+ "ws_url": "wss://ws-api.testnet.binance.vision/ws-api/v3",
+ "symbol": "BTC-USD",
+ "results": {
+  "1.rest_testnet_reachable": "PASS",
+  "1.venue_time_read": "PASS",
+  "1.subscribe_request_signed": "PASS",
+  "1.exchange_info_read": "PASS",
+  "1.user_stream_subscribed": "PASS",
+  "2.USDT_free_locked": "PASS",
+  "2.BTC_free_locked": "PASS",
+  "2.account_balance_parser_matches_payload": "PASS",
+  "3.exchange_info_filters": "PASS",
+  "3.price_is_on_the_maker_side_and_on_the_grid": "PASS",
+  "3.client_order_id_generated_by_trader_ia": "PASS",
+  "3.order_acknowledged_resting": "PASS",
+  "3.only_limit_maker_was_sent": "PASS",
+  "4.execution_report_NEW_received": "PASS",
+  "4.correlation_clientOrderId_orderId": "PASS",
+  "4.order_cancelled_locally": "PASS",
+  "4.execution_report_CANCELED_received": "PASS",
+  "4.venue_confirms_CANCELED": "PASS",
+  "4.ledger_consistent_no_fill": "PASS",
+  "4.partial_fill": "NOT TESTED",
+  "5.duplicate_executionReport_books_nothing": "PASS",
+  "5.report_plus_myTrades_single_booking": "PASS",
+  "5.embedded_fill_in_POST_response_not_booked": "PASS",
+  "6.safe_state_signalled_on_cut": "PASS",
+  "6.order_state_not_invented": "PASS",
+  "6.rest_reconciliation_sees_the_order": "PASS",
+  "6.reconnected_with_new_subscription": "PASS",
+  "6.recovery_only_after_reconciliation": "PASS",
+  "6.second_order_cancelled": "PASS",
+  "6b.buy_probe_accepted_locally": "PASS",
+  "6b.sell_probe_accepted_locally": "PASS",
+  "6b.fill_observed": "PASS",
+  "6b.execution_report_TRADE_fields": "PASS",
+  "6b.fill_report_correlation_clientOrderId_orderId": "PASS",
+  "6b.fill_booked_to_ledger_once": "PASS",
+  "6b.outboundAccountPosition_after_fill": "PASS",
+  "6b.balances_reconcile_after_fill": "PASS",
+  "6b.unwind_filled": "PASS",
+  "7.decision_to_enqueue_ms": "PASS",
+  "7.enqueue_to_submit_ms": "PASS",
+  "7.rest_submit_rtt_ms (submit -> REST ack)": "PASS",
+  "7.submit_to_first_ack_ms": "PASS",
+  "7.report_to_local_ms (venue E -> received; includes clock offset)": "PASS",
+  "7.cancel_to_ack_ms": "PASS",
+  "7.ws_receive_to_local_processing_ms": "PASS",
+  "7.fill_to_ledger_ms": "PASS",
+  "7.clock_offset_stated": "PASS",
+  "8.hot_path_is_synchronous_no_http_no_db": "PASS",
+  "8.testnet_hosts_only": "PASS",
+  "8.no_mainnet_order": "PASS",
+  "8.no_activation_token": "PASS",
+  "8.no_env_file_touched": "PASS",
+  "8.no_deploy_no_restart": "PASS",
+  "8.no_real_money": "PASS",
+  "cleanup.no_open_orders_left": "PASS"
+ },
+ "notes": {
+  "1.rest_testnet_reachable": "HTTP 200",
+  "1.venue_time_read": "venue - host = 1 ms (not corrected anywhere below)",
+  "1.subscribe_request_signed": "params ['apiKey', 'recvWindow', 'signature', 'timestamp'] (values never recorded)",
+  "1.exchange_info_read": "status TRADING, orderTypes ['LIMIT', 'LIMIT_MAKER', 'MARKET', 'STOP_LOSS', 'STOP_LOSS_LIMIT', 'TAKE_PROFIT', 'TAKE_PROFIT_LIMIT']",
+  "1.user_stream_subscribed": "subscriptionId 0; status events: [(True, 'connected')]; last_error ''",
+  "2.USDT_free_locked": "free 10000.0 locked 0.0",
+  "2.BTC_free_locked": "free 1.0 locked 0.0",
+  "3.exchange_info_filters": "tick 0.01 step 1e-05 minQty 1e-05 minNotional 5.0 orderTypes ['LIMIT', 'LIMIT_MAKER', 'MARKET', 'STOP_LOSS', 'STOP_LOSS_LIMIT', 'TAKE_PROFIT', 'TAKE_PROFIT_LIMIT']",
+  "3.price_is_on_the_maker_side_and_on_the_grid": "bid 83595.63 < best ask 85301.68, 2.0% under the best bid 85301.67",
+  "3.client_order_id_generated_by_trader_ia": "tiamm-validate-1791131813441-000001",
+  "3.order_acknowledged_resting": "orderId 9248932, first ack from stream",
+  "3.only_limit_maker_was_sent": "the adapter has no other order type; see test_the_adapter_has_no_code_path_to_a_market_or_plain_limit_order",
+  "4.execution_report_NEW_received": "1 NEW report(s)",
+  "4.correlation_clientOrderId_orderId": "report c=tiamm-validate-1791131813441-000001 i=9248932 X=NEW; REST orderId=9248932",
+  "4.order_cancelled_locally": "state cancelled, cancel_to_ack 240 ms",
+  "4.execution_report_CANCELED_received": "1 CANCELED report(s); C=tiamm-validate-1791131813441-000001",
+  "4.venue_confirms_CANCELED": "REST status cancelled",
+  "4.ledger_consistent_no_fill": "ledger fills 0, execution fills 0",
+  "4.partial_fill": "every filled probe filled whole; a partial fill did not occur",
+  "5.duplicate_executionReport_books_nothing": "duplicates counted 2, fills 0",
+  "5.report_plus_myTrades_single_booking": "myTrades shows 1 print(s) for orderIds ['9248936']; fills stayed 1; duplicates recognised 1",
+  "5.embedded_fill_in_POST_response_not_booked": "no embedded fill occurred (the order did not match on arrival); the adapter books none by construction, unit-tested",
+  "6.safe_state_signalled_on_cut": "stream_connected=False, criticals=['user_stream_down']",
+  "6.order_state_not_invented": "local state stayed 'resting' (unknown to us until the venue says otherwise)",
+  "6.rest_reconciliation_sees_the_order": "1 open at the venue",
+  "6.reconnected_with_new_subscription": "subscriptionId 0; last_error ''",
+  "6.recovery_only_after_reconciliation": "the service clears user_stream_down only after a reconciliation that follows the reconnect (rule unit-tested); here the reconciliation is the open-orders read above",
+  "6.second_order_cancelled": "state cancelled",
+  "6b.buy_probe_accepted_locally": "orderId 9249007, state resting",
+  "6b.sell_probe_accepted_locally": "orderId 9248936, state resting",
+  "6b.fill_observed": "real_testnet_fill: bought 0 sold 8e-05 on 1 order(s) [('sell', 85301.68, 'filled')]; 1 print(s); 0 re-pegs",
+  "6b.execution_report_TRADE_fields": "t=2344502 m=True l=8e-05 L=85301.68 n=0.0 N='USDT' X=FILLED",
+  "6b.fill_report_correlation_clientOrderId_orderId": "report c/C=tiamm-validate-1791131817381-000004 i=9248936; local orderId=9248936",
+  "6b.fill_booked_to_ledger_once": "booked 1, counted 1, distinct trade ids 1, ledger fills 1",
+  "6b.outboundAccountPosition_after_fill": "balance reports after the fill: 4",
+  "6b.balances_reconcile_after_fill": "quote delta 0.0 USD (tol 0.05), base delta 0.0 BTC (tol 2e-05); adopted=False",
+  "6b.unwind_filled": "buy 8e-05 @ 85315.54; inventory from the probe is flat",
+  "7.decision_to_enqueue_ms": "count 5 last 0.0 p50 0.0 max 0.0",
+  "7.enqueue_to_submit_ms": "count 5 last 1.0 p50 0.0 max 1.0",
+  "7.rest_submit_rtt_ms (submit -> REST ack)": "count 5 last 235.0 p50 234.0 max 320.0",
+  "7.submit_to_first_ack_ms": "count 5 last 235.0 p50 241.0 max 318.0",
+  "7.report_to_local_ms (venue E -> received; includes clock offset)": "count 12 last 127.0 p50 117.0 max 127.0",
+  "7.cancel_to_ack_ms": "count 3 last 246.0 p50 246.0 max 469.0",
+  "7.ws_receive_to_local_processing_ms": "samples [0, 0, 0, 0, 1, 0, 0, 0, 0, 0]",
+  "7.fill_to_ledger_ms": "count 2 last 0.0 p50 0.0 max 0.0",
+  "7.clock_offset_stated": "venue - host = 1 ms; venue legs are not corrected for it",
+  "8.hot_path_is_synchronous_no_http_no_db": "a property of the code (UNIT TESTED: test_the_hot_path_never_awaits_the_network); the market-data callback never ran in this script",
+  "8.testnet_hosts_only": "https://testnet.binance.vision / wss://ws-api.testnet.binance.vision/ws-api/v3",
+  "8.no_mainnet_order": "no request left this process for api.binance.com; the rails refuse the host before connecting",
+  "8.no_activation_token": "is_live=False, activation=None",
+  "8.no_env_file_touched": "credentials were read from the process environment; this script writes only --json-out",
+  "8.no_deploy_no_restart": "this script runs in-process and touches no service",
+  "8.no_real_money": "Testnet balances only; the adapter was built simulated=True",
+  "cleanup.no_open_orders_left": "cancelled 0; left []"
+ },
+ "commands": [
+  "GET https://testnet.binance.vision/api/v3/ping",
+  "GET https://testnet.binance.vision/api/v3/time",
+  "provider.user_stream_subscribe_params()  [local HMAC over apiKey, recvWindow, timestamp; nothing sent]",
+  "provider.get_exchange_info(BTC-USD)  [GET /api/v3/exchangeInfo?symbol=BTCUSDT]",
+  "BinanceUserDataStream.start()  [wss://ws-api.testnet.binance.vision/ws-api/v3 -> userDataStream.subscribe.signature]",
+  "provider.get_balances()  [GET /api/v3/account, signed]",
+  "GET /api/v3/ticker/bookTicker?symbol=BTCUSDT",
+  "execution.place(LIMIT_MAKER buy 8e-05 @ 83595.63, clientOrderId=tiamm-validate-1791131813441-000001)",
+  "execution.cancel(tiamm-validate-1791131813441-000001)  [DELETE /api/v3/order origClientOrderId]",
+  "provider.get_order(tiamm-validate-1791131813441-000001)  [GET /api/v3/order orderId=9248932]  \u2014 the REST confirmation, by the venue's id",
+  "execution.fetch_trades()  [GET /api/v3/myTrades]",
+  "stream.close()  [the account stream is cut while the order rests]",
+  "execution.fetch_open_orders()  [GET /api/v3/openOrders?symbol]  \u2014 the fallback reconciliation",
+  "BinanceUserDataStream.start()  [reconnect: a new signed subscription]",
+  "execution.place(LIMIT_MAKER buy 8e-05 @ 85301.67, clientOrderId=tiamm-validate-1791131817127-000003)  [fill probe]",
+  "execution.place(LIMIT_MAKER sell 8e-05 @ 85301.68, clientOrderId=tiamm-validate-1791131817381-000004)  [fill probe]",
+  "execution.cancel(tiamm-validate-1791131817127-000003)  [the other side after a fill]",
+  "execution.fetch_trades()  [GET /api/v3/myTrades]  \u2014 the same prints, second source",
+  "provider.get_balances()  [GET /api/v3/account]  \u2014 reconciliation after the fill",
+  "execution.place(LIMIT_MAKER buy 8e-05 @ 85315.54, clientOrderId=tiamm-validate-1791131832362-000005)  [fill probe]"
+ ],
+ "responses": {
+  "ping": {
+   "status": 200,
+   "rtt_ms": 299
+  },
+  "time": {
+   "serverTime": 1791131811036,
+   "local_mid_ms": 1791131811035,
+   "offset_ms_venue_minus_host": 1,
+   "rtt_ms": 231
+  },
+  "subscribe_request": {
+   "method": "userDataStream.subscribe.signature",
+   "param_names": [
+    "apiKey",
+    "recvWindow",
+    "signature",
+    "timestamp"
+   ],
+   "signature_length": 64
+  },
+  "filters": {
+   "symbol": "BTC-USD",
+   "tick_size": 0.01,
+   "step_size": 1e-05,
+   "min_qty": 1e-05,
+   "max_qty": 9000.0,
+   "min_notional": 5.0,
+   "source": "exchange_info",
+   "order_types": [
+    "LIMIT",
+    "LIMIT_MAKER",
+    "MARKET",
+    "STOP_LOSS",
+    "STOP_LOSS_LIMIT",
+    "TAKE_PROFIT",
+    "TAKE_PROFIT_LIMIT"
+   ]
+  },
+  "subscription": {
+   "subscription_id": 0,
+   "last_error": ""
+  },
+  "balances": {
+   "0G": {
+    "free": 2507.0,
+    "locked": 0.0
+   },
+   "1000CAT": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "1000CHEEMS": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "1000SATS": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "1INCH": {
+    "free": 5331.0,
+    "locked": 0.0
+   },
+   "1MBABYDOGE": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "2Z": {
+    "free": 9737.0,
+    "locked": 0.0
+   },
+   "456": {
+    "free": 10000.0,
+    "locked": 0.0
+   },
+   "A": {
+    "free": 5920.0,
+    "locked": 0.0
+   },
+   "AAOIB": {
+    "free": 4.0,
+    "locked": 0.0
+   },
+   "AAPLB": {
+    "free": 1.0,
+    "locked": 0.0
+   },
+   "AAVE": {
+    "free": 3.0,
+    "locked": 0.0
+   },
+   "ACE": {
+    "free": 2819.0,
+    "locked": 0.0
+   },
+   "ACH": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "ACM": {
+    "free": 1778.0,
+    "locked": 0.0
+   },
+   "ACT": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "ADA": {
+    "free": 2268.0,
+    "locked": 0.0
+   },
+   "ADX": {
+    "free": 8295.0,
+    "locked": 0.0
+   },
+   "AED": {
+    "free": 10000.0,
+    "locked": 0.0
+   },
+   "AERO": {
+    "free": 809.0,
+    "locked": 0.0
+   },
+   "AEVO": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "AGLD": {
+    "free": 2886.0,
+    "locked": 0.0
+   },
+   "AI": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "AIGENSYN": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "AIXBT": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "ALABB": {
+    "free": 1.0,
+    "locked": 0.0
+   },
+   "ALGO": {
+    "free": 4949.0,
+    "locked": 0.0
+   },
+   "ALICE": {
+    "free": 3609.0,
+    "locked": 0.0
+   },
+   "ALLO": {
+    "free": 1998.0,
+    "locked": 0.0
+   },
+   "ALPINE": {
+    "free": 1420.0,
+    "locked": 0.0
+   },
+   "ALT": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "AMATB": {
+    "free": 1.0,
+    "locked": 0.0
+   },
+   "AMDB": {
+    "free": 1.0,
+    "locked": 0.0
+   },
+   "AMP": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "AMZNB": {
+    "free": 1.0,
+    "locked": 0.0
+   },
+   "ANIME": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "ANKR": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "APE": {
+    "free": 3487.0,
+    "locked": 0.0
+   },
+   "API3": {
+    "free": 2126.0,
+    "locked": 0.0
+   },
+   "APT": {
+    "free": 772.0,
+    "locked": 0.0
+   },
+   "AR": {
+    "free": 174.0,
+    "locked": 0.0
+   },
+   "ARB": {
+    "free": 2976.0,
+    "locked": 0.0
+   },
+   "ARK": {
+    "free": 4251.0,
+    "locked": 0.0
+   },
+   "ARKM": {
+    "free": 4608.0,
+    "locked": 0.0
+   },
+   "ARMB": {
+    "free": 1.0,
+    "locked": 0.0
+   },
+   "ARPA": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "ARS": {
+    "free": 18466.0,
+    "locked": 0.0
+   },
+   "ASMLB": {
+    "free": 1.0,
+    "locked": 0.0
+   },
+   "ASR": {
+    "free": 567.0,
+    "locked": 0.0
+   },
+   "ASTER": {
+    "free": 659.0,
+    "locked": 0.0
+   },
+   "ASTR": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "ASTSB": {
+    "free": 7.0,
+    "locked": 0.0
+   },
+   "AT": {
+    "free": 3527.0,
+    "locked": 0.0
+   },
+   "ATM": {
+    "free": 427.0,
+    "locked": 0.0
+   },
+   "ATOM": {
+    "free": 269.0,
+    "locked": 0.0
+   },
+   "AUCTION": {
+    "free": 145.0,
+    "locked": 0.0
+   },
+   "AUDIO": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "AVA": {
+    "free": 2990.0,
+    "locked": 0.0
+   },
+   "AVAX": {
+    "free": 62.0,
+    "locked": 0.0
+   },
+   "AVGOB": {
+    "free": 1.0,
+    "locked": 0.0
+   },
+   "AVNT": {
+    "free": 4686.0,
+    "locked": 0.0
+   },
+   "AWE": {
+    "free": 8262.0,
+    "locked": 0.0
+   },
+   "AXL": {
+    "free": 11235.0,
+    "locked": 0.0
+   },
+   "AXS": {
+    "free": 520.0,
+    "locked": 0.0
+   },
+   "AXTIB": {
+    "free": 7.0,
+    "locked": 0.0
+   },
+   "BABAB": {
+    "free": 4.0,
+    "locked": 0.0
+   },
+   "BABY": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "BANANA": {
+    "free": 123.0,
+    "locked": 0.0
+   },
+   "BANANAS31": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "BAND": {
+    "free": 2565.0,
+    "locked": 0.0
+   },
+   "BANK": {
+    "free": 14836.0,
+    "locked": 0.0
+   },
+   "BAR": {
+    "free": 1803.0,
+    "locked": 0.0
+   },
+   "BARD": {
+    "free": 3819.0,
+    "locked": 0.0
+   },
+   "BAT": {
+    "free": 6501.0,
+    "locked": 0.0
+   },
+   "BB": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "BCH": {
+    "free": 1.0,
+    "locked": 0.0
+   },
+   "BEAMX": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "BEB": {
+    "free": 1.0,
+    "locked": 0.0
+   },
+   "BEL": {
+    "free": 4125.0,
+    "locked": 0.0
+   },
+   "BERA": {
+    "free": 2682.0,
+    "locked": 0.0
+   },
+   "BFUSD": {
+    "free": 500.0,
+    "locked": 0.0
+   },
+   "BICO": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "BIGTIME": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "BIO": {
+    "free": 18280.0,
+    "locked": 0.0
+   },
+   "BLUR": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "BMNRB": {
+    "free": 19.0,
+    "locked": 0.0
+   },
+   "BMT": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "BNB": {
+    "free": 1.0,
+    "locked": 0.0
+   },
+   "BNSOL": {
+    "free": 4.0,
+    "locked": 0.0
+   },
+   "BNT": {
+    "free": 1545.0,
+    "locked": 0.0
+   },
+   "BOME": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "BONK": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "BREV": {
+    "free": 6371.0,
+    "locked": 0.0
+   },
+   "BRL": {
+    "free": 97.0,
+    "locked": 0.0
+   },
+   "BROCCOLI714": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "BTC": {
+    "free": 1.0,
+    "locked": 0.0
+   },
+   "BTTC": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "C": {
+    "free": 8259.0,
+    "locked": 0.0
+   },
+   "C98": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "CAKE": {
+    "free": 218.0,
+    "locked": 0.0
+   },
+   "CATI": {
+    "free": 8098.0,
+    "locked": 0.0
+   },
+   "CBRSB": {
+    "free": 2.0,
+    "locked": 0.0
+   },
+   "CELO": {
+    "free": 6084.0,
+    "locked": 0.0
+   },
+   "CELR": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "CETUS": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "CFG": {
+    "free": 4228.0,
+    "locked": 0.0
+   },
+   "CFX": {
+    "free": 10076.0,
+    "locked": 0.0
+   },
+   "CGPT": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "CHIP": {
+    "free": 9281.0,
+    "locked": 0.0
+   },
+   "CHR": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "CHZ": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "CITY": {
+    "free": 1364.0,
+    "locked": 0.0
+   },
+   "CKB": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "COHRB": {
+    "free": 1.0,
+    "locked": 0.0
+   },
+   "COINB": {
+    "free": 2.0,
+    "locked": 0.0
+   },
+   "COMP": {
+    "free": 24.0,
+    "locked": 0.0
+   },
+   "COOKIE": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "COP": {
+    "free": 18466.0,
+    "locked": 0.0
+   },
+   "COTI": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "COW": {
+    "free": 3684.0,
+    "locked": 0.0
+   },
+   "CRCLB": {
+    "free": 5.0,
+    "locked": 0.0
+   },
+   "CRDOB": {
+    "free": 2.0,
+    "locked": 0.0
+   },
+   "CRV": {
+    "free": 1369.0,
+    "locked": 0.0
+   },
+   "CRWDB": {
+    "free": 2.0,
+    "locked": 0.0
+   },
+   "CRWVB": {
+    "free": 5.0,
+    "locked": 0.0
+   },
+   "CTK": {
+    "free": 4271.0,
+    "locked": 0.0
+   },
+   "CTSI": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "CVC": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "CVX": {
+    "free": 224.0,
+    "locked": 0.0
+   },
+   "CYBER": {
+    "free": 1556.0,
+    "locked": 0.0
+   },
+   "DASH": {
+    "free": 7.0,
+    "locked": 0.0
+   },
+   "DCR": {
+    "free": 29.0,
+    "locked": 0.0
+   },
+   "DELLB": {
+    "free": 1.0,
+    "locked": 0.0
+   },
+   "DEXE": {
+    "free": 257.0,
+    "locked": 0.0
+   },
+   "DGB": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "DIA": {
+    "free": 3608.0,
+    "locked": 0.0
+   },
+   "DJTB": {
+    "free": 54.0,
+    "locked": 0.0
+   },
+   "DODO": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "DOGE": {
+    "free": 5531.0,
+    "locked": 0.0
+   },
+   "DOGS": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "DOLO": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "DOT": {
+    "free": 414.0,
+    "locked": 0.0
+   },
+   "DRAMB": {
+    "free": 8.0,
+    "locked": 0.0
+   },
+   "DUSK": {
+    "free": 6341.0,
+    "locked": 0.0
+   },
+   "DYDX": {
+    "free": 4123.0,
+    "locked": 0.0
+   },
+   "DYM": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "EDEN": {
+    "free": 9444.0,
+    "locked": 0.0
+   },
+   "EDU": {
+    "free": 9560.0,
+    "locked": 0.0
+   },
+   "EGLD": {
+    "free": 99.0,
+    "locked": 0.0
+   },
+   "EIGEN": {
+    "free": 2330.0,
+    "locked": 0.0
+   },
+   "ENA": {
+    "free": 3072.0,
+    "locked": 0.0
+   },
+   "ENJ": {
+    "free": 18407.0,
+    "locked": 0.0
+   },
+   "ENS": {
+    "free": 80.0,
+    "locked": 0.0
+   },
+   "ENSO": {
+    "free": 549.0,
+    "locked": 0.0
+   },
+   "EPIC": {
+    "free": 1207.0,
+    "locked": 0.0
+   },
+   "ERA": {
+    "free": 8263.0,
+    "locked": 0.0
+   },
+   "ESP": {
+    "free": 5428.0,
+    "locked": 0.0
+   },
+   "ETC": {
+    "free": 58.0,
+    "locked": 0.0
+   },
+   "ETH": {
+    "free": 1.0,
+    "locked": 0.0
+   },
+   "ETHFI": {
+    "free": 825.0,
+    "locked": 0.0
+   },
+   "EUL": {
+    "free": 394.0,
+    "locked": 0.0
+   },
+   "EUR": {
+    "free": 429.0,
+    "locked": 0.0
+   },
+   "EURI": {
+    "free": 430.0,
+    "locked": 0.0
+   },
+   "EWYB": {
+    "free": 2.0,
+    "locked": 0.0
+   },
+   "F": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "FDUSD": {
+    "free": 10000.0,
+    "locked": 0.0
+   },
+   "FET": {
+    "free": 2799.0,
+    "locked": 0.0
+   },
+   "FF": {
+    "free": 3399.0,
+    "locked": 0.0
+   },
+   "FIDA": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "FIL": {
+    "free": 595.0,
+    "locked": 0.0
+   },
+   "FLNCB": {
+    "free": 45.0,
+    "locked": 0.0
+   },
+   "FLOKI": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "FLOW": {
+    "free": 17431.0,
+    "locked": 0.0
+   },
+   "FLUX": {
+    "free": 9531.0,
+    "locked": 0.0
+   },
+   "FOGO": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "FORM": {
+    "free": 1621.0,
+    "locked": 0.0
+   },
+   "FRAX": {
+    "free": 1686.0,
+    "locked": 0.0
+   },
+   "FTT": {
+    "free": 2233.0,
+    "locked": 0.0
+   },
+   "G": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "GALA": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "GAS": {
+    "free": 393.0,
+    "locked": 0.0
+   },
+   "GENIUS": {
+    "free": 1637.0,
+    "locked": 0.0
+   },
+   "GIGGLE": {
+    "free": 13.0,
+    "locked": 0.0
+   },
+   "GLM": {
+    "free": 4501.0,
+    "locked": 0.0
+   },
+   "GLMR": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "GLWB": {
+    "free": 2.0,
+    "locked": 0.0
+   },
+   "GMEB": {
+    "free": 26.0,
+    "locked": 0.0
+   },
+   "GMT": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "GMX": {
+    "free": 60.0,
+    "locked": 0.0
+   },
+   "GNO": {
+    "free": 4.0,
+    "locked": 0.0
+   },
+   "GNS": {
+    "free": 1028.0,
+    "locked": 0.0
+   },
+   "GOOGLB": {
+    "free": 1.0,
+    "locked": 0.0
+   },
+   "GPS": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "GRAM": {
+    "free": 359.0,
+    "locked": 0.0
+   },
+   "GRT": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "GSB": {
+    "free": 1.0,
+    "locked": 0.0
+   },
+   "GTC": {
+    "free": 6021.0,
+    "locked": 0.0
+   },
+   "GUN": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "HAEDAL": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "HBAR": {
+    "free": 6299.0,
+    "locked": 0.0
+   },
+   "HEI": {
+    "free": 3515.0,
+    "locked": 0.0
+   },
+   "HEMI": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "HIVE": {
+    "free": 10963.0,
+    "locked": 0.0
+   },
+   "HMSTR": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "HOLO": {
+    "free": 7758.0,
+    "locked": 0.0
+   },
+   "HOME": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "HOODB": {
+    "free": 4.0,
+    "locked": 0.0
+   },
+   "HOT": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "HUMA": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "HYPER": {
+    "free": 6998.0,
+    "locked": 0.0
+   },
+   "IBMB": {
+    "free": 2.0,
+    "locked": 0.0
+   },
+   "ICP": {
+    "free": 173.0,
+    "locked": 0.0
+   },
+   "ID": {
+    "free": 14704.0,
+    "locked": 0.0
+   },
+   "IDR": {
+    "free": 10000.0,
+    "locked": 0.0
+   },
+   "ILV": {
+    "free": 151.0,
+    "locked": 0.0
+   },
+   "IMX": {
+    "free": 3801.0,
+    "locked": 0.0
+   },
+   "INIT": {
+    "free": 7475.0,
+    "locked": 0.0
+   },
+   "INJ": {
+    "free": 79.0,
+    "locked": 0.0
+   },
+   "INTCB": {
+    "free": 4.0,
+    "locked": 0.0
+   },
+   "INTWB": {
+    "free": 20.0,
+    "locked": 0.0
+   },
+   "IO": {
+    "free": 3659.0,
+    "locked": 0.0
+   },
+   "IOST": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "IOTA": {
+    "free": 11703.0,
+    "locked": 0.0
+   },
+   "IOTX": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "IQ": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "IRENB": {
+    "free": 10.0,
+    "locked": 0.0
+   },
+   "JASMY": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "JOE": {
+    "free": 15479.0,
+    "locked": 0.0
+   },
+   "JPY": {
+    "free": 18466.0,
+    "locked": 0.0
+   },
+   "JST": {
+    "free": 4787.0,
+    "locked": 0.0
+   },
+   "JTO": {
+    "free": 1103.0,
+    "locked": 0.0
+   },
+   "JUP": {
+    "free": 2044.0,
+    "locked": 0.0
+   },
+   "JUV": {
+    "free": 1599.0,
+    "locked": 0.0
+   },
+   "KAIA": {
+    "free": 15852.0,
+    "locked": 0.0
+   },
+   "KAITO": {
+    "free": 1515.0,
+    "locked": 0.0
+   },
+   "KAT": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "KAVA": {
+    "free": 8290.0,
+    "locked": 0.0
+   },
+   "KERNEL": {
+    "free": 12224.0,
+    "locked": 0.0
+   },
+   "KGST": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "KITE": {
+    "free": 4423.0,
+    "locked": 0.0
+   },
+   "KMNO": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "KNC": {
+    "free": 4087.0,
+    "locked": 0.0
+   },
+   "KORUB": {
+    "free": 20.0,
+    "locked": 0.0
+   },
+   "KSM": {
+    "free": 122.0,
+    "locked": 0.0
+   },
+   "KZT": {
+    "free": 10000.0,
+    "locked": 0.0
+   },
+   "LA": {
+    "free": 8150.0,
+    "locked": 0.0
+   },
+   "LAYER": {
+    "free": 6881.0,
+    "locked": 0.0
+   },
+   "LAZIO": {
+    "free": 1285.0,
+    "locked": 0.0
+   },
+   "LDO": {
+    "free": 1279.0,
+    "locked": 0.0
+   },
+   "LINEA": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "LINK": {
+    "free": 39.0,
+    "locked": 0.0
+   },
+   "LISTA": {
+    "free": 6475.0,
+    "locked": 0.0
+   },
+   "LITEB": {
+    "free": 1.0,
+    "locked": 0.0
+   },
+   "LPT": {
+    "free": 336.0,
+    "locked": 0.0
+   },
+   "LQTY": {
+    "free": 2160.0,
+    "locked": 0.0
+   },
+   "LSK": {
+    "free": 4800.0,
+    "locked": 0.0
+   },
+   "LTC": {
+    "free": 9.0,
+    "locked": 0.0
+   },
+   "LUMIA": {
+    "free": 6017.0,
+    "locked": 0.0
+   },
+   "LUNA": {
+    "free": 10455.0,
+    "locked": 0.0
+   },
+   "LUNC": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "MAGIC": {
+    "free": 10805.0,
+    "locked": 0.0
+   },
+   "MANA": {
+    "free": 6558.0,
+    "locked": 0.0
+   },
+   "MANTA": {
+    "free": 8157.0,
+    "locked": 0.0
+   },
+   "MANTRA": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "MARSCOIN": {
+    "free": 3573.0,
+    "locked": 0.0
+   },
+   "MASK": {
+    "free": 1091.0,
+    "locked": 0.0
+   },
+   "MAV": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "MBL": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "ME": {
+    "free": 7465.0,
+    "locked": 0.0
+   },
+   "MEGA": {
+    "free": 11683.0,
+    "locked": 0.0
+   },
+   "MEME": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "MET": {
+    "free": 2556.0,
+    "locked": 0.0
+   },
+   "METAB": {
+    "free": 1.0,
+    "locked": 0.0
+   },
+   "METIS": {
+    "free": 159.0,
+    "locked": 0.0
+   },
+   "MINA": {
+    "free": 5896.0,
+    "locked": 0.0
+   },
+   "MIRA": {
+    "free": 10110.0,
+    "locked": 0.0
+   },
+   "MITO": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "MMT": {
+    "free": 2979.0,
+    "locked": 0.0
+   },
+   "MORPHO": {
+    "free": 210.0,
+    "locked": 0.0
+   },
+   "MOVE": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "MOVR": {
+    "free": 587.0,
+    "locked": 0.0
+   },
+   "MRNAB": {
+    "free": 3.0,
+    "locked": 0.0
+   },
+   "MRVLB": {
+    "free": 2.0,
+    "locked": 0.0
+   },
+   "MSFTB": {
+    "free": 1.0,
+    "locked": 0.0
+   },
+   "MSTRB": {
+    "free": 3.0,
+    "locked": 0.0
+   },
+   "MTL": {
+    "free": 2049.0,
+    "locked": 0.0
+   },
+   "MUB": {
+    "free": 1.0,
+    "locked": 0.0
+   },
+   "MUBARAK": {
+    "free": 16964.0,
+    "locked": 0.0
+   },
+   "MUUB": {
+    "free": 14.0,
+    "locked": 0.0
+   },
+   "MVLLB": {
+    "free": 18.0,
+    "locked": 0.0
+   },
+   "MXN": {
+    "free": 18466.0,
+    "locked": 0.0
+   },
+   "NBISB": {
+    "free": 2.0,
+    "locked": 0.0
+   },
+   "NEAR": {
+    "free": 214.0,
+    "locked": 0.0
+   },
+   "NEIRO": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "NEO": {
+    "free": 226.0,
+    "locked": 0.0
+   },
+   "NEWT": {
+    "free": 11209.0,
+    "locked": 0.0
+   },
+   "NEXO": {
+    "free": 596.0,
+    "locked": 0.0
+   },
+   "NFLXB": {
+    "free": 6.0,
+    "locked": 0.0
+   },
+   "NIGHT": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "NIL": {
+    "free": 9851.0,
+    "locked": 0.0
+   },
+   "NMR": {
+    "free": 52.0,
+    "locked": 0.0
+   },
+   "NOKB": {
+    "free": 46.0,
+    "locked": 0.0
+   },
+   "NOM": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "NOT": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "NVDAB": {
+    "free": 2.0,
+    "locked": 0.0
+   },
+   "NXPC": {
+    "free": 2290.0,
+    "locked": 0.0
+   },
+   "OG": {
+    "free": 178.0,
+    "locked": 0.0
+   },
+   "OGN": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "ONDO": {
+    "free": 1330.0,
+    "locked": 0.0
+   },
+   "ONE": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "ONG": {
+    "free": 5303.0,
+    "locked": 0.0
+   },
+   "ONT": {
+    "free": 8923.0,
+    "locked": 0.0
+   },
+   "OP": {
+    "free": 4803.0,
+    "locked": 0.0
+   },
+   "OPEN": {
+    "free": 3848.0,
+    "locked": 0.0
+   },
+   "OPG": {
+    "free": 4986.0,
+    "locked": 0.0
+   },
+   "OPN": {
+    "free": 8961.0,
+    "locked": 0.0
+   },
+   "ORCA": {
+    "free": 345.0,
+    "locked": 0.0
+   },
+   "ORCLB": {
+    "free": 3.0,
+    "locked": 0.0
+   },
+   "ORDI": {
+    "free": 114.0,
+    "locked": 0.0
+   },
+   "OSMO": {
+    "free": 13905.0,
+    "locked": 0.0
+   },
+   "PARTI": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "PAXG": {
+    "free": 1.0,
+    "locked": 0.0
+   },
+   "PENDLE": {
+    "free": 235.0,
+    "locked": 0.0
+   },
+   "PENGU": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "PEOPLE": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "PEPE": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "PHA": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "PIXEL": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "PLTRB": {
+    "free": 2.0,
+    "locked": 0.0
+   },
+   "PLUME": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "PNUT": {
+    "free": 9960.0,
+    "locked": 0.0
+   },
+   "POL": {
+    "free": 5220.0,
+    "locked": 0.0
+   },
+   "POLYX": {
+    "free": 13297.0,
+    "locked": 0.0
+   },
+   "PORTAL": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "PORTO": {
+    "free": 1073.0,
+    "locked": 0.0
+   },
+   "POWR": {
+    "free": 9924.0,
+    "locked": 0.0
+   },
+   "PROM": {
+    "free": 84.0,
+    "locked": 0.0
+   },
+   "PROVE": {
+    "free": 2624.0,
+    "locked": 0.0
+   },
+   "PSG": {
+    "free": 1040.0,
+    "locked": 0.0
+   },
+   "PUMP": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "PUNDIX": {
+    "free": 5181.0,
+    "locked": 0.0
+   },
+   "PYPLB": {
+    "free": 9.0,
+    "locked": 0.0
+   },
+   "PYTH": {
+    "free": 9262.0,
+    "locked": 0.0
+   },
+   "QCOMB": {
+    "free": 2.0,
+    "locked": 0.0
+   },
+   "QI": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "QKC": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "QNT": {
+    "free": 7.0,
+    "locked": 0.0
+   },
+   "QNTB": {
+    "free": 9.0,
+    "locked": 0.0
+   },
+   "QQQB": {
+    "free": 1.0,
+    "locked": 0.0
+   },
+   "QTUM": {
+    "free": 560.0,
+    "locked": 0.0
+   },
+   "QUICK": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "RAD": {
+    "free": 2090.0,
+    "locked": 0.0
+   },
+   "RARE": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "RAY": {
+    "free": 396.0,
+    "locked": 0.0
+   },
+   "RE": {
+    "free": 1108.0,
+    "locked": 0.0
+   },
+   "RED": {
+    "free": 3929.0,
+    "locked": 0.0
+   },
+   "RENDER": {
+    "free": 332.0,
+    "locked": 0.0
+   },
+   "REQ": {
+    "free": 9252.0,
+    "locked": 0.0
+   },
+   "RESOLV": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "REZ": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "RIF": {
+    "free": 6468.0,
+    "locked": 0.0
+   },
+   "RKLBB": {
+    "free": 7.0,
+    "locked": 0.0
+   },
+   "RLC": {
+    "free": 1619.0,
+    "locked": 0.0
+   },
+   "RLUSD": {
+    "free": 499.0,
+    "locked": 0.0
+   },
+   "ROBO": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "RONIN": {
+    "free": 9236.0,
+    "locked": 0.0
+   },
+   "ROSE": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "RPL": {
+    "free": 292.0,
+    "locked": 0.0
+   },
+   "RSR": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "RUNE": {
+    "free": 1023.0,
+    "locked": 0.0
+   },
+   "RVN": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "S": {
+    "free": 16999.0,
+    "locked": 0.0
+   },
+   "SAGA": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "SAHARA": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "SAND": {
+    "free": 12437.0,
+    "locked": 0.0
+   },
+   "SANTOS": {
+    "free": 946.0,
+    "locked": 0.0
+   },
+   "SAPIEN": {
+    "free": 6292.0,
+    "locked": 0.0
+   },
+   "SC": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "SCR": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "SEI": {
+    "free": 9779.0,
+    "locked": 0.0
+   },
+   "SENT": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "SFP": {
+    "free": 1818.0,
+    "locked": 0.0
+   },
+   "SHELL": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "SHIB": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "SIGN": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "SKHYB": {
+    "free": 2.0,
+    "locked": 0.0
+   },
+   "SKL": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "SKY": {
+    "free": 7368.0,
+    "locked": 0.0
+   },
+   "SLP": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "SMCIB": {
+    "free": 12.0,
+    "locked": 0.0
+   },
+   "SMHB": {
+    "free": 1.0,
+    "locked": 0.0
+   },
+   "SNDKB": {
+    "free": 1.0,
+    "locked": 0.0
+   },
+   "SNX": {
+    "free": 2258.0,
+    "locked": 0.0
+   },
+   "SNXXB": {
+    "free": 28.0,
+    "locked": 0.0
+   },
+   "SOL": {
+    "free": 4.0,
+    "locked": 0.0
+   },
+   "SOLV": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "SOMI": {
+    "free": 3740.0,
+    "locked": 0.0
+   },
+   "SOPH": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "SOXLB": {
+    "free": 3.0,
+    "locked": 0.0
+   },
+   "SOXSB": {
+    "free": 11.0,
+    "locked": 0.0
+   },
+   "SPCXB": {
+    "free": 3.0,
+    "locked": 0.0
+   },
+   "SPELL": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "SPK": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "SPYB": {
+    "free": 1.0,
+    "locked": 0.0
+   },
+   "SQQQB": {
+    "free": 13.0,
+    "locked": 0.0
+   },
+   "SSV": {
+    "free": 168.0,
+    "locked": 0.0
+   },
+   "STEEM": {
+    "free": 10781.0,
+    "locked": 0.0
+   },
+   "STG": {
+    "free": 3028.0,
+    "locked": 0.0
+   },
+   "STO": {
+    "free": 12224.0,
+    "locked": 0.0
+   },
+   "STRAX": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "STRK": {
+    "free": 15987.0,
+    "locked": 0.0
+   },
+   "STX": {
+    "free": 1868.0,
+    "locked": 0.0
+   },
+   "STXB": {
+    "free": 1.0,
+    "locked": 0.0
+   },
+   "SUI": {
+    "free": 610.0,
+    "locked": 0.0
+   },
+   "SUN": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "SUPER": {
+    "free": 4124.0,
+    "locked": 0.0
+   },
+   "SUSHI": {
+    "free": 2079.0,
+    "locked": 0.0
+   },
+   "SXT": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "SYN": {
+    "free": 5515.0,
+    "locked": 0.0
+   },
+   "SYRUP": {
+    "free": 2227.0,
+    "locked": 0.0
+   },
+   "T": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "TAO": {
+    "free": 1.0,
+    "locked": 0.0
+   },
+   "TFUEL": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "THE": {
+    "free": 6831.0,
+    "locked": 0.0
+   },
+   "THETA": {
+    "free": 2768.0,
+    "locked": 0.0
+   },
+   "TIA": {
+    "free": 1220.0,
+    "locked": 0.0
+   },
+   "TKO": {
+    "free": 9432.0,
+    "locked": 0.0
+   },
+   "TLM": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "TNSR": {
+    "free": 13698.0,
+    "locked": 0.0
+   },
+   "TOWNS": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "TQQQB": {
+    "free": 6.0,
+    "locked": 0.0
+   },
+   "TRB": {
+    "free": 27.0,
+    "locked": 0.0
+   },
+   "TREE": {
+    "free": 11395.0,
+    "locked": 0.0
+   },
+   "TRUMP": {
+    "free": 223.0,
+    "locked": 0.0
+   },
+   "TRX": {
+    "free": 1475.0,
+    "locked": 0.0
+   },
+   "TRY": {
+    "free": 18466.0,
+    "locked": 0.0
+   },
+   "TSLAB": {
+    "free": 1.0,
+    "locked": 0.0
+   },
+   "TSMB": {
+    "free": 1.0,
+    "locked": 0.0
+   },
+   "TST": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "TURBO": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "TURTLE": {
+    "free": 12011.0,
+    "locked": 0.0
+   },
+   "TUSD": {
+    "free": 10000.0,
+    "locked": 0.0
+   },
+   "TUT": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "TWT": {
+    "free": 868.0,
+    "locked": 0.0
+   },
+   "U": {
+    "free": 500.0,
+    "locked": 0.0
+   },
+   "UAH": {
+    "free": 18466.0,
+    "locked": 0.0
+   },
+   "UMA": {
+    "free": 1282.0,
+    "locked": 0.0
+   },
+   "UNI": {
+    "free": 72.0,
+    "locked": 0.0
+   },
+   "USARB": {
+    "free": 27.0,
+    "locked": 0.0
+   },
+   "USD": {
+    "free": 10000.0,
+    "locked": 0.0
+   },
+   "USD1": {
+    "free": 500.0,
+    "locked": 0.0
+   },
+   "USDC": {
+    "free": 10000.0,
+    "locked": 0.0
+   },
+   "USDE": {
+    "free": 499.0,
+    "locked": 0.0
+   },
+   "USDP": {
+    "free": 500.0,
+    "locked": 0.0
+   },
+   "USDS": {
+    "free": 499.0,
+    "locked": 0.0
+   },
+   "USDT": {
+    "free": 10000.0,
+    "locked": 0.0
+   },
+   "USTC": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "USUAL": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "VANA": {
+    "free": 523.0,
+    "locked": 0.0
+   },
+   "VELODROME": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "VET": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "VIRTUAL": {
+    "free": 705.0,
+    "locked": 0.0
+   },
+   "VTHO": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "W": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "WAL": {
+    "free": 17921.0,
+    "locked": 0.0
+   },
+   "WAXP": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "WBETH": {
+    "free": 1.0,
+    "locked": 0.0
+   },
+   "WBTC": {
+    "free": 1.0,
+    "locked": 0.0
+   },
+   "WCT": {
+    "free": 12422.0,
+    "locked": 0.0
+   },
+   "WDCB": {
+    "free": 1.0,
+    "locked": 0.0
+   },
+   "WIF": {
+    "free": 2323.0,
+    "locked": 0.0
+   },
+   "WIN": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "WLD": {
+    "free": 1097.0,
+    "locked": 0.0
+   },
+   "WLFI": {
+    "free": 8929.0,
+    "locked": 0.0
+   },
+   "WOO": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "XAI": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "XAUT": {
+    "free": 1.0,
+    "locked": 0.0
+   },
+   "XEC": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "XLM": {
+    "free": 2636.0,
+    "locked": 0.0
+   },
+   "XNO": {
+    "free": 1355.0,
+    "locked": 0.0
+   },
+   "XPL": {
+    "free": 5052.0,
+    "locked": 0.0
+   },
+   "XRP": {
+    "free": 349.0,
+    "locked": 0.0
+   },
+   "XTZ": {
+    "free": 2010.0,
+    "locked": 0.0
+   },
+   "XUSD": {
+    "free": 499.0,
+    "locked": 0.0
+   },
+   "XVG": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "XVS": {
+    "free": 152.0,
+    "locked": 0.0
+   },
+   "YB": {
+    "free": 4865.0,
+    "locked": 0.0
+   },
+   "YFI": {
+    "free": 1.0,
+    "locked": 0.0
+   },
+   "YGG": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "ZAMA": {
+    "free": 9737.0,
+    "locked": 0.0
+   },
+   "ZAR": {
+    "free": 18466.0,
+    "locked": 0.0
+   },
+   "ZBT": {
+    "free": 5923.0,
+    "locked": 0.0
+   },
+   "ZEC": {
+    "free": 1.0,
+    "locked": 0.0
+   },
+   "ZEN": {
+    "free": 69.0,
+    "locked": 0.0
+   },
+   "ZIL": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "ZK": {
+    "free": 18446.0,
+    "locked": 0.0
+   },
+   "ZKC": {
+    "free": 10095.0,
+    "locked": 0.0
+   },
+   "ZKP": {
+    "free": 10431.0,
+    "locked": 0.0
+   },
+   "ZRO": {
+    "free": 437.0,
+    "locked": 0.0
+   },
+   "ZRX": {
+    "free": 4615.0,
+    "locked": 0.0
+   },
+   "\u5e01\u5b89\u4eba\u751f": {
+    "free": 982.0,
+    "locked": 0.0
+   },
+   "\u8fd9\u662f\u6d4b\u8bd5\u5e01": {
+    "free": 10000.0,
+    "locked": 0.0
+   }
+  },
+  "account_raw_rows": {
+   "USDT": {
+    "asset": "USDT",
+    "free": "10000.00000000",
+    "locked": "0.00000000"
+   },
+   "BTC": {
+    "asset": "BTC",
+    "free": "1.00000000",
+    "locked": "0.00000000"
+   }
+  },
+  "book_ticker": {
+   "symbol": "BTCUSDT",
+   "bidPrice": "85301.67000000",
+   "bidQty": "18.14393000",
+   "askPrice": "85301.68000000",
+   "askQty": "12.86587000"
+  },
+  "intended_order": {
+   "side": "buy",
+   "price": 83595.63,
+   "quantity": 8e-05,
+   "notional": 6.6877,
+   "best_bid": 85301.67,
+   "best_ask": 85301.68,
+   "percent_away": 2.0,
+   "check": {
+    "side": "buy",
+    "ok": true,
+    "reason": "",
+    "price": 83595.63,
+    "quantity": 8e-05
+   }
+  },
+  "order_after_cancel": {
+   "state": "cancelled",
+   "filled": 0.0
+  },
+  "my_trades_count": 0,
+  "fill_probe": {
+   "kind": "real_testnet_fill",
+   "sides": [
+    "buy",
+    "sell"
+   ],
+   "window_s": 1800.0,
+   "repeg_s": 30.0,
+   "repegs": 0,
+   "orders": [
+    {
+     "order_id": "tiamm-validate-1791131817127-000003",
+     "side": "buy",
+     "price": 85301.67,
+     "quantity": 8e-05,
+     "state": "cancelled",
+     "venue_order_id": "9248934",
+     "filled": 0
+    },
+    {
+     "order_id": "tiamm-validate-1791131817381-000004",
+     "side": "sell",
+     "price": 85301.68,
+     "quantity": 8e-05,
+     "state": "filled",
+     "venue_order_id": "9248936",
+     "filled": 8e-05
+    }
+   ]
+  },
+  "fill_probe_bid": {
+   "price": 85301.67,
+   "quantity": 8e-05,
+   "notional": 6.8241,
+   "best_bid": 85301.67,
+   "best_ask": 85301.68,
+   "check": {
+    "side": "buy",
+    "ok": true,
+    "reason": "",
+    "price": 85301.67,
+    "quantity": 8e-05
+   }
+  },
+  "fill_probe_ask": {
+   "price": 85301.68,
+   "quantity": 8e-05,
+   "notional": 6.8241,
+   "best_bid": 85301.67,
+   "best_ask": 85301.68,
+   "check": {
+    "side": "sell",
+    "ok": true,
+    "reason": "",
+    "price": 85301.68,
+    "quantity": 8e-05
+   }
+  },
+  "fill_probe_fills": [
+   {
+    "fill_id": "2344502",
+    "order_id": "tiamm-validate-1791131817381-000004",
+    "side": "sell",
+    "price": 85301.68,
+    "quantity": 8e-05,
+    "t_ms": 1791131830739,
+    "venue_trade_ids": [
+     2344502
+    ],
+    "queue_ahead_at_arrival": 0.0,
+    "mid_at_fill": 85301.67499999999,
+    "resolution": "confirmed",
+    "fee": 0.0,
+    "fee_asset": "USDT",
+    "fee_usd": 0.0,
+    "fee_status": "venue",
+    "liquidity": "maker",
+    "attribution_source": "report",
+    "venue_order_id": "9248936",
+    "received_at_ms": 1791131830855,
+    "booked": {
+     "notional_usd": 6.8241344,
+     "fee_usd": 0.0,
+     "realised_usd": 0.0,
+     "fee_status": "venue"
+    },
+    "kind": "real_testnet_fill"
+   }
+  ],
+  "fill_probe_reconciliation": {
+   "t_ms": 1791131832117,
+   "ok": true,
+   "expected_quote_usd": 10006.824134,
+   "venue_quote_usd": 10006.8241344,
+   "venue_quote_free": 10006.8241344,
+   "venue_quote_locked": 0.0,
+   "quote_delta_usd": 0.0,
+   "quote_tolerance_usd": 0.05,
+   "expected_base_btc": 0.99992,
+   "venue_base_btc": 0.99992,
+   "venue_base_free": 0.99992,
+   "venue_base_locked": 0.0,
+   "base_delta_btc": 0.0,
+   "base_tolerance_btc": 2e-05,
+   "adopted": false
+  },
+  "fill_probe_unwind": {
+   "side": "buy",
+   "price": 85315.54,
+   "quantity": 8e-05,
+   "net_before": -8e-05,
+   "best_bid": 85315.54,
+   "best_ask": 85315.55,
+   "check": {
+    "side": "buy",
+    "ok": true,
+    "reason": "",
+    "price": 85315.54,
+    "quantity": 8e-05
+   }
+  }
+ },
+ "reports": [
+  {
+   "event_time_ms": 1791131813559,
+   "transaction_time_ms": 1791131813558,
+   "symbol": "BTCUSDT",
+   "client_order_id": "tiamm-validate-1791131813441-000001",
+   "orig_client_order_id": "",
+   "venue_order_id": "9248932",
+   "side": "buy",
+   "status": "acknowledged",
+   "execution_type": "new",
+   "order_quantity": 8e-05,
+   "cumulative_quantity": 0.0,
+   "last_quantity": 0.0,
+   "last_price": 0.0,
+   "trade_id": null,
+   "is_maker": null,
+   "commission": 0.0,
+   "commission_asset": "",
+   "reject_reason": "",
+   "raw_status": "NEW",
+   "received_at_ms": 1791131813682,
+   "processed_at_ms": 1791131813682
+  },
+  {
+   "event_time_ms": 1791131813811,
+   "transaction_time_ms": 1791131813810,
+   "symbol": "BTCUSDT",
+   "client_order_id": "bJO7C8YI0wip6AmMcztf7x",
+   "orig_client_order_id": "tiamm-validate-1791131813441-000001",
+   "venue_order_id": "9248932",
+   "side": "buy",
+   "status": "cancelled",
+   "execution_type": "canceled",
+   "order_quantity": 8e-05,
+   "cumulative_quantity": 0.0,
+   "last_quantity": 0.0,
+   "last_price": 0.0,
+   "trade_id": null,
+   "is_maker": null,
+   "commission": 0.0,
+   "commission_asset": "",
+   "reject_reason": "",
+   "raw_status": "CANCELED",
+   "received_at_ms": 1791131813934,
+   "processed_at_ms": 1791131813934
+  },
+  {
+   "event_time_ms": 1791131814547,
+   "transaction_time_ms": 1791131814547,
+   "symbol": "BTCUSDT",
+   "client_order_id": "tiamm-validate-1791131814429-000002",
+   "orig_client_order_id": "",
+   "venue_order_id": "9248933",
+   "side": "buy",
+   "status": "acknowledged",
+   "execution_type": "new",
+   "order_quantity": 8e-05,
+   "cumulative_quantity": 0.0,
+   "last_quantity": 0.0,
+   "last_price": 0.0,
+   "trade_id": null,
+   "is_maker": null,
+   "commission": 0.0,
+   "commission_asset": "",
+   "reject_reason": "",
+   "raw_status": "NEW",
+   "received_at_ms": 1791131814670,
+   "processed_at_ms": 1791131814670
+  },
+  {
+   "event_time_ms": 1791131816741,
+   "transaction_time_ms": 1791131816740,
+   "symbol": "BTCUSDT",
+   "client_order_id": "Po8AiTtXv0mzAaI06fa0ym",
+   "orig_client_order_id": "tiamm-validate-1791131814429-000002",
+   "venue_order_id": "9248933",
+   "side": "buy",
+   "status": "cancelled",
+   "execution_type": "canceled",
+   "order_quantity": 8e-05,
+   "cumulative_quantity": 0.0,
+   "last_quantity": 0.0,
+   "last_price": 0.0,
+   "trade_id": null,
+   "is_maker": null,
+   "commission": 0.0,
+   "commission_asset": "",
+   "reject_reason": "",
+   "raw_status": "CANCELED",
+   "received_at_ms": 1791131816857,
+   "processed_at_ms": 1791131816857
+  },
+  {
+   "event_time_ms": 1791131817245,
+   "transaction_time_ms": 1791131817245,
+   "symbol": "BTCUSDT",
+   "client_order_id": "tiamm-validate-1791131817127-000003",
+   "orig_client_order_id": "",
+   "venue_order_id": "9248934",
+   "side": "buy",
+   "status": "acknowledged",
+   "execution_type": "new",
+   "order_quantity": 8e-05,
+   "cumulative_quantity": 0.0,
+   "last_quantity": 0.0,
+   "last_price": 0.0,
+   "trade_id": null,
+   "is_maker": null,
+   "commission": 0.0,
+   "commission_asset": "",
+   "reject_reason": "",
+   "raw_status": "NEW",
+   "received_at_ms": 1791131817361,
+   "processed_at_ms": 1791131817362
+  },
+  {
+   "event_time_ms": 1791131817584,
+   "transaction_time_ms": 1791131817584,
+   "symbol": "BTCUSDT",
+   "client_order_id": "tiamm-validate-1791131817381-000004",
+   "orig_client_order_id": "",
+   "venue_order_id": "9248936",
+   "side": "sell",
+   "status": "acknowledged",
+   "execution_type": "new",
+   "order_quantity": 8e-05,
+   "cumulative_quantity": 0.0,
+   "last_quantity": 0.0,
+   "last_price": 0.0,
+   "trade_id": null,
+   "is_maker": null,
+   "commission": 0.0,
+   "commission_asset": "",
+   "reject_reason": "",
+   "raw_status": "NEW",
+   "received_at_ms": 1791131817699,
+   "processed_at_ms": 1791131817699
+  },
+  {
+   "event_time_ms": 1791131830740,
+   "transaction_time_ms": 1791131830739,
+   "symbol": "BTCUSDT",
+   "client_order_id": "tiamm-validate-1791131817381-000004",
+   "orig_client_order_id": "",
+   "venue_order_id": "9248936",
+   "side": "sell",
+   "status": "filled",
+   "execution_type": "trade",
+   "order_quantity": 8e-05,
+   "cumulative_quantity": 8e-05,
+   "last_quantity": 8e-05,
+   "last_price": 85301.68,
+   "trade_id": "2344502",
+   "is_maker": true,
+   "commission": 0.0,
+   "commission_asset": "USDT",
+   "reject_reason": "",
+   "raw_status": "FILLED",
+   "received_at_ms": 1791131830855,
+   "processed_at_ms": 1791131830855
+  },
+  {
+   "event_time_ms": 1791131831002,
+   "transaction_time_ms": 1791131831001,
+   "symbol": "BTCUSDT",
+   "client_order_id": "ksj6nW71XuTxXkU7LMJILe",
+   "orig_client_order_id": "tiamm-validate-1791131817127-000003",
+   "venue_order_id": "9248934",
+   "side": "buy",
+   "status": "cancelled",
+   "execution_type": "canceled",
+   "order_quantity": 8e-05,
+   "cumulative_quantity": 0.0,
+   "last_quantity": 0.0,
+   "last_price": 0.0,
+   "trade_id": null,
+   "is_maker": null,
+   "commission": 0.0,
+   "commission_asset": "",
+   "reject_reason": "",
+   "raw_status": "CANCELED",
+   "received_at_ms": 1791131831118,
+   "processed_at_ms": 1791131831118
+  },
+  {
+   "event_time_ms": 1791131832481,
+   "transaction_time_ms": 1791131832480,
+   "symbol": "BTCUSDT",
+   "client_order_id": "tiamm-validate-1791131832362-000005",
+   "orig_client_order_id": "",
+   "venue_order_id": "9249007",
+   "side": "buy",
+   "status": "acknowledged",
+   "execution_type": "new",
+   "order_quantity": 8e-05,
+   "cumulative_quantity": 0.0,
+   "last_quantity": 0.0,
+   "last_price": 0.0,
+   "trade_id": null,
+   "is_maker": null,
+   "commission": 0.0,
+   "commission_asset": "",
+   "reject_reason": "",
+   "raw_status": "NEW",
+   "received_at_ms": 1791131832598,
+   "processed_at_ms": 1791131832598
+  },
+  {
+   "event_time_ms": 1791131917806,
+   "transaction_time_ms": 1791131917806,
+   "symbol": "BTCUSDT",
+   "client_order_id": "tiamm-validate-1791131832362-000005",
+   "orig_client_order_id": "",
+   "venue_order_id": "9249007",
+   "side": "buy",
+   "status": "filled",
+   "execution_type": "trade",
+   "order_quantity": 8e-05,
+   "cumulative_quantity": 8e-05,
+   "last_quantity": 8e-05,
+   "last_price": 85315.54,
+   "trade_id": "2344551",
+   "is_maker": true,
+   "commission": 0.0,
+   "commission_asset": "BTC",
+   "reject_reason": "",
+   "raw_status": "FILLED",
+   "received_at_ms": 1791131917933,
+   "processed_at_ms": 1791131917933
+  }
+ ],
+ "orders": [
+  {
+   "order_id": "tiamm-validate-1791131813441-000001",
+   "venue_order_id": "9248932",
+   "side": "buy",
+   "price": 83595.63,
+   "quantity": 8e-05,
+   "filled": 0,
+   "venue_executed_qty": 0.0,
+   "unresolved": 0.0,
+   "state": "resting",
+   "venue_state": "acknowledged",
+   "t_decision_ms": 1791131813441,
+   "t_enqueued_ms": 1791131813441,
+   "t_submitted_ms": 1791131813441,
+   "t_rest_response_ms": 1791131813675,
+   "t_arrival_ms": 1791131813682,
+   "t_ack_ms": 1791131813682,
+   "ack_source": "stream",
+   "t_cancel_requested_ms": null,
+   "t_cancel_effective_ms": null,
+   "cancel_reason": "",
+   "reject_reason": "",
+   "unknown_reason": "",
+   "reason": "testnet validation: one post-only bid far below the market",
+   "authorization_id": "decision-1791131813441",
+   "queue": null
+  },
+  {
+   "order_id": "tiamm-validate-1791131813441-000001",
+   "venue_order_id": "9248932",
+   "side": "buy",
+   "price": 83595.63,
+   "quantity": 8e-05,
+   "filled": 0,
+   "venue_executed_qty": 0.0,
+   "unresolved": 0.0,
+   "state": "cancelled",
+   "venue_state": "cancelled",
+   "t_decision_ms": 1791131813441,
+   "t_enqueued_ms": 1791131813441,
+   "t_submitted_ms": 1791131813441,
+   "t_rest_response_ms": 1791131813675,
+   "t_arrival_ms": 1791131813682,
+   "t_ack_ms": 1791131813682,
+   "ack_source": "stream",
+   "t_cancel_requested_ms": 1791131813694,
+   "t_cancel_effective_ms": 1791131813934,
+   "cancel_reason": "validation: cancel the resting bid",
+   "reject_reason": "",
+   "unknown_reason": "",
+   "reason": "testnet validation: one post-only bid far below the market",
+   "authorization_id": "decision-1791131813441",
+   "queue": null
+  },
+  {
+   "order_id": "tiamm-validate-1791131814429-000002",
+   "venue_order_id": "9248933",
+   "side": "buy",
+   "price": 83595.63,
+   "quantity": 8e-05,
+   "filled": 0,
+   "venue_executed_qty": 0.0,
+   "unresolved": 0.0,
+   "state": "resting",
+   "venue_state": "acknowledged",
+   "t_decision_ms": 1791131814429,
+   "t_enqueued_ms": 1791131814429,
+   "t_submitted_ms": 1791131814429,
+   "t_rest_response_ms": 1791131814663,
+   "t_arrival_ms": 1791131814670,
+   "t_ack_ms": 1791131814670,
+   "ack_source": "stream",
+   "t_cancel_requested_ms": null,
+   "t_cancel_effective_ms": null,
+   "cancel_reason": "",
+   "reject_reason": "",
+   "unknown_reason": "",
+   "reason": "testnet validation: second resting bid for the disconnect test",
+   "authorization_id": "decision-1791131814429",
+   "queue": null
+  },
+  {
+   "order_id": "tiamm-validate-1791131814429-000002",
+   "venue_order_id": "9248933",
+   "side": "buy",
+   "price": 83595.63,
+   "quantity": 8e-05,
+   "filled": 0,
+   "venue_executed_qty": 0.0,
+   "unresolved": 0.0,
+   "state": "cancelled",
+   "venue_state": "cancelled",
+   "t_decision_ms": 1791131814429,
+   "t_enqueued_ms": 1791131814429,
+   "t_submitted_ms": 1791131814429,
+   "t_rest_response_ms": 1791131814663,
+   "t_arrival_ms": 1791131814670,
+   "t_ack_ms": 1791131814670,
+   "ack_source": "stream",
+   "t_cancel_requested_ms": 1791131816388,
+   "t_cancel_effective_ms": 1791131816857,
+   "cancel_reason": "validation: cancel the disconnect-test bid",
+   "reject_reason": "",
+   "unknown_reason": "",
+   "reason": "testnet validation: second resting bid for the disconnect test",
+   "authorization_id": "decision-1791131814429",
+   "queue": null
+  },
+  {
+   "order_id": "tiamm-validate-1791131817127-000003",
+   "venue_order_id": "9248934",
+   "side": "buy",
+   "price": 85301.67,
+   "quantity": 8e-05,
+   "filled": 0,
+   "venue_executed_qty": 0.0,
+   "unresolved": 0.0,
+   "state": "resting",
+   "venue_state": "acknowledged",
+   "t_decision_ms": 1791131817127,
+   "t_enqueued_ms": 1791131817127,
+   "t_submitted_ms": 1791131817128,
+   "t_rest_response_ms": 1791131817361,
+   "t_arrival_ms": 1791131817361,
+   "t_ack_ms": 1791131817361,
+   "ack_source": "stream",
+   "t_cancel_requested_ms": null,
+   "t_cancel_effective_ms": null,
+   "cancel_reason": "",
+   "reject_reason": "",
+   "unknown_reason": "",
+   "reason": "testnet fill probe: join the best bid, maker-only",
+   "authorization_id": "decision-1791131817127",
+   "queue": null
+  },
+  {
+   "order_id": "tiamm-validate-1791131817381-000004",
+   "venue_order_id": "9248936",
+   "side": "sell",
+   "price": 85301.68,
+   "quantity": 8e-05,
+   "filled": 0,
+   "venue_executed_qty": 0.0,
+   "unresolved": 0.0,
+   "state": "resting",
+   "venue_state": "acknowledged",
+   "t_decision_ms": 1791131817381,
+   "t_enqueued_ms": 1791131817381,
+   "t_submitted_ms": 1791131817381,
+   "t_rest_response_ms": 1791131817701,
+   "t_arrival_ms": 1791131817699,
+   "t_ack_ms": 1791131817699,
+   "ack_source": "stream",
+   "t_cancel_requested_ms": null,
+   "t_cancel_effective_ms": null,
+   "cancel_reason": "",
+   "reject_reason": "",
+   "unknown_reason": "",
+   "reason": "testnet fill probe: join the best ask, maker-only",
+   "authorization_id": "decision-1791131817381",
+   "queue": null
+  },
+  {
+   "order_id": "tiamm-validate-1791131817127-000003",
+   "venue_order_id": "9248934",
+   "side": "buy",
+   "price": 85301.67,
+   "quantity": 8e-05,
+   "filled": 0,
+   "venue_executed_qty": 0.0,
+   "unresolved": 0.0,
+   "state": "cancelled",
+   "venue_state": "cancelled",
+   "t_decision_ms": 1791131817127,
+   "t_enqueued_ms": 1791131817127,
+   "t_submitted_ms": 1791131817128,
+   "t_rest_response_ms": 1791131817361,
+   "t_arrival_ms": 1791131817361,
+   "t_ack_ms": 1791131817361,
+   "ack_source": "stream",
+   "t_cancel_requested_ms": 1791131830872,
+   "t_cancel_effective_ms": 1791131831118,
+   "cancel_reason": "fill probe: window elapsed or the other side traded",
+   "reject_reason": "",
+   "unknown_reason": "",
+   "reason": "testnet fill probe: join the best bid, maker-only",
+   "authorization_id": "decision-1791131817127",
+   "queue": null
+  },
+  {
+   "order_id": "tiamm-validate-1791131817381-000004",
+   "venue_order_id": "9248936",
+   "side": "sell",
+   "price": 85301.68,
+   "quantity": 8e-05,
+   "filled": 8e-05,
+   "venue_executed_qty": 8e-05,
+   "unresolved": 0.0,
+   "state": "filled",
+   "venue_state": "filled",
+   "t_decision_ms": 1791131817381,
+   "t_enqueued_ms": 1791131817381,
+   "t_submitted_ms": 1791131817381,
+   "t_rest_response_ms": 1791131817701,
+   "t_arrival_ms": 1791131817699,
+   "t_ack_ms": 1791131817699,
+   "ack_source": "stream",
+   "t_cancel_requested_ms": null,
+   "t_cancel_effective_ms": null,
+   "cancel_reason": "",
+   "reject_reason": "",
+   "unknown_reason": "",
+   "reason": "testnet fill probe: join the best ask, maker-only",
+   "authorization_id": "decision-1791131817381",
+   "queue": null
+  },
+  {
+   "order_id": "tiamm-validate-1791131832362-000005",
+   "venue_order_id": "9249007",
+   "side": "buy",
+   "price": 85315.54,
+   "quantity": 8e-05,
+   "filled": 0,
+   "venue_executed_qty": 0.0,
+   "unresolved": 0.0,
+   "state": "resting",
+   "venue_state": "acknowledged",
+   "t_decision_ms": 1791131832362,
+   "t_enqueued_ms": 1791131832362,
+   "t_submitted_ms": 1791131832363,
+   "t_rest_response_ms": 1791131832598,
+   "t_arrival_ms": 1791131832598,
+   "t_ack_ms": 1791131832598,
+   "ack_source": "stream",
+   "t_cancel_requested_ms": null,
+   "t_cancel_effective_ms": null,
+   "cancel_reason": "",
+   "reject_reason": "",
+   "unknown_reason": "",
+   "reason": "testnet fill probe: unwind with a post-only buy",
+   "authorization_id": "decision-1791131832362",
+   "queue": null
+  },
+  {
+   "order_id": "tiamm-validate-1791131832362-000005",
+   "venue_order_id": "9249007",
+   "side": "buy",
+   "price": 85315.54,
+   "quantity": 8e-05,
+   "filled": 8e-05,
+   "venue_executed_qty": 8e-05,
+   "unresolved": 0.0,
+   "state": "filled",
+   "venue_state": "filled",
+   "t_decision_ms": 1791131832362,
+   "t_enqueued_ms": 1791131832362,
+   "t_submitted_ms": 1791131832363,
+   "t_rest_response_ms": 1791131832598,
+   "t_arrival_ms": 1791131832598,
+   "t_ack_ms": 1791131832598,
+   "ack_source": "stream",
+   "t_cancel_requested_ms": null,
+   "t_cancel_effective_ms": null,
+   "cancel_reason": "",
+   "reject_reason": "",
+   "unknown_reason": "",
+   "reason": "testnet fill probe: unwind with a post-only buy",
+   "authorization_id": "decision-1791131832362",
+   "queue": null
+  }
+ ],
+ "latency_ms": {
+  "host_venue_clock_offset_ms": 1,
+  "adapter": {
+   "decision_to_enqueue_ms": {
+    "count": 5,
+    "window": 5,
+    "last_ms": 0.0,
+    "ema_ms": 0.0,
+    "min_ms": 0.0,
+    "max_ms": 0.0,
+    "p50_ms": 0.0,
+    "p95_ms": 0.0,
+    "p99_ms": 0.0
+   },
+   "enqueue_to_submit_ms": {
+    "count": 5,
+    "window": 5,
+    "last_ms": 1.0,
+    "ema_ms": 0.1,
+    "min_ms": 0.0,
+    "max_ms": 1.0,
+    "p50_ms": 0.0,
+    "p95_ms": 1.0,
+    "p99_ms": 1.0
+   },
+   "rest_submit_rtt_ms": {
+    "count": 5,
+    "window": 5,
+    "last_ms": 235.0,
+    "ema_ms": 238.09,
+    "min_ms": 233.0,
+    "max_ms": 320.0,
+    "p50_ms": 234.0,
+    "p95_ms": 320.0,
+    "p99_ms": 320.0
+   },
+   "submit_to_ack_ms": {
+    "count": 5,
+    "window": 5,
+    "last_ms": 254.0,
+    "ema_ms": 257.99,
+    "min_ms": 253.0,
+    "max_ms": 356.0,
+    "p50_ms": 254.0,
+    "p95_ms": 356.0,
+    "p99_ms": 356.0
+   },
+   "submit_to_first_ack_ms": {
+    "count": 5,
+    "window": 5,
+    "last_ms": 235.0,
+    "ema_ms": 244.0,
+    "min_ms": 233.0,
+    "max_ms": 318.0,
+    "p50_ms": 241.0,
+    "p95_ms": 318.0,
+    "p99_ms": 318.0
+   },
+   "report_to_local_ms": {
+    "count": 12,
+    "window": 12,
+    "last_ms": 127.0,
+    "ema_ms": 121.4,
+    "min_ms": 115.0,
+    "max_ms": 127.0,
+    "p50_ms": 117.0,
+    "p95_ms": 127.0,
+    "p99_ms": 127.0
+   },
+   "report_received_to_applied_ms": {
+    "count": 10,
+    "window": 10,
+    "last_ms": 0.0,
+    "ema_ms": 0.04,
+    "min_ms": 0.0,
+    "max_ms": 1.0,
+    "p50_ms": 0.0,
+    "p95_ms": 1.0,
+    "p99_ms": 1.0
+   },
+   "fill_to_ledger_ms": {
+    "count": 2,
+    "window": 2,
+    "last_ms": 0.0,
+    "ema_ms": 0.0,
+    "min_ms": 0.0,
+    "max_ms": 0.0,
+    "p50_ms": 0.0,
+    "p95_ms": 0.0,
+    "p99_ms": 0.0
+   },
+   "cancel_to_ack_ms": {
+    "count": 3,
+    "window": 3,
+    "last_ms": 246.0,
+    "ema_ms": 251.18,
+    "min_ms": 240.0,
+    "max_ms": 469.0,
+    "p50_ms": 246.0,
+    "p95_ms": 469.0,
+    "p99_ms": 469.0
+   },
+   "note": "host clock throughout; submit_to_ack is the REST response applied, submit_to_first_ack the first acknowledgement from any source (stream or REST); report_to_local includes the host-venue clock offset; fill_to_ledger is measured only with the fill sink installed"
+  },
+  "ws_received_to_processed_ms": [
+   0,
+   0,
+   0,
+   0,
+   1,
+   0,
+   0,
+   0,
+   0,
+   0
+  ]
+ },
+ "stream_status": [
+  [
+   true,
+   "connected",
+   1791131812476
+  ],
+  [
+   false,
+   "closed",
+   1791131814934
+  ],
+  [
+   true,
+   "connected",
+   1791131816353
+  ],
+  [
+   false,
+   "closed",
+   1791131918667
+  ]
+ ],
+ "criticals": [
+  [
+   "user_stream_down",
+   "account stream dropped: closed"
+  ],
+  [
+   "user_stream_down",
+   "account stream dropped: closed"
+  ]
+ ],
+ "execution_stats": {
+  "mode": "live",
+  "venue": "binance-spot-testnet",
+  "is_live": false,
+  "placed": 5,
+  "submitted": 5,
+  "acked": 5,
+  "rejected": 0,
+  "rejected_would_cross": 0,
+  "refused_validation": 0,
+  "refused_blocked": 0,
+  "deferred_cancel_pending": 0,
+  "cancel_requests": 3,
+  "cancelled": 3,
+  "cancelled_before_submit": 0,
+  "cancel_raced_fill": 0,
+  "expired": 0,
+  "unknown": 0,
+  "resolved_present": 0,
+  "resolved_absent": 0,
+  "resolved_absent_after_close": 0,
+  "cancel_rejected_after_close": 0,
+  "unresolved": 0,
+  "fills": 2,
+  "maker_fills": 2,
+  "taker_fills": 0,
+  "unknown_fills": 0,
+  "historical_trades": 0,
+  "api_errors": 0,
+  "activation_refusals": 0,
+  "venue_orders_unknown_locally": 0,
+  "foreign_open_orders": 0,
+  "missing_at_venue": 0,
+  "closed_open_at_venue": 0,
+  "reopened_from_venue": 0,
+  "worker_errors": 0,
+  "reports": 12,
+  "duplicate_reports": 2,
+  "reports_before_start": 0,
+  "reports_before_rest_ack": 1,
+  "report_fills": 2,
+  "trade_poll_fills": 0,
+  "duplicate_trades": 4,
+  "unknown_reports": 0,
+  "unknown_attribution_fills": 0,
+  "stream_drops": 2,
+  "stream_resolved": 0,
+  "balance_updates": 10,
+  "refused_crossed": 0,
+  "partial_orders": 0,
+  "unresolved_fill_events": 0,
+  "unresolved_quantity": 0.0,
+  "states": {
+   "cancelled": 3,
+   "filled": 2
+  },
+  "active": 0,
+  "open": 0,
+  "unknown_open": 0,
+  "blocked_reason": "",
+  "critical_reason": "user_stream_down: account stream dropped: closed",
+  "last_refusal": "",
+  "worker_running": false,
+  "queue_depth": null,
+  "pending_outcomes": 0,
+  "trade_baseline_ms": 1791131753441,
+  "filters": {
+   "symbol": "BTC-USD",
+   "tick_size": 0.01,
+   "step_size": 1e-05,
+   "min_qty": 1e-05,
+   "max_qty": 9000.0,
+   "min_notional": 5.0,
+   "source": "exchange_info",
+   "order_types": [
+    "LIMIT",
+    "LIMIT_MAKER",
+    "MARKET",
+    "STOP_LOSS",
+    "STOP_LOSS_LIMIT",
+    "TAKE_PROFIT",
+    "TAKE_PROFIT_LIMIT"
+   ]
+  },
+  "strict_cancel_replace": true,
+  "fill_sink_installed": true,
+  "pending_fills": 0,
+  "stream": {
+   "wired": true,
+   "connected": false,
+   "reason": "closed",
+   "last_change_ms": 1791131918667,
+   "accepting_reports": true,
+   "fills_source_note": "account stream first, trade history as fallback and cross-check; one booking per venue trade id"
+  },
+  "venue_balances": {
+   "BTC": {
+    "free": 1.0,
+    "locked": 0.0
+   },
+   "USDT": {
+    "free": 9999.9988912,
+    "locked": 0.0
+   }
+  },
+  "venue_balances_at_ms": 1791131917933,
+  "latency": {
+   "decision_to_enqueue_ms": {
+    "count": 5,
+    "window": 5,
+    "last_ms": 0.0,
+    "ema_ms": 0.0,
+    "min_ms": 0.0,
+    "max_ms": 0.0,
+    "p50_ms": 0.0,
+    "p95_ms": 0.0,
+    "p99_ms": 0.0
+   },
+   "enqueue_to_submit_ms": {
+    "count": 5,
+    "window": 5,
+    "last_ms": 1.0,
+    "ema_ms": 0.1,
+    "min_ms": 0.0,
+    "max_ms": 1.0,
+    "p50_ms": 0.0,
+    "p95_ms": 1.0,
+    "p99_ms": 1.0
+   },
+   "rest_submit_rtt_ms": {
+    "count": 5,
+    "window": 5,
+    "last_ms": 235.0,
+    "ema_ms": 238.09,
+    "min_ms": 233.0,
+    "max_ms": 320.0,
+    "p50_ms": 234.0,
+    "p95_ms": 320.0,
+    "p99_ms": 320.0
+   },
+   "submit_to_ack_ms": {
+    "count": 5,
+    "window": 5,
+    "last_ms": 254.0,
+    "ema_ms": 257.99,
+    "min_ms": 253.0,
+    "max_ms": 356.0,
+    "p50_ms": 254.0,
+    "p95_ms": 356.0,
+    "p99_ms": 356.0
+   },
+   "submit_to_first_ack_ms": {
+    "count": 5,
+    "window": 5,
+    "last_ms": 235.0,
+    "ema_ms": 244.0,
+    "min_ms": 233.0,
+    "max_ms": 318.0,
+    "p50_ms": 241.0,
+    "p95_ms": 318.0,
+    "p99_ms": 318.0
+   },
+   "report_to_local_ms": {
+    "count": 12,
+    "window": 12,
+    "last_ms": 127.0,
+    "ema_ms": 121.4,
+    "min_ms": 115.0,
+    "max_ms": 127.0,
+    "p50_ms": 117.0,
+    "p95_ms": 127.0,
+    "p99_ms": 127.0
+   },
+   "report_received_to_applied_ms": {
+    "count": 10,
+    "window": 10,
+    "last_ms": 0.0,
+    "ema_ms": 0.04,
+    "min_ms": 0.0,
+    "max_ms": 1.0,
+    "p50_ms": 0.0,
+    "p95_ms": 1.0,
+    "p99_ms": 1.0
+   },
+   "fill_to_ledger_ms": {
+    "count": 2,
+    "window": 2,
+    "last_ms": 0.0,
+    "ema_ms": 0.0,
+    "min_ms": 0.0,
+    "max_ms": 0.0,
+    "p50_ms": 0.0,
+    "p95_ms": 0.0,
+    "p99_ms": 0.0
+   },
+   "cancel_to_ack_ms": {
+    "count": 3,
+    "window": 3,
+    "last_ms": 246.0,
+    "ema_ms": 251.18,
+    "min_ms": 240.0,
+    "max_ms": 469.0,
+    "p50_ms": 246.0,
+    "p95_ms": 469.0,
+    "p99_ms": 469.0
+   },
+   "note": "host clock throughout; submit_to_ack is the REST response applied, submit_to_first_ack the first acknowledgement from any source (stream or REST); report_to_local includes the host-venue clock offset; fill_to_ledger is measured only with the fill sink installed"
+  }
+ },
+ "ledger": {
+  "starting_equity_usd": 10000.0,
+  "cash_usd": 9999.998891,
+  "inventory_btc": 0.0,
+  "average_cost": 0.0,
+  "mark_price": 0.0,
+  "equity_usd": 9999.998891,
+  "equity_conservative_usd": 9999.998891,
+  "gross_pnl_usd": -0.001109,
+  "realised_pnl_usd": -0.001109,
+  "unrealised_mid_usd": 0.0,
+  "unrealised_conservative_usd": 0.0,
+  "fees_usd": 0.0,
+  "adverse_selection_usd": 0.0,
+  "slippage_usd": 0.0,
+  "net_pnl_usd": -0.001109,
+  "net_pnl_conservative_usd": -0.001109,
+  "peak_equity_usd": 10000.0,
+  "drawdown_pct": 0.0,
+  "day": "",
+  "day_start_equity_usd": 10000.0,
+  "daily_pnl_usd": -0.001109,
+  "fills": 2,
+  "buy_volume_btc": 8e-05,
+  "sell_volume_btc": 8e-05,
+  "max_inventory_btc": 8e-05,
+  "inventory_duration_s": 87.1,
+  "cost_model": {
+   "maker_fee_bps": 10.0,
+   "status": "PROVISIONAL_COST_ASSUMPTION",
+   "scenario": "assumed",
+   "scenarios_bps": {
+    "assumed": 10.0,
+    "verified": null,
+    "adverse": 15.0
+   },
+   "taker_fee_bps": 10.0
+  },
+  "note": "starting equity is the quote total (free + locked) at seed; inventory and P&L are this maker's fills only; the base held before the run is a baseline, not inventory; free balances are the venue's word and size new orders",
+  "mode": "live",
+  "seeded": true,
+  "seeded_at_ms": 1791131812975,
+  "baseline_base_btc": 1.0,
+  "base_held_btc": 1.0,
+  "account_equity_usd": 9999.998891,
+  "venue_quote_free": 10006.8241344,
+  "venue_quote_locked": 0.0,
+  "venue_base_free": 0.99992,
+  "venue_base_locked": 0.0,
+  "venue_balances_at_ms": 1791131832117,
+  "available_for_bid_usd": 10006.8241344,
+  "available_for_ask_btc": 0.99992,
+  "fees_venue_usd": 0.0,
+  "fees_converted_usd": 0.0,
+  "fees_assumed_usd": 0.0,
+  "base_fees_btc": 0.0,
+  "fills_unconverted_fee": 0,
+  "fills_by_liquidity": {
+   "maker": 2,
+   "taker": 0
+  },
+  "reconciliations": 1,
+  "discrepancies": 0,
+  "last_reconciliation": {
+   "t_ms": 1791131832117,
+   "ok": true,
+   "expected_quote_usd": 10006.824134,
+   "venue_quote_usd": 10006.8241344,
+   "venue_quote_free": 10006.8241344,
+   "venue_quote_locked": 0.0,
+   "quote_delta_usd": 0.0,
+   "quote_tolerance_usd": 0.05,
+   "expected_base_btc": 0.99992,
+   "venue_base_btc": 0.99992,
+   "venue_base_free": 0.99992,
+   "venue_base_locked": 0.0,
+   "base_delta_btc": 0.0,
+   "base_tolerance_btc": 2e-05,
+   "adopted": false
+  },
+  "adjustments": []
+ },
+ "fill_evidence_kind": "real_testnet_fill",
+ "fill_evidence_note": "a fill here is the venue trading with a post-only probe of ours; the synthetic fill tests under tests/unit/mm and tests/adversarial are evidence about our invariants, never about Binance"
+}

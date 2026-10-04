@@ -236,3 +236,10 @@ not found. The profile lives in the production data volume and was measured agai
 data; a Testnet run now measures its own profile against Testnet into a separate directory
 (`mm_market_data_check.py --rest-url/--stream-url`, `scripts/run_mm_service_testnet_validation.sh`).
 Phase 4 §10.7. The run itself is still pending.
+
+Addendum 2026-10-04, recovery and fills (code after `7e44954`): a run that died with quotes resting
+left them at the venue unmanaged (the sticky kill cancels local orders only). start_live() now
+sweeps the previous run's orders by id before placing anything, journals and raises an incident;
+the venue's refusal still ends in a sticky kill. The block validator's fill probe rests both sides
+at the best and re-pegs, maker-only; the service validator gained a recovery drill. Both Testnet
+runs are still pending: nothing after `8608db6` has run on Testnet. Phase 4 §10.8 to §10.11.

@@ -499,6 +499,134 @@ en los tres componentes), corrida de 3 min, evidencia escaneada y copiada sin mo
 shell root: sus JSON están en `/root/tia-testnet/`, no en `/home/tia/tia-testnet/`. El runbook
 los copia a `docs/evidence/` si los encuentra, sin editarlos.
 
+### 10.8 Auditoría del camino de fills (2026-10-04, código en `7e44954`+)
+
+Las doce preguntas, respondidas sobre el código, sin cambiarlo. Archivos: `Q` =
+`tia/mm/quoting.py`, `X` = `tia/mm/execution.py`, `L` = `tia/mm/live_ledger.py`,
+`S` = `tia/mm/live_service.py`, `U` = `tia/data/providers/binance_user_stream.py`.
+
+1. **Cotizaciones.** `Q.decide()`: centro = fair value corregido por inventario (bps); bid =
+   redondeo hacia abajo de centro·(1 − half/1e4) al tick, ask = redondeo hacia arriba de
+   centro·(1 + half/1e4); si bid ≥ ask, ask = bid + tick; se rechaza la decisión si bid o ask
+   se alejan del mid más de `max_offset_from_mid_bps`; antes, el controlador de riesgo y la
+   confianza mínima del fair value pueden devolver `no_quote`. Tamaño `base_quote_size_btc`,
+   TTL `quote_ttl_ms`.
+2. **Precio del LIMIT_MAKER.** El de la decisión, tal cual. `X.validate_maker_order` rechaza en
+   vez de re-redondear: fuera de grilla, bajo `minQty`/`minNotional`, o un precio que tomaría
+   liquidez contra el libro local (bid ≥ best ask, ask ≤ best bid). La venue es el segundo
+   rail: LIMIT_MAKER rechaza con -2010 lo que tomaría (`rejected_would_cross`, nunca reenviado).
+3. **Maker.** Localmente, la validación anterior. En la venue, el tipo de orden. En el fill, la
+   bandera `m` del `executionReport` (`is_maker`): `maker_fills`/`taker_fills`; un fill taker
+   sobre una orden nuestra se contabiliza y se registra como anomalía (`mm_live_taker_fill`).
+4. **Cancel/replace.** `X.cancel`/`cancel_all` encolan el cancel; con `strict_cancel_replace`
+   la pata nueva se difiere mientras la vieja tiene un cancel pendiente
+   (`deferred_cancel_pending`). `_do_cancel` solo sale cuando la venue reconoció la orden
+   (`_worker_acked`); resultados: `cancelled`, `cancel_rejected` (-2011/-2013 → resolver por
+   id), `unknown` → resolver. El vencimiento del TTL cancela por la venue.
+5. **Llegada del `executionReport`.** `U.BinanceUserDataStream` (WebSocket API,
+   `userDataStream.subscribe.signature`) parsea `ExecutionReport` y llama a
+   `X.absorb_execution_report(report, received_at_ms)` en la tarea del stream, nunca en el hot
+   path de market data. Tramos medidos: `report_to_local_ms`, `report_received_to_applied_ms`.
+6. **Correlación.** `report.order_ref` (`C` origClientOrderId si viene, si no `c`) → `_all`;
+   luego `client_order_id`; luego `_by_venue_id[orderId]`. Desconocida con nuestro prefijo:
+   `venue_order_unknown_locally`, crítica. Sin prefijo: `unknown_execution_report`. Anterior a
+   la línea base de trades: histórica. Antes de la reconciliación inicial: `reports_before_start`.
+7. **Fill parcial.** Un TRADE con `t`, `l`, `L` → `_fill_from_report` → `_book_fill` agrega el
+   fill; la orden sigue abierta mientras `remaining > step/2`; `_adopt` registra `z` como
+   `venue_executed_qty` y, si supera lo contabilizado, fuerza un poll de `myTrades` (`_poll_due`).
+8. **Fill total.** `_book_fill` cierra la orden cuando `remaining ≤ step/2` (estado `filled`); o
+   `_adopt` con estado FILLED de la venue. Una orden terminal no se reabre (idempotencia).
+9. **Ledger.** `fill_sink` → `L.apply_fill(fill)` en el acto: comisión según su estado (`venue`
+   en quote, `converted_from_base`, si no asumida y contada en `fills_unconverted`), inventario y
+   caja vía `_book`; `fill_to_ledger_ms` medido en `_book_fill`.
+10. **Reconciliación posterior.** `S.reconcile()`: órdenes abiertas (con instante de la foto),
+    balances y `myTrades`; `_apply_trades` deduplica por trade id y descarta lo anterior a la
+    línea base; `L.expected_balances()` contra totales de la venue con tolerancias; un desvío
+    aislado es warning, dos seguidos (o el pase final) adoptan las cifras de la venue.
+11. **Fill + cancel race.** Respuesta al cancel con FILLED → `cancel_raced_fill`; el fill llega
+    por TRADE o por `myTrades`; `z` por delante de lo contabilizado fuerza el poll. Test:
+    `test_a_fill_that_races_the_cancel_is_booked_and_the_order_ends_filled`.
+12. **Sin doble contabilización.** `_seen_trade_ids` por trade id de la venue a través de
+    todas las fuentes, `_seen_report_keys` para reportes duplicados (`dedupe_key`), contadores
+    `duplicate_trades`/`duplicate_reports`; `_book_fill` es la única puerta.
+
+### 10.9 Diseño de la prueba de fill real en Testnet (sin agresión)
+
+Un LIMIT_MAKER no cruza por definición; un fill real solo puede venir de que el mercado opere
+contra una orden nuestra que descansa. El mecanismo legítimo es el de cualquier maker: estar
+AL mejor nivel y esperar. `scripts/validate_mm_testnet.py --fill-probe SEGUNDOS` ya lo hacía
+con un bid; desde `7e44954`+:
+
+* `--fill-probe-sides both`: un bid al best bid y un ask al best ask a la vez, post-only, tamaño
+  mínimo sobre `minNotional`; el que el mercado alcance primero es el fill, el otro se cancela.
+* `--fill-probe-repeg S`: si el best se alejó de una sonda (subió sobre nuestro bid, bajó bajo
+  nuestro ask), se cancela (confirmado) y se vuelve a descansar al nuevo best, del lado maker,
+  nunca cruzando. Un best que atravesó nuestro precio no es re-peg: es un fill (o está por
+  serlo). Helper puro `_repeg_target`, testeado.
+* Si hay fill: campos del TRADE, correlación `c/C` ↔ `i`, booking único contra `myTrades`,
+  `outboundAccountPosition`, reconciliación de balances, desarme a plano con una sola orden
+  post-only del otro lado por el neto (`_net_inventory`). Fill parcial solo si la venue lo
+  produce; duplicado y demorado no se pueden forzar en la venue real: siguen SYNTHETIC ONLY.
+* Evidencia etiquetada `fill_evidence_kind: real_testnet_fill`; en el validator del servicio,
+  S8 dice `real_testnet_fill` si hubo fill y "SYNTHETIC ONLY" si no.
+
+Rails intactos: mismo `validate_maker_order`, mismo adapter, sin MARKET, sin token, Testnet
+only. Comando desde el VPS: `FILL_PROBE=1800 bash scripts/run_mm_service_testnet_validation.sh`
+(30 min de ventana). Si el mercado no viene, S8 queda NOT TESTED y se dice.
+
+### 10.10 Restart y recuperación: el hueco encontrado y el barrido al arranque
+
+**Auditoría.** Hasta `7e44954`, un servicio que moría con cotizaciones descansando (crash,
+`kill -9`, host caído) dejaba esas órdenes en la venue. El siguiente `start_live()` las veía en
+la reconciliación inicial como `venue_order_unknown_locally` (prefijo nuestro, desconocidas
+para esta corrida) → kill sticky `CANCEL_OPEN` → `execution.cancel_all`, que solo cancela
+órdenes **locales**: las huérfanas quedaban descansando en la venue, sin nadie que las
+gestionara, hasta que una persona las cancelara a mano. Una huérfana que se llena mientras
+tanto es un fill sobre una orden que nadie contabiliza. Riesgo real de recuperación, no
+especulativo; afecta Testnet hoy y afectaría cualquier venue.
+
+**Decisión (implementada en `S._sweep_orphans`, llamada desde `start_live` antes de la
+reconciliación inicial).** Antes de que esta corrida coloque nada, se leen las órdenes abiertas
+de la venue; las que llevan el prefijo del maker son de una corrida anterior y no las gestiona
+nadie: cada una se consulta por id (`resolve_unknown_order`, para que el provider la conozca)
+y se cancela por la venue (`cancel_order`); el barrido se escribe en el journal
+(`kind: orphan_sweep`) y se eleva como incidente `mm_orphans_swept` (una corrida murió con
+órdenes abiertas: el operador debe saberlo). Nada se adopta, nada se reenvía. Una huérfana que
+la venue no cancela queda para la reconciliación inicial, que la encuentra abierta y
+desconocida y engancha el kill sticky como antes. Las órdenes ajenas no se tocan (siguen
+críticas). Durante la corrida el barrido no aplica: una orden con nuestro prefijo que la venue
+lista y esta corrida no conoce podría ser una submission duplicada, y sigue siendo crítica.
+Estado visible en `status()["orphan_sweep"]`.
+
+**Tests (UNIT/ADVERSARIAL).** `test_orders_of_a_previous_run_found_open_at_start_are_cancelled_before_quoting_and_reported`,
+`test_an_orphan_the_venue_will_not_cancel_is_left_to_the_initial_reconciliation_which_is_critical`,
+`test_a_foreign_open_order_at_start_is_not_swept_and_stays_critical` (servicio) y
+`test_a_restart_after_a_run_died_with_orders_open_leaves_no_orphan_and_duplicates_nothing`
+(adversarial: dos servicios sobre la misma venue falsa, el primero muere sin `stop()`).
+
+**Simulacro en Testnet (`--recovery-drill`, NOT TESTED todavía).** Tras la ventana, el servicio
+muere con cotizaciones descansando (suscripción de mercado cortada, loops cancelados, stream y
+worker cortados, sin `stop()`); un segundo servicio arranca con cliente nuevo sobre la misma
+cuenta. Items R1 (la venue aún las tiene), R2 (el barrido las encontró y canceló todas), R3
+(reconciliación inicial limpia), R4 (ninguna de la corrida muerta abierta), R5 (stream
+suscripto), R6 (la segunda corrida cotiza solo con sus ids), R7 (ningún id de la corrida muerta
+adoptado ni reenviado). Después, `stop()` y la verificación con cliente nuevo de siempre.
+Comando: `RECOVERY_DRILL=1 bash scripts/run_mm_service_testnet_validation.sh`. Nunca deja
+órdenes sin reconciliar: la segunda corrida siempre arranca y el cierre cancela todo lo nuestro.
+
+### 10.11 Clasificación de lo demostrado (estado al cierre de este ciclo)
+
+| Clase | Qué |
+|---|---|
+| **VERIFIED TESTNET** (corridas sobre `1ebc584`…`8608db6`) | REST y suscripción firmada del stream de cuenta; LIMIT_MAKER post-only; reportes NEW/CANCELED reales y su correlación (incluido el `c`/`C` re-keyed del cancel); cancel por `orderId`; -2013; corte y reconexión del stream con orden abierta y reconciliación REST; ensamblado del servicio como el API; reconciliación inicial y ledger sembrado; cotización del engine sobre datos Testnet; cancel/replace 62/62; 13 reconciliaciones limpias; kill transitorio por datos stale y recuperación; `stop()` con 0 abiertas local y en la venue; rails Testnet-only. |
+| **VERIFIED LOCALLY** | Todo el §10.6; estado `shutdown`; barrido de huérfanas; semántica del validator; flags de venue del medidor de latencia; aritmética del fill probe. |
+| **SYNTHETIC ONLY** | Fills (parcial, total, duplicado, race con cancel, demorado, correlación por `orderId`, ledger, `fill_to_ledger_ms`, reconciliación tras fill); restart con huérfanas; órdenes zombi; semántica de caída/reconexión del stream a nivel servicio. |
+| **NOT TESTED** | S8 con fill real; simulacro de recovery en Testnet; el estado `shutdown` en Testnet (S10b con la semántica nueva); perfil de latencia medido contra Testnet; endpoints `/api/mm/live/*` contra Testnet. Nada posterior a `8608db6` ha corrido en Testnet. |
+| **KNOWN LIMITATIONS** | Libro de Testnet fino y precios propios; un fill no puede forzarse sin agresión; el perfil que pasó S0 antes se midió contra Mainnet público; offset de reloj host-venue no corregido en el servicio; el estado local de órdenes no persiste entre procesos (la recuperación se apoya en la venue más el barrido, por diseño). |
+| **REMAINING RISKS** (mayor a menor) | 1. Camino de fills real sin observar en la venue. 2. Recuperación tras crash sin observar en la venue. 3. Offset de reloj en los tramos de latencia de la venue. 4. Un fill sobre una huérfana entre la muerte y el barrido se ve como fill histórico tras la línea base: contabilidad correcta por balances, pero sin atribución a orden. 5. Fee en tercer activo contabilizado como asumido. |
+
+Ninguna de estas filas afirma "production ready", "profitable" ni "safe for real money".
+
 ## 11. Modelo de estados de seguridad del maker live
 
 El kill switch del maker (`tia/mm/kill_switch.py`) alimenta el `system_unsafe` del gate global;
@@ -544,3 +672,9 @@ Lo que una persona debe hacer ante un sticky: leer `GET /api/mm/live/status` (`k
 `POST /api/mm/live/stop` y, si corresponde, `start`. No existe ningún endpoint que libere el
 switch sin parar el servicio.
 
+**Regla 4 — barrido al arranque (desde `7e44954`+).** Antes de la reconciliación inicial, las
+órdenes abiertas en la venue con el prefijo del maker son de una corrida anterior y se cancelan
+por id, se registran (`orphan_sweep`) y se elevan como incidente; no son un engagement. Lo que
+la venue no cancela lo encuentra la reconciliación inicial y es sticky, como siempre. Las
+órdenes ajenas no se barren. Durante la corrida la regla no aplica: una orden nuestra que la
+venue lista y esta corrida no conoce sigue siendo crítica.

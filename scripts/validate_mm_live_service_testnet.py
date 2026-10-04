@@ -108,6 +108,9 @@ class ServiceValidation:
         self.final_status: dict[str, Any] | None = None
         self.stop_result: dict[str, Any] | None = None
         self.open_after_stop: list[str] | None = None
+        self.config: MarketMakerConfig | None = None
+        self.profile: LatencyProfile | None = None
+        self.first_run_status: dict[str, Any] | None = None  # the recovery drill's dead run, as it was when it died
 
     def now_ms(self) -> int:
         return self.clock.timestamp_ms()
@@ -150,16 +153,29 @@ class ServiceValidation:
 
         stream = MarketDataStream(args.symbol, stream_url=args.stream_url, depth_speed="100ms")
         self.market = MarketDataService(args.symbol, stream=stream, fetch_snapshot=fetch_snapshot, recorder=None)
-        self.service = LiveMarketMakerService(
+        self.config, self.profile = config, profile
+        self.service = self._assemble_service(run_id="mm-testnet-service")
+        ev.mark("S0.service_assembled_like_the_api_would", "PASS", "LiveMarketMakerService + BinanceUserDataStream + MarketDataService on Testnet URLs; capital cap " + (f"{args.capital_cap_usd} USD" if args.capital_cap_usd > 0 else "none"))
+
+    def _new_provider(self) -> BinanceExecutionProvider:
+        signer = signer_from_live_config(self.live, self.clock)
+        return BinanceExecutionProvider(signer=signer, clock=self.clock, activation=None, base_url=self.args.rest_url, simulated=True)
+
+    def _assemble_service(self, *, run_id: str) -> LiveMarketMakerService:
+        """The service exactly as ``POST /api/mm/live/start`` would build it, on the current
+        provider: the maker, its account stream, the market data already running."""
+        assert self.market is not None and self.provider is not None and self.filters is not None and self.config is not None and self.profile is not None
+        args = self.args
+        service = LiveMarketMakerService(
             market=self.market,
-            config=config,
-            profile=profile,
+            config=self.config,
+            profile=self.profile,
             scenario=args.scenario,
-            run_id="mm-testnet-service",
+            run_id=run_id,
             risk_state=lambda: None,  # no directional session here: the gate reads data validity and the kill switch
             provider=self.provider,
             clock=self.clock,
-            filters=f,
+            filters=self.filters,
             activation=None,
             capital_cap_usd=args.capital_cap_usd if args.capital_cap_usd > 0 else None,
             economics=EconomicsConfig(min_net_edge_bps=args.min_net_edge_bps),
@@ -171,13 +187,23 @@ class ServiceValidation:
         user_stream = BinanceUserDataStream(
             self.provider,
             now_ms=self.now_ms,
-            on_report=self.service.execution.absorb_execution_report,
-            on_balances=self.service.execution.absorb_balances,
-            on_status=self.service.execution.absorb_stream_status,
+            on_report=service.execution.absorb_execution_report,
+            on_balances=service.execution.absorb_balances,
+            on_status=service.execution.absorb_stream_status,
             base_url=args.ws_url,
         )
-        self.service.attach_user_stream(user_stream)
-        ev.mark("S0.service_assembled_like_the_api_would", "PASS", "LiveMarketMakerService + BinanceUserDataStream + MarketDataService on Testnet URLs; capital cap " + (f"{args.capital_cap_usd} USD" if args.capital_cap_usd > 0 else "none"))
+        service.attach_user_stream(user_stream)
+        return service
+
+    async def _own_open_at_venue(self) -> list[str]:
+        """The venue's open orders of this maker's prefix, asked with a fresh client so the
+        answer does not depend on any adapter's mirror."""
+        fresh = self._new_provider()
+        try:
+            open_orders = await fresh.get_orders(open_only=True, symbol=self.args.symbol)
+            return sorted(o.client_order_id for o in open_orders if (o.client_order_id or "").startswith(CLIENT_ID_PREFIX))
+        finally:
+            await fresh.close()
 
     # ------------------------------------------------------------------ the run
 
@@ -208,6 +234,8 @@ class ServiceValidation:
             ev.mark("S3.account_stream_subscribed_through_the_service", "PASS" if up else "FAIL", f"connected={up} subscriptionId={getattr(self.service.user_stream, 'subscription_id', None)} last_error={getattr(self.service.user_stream, 'last_error', '')!r}")
 
             await self._observe(args.minutes * 60.0)
+            if args.recovery_drill:
+                await self.recovery_drill()
         except SystemExit:
             raise
         except Exception as exc:
@@ -218,6 +246,74 @@ class ServiceValidation:
             await self.shutdown()
         self.judge()
         return 1 if failed or any(v == "FAIL" for v in ev.results.values()) else 0
+
+    async def recovery_drill(self) -> None:
+        """RECOVERY — the running service dies with quotes resting: no stop(), no cancel (the
+        engine stops hearing the market, the loops are cancelled, the account stream and the
+        worker are cut). A second service starts on the same account with a fresh client, as a
+        restarted process would: it must find the dead run's orders under its own prefix and
+        cancel them before placing anything, reconcile clean, quote with its own ids, and never
+        resubmit a client id. The venue is asked with a fresh client at every step; the
+        S-items that follow judge the second run, and stop() runs on it."""
+        ev = self.ev
+        first = self.service
+        assert first is not None and self.provider is not None
+        print("\nRECOVERY DRILL — the first run dies with orders resting; a second run starts on the same account")
+        await _wait_until(lambda: any(o.state == "resting" for o in first.execution.open_orders()), 60.0)
+        left = sorted(o.order_id for o in first.execution.open_orders() if o.state == "resting")
+        drill: dict[str, Any] = {"left_by_first_run": left}
+        ev.responses["recovery_drill"] = drill
+        if not left:
+            ev.mark("R1.first_run_died_with_orders_resting", "NOT TESTED", f"nothing was resting to leave behind: {first.engine.last_block_reason!r}")
+            return
+        ev.command("first run dies: market subscription dropped, loops cancelled, account stream and worker cut — no stop(), no cancel")
+        if first._unsubscribe is not None:
+            first._unsubscribe()
+            first._unsubscribe = None
+        for task in (first._reconcile_task, first._heartbeat_task):
+            if task is not None:
+                task.cancel()
+        with contextlib.suppress(Exception):
+            if first.user_stream is not None:
+                await first.user_stream.close()
+        worker = getattr(first.execution, "_worker", None)
+        if worker is not None:
+            worker.cancel()  # a crash does not drain its queue
+        await asyncio.sleep(0.2)
+        self.first_run_status = first.status()
+        still = await self._own_open_at_venue()
+        drill["open_at_venue_after_death"] = still
+        ev.command(f"GET /api/v3/openOrders  [fresh client]  — the venue still holds the dead run's orders: {still}")
+        ev.mark("R1.first_run_died_with_orders_resting", "PASS" if set(left) <= set(still) else "FAIL", f"resting locally when it died {left}; open at the venue {still}")
+
+        # The second run: a fresh provider, a fresh account stream, the same market data.
+        with contextlib.suppress(Exception):
+            await self.provider.close()
+        self.provider = self._new_provider()
+        second = self._assemble_service(run_id="mm-testnet-service-restarted")
+        self.service = second
+        ev.command("second run: service.start_live()  [orphan sweep by id, initial reconciliation, ledger seed]")
+        report = await second.start_live()
+        sweep = second.orphan_sweep or {}
+        drill["sweep"] = sweep
+        drill["initial_reconciliation_second_run"] = report.as_dict()
+        cancelled = sorted(c["order_id"] for c in sweep.get("cancelled", []))
+        ev.mark("R2.orphans_found_and_cancelled_before_quoting", "PASS" if sorted(sweep.get("found", [])) == still and cancelled == still and not sweep.get("failed") else "FAIL", f"found {sweep.get('found')} cancelled {cancelled} failed {sweep.get('failed')}")
+        ev.mark("R3.initial_reconciliation_clean_after_the_sweep", "PASS" if not report.critical else "FAIL", report.summary)
+        after = await self._own_open_at_venue()
+        drill["open_at_venue_after_sweep"] = after
+        ev.mark("R4.no_order_of_the_dead_run_open_at_the_venue", "PASS" if not (set(after) & set(left)) else "FAIL", f"open at the venue after the sweep {after}")
+        up = await _wait_until(lambda: bool(second.user_stream is not None and second.user_stream.connected), 20.0)
+        ev.mark("R5.second_run_account_stream_subscribed", "PASS" if up else "FAIL", f"connected={up} subscriptionId={getattr(second.user_stream, 'subscription_id', None)}")
+        await self._observe(min(60.0, max(20.0, self.args.minutes * 60.0 / 3)))
+        placed = second.execution.counters["placed"]
+        own = f"{CLIENT_ID_PREFIX}{second.execution.run_tag[:8]}"
+        open_now = await self._own_open_at_venue()
+        drill["open_at_venue_while_second_run_quotes"] = open_now
+        not_ours = [cid for cid in open_now if not cid.startswith(own)]
+        ev.mark("R6.second_run_quotes_with_its_own_ids_only", "PASS" if placed > 0 and not not_ours else ("NOT TESTED" if placed == 0 and not not_ours else "FAIL"), f"placed {placed}; open at the venue {open_now}; not this run's {not_ours}")
+        known = {o.order_id for o in list(second.execution.closed) + list(second.execution.orders.values())}
+        ev.mark("R7.no_client_id_of_the_dead_run_adopted_or_resubmitted", "PASS" if not (known & set(left)) and second.execution.counters["venue_orders_unknown_locally"] == 0 else "FAIL", f"dead run's ids known to the second run {sorted(known & set(left))}; venue_orders_unknown_locally {second.execution.counters['venue_orders_unknown_locally']}")
 
     async def _observe(self, seconds: float) -> None:
         assert self.service is not None
@@ -325,9 +421,9 @@ class ServiceValidation:
             ev.mark("S7.cancel_replace_through_the_venue", "NOT TESTED", "nothing was placed")
         ledger = st["ledger"]
         if c["fills"] > 0:
-            ev.mark("S8.fills_booked_once_into_the_ledger", "PASS" if ledger.get("fills") == c["fills"] and c["duplicate_trades"] >= 0 else "FAIL", f"execution fills {c['fills']} (reports {c['report_fills']}, trade poll {c['trade_poll_fills']}, duplicates recognised {c['duplicate_trades']}) ledger fills {ledger.get('fills')} inventory {ledger.get('inventory_btc')}")
+            ev.mark("S8.fills_booked_once_into_the_ledger", "PASS" if ledger.get("fills") == c["fills"] and c["duplicate_trades"] >= 0 else "FAIL", f"real_testnet_fill: execution fills {c['fills']} (reports {c['report_fills']}, trade poll {c['trade_poll_fills']}, duplicates recognised {c['duplicate_trades']}) ledger fills {ledger.get('fills')} inventory {ledger.get('inventory_btc')}")
         else:
-            ev.mark("S8.fills_booked_once_into_the_ledger", "NOT TESTED", "no fill occurred (not provoked)")
+            ev.mark("S8.fills_booked_once_into_the_ledger", "NOT TESTED", "no fill occurred (not provoked); the fill paths are SYNTHETIC ONLY here (tests/unit/mm, tests/adversarial), which is not evidence about Binance")
         rec = st["reconciliation"]
         ev.mark("S9.periodic_reconciliation_ran", "PASS" if rec["count"] >= 2 and rec["failures"] == 0 else ("FAIL" if rec["failures"] else "NOT TESTED"), f"reconciliations {rec['count']} failures {rec['failures']} interval {rec['interval_s']} s last ok={((rec.get('last') or {}).get('ok'))} critical={((rec.get('last') or {}).get('critical'))}")
         # The kill switch, in two readings. Before stop(): a sticky engagement means a critical
@@ -381,6 +477,8 @@ class ServiceValidation:
             "responses": self.ev.responses,
             "latency_ms": self.ev.latency_ms,
             "journal_tail": self.service.journal(limit=300) if self.service is not None else [],
+            "first_run_status_before_death": self.first_run_status,
+            "fill_evidence_kind": "real_testnet_fill" if (self.final_status or {}).get("execution", {}).get("fills", 0) > 0 else None,
         }
 
 
@@ -400,6 +498,7 @@ def main() -> int:
     parser.add_argument("--ws-url", default=WS_URL)
     parser.add_argument("--stream-url", default=STREAM_URL)
     parser.add_argument("--json-out", default="")
+    parser.add_argument("--recovery-drill", action="store_true", help="after the window: the service dies with quotes resting (no stop, no cancel) and a second service starts on the same account, which must sweep the dead run's orders before quoting (items R1-R7); stop() then runs on the second run")
     args = parser.parse_args()
 
     live = _env_live_config(args)

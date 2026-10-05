@@ -898,6 +898,64 @@ la mayoría de los cancels. (2) Las 17 would-cross: con half-spread 2.67 bps y r
 bps, algunos quotes llegan a la venue cruzando un touch que ya se movió; el rail funciona, y
 mide cuánto se acerca el engine al touch con estos parámetros.
 
+### 10.16 Instrumentación de markouts y contexto por fill (evidencia, sin cambio de comportamiento)
+
+**Por qué.** La auditoría económica de la corrida `e5b5625` sólo pudo medir el adverse selection
+a 1 s, y recortado, invirtiendo el EWMA de toxicidad que el spread engine deja ver en el
+half-spread muestreado cada 5 s. El engine medía seis horizontes (100, 250, 500, 1000, 2000 y
+5000 ms) en memoria y los escribía en su journal, pero el harness exportaba sólo la cola del
+journal y ningún mid. Esta iteración exporta los datos crudos. **No cambia ninguna decisión**:
+el journal de decisiones, fills y markouts de la cinta sintética de `tests/unit/mm/test_engine_replay.py`
+tiene el mismo SHA-256 que antes del cambio (`6eccfa05…b452` para 20 prints, `cf28cbef…8f51`
+para 40), pinneado en `tests/unit/mm/test_markout_raw_export.py`; con los buffers de evidencia
+deshabilitados el hash es idéntico; y un fallo forzado dentro del registro queda en el registro
+y no toca la contabilización del fill. En `engine.py` y `adverse_selection.py` el diff no elimina
+ni modifica ninguna línea existente: sólo agrega.
+
+**Convención de resolución de horizontes** (`tia.mm.adverse_selection.HORIZON_RULE`, copiada
+textual en la evidencia): un horizonte `h` se resuelve con el **primer mid observado en o
+después de `t_fill + h`**, y sólo si ese mid llega dentro de `tolerance_ms` (1000 ms) de
+`t_fill + h`; un mid posterior significa un hueco de datos y el horizonte queda **no medido**
+(el fill se conserva como `unresolved` con los horizontes que sí se resolvieron). Signo: `markout_bps
+= signo × (mid_at_mark − precio) / precio × 1e4`, con signo +1 para compra y −1 para venta:
+positivo es favorable, negativo es adverso; `markout_usd = markout_bps / 1e4 × precio × cantidad`.
+El mid es el del libro local del servicio (`MarketDataService`), el mismo que ve el tracker.
+
+**Qué exporta ahora `scripts/validate_mm_live_service_testnet.py`.**
+
+| Bloque de la evidencia | Contenido |
+|---|---|
+| `responses.fills[]` (una fila por fill, unidas por trade id) | lo de antes (correlación, liquidez, fuente, fee) más `trade_id`, `venue_order_id`, `client_order_id`, `t_fill_ms`, `notional_usd`, `inventory_before_btc`, `inventory_after_btc`, `bid_quote`, `ask_quote`, `bid_size`, `ask_size`, `mid_at_quote`, `mid_at_fill`, `mid_used_by_tracker`, `fair_value_at_quote`, `fair_value_at_fill`, `half_spread_bps_at_quote`, `spread_binding_at_quote`, `capture_bps_vs_fair_value_at_quote`, `capture_bps_vs_mid_at_fill`, `confidence_at_quote`, `toxicity_at_quote`, `toxicity_at_fill`, `data_age_at_quote_ms`, `data_age_at_fill_ms`, `vol_5s_bps_at_quote`, `inventory_adjustment_bps_at_quote`, `t_decision_ms`, `t_enqueued_ms`, `t_ack_ms`, `ack_source`, `resting_ms`, `realised_usd`, `regimes`, y `markouts[]` (por horizonte: `horizon_ms`, `target_t_ms`, `mark_t_ms`, `delay_ms`, `mid_at_mark`, `markout_bps`, `markout_usd`, `measured`) con `markouts_resolved/expired/pending` |
+| `responses.markouts` | `convention` (la regla, textual), `horizons_ms`, `tracker` (resumen del `MarkoutTracker`), `toxicity_final`, `rows[]` (crudo por fill: resueltos, expirados con lo que sí se midió, y pendientes al stop), `summary` por horizonte: `measured`/`unmeasured`, `markout_bps` {count, mean, median, p25, p75, min, max, weighted_mean por notional}, `markout_usd_sum`, `by_side` buy/sell, `adverse_share`, `clipped_adverse_bps_mean` (lo que ve toxicidad), `clipped_favourable_bps_mean`, `delay_ms` |
+| `responses.mid_series` | todos los mids que vio el tracker, `[t_ms, mid]`, con `count`, `t_first_ms`, `t_last_ms` |
+| ítem `S8e.markouts_raw_exported_and_consistent` | PASS si cada fill real tiene su fila cruda, cada fila cumple su propia regla (target = t_fill + h; mark ≥ target y dentro de la tolerancia; bps y USD coherentes con el mid y el precio; el primer mid ≥ target de la serie es exactamente el `mid_at_mark`) y cada fill tiene contexto del quote; NOT TESTED sin fills. Juzga completitud y consistencia, nunca el valor |
+
+**Cómo se reconstruye cada markout offline.** Con `responses.mid_series.samples` ordenada por
+`t_ms`: para el fill `f` y el horizonte `h`, `target = f.t_fill_ms + h`; tomar la primera muestra
+con `t_ms ≥ target`; si `t_ms − target > 1000`, el horizonte no es medible (debe coincidir con
+`measured = false`); si no, `mid_at_mark` es su mid, `markout_bps = signo × (mid − f.price) /
+f.price × 1e4` y `markout_usd = markout_bps / 1e4 × f.price × f.quantity`. El ítem S8e verifica
+esta reconstrucción contra las filas crudas en cada corrida. El contexto del quote
+(`fair_value_at_quote`, `confidence_at_quote`, `bid_quote`, `ask_quote`, `toxicity_at_quote`,
+`data_age_at_quote_ms`) es lo que el engine sabía en la decisión que colocó la orden;
+`capture_bps_vs_fair_value_at_quote` es la distancia del precio de la orden a ese fair value, y
+`capture_bps_vs_mid_at_fill` la distancia al mid del libro cuando llegó el reporte del fill.
+
+**Dónde vive en el engine.** Tres buffers de sólo evidencia: `MarketMakerEngine.mid_samples`
+(deque de 50 000 `(t_ms, mid)`, alimentado en el mismo punto en que el tracker recibe el mid),
+`MarketMakerEngine.fill_records` (deque de 20 000 registros, escrito después de contabilizar el
+fill, con `inventory_before` leído antes) y `MarketMakerEngine._order_quotes` (el contexto de la
+decisión por orden, podado junto con `_order_regimes`). En el tracker, `Markout.mid_at_mark`,
+`Markout.raw()`, `MarkoutTracker.unresolved` y `MarkoutTracker.raw_rows()`; `Markout.as_dict()`,
+que es la fila del journal, no cambió. Ninguna decisión, autorizador, spread, toxicidad,
+inventario, ejecución ni rail lee nada de esto.
+
+**Próxima corrida.** Mismo comando y mismos overrides EXPERIMENTALES que §10.15
+(`S8_EXPERIMENT=1 MINUTES=30 bash scripts/run_mm_service_testnet_validation.sh`, es decir
+`--fee-scenario testnet_zero --quote-ttl-ms 30000 --requote-threshold-bps 5`), sin ejecutar
+todavía. Con esta evidencia la auditoría de §10.15 se repite con markouts medidos, no inferidos,
+en los seis horizontes, con signo, por lado y por inventario.
+
 ## 11. Modelo de estados de seguridad del maker live
 
 El kill switch del maker (`tia/mm/kill_switch.py`) alimenta el `system_unsafe` del gate global;

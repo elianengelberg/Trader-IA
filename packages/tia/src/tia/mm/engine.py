@@ -46,6 +46,11 @@ from tia.mm.spread import SpreadConfig, SpreadEngine
 from tia.mm.streams import TradeEvent
 from tia.mm.toxicity import ToxicityConfig, ToxicityEngine
 
+#: Evidence buffers (read by the validators, never by a decision): the mids shown to the
+#: markout tracker and one record per confirmed fill.
+MID_SAMPLES_KEEP = 50_000
+FILL_RECORDS_KEEP = 20_000
+
 
 @dataclass(frozen=True)
 class MarketMakerConfig:
@@ -136,6 +141,16 @@ class MarketMakerEngine:
         self.last_block_reason = ""
         self._active: list[SimulatedOrder] = []
         self._order_regimes: dict[str, dict[str, str]] = {}
+        # ---- evidence only, nothing below is read by any decision --------------------------
+        #: Every mid the markout tracker was shown, with its instant: the series an offline
+        #: reader needs to recompute every markout by the tracker's own rule.
+        self.mid_samples: deque[tuple[int, float]] = deque(maxlen=MID_SAMPLES_KEEP)
+        #: What the engine knew when it quoted each order (fair value, confidence, both quotes,
+        #: the half-spread, the toxicity reading, the data age), kept while the order lives.
+        self._order_quotes: dict[str, dict[str, Any]] = {}
+        #: One record per confirmed fill: the fill, the inventory before and after, the quote
+        #: context above, the estimators in force at the fill, and the order's timings.
+        self.fill_records: deque[dict[str, Any]] = deque(maxlen=FILL_RECORDS_KEEP)
 
     # ------------------------------------------------------------------ journal
 
@@ -181,6 +196,7 @@ class MarketMakerEngine:
             bid, ask, mid = self.book.best_bid(), self.book.best_ask(), self.book.mid
             if bid is not None and ask is not None and mid is not None:
                 self.ledger.mark(t_ms, bid=bid[0], ask=ask[0])
+                self.mid_samples.append((t_ms, mid))  # evidence: the same mid the tracker sees
                 for markout in self.markouts.on_mid(t_ms, mid):
                     if not markout.observation.shadow:
                         # Only confirmed fills teach toxicity and cost the ledger.
@@ -219,10 +235,78 @@ class MarketMakerEngine:
                 self.markouts.register(FillObservation(f"shadow-{order.order_id}-{self.unresolved_events}", t_ms, order.side, order.price, grew, mid, regimes, shadow=True))
 
     def _on_fill(self, fill: SimulatedFill, t_ms: int) -> None:
+        inventory_before = self.ledger.state.inventory_btc  # read for the record; booking is below
         booked = self.ledger.apply_fill(fill, fee_scenario=self.config.fee_scenario)
         regimes = self._order_regimes.get(fill.order_id, {})
         self.markouts.register(FillObservation(fill.fill_id, fill.t_ms, fill.side, fill.price, fill.quantity, fill.mid_at_fill or fill.price, regimes))
         self._write({"t": t_ms, "kind": "fill", **fill.as_dict(), **booked, "inventory_btc": self.ledger.state.inventory_btc, "regimes": regimes})
+        self._record_fill(fill, t_ms, inventory_before=inventory_before, booked=booked, regimes=regimes)
+
+    # ------------------------------------------------------------------ evidence (read-only)
+
+    def _find_order(self, order_id: str) -> Any:
+        """The order as the execution holds it, open or closed; None when it is gone."""
+        orders = getattr(self.execution, "orders", None)
+        if isinstance(orders, dict) and order_id in orders:
+            return orders[order_id]
+        for order in reversed(getattr(self.execution, "closed", ()) or ()):
+            if getattr(order, "order_id", None) == order_id:
+                return order
+        return None
+
+    def _record_fill(self, fill: Any, t_ms: int, *, inventory_before: float, booked: dict[str, Any], regimes: dict[str, str]) -> None:
+        """Evidence about one fill, written after it was booked. Reads engine state, changes
+        none of it; a failure here is recorded in the record itself and never reaches the
+        booking path or the caller."""
+        try:
+            quote = self._order_quotes.get(fill.order_id)
+            order = self._find_order(fill.order_id)
+            sign = 1.0 if fill.side == "buy" else -1.0
+            mid_at_fill = getattr(fill, "mid_at_fill", None)
+            fv_quote = quote.get("fair_value") if quote else None
+            t_ack = getattr(order, "t_ack_ms", None) if order is not None else None
+            if t_ack is None and order is not None:
+                t_ack = getattr(order, "t_arrival_ms", None)  # the paper order's arrival at the venue
+            last_event = self._last_event_ms
+            record: dict[str, Any] = {
+                "fill_id": fill.fill_id,
+                "order_id": fill.order_id,
+                "venue_order_id": getattr(fill, "venue_order_id", "") or (getattr(order, "venue_order_id", "") if order is not None else ""),
+                "side": fill.side,
+                "price": fill.price,
+                "quantity": fill.quantity,
+                "notional_usd": fill.price * fill.quantity,
+                "t_fill_ms": fill.t_ms,
+                "t_booked_ms": t_ms,
+                "received_at_ms": getattr(fill, "received_at_ms", None),
+                "liquidity": getattr(fill, "liquidity", None),
+                "attribution_source": getattr(fill, "attribution_source", None),
+                "fee": getattr(fill, "fee", None),
+                "fee_asset": getattr(fill, "fee_asset", None),
+                "fee_status": getattr(fill, "fee_status", None),
+                "realised_usd": booked.get("realised_usd"),
+                "fee_usd_booked": booked.get("fee_usd"),
+                "inventory_before_btc": inventory_before,
+                "inventory_after_btc": self.ledger.state.inventory_btc,
+                "mid_at_fill": mid_at_fill,
+                "mid_used_by_tracker": mid_at_fill if mid_at_fill is not None else fill.price,
+                "capture_bps_vs_mid_at_fill": (sign * (mid_at_fill - fill.price) / fill.price * 10_000.0) if mid_at_fill else None,
+                "fair_value_at_quote": fv_quote,
+                "capture_bps_vs_fair_value_at_quote": (sign * (fv_quote - fill.price) / fv_quote * 10_000.0) if fv_quote else None,
+                "fair_value_at_fill": self.last_decision.fair_value if self.last_decision is not None else None,
+                "quote": quote,  # fair value, confidence, bid, ask, sizes, half-spread, toxicity, data age at the decision that placed the order
+                "toxicity_at_fill": self.toxicity.overall().as_dict(),
+                "data_age_at_fill_ms": (t_ms - last_event) if last_event is not None else None,
+                "t_decision_ms": getattr(order, "t_decision_ms", None) if order is not None else (quote or {}).get("t_decision_ms"),
+                "t_enqueued_ms": getattr(order, "t_enqueued_ms", None) if order is not None else None,
+                "t_ack_ms": t_ack,
+                "ack_source": getattr(order, "ack_source", None) if order is not None else None,
+                "resting_ms": (fill.t_ms - t_ack) if t_ack is not None else None,
+                "regimes": dict(regimes),
+            }
+        except Exception as exc:  # evidence must never break the money path
+            record = {"fill_id": getattr(fill, "fill_id", None), "order_id": getattr(fill, "order_id", None), "error": f"{type(exc).__name__}: {str(exc)[:160]}"}
+        self.fill_records.append(record)
 
     # ------------------------------------------------------------------ the hierarchy
 
@@ -379,12 +463,32 @@ class MarketMakerEngine:
             self.cancels += self.execution.cancel_all(t_ms, reason="requote")
             self.requotes += 1
         placed = self.execution.place(decision, t_ms)
+        quote_context = {
+            "t_decision_ms": t_ms,
+            "mid": features.mid_price,
+            "fair_value": fv.fair_value,
+            "fair_value_offset_bps": fv.fair_value_offset_bps,
+            "fair_value_confidence": fv.fair_value_confidence,
+            "bid": decision.bid_price,
+            "ask": decision.ask_price,
+            "bid_size": decision.bid_size,
+            "ask_size": decision.ask_size,
+            "half_spread_bps": decision.half_spread_bps,
+            "spread_binding": spread.binding,
+            "inventory_btc": inventory.inventory_btc,
+            "inventory_adjustment_bps": inventory.inventory_adjustment_bps,
+            "toxicity": toxicity.as_dict(),
+            "data_age_ms": features.data_age_ms,
+            "vol_5s_bps": features.vol_bps.get("5s"),
+        }
         for order in placed:
             self._order_regimes[order.order_id] = regimes_bid if order.side == "buy" else regimes_ask
+            self._order_quotes[order.order_id] = quote_context  # evidence: what the engine knew when it quoted
         if len(self._order_regimes) > 4_000:  # regimes are needed while an order lives; prune the oldest
             for stale in list(self._order_regimes)[:2_000]:
                 if stale not in self.execution.orders:
                     del self._order_regimes[stale]
+                    self._order_quotes.pop(stale, None)
         self._active = placed
         self.controller.record_quote(t_ms)
         self.quotes += 1

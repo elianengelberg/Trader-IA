@@ -27,6 +27,15 @@ from tia.mm.features import FeatureVector
 
 HORIZONS_MS: tuple[int, ...] = (100, 250, 500, 1_000, 2_000, 5_000)
 BUCKET_KEYS = ("side", "spread_regime", "imbalance_regime", "vol_regime", "flow_regime")
+#: The resolution rule, stated once so the evidence can carry it verbatim.
+HORIZON_RULE = (
+    "a horizon h is resolved by the FIRST mid observed at or after t_fill + h, and only if that mid "
+    "arrives within tolerance_ms of t_fill + h; a later mid means a data gap and the horizon is "
+    "unmeasured (the fill is kept as unresolved, with the horizons that did resolve). "
+    "markout_bps = sign * (mid_at_mark - fill_price) / fill_price * 1e4 with sign +1 for a buy and -1 "
+    "for a sell: positive is favourable, negative is adverse. markout_usd = markout_bps / 1e4 * "
+    "fill_price * quantity."
+)
 
 
 @dataclass(frozen=True)
@@ -111,6 +120,9 @@ class Markout:
     horizons_bps: dict[int, float | None] = field(default_factory=dict)
     resolved_at_ms: dict[int, int] = field(default_factory=dict)
     expired: bool = False
+    #: The mid that resolved each horizon, kept raw so the markout can be recomputed offline.
+    #: Evidence only: nothing reads it to decide anything.
+    mid_at_mark: dict[int, float] = field(default_factory=dict)
 
     @property
     def resolved(self) -> bool:
@@ -147,6 +159,46 @@ class Markout:
             "expired": self.expired,
         }
 
+    def raw(self, *, horizons_ms: tuple[int, ...], tolerance_ms: int) -> dict[str, Any]:
+        """Everything about this fill's markouts, raw and per horizon: the target instant, the
+        instant of the mid that resolved it, the delay between the two, that mid, the markout
+        in bps and in USD, and whether the horizon could be measured. ``as_dict`` is the
+        journal's row and is left as it was; this is the evidence export."""
+        obs = self.observation
+        notional = obs.price * obs.quantity
+        rows = []
+        for h in horizons_ms:
+            bps = self.horizons_bps.get(h)
+            mark_t = self.resolved_at_ms.get(h)
+            target_t = obs.t_fill_ms + h
+            rows.append({
+                "horizon_ms": h,
+                "target_t_ms": target_t,
+                "mark_t_ms": mark_t,
+                "delay_ms": (mark_t - target_t) if mark_t is not None else None,
+                "mid_at_mark": self.mid_at_mark.get(h),
+                "markout_bps": bps,
+                "markout_usd": (bps / 10_000.0 * notional) if bps is not None else None,
+                "measured": bps is not None,
+            })
+        return {
+            "fill_id": obs.fill_id,
+            "shadow": obs.shadow,
+            "side": obs.side,
+            "price": obs.price,
+            "quantity": obs.quantity,
+            "notional_usd": notional,
+            "t_fill_ms": obs.t_fill_ms,
+            "mid_at_fill": obs.mid_at_fill,
+            "fill_to_mid_bps": obs.fill_to_mid_bps,
+            "buckets": dict(obs.buckets),
+            "tolerance_ms": tolerance_ms,
+            "resolved": self.resolved,
+            "expired": self.expired,
+            "pending": not self.resolved and not self.expired,
+            "horizons": rows,
+        }
+
 
 @dataclass(frozen=True)
 class HorizonStats:
@@ -171,6 +223,9 @@ class MarkoutTracker:
         self._tolerance_ms = tolerance_ms
         self._pending: list[Markout] = []
         self.resolved: deque[Markout] = deque(maxlen=keep)
+        #: Expired markouts, kept with the horizons that did resolve, for the evidence only.
+        #: Toxicity and the ledger never read this list.
+        self.unresolved: deque[Markout] = deque(maxlen=keep)
         self.expired = 0
         self.registered = 0
 
@@ -194,8 +249,10 @@ class MarkoutTracker:
                     break
                 markout.horizons_bps[h] = obs.sign * (mid - obs.price) / obs.price * 10_000.0
                 markout.resolved_at_ms[h] = t_ms
+                markout.mid_at_mark[h] = mid
             if markout.expired:
                 self.expired += 1
+                self.unresolved.append(markout)
             elif markout.resolved:
                 self.resolved.append(markout)
                 newly.append(markout)
@@ -237,10 +294,19 @@ class MarkoutTracker:
             "horizons": {str(h): self.stats(h).as_dict() for h in self.horizons_ms},
         }
 
+    def raw_rows(self, *, include_shadow: bool = False) -> list[dict[str, Any]]:
+        """Every markout this tracker still holds, raw: resolved, expired (with whatever did
+        resolve) and pending (horizons not yet elapsed when asked). Sorted by fill time."""
+        held = list(self.resolved) + list(self.unresolved) + list(self._pending)
+        rows = [m.raw(horizons_ms=self.horizons_ms, tolerance_ms=self._tolerance_ms) for m in held if include_shadow or not m.observation.shadow]
+        rows.sort(key=lambda r: (r["t_fill_ms"], r["fill_id"]))
+        return rows
+
 
 __all__ = [
     "BUCKET_KEYS",
     "HORIZONS_MS",
+    "HORIZON_RULE",
     "FillObservation",
     "HorizonStats",
     "Markout",

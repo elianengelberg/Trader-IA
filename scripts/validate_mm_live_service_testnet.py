@@ -63,6 +63,7 @@ from tia.data.providers.binance_live import BinanceExecutionProvider
 from tia.data.providers.binance_public import BinancePublicProvider
 from tia.data.providers.binance_signing import signer_from_live_config
 from tia.data.providers.binance_user_stream import BinanceUserDataStream
+from tia.mm.adverse_selection import HORIZON_RULE, HORIZONS_MS
 from tia.mm.authorization import EconomicsConfig
 from tia.mm.costs import MarketMakerCostConfig
 from tia.mm.engine import MarketMakerConfig
@@ -304,6 +305,166 @@ def _fill_rows(execution: Any) -> list[dict[str, Any]]:
     return rows
 
 
+# ---------------------------------------------------------------- markouts and fill context, raw
+
+FILL_EVIDENCE_FIELDS = (
+    "trade_id", "venue_order_id", "client_order_id", "t_fill_ms", "side", "price", "quantity", "notional_usd",
+    "inventory_before_btc", "inventory_after_btc", "bid_quote", "ask_quote", "mid_at_fill", "fair_value_at_quote",
+    "fair_value_at_fill", "capture_bps_vs_fair_value_at_quote", "capture_bps_vs_mid_at_fill", "confidence_at_quote",
+    "toxicity_at_quote", "toxicity_at_fill", "data_age_at_quote_ms", "data_age_at_fill_ms", "resting_ms", "markouts",
+)
+
+
+def _stats(values: list[float], weights: list[float] | None = None) -> dict[str, Any]:
+    if not values:
+        return {"count": 0, "mean": None, "median": None, "p25": None, "p75": None, "min": None, "max": None, "weighted_mean": None}
+    ordered = sorted(values)
+    out: dict[str, Any] = {
+        "count": len(values),
+        "mean": sum(values) / len(values),
+        "median": _percentile(values, 0.5),
+        "p25": _percentile(values, 0.25),
+        "p75": _percentile(values, 0.75),
+        "min": ordered[0],
+        "max": ordered[-1],
+        "weighted_mean": None,
+    }
+    if weights and sum(weights) > 0:
+        out["weighted_mean"] = sum(v * w for v, w in zip(values, weights, strict=True)) / sum(weights)
+    return out
+
+
+def _markout_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    """Per horizon, from the raw rows: the signed markout (mean, median, p25/p75, min/max,
+    mean weighted by notional), the same split BUY/SELL, and the cost side apart: the mean
+    of max(0, -markout) (clipped adverse, what toxicity sees), the mean of max(0, markout)
+    and the share of fills whose markout was negative. Shadow rows and unmeasured horizons
+    are left out, and said so in the counts."""
+    out: dict[str, Any] = {}
+    real = [r for r in rows if not r.get("shadow")]
+    for h in HORIZONS_MS:
+        measured = [(r, hz) for r in real for hz in r["horizons"] if hz["horizon_ms"] == h and hz["measured"]]
+        vals = [hz["markout_bps"] for _, hz in measured]
+        weights = [r["notional_usd"] for r, _ in measured]
+        by_side = {}
+        for side in ("buy", "sell"):
+            sv = [hz["markout_bps"] for r, hz in measured if r["side"] == side]
+            sw = [r["notional_usd"] for r, _ in measured if r["side"] == side]
+            by_side[side] = _stats(sv, sw)
+        out[str(h)] = {
+            "fills": len(real),
+            "measured": len(vals),
+            "unmeasured": len(real) - len(vals),
+            "markout_bps": _stats(vals, weights),
+            "markout_usd_sum": sum(hz["markout_usd"] for _, hz in measured) if measured else None,
+            "by_side": by_side,
+            "adverse_share": (sum(1 for v in vals if v < 0) / len(vals)) if vals else None,
+            "clipped_adverse_bps_mean": (sum(max(0.0, -v) for v in vals) / len(vals)) if vals else None,
+            "clipped_favourable_bps_mean": (sum(max(0.0, v) for v in vals) / len(vals)) if vals else None,
+            "delay_ms": _stats([float(hz["delay_ms"]) for _, hz in measured]),
+        }
+    return out
+
+
+def _markout_consistency(rows: list[dict[str, Any]], mids: list[tuple[int, float]] | None = None, *, bps_tolerance: float = 1e-6) -> list[str]:
+    """Checks the raw rows against their own rule: target = t_fill + horizon; the mark is at
+    or after the target and within tolerance; the bps and usd values match the mid and the
+    price; and, when the mid series is given, the mid at mark is the first mid at or after
+    the target. Returns the problems found (empty means consistent)."""
+    problems: list[str] = []
+    series = sorted(mids) if mids else None
+    for r in rows:
+        if r.get("shadow"):
+            continue
+        sign = 1.0 if r["side"] == "buy" else -1.0
+        notional = r["price"] * r["quantity"]
+        for hz in r["horizons"]:
+            tag = f"{r['fill_id']}@{hz['horizon_ms']}"
+            if hz["target_t_ms"] != r["t_fill_ms"] + hz["horizon_ms"]:
+                problems.append(f"{tag}: target {hz['target_t_ms']} != t_fill + horizon")
+            if not hz["measured"]:
+                if hz["markout_bps"] is not None or hz["mark_t_ms"] is not None:
+                    problems.append(f"{tag}: unmeasured but carries values")
+                continue
+            if hz["mark_t_ms"] is None or hz["mark_t_ms"] < hz["target_t_ms"]:
+                problems.append(f"{tag}: mark {hz['mark_t_ms']} before target {hz['target_t_ms']}")
+            elif hz["mark_t_ms"] - hz["target_t_ms"] > r["tolerance_ms"]:
+                problems.append(f"{tag}: delay {hz['mark_t_ms'] - hz['target_t_ms']} ms over tolerance {r['tolerance_ms']}")
+            if hz["delay_ms"] != hz["mark_t_ms"] - hz["target_t_ms"]:
+                problems.append(f"{tag}: delay_ms inconsistent")
+            expected_bps = sign * (hz["mid_at_mark"] - r["price"]) / r["price"] * 10_000.0
+            if abs(expected_bps - hz["markout_bps"]) > bps_tolerance:
+                problems.append(f"{tag}: markout_bps {hz['markout_bps']} != {expected_bps} from mid {hz['mid_at_mark']}")
+            if abs(hz["markout_bps"] / 10_000.0 * notional - hz["markout_usd"]) > 1e-9:
+                problems.append(f"{tag}: markout_usd inconsistent")
+            if series:
+                first = next((m for m in series if m[0] >= hz["target_t_ms"]), None)
+                if first is None or first[0] != hz["mark_t_ms"] or abs(first[1] - hz["mid_at_mark"]) > 1e-9:
+                    problems.append(f"{tag}: mid series says first mid >= target is {first}, row says ({hz['mark_t_ms']}, {hz['mid_at_mark']})")
+    return problems
+
+
+def _fill_evidence(fill_rows: list[dict[str, Any]], records: list[dict[str, Any]], markout_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """One row per fill, joined by the venue's trade id: the adapter's correlation row, the
+    engine's record (inventory, quote context, estimators, timings) and the raw markouts.
+    Fields the run could not know are None, never guessed."""
+    by_record = {str(r.get("fill_id")): r for r in records}
+    by_markout = {str(r.get("fill_id")): r for r in markout_rows}
+    seen: set[str] = set()
+    out: list[dict[str, Any]] = []
+    for f in fill_rows:
+        fid = str(f["fill_id"])
+        seen.add(fid)
+        rec = by_record.get(fid) or {}
+        quote = rec.get("quote") or {}
+        mo = by_markout.get(fid)
+        out.append({
+            **f,
+            "trade_id": fid,
+            "client_order_id": f.get("order_id"),
+            "t_fill_ms": f.get("t_ms"),
+            "notional_usd": rec.get("notional_usd", (f.get("price") or 0.0) * (f.get("quantity") or 0.0)),
+            "inventory_before_btc": rec.get("inventory_before_btc"),
+            "inventory_after_btc": rec.get("inventory_after_btc"),
+            "bid_quote": quote.get("bid"),
+            "ask_quote": quote.get("ask"),
+            "bid_size": quote.get("bid_size"),
+            "ask_size": quote.get("ask_size"),
+            "mid_at_quote": quote.get("mid"),
+            "mid_at_fill": rec.get("mid_at_fill"),
+            "mid_used_by_tracker": rec.get("mid_used_by_tracker"),
+            "fair_value_at_quote": rec.get("fair_value_at_quote"),
+            "fair_value_at_fill": rec.get("fair_value_at_fill"),
+            "half_spread_bps_at_quote": quote.get("half_spread_bps"),
+            "spread_binding_at_quote": quote.get("spread_binding"),
+            "capture_bps_vs_fair_value_at_quote": rec.get("capture_bps_vs_fair_value_at_quote"),
+            "capture_bps_vs_mid_at_fill": rec.get("capture_bps_vs_mid_at_fill"),
+            "confidence_at_quote": quote.get("fair_value_confidence"),
+            "toxicity_at_quote": quote.get("toxicity"),
+            "toxicity_at_fill": rec.get("toxicity_at_fill"),
+            "data_age_at_quote_ms": quote.get("data_age_ms"),
+            "data_age_at_fill_ms": rec.get("data_age_at_fill_ms"),
+            "vol_5s_bps_at_quote": quote.get("vol_5s_bps"),
+            "inventory_adjustment_bps_at_quote": quote.get("inventory_adjustment_bps"),
+            "t_decision_ms": rec.get("t_decision_ms"),
+            "t_enqueued_ms": rec.get("t_enqueued_ms"),
+            "t_ack_ms": rec.get("t_ack_ms"),
+            "ack_source": rec.get("ack_source"),
+            "resting_ms": rec.get("resting_ms"),
+            "realised_usd": rec.get("realised_usd"),
+            "regimes": rec.get("regimes"),
+            "record_error": rec.get("error"),
+            "markouts": mo["horizons"] if mo else None,
+            "markouts_resolved": mo["resolved"] if mo else None,
+            "markouts_expired": mo["expired"] if mo else None,
+            "markouts_pending": mo["pending"] if mo else None,
+        })
+    for fid, rec in by_record.items():  # a record without an adapter row: say so rather than drop it
+        if fid not in seen:
+            out.append({**rec, "trade_id": fid, "client_order_id": rec.get("order_id"), "correlated": False, "note": "engine record without an adapter fill row", "markouts": (by_markout.get(fid) or {}).get("horizons")})
+    return out
+
+
 # ---------------------------------------------------------------- the event loop, watched from the harness
 
 def _lag_summary(samples: list[float], stalls: list[dict[str, Any]], stall_ms: float) -> dict[str, Any]:
@@ -384,6 +545,11 @@ class ServiceValidation:
         self.lag = LoopLagSampler(now_ms=self.now_ms)
         self.lifecycle: dict[str, Any] | None = None
         self.fills: list[dict[str, Any]] = []
+        self.fill_records: list[dict[str, Any]] = []
+        self.markout_rows: list[dict[str, Any]] = []
+        self.markout_tracker: dict[str, Any] | None = None
+        self.toxicity_final: dict[str, Any] | None = None
+        self.mid_series: list[tuple[int, float]] = []
 
     def now_ms(self) -> int:
         return self.clock.timestamp_ms()
@@ -665,6 +831,13 @@ class ServiceValidation:
             with contextlib.suppress(Exception):
                 self.lifecycle = _order_lifecycle(list(self.service.execution.closed) + list(self.service.execution.orders.values()))
                 self.fills = _fill_rows(self.service.execution)
+            with contextlib.suppress(Exception):
+                engine = self.service.engine
+                self.fill_records = list(engine.fill_records)
+                self.markout_rows = engine.markouts.raw_rows()
+                self.markout_tracker = engine.markouts.summary()
+                self.toxicity_final = engine.toxicity.as_dict()
+                self.mid_series = list(engine.mid_samples)
         elif self.service is not None:
             self.final_status = self.service.status()
         if self.service is not None:
@@ -721,8 +894,28 @@ class ServiceValidation:
         ledger = st["ledger"]
         lifecycle: dict[str, Any] | None = getattr(self, "lifecycle", None)
         fills: list[dict[str, Any]] = getattr(self, "fills", [])
+        records: list[dict[str, Any]] = getattr(self, "fill_records", [])
+        markout_rows: list[dict[str, Any]] = getattr(self, "markout_rows", [])
+        mid_series: list[tuple[int, float]] = getattr(self, "mid_series", [])
+        fills = _fill_evidence(fills, records, markout_rows) if (records or markout_rows) else fills
         ev.responses["order_lifecycle"] = lifecycle
         ev.responses["fills"] = fills
+        ev.responses["markouts"] = {
+            "convention": HORIZON_RULE,
+            "horizons_ms": list(HORIZONS_MS),
+            "tracker": getattr(self, "markout_tracker", None),
+            "toxicity_final": getattr(self, "toxicity_final", None),
+            "summary": _markout_summary(markout_rows),
+            "rows": markout_rows,
+            "note": "raw per fill and per horizon; the summary leaves out shadow rows and unmeasured horizons; clipped adverse is what toxicity sees, the signed markout is the economics",
+        }
+        ev.responses["mid_series"] = {
+            "count": len(mid_series),
+            "t_first_ms": mid_series[0][0] if mid_series else None,
+            "t_last_ms": mid_series[-1][0] if mid_series else None,
+            "samples": [[t, m] for t, m in mid_series],
+            "note": "every mid the markout tracker was shown (local book, same instants); recompute any markout as the first sample at or after t_fill + horizon within the tolerance",
+        }
         if lifecycle is not None:
             lc = lifecycle
             ev.mark("S5b.order_lifecycle_recorded", "PASS", f"orders {lc['orders']} sent {lc['sent_to_venue']} acked {lc['acknowledged']} never_acked {lc['never_acknowledged']} terminal {lc['terminal']} resting_ms p50 {lc['resting_ms']['p50']} p90 {lc['resting_ms']['p90']} max {lc['resting_ms']['max']}")
@@ -735,9 +928,20 @@ class ServiceValidation:
             ev.mark("S8c.reconciliation_after_the_fill_clean", "PASS" if last.get("ok") and not last.get("critical") and int(last.get("t_ms") or 0) >= last_fill_t else "FAIL", f"last reconciliation ok={last.get('ok')} critical={last.get('critical')} at {last.get('t_ms')} vs last fill {last_fill_t}; balances {json.dumps({k: (last.get('balances') or {}).get(k) for k in ('expected_quote_usd', 'venue_quote_usd', 'expected_base_btc', 'venue_base_btc')}, default=str)}")
             f2l = (st.get("latency") or {}).get("fill_to_ledger_ms") or {}
             ev.mark("S8d.fill_to_ledger_latency_measured", "PASS" if (f2l.get("count") or 0) == c["fills"] else "FAIL", f"fill_to_ledger_ms count {f2l.get('count')} p50 {f2l.get('p50_ms')} max {f2l.get('max_ms')} for {c['fills']} fill(s)")
+            # Raw markouts: judged for completeness and internal consistency only, never for
+            # their value. Every real fill must have a raw row, every row must obey the rule it
+            # states, and the mid series must reproduce each mark.
+            real_rows = [r for r in markout_rows if not r.get("shadow")]
+            fill_ids = {str(f["fill_id"]) for f in fills}
+            missing = sorted(fill_ids - {str(r["fill_id"]) for r in real_rows})
+            problems = _markout_consistency(real_rows, mid_series)
+            measured = {h: sum(1 for r in real_rows for hz in r["horizons"] if hz["horizon_ms"] == h and hz["measured"]) for h in HORIZONS_MS}
+            with_context = sum(1 for f in fills if f.get("inventory_before_btc") is not None and f.get("fair_value_at_quote") is not None)
+            ok = not missing and not problems and bool(mid_series) and with_context == len(fills)
+            ev.mark("S8e.markouts_raw_exported_and_consistent", "PASS" if ok else "FAIL", f"raw rows {len(real_rows)} for {len(fills)} fills (missing {missing[:5]}), measured per horizon {measured}, pending {sum(1 for r in real_rows if r['pending'])} expired {sum(1 for r in real_rows if r['expired'])}, fills with quote context {with_context}/{len(fills)}, mid samples {len(mid_series)}, consistency problems {len(problems)}: {problems[:3]}")
         else:
             ev.mark("S8.fills_booked_once_into_the_ledger", "NOT TESTED", "no fill occurred (not provoked); the fill paths are SYNTHETIC ONLY here (tests/unit/mm, tests/adversarial), which is not evidence about Binance")
-            for item in ("S8b.fills_correlated_by_clientOrderId_and_orderId", "S8c.reconciliation_after_the_fill_clean", "S8d.fill_to_ledger_latency_measured"):
+            for item in ("S8b.fills_correlated_by_clientOrderId_and_orderId", "S8c.reconciliation_after_the_fill_clean", "S8d.fill_to_ledger_latency_measured", "S8e.markouts_raw_exported_and_consistent"):
                 ev.mark(item, "NOT TESTED", "no fill occurred")
         loop = ev.responses.get("event_loop") or {}
         ev.mark("S4b.event_loop_stalls_observed", "PASS", f"{loop.get('stall_count')} stall(s) over {loop.get('stall_threshold_ms')} ms in {loop.get('samples')} samples; lag p50 {loop.get('p50_ms')} p99 {loop.get('p99_ms')} max {loop.get('max_ms')} ms (recorded, not judged)")

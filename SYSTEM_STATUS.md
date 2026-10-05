@@ -279,3 +279,13 @@ both corrected in the harness only, evidence unchanged. S8 is VERIFIED TESTNET o
 experimental parameters: not a strategy, not a fee assumption for Mainnet, not a profitability
 claim, nothing about production or real money. Still NOT TESTED: a fill with the production
 defaults, non-zero fees, `/api/mm/live/*` against Testnet, runs longer than 30 minutes.
+
+Addendum 2026-10-05, markout instrumentation (Phase 4 §10.16): the economic audit of the e5b5625
+run could only infer the 1 s adverse selection, clipped, from the toxicity EWMA. The engine now keeps,
+as evidence only, every mid it shows the markout tracker, one context record per fill (inventory
+before and after, both quotes, fair value and confidence at the quote, toxicity and data age at the
+quote and at the fill, resting time) and the tracker's raw per-horizon markouts (target, mark time,
+delay, mid at mark, bps, usd, measured or not, with the resolution rule stated verbatim); the service
+validator exports them and checks their consistency (item S8e). No decision, estimator, limit or rail
+changed: the synthetic tape's decision/fill/markout journal keeps its pre-change SHA-256, pinned in
+tests. The next Testnet run has not been executed.

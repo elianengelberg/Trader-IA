@@ -200,7 +200,7 @@ def build_maker_config(*, symbol: str, filters: SymbolFilters, quote_size: float
 
 # ---------------------------------------------------------------- what happened to every order
 
-CANCEL_CLASSES = ("ttl", "requote", "stale_data", "kill_switch", "shutdown", "pacing", "gate_other", "other", "none")
+CANCEL_CLASSES = ("ttl", "requote", "stale_data", "kill_switch", "shutdown", "pacing", "gate_other", "no_quote_size", "no_quote_confidence", "no_quote_risk", "no_quote_implausible", "other", "none")
 
 
 def _classify_cancel_reason(reason: str) -> str:
@@ -222,6 +222,19 @@ def _classify_cancel_reason(reason: str) -> str:
         return "kill_switch"
     if r.startswith("gate"):
         return "gate_other"
+    # The engine withdrew its quotes because it had none to make: the quoting layer's own
+    # no_quote reasons, passed verbatim as the cancel reason (engine.py, cancel_all on a
+    # decision without a quote). Told apart from each other because they are different
+    # findings: a size scaled below the venue's minimum, a fair value it does not trust, the
+    # risk controller, or a price it refused as implausible.
+    if r.startswith("both sides sized to zero"):
+        return "no_quote_size"
+    if r.startswith("fair value confidence"):
+        return "no_quote_confidence"
+    if r.startswith("risk controller"):
+        return "no_quote_risk"
+    if "refused as implausible" in r:
+        return "no_quote_implausible"
     return "other"
 
 
@@ -237,7 +250,8 @@ def _order_lifecycle(orders: Iterable[Any]) -> dict[str, Any]:
     """Per order: was it sent, acknowledged, how long did it rest, how did it end and why.
     Read from the adapter's own records (its closed deque and open orders), so a quote the
     engine decided but never sent, an order the venue never acknowledged, a TTL expiry, a
-    requote, a stale-data cancel, a shutdown cancel and a fill are told apart."""
+    requote, a stale-data cancel, a shutdown cancel, a withdrawal because the engine had no
+    quote to make (size, confidence, risk, implausible price) and a fill are told apart."""
     rows: list[dict[str, Any]] = []
     for o in orders:
         fills = list(getattr(o, "fills", []) or [])
@@ -254,7 +268,7 @@ def _order_lifecycle(orders: Iterable[Any]) -> dict[str, Any]:
             "order_id": o.order_id, "side": o.side, "price": o.price, "quantity": o.quantity,
             "sent": getattr(o, "t_submitted_ms", None) is not None, "acked": t_ack is not None, "ack_source": getattr(o, "ack_source", ""),
             "t_enqueued_ms": getattr(o, "t_enqueued_ms", None), "t_ack_ms": t_ack, "t_end_ms": end, "resting_ms": resting_ms,
-            "terminal": terminal, "cancel_reason": (getattr(o, "cancel_reason", "") or "")[:80], "fills": len(fills), "filled_qty": sum(float(getattr(f, "quantity", 0.0)) for f in fills),
+            "terminal": terminal, "cancel_reason": (getattr(o, "cancel_reason", "") or "")[:160], "fills": len(fills), "filled_qty": sum(float(getattr(f, "quantity", 0.0)) for f in fills),
             "venue_order_id": getattr(o, "venue_order_id", ""),
         })
     resting = [r["resting_ms"] for r in rows if r["resting_ms"] is not None]
@@ -743,7 +757,11 @@ class ServiceValidation:
         if kill_before.get("sticky"):
             ev.mark("S10.no_sticky_kill_during_the_run", "FAIL", f"sticky before stop: trigger={kill_before.get('trigger')!r} reason={kill_before.get('reason')!r}; engagements {engagements}")
         else:
-            ev.mark("S10.no_sticky_kill_during_the_run", "PASS", f"transient engagements during the run: {[t for t, sticky, _ in engagements if not sticky]}; none sticky")
+            # The history the status carries is bounded (the last 20 events); the switch's own
+            # counter is the number of engagements over the whole run.
+            total = st["kill_switch"].get("engagements")
+            total = len(engagements) if total is None else total
+            ev.mark("S10.no_sticky_kill_during_the_run", "PASS", f"transient engagements during the run: {total} by the kill switch's counter; the last {len(history)} events kept show {[t for t, sticky, _ in engagements if not sticky]}; none sticky")
         kill = st["kill_switch"]
         shutdown_ok = bool(kill.get("shutdown")) and not kill.get("sticky") and not kill.get("transient") and not kill.get("engaged")
         ev.mark("S10b.shutdown_recorded_as_shutdown_no_safety_engagement_left", "PASS" if shutdown_ok else "FAIL", json.dumps({k: kill.get(k) for k in ("engaged", "sticky", "trigger", "reason", "severity", "transient", "shutdown", "blocks_quoting")}, default=str)[:400])

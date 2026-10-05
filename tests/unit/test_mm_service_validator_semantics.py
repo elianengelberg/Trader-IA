@@ -46,14 +46,18 @@ def _status(*, kill: dict[str, Any], placed: int = 3) -> dict[str, Any]:
     }
 
 
-def _judge(module: Any, *, before: dict[str, Any], after: dict[str, Any]) -> dict[str, str]:
+def _judged(module: Any, *, before: dict[str, Any], after: dict[str, Any]) -> Any:
     args = Namespace(rest_url=module.REST_URL, ws_url=module.WS_URL, stream_url=module.STREAM_URL, symbol="BTC-USD")
     v = module.ServiceValidation.__new__(module.ServiceValidation)
     v.args, v.ev, v.samples = args, module.Evidence(), [{"kill": before}]
     v.final_status = v.stop_result = _status(kill=after)
     v.open_after_stop = []
     v.judge()
-    return v.ev.results
+    return v.ev
+
+
+def _judge(module: Any, *, before: dict[str, Any], after: dict[str, Any]) -> dict[str, str]:
+    return _judged(module, before=before, after=after).results
 
 
 def _shutdown(**extra: Any) -> dict[str, Any]:
@@ -71,6 +75,20 @@ def test_a_transient_engagement_during_the_run_is_the_rails_working_not_a_fail(v
     before = {"engaged": True, "sticky": False, "trigger": "data", "transient": {"data": "market data not usable: last event 4151 ms ago"}}
     results = _judge(validator_module, before=before, after=_shutdown())
     assert results["S10.no_sticky_kill_during_the_run"] == "PASS"
+
+
+def test_the_transient_count_comes_from_the_kill_switch_counter_not_the_bounded_history(validator_module) -> None:  # type: ignore[no-untyped-def]
+    """The status keeps the last 20 kill events; the 2026-10-05 run engaged 239 times. The
+    note says the counter's number and how many events the history kept."""
+    engage = {"action": "engage", "trigger": "data", "sticky": False, "reason": "market data not usable"}
+    clear = {"action": "clear", "trigger": "data", "sticky": False, "reason": "market data not usable"}
+    after = _shutdown(engagements=239, history=[engage, clear] * 10)
+    ev = _judged(validator_module, before={"engaged": False, "sticky": False, "transient": {}}, after=after)
+    note = ev.notes["S10.no_sticky_kill_during_the_run"]
+    assert ev.results["S10.no_sticky_kill_during_the_run"] == "PASS"
+    assert "239 by the kill switch's counter" in note and "last 20 events kept" in note and "none sticky" in note
+    without_counter = _judged(validator_module, before={"engaged": False, "sticky": False, "transient": {}}, after=_shutdown(history=[engage, clear]))
+    assert "1 by the kill switch's counter" in without_counter.notes["S10.no_sticky_kill_during_the_run"]
 
 
 def test_a_sticky_safety_kill_during_the_run_fails_and_stays_failed_after_the_stop(validator_module) -> None:  # type: ignore[no-untyped-def]

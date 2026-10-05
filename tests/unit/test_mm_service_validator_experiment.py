@@ -122,16 +122,33 @@ def test_cancel_reasons_are_classified_and_resting_times_measured(harness) -> No
         _Order("f", "cancelled", t_ack=1_300, t_cancel=1_900, reason="kill switch (user_stream_down): account stream dropped: closed"),
         _Order("g", "filled", t_ack=1_300, fills=[_Fill("77", 14_300, 0.0002)]),
         _Order("h", "refused", t_ack=None, submitted=False),
+        # The engine's own no_quote reasons, verbatim from the 2026-10-05 Testnet evidence (e5b5625):
+        _Order("i", "cancelled", t_ack=1_300, t_cancel=2_563, reason="both sides sized to zero: inventory -1% of limit: quotes shifted +0.00 bps; within limits"),
+        _Order("j", "cancelled", t_ack=1_300, t_cancel=2_100, reason="fair value confidence 0.13 below 0.20: data 840 ms old; no 5 s volatility yet"),
+        _Order("k", "cancelled", t_ack=1_300, t_cancel=2_200, reason="risk controller: daily loss limit reached"),
+        _Order("l", "cancelled", t_ack=1_300, t_cancel=2_300, reason="quotes 1.0/2.0 further than 50.0 bps from the mid 85000.0: refused as implausible"),
+        _Order("m", "filled", t_ack=1_300, fills=[_Fill("78", 2_000, 0.00016)], t_cancel=1_900, reason="requote | cancel rejected (code -2011): [ORDER_REJECTED] Unknown order sent."),
     ]
     lc = harness._order_lifecycle(orders)
-    assert lc["orders"] == 8 and lc["sent_to_venue"] == 7 and lc["acknowledged"] == 7 and lc["never_acknowledged"] == 1
-    assert lc["terminal"] == {"cancelled:ttl": 1, "cancelled:requote": 1, "cancelled:stale_data": 2, "cancelled:shutdown": 1, "cancelled:kill_switch": 1, "filled": 1, "refused": 1}
-    assert lc["cancel_reasons"] == {"ttl": 1, "requote": 1, "stale_data": 2, "shutdown": 1, "kill_switch": 1}
+    assert lc["orders"] == 13 and lc["sent_to_venue"] == 12 and lc["acknowledged"] == 12 and lc["never_acknowledged"] == 1
+    assert lc["terminal"] == {"cancelled:ttl": 1, "cancelled:requote": 1, "cancelled:stale_data": 2, "cancelled:shutdown": 1, "cancelled:kill_switch": 1, "filled": 2, "refused": 1, "cancelled:no_quote_size": 1, "cancelled:no_quote_confidence": 1, "cancelled:no_quote_risk": 1, "cancelled:no_quote_implausible": 1}
+    assert lc["cancel_reasons"] == {"ttl": 1, "requote": 1, "stale_data": 2, "shutdown": 1, "kill_switch": 1, "no_quote_size": 1, "no_quote_confidence": 1, "no_quote_risk": 1, "no_quote_implausible": 1}
     by_id = {r["order_id"]: r for r in lc["rows"]}
     assert by_id["a"]["resting_ms"] == 1_000 and by_id["b"]["resting_ms"] == 500 and by_id["g"]["resting_ms"] == 13_000 and by_id["h"]["resting_ms"] is None
-    assert lc["resting_ms"]["count"] == 7 and lc["resting_ms"]["max"] == 13_000 and lc["resting_ms"]["min"] == 50
+    assert by_id["m"]["terminal"] == "filled" and by_id["m"]["resting_ms"] == 700  # a fill that raced our cancel ends at the fill, and stays a fill
+    assert lc["resting_ms"]["count"] == 12 and lc["resting_ms"]["max"] == 13_000 and lc["resting_ms"]["min"] == 50
     assert lc["filled_orders"][0]["order_id"] == "g" and lc["filled_orders"][0]["filled_qty"] == 0.0002
     assert harness._classify_cancel_reason("") == "none" and harness._classify_cancel_reason("something new") == "other" and harness._classify_cancel_reason("pacing denial while a requote was due (x)") == "pacing"
+    assert harness._classify_cancel_reason("requote | cancel rejected (code -2011): [ORDER_REJECTED] Unknown order sent.") == "requote"
+    assert set(lc["cancel_reasons"]) <= set(harness.CANCEL_CLASSES)
+
+
+def test_the_cancel_reason_is_kept_long_enough_to_read_the_whole_finding(harness) -> None:  # type: ignore[no-untyped-def]
+    """The engine's reasons run past 80 characters (the 2026-10-05 evidence cut them at
+    '...quotes shifted +0.00 bps; with'); the row keeps 160."""
+    reason = "fair value confidence 0.13 below 0.20: data 840 ms old; no 5 s volatility yet; wide spread regime; components disagree in sign; " + "x" * 80
+    [row] = harness._order_lifecycle([_Order("a", "cancelled", t_ack=1_300, t_cancel=2_300, reason=reason)])["rows"]
+    assert row["cancel_reason"] == reason[:160] and len(row["cancel_reason"]) == 160 and "components disagree in sign" in row["cancel_reason"]
 
 
 def test_the_loop_lag_summary_reports_percentiles_and_the_stalls(harness) -> None:  # type: ignore[no-untyped-def]

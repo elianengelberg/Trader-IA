@@ -311,7 +311,8 @@ FILL_EVIDENCE_FIELDS = (
     "trade_id", "venue_order_id", "client_order_id", "t_fill_ms", "side", "price", "quantity", "notional_usd",
     "inventory_before_btc", "inventory_after_btc", "bid_quote", "ask_quote", "mid_at_fill", "fair_value_at_quote",
     "fair_value_at_fill", "capture_bps_vs_fair_value_at_quote", "capture_bps_vs_mid_at_fill", "confidence_at_quote",
-    "toxicity_at_quote", "toxicity_at_fill", "data_age_at_quote_ms", "data_age_at_fill_ms", "resting_ms", "markouts",
+    "toxicity_at_quote", "toxicity_at_fill", "data_age_at_quote_ms", "data_age_at_fill_ms", "resting_ms", "t_registered_ms",
+    "registration_lag_ms", "markouts",
 )
 
 
@@ -344,6 +345,8 @@ def _markout_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
     real = [r for r in rows if not r.get("shadow")]
     for h in HORIZONS_MS:
         measured = [(r, hz) for r in real for hz in r["horizons"] if hz["horizon_ms"] == h and hz["measured"]]
+        late = [(r, hz) for r, hz in measured if hz.get("measured_late")]
+        on_time = [(r, hz) for r, hz in measured if not hz.get("measured_late")]
         vals = [hz["markout_bps"] for _, hz in measured]
         weights = [r["notional_usd"] for r, _ in measured]
         by_side = {}
@@ -355,7 +358,16 @@ def _markout_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
             "fills": len(real),
             "measured": len(vals),
             "unmeasured": len(real) - len(vals),
+            # nominal: every measured mark, late or not (what the tracker holds)
             "markout_bps": _stats(vals, weights),
+            # the nominal horizon was still ahead when the fill was registered: the mark is at the horizon
+            "measured_on_time": len(on_time),
+            "markout_bps_on_time": _stats([hz["markout_bps"] for _, hz in on_time], [r["notional_usd"] for r, _ in on_time]),
+            # the nominal horizon had passed at registration: the mark is the first mid after registration
+            "measured_late": len(late),
+            "markout_bps_late": _stats([hz["markout_bps"] for _, hz in late], [r["notional_usd"] for r, _ in late]),
+            "late_by_ms": _stats([float(hz["late_by_ms"]) for _, hz in late if hz.get("late_by_ms") is not None]),
+            "effective_horizon_ms": _stats([float(hz["effective_horizon_ms"]) for _, hz in measured if hz.get("effective_horizon_ms") is not None]),
             "markout_usd_sum": sum(hz["markout_usd"] for _, hz in measured) if measured else None,
             "by_side": by_side,
             "adverse_share": (sum(1 for v in vals if v < 0) / len(vals)) if vals else None,
@@ -366,26 +378,71 @@ def _markout_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
     return out
 
 
-def _markout_consistency(rows: list[dict[str, Any]], mids: list[tuple[int, float]] | None = None, *, bps_tolerance: float = 1e-6) -> list[str]:
+def _mid_series_inversions(samples: list[Any]) -> list[dict[str, Any]]:
+    """Samples whose timestamp is older than one already processed, in processing order.
+    Each is reported with its index, its stamp, the running maximum before it and how far
+    back it went. A series fed with correct times has none."""
+    out: list[dict[str, Any]] = []
+    run_max: int | None = None
+    for i, sample in enumerate(samples):
+        t = int(sample[0])
+        if run_max is not None and t < run_max:
+            out.append({"index": i, "t_ms": t, "previous_max_ms": run_max, "backwards_ms": run_max - t})
+        run_max = t if run_max is None else max(run_max, t)
+    return out
+
+
+def _first_mid_seen(samples: list[Any], *, after_ms: int | None, at_or_after_ms: int) -> tuple[int, float] | None:
+    """The tracker's own rule, replayed on the series in PROCESSING order: the first sample
+    processed after the fill was registered (``after_ms``) whose stamp is at or after the
+    target. A sample's processing instant is never earlier than the largest stamp processed
+    before it, so a stamp that went backwards (a stale timestamp) is placed by that envelope,
+    not by its own value. Without ``after_ms`` (registration unknown) only the target rule
+    applies."""
+    run_max: int | None = None
+    for sample in samples:
+        t = int(sample[0])
+        processed = t if run_max is None else max(run_max, t)
+        run_max = processed
+        if after_ms is not None and processed < after_ms:
+            continue
+        if t >= at_or_after_ms:
+            return t, float(sample[1])
+    return None
+
+
+def _markout_consistency(rows: list[dict[str, Any]], mids: list[Any] | None = None, *, bps_tolerance: float = 1e-6) -> list[str]:
     """Checks the raw rows against their own rule: target = t_fill + horizon; the mark is at
-    or after the target and within tolerance; the bps and usd values match the mid and the
-    price; and, when the mid series is given, the mid at mark is the first mid at or after
-    the target. Returns the problems found (empty means consistent)."""
+    or after the target and within tolerance; late_by_ms, measured_late and the effective
+    horizon follow from t_registered; the bps and usd values match the mid and the price;
+    and, when the mid series is given (in processing order), the mid at mark is the first
+    mid observed after registration whose stamp is at or after the target. Returns the
+    problems found (empty means consistent). Timestamp inversions in the series are a
+    separate finding: see ``_mid_series_inversions``."""
     problems: list[str] = []
-    series = sorted(mids) if mids else None
+    series = list(mids) if mids else None
     for r in rows:
         if r.get("shadow"):
             continue
         sign = 1.0 if r["side"] == "buy" else -1.0
         notional = r["price"] * r["quantity"]
+        registered = r.get("t_registered_ms")
+        if registered is not None and r.get("registration_lag_ms") is not None and r["registration_lag_ms"] != registered - r["t_fill_ms"]:
+            problems.append(f"{r['fill_id']}: registration_lag_ms inconsistent with t_registered - t_fill")
         for hz in r["horizons"]:
             tag = f"{r['fill_id']}@{hz['horizon_ms']}"
             if hz["target_t_ms"] != r["t_fill_ms"] + hz["horizon_ms"]:
                 problems.append(f"{tag}: target {hz['target_t_ms']} != t_fill + horizon")
+            if registered is not None and "late_by_ms" in hz and hz["late_by_ms"] != max(0, registered - hz["target_t_ms"]):
+                problems.append(f"{tag}: late_by_ms {hz['late_by_ms']} != max(0, t_registered - target)")
+            if "measured_late" in hz and hz["measured_late"] != bool(hz["measured"] and (hz.get("late_by_ms") or 0) > 0):
+                problems.append(f"{tag}: measured_late flag inconsistent")
             if not hz["measured"]:
                 if hz["markout_bps"] is not None or hz["mark_t_ms"] is not None:
                     problems.append(f"{tag}: unmeasured but carries values")
                 continue
+            if hz.get("effective_horizon_ms") is not None and hz["effective_horizon_ms"] != hz["mark_t_ms"] - r["t_fill_ms"]:
+                problems.append(f"{tag}: effective_horizon_ms inconsistent")
             if hz["mark_t_ms"] is None or hz["mark_t_ms"] < hz["target_t_ms"]:
                 problems.append(f"{tag}: mark {hz['mark_t_ms']} before target {hz['target_t_ms']}")
             elif hz["mark_t_ms"] - hz["target_t_ms"] > r["tolerance_ms"]:
@@ -398,9 +455,10 @@ def _markout_consistency(rows: list[dict[str, Any]], mids: list[tuple[int, float
             if abs(hz["markout_bps"] / 10_000.0 * notional - hz["markout_usd"]) > 1e-9:
                 problems.append(f"{tag}: markout_usd inconsistent")
             if series:
-                first = next((m for m in series if m[0] >= hz["target_t_ms"]), None)
+                first = _first_mid_seen(series, after_ms=registered, at_or_after_ms=hz["target_t_ms"])
                 if first is None or first[0] != hz["mark_t_ms"] or abs(first[1] - hz["mid_at_mark"]) > 1e-9:
-                    problems.append(f"{tag}: mid series says first mid >= target is {first}, row says ({hz['mark_t_ms']}, {hz['mid_at_mark']})")
+                    rule = "first mid seen after registration with stamp >= target" if registered is not None else "first mid >= target (registration time unknown)"
+                    problems.append(f"{tag}: mid series says the {rule} is {first}, row says ({hz['mark_t_ms']}, {hz['mid_at_mark']})")
     return problems
 
 
@@ -451,6 +509,9 @@ def _fill_evidence(fill_rows: list[dict[str, Any]], records: list[dict[str, Any]
             "t_ack_ms": rec.get("t_ack_ms"),
             "ack_source": rec.get("ack_source"),
             "resting_ms": rec.get("resting_ms"),
+            "t_booked_ms": rec.get("t_booked_ms"),
+            "t_registered_ms": mo.get("t_registered_ms") if mo else None,
+            "registration_lag_ms": mo.get("registration_lag_ms") if mo else None,
             "realised_usd": rec.get("realised_usd"),
             "regimes": rec.get("regimes"),
             "record_error": rec.get("error"),
@@ -909,12 +970,15 @@ class ServiceValidation:
             "rows": markout_rows,
             "note": "raw per fill and per horizon; the summary leaves out shadow rows and unmeasured horizons; clipped adverse is what toxicity sees, the signed markout is the economics",
         }
+        inversions = _mid_series_inversions(mid_series)
         ev.responses["mid_series"] = {
             "count": len(mid_series),
             "t_first_ms": mid_series[0][0] if mid_series else None,
             "t_last_ms": mid_series[-1][0] if mid_series else None,
             "samples": [[t, m] for t, m in mid_series],
-            "note": "every mid the markout tracker was shown (local book, same instants); recompute any markout as the first sample at or after t_fill + horizon within the tolerance",
+            "order": "processing order (the order the tracker saw them), not sorted by stamp",
+            "inversions": {"count": len(inversions), "max_backwards_ms": max((i["backwards_ms"] for i in inversions), default=0), "examples": inversions[:10]},
+            "note": "every mid the markout tracker was shown (local book, same instants); recompute a markout as the first sample processed after the fill's t_registered_ms whose stamp is at or after t_fill + horizon, within the tolerance; an inversion is a sample stamped earlier than one already processed and means a caller fed the engine a stale timestamp",
         }
         if lifecycle is not None:
             lc = lifecycle
@@ -935,10 +999,13 @@ class ServiceValidation:
             fill_ids = {str(f["fill_id"]) for f in fills}
             missing = sorted(fill_ids - {str(r["fill_id"]) for r in real_rows})
             problems = _markout_consistency(real_rows, mid_series)
+            inversions = _mid_series_inversions(mid_series)
             measured = {h: sum(1 for r in real_rows for hz in r["horizons"] if hz["horizon_ms"] == h and hz["measured"]) for h in HORIZONS_MS}
+            late = {h: sum(1 for r in real_rows for hz in r["horizons"] if hz["horizon_ms"] == h and hz.get("measured_late")) for h in HORIZONS_MS}
+            lags = [r["registration_lag_ms"] for r in real_rows if r.get("registration_lag_ms") is not None]
             with_context = sum(1 for f in fills if f.get("inventory_before_btc") is not None and f.get("fair_value_at_quote") is not None)
-            ok = not missing and not problems and bool(mid_series) and with_context == len(fills)
-            ev.mark("S8e.markouts_raw_exported_and_consistent", "PASS" if ok else "FAIL", f"raw rows {len(real_rows)} for {len(fills)} fills (missing {missing[:5]}), measured per horizon {measured}, pending {sum(1 for r in real_rows if r['pending'])} expired {sum(1 for r in real_rows if r['expired'])}, fills with quote context {with_context}/{len(fills)}, mid samples {len(mid_series)}, consistency problems {len(problems)}: {problems[:3]}")
+            ok = not missing and not problems and not inversions and bool(mid_series) and with_context == len(fills)
+            ev.mark("S8e.markouts_raw_exported_and_consistent", "PASS" if ok else "FAIL", f"raw rows {len(real_rows)} for {len(fills)} fills (missing {missing[:5]}), measured per horizon {measured}, of which measured_late (nominal horizon already past at registration) {late}, registration lag ms min {min(lags) if lags else None} max {max(lags) if lags else None}, pending {sum(1 for r in real_rows if r['pending'])} expired {sum(1 for r in real_rows if r['expired'])}, fills with quote context {with_context}/{len(fills)}, mid samples {len(mid_series)} with {len(inversions)} timestamp inversion(s){(' (max ' + str(max(i['backwards_ms'] for i in inversions)) + ' ms backwards; e.g. ' + str(inversions[:2]) + ')') if inversions else ''}, reconstruction problems {len(problems)}: {problems[:3]}")
         else:
             ev.mark("S8.fills_booked_once_into_the_ledger", "NOT TESTED", "no fill occurred (not provoked); the fill paths are SYNTHETIC ONLY here (tests/unit/mm, tests/adversarial), which is not evidence about Binance")
             for item in ("S8b.fills_correlated_by_clientOrderId_and_orderId", "S8c.reconciliation_after_the_fill_clean", "S8d.fill_to_ledger_latency_measured", "S8e.markouts_raw_exported_and_consistent"):

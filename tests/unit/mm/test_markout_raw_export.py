@@ -37,7 +37,8 @@ def test_raw_rows_carry_every_horizon_with_its_mark_delay_mid_and_values() -> No
     by_h = {hz["horizon_ms"]: hz for hz in row["horizons"]}
     assert tuple(by_h) == HORIZONS_MS
     # 100 ms: the first mid at or after T0+100 is the one at T0+300 (the +50 one is too early)
-    assert by_h[100] == {"horizon_ms": 100, "target_t_ms": T0 + 100, "mark_t_ms": T0 + 300, "delay_ms": 200, "mid_at_mark": 100.2, "markout_bps": pytest.approx(20.0), "markout_usd": pytest.approx(0.4), "measured": True}
+    assert by_h[100] == {"horizon_ms": 100, "target_t_ms": T0 + 100, "mark_t_ms": T0 + 300, "delay_ms": 200, "mid_at_mark": 100.2, "markout_bps": pytest.approx(20.0), "markout_usd": pytest.approx(0.4), "measured": True, "late_by_ms": None, "measured_late": False, "effective_horizon_ms": 300}
+    assert row["t_registered_ms"] is None and row["registration_lag_ms"] is None  # registered without a clock: unknown, never guessed
     assert by_h[250]["mark_t_ms"] == T0 + 300 and by_h[250]["delay_ms"] == 50
     assert by_h[500]["mark_t_ms"] == T0 + 600 and by_h[500]["markout_bps"] == pytest.approx(30.0)
     assert by_h[1_000]["mark_t_ms"] == T0 + 1_100 and by_h[1_000]["markout_bps"] == pytest.approx(-10.0) and by_h[1_000]["markout_usd"] == pytest.approx(-0.2)
@@ -67,7 +68,7 @@ def test_a_data_gap_leaves_the_horizon_unmeasured_and_keeps_the_fill_as_unresolv
     assert row["expired"] and not row["resolved"] and not row["pending"]
     by_h = {hz["horizon_ms"]: hz for hz in row["horizons"]}
     assert by_h[100]["measured"] and by_h[250]["measured"]
-    assert not by_h[500]["measured"] and by_h[500] == {"horizon_ms": 500, "target_t_ms": T0 + 500, "mark_t_ms": None, "delay_ms": None, "mid_at_mark": None, "markout_bps": None, "markout_usd": None, "measured": False}
+    assert not by_h[500]["measured"] and by_h[500] == {"horizon_ms": 500, "target_t_ms": T0 + 500, "mark_t_ms": None, "delay_ms": None, "mid_at_mark": None, "markout_bps": None, "markout_usd": None, "measured": False, "late_by_ms": None, "measured_late": False, "effective_horizon_ms": None}
     assert not by_h[5_000]["measured"]
 
 
@@ -89,6 +90,40 @@ def test_the_journal_row_of_a_markout_is_unchanged_and_the_rule_is_stated() -> N
     [m] = tracker.resolved
     assert set(m.as_dict()) == {"fill_id", "shadow", "side", "price", "quantity", "t_fill_ms", "fill_to_mid_bps", "buckets", "markout_bps", "adverse_bps_1s", "favorable_bps_1s", "resolved", "expired"}
     assert "FIRST mid observed at or after t_fill + h" in HORIZON_RULE and "tolerance_ms" in HORIZON_RULE and "positive is favourable" in HORIZON_RULE
+
+
+def test_a_fill_registered_after_its_100_ms_horizon_is_marked_late_with_the_horizon_it_really_measured() -> None:
+    """The live path: the venue's trade time is t_fill, the confirmation is processed ~130 ms
+    later. Mids shown before registration cannot resolve anything; the 100 ms horizon is
+    resolved by the first mid after registration, flagged measured_late, and its effective
+    horizon is what was measured. Nothing is back-filled from earlier mids."""
+    tracker = MarkoutTracker()
+    tracker.on_mid(T0 + 50, 100.0)
+    tracker.on_mid(T0 + 110, 100.1)  # at or after t_fill + 100, but the fill is not known yet
+    tracker.register(_buy("late", t=T0), t_registered_ms=T0 + 130)
+    for t, mid in [(T0 + 190, 100.3), (T0 + 260, 100.4), (T0 + 510, 100.5), (T0 + 1_010, 100.6), (T0 + 2_010, 100.7), (T0 + 5_010, 100.8)]:
+        tracker.on_mid(t, mid)
+    [row] = tracker.raw_rows()
+    assert row["t_registered_ms"] == T0 + 130 and row["registration_lag_ms"] == 130
+    by_h = {hz["horizon_ms"]: hz for hz in row["horizons"]}
+    h100 = by_h[100]
+    assert h100["mark_t_ms"] == T0 + 190 and h100["mid_at_mark"] == 100.3  # not the +110 mid: it was seen before the fill was known
+    assert h100["late_by_ms"] == 30 and h100["measured_late"] is True and h100["effective_horizon_ms"] == 190 and h100["delay_ms"] == 90
+    assert h100["markout_bps"] == pytest.approx(30.0)
+    h250 = by_h[250]
+    assert h250["mark_t_ms"] == T0 + 260 and h250["late_by_ms"] == 0 and h250["measured_late"] is False and h250["effective_horizon_ms"] == 260
+    assert all(by_h[h]["late_by_ms"] == 0 and not by_h[h]["measured_late"] for h in (250, 500, 1_000, 2_000, 5_000))
+
+
+def test_late_by_is_measured_against_the_target_not_the_fill_and_an_unmeasured_late_horizon_is_not_measured_late() -> None:
+    tracker = MarkoutTracker()
+    tracker.register(_buy("l2", t=T0), t_registered_ms=T0 + 400)  # 100 and 250 ms already past
+    tracker.on_mid(T0 + 450, 100.1)
+    [row] = tracker.raw_rows()
+    by_h = {hz["horizon_ms"]: hz for hz in row["horizons"]}
+    assert by_h[100]["late_by_ms"] == 300 and by_h[250]["late_by_ms"] == 150 and by_h[500]["late_by_ms"] == 0
+    assert by_h[100]["measured_late"] and by_h[250]["measured_late"] and by_h[100]["effective_horizon_ms"] == 450 and by_h[250]["effective_horizon_ms"] == 450
+    assert not by_h[500]["measured"] and not by_h[500]["measured_late"] and by_h[500]["effective_horizon_ms"] is None  # pending, not late
 
 
 # ------------------------------------------------------------------ the engine, recording without deciding
@@ -136,6 +171,10 @@ def test_the_fill_record_has_the_context_and_the_mid_series_reproduces_every_mar
     mids = sorted(engine.mid_samples)
     assert mids == list(engine.mid_samples)  # recorded in time order
     assert all(hz["measured"] for hz in row["horizons"])
+    # The paper path registers the fill on the event that produced it: no registration lag,
+    # nothing late, the effective horizon is the nominal one plus the series' own delay.
+    assert row["t_registered_ms"] == row["t_fill_ms"] and row["registration_lag_ms"] == 0
+    assert all(hz["late_by_ms"] == 0 and not hz["measured_late"] and hz["effective_horizon_ms"] == hz["horizon_ms"] + hz["delay_ms"] for hz in row["horizons"])
     for hz in row["horizons"]:
         first = next(m for m in mids if m[0] >= hz["target_t_ms"])
         assert first[0] == hz["mark_t_ms"] and first[1] == hz["mid_at_mark"]

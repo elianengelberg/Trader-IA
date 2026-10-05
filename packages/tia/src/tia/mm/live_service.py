@@ -568,6 +568,7 @@ class LiveMarketMakerService(MarketMakerService):
             quote = quote_free + quote_locked
             base_total = base_free + base_locked
             trades = await self.execution.fetch_trades()
+            fetched_t = self._now_ms()  # the venue has answered: what follows is stamped now, not at the start
             mark = self.market.book.mid if self.market.book.is_valid else None
             balances: dict[str, Any] = {
                 "venue_quote_usd": quote, "venue_quote_free": quote_free, "venue_quote_locked": quote_locked,
@@ -576,7 +577,7 @@ class LiveMarketMakerService(MarketMakerService):
             }
             self.execution.absorb_balances(
                 [AccountBalance(asset=self._quote_asset, free=quote_free, locked=quote_locked), AccountBalance(asset=self._base_asset, free=base_free, locked=base_locked)],
-                t,
+                fetched_t,
             )
             balance_issue: dict[str, Any] | None = None
             if initial:
@@ -593,8 +594,11 @@ class LiveMarketMakerService(MarketMakerService):
                 # cancel response that carried executed quantity) is in this history and in
                 # nothing else, and after stop() there is no next reconciliation to catch it.
                 # The engine's tick applies the adapter's outcomes; with the stop engaged the
-                # gate blocks, so the tick places nothing.
-                self.engine.on_event("tick", None, t)
+                # gate blocks, so the tick places nothing. Stamped with the time it happens:
+                # the REST reads above took hundreds of milliseconds, and a tick carrying the
+                # reconciliation's start time would feed the engine (and its mid series) a
+                # timestamp older than events it has already processed.
+                self.engine.on_event("tick", None, self._now_ms())
                 expected_quote, expected_base = self.live_ledger.expected_balances()
                 balances.update({"expected_quote_usd": round(expected_quote, 6), "expected_base_btc": round(expected_base, 8)})
                 balance_issue = compare_balances(

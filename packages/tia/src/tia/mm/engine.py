@@ -232,13 +232,13 @@ class MarketMakerEngine:
             }
             self._write(row)
             if mid is not None:
-                self.markouts.register(FillObservation(f"shadow-{order.order_id}-{self.unresolved_events}", t_ms, order.side, order.price, grew, mid, regimes, shadow=True))
+                self.markouts.register(FillObservation(f"shadow-{order.order_id}-{self.unresolved_events}", t_ms, order.side, order.price, grew, mid, regimes, shadow=True), t_registered_ms=t_ms)
 
     def _on_fill(self, fill: SimulatedFill, t_ms: int) -> None:
         inventory_before = self.ledger.state.inventory_btc  # read for the record; booking is below
         booked = self.ledger.apply_fill(fill, fee_scenario=self.config.fee_scenario)
         regimes = self._order_regimes.get(fill.order_id, {})
-        self.markouts.register(FillObservation(fill.fill_id, fill.t_ms, fill.side, fill.price, fill.quantity, fill.mid_at_fill or fill.price, regimes))
+        self.markouts.register(FillObservation(fill.fill_id, fill.t_ms, fill.side, fill.price, fill.quantity, fill.mid_at_fill or fill.price, regimes), t_registered_ms=t_ms)
         self._write({"t": t_ms, "kind": "fill", **fill.as_dict(), **booked, "inventory_btc": self.ledger.state.inventory_btc, "regimes": regimes})
         self._record_fill(fill, t_ms, inventory_before=inventory_before, booked=booked, regimes=regimes)
 

@@ -34,7 +34,11 @@ HORIZON_RULE = (
     "unmeasured (the fill is kept as unresolved, with the horizons that did resolve). "
     "markout_bps = sign * (mid_at_mark - fill_price) / fill_price * 1e4 with sign +1 for a buy and -1 "
     "for a sell: positive is favourable, negative is adverse. markout_usd = markout_bps / 1e4 * "
-    "fill_price * quantity."
+    "fill_price * quantity. A fill is registered when its confirmation is processed (t_registered), "
+    "not when it happened at the venue (t_fill): a horizon whose moment had already passed at "
+    "registration can only be resolved by the first mid observed AFTER registration, is flagged "
+    "measured_late with late_by_ms = t_registered - (t_fill + h), and its effective_horizon_ms = "
+    "mark_time - t_fill says what was actually measured. Nothing is back-filled."
 )
 
 
@@ -123,6 +127,9 @@ class Markout:
     #: The mid that resolved each horizon, kept raw so the markout can be recomputed offline.
     #: Evidence only: nothing reads it to decide anything.
     mid_at_mark: dict[int, float] = field(default_factory=dict)
+    #: When the fill was registered here (the engine's clock), as opposed to when it
+    #: happened at the venue (``observation.t_fill_ms``). Evidence only.
+    t_registered_ms: int | None = None
 
     @property
     def resolved(self) -> bool:
@@ -166,11 +173,13 @@ class Markout:
         journal's row and is left as it was; this is the evidence export."""
         obs = self.observation
         notional = obs.price * obs.quantity
+        registered = self.t_registered_ms
         rows = []
         for h in horizons_ms:
             bps = self.horizons_bps.get(h)
             mark_t = self.resolved_at_ms.get(h)
             target_t = obs.t_fill_ms + h
+            late_by = (max(0, registered - target_t) if registered is not None else None)
             rows.append({
                 "horizon_ms": h,
                 "target_t_ms": target_t,
@@ -180,6 +189,11 @@ class Markout:
                 "markout_bps": bps,
                 "markout_usd": (bps / 10_000.0 * notional) if bps is not None else None,
                 "measured": bps is not None,
+                # the horizon's moment had passed when the fill was registered: the mark is
+                # the first mid observed after registration, not at the nominal horizon
+                "late_by_ms": late_by,
+                "measured_late": bool(bps is not None and late_by is not None and late_by > 0),
+                "effective_horizon_ms": (mark_t - obs.t_fill_ms) if mark_t is not None else None,
             })
         return {
             "fill_id": obs.fill_id,
@@ -189,6 +203,8 @@ class Markout:
             "quantity": obs.quantity,
             "notional_usd": notional,
             "t_fill_ms": obs.t_fill_ms,
+            "t_registered_ms": registered,
+            "registration_lag_ms": (registered - obs.t_fill_ms) if registered is not None else None,
             "mid_at_fill": obs.mid_at_fill,
             "fill_to_mid_bps": obs.fill_to_mid_bps,
             "buckets": dict(obs.buckets),
@@ -231,8 +247,10 @@ class MarkoutTracker:
 
     # ------------------------------------------------------------------ inputs
 
-    def register(self, observation: FillObservation) -> None:
-        self._pending.append(Markout(observation=observation, horizons_bps=dict.fromkeys(self.horizons_ms)))
+    def register(self, observation: FillObservation, *, t_registered_ms: int | None = None) -> None:
+        """``t_registered_ms`` is when the caller learnt of the fill (its clock); it is kept for
+        the evidence and changes nothing about how horizons resolve."""
+        self._pending.append(Markout(observation=observation, horizons_bps=dict.fromkeys(self.horizons_ms), t_registered_ms=t_registered_ms))
         self.registered += 1
 
     def on_mid(self, t_ms: int, mid: float) -> list[Markout]:

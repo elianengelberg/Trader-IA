@@ -956,6 +956,34 @@ inventario, ejecución ni rail lee nada de esto.
 todavía. Con esta evidencia la auditoría de §10.15 se repite con markouts medidos, no inferidos,
 en los seis horizontes, con signo, por lado y por inventario.
 
+**Corrección tras la corrida `5ac604e` del 2026-10-05 19:27Z** (evidencia
+`mm_service_testnet_5ac604e_20261005T192714Z.json`, 27 ítems, S8e FAIL con 12 inconsistencias).
+S8e detectó dos hechos reales, ninguno de ellos un error del cálculo del tracker:
+
+1. **Lag de registro.** El fill lleva el tiempo de la venue (`t_fill`) y se registra en el tracker
+   al procesar el reporte, 116 a 153 ms después (p50 127). Un horizonte cuyo instante ya pasó al
+   registrar sólo puede resolverse con el primer mid observado **después** del registro. En esta
+   corrida afectó al horizonte de 100 ms en los 14 fills (marca efectiva 125 a 233 ms) y a ningún
+   otro. El tracker ahora guarda `t_registered_ms` y exporta por horizonte `late_by_ms`,
+   `measured_late` y `effective_horizon_ms`; la regla (`HORIZON_RULE`) lo dice textualmente. **No
+   se rellena nada hacia atrás**: si el fill llegó tarde, la evidencia lo dice.
+2. **Timestamp viejo en `reconcile()`.** El tick que la reconciliación daba al engine llevaba el
+   tiempo del *inicio* de la reconciliación, anterior a tres lecturas REST (222 a 843 ms): 107
+   muestras de `mid_series` quedaron estampadas antes que muestras ya procesadas, cada una igual al
+   `t_ms` de una reconciliación. No alteró ningún markout (una muestra con estampa vieja nunca
+   resuelve lo que una más nueva ya resolvió) pero rompía la reconstrucción offline ordenada por
+   tiempo. El tick y `absorb_balances` se estampan ahora con la hora posterior a las lecturas.
+
+S8e usa desde ahora la regla con lag ("primer mid observado después del registro con estampa ≥
+target"), recorre `mid_series` en orden de procesamiento, cuenta y exporta las inversiones de
+timestamp (`responses.mid_series.inversions`), y el resumen separa `measured_on_time` de
+`measured_late` con `late_by_ms` y `effective_horizon_ms`. Verificación sobre la evidencia de
+`5ac604e`: 0 problemas de reconstrucción con el tiempo de recepción como registro, 107 inversiones
+identificadas (S8e seguiría FAIL sobre ese archivo, correctamente, hasta la próxima corrida con el
+tick corregido). Los hashes dorados del journal no cambiaron; los markouts de 250 ms a 5 s de esa
+corrida coinciden con la reconstrucción offline en 70 de 70 filas. Casos reales `2422185` y
+`2423539` fijados como fixtures en `tests/unit/test_mm_service_validator_markouts.py`.
+
 ## 11. Modelo de estados de seguridad del maker live
 
 El kill switch del maker (`tia/mm/kill_switch.py`) alimenta el `system_unsafe` del gate global;

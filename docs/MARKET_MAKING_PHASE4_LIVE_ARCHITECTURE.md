@@ -618,12 +618,12 @@ Comando: `RECOVERY_DRILL=1 bash scripts/run_mm_service_testnet_validation.sh`. N
 
 | Clase | Qué |
 |---|---|
-| **VERIFIED TESTNET** (corridas sobre `1ebc584`…`f85b3ef`; §10.12 agrega: perfil de latencia medido contra Testnet; S10b con el estado `shutdown`; el camino de fills a nivel adapter + stream + ledger con un fill real entero, maker, contabilizado una vez, reconciliado con delta cero y desarmado plano; `fill_to_ledger_ms` real) | REST y suscripción firmada del stream de cuenta; LIMIT_MAKER post-only; reportes NEW/CANCELED reales y su correlación (incluido el `c`/`C` re-keyed del cancel); cancel por `orderId`; -2013; corte y reconexión del stream con orden abierta y reconciliación REST; ensamblado del servicio como el API; reconciliación inicial y ledger sembrado; cotización del engine sobre datos Testnet; cancel/replace 62/62; 13 reconciliaciones limpias; kill transitorio por datos stale y recuperación; `stop()` con 0 abiertas local y en la venue; rails Testnet-only. |
+| **VERIFIED TESTNET** (corridas sobre `1ebc584`…`daef8e6`; §10.13 agrega la recuperación tras una muerte con una orden descansando: barrido por id antes de cotizar, reconciliación limpia, sin adopción ni reenvío; §10.12 agrega: perfil de latencia medido contra Testnet; S10b con el estado `shutdown`; el camino de fills a nivel adapter + stream + ledger con un fill real entero, maker, contabilizado una vez, reconciliado con delta cero y desarmado plano; `fill_to_ledger_ms` real) | REST y suscripción firmada del stream de cuenta; LIMIT_MAKER post-only; reportes NEW/CANCELED reales y su correlación (incluido el `c`/`C` re-keyed del cancel); cancel por `orderId`; -2013; corte y reconexión del stream con orden abierta y reconciliación REST; ensamblado del servicio como el API; reconciliación inicial y ledger sembrado; cotización del engine sobre datos Testnet; cancel/replace 62/62; 13 reconciliaciones limpias; kill transitorio por datos stale y recuperación; `stop()` con 0 abiertas local y en la venue; rails Testnet-only. |
 | **VERIFIED LOCALLY** | Todo el §10.6; estado `shutdown`; barrido de huérfanas; semántica del validator; flags de venue del medidor de latencia; aritmética del fill probe. |
-| **SYNTHETIC ONLY** | Fill parcial, reporte duplicado emitido por la venue, reporte demorado, race fill + cancel; restart con huérfanas (el barrido no tuvo nada que barrer en Testnet); órdenes zombi; semántica de caída/reconexión del stream a nivel servicio. |
-| **NOT TESTED** | S8 a nivel servicio (un quote del engine llenado); el barrido de huérfanas contra la venue (R2/R4/R7 sin nada que barrer en §10.12); fill parcial real; endpoints `/api/mm/live/*` contra Testnet. |
+| **SYNTHETIC ONLY** | Fill parcial, reporte duplicado emitido por la venue, reporte demorado, race fill + cancel; una huérfana que la venue rechaza cancelar; un fill sobre una huérfana antes del barrido; órdenes zombi; semántica de caída/reconexión del stream a nivel servicio. |
+| **NOT TESTED** | S8 a nivel servicio (un quote del engine llenado); fill parcial real; comisiones con monto distinto de cero; endpoints `/api/mm/live/*` contra Testnet; corridas más largas que 3 minutos. |
 | **KNOWN LIMITATIONS** | Libro de Testnet fino y precios propios; un fill no puede forzarse sin agresión; el perfil que pasó S0 antes se midió contra Mainnet público; offset de reloj host-venue no corregido en el servicio; el estado local de órdenes no persiste entre procesos (la recuperación se apoya en la venue más el barrido, por diseño). |
-| **REMAINING RISKS** (mayor a menor) | 1. Recuperación tras crash sin observar en la venue (el barrido solo está probado contra la venue falsa). 2. Un fill del servicio (engine) sin observar: el fill real fue del harness por bloques con los mismos componentes. 3. Un bloqueo aislado del event loop de ~1 s observado (p99 de decisión → enqueue 984 ms en la primera corrida), cubierto por la regla de edad de datos pero sin causa identificada. 4. Offset de reloj en los tramos de latencia de la venue. 5. Un fill sobre una huérfana entre la muerte y el barrido queda como trade histórico: balances correctos, sin atribución a orden. 6. Fee en tercer activo contabilizado como asumido; en Testnet las comisiones son cero, de modo que el camino de fees reales sigue sin monto observado. |
+| **REMAINING RISKS** (mayor a menor) | 1. Un fill del servicio (engine) sin observar: el fill real fue del harness por bloques con los mismos componentes. 2. Un bloqueo aislado del event loop por corrida (985, 968 y 640 ms en tres corridas), cubierto por la regla de edad de datos pero sin causa identificada. 3. Duración: ninguna corrida supera 3 minutos; el límite de 24 h de la conexión WebSocket API y la rotación de suscripción no se han observado. 4. Offset de reloj en los tramos de latencia de la venue. 5. Un fill sobre una huérfana entre la muerte y el barrido queda como trade histórico: balances correctos, sin atribución a orden. 6. Comisiones: Testnet cobra cero, de modo que el camino de fees con monto real sigue sin observar. |
 
 Ninguna de estas filas afirma "production ready", "profitable" ni "safe for real money".
 
@@ -694,6 +694,56 @@ reporte duplicado emitido por la venue (el ítem 5 reinyecta un reporte real).
 **Lo que esta corrida no demuestra.** Un fill del servicio (engine → cotización → fill);
 el barrido de huérfanas contra la venue; un fill parcial real; el perfil de latencia bajo
 carga más larga que 5 min.
+
+### 10.13 Corrida real del 2026-10-05 04:16Z sobre `daef8e6`: recovery demostrada en Testnet
+
+Evidencia: `docs/evidence/mm_service_testnet_daef8e6_20261005T041623Z.json`, copiada sin modificar
+por el runbook (commit `ea3f44b`), escaneada: ninguna clave sensible, ningún token largo. Imagen
+`trader-ia:prod` con `TIA_COMMIT=daef8e6`. Mismos hosts Testnet que §10.12; `is_live=False`,
+`activation=None`. Esta vez sin fill probe (`FILL_PROBE` no seteado). Resultado: 27 PASS, 0 FAIL,
+1 NOT TESTED (S8 en el servicio).
+
+**Perfil de latencia.** Medido de nuevo contra Testnet: `b4740412038b6bac`, commit `daef8e6`,
+`source` nombra Testnet; el perfil anterior quedó apartado como `latency_profile_20261005T041623Z_previous.json`.
+
+**Primera corrida (180 s, 04:21:43 → 04:24:44).** 151 colocadas, 151 ack, 0 rechazadas, 150
+canceladas confirmadas, 50 vencidas, 0 unknown, 0 fills, 0 errores de API; 12 reconciliaciones,
+0 fallas; stream 301 reportes, 301 balances, 0 desconexiones; 1149 eventos, 264 decisiones, 63
+heartbeats, 0 errores del engine; 21 engagements transitorios `data`, ninguno sticky. Latencias
+(p50/p95/p99 ms): submit RTT 235/243/280; submit → primer ack 243/246/290; reporte `E` →
+recepción 126/127/127; cancel → ack 247/481/578; evento → procesado 1/4/7 con un máximo aislado
+de 968 ms.
+
+**Simulacro de recovery, R1 a R7, todos PASS con una huérfana real.** La corrida murió con el
+bid `tiamm-c7249c2b-1791174283935-000151` (85763.41, `orderId 9401408`) descansando y sin
+cancel en vuelo (`cancel_in_flight_at_death: []`). Detalle que la evidencia muestra y conviene
+dejar escrito: al cortar el stream de cuenta, el kill switch transitorio `user_stream_down`
+pidió el cancel localmente (`t_cancel_requested_ms 1791174284786`, historial `cancelled: 1`),
+pero el worker fue cortado antes de que el pedido saliera, así que la venue siguió teniendo la
+orden (`cancel_requests 151, cancelled 150`). Es decir: la "muerte" fue observada en parte por
+el servicio, como pasaría con un corte de red, y aun así la orden quedó huérfana en la venue,
+que es la condición que importa. R1: la venue la listaba. La segunda corrida
+(`mm-testnet-service-restarted`, cliente nuevo) la encontró en el barrido 460 ms después, la
+consultó por id (`order_resolved_present`, estado `acknowledged`), la canceló por la venue
+(estado `cancelled`), lo registró en el journal (`kind: orphan_sweep`) y lo elevó como
+`mm_live_orphans_swept`; reconciliación inicial limpia (R3); ninguna orden de la corrida muerta
+abierta (R4); stream suscripto (R5); cotizó solo con sus ids, 64 colocadas (R6); ningún id de la
+corrida muerta adoptado ni reenviado, `venue_orders_unknown_locally 0` (R7). Segunda corrida:
+64 ack, 64 canceladas, 29 vencidas, 0 unknown, 5 reconciliaciones limpias, 128 reportes, 7
+transitorios `data` con 7 clears, `stop()` con `shutdown` registrado, `engaged=false`, 0
+abiertas local y en la venue (S10b, S12, S12b PASS).
+
+**Lo que esta corrida demuestra.** La recuperación tras una muerte con órdenes descansando, a
+nivel de servicio y contra la venue real: barrido por id antes de cotizar, sin adopción, sin
+reenvío, sin duplicados, reconciliación limpia después. **Lo que no demuestra:** una huérfana
+que la venue rechace cancelar (SYNTHETIC ONLY), un fill sobre la huérfana entre la muerte y el
+barrido (SYNTHETIC ONLY, y el ledger lo trataría como trade histórico), y S8 a nivel servicio.
+
+**Observación recurrente.** Un bloqueo aislado del event loop por corrida: 985 ms (§10.12,
+primera corrida), 968 ms y 640 ms aquí (`market_event_to_processed_ms` y
+`decision_to_enqueue_ms` máximos; el callback en sí no pasa de 11 ms). La regla de edad de datos
+lo cubre (el gate bloquea y cancela), pero la causa no está identificada. Instrumentar el lag
+del event loop en el servicio es el siguiente ítem de observabilidad.
 
 ## 11. Modelo de estados de seguridad del maker live
 

@@ -251,3 +251,9 @@ in flight as left behind (harness defect, fixed next; R2/R4/R7 had nothing to sw
 NOT TESTED in that case); the first real Testnet fill through the block harness: maker, booked once,
 reconciled with zero delta, unwound flat. S8 at the service level and the orphan sweep against the
 venue remain NOT TESTED. Nothing here is a claim about production readiness or profitability.
+
+Addendum 2026-10-05 04:16Z, runbook with the recovery drill on `daef8e6` (Phase 4 §10.13): 27 PASS,
+0 FAIL, S8 NOT TESTED. Recovery after a death with an order resting is now demonstrated against
+Testnet: the second run swept the orphan by id before quoting, reconciled clean, adopted and resent
+nothing. Still NOT TESTED: a fill of the service's own quotes, non-zero fees, runs longer than 3 min.
+A ~1 s event-loop stall per run remains unexplained. No claim about production or profitability.

@@ -614,16 +614,16 @@ adoptado ni reenviado). Después, `stop()` y la verificación con cliente nuevo 
 Comando: `RECOVERY_DRILL=1 bash scripts/run_mm_service_testnet_validation.sh`. Nunca deja
 órdenes sin reconciliar: la segunda corrida siempre arranca y el cierre cancela todo lo nuestro.
 
-### 10.11 Clasificación de lo demostrado (estado al cierre de este ciclo)
+### 10.11 Clasificación de lo demostrado (estado al cierre de este ciclo; §10.15 es la última corrida)
 
 | Clase | Qué |
 |---|---|
-| **VERIFIED TESTNET** (corridas sobre `1ebc584`…`daef8e6`; §10.13 agrega la recuperación tras una muerte con una orden descansando: barrido por id antes de cotizar, reconciliación limpia, sin adopción ni reenvío; §10.12 agrega: perfil de latencia medido contra Testnet; S10b con el estado `shutdown`; el camino de fills a nivel adapter + stream + ledger con un fill real entero, maker, contabilizado una vez, reconciliado con delta cero y desarmado plano; `fill_to_ledger_ms` real) | REST y suscripción firmada del stream de cuenta; LIMIT_MAKER post-only; reportes NEW/CANCELED reales y su correlación (incluido el `c`/`C` re-keyed del cancel); cancel por `orderId`; -2013; corte y reconexión del stream con orden abierta y reconciliación REST; ensamblado del servicio como el API; reconciliación inicial y ledger sembrado; cotización del engine sobre datos Testnet; cancel/replace 62/62; 13 reconciliaciones limpias; kill transitorio por datos stale y recuperación; `stop()` con 0 abiertas local y en la venue; rails Testnet-only. |
-| **VERIFIED LOCALLY** | Todo el §10.6; estado `shutdown`; barrido de huérfanas; semántica del validator; flags de venue del medidor de latencia; aritmética del fill probe. |
-| **SYNTHETIC ONLY** | Fill parcial, reporte duplicado emitido por la venue, reporte demorado, race fill + cancel; una huérfana que la venue rechaza cancelar; un fill sobre una huérfana antes del barrido; órdenes zombi; semántica de caída/reconexión del stream a nivel servicio. |
-| **NOT TESTED** | S8 a nivel servicio (un quote del engine llenado); fill parcial real; comisiones con monto distinto de cero; endpoints `/api/mm/live/*` contra Testnet; corridas más largas que 3 minutos. |
-| **KNOWN LIMITATIONS** | Libro de Testnet fino y precios propios; un fill no puede forzarse sin agresión; el perfil que pasó S0 antes se midió contra Mainnet público; offset de reloj host-venue no corregido en el servicio; el estado local de órdenes no persiste entre procesos (la recuperación se apoya en la venue más el barrido, por diseño). |
-| **REMAINING RISKS** (mayor a menor) | 1. Un fill del servicio (engine) sin observar: el fill real fue del harness por bloques con los mismos componentes. 2. Un bloqueo aislado del event loop por corrida (985, 968 y 640 ms en tres corridas), cubierto por la regla de edad de datos pero sin causa identificada. 3. Duración: ninguna corrida supera 3 minutos; el límite de 24 h de la conexión WebSocket API y la rotación de suscripción no se han observado. 4. Offset de reloj en los tramos de latencia de la venue. 5. Un fill sobre una huérfana entre la muerte y el barrido queda como trade histórico: balances correctos, sin atribución a orden. 6. Comisiones: Testnet cobra cero, de modo que el camino de fees con monto real sigue sin observar. |
+| **VERIFIED TESTNET** (corridas sobre `1ebc584`…`e5b5625`; §10.15 agrega, bajo overrides EXPERIMENTALES y sólo bajo ellos: S8 a nivel servicio con 24 fills reales de quotes del engine, maker, por el account stream, correlacionados 24/24, asentados una vez, reconciliados con delta cero; un fill parcial real (PARTIALLY_FILLED → FILLED en dos trades); 17 rechazos would-cross del rail post-only; dos corridas de 30 minutos con 116 reconciliaciones limpias cada una y 0 stalls del event loop; §10.13 agrega la recuperación tras una muerte con una orden descansando: barrido por id antes de cotizar, reconciliación limpia, sin adopción ni reenvío; §10.12 agrega: perfil de latencia medido contra Testnet; S10b con el estado `shutdown`; el camino de fills a nivel adapter + stream + ledger con un fill real entero del harness por bloques) | REST y suscripción firmada del stream de cuenta; LIMIT_MAKER post-only; reportes NEW/PARTIALLY_FILLED/FILLED/CANCELED/REJECTED reales y su correlación (incluido el `c`/`C` re-keyed del cancel); cancel por `orderId`; -2010, -2011, -2013; corte y reconexión del stream con orden abierta y reconciliación REST; ensamblado del servicio como el API; reconciliación inicial y ledger sembrado; cotización del engine sobre datos Testnet; cancel/replace a escala (1301/1309 en 30 min); kill transitorio por datos stale y recuperación (239 veces en una corrida); `stop()` con 0 abiertas local y en la venue; rails Testnet-only. |
+| **VERIFIED LOCALLY** | Todo el §10.6; estado `shutdown`; barrido de huérfanas; semántica del validator; flags de venue del medidor de latencia; aritmética del fill probe; overrides experimentales del harness (defaults idénticos sin flags; rangos; escenarios de producción rechazados); clasificación de razones de cancel. |
+| **SYNTHETIC ONLY** | Reporte duplicado emitido por la venue, reporte demorado; una huérfana que la venue rechaza cancelar; un fill sobre una huérfana antes del barrido; órdenes zombi; semántica de caída/reconexión del stream a nivel servicio. |
+| **NOT TESTED** | S8 con los **defaults de producción** (el control de 30 min no produjo ningún fill: §10.15); comisiones con monto distinto de cero; endpoints `/api/mm/live/*` contra Testnet; corridas más largas que 30 minutos (límite de 24 h de la conexión WebSocket API, rotación de suscripción). |
+| **KNOWN LIMITATIONS** | Libro de Testnet fino y precios propios; Testnet cobra comisión cero; un fill no puede forzarse sin agresión y los overrides que lo hicieron posible son experimentales; offset de reloj host-venue no corregido en el servicio (y un mínimo negativo aislado en `submit_to_ack`); el status conserva los últimos 20 eventos del kill switch (el contador tiene el total); el estado local de órdenes no persiste entre procesos (la recuperación se apoya en la venue más el barrido, por diseño). |
+| **REMAINING RISKS** (mayor a menor) | 1. Con los defaults de producción el maker no provee liquidez al touch y no opera: es una decisión de estrategia no tomada, no un bug, y hoy ningún parámetro de producción está validado como viable. 2. La confianza del fair value escalada por edad de datos y por "no 5 s volatility yet" lleva el tamaño bajo el mínimo y retira ambos lados durante ~20% del tiempo (435 + 219 retiradas en 30 min), con la cadencia de Testnet. 3. Comisiones: el camino de fees con monto real sigue sin observar. 4. Duración: nada supera 30 minutos; la rotación de la conexión WebSocket API a las 24 h no se ha observado. 5. Offset de reloj en los tramos de latencia de la venue. 6. Un fill sobre una huérfana entre la muerte y el barrido queda como trade histórico: balances correctos, sin atribución a orden. 7. El bloqueo de ~1 s del event loop de las corridas de 3 minutos no se reprodujo en 30 (0 stalls ≥ 200 ms en 17867 muestras); sin causa identificada, queda registrado. |
 
 Ninguna de estas filas afirma "production ready", "profitable" ni "safe for real money".
 
@@ -797,6 +797,106 @@ mayores a 200 ms con timestamp (ítem `S4b.event_loop_stalls_observed`, registra
 
 Comando del experimento desde el VPS, cuando se decida correrlo:
 `S8_EXPERIMENT=1 MINUTES=30 bash scripts/run_mm_service_testnet_validation.sh`.
+
+### 10.15 Corrida del experimento S8 del 2026-10-05 05:39Z sobre `e5b5625` (30 minutos, overrides EXPERIMENTALES): el primer fill real de un quote del engine, y la corrida de control con defaults
+
+Evidencia: `docs/evidence/mm_service_testnet_e5b5625_20261005T053437Z.json` (commit `8511d6b`,
+copiada sin modificar desde el VPS). Control: `docs/evidence/mm_service_testnet_0ea5286_20261005T044643Z.json`
+(commit `513ea49`, defaults de producción, 30 minutos, misma cuenta y mismo host, una hora antes).
+Las dos corridas midieron su perfil de latencia contra Testnet justo antes (el del experimento:
+`c4596561e4d56b14`, 05:34:44Z). Todo lo que sigue sale de los JSON, no de los logs.
+
+**Control con defaults (`0ea5286`, 04:52Z, 30 min).** 874 órdenes colocadas, 873 reconocidas,
+873 canceladas (304 por el TTL de 1 s; el resto requotes y stale-data), 0 fills, 0 rechazos;
+half-spread 10.5 bps (`cost_floor` con 10 bps de comisión asumida); 341 enganches transitorios
+del kill switch por datos; sin ninguna orden abierta en 218 de 360 muestras (60% del tiempo); 116
+reconciliaciones limpias; un `-1021` en `openOrders` (`api_errors 1`) sin consecuencia; 20 PASS y
+S8 NOT TESTED. Confirma el diagnóstico de §10.14 sobre 30 minutos: con los defaults el engine no
+se llena.
+
+**Experimento (`e5b5625`, 05:39Z, 30 min, `--fee-scenario testnet_zero --quote-ttl-ms 30000
+--requote-threshold-bps 5`, registrados en `args`, `responses.experiment` y
+`S0.experimental_overrides_recorded`).** 27 PASS, 0 FAIL, 0 NOT TESTED. Por capa:
+
+- **Engine.** 8716 eventos, 2672 decisiones, 889 quotes, 412 requotes, 1309 cancels, 0 errores.
+  Half-spread 2.67 bps = `cost_floor` 1.12 (comisión 0 + adverse selection medida 0.62 bps sobre
+  24 markouts + colchón 0.5) + ensanche por toxicidad 1.55: unos 23 USD del centro, contra 90 USD
+  con defaults. El autorizador de economía dejó pasar ambos lados ("both quoted sides clear the
+  floor", neto ~2.05 bps con comisión cero). El `fee_scenario` del engine sigue siendo `assumed`:
+  el harness le dio un `MarketMakerCostConfig` con 0 bps bajo ese nombre, y así quedó grabado
+  (`responses.quoting.costs.maker_fee_status = EXPERIMENT_TESTNET_ZERO`).
+- **Órdenes** (`responses.order_lifecycle`, 1343 filas). 1341 enviadas (2 canceladas antes de
+  salir), 1324 reconocidas, **17 rechazadas por la venue con -2010** (would cross: el rail
+  post-only; `taker_fills 0`), 0 unknown. 1309 pedidos de cancel, 1301 canceladas confirmadas,
+  **0 por TTL** (los 30 s nunca se alcanzaron: la orden que más descansó vivió 10.2 s), 3
+  `cancel_rejected_after_close`: 2 sobre órdenes que se llenaron mientras nuestro cancel viajaba
+  (`requote | cancel rejected (code -2011)`; el fill manda y la orden queda `filled`) y 1 sobre una
+  orden que el stream ya había cerrado.
+- **Cómo terminaron.** Tal como se grabó: `requote` 409, `stale_data` 238, `shutdown` 2, `filled`
+  23, `refused` 17 y **`other` 654**. Las 654 son las dos razones `no_quote` del engine, pasadas
+  textuales como razón del cancel (`engine.py`, `cancel_all` sobre una decisión sin quote):
+  "both sides sized to zero" 435 y "fair value confidence 0.11–0.20 below 0.20" 219. El
+  clasificador del harness no las conocía; el commit `9dc3845` agrega las clases
+  `no_quote_size`, `no_quote_confidence`, `no_quote_risk` y `no_quote_implausible`, guarda la
+  razón hasta 160 caracteres (la evidencia la cortó en 80) y lo cubre con las cadenas reales de
+  esta corrida. Es una corrección del harness; no cambia ninguna fila de la evidencia.
+- **Tiempo en libro.** p50 1003 ms, p90 2824, máx 10209 (1324 órdenes reconocidas). Por clase:
+  requote p50 89 ms (el engine las reemplaza al moverse 5 bps); retiradas `no_quote` p50 1.2 a
+  1.4 s; stale-data p50 1.2 s; llenadas p50 776 ms, máx 3896.
+- **Fills** (`responses.fills`). **24 trades sobre 23 órdenes, todos maker, todos por el
+  account stream** (`attribution_source report`), 0 por `myTrades`; 2478 duplicados reconocidos
+  (los polls de respaldo volvieron a ver los mismos trade ids y el dedupe por id los descartó;
+  `duplicate_reports 0`). 13 ventas y 10 compras por órdenes; 0.00157 BTC comprados, 0.00197
+  vendidos; inventario final -0.0004 BTC (máximo 0.00046). Una orden (`...-000912`, ask 0.00016)
+  se llenó en dos trades (0.00005 + 0.00011): PARTIALLY_FILLED → FILLED, ambos asentados una vez:
+  **el fill parcial real queda observado**. Comisión 0.0 en los 24 (Testnet), `fee_asset` USDT en
+  ventas (`venue`) y BTC en compras (`converted_from_base`, monto cero). 24/24 correlacionados
+  (trade id de la venue, nuestro client id, el `orderId`, un asiento por orden). `fill_to_ledger`
+  p50 0 ms, máx 1; `report_to_local` p50 127 ms (incluye el offset de reloj). Los fills se
+  repartieron a lo largo de los 30 minutos (del minuto 0.3 al 26.4).
+- **Ledger y reconciliación.** 116 reconciliaciones, 0 fallas; la final limpia con 0 abiertas en
+  ambos lados; `expected_quote_usd 10034.324812` vs venue `10034.3248117` (3e-7 USD, redondeo),
+  base 0.9996 en ambos; `trades_seen 26` = 24 de la corrida + 2 históricos anteriores a ella (no
+  atribuidos a orden, por diseño). P&L del ledger: realizado -0.01997 USD, no realizado +0.0127,
+  neto -0.0073 USD, adverse selection 0.0406 USD, fees 0. Son 24 fills en Testnet con comisión
+  cero y precios propios de Testnet: **no dicen nada sobre rentabilidad.**
+- **Kill switch.** 239 enganches transitorios por datos (los 238 cancels `stale_data`), ninguno
+  sticky, `cancelled_total 6`; el shutdown registrado como shutdown (S10b PASS). La nota de S10
+  listó 9 porque el status conserva los últimos 20 eventos; `9dc3845` hace que la nota
+  lea el contador. Datos no usables en 41 de 360 muestras (~3.4 min); sin órdenes abiertas en 71
+  muestras (~20%, contra 60% con defaults).
+- **Stream de cuenta.** 1 conexión, 0 cortes, 2649 reportes, 2649 balances, 0 errores de
+  parseo; 249 reportes llegaron antes de la respuesta REST del submit. El `stream_drops 1` y el
+  `critical_reason user_stream_down` del status final son el cierre del stream por `stop()`, como
+  en §10.13.
+- **Event loop** (`responses.event_loop`). 17867 muestras, p50 0.7 ms, p99 5.1, máx 66.5,
+  **0 stalls ≥ 200 ms**. El bloqueo de ~1 s visto en las corridas de 3 minutos no apareció en 30.
+  `market_event_to_processed` y `decision_to_enqueue` tienen un máximo de 762 ms en un solo
+  evento, que el durmiente no vio: una ráfaga encolada, no un bloqueo del loop.
+- **Tramos de latencia.** `enqueue_to_submit` p50 234 ms (el worker serializa: la segunda orden
+  del par espera el RTT de la primera), `rest_submit_rtt` p50 235 p99 325, `submit_to_first_ack`
+  p50 244, `cancel_to_ack` p50 260 p99 747 máx 1198. Un mínimo aislado negativo (-584 ms) en
+  `submit_to_ack` y `submit_to_first_ack` es un artefacto de medición de una sola orden, sin
+  efecto sobre estados; queda anotado como limitación.
+
+**Qué demuestra y qué no.** Demuestra, contra Binance Spot Testnet, el camino completo engine →
+adapter → venue → account stream → correlación → ledger → reconciliación con 24 fills reales de
+quotes del engine, incluido un fill parcial, sin unknowns, sin duplicados, con el rail post-only
+rechazando las 17 órdenes que habrían cruzado y la reconciliación final con delta cero. **No
+demuestra una estrategia**: los overrides son EXPERIMENTALES y con los defaults de producción el
+engine no se llena (control). No demuestra comisiones con monto (Testnet cobra cero), ni dice
+nada sobre Mainnet, producción ni dinero real.
+
+**Dos observaciones del engine que quedan abiertas (no se modificó nada).** (1) La confianza del
+fair value cae con la edad de los datos (`1 - edad/2000 ms`) y se multiplica por 0.8 cuando no
+hay volatilidad de 5 s; con la cadencia de Testnet (~1 s, y `_mids` sólo guarda cambios del mid,
+así que en 5 s no siempre hay los 4 puntos que `vol_min_returns = 3` exige) ese factor está casi
+siempre activo. Con `scale_size_by_confidence`, 0.0002 BTC × confianza ~0.4 a 0.6 × toxicidad
+0.85 cae bajo el mínimo de 0.0001 BTC y el engine retira ambos lados ("both sides sized to zero",
+435 veces) o no cotiza por confianza < 0.20 (219). Es la causa del 20% de tiempo sin órdenes y de
+la mayoría de los cancels. (2) Las 17 would-cross: con half-spread 2.67 bps y re-cotización a 5
+bps, algunos quotes llegan a la venue cruzando un touch que ya se movió; el rail funciona, y
+mide cuánto se acerca el engine al touch con estos parámetros.
 
 ## 11. Modelo de estados de seguridad del maker live
 

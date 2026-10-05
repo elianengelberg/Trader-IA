@@ -265,3 +265,17 @@ harness-only overrides (--fee-scenario testnet_zero, --quote-ttl-ms, --requote-t
 recorded in the evidence, with production defaults unchanged and every safety rail untouched; and
 it now records per-order lifecycles, fill correlation and event-loop stalls. Not a strategy, not a
 fee assumption for Mainnet, not a profitability claim. The 30-minute run has not been executed.
+
+Addendum 2026-10-05 05:39Z, the S8 experiment run on `e5b5625` and its control (Phase 4 §10.15):
+30 minutes under the EXPERIMENTAL harness overrides: 27 PASS, 0 FAIL, 0 NOT TESTED. Twenty-four real
+maker fills of the engine's own quotes reached the ledger through the account stream, 24/24
+correlated, booked once, including one real partial fill; 17 would-cross orders were refused by
+the post-only rail; 1301 of 1309 cancels confirmed, 0 unknown, 239 transient stale-data kills and
+none sticky, 116 clean reconciliations, final delta zero, 0 event-loop stalls over 200 ms. The
+control run one hour earlier with the production defaults (30 minutes, `0ea5286`) placed 874 orders
+and filled none. The harness classifier did not know the engine's two no-quote cancel reasons
+(654 rows recorded as `other`) and the S10 note counted engagements from the bounded history;
+both corrected in the harness only, evidence unchanged. S8 is VERIFIED TESTNET only under the
+experimental parameters: not a strategy, not a fee assumption for Mainnet, not a profitability
+claim, nothing about production or real money. Still NOT TESTED: a fill with the production
+defaults, non-zero fees, `/api/mm/live/*` against Testnet, runs longer than 30 minutes.

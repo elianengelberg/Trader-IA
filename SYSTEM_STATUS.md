@@ -257,3 +257,11 @@ Addendum 2026-10-05 04:16Z, runbook with the recovery drill on `daef8e6` (Phase 
 Testnet: the second run swept the orphan by id before quoting, reconciled clean, adopted and resent
 nothing. Still NOT TESTED: a fill of the service's own quotes, non-zero fees, runs longer than 3 min.
 A ~1 s event-loop stall per run remains unexplained. No claim about production or profitability.
+
+Addendum 2026-10-05, S8 experiment (Phase 4 §10.14): the engine cancels every one of its Testnet
+orders because its quotes rest 10 bps off the mid (cost floor assuming 10 bps of fee), live one
+second and are replaced on a 0.5 bps move. The service validator gained three EXPERIMENTAL,
+harness-only overrides (--fee-scenario testnet_zero, --quote-ttl-ms, --requote-threshold-bps),
+recorded in the evidence, with production defaults unchanged and every safety rail untouched; and
+it now records per-order lifecycles, fill correlation and event-loop stalls. Not a strategy, not a
+fee assumption for Mainnet, not a profitability claim. The 30-minute run has not been executed.

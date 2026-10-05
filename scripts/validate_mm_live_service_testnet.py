@@ -50,6 +50,9 @@ import contextlib
 import json
 import sys
 import time
+from collections import Counter
+from collections.abc import Iterable
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -61,6 +64,7 @@ from tia.data.providers.binance_public import BinancePublicProvider
 from tia.data.providers.binance_signing import signer_from_live_config
 from tia.data.providers.binance_user_stream import BinanceUserDataStream
 from tia.mm.authorization import EconomicsConfig
+from tia.mm.costs import MarketMakerCostConfig
 from tia.mm.engine import MarketMakerConfig
 from tia.mm.execution import CLIENT_ID_PREFIX, SymbolFilters
 from tia.mm.latency_model import LatencyProfile, LatencyProfileError
@@ -90,6 +94,244 @@ def _check_stream_rail(stream_url: str) -> None:
         raise SystemExit(f"REFUSED: the market data stream URL {stream_url!r} is not a Testnet host")
     if any(marker in stream_url for marker in MAINNET_MARKERS):
         raise SystemExit("REFUSED: a mainnet market data host was configured")
+
+
+# ---------------------------------------------------------------- the S8 experiment (harness overrides)
+#
+# EXPERIMENTAL. These three overrides exist so that a Testnet run can show the service's own
+# quotes being filled: engine -> adapter -> account stream -> correlation -> ledger ->
+# reconciliation. With the production defaults the engine's quotes rest about 10 bps away
+# from the mid (the cost floor assumes 10 bps of maker fee), live one second and are replaced
+# on a 0.5 bps move, so on Testnet none of them is ever reached (sections 10.12 to 10.14 of
+# the Phase 4 document). The overrides change quoting parameters only, in this harness only,
+# and only when asked for on the command line; they are recorded in the evidence. They are
+# not a strategy, not a fee assumption for Mainnet and not a statement about profitability.
+# Nothing here touches the stale-data threshold, the kill switch, the risk or economics
+# authorizers, the maker-only validation, the capital cap or the Testnet-only rails.
+
+DEFAULT_FEE_SCENARIO = MarketMakerConfig().fee_scenario  # "assumed"
+DEFAULT_QUOTE_TTL_MS = QuotingConfig().quote_ttl_ms  # 1000
+DEFAULT_REQUOTE_THRESHOLD_BPS = MarketMakerConfig().requote_threshold_bps  # 0.5
+FEE_SCENARIO_CHOICES = (DEFAULT_FEE_SCENARIO, "testnet_zero")
+QUOTE_TTL_RANGE_MS = (100, 300_000)
+REQUOTE_THRESHOLD_RANGE_BPS = (0.1, 100.0)
+TESTNET_ZERO_FEE_STATUS = "EXPERIMENT_TESTNET_ZERO: Binance Spot Testnet charges no commission (n=0.0 on the real fills observed); an experiment on Testnet, not a Mainnet assumption, not a strategy"
+
+
+def _quote_ttl_ms(text: str) -> int:
+    try:
+        value = int(text)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError(f"invalid quote TTL {text!r}: an integer number of milliseconds") from exc
+    lo, hi = QUOTE_TTL_RANGE_MS
+    if not lo <= value <= hi:
+        raise argparse.ArgumentTypeError(f"invalid quote TTL {value} ms: must be between {lo} and {hi}")
+    return value
+
+
+def _requote_threshold_bps(text: str) -> float:
+    try:
+        value = float(text)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError(f"invalid requote threshold {text!r}: a number of bps") from exc
+    lo, hi = REQUOTE_THRESHOLD_RANGE_BPS
+    if not lo <= value <= hi:
+        raise argparse.ArgumentTypeError(f"invalid requote threshold {value} bps: must be between {lo} and {hi}")
+    return value
+
+
+def _fee_scenario(text: str) -> str:
+    if text not in FEE_SCENARIO_CHOICES:
+        raise argparse.ArgumentTypeError(f"invalid fee scenario {text!r}: one of {list(FEE_SCENARIO_CHOICES)} (the production scenarios 'verified' and 'adverse' are not offered by this harness)")
+    return text
+
+
+@dataclass(frozen=True)
+class ExperimentOverrides:
+    """What the command line changed, if anything. Defaults are the production defaults."""
+
+    fee_scenario: str = DEFAULT_FEE_SCENARIO
+    quote_ttl_ms: int = DEFAULT_QUOTE_TTL_MS
+    requote_threshold_bps: float = DEFAULT_REQUOTE_THRESHOLD_BPS
+
+    @classmethod
+    def from_args(cls, args: argparse.Namespace) -> ExperimentOverrides:
+        return cls(
+            fee_scenario=_fee_scenario(str(getattr(args, "fee_scenario", DEFAULT_FEE_SCENARIO))),
+            quote_ttl_ms=_quote_ttl_ms(str(getattr(args, "quote_ttl_ms", DEFAULT_QUOTE_TTL_MS))),
+            requote_threshold_bps=_requote_threshold_bps(str(getattr(args, "requote_threshold_bps", DEFAULT_REQUOTE_THRESHOLD_BPS))),
+        )
+
+    @property
+    def defaults(self) -> dict[str, Any]:
+        return {"fee_scenario": DEFAULT_FEE_SCENARIO, "quote_ttl_ms": DEFAULT_QUOTE_TTL_MS, "requote_threshold_bps": DEFAULT_REQUOTE_THRESHOLD_BPS}
+
+    @property
+    def active(self) -> dict[str, Any]:
+        mine = {"fee_scenario": self.fee_scenario, "quote_ttl_ms": self.quote_ttl_ms, "requote_threshold_bps": self.requote_threshold_bps}
+        return {k: v for k, v in mine.items() if v != self.defaults[k]}
+
+    @property
+    def experimental(self) -> bool:
+        return bool(self.active)
+
+    def as_dict(self) -> dict[str, Any]:
+        return {
+            "experimental": self.experimental,
+            "overrides": self.active,
+            "defaults": self.defaults,
+            "note": "EXPERIMENTAL harness overrides for the S8 experiment on Testnet; quoting parameters only; not a strategy, not a fee assumption for Mainnet, not a statement about profitability; the stale-data threshold, kill switch, authorizers, maker-only validation, capital cap and Testnet-only rails are untouched" if self.experimental else "production defaults; no override",
+        }
+
+
+def build_maker_config(*, symbol: str, filters: SymbolFilters, quote_size: float, overrides: ExperimentOverrides) -> MarketMakerConfig:
+    """The maker's configuration for the run. With no overrides it is exactly what this
+    harness always built: production defaults plus the venue's grid and the quote size."""
+    quoting = QuotingConfig(base_quote_size_btc=quote_size, tick_size=filters.tick_size, size_step=filters.step_size, min_size_btc=max(0.0001, filters.min_qty), quote_ttl_ms=overrides.quote_ttl_ms)
+    kwargs: dict[str, Any] = {"symbol": symbol, "quoting": quoting, "requote_threshold_bps": overrides.requote_threshold_bps}
+    if overrides.fee_scenario == "testnet_zero":
+        # The engine's cost floor, the ledger's assumed fee and the economics authorizer all
+        # read the cost config's maker fee; a zero-fee cost config is the override. The
+        # scenario name the engine looks up stays "assumed": nothing in production learns a
+        # new scenario, and the status string says what this is.
+        kwargs["costs"] = MarketMakerCostConfig(maker_fee_bps=0.0, maker_fee_adverse_bps=0.0, taker_fee_bps=0.0, maker_fee_status=TESTNET_ZERO_FEE_STATUS)
+    return MarketMakerConfig(**kwargs)
+
+
+# ---------------------------------------------------------------- what happened to every order
+
+CANCEL_CLASSES = ("ttl", "requote", "stale_data", "kill_switch", "shutdown", "pacing", "gate_other", "other", "none")
+
+
+def _classify_cancel_reason(reason: str) -> str:
+    """The adapter records why a cancel was asked for; the classes the evidence reports."""
+    r = (reason or "").strip().lower()
+    if not r:
+        return "none"
+    if r.startswith("ttl expired"):
+        return "ttl"
+    if r.startswith("requote"):
+        return "requote"
+    if "data_invalid" in r or "market data not usable" in r or "last event" in r or "kill switch (data)" in r:
+        return "stale_data"
+    if r.startswith("shutdown") or "shut down" in r:
+        return "shutdown"
+    if "pacing" in r:
+        return "pacing"
+    if "kill switch" in r:
+        return "kill_switch"
+    if r.startswith("gate"):
+        return "gate_other"
+    return "other"
+
+
+def _percentile(values: list[float], q: float) -> float | None:
+    if not values:
+        return None
+    ordered = sorted(values)
+    idx = min(len(ordered) - 1, max(0, round(q * (len(ordered) - 1))))
+    return float(ordered[idx])
+
+
+def _order_lifecycle(orders: Iterable[Any]) -> dict[str, Any]:
+    """Per order: was it sent, acknowledged, how long did it rest, how did it end and why.
+    Read from the adapter's own records (its closed deque and open orders), so a quote the
+    engine decided but never sent, an order the venue never acknowledged, a TTL expiry, a
+    requote, a stale-data cancel, a shutdown cancel and a fill are told apart."""
+    rows: list[dict[str, Any]] = []
+    for o in orders:
+        fills = list(getattr(o, "fills", []) or [])
+        t_ack = getattr(o, "t_ack_ms", None)
+        end: int | None = None
+        if o.state == "filled" and fills:
+            end = max(int(getattr(f, "t_ms", 0) or 0) for f in fills) or None
+        if end is None:
+            end = getattr(o, "t_cancel_requested_ms", None) or getattr(o, "t_cancel_effective_ms", None)
+        resting_ms = (max(0, int(end) - int(t_ack)) if (t_ack is not None and end is not None) else None)
+        cancel_class = _classify_cancel_reason(getattr(o, "cancel_reason", "")) if o.state == "cancelled" else None
+        terminal = "filled" if o.state == "filled" else (f"cancelled:{cancel_class}" if o.state == "cancelled" else str(o.state))
+        rows.append({
+            "order_id": o.order_id, "side": o.side, "price": o.price, "quantity": o.quantity,
+            "sent": getattr(o, "t_submitted_ms", None) is not None, "acked": t_ack is not None, "ack_source": getattr(o, "ack_source", ""),
+            "t_enqueued_ms": getattr(o, "t_enqueued_ms", None), "t_ack_ms": t_ack, "t_end_ms": end, "resting_ms": resting_ms,
+            "terminal": terminal, "cancel_reason": (getattr(o, "cancel_reason", "") or "")[:80], "fills": len(fills), "filled_qty": sum(float(getattr(f, "quantity", 0.0)) for f in fills),
+            "venue_order_id": getattr(o, "venue_order_id", ""),
+        })
+    resting = [r["resting_ms"] for r in rows if r["resting_ms"] is not None]
+    terminal = Counter(r["terminal"] for r in rows)
+    return {
+        "orders": len(rows),
+        "sent_to_venue": sum(1 for r in rows if r["sent"]),
+        "acknowledged": sum(1 for r in rows if r["acked"]),
+        "never_acknowledged": sum(1 for r in rows if not r["acked"]),
+        "terminal": dict(terminal),
+        "cancel_reasons": dict(Counter(r["terminal"].split(":", 1)[1] for r in rows if r["terminal"].startswith("cancelled:"))),
+        "filled_orders": [r for r in rows if r["terminal"] == "filled"],
+        "resting_ms": {"count": len(resting), "p50": _percentile(resting, 0.5), "p90": _percentile(resting, 0.9), "max": max(resting) if resting else None, "min": min(resting) if resting else None},
+        "rows": rows,
+    }
+
+
+def _fill_rows(execution: Any) -> list[dict[str, Any]]:
+    """Every fill the adapter booked, with what correlates it: the venue's trade id, our
+    client id, the venue's orderId, the source that said it first, and the fee as reported."""
+    known = {o.order_id: o for o in list(getattr(execution, "closed", [])) + list(getattr(execution, "orders", {}).values())}
+    rows = []
+    for f in list(getattr(execution, "recent_fills", [])):
+        order = known.get(f.order_id)
+        rows.append({
+            "fill_id": f.fill_id, "order_id": f.order_id, "venue_order_id": getattr(f, "venue_order_id", ""), "side": f.side, "price": f.price, "quantity": f.quantity,
+            "liquidity": getattr(f, "liquidity", ""), "attribution_source": getattr(f, "attribution_source", ""), "fee": getattr(f, "fee", 0.0), "fee_asset": getattr(f, "fee_asset", ""), "fee_status": getattr(f, "fee_status", ""),
+            "t_ms": f.t_ms, "received_at_ms": getattr(f, "received_at_ms", None),
+            "order_known": order is not None,
+            "order_venue_order_id": getattr(order, "venue_order_id", None) if order is not None else None,
+            "correlated": order is not None and str(getattr(order, "venue_order_id", "")) == str(getattr(f, "venue_order_id", "")) and any(getattr(x, "fill_id", None) == f.fill_id for x in getattr(order, "fills", [])),
+        })
+    return rows
+
+
+# ---------------------------------------------------------------- the event loop, watched from the harness
+
+def _lag_summary(samples: list[float], stalls: list[dict[str, Any]], stall_ms: float) -> dict[str, Any]:
+    return {
+        "samples": len(samples),
+        "p50_ms": _percentile(samples, 0.5), "p99_ms": _percentile(samples, 0.99), "max_ms": max(samples) if samples else None,
+        "stall_threshold_ms": stall_ms, "stall_count": len(stalls), "stalls": stalls[-50:],
+        "note": "lag of this process's event loop measured by a 100 ms sleeper: the service, the adapter worker and the streams share it; a stall here delays every one of them",
+    }
+
+
+class LoopLagSampler:
+    """A 100 ms sleeper that notes how late it wakes up. Harness only."""
+
+    def __init__(self, *, interval_s: float = 0.1, stall_ms: float = 200.0, now_ms: Any = None) -> None:
+        self.interval_s, self.stall_ms = interval_s, stall_ms
+        self.samples: list[float] = []
+        self.stalls: list[dict[str, Any]] = []
+        self._task: asyncio.Task[None] | None = None
+        self._now_ms = now_ms or (lambda: int(time.time() * 1000))
+
+    def start(self) -> None:
+        self._task = asyncio.get_running_loop().create_task(self._run(), name="harness-loop-lag")
+
+    async def _run(self) -> None:
+        while True:
+            t0 = time.perf_counter()
+            await asyncio.sleep(self.interval_s)
+            lag_ms = max(0.0, (time.perf_counter() - t0 - self.interval_s) * 1000.0)
+            self.samples.append(round(lag_ms, 1))
+            if lag_ms >= self.stall_ms and len(self.stalls) < 500:
+                self.stalls.append({"t_ms": self._now_ms(), "lag_ms": round(lag_ms, 1)})
+
+    async def stop(self) -> None:
+        if self._task is not None:
+            self._task.cancel()
+            with contextlib.suppress(asyncio.CancelledError, Exception):
+                await self._task
+            self._task = None
+
+    def summary(self) -> dict[str, Any]:
+        return _lag_summary(self.samples, self.stalls, self.stall_ms)
 
 
 def _left_resting(open_orders: list[Any]) -> tuple[list[str], list[str]]:
@@ -124,6 +366,10 @@ class ServiceValidation:
         self.config: MarketMakerConfig | None = None
         self.profile: LatencyProfile | None = None
         self.first_run_status: dict[str, Any] | None = None  # the recovery drill's dead run, as it was when it died
+        self.overrides = ExperimentOverrides.from_args(args)
+        self.lag = LoopLagSampler(now_ms=self.now_ms)
+        self.lifecycle: dict[str, Any] | None = None
+        self.fills: list[dict[str, Any]] = []
 
     def now_ms(self) -> int:
         return self.clock.timestamp_ms()
@@ -154,9 +400,11 @@ class ServiceValidation:
         ev.mark("S0.exchange_filters_read", "PASS", f"tick {f.tick_size} step {f.step_size} minQty {f.min_qty} minNotional {f.min_notional}")
 
         quote_size = args.quote_size
-        quoting = QuotingConfig(base_quote_size_btc=quote_size, tick_size=f.tick_size, size_step=f.step_size, min_size_btc=max(0.0001, f.min_qty))
-        config = MarketMakerConfig(symbol=args.symbol, quoting=quoting)
-        ev.responses["quoting"] = {"base_quote_size_btc": quote_size, "tick_size": f.tick_size, "size_step": f.step_size, "min_size_btc": quoting.min_size_btc, "limits": config.limits.as_dict()}
+        config = build_maker_config(symbol=args.symbol, filters=f, quote_size=quote_size, overrides=self.overrides)
+        quoting = config.quoting
+        ev.responses["quoting"] = {"base_quote_size_btc": quote_size, "tick_size": f.tick_size, "size_step": f.step_size, "min_size_btc": quoting.min_size_btc, "quote_ttl_ms": quoting.quote_ttl_ms, "requote_threshold_bps": config.requote_threshold_bps, "fee_scenario": config.fee_scenario, "costs": config.costs.__dict__, "limits": config.limits.as_dict()}
+        ev.responses["experiment"] = self.overrides.as_dict()
+        ev.mark("S0.experimental_overrides_recorded", "PASS", f"EXPERIMENTAL overrides {self.overrides.active} (defaults {self.overrides.defaults})" if self.overrides.experimental else "none: production defaults")
 
         public = self.public
 
@@ -227,6 +475,7 @@ class ServiceValidation:
         try:
             await self.build()
             assert self.market is not None and self.service is not None
+            self.lag.start()
             ev.command(f"MarketDataService.start()  [{args.stream_url}; snapshot GET {args.rest_url}/api/v3/depth]")
             self.market.start()
             await _wait_until(lambda: bool(self.market and self.market.usable), 60.0)
@@ -295,6 +544,7 @@ class ServiceValidation:
             worker.cancel()  # a crash does not drain its queue
         await asyncio.sleep(0.2)
         self.first_run_status = first.status()
+        drill["first_run_order_lifecycle"] = _order_lifecycle(list(first.execution.closed) + list(first.execution.orders.values()))
         still = await self._own_open_at_venue()
         drill["open_at_venue_after_death"] = still
         ev.command(f"GET /api/v3/openOrders  [fresh client]  — the venue still holds the dead run's orders: {still}")
@@ -395,6 +645,12 @@ class ServiceValidation:
                 self.final_status = self.stop_result
             except Exception as exc:
                 ev.mark("S12.stop_completed", "FAIL", f"{type(exc).__name__}: {str(exc)[:160]}")
+        await self.lag.stop()
+        ev.responses["event_loop"] = self.lag.summary()
+        if self.service is not None:
+            with contextlib.suppress(Exception):
+                self.lifecycle = _order_lifecycle(list(self.service.execution.closed) + list(self.service.execution.orders.values()))
+                self.fills = _fill_rows(self.service.execution)
         elif self.service is not None:
             self.final_status = self.service.status()
         if self.service is not None:
@@ -449,10 +705,28 @@ class ServiceValidation:
             ev.mark("S6.orders_acknowledged_by_the_venue", "NOT TESTED", "nothing was placed")
             ev.mark("S7.cancel_replace_through_the_venue", "NOT TESTED", "nothing was placed")
         ledger = st["ledger"]
+        lifecycle: dict[str, Any] | None = getattr(self, "lifecycle", None)
+        fills: list[dict[str, Any]] = getattr(self, "fills", [])
+        ev.responses["order_lifecycle"] = lifecycle
+        ev.responses["fills"] = fills
+        if lifecycle is not None:
+            lc = lifecycle
+            ev.mark("S5b.order_lifecycle_recorded", "PASS", f"orders {lc['orders']} sent {lc['sent_to_venue']} acked {lc['acknowledged']} never_acked {lc['never_acknowledged']} terminal {lc['terminal']} resting_ms p50 {lc['resting_ms']['p50']} p90 {lc['resting_ms']['p90']} max {lc['resting_ms']['max']}")
         if c["fills"] > 0:
             ev.mark("S8.fills_booked_once_into_the_ledger", "PASS" if ledger.get("fills") == c["fills"] and c["duplicate_trades"] >= 0 else "FAIL", f"real_testnet_fill: execution fills {c['fills']} (reports {c['report_fills']}, trade poll {c['trade_poll_fills']}, duplicates recognised {c['duplicate_trades']}) ledger fills {ledger.get('fills')} inventory {ledger.get('inventory_btc')}")
+            correlated = [f for f in fills if f["correlated"]]
+            ev.mark("S8b.fills_correlated_by_clientOrderId_and_orderId", "PASS" if fills and len(correlated) == len(fills) else "FAIL", f"{len(correlated)} of {len(fills)} fills correlate (venue trade id, our client id, the venue's orderId, booked once on the order): {[(f['fill_id'], f['order_id'], f['venue_order_id'], f['attribution_source'], f['liquidity']) for f in fills][:6]}")
+            last = (st.get("reconciliation") or {}).get("last") or {}
+            last_fill_t = max((f["t_ms"] for f in fills), default=0)
+            ev.mark("S8c.reconciliation_after_the_fill_clean", "PASS" if last.get("ok") and not last.get("critical") and int(last.get("t_ms") or 0) >= last_fill_t else "FAIL", f"last reconciliation ok={last.get('ok')} critical={last.get('critical')} at {last.get('t_ms')} vs last fill {last_fill_t}; balances {json.dumps({k: (last.get('balances') or {}).get(k) for k in ('expected_quote_usd', 'venue_quote_usd', 'expected_base_btc', 'venue_base_btc')}, default=str)}")
+            f2l = (st.get("latency") or {}).get("fill_to_ledger_ms") or {}
+            ev.mark("S8d.fill_to_ledger_latency_measured", "PASS" if (f2l.get("count") or 0) == c["fills"] else "FAIL", f"fill_to_ledger_ms count {f2l.get('count')} p50 {f2l.get('p50_ms')} max {f2l.get('max_ms')} for {c['fills']} fill(s)")
         else:
             ev.mark("S8.fills_booked_once_into_the_ledger", "NOT TESTED", "no fill occurred (not provoked); the fill paths are SYNTHETIC ONLY here (tests/unit/mm, tests/adversarial), which is not evidence about Binance")
+            for item in ("S8b.fills_correlated_by_clientOrderId_and_orderId", "S8c.reconciliation_after_the_fill_clean", "S8d.fill_to_ledger_latency_measured"):
+                ev.mark(item, "NOT TESTED", "no fill occurred")
+        loop = ev.responses.get("event_loop") or {}
+        ev.mark("S4b.event_loop_stalls_observed", "PASS", f"{loop.get('stall_count')} stall(s) over {loop.get('stall_threshold_ms')} ms in {loop.get('samples')} samples; lag p50 {loop.get('p50_ms')} p99 {loop.get('p99_ms')} max {loop.get('max_ms')} ms (recorded, not judged)")
         rec = st["reconciliation"]
         ev.mark("S9.periodic_reconciliation_ran", "PASS" if rec["count"] >= 2 and rec["failures"] == 0 else ("FAIL" if rec["failures"] else "NOT TESTED"), f"reconciliations {rec['count']} failures {rec['failures']} interval {rec['interval_s']} s last ok={((rec.get('last') or {}).get('ok'))} critical={((rec.get('last') or {}).get('critical'))}")
         # The kill switch, in two readings. Before stop(): a sticky engagement means a critical
@@ -511,7 +785,7 @@ class ServiceValidation:
         }
 
 
-def main() -> int:
+def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--symbol", default="BTC-USD")
     parser.add_argument("--minutes", type=float, default=3.0, help="how long the service runs before stop()")
@@ -528,7 +802,15 @@ def main() -> int:
     parser.add_argument("--stream-url", default=STREAM_URL)
     parser.add_argument("--json-out", default="")
     parser.add_argument("--recovery-drill", action="store_true", help="after the window: the service dies with quotes resting (no stop, no cancel) and a second service starts on the same account, which must sweep the dead run's orders before quoting (items R1-R7); stop() then runs on the second run")
-    args = parser.parse_args()
+    experiment = parser.add_argument_group("S8 experiment (EXPERIMENTAL harness overrides; quoting parameters only; recorded in the evidence; not a strategy, not a Mainnet fee assumption)")
+    experiment.add_argument("--fee-scenario", type=_fee_scenario, default=DEFAULT_FEE_SCENARIO, help=f"'{DEFAULT_FEE_SCENARIO}' (production default, 10 bps assumed maker fee) or 'testnet_zero' (a zero-fee cost config: Testnet charges none, so the cost floor stops pushing the quotes 10 bps off the mid)")
+    experiment.add_argument("--quote-ttl-ms", type=_quote_ttl_ms, default=DEFAULT_QUOTE_TTL_MS, help=f"how long a quote may rest before the TTL cancels it (default {DEFAULT_QUOTE_TTL_MS}; {QUOTE_TTL_RANGE_MS[0]}..{QUOTE_TTL_RANGE_MS[1]})")
+    experiment.add_argument("--requote-threshold-bps", type=_requote_threshold_bps, default=DEFAULT_REQUOTE_THRESHOLD_BPS, help=f"how far the desired quotes must move before the resting ones are replaced (default {DEFAULT_REQUOTE_THRESHOLD_BPS}; {REQUOTE_THRESHOLD_RANGE_BPS[0]}..{REQUOTE_THRESHOLD_RANGE_BPS[1]})")
+    return parser
+
+
+def main() -> int:
+    args = build_parser().parse_args()
 
     live = _env_live_config(args)
     if live is None:

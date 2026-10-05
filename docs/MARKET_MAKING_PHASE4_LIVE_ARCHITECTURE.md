@@ -745,6 +745,59 @@ primera corrida), 968 ms y 640 ms aquí (`market_event_to_processed_ms` y
 lo cubre (el gate bloquea y cancela), pero la causa no está identificada. Instrumentar el lag
 del event loop en el servicio es el siguiente ítem de observabilidad.
 
+### 10.14 Por qué el engine cancela todas sus órdenes en Testnet, y el experimento controlado para S8 a nivel servicio
+
+**Diagnóstico (evidencia `daef8e6`, 2026-10-05).** En la primera corrida, 151 órdenes colocadas,
+151 reconocidas, 150 canceladas confirmadas, 0 fills. Las 43 decisiones `quote` del journal
+tienen `half_spread_bps = 10.5` con `spread_binding = cost_floor`: el piso de costo asume 10 bps
+de comisión maker (`MarketMakerCostConfig.maker_fee_bps = 10.0`, `fee_scenario = "assumed"`)
+más 0.5 bps de colchón, así que **cada cotización descansa a 90 USD del mid, de cada lado**,
+cuando el spread real de Testnet es un centavo. Además `quote_ttl_ms = 1000` vence cada
+cotización al segundo (50 de 151 cancelaciones) y `requote_threshold_bps = 0.5` (0.43 USD) la
+reemplaza ante cualquier jitter del fair value (92 requotes, 101 cancelaciones). Para llenarse,
+el precio tendría que atravesar 90 USD en el segundo de vida de la orden. El fill probe (§10.12),
+que descansó AL best, se llenó en 13 segundos. Conclusión: no es un bug del plumbing ni de
+Testnet; con esos parámetros el maker no provee liquidez al touch y no opera, ni acá ni en
+Mainnet. Es una decisión de estrategia, y hace imposible S8 a nivel servicio.
+
+**Experimento controlado (commit siguiente a `0ea5286`).** Tres overrides **exclusivamente en el
+harness** (`scripts/validate_mm_live_service_testnet.py`), explícitos en la línea de comandos,
+validados, y registrados en la evidencia (`args` y `responses.experiment`, más el ítem
+`S0.experimental_overrides_recorded`):
+
+| Flag | Default de producción (sin cambios) | Valor del experimento |
+|---|---|---|
+| `--fee-scenario` | `assumed` (10 bps asumidos) | `testnet_zero`: un `MarketMakerCostConfig` con comisiones cero construido en el harness; Testnet cobra cero (`n=0.0` en los fills reales). El engine sigue buscando el escenario `assumed`: no aprende un nombre nuevo |
+| `--quote-ttl-ms` | 1000 | 30000 (rango admitido 100 a 300000) |
+| `--requote-threshold-bps` | 0.5 | 5 (rango admitido 0.1 a 100) |
+
+Valores fuera de rango, no numéricos, o los escenarios de producción `verified`/`adverse`, se
+rechazan antes de conectar nada. Sin flags, la configuración construida es **idéntica** a la de
+siempre (test que compara el dataclass completo). **No cambia** el umbral PROVISIONAL de 1.0 s de
+edad de datos (el harness no nombra `max_venue_age_s`, y un test lo vigila), el kill switch, los
+autorizadores de riesgo y economía, la validación maker-only, LIMIT_MAKER, el cap de capital, los
+rails Testnet-only ni ningún default de producción.
+
+**Estos parámetros son EXPERIMENTALES.** Existen para demostrar el camino engine → adapter →
+stream de cuenta → correlación → ledger → reconciliación con un fill real del servicio. No son
+una recomendación de estrategia, no son una hipótesis de comisiones para Mainnet y no dicen nada
+sobre rentabilidad.
+
+**Evidencia nueva que la corrida registra, con o sin experimento.** `responses.order_lifecycle`
+por orden: enviada a la venue, reconocida (y por qué fuente), tiempo que descansó, cómo terminó
+(`filled`, `cancelled:ttl`, `cancelled:requote`, `cancelled:stale_data`, `cancelled:shutdown`,
+`cancelled:kill_switch`, `cancelled:pacing`) y percentiles de tiempo en libro (ítem
+`S5b.order_lifecycle_recorded`); en el simulacro, también el de la corrida muerta.
+`responses.fills`: cada fill con trade id, client id, `orderId` de la venue, fuente
+(reporte o `myTrades`), liquidez, comisión, y si correlaciona con la orden local (ítems
+`S8b.fills_correlated_by_clientOrderId_and_orderId`, `S8c.reconciliation_after_the_fill_clean`,
+`S8d.fill_to_ledger_latency_measured`; NOT TESTED sin fill). `responses.event_loop`: lag del
+event loop del proceso medido por un durmiente de 100 ms, con percentiles y la lista de stalls
+mayores a 200 ms con timestamp (ítem `S4b.event_loop_stalls_observed`, registrado, no juzgado).
+
+Comando del experimento desde el VPS, cuando se decida correrlo:
+`S8_EXPERIMENT=1 MINUTES=30 bash scripts/run_mm_service_testnet_validation.sh`.
+
 ## 11. Modelo de estados de seguridad del maker live
 
 El kill switch del maker (`tia/mm/kill_switch.py`) alimenta el `system_unsafe` del gate global;

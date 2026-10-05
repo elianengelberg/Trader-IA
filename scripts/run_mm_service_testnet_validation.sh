@@ -25,6 +25,11 @@
 #   FILL_PROBE=1800    then the block validator rests a post-only bid AT the best bid and an ask AT
 #                      the best ask for that many seconds, re-pegged to the best every 30 s, and
 #                      checks a real fill if the market comes (never forced; NOT TESTED otherwise)
+#   S8_EXPERIMENT=1    EXPERIMENTAL: the service validation runs with the three harness overrides
+#                      (--fee-scenario testnet_zero --quote-ttl-ms 30000 --requote-threshold-bps 5)
+#                      so the engine's own quotes can rest long enough to be filled on Testnet.
+#                      Quoting parameters only, recorded in the evidence; not a strategy, not a
+#                      Mainnet fee assumption; the stale-data threshold and every rail unchanged.
 
 set -euo pipefail
 
@@ -39,6 +44,7 @@ PROFILE_MINUTES="${PROFILE_MINUTES:-5}"
 CAP_USD="${CAP_USD:-200}"
 RECOVERY_DRILL="${RECOVERY_DRILL:-0}"
 FILL_PROBE="${FILL_PROBE:-0}"
+S8_EXPERIMENT="${S8_EXPERIMENT:-0}"
 REST_URL=https://testnet.binance.vision
 STREAM_URL=wss://stream.testnet.binance.vision/stream
 WS_URL=wss://ws-api.testnet.binance.vision/ws-api/v3
@@ -104,7 +110,9 @@ PY
 
 DRILL=()
 [ "$RECOVERY_DRILL" = "1" ] && DRILL=(--recovery-drill)
-say "6. the service validation: $MINUTES min on Spot Testnet, capital cap $CAP_USD USD, profile measured above${DRILL:+, then the recovery drill}"
+EXPERIMENT=()
+[ "$S8_EXPERIMENT" = "1" ] && EXPERIMENT=(--fee-scenario testnet_zero --quote-ttl-ms 30000 --requote-threshold-bps 5)
+say "6. the service validation: $MINUTES min on Spot Testnet, capital cap $CAP_USD USD, profile measured above${DRILL:+, then the recovery drill}${EXPERIMENT:+; EXPERIMENTAL overrides: ${EXPERIMENT[*]}}"
 JSON_NAME="mm_service_testnet_${HEAD}_$STAMP.json"
 [ -e "$OUT/$JSON_NAME" ] && die "$OUT/$JSON_NAME already exists; evidence is never overwritten"
 status=0
@@ -116,7 +124,7 @@ docker run --rm --name tia-mm-service-testnet --user "$RUN_AS" \
   "$IMAGE" python scripts/validate_mm_live_service_testnet.py \
     --minutes "$MINUTES" --capital-cap-usd "$CAP_USD" --profile "$PROFILE_IN_CONTAINER" \
     --rest-url "$REST_URL" --ws-url "$WS_URL" --stream-url "$STREAM_URL" \
-    --json-out "/out/$JSON_NAME" "${DRILL[@]}" \
+    --json-out "/out/$JSON_NAME" "${DRILL[@]}" "${EXPERIMENT[@]}" \
   2>&1 | tee "$OUT/${JSON_NAME%.json}.log" || status=$?
 echo "validator exit status: $status (0 = no FAIL; anything else is kept as it is)"
 [ -s "$OUT/$JSON_NAME" ] || die "the validator wrote no evidence file"

@@ -984,6 +984,63 @@ tick corregido). Los hashes dorados del journal no cambiaron; los markouts de 25
 corrida coinciden con la reconstrucción offline en 70 de 70 filas. Casos reales `2422185` y
 `2423539` fijados como fixtures en `tests/unit/test_mm_service_validator_markouts.py`.
 
+### 10.17 Relojes separados: el outlier de 982 ms, `resting_ms` y el offset host–venue (instrumentación, sin cambio económico)
+
+**Auditoría (commit después de `f74c363`).** La corrida `ee987a5` dejó tres deficiencias de medición;
+las tres se demostraron con código y trazas antes de tocar nada.
+
+1. **El máximo de 982 ms en `decision_to_enqueue` y `market_event_to_processed` es la edad del snapshot
+   de handover.** `MarketDataService.subscribe()` entrega al nuevo consumidor el libro tal como está,
+   estampado con `book.last_received_at_ms` (la recepción de su último update). `LiveMarketMakerService.start_live()`
+   se suscribe después del barrido de huérfanas y de la reconciliación inicial (varias lecturas REST), así que
+   ese stamp puede tener la edad del silencio del feed en ese instante. El engine decide sobre ese evento con
+   `t_ms` = stamp; las primeras órdenes heredan `t_decision_ms` = stamp y `decision_to_enqueue = t_enqueued − stamp`;
+   `market_event_to_processed = done − stamp`. Traza: en `ee987a5` el primer mid de `mid_series` tiene estampa
+   `1791255058064` (igual a `freshness.last_change_ms`) y la primera orden se encoló en `1791255059046`:
+   **982 ms exactos**; en `5ac604e`, 64 ms exactos. El loop no se bloqueó (`callback_ms` máx 25 ms): la métrica
+   sumaba la edad del dato con el procesamiento. No es un stall ni un resync.
+2. **`resting_ms` mezclaba relojes.** `fill.t_ms` es el `T` de la venue; `t_ack_ms` es la hora del host al
+   procesar el reporte NEW o la respuesta REST. En `ee987a5` dio −74 ms en un fill tomado al llegar al libro.
+3. **El offset host–venue no estaba medido** (`venue_clock_offset_status: not measured`). Otros cruces de reloj
+   auditados y dejados como están, por diseño y documentados: `report_to_local_ms` (recepción host − `E` venue,
+   declarado como "incluye el offset"), los horizontes del tracker (`t_fill` venue + h contra mids host; corregible
+   offline con el offset) y `trade_baseline_ms` (venue contra host con 60 s de holgura explícita).
+
+**Instrumentación (sólo datos; ningún cambio en spread, fair value, toxicidad, EV, sizing, riesgo, ejecución,
+market data ni rails).**
+
+| Dónde | Qué se agrega |
+|---|---|
+| `LiveOrder` | `t_decided_host_ms` (instante host en que la orden se construyó a partir de la decisión; `t_decision_ms` sigue siendo el stamp del evento de mercado), `venue_ack_time_ms` (aceptación según la venue: `transactTime` de la respuesta REST o `T` del reporte NEW), `mono_enqueued_ms`, `mono_ack_ms` (reloj monotónico del host) |
+| `LiveFill` | `received_mono_ms` |
+| `LiveMarketMakerService` | `event_age_at_callback_ms` (stamp del evento → inicio del callback; `market_event_to_processed = edad + callback`), `timing_anomalies` (deque acotada: eventos con edad o callback > 200 ms con todos sus stamps, `book_update_id`, `handover`, decisiones y quotes producidos), `status()["timing"]` |
+| `MarketDataService` | `sync.handovers`, `sync.last_handover_age_ms` |
+| Engine `fill_records` | `host_resting_ms` (recepción host del fill − ack host), `venue_resting_ms` (`T` del trade − aceptación venue; `None` si falta), `resting_ms` = host, `event_age_at_decision_ms`, `t_decided_host_ms`, `venue_ack_time_ms`, stamps monotónicos |
+| Harness | `_order_lifecycle` con `host_resting_ms`/`venue_resting_ms`/`event_age_at_decision_ms`/`host_wall_vs_mono_drift_ms` por orden y agregados (máximo con su orden, cuántas > 200 ms); `responses.clock` {`at_start`, `at_end`, `derived`}; `responses.market_at_start_full`, `responses.market_at_end` (resyncs, snapshots, fallos, handovers, conexiones/cortes/reconexiones del stream, transiciones de frescura, episodios stale); `responses.timing`; ítems `S0b.venue_clock_offset_measured` y `S4c.timing_anomalies_and_clocks_recorded` (registrados y explicados, no juzgados) |
+
+**Offset de reloj: metodología y error.** Siete `GET /api/v3/time` con el wall clock del host antes y después:
+`offset_i = serverTime − (antes + después)/2`, `rtt_i = después − antes`; estimación = mediana de los offsets;
+error acotado por `min(rtt)/2` (el servidor pudo responder en cualquier instante del viaje). Signo positivo:
+la venue adelanta al host. Se mide al inicio y al final (deriva). **No se aplica en ningún lado**: `venue_age`
+sigue incluyendo el offset, como antes; cambiarlo sería un cambio de comportamiento de market data. Derivados
+en la evidencia: `report_latency_est_p50 = report_to_local_p50 − offset`, `depth_latency_est_p50` igual con
+`depth_receive_minus_event_ms`, ambos con el error del offset.
+
+**Qué significa cada duración ahora.** `host_resting_ms`: tiempo host desde el ack hasta recibir el reporte del
+fill; `venue_resting_ms`: tiempo venue desde la aceptación hasta el trade, `None` si la aceptación venue no se
+conoce; `event_age_at_decision_ms`: cuán viejo era el dato de mercado cuando se decidió; `decision_to_enqueue_ms`
+conserva su cálculo (stamp del evento → encolado) y su nota dice que incluye la edad del evento; el handover queda
+señalado en `timing.anomalies` con `handover: true`. El camino paper tiene un solo reloj simulado: `host_resting`
+= antes, `venue_resting` = `None`.
+
+**Tests.** `tests/unit/mm/test_timing_clocks.py` (offsets de reloj venue de −5 s a +5 s sin alterar las
+duraciones host; venue_resting sólo de stamps venue; fill sin ack → `None`, nunca negativo; handover de 982 ms
+registrado como anomalía con edad 982 y `t_enqueued − t_decided_host = 0`; handover fresco sin anomalía; hashes
+dorados intactos) y `tests/unit/test_mm_service_validator_clocks.py` (estimador de offset; lifecycle con el caso
+real de −74 ms → host 53 ms y venue 192 ms; compatibilidad con objetos sin los campos nuevos; deriva wall vs
+monotónico). Diff: ninguna línea eliminada en spread, fair value, toxicidad, inventario, riesgo, autorización,
+quoting, costos, tracker, kill switch, gate ni ledgers.
+
 ## 11. Modelo de estados de seguridad del maker live
 
 El kill switch del maker (`tia/mm/kill_switch.py`) alimenta el `system_unsafe` del gate global;

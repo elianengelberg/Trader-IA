@@ -64,6 +64,10 @@ _log = get_logger("mm.live")
 #: must release it. An order in an unknown state blocks new orders until the venue
 #: answers (a cancel would be one more request of unknown fate); everything else that
 #: means "the account is not what we think" cancels what rests and stays engaged.
+#: Evidence only: an event older than this at its callback, or a callback longer than this,
+#: is kept with its stamps (bounded) so the cause can be read after the fact.
+TIMING_ANOMALY_MS = 200
+TIMING_ANOMALY_KEEP = 200
 CRITICAL_RESPONSE: dict[str, tuple[KillSeverity, bool]] = {
     "unknown_order_state": (KillSeverity.NO_NEW_QUOTES, False),
     "unresolved_order": (KillSeverity.NO_NEW_QUOTES, True),
@@ -217,6 +221,14 @@ class LiveMarketMakerService(MarketMakerService):
         self.user_stream: Any | None = None
         self.event_to_processed_ms = LatencyStats()
         self.callback_ms = LatencyStats()
+        #: Receive stamp of the event to the start of its callback: how old the market
+        #: information already was when the engine saw it (the handover snapshot at start,
+        #: a queued burst). Kept apart from the callback's own duration.
+        self.event_age_at_callback_ms = LatencyStats()
+        self.market_events = 0
+        #: Events whose age at the callback or whose callback exceeded the threshold, with
+        #: every stamp needed to tell a stale handover from a slow callback. Bounded.
+        self.timing_anomalies: deque[dict[str, Any]] = deque(maxlen=TIMING_ANOMALY_KEEP)
         self._reconcile_task: asyncio.Task[Any] | None = None
         self._reconciling = False
         self._balance_mismatch_streak = 0
@@ -456,13 +468,34 @@ class LiveMarketMakerService(MarketMakerService):
 
     def _on_market_event(self, kind: str, event: Any, t_ms: int) -> None:
         self._last_event_ms = t_ms
+        self.market_events += 1
         started = self._now_ms()
+        quotes_before, decisions_before = self.engine.quotes, self.engine.decisions
         super()._on_market_event(kind, event, t_ms)
         done = self._now_ms()
         # Receive stamp to decision applied (features, fair value, authorization, quoting,
-        # local validation, enqueue) and the callback's own duration. No network in it.
+        # local validation, enqueue) and the callback's own duration. No network in it. The
+        # first term includes the event's age at the callback: for the handover snapshot a
+        # new subscriber receives, that age is how long the book had been silent.
         self.event_to_processed_ms.add(done - t_ms)
+        self.event_age_at_callback_ms.add(started - t_ms)
         self.callback_ms.add(done - started)
+        if started - t_ms > TIMING_ANOMALY_MS or done - started > TIMING_ANOMALY_MS:
+            last = self.engine.last_decision
+            self.timing_anomalies.append({
+                "n": self.market_events,
+                "kind": kind,
+                "t_event_ms": t_ms,
+                "t_callback_start_ms": started,
+                "t_callback_done_ms": done,
+                "event_age_at_callback_ms": started - t_ms,
+                "callback_ms": done - started,
+                "book_update_id": self.engine.book.update_id,
+                "handover": kind == "snapshot" and self.market_events == 1,
+                "decisions": self.engine.decisions - decisions_before,
+                "quotes_placed": self.engine.quotes - quotes_before,
+                "decision_t_ms": last.t_ms if (last is not None and self.engine.decisions > decisions_before) else None,
+            })
         self._watch(t_ms)
 
     def _on_live_fill(self, fill: Any, t_ms: int) -> None:
@@ -745,8 +778,15 @@ class LiveMarketMakerService(MarketMakerService):
             "user_stream": self.user_stream.as_dict() if self.user_stream is not None and hasattr(self.user_stream, "as_dict") else {"wired": self.user_stream is not None},
             "latency": {
                 "market_event_to_processed_ms": self.event_to_processed_ms.as_dict(),
+                "event_age_at_callback_ms": self.event_age_at_callback_ms.as_dict(),
                 "callback_ms": self.callback_ms.as_dict(),
                 **self.execution.stats()["latency"],
+            },
+            "timing": {
+                "market_events": self.market_events,
+                "anomaly_threshold_ms": TIMING_ANOMALY_MS,
+                "anomalies": list(self.timing_anomalies),
+                "note": "market_event_to_processed = event_age_at_callback + callback; an anomaly is an event older than the threshold when its callback started, or a callback longer than it; handover marks the snapshot a new subscriber receives, stamped with the book's last receive time",
             },
             "counts": {"events": engine.events, "decisions": engine.decisions, "quotes": engine.quotes, "requotes": engine.requotes, "cancels": engine.cancels, "gate_blocks": engine.gate_blocks, "data_blocks": engine.data_blocks},
             "data": {"usable": self.market.usable, "freshness": self.market.freshness()[0].value},

@@ -265,9 +265,19 @@ class MarketMakerEngine:
             mid_at_fill = getattr(fill, "mid_at_fill", None)
             fv_quote = quote.get("fair_value") if quote else None
             t_ack = getattr(order, "t_ack_ms", None) if order is not None else None
-            if t_ack is None and order is not None:
-                t_ack = getattr(order, "t_arrival_ms", None)  # the paper order's arrival at the venue
+            if t_ack is None and order is not None and not hasattr(order, "venue_ack_time_ms"):
+                t_ack = getattr(order, "t_arrival_ms", None)  # the paper order's arrival at the venue (one simulated clock); a live order without an acknowledgement has none
             last_event = self._last_event_ms
+            # Clocks apart. Host: the fill's receipt (live) or the simulated instant (paper, one
+            # clock) against the host acknowledgement. Venue: the venue's trade time against the
+            # venue's acceptance time. Never one against the other; None when a side is unknown.
+            received_host = getattr(fill, "received_at_ms", None) or None
+            fill_host_ms = received_host if received_host else (fill.t_ms if getattr(fill, "attribution_source", None) is None else None)
+            venue_ack = getattr(order, "venue_ack_time_ms", None) if order is not None else None
+            host_resting = (fill_host_ms - t_ack) if (fill_host_ms is not None and t_ack is not None) else None
+            venue_resting = (fill.t_ms - venue_ack) if venue_ack is not None else None
+            decided_host = getattr(order, "t_decided_host_ms", None) if order is not None else None
+            t_decision = getattr(order, "t_decision_ms", None) if order is not None else (quote or {}).get("t_decision_ms")
             record: dict[str, Any] = {
                 "fill_id": fill.fill_id,
                 "order_id": fill.order_id,
@@ -297,11 +307,19 @@ class MarketMakerEngine:
                 "quote": quote,  # fair value, confidence, bid, ask, sizes, half-spread, toxicity, data age at the decision that placed the order
                 "toxicity_at_fill": self.toxicity.overall().as_dict(),
                 "data_age_at_fill_ms": (t_ms - last_event) if last_event is not None else None,
-                "t_decision_ms": getattr(order, "t_decision_ms", None) if order is not None else (quote or {}).get("t_decision_ms"),
+                "t_decision_ms": t_decision,
+                "t_decided_host_ms": decided_host,
+                "event_age_at_decision_ms": (decided_host - t_decision) if (decided_host is not None and t_decision is not None) else None,
                 "t_enqueued_ms": getattr(order, "t_enqueued_ms", None) if order is not None else None,
                 "t_ack_ms": t_ack,
                 "ack_source": getattr(order, "ack_source", None) if order is not None else None,
-                "resting_ms": (fill.t_ms - t_ack) if t_ack is not None else None,
+                "venue_ack_time_ms": venue_ack,
+                "received_mono_ms": getattr(fill, "received_mono_ms", None),
+                "mono_enqueued_ms": getattr(order, "mono_enqueued_ms", None) if order is not None else None,
+                "mono_ack_ms": getattr(order, "mono_ack_ms", None) if order is not None else None,
+                "host_resting_ms": host_resting,
+                "venue_resting_ms": venue_resting,
+                "resting_ms": host_resting,  # host clock on both ends; the venue's own resting is venue_resting_ms
                 "regimes": dict(regimes),
             }
         except Exception as exc:  # evidence must never break the money path

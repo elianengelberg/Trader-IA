@@ -257,22 +257,43 @@ def _order_lifecycle(orders: Iterable[Any]) -> dict[str, Any]:
     for o in orders:
         fills = list(getattr(o, "fills", []) or [])
         t_ack = getattr(o, "t_ack_ms", None)
+        # Host clock only: a fill ends the order when its report was received here (the venue's
+        # trade time belongs to the venue's clock); a cancel ends it when it was requested.
         end: int | None = None
+        venue_end: int | None = None
         if o.state == "filled" and fills:
-            end = max(int(getattr(f, "t_ms", 0) or 0) for f in fills) or None
-        if end is None:
+            received = [int(getattr(f, "received_at_ms", 0) or 0) for f in fills]
+            end = max(received) if any(received) else None
+            venue_end = max(int(getattr(f, "t_ms", 0) or 0) for f in fills) or None
+            if end is None and getattr(o, "venue_ack_time_ms", None) is None and not hasattr(o, "mono_enqueued_ms"):
+                end = venue_end  # the paper path: one simulated clock for everything
+        if end is None and o.state != "filled":
             end = getattr(o, "t_cancel_requested_ms", None) or getattr(o, "t_cancel_effective_ms", None)
-        resting_ms = (max(0, int(end) - int(t_ack)) if (t_ack is not None and end is not None) else None)
+        host_resting = (int(end) - int(t_ack)) if (t_ack is not None and end is not None) else None
+        venue_ack = getattr(o, "venue_ack_time_ms", None)
+        venue_resting = (int(venue_end) - int(venue_ack)) if (venue_end is not None and venue_ack is not None) else None
+        decided = getattr(o, "t_decided_host_ms", None)
+        t_decision = getattr(o, "t_decision_ms", None)
+        mono_enq, mono_ack = getattr(o, "mono_enqueued_ms", None), getattr(o, "mono_ack_ms", None)
+        t_enq = getattr(o, "t_enqueued_ms", None)
+        drift = ((t_ack - t_enq) - (mono_ack - mono_enq)) if (t_ack is not None and t_enq is not None and mono_ack is not None and mono_enq is not None) else None
         cancel_class = _classify_cancel_reason(getattr(o, "cancel_reason", "")) if o.state == "cancelled" else None
         terminal = "filled" if o.state == "filled" else (f"cancelled:{cancel_class}" if o.state == "cancelled" else str(o.state))
         rows.append({
             "order_id": o.order_id, "side": o.side, "price": o.price, "quantity": o.quantity,
             "sent": getattr(o, "t_submitted_ms", None) is not None, "acked": t_ack is not None, "ack_source": getattr(o, "ack_source", ""),
-            "t_enqueued_ms": getattr(o, "t_enqueued_ms", None), "t_ack_ms": t_ack, "t_end_ms": end, "resting_ms": resting_ms,
+            "t_decision_ms": t_decision, "t_decided_host_ms": decided,
+            "event_age_at_decision_ms": (decided - t_decision) if (decided is not None and t_decision is not None) else None,
+            "t_enqueued_ms": t_enq, "t_ack_ms": t_ack, "venue_ack_time_ms": venue_ack, "t_end_ms": end, "venue_t_end_ms": venue_end,
+            "host_resting_ms": host_resting, "venue_resting_ms": venue_resting, "resting_ms": host_resting,
+            "host_wall_vs_mono_drift_ms": drift,
             "terminal": terminal, "cancel_reason": (getattr(o, "cancel_reason", "") or "")[:160], "fills": len(fills), "filled_qty": sum(float(getattr(f, "quantity", 0.0)) for f in fills),
             "venue_order_id": getattr(o, "venue_order_id", ""),
         })
     resting = [r["resting_ms"] for r in rows if r["resting_ms"] is not None]
+    venue_resting_all = [r["venue_resting_ms"] for r in rows if r["venue_resting_ms"] is not None]
+    ages = [(r["event_age_at_decision_ms"], r["order_id"]) for r in rows if r["event_age_at_decision_ms"] is not None]
+    drifts = [r["host_wall_vs_mono_drift_ms"] for r in rows if r["host_wall_vs_mono_drift_ms"] is not None]
     terminal = Counter(r["terminal"] for r in rows)
     return {
         "orders": len(rows),
@@ -282,7 +303,10 @@ def _order_lifecycle(orders: Iterable[Any]) -> dict[str, Any]:
         "terminal": dict(terminal),
         "cancel_reasons": dict(Counter(r["terminal"].split(":", 1)[1] for r in rows if r["terminal"].startswith("cancelled:"))),
         "filled_orders": [r for r in rows if r["terminal"] == "filled"],
-        "resting_ms": {"count": len(resting), "p50": _percentile(resting, 0.5), "p90": _percentile(resting, 0.9), "max": max(resting) if resting else None, "min": min(resting) if resting else None},
+        "resting_ms": {"count": len(resting), "p50": _percentile(resting, 0.5), "p90": _percentile(resting, 0.9), "max": max(resting) if resting else None, "min": min(resting) if resting else None, "clock": "host: fill report received (or cancel requested) minus host acknowledgement"},
+        "venue_resting_ms": {"count": len(venue_resting_all), "p50": _percentile(venue_resting_all, 0.5), "p90": _percentile(venue_resting_all, 0.9), "max": max(venue_resting_all) if venue_resting_all else None, "min": min(venue_resting_all) if venue_resting_all else None, "clock": "venue: trade time minus the venue's acceptance time; None when the venue's acceptance time is unknown"},
+        "event_age_at_decision_ms": {"count": len(ages), "p50": _percentile([a for a, _ in ages], 0.5), "max": max(ages)[0] if ages else None, "max_order_id": max(ages)[1] if ages else None, "over_200_ms": sum(1 for a, _ in ages if a > 200), "note": "host decision instant minus the receive stamp of the market event the decision was made on"},
+        "host_wall_vs_mono_drift_ms": {"count": len(drifts), "max_abs": max((abs(d) for d in drifts), default=None), "note": "(t_ack - t_enqueued) on the wall clock minus the same span on the monotonic clock; a wall-clock step shows here"},
         "rows": rows,
     }
 
@@ -303,6 +327,49 @@ def _fill_rows(execution: Any) -> list[dict[str, Any]]:
             "correlated": order is not None and str(getattr(order, "venue_order_id", "")) == str(getattr(f, "venue_order_id", "")) and any(getattr(x, "fill_id", None) == f.fill_id for x in getattr(order, "fills", [])),
         })
     return rows
+
+
+# ---------------------------------------------------------------- clocks: host vs venue
+
+CLOCK_SAMPLES = 7
+
+
+def _estimate_clock_offset(samples: list[tuple[int, int, int]]) -> dict[str, Any]:
+    """From (host_before_ms, venue_server_time_ms, host_after_ms) triples around GET
+    /api/v3/time: offset_i = server - (before + after) / 2, rtt_i = after - before. The
+    estimate is the median offset; its error is bounded by half the smallest round trip
+    (the server could have answered at any instant inside it). Positive: the venue's clock
+    reads ahead of the host's. Nothing here is applied anywhere: evidence only."""
+    if not samples:
+        return {"method": "GET /api/v3/time, NTP-style midpoint", "n": 0, "offset_ms": None, "error_bound_ms": None, "min_rtt_ms": None, "samples": []}
+    offsets = [server - (before + after) / 2.0 for before, server, after in samples]
+    rtts = [after - before for before, _, after in samples]
+    best = min(range(len(samples)), key=lambda i: rtts[i])
+    return {
+        "method": "GET /api/v3/time, NTP-style midpoint: offset = serverTime - (host_before + host_after)/2; sign positive when the venue reads ahead",
+        "n": len(samples),
+        "offset_ms": float(_percentile(offsets, 0.5)),
+        "offset_at_min_rtt_ms": offsets[best],
+        "error_bound_ms": rtts[best] / 2.0,
+        "min_rtt_ms": rtts[best],
+        "rtt_p50_ms": float(_percentile([float(r) for r in rtts], 0.5)),
+        "samples": [{"host_before_ms": b, "server_time_ms": v, "host_after_ms": a, "offset_ms": o, "rtt_ms": r} for (b, v, a), o, r in zip(samples, offsets, rtts, strict=True)],
+        "applied": False,
+        "note": "not fed to the market data service nor to any rule: venue_age keeps including the offset, as before",
+    }
+
+
+async def _measure_clock_offset(public: Any, *, n: int = CLOCK_SAMPLES) -> dict[str, Any]:
+    samples: list[tuple[int, int, int]] = []
+    for _ in range(n):
+        before = int(time.time() * 1000)
+        try:
+            server = int(await public.server_time_ms())
+        except Exception as exc:
+            return {**_estimate_clock_offset(samples), "error": f"{type(exc).__name__}: {str(exc)[:160]}"}
+        after = int(time.time() * 1000)
+        samples.append((before, server, after))
+    return _estimate_clock_offset(samples)
 
 
 # ---------------------------------------------------------------- markouts and fill context, raw
@@ -512,6 +579,11 @@ def _fill_evidence(fill_rows: list[dict[str, Any]], records: list[dict[str, Any]
             "t_booked_ms": rec.get("t_booked_ms"),
             "t_registered_ms": mo.get("t_registered_ms") if mo else None,
             "registration_lag_ms": mo.get("registration_lag_ms") if mo else None,
+            "t_decided_host_ms": rec.get("t_decided_host_ms"),
+            "event_age_at_decision_ms": rec.get("event_age_at_decision_ms"),
+            "venue_ack_time_ms": rec.get("venue_ack_time_ms"),
+            "host_resting_ms": rec.get("host_resting_ms"),
+            "venue_resting_ms": rec.get("venue_resting_ms"),
             "realised_usd": rec.get("realised_usd"),
             "regimes": rec.get("regimes"),
             "record_error": rec.get("error"),
@@ -722,6 +794,14 @@ class ServiceValidation:
             await _wait_until(lambda: bool(self.market and self.market.usable), 60.0)
             snap = self.market.snapshot(levels=1)
             ev.responses["market_at_start"] = {k: snap.get(k) for k in ("usable", "not_usable_reason", "freshness")}
+            ev.responses["market_at_start_full"] = snap
+            ev.command("GET /api/v3/time x7  [host wall clock before/after each: venue clock offset estimate]")
+            clock_start = await _measure_clock_offset(self.public) if self.public is not None else {"n": 0, "error": "no public client"}
+            ev.responses["clock"] = {"at_start": clock_start}
+            if clock_start.get("offset_ms") is not None:
+                ev.mark("S0b.venue_clock_offset_measured", "PASS", f"venue - host offset {clock_start['offset_ms']:+.1f} ms (+/- {clock_start['error_bound_ms']:.1f} ms, min RTT {clock_start['min_rtt_ms']} ms, n={clock_start['n']}); not applied anywhere")
+            else:
+                ev.mark("S0b.venue_clock_offset_measured", "NOT TESTED", f"could not read the venue's time: {clock_start.get('error')}")
             ev.mark("S1.testnet_market_data_usable", "PASS" if self.market.usable else "FAIL", f"usable={self.market.usable} {snap.get('not_usable_reason') or ''}".strip())
             if not self.market.usable:
                 raise RuntimeError("Testnet market data never became usable; the engine would not quote")
@@ -888,6 +968,12 @@ class ServiceValidation:
                 ev.mark("S12.stop_completed", "FAIL", f"{type(exc).__name__}: {str(exc)[:160]}")
         await self.lag.stop()
         ev.responses["event_loop"] = self.lag.summary()
+        if self.market is not None:
+            with contextlib.suppress(Exception):
+                ev.responses["market_at_end"] = self.market.snapshot(levels=1)
+        if self.public is not None:
+            with contextlib.suppress(Exception):
+                ev.responses.setdefault("clock", {})["at_end"] = await _measure_clock_offset(self.public)
         if self.service is not None:
             with contextlib.suppress(Exception):
                 self.lifecycle = _order_lifecycle(list(self.service.execution.closed) + list(self.service.execution.orders.values()))
@@ -1012,6 +1098,40 @@ class ServiceValidation:
                 ev.mark(item, "NOT TESTED", "no fill occurred")
         loop = ev.responses.get("event_loop") or {}
         ev.mark("S4b.event_loop_stalls_observed", "PASS", f"{loop.get('stall_count')} stall(s) over {loop.get('stall_threshold_ms')} ms in {loop.get('samples')} samples; lag p50 {loop.get('p50_ms')} p99 {loop.get('p99_ms')} max {loop.get('max_ms')} ms (recorded, not judged)")
+        # Timing anomalies and the clocks, recorded and explained, not judged: every event older
+        # than the threshold at its callback (the handover snapshot a new subscriber receives is
+        # the usual one) and the venue-host clock offset with its error bound.
+        timing = st.get("timing") or {}
+        anomalies = timing.get("anomalies") or []
+        ev.responses["timing"] = timing
+        lat = st.get("latency") or {}
+        age = lat.get("event_age_at_callback_ms") or {}
+        lc_ages = (lifecycle or {}).get("event_age_at_decision_ms") or {}
+        handover = [a for a in anomalies if a.get("handover")]
+        clock = ev.responses.get("clock") or {}
+        start_off = (clock.get("at_start") or {}).get("offset_ms")
+        end_off = (clock.get("at_end") or {}).get("offset_ms")
+        bound = (clock.get("at_start") or {}).get("error_bound_ms")
+        r2l = (lat.get("report_to_local_ms") or {}).get("p50_ms")
+        market_end = ev.responses.get("market_at_end") or {}
+        depth = ((market_end.get("latency") or {}).get("depth_receive_minus_event_ms") or {}).get("p50_ms")
+        est = {
+            "report_latency_est_p50_ms": (r2l - start_off) if (r2l is not None and start_off is not None) else None,
+            "depth_latency_est_p50_ms": (depth - start_off) if (depth is not None and start_off is not None) else None,
+            "note": "host receipt minus venue event time, minus the measured offset; the error bound of the offset applies",
+        }
+        ev.responses.setdefault("clock", {})["derived"] = est
+        sync = (market_end.get("sync") or {})
+        stream = (market_end.get("stream") or {})
+        ev.mark(
+            "S4c.timing_anomalies_and_clocks_recorded",
+            "PASS",
+            f"market events {timing.get('market_events')}; event age at callback p50 {age.get('p50_ms')} p99 {age.get('p99_ms')} max {age.get('max_ms')} ms; "
+            f"anomalies over {timing.get('anomaly_threshold_ms')} ms: {len(anomalies)} ({len(handover)} handover snapshot(s), ages {[a.get('event_age_at_callback_ms') for a in handover]}); "
+            f"decision event age max {lc_ages.get('max')} ms on {lc_ages.get('max_order_id')}, over 200 ms: {lc_ages.get('over_200_ms')}; "
+            f"handovers {sync.get('handovers')} (last age {sync.get('last_handover_age_ms')} ms) resyncs {sync.get('resyncs')} snapshots {sync.get('snapshots_fetched')} failures {sync.get('resync_failures')}; stream connections {stream.get('connections')} disconnects {stream.get('disconnects')} reconnects {stream.get('reconnects')}; "
+            f"venue-host clock offset start {start_off} end {end_off} ms (+/- {bound} ms); report latency est p50 {est['report_latency_est_p50_ms']} ms; (recorded, not judged)",
+        )
         rec = st["reconciliation"]
         ev.mark("S9.periodic_reconciliation_ran", "PASS" if rec["count"] >= 2 and rec["failures"] == 0 else ("FAIL" if rec["failures"] else "NOT TESTED"), f"reconciliations {rec['count']} failures {rec['failures']} interval {rec['interval_s']} s last ok={((rec.get('last') or {}).get('ok'))} critical={((rec.get('last') or {}).get('critical'))}")
         # The kill switch, in two readings. Before stop(): a sticky engagement means a critical

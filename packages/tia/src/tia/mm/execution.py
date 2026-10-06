@@ -37,6 +37,7 @@ from __future__ import annotations
 import asyncio
 import contextlib
 import inspect
+import time
 from collections import deque
 from collections.abc import Callable
 from dataclasses import dataclass, field
@@ -253,9 +254,16 @@ class LiveFill:
     attribution_source: str = "trades"
     venue_order_id: str = ""
     received_at_ms: int = 0
+    #: Host monotonic clock at receipt (ms), for duration checks that no wall-clock step can bend.
+    received_mono_ms: float | None = None
 
     def as_dict(self) -> dict[str, Any]:
         return dict(self.__dict__)
+
+
+def _mono_ms() -> float:
+    """The host's monotonic clock in milliseconds: durations only, never correlation."""
+    return time.monotonic() * 1000.0
 
 
 @dataclass
@@ -288,6 +296,16 @@ class LiveOrder:
     fills: list[LiveFill] = field(default_factory=list)
     queue: Any = None  # no queue model for a real order; the engine checks for None
     closed: bool = False
+    # ---- clocks kept apart (evidence): host wall clock for correlation, host monotonic for
+    # durations, the venue's clock only against other venue stamps. ``t_decision_ms`` is the
+    # receive stamp of the market event the decision was made on; ``t_decided_host_ms`` is
+    # the host instant the order was built from it.
+    t_decided_host_ms: int | None = None
+    #: The venue's own time of acceptance (transactTime of the REST answer or ``T`` of the NEW
+    #: report): compared only with venue trade times, never with host stamps.
+    venue_ack_time_ms: int | None = None
+    mono_enqueued_ms: float | None = None
+    mono_ack_ms: float | None = None
 
     @property
     def filled(self) -> float:
@@ -322,6 +340,10 @@ class LiveOrder:
             "state": self.state,
             "venue_state": self.venue_state,
             "t_decision_ms": self.t_decision_ms,
+            "t_decided_host_ms": self.t_decided_host_ms,
+            "venue_ack_time_ms": self.venue_ack_time_ms,
+            "mono_enqueued_ms": self.mono_enqueued_ms,
+            "mono_ack_ms": self.mono_ack_ms,
             "t_enqueued_ms": self.t_enqueued_ms,
             "t_submitted_ms": self.t_submitted_ms,
             "t_rest_response_ms": self.t_rest_response_ms,
@@ -569,8 +591,14 @@ class LiveMarketMakerExecution:
             self.orders[order.order_id] = order
             self._all[order.order_id] = order
             self.counters["placed"] += 1
+            order.t_decided_host_ms = self._now_ms()  # the host instant this order was built from the decision
             order.t_enqueued_ms = self._now_ms()
+            order.mono_enqueued_ms = _mono_ms()
             if decision.t_ms > 0:
+                # From the receive stamp of the market event the decision was made on to the
+                # enqueue: the age of the market information behind the order. It includes the
+                # event's own age (the handover snapshot at start carries the book's last
+                # receive stamp); the host-only decision-to-enqueue is t_enqueued - t_decided_host.
                 self.decision_to_enqueue_ms.add(order.t_enqueued_ms - decision.t_ms)
             self._enqueue("submit", order)
             out.append(order)
@@ -689,6 +717,8 @@ class LiveMarketMakerExecution:
                 self._remember_trade(trade_id)
                 self._book_fill(order, self._fill_from_report(order, report, t), t, source="report")
         self._adopt(order, venue_order_id=report.venue_order_id, state=report.status, executed_qty=report.cumulative_quantity, t_ms=t, reject_reason=report.reject_reason, source="stream")
+        if order.venue_ack_time_ms is None and str(report.execution_type).lower() == "new" and report.transaction_time_ms > 0:
+            order.venue_ack_time_ms = report.transaction_time_ms  # the venue's acceptance, on the venue's clock
         self.report_received_to_applied_ms.add(self._now_ms() - t)
 
     def absorb_balances(self, balances: list[AccountBalance], received_at_ms: int | None = None) -> None:
@@ -846,6 +876,7 @@ class LiveMarketMakerExecution:
         if order.t_ack_ms is not None:
             return
         order.t_ack_ms = t_ms
+        order.mono_ack_ms = _mono_ms()
         order.ack_source = source
         self.counters["acked"] += 1
         if order.t_submitted_ms is not None:
@@ -858,6 +889,11 @@ class LiveMarketMakerExecution:
             order.rest_acked = True
             if order.t_submitted_ms is not None:
                 self.submit_to_ack_ms.add(t_ms - order.t_submitted_ms)
+            if order.venue_ack_time_ms is None:
+                updated = getattr(venue, "updated_at", None)  # the venue's transactTime, on its clock
+                if updated is not None:
+                    with contextlib.suppress(Exception):
+                        order.venue_ack_time_ms = int(updated.timestamp() * 1000)
         self._adopt_venue_state(order, venue, t_ms, source=source)
 
     def _apply_reject(self, order: LiveOrder, code: Any, message: str, t_ms: int) -> None:
@@ -1051,6 +1087,7 @@ class LiveMarketMakerExecution:
             attribution_source="report",
             venue_order_id=report.venue_order_id or order.venue_order_id,
             received_at_ms=t_ms,
+            received_mono_ms=_mono_ms(),
         )
 
     def _live_fill(self, order: LiveOrder, fill: Fill, t_ms: int) -> LiveFill:
@@ -1307,9 +1344,14 @@ class LiveMarketMakerExecution:
                 "fill_to_ledger_ms": self.fill_to_ledger_ms.as_dict(),
                 "cancel_to_ack_ms": self.cancel_to_ack_ms.as_dict(),
                 "note": (
-                    "host clock throughout; submit_to_ack is the REST response applied, submit_to_first_ack the "
-                    "first acknowledgement from any source (stream or REST); report_to_local includes the host-venue "
-                    "clock offset; fill_to_ledger is measured only with the fill sink installed"
+                    "host wall clock throughout (the injected now_ms); decision_to_enqueue runs from the receive "
+                    "stamp of the market event the decision was made on, so it carries that event's age (a "
+                    "handover snapshot at start carries the book's last receive stamp): the host-only "
+                    "decision-to-enqueue is t_enqueued - t_decided_host per order; submit_to_ack is the REST "
+                    "response applied, submit_to_first_ack the first acknowledgement from any source (stream or "
+                    "REST); report_to_local is host receipt minus the venue's event time and includes the "
+                    "host-venue clock offset; fill_to_ledger is measured only with the fill sink installed; "
+                    "venue_ack_time_ms and fill t_ms are the venue's clock and are only ever compared with each other"
                 ),
             },
         }

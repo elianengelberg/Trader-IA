@@ -132,6 +132,10 @@ class MarketDataService:
         # a replay of the tape would: snapshot, depth, trade, book, disconnect.
         self._subscribers: list[Callable[[str, Any, int], None]] = []
         self.subscriber_errors = 0
+        #: Consumers served the book as it stood when they subscribed, and how old that book
+        #: already was (receive stamp of its last update to the subscription instant).
+        self.handovers = 0
+        self.last_handover_age_ms: int | None = None
 
     # ------------------------------------------------------------------ lifecycle
 
@@ -174,8 +178,11 @@ class MarketDataService:
             # the same thing a replay would read from the segment's opening checkpoint.
             bids, asks = self.book.levels()
             handover = DepthSnapshot(self.book.update_id, tuple(bids), tuple(asks))
+            self.handovers += 1
+            stamp = self.book.last_received_at_ms or self._now_ms()
+            self.last_handover_age_ms = self._now_ms() - stamp  # evidence: how old the handed-over book was
             try:
-                callback("snapshot", handover, self.book.last_received_at_ms or self._now_ms())
+                callback("snapshot", handover, stamp)
             except Exception as exc:
                 self.subscriber_errors += 1
                 _log.warning("mm_consumer_failed", kind="snapshot", error=str(exc)[:160])
@@ -470,6 +477,8 @@ class MarketDataService:
                 "last_resync_error": self.last_resync_error,
                 "last_snapshot_update_id": self.book.last_snapshot_update_id,
                 "checkpoints_written": self.checkpoints_written,
+                "handovers": self.handovers,
+                "last_handover_age_ms": self.last_handover_age_ms,
             },
             "integrity": {
                 "stale_episodes": self.stale_episodes,

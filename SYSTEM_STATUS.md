@@ -289,3 +289,12 @@ delay, mid at mark, bps, usd, measured or not, with the resolution rule stated v
 validator exports them and checks their consistency (item S8e). No decision, estimator, limit or rail
 changed: the synthetic tape's decision/fill/markout journal keeps its pre-change SHA-256, pinned in
 tests. The next Testnet run has not been executed.
+
+Addendum 2026-10-06, clocks apart (Phase 4 §10.17): the 982 ms outlier of the ee987a5 run was the age of
+the handover snapshot a new subscriber receives (the book's last receive stamp, 982 ms old after the start-up
+REST reads), not a stall; `resting_ms` compared a venue trade time with a host acknowledgement; the venue-host
+clock offset was not measured. Instrumentation only: host and venue stamps are kept apart (`host_resting_ms`,
+`venue_resting_ms`, `event_age_at_decision_ms`, monotonic drift), the service records timing anomalies with
+every stamp, the market data service counts handovers, and the validator measures the venue-host offset with
+an error bound without applying it anywhere. No economic parameter, decision path, execution semantics or rail
+changed; golden journal hashes unchanged. The 60-minute run with the same experimental parameters is pending.

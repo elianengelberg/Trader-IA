@@ -1,0 +1,748 @@
+{
+ "script": "validate_mm_live_service_testnet.py",
+ "started_utc": "2026-10-06T05:15:38Z",
+ "args": {
+  "symbol": "BTC-USD",
+  "minutes": 60.0,
+  "profile": "/app/data/runtime/mm/latency_profile.json",
+  "scenario": "baseline",
+  "quote_size": 0.0002,
+  "capital_cap_usd": 200.0,
+  "min_net_edge_bps": 0.0,
+  "reconcile_interval": 15.0,
+  "sample_seconds": 5.0,
+  "depth_limit": 1000,
+  "rest_url": "https://testnet.binance.vision",
+  "ws_url": "wss://ws-api.testnet.binance.vision/ws-api/v3",
+  "stream_url": "wss://stream.testnet.binance.vision/stream",
+  "json_out": "/out/mm_service_testnet_0fc5763_20261006T050913Z.json",
+  "recovery_drill": false,
+  "fee_scenario": "testnet_zero",
+  "quote_ttl_ms": 30000,
+  "requote_threshold_bps": 5.0
+ },
+ "results": {
+  "S0.provider_is_simulated_without_token": "PASS",
+  "S0.latency_profile_measured_on_this_host": "PASS",
+  "S0.exchange_filters_read": "PASS",
+  "S0.experimental_overrides_recorded": "PASS",
+  "S0.service_assembled_like_the_api_would": "PASS",
+  "S0b.venue_clock_offset_measured": "PASS",
+  "S1.testnet_market_data_usable": "FAIL",
+  "S12.stop_completed": "FAIL"
+ },
+ "notes": {
+  "S0.provider_is_simulated_without_token": "is_live=False activation=None",
+  "S0.latency_profile_measured_on_this_host": "profile dbc31014f224cef5 commit 0fc5763 measured 2026-10-06T05:10:29Z source scripts/mm_market_data_check.py @ stream stream.testnet.binance.vision snapshots testnet.binance.vision",
+  "S0.exchange_filters_read": "tick 0.01 step 1e-05 minQty 1e-05 minNotional 5.0",
+  "S0.experimental_overrides_recorded": "EXPERIMENTAL overrides {'fee_scenario': 'testnet_zero', 'quote_ttl_ms': 30000, 'requote_threshold_bps': 5.0} (defaults {'fee_scenario': 'assumed', 'quote_ttl_ms': 1000, 'requote_threshold_bps': 0.5})",
+  "S0.service_assembled_like_the_api_would": "LiveMarketMakerService + BinanceUserDataStream + MarketDataService on Testnet URLs; capital cap 200.0 USD",
+  "S0b.venue_clock_offset_measured": "venue - host offset +0.0 ms (+/- 115.5 ms, min RTT 231 ms, n=7); not applied anywhere",
+  "S1.testnet_market_data_usable": "usable=False",
+  "stopped": "RuntimeError: Testnet market data never became usable; the engine would not quote",
+  "S12.stop_completed": "no final status: the service never reached stop()"
+ },
+ "commands": [
+  "provider.get_exchange_info(BTC-USD)  [GET /api/v3/exchangeInfo]",
+  "MarketDataService.start()  [wss://stream.testnet.binance.vision/stream; snapshot GET https://testnet.binance.vision/api/v3/depth]",
+  "GET /api/v3/time x7  [host wall clock before/after each: venue clock offset estimate]",
+  "GET /api/v3/openOrders?symbol=BTCUSDT  [fresh client]"
+ ],
+ "responses": {
+  "filters": {
+   "symbol": "BTC-USD",
+   "tick_size": 0.01,
+   "step_size": 1e-05,
+   "min_qty": 1e-05,
+   "max_qty": 9000.0,
+   "min_notional": 5.0,
+   "source": "exchange_info",
+   "order_types": [
+    "LIMIT",
+    "LIMIT_MAKER",
+    "MARKET",
+    "STOP_LOSS",
+    "STOP_LOSS_LIMIT",
+    "TAKE_PROFIT",
+    "TAKE_PROFIT_LIMIT"
+   ]
+  },
+  "quoting": {
+   "base_quote_size_btc": 0.0002,
+   "tick_size": 0.01,
+   "size_step": 1e-05,
+   "min_size_btc": 0.0001,
+   "quote_ttl_ms": 30000,
+   "requote_threshold_bps": 5.0,
+   "fee_scenario": "assumed",
+   "costs": {
+    "maker_fee_bps": 0.0,
+    "maker_fee_status": "EXPERIMENT_TESTNET_ZERO: Binance Spot Testnet charges no commission (n=0.0 on the real fills observed); an experiment on Testnet, not a Mainnet assumption, not a strategy",
+    "maker_fee_verified_bps": null,
+    "maker_fee_adverse_bps": 0.0,
+    "taker_fee_bps": 0.0,
+    "scenario": "assumed"
+   },
+   "limits": {
+    "max_inventory_btc": 0.05,
+    "max_notional_usd": 6000.0,
+    "max_quote_size_btc": 0.01,
+    "max_daily_loss_usd": 100.0,
+    "max_drawdown_pct": 3.0,
+    "max_quotes_per_minute": 120,
+    "min_quote_interval_ms": 250
+   }
+  },
+  "experiment": {
+   "experimental": true,
+   "overrides": {
+    "fee_scenario": "testnet_zero",
+    "quote_ttl_ms": 30000,
+    "requote_threshold_bps": 5.0
+   },
+   "defaults": {
+    "fee_scenario": "assumed",
+    "quote_ttl_ms": 1000,
+    "requote_threshold_bps": 0.5
+   },
+   "note": "EXPERIMENTAL harness overrides for the S8 experiment on Testnet; quoting parameters only; not a strategy, not a fee assumption for Mainnet, not a statement about profitability; the stale-data threshold, kill switch, authorizers, maker-only validation, capital cap and Testnet-only rails are untouched"
+  },
+  "market_at_start": {
+   "usable": true,
+   "not_usable_reason": "",
+   "freshness": {
+    "state": "fresh",
+    "reason": "",
+    "receive_age_s": 0.024,
+    "venue_age_s": null,
+    "venue_age_source": null,
+    "trade_venue_age_s": null,
+    "max_data_age_s": 2.0,
+    "max_venue_age_s": 1.0,
+    "max_venue_age_status": "PROVISIONAL_THRESHOLD: calibrate from the measured venue_age distribution",
+    "venue_clock_offset_ms": 0.0,
+    "venue_clock_offset_status": "not measured: venue_age includes the host-venue offset",
+    "transitions": 1,
+    "last_change_ms": 1791263740299,
+    "stale_receive_episodes": 0,
+    "stale_venue_episodes": 0
+   }
+  },
+  "market_at_start_full": {
+   "symbol": "BTC-USD",
+   "usable": true,
+   "not_usable_reason": "",
+   "freshness": {
+    "state": "fresh",
+    "reason": "",
+    "receive_age_s": 0.024,
+    "venue_age_s": null,
+    "venue_age_source": null,
+    "trade_venue_age_s": null,
+    "max_data_age_s": 2.0,
+    "max_venue_age_s": 1.0,
+    "max_venue_age_status": "PROVISIONAL_THRESHOLD: calibrate from the measured venue_age distribution",
+    "venue_clock_offset_ms": 0.0,
+    "venue_clock_offset_status": "not measured: venue_age includes the host-venue offset",
+    "transitions": 1,
+    "last_change_ms": 1791263740299,
+    "stale_receive_episodes": 0,
+    "stale_venue_episodes": 0
+   },
+   "latency": {
+    "depth_receive_minus_event_ms": {
+     "count": 2,
+     "window": 2,
+     "last_ms": 128.0,
+     "ema_ms": 128.0,
+     "min_ms": 128.0,
+     "max_ms": 128.0,
+     "p50_ms": 128.0,
+     "p95_ms": 128.0,
+     "p99_ms": 128.0
+    },
+    "trade_receive_minus_event_ms": {
+     "count": 0,
+     "window": 0,
+     "last_ms": null,
+     "ema_ms": null,
+     "min_ms": null,
+     "max_ms": null,
+     "p50_ms": null,
+     "p95_ms": null,
+     "p99_ms": null
+    },
+    "book_ticker": "no venue event time on Spot bookTicker: not measured, not invented",
+    "ticker_lead_updates_at_batch_arrival": {
+     "count": 0,
+     "window": 0,
+     "last_ms": null,
+     "ema_ms": null,
+     "min_ms": null,
+     "max_ms": null,
+     "p50_ms": null,
+     "p95_ms": null,
+     "p99_ms": null
+    },
+    "ticker_lead_ms_at_batch_arrival": {
+     "count": 0,
+     "window": 0,
+     "last_ms": null,
+     "ema_ms": null,
+     "min_ms": null,
+     "max_ms": null,
+     "p50_ms": null,
+     "p95_ms": null,
+     "p99_ms": null
+    },
+    "note": "receive minus event includes the host-venue clock offset; lead figures need no clock"
+   },
+   "data_age_s": 0.024,
+   "receive_age_s": 0.024,
+   "venue_age_s": null,
+   "max_data_age_s": 2.0,
+   "uptime_s": 1.3,
+   "book": {
+    "symbol": "BTC-USD",
+    "state": "synced",
+    "valid": true,
+    "update_id": 12657945,
+    "first_applied_update_id": null,
+    "last_snapshot_update_id": 12657945,
+    "last_invalid_reason": "",
+    "levels_bid": 700,
+    "levels_ask": 715,
+    "buffered": 0,
+    "best_bid": [
+     85688.0,
+     4.87096
+    ],
+    "best_ask": [
+     85688.01,
+     27.51548
+    ],
+    "mid": 85688.005,
+    "spread": 0.00999999999476131,
+    "spread_bps": 0.0012,
+    "microprice_1": 85688.00150401218,
+    "microprice_5": 85688.00138611346,
+    "imbalance": {
+     "1": -0.6991975654008282,
+     "5": -0.7227773076027534,
+     "10": -0.7153284449051532,
+     "20": -0.6511732501442826
+    },
+    "depth": {
+     "1": [
+      4.87096,
+      27.51548
+     ],
+     "5": [
+      4.97079,
+      30.890559999999997
+     ],
+     "10": [
+      5.136799999999999,
+      30.952509999999997
+     ],
+     "20": [
+      9.722029999999998,
+      46.01927999999999
+     ]
+    },
+    "weighted_mid_5": 85688.00956203546,
+    "concentration_10": [
+     0.9482479364584957,
+     0.888957955267602
+    ],
+    "bids": [
+     [
+      85688.0,
+      4.87096
+     ]
+    ],
+    "asks": [
+     [
+      85688.01,
+      27.51548
+     ]
+    ],
+    "metrics": {
+     "updates_applied": 0,
+     "updates_ignored_old": 2,
+     "updates_buffered": 2,
+     "gaps": 0,
+     "rebuilds": 1,
+     "snapshots_rejected_stale": 0,
+     "crossed_books": 0,
+     "invalidations": 0,
+     "max_buffer": 2
+    },
+    "last_event_time_ms": 0,
+    "last_received_at_ms": 1791263740298
+   },
+   "stream": {
+    "connected": true,
+    "connections": 1,
+    "disconnects": 0,
+    "connect_failures": 0,
+    "reconnects": 0,
+    "current_connection_s": 0.5,
+    "longest_connection_s": 0.5,
+    "messages": 2,
+    "depth_events": 2,
+    "trade_events": 0,
+    "book_ticker_events": 0,
+    "parse_errors": 0,
+    "dropped_events": 0,
+    "last_error": "",
+    "last_message_age_s": 0.052,
+    "url": "wss://stream.testnet.binance.vision/stream?streams=btcusdt@depth@100ms/btcusdt@trade/btcusdt@bookTicker",
+    "latency_depth_ms": {
+     "count": 2,
+     "window": 2,
+     "last_ms": 128.0,
+     "ema_ms": 128.0,
+     "min_ms": 128.0,
+     "max_ms": 128.0,
+     "p50_ms": 128.0,
+     "p95_ms": 128.0,
+     "p99_ms": 128.0
+    },
+    "latency_trade_ms": {
+     "count": 0,
+     "window": 0,
+     "last_ms": null,
+     "ema_ms": null,
+     "min_ms": null,
+     "max_ms": null,
+     "p50_ms": null,
+     "p95_ms": null,
+     "p99_ms": null
+    },
+    "venue_trade_to_event_ms": {
+     "count": 0,
+     "window": 0,
+     "last_ms": null,
+     "ema_ms": null,
+     "min_ms": null,
+     "max_ms": null,
+     "p50_ms": null,
+     "p95_ms": null,
+     "p99_ms": null
+    }
+   },
+   "sync": {
+    "resyncs": 1,
+    "snapshots_fetched": 1,
+    "resync_failures": 0,
+    "last_resync_error": "",
+    "last_snapshot_update_id": 12657945,
+    "checkpoints_written": 0,
+    "handovers": 0,
+    "last_handover_age_ms": null
+   },
+   "integrity": {
+    "stale_episodes": 0,
+    "max_silence_ms": 0,
+    "hold_active": false,
+    "held_events": 0
+   },
+   "processing_us": {
+    "count": 2,
+    "window": 2,
+    "last_ms": 44.35,
+    "ema_ms": 48.62,
+    "min_ms": 44.35,
+    "max_ms": 48.84,
+    "p50_ms": 44.35,
+    "p95_ms": 48.84,
+    "p99_ms": 48.84
+   },
+   "trades": {
+    "events": 0,
+    "last": null
+   },
+   "recorder": null,
+   "quoting": "disabled \u2014 phase 2 is market data only"
+  },
+  "clock": {
+   "at_start": {
+    "method": "GET /api/v3/time, NTP-style midpoint: offset = serverTime - (host_before + host_after)/2; sign positive when the venue reads ahead",
+    "n": 7,
+    "offset_ms": 0.0,
+    "offset_at_min_rtt_ms": -0.5,
+    "error_bound_ms": 115.5,
+    "min_rtt_ms": 231,
+    "rtt_p50_ms": 234.0,
+    "samples": [
+     {
+      "host_before_ms": 1791263740325,
+      "server_time_ms": 1791263740440,
+      "host_after_ms": 1791263740556,
+      "offset_ms": -0.5,
+      "rtt_ms": 231
+     },
+     {
+      "host_before_ms": 1791263740556,
+      "server_time_ms": 1791263740673,
+      "host_after_ms": 1791263740790,
+      "offset_ms": 0.0,
+      "rtt_ms": 234
+     },
+     {
+      "host_before_ms": 1791263740790,
+      "server_time_ms": 1791263740908,
+      "host_after_ms": 1791263741024,
+      "offset_ms": 1.0,
+      "rtt_ms": 234
+     },
+     {
+      "host_before_ms": 1791263741024,
+      "server_time_ms": 1791263741142,
+      "host_after_ms": 1791263741259,
+      "offset_ms": 0.5,
+      "rtt_ms": 235
+     },
+     {
+      "host_before_ms": 1791263741259,
+      "server_time_ms": 1791263741376,
+      "host_after_ms": 1791263741493,
+      "offset_ms": 0.0,
+      "rtt_ms": 234
+     },
+     {
+      "host_before_ms": 1791263741493,
+      "server_time_ms": 1791263741610,
+      "host_after_ms": 1791263741727,
+      "offset_ms": 0.0,
+      "rtt_ms": 234
+     },
+     {
+      "host_before_ms": 1791263741727,
+      "server_time_ms": 1791263741844,
+      "host_after_ms": 1791263741960,
+      "offset_ms": 0.5,
+      "rtt_ms": 233
+     }
+    ],
+    "applied": false,
+    "note": "not fed to the market data service nor to any rule: venue_age keeps including the offset, as before"
+   },
+   "at_end": {
+    "method": "GET /api/v3/time, NTP-style midpoint: offset = serverTime - (host_before + host_after)/2; sign positive when the venue reads ahead",
+    "n": 7,
+    "offset_ms": 0.0,
+    "offset_at_min_rtt_ms": -0.5,
+    "error_bound_ms": 115.5,
+    "min_rtt_ms": 231,
+    "rtt_p50_ms": 232.0,
+    "samples": [
+     {
+      "host_before_ms": 1791263741963,
+      "server_time_ms": 1791263742081,
+      "host_after_ms": 1791263742198,
+      "offset_ms": 0.5,
+      "rtt_ms": 235
+     },
+     {
+      "host_before_ms": 1791263742198,
+      "server_time_ms": 1791263742314,
+      "host_after_ms": 1791263742430,
+      "offset_ms": 0.0,
+      "rtt_ms": 232
+     },
+     {
+      "host_before_ms": 1791263742430,
+      "server_time_ms": 1791263742545,
+      "host_after_ms": 1791263742662,
+      "offset_ms": -1.0,
+      "rtt_ms": 232
+     },
+     {
+      "host_before_ms": 1791263742662,
+      "server_time_ms": 1791263742777,
+      "host_after_ms": 1791263742893,
+      "offset_ms": -0.5,
+      "rtt_ms": 231
+     },
+     {
+      "host_before_ms": 1791263742893,
+      "server_time_ms": 1791263743009,
+      "host_after_ms": 1791263743125,
+      "offset_ms": 0.0,
+      "rtt_ms": 232
+     },
+     {
+      "host_before_ms": 1791263743125,
+      "server_time_ms": 1791263743241,
+      "host_after_ms": 1791263743357,
+      "offset_ms": 0.0,
+      "rtt_ms": 232
+     },
+     {
+      "host_before_ms": 1791263743357,
+      "server_time_ms": 1791263743474,
+      "host_after_ms": 1791263743590,
+      "offset_ms": 0.5,
+      "rtt_ms": 233
+     }
+    ],
+    "applied": false,
+    "note": "not fed to the market data service nor to any rule: venue_age keeps including the offset, as before"
+   }
+  },
+  "event_loop": {
+   "samples": 29,
+   "p50_ms": 0.6,
+   "p99_ms": 4.6,
+   "max_ms": 4.6,
+   "stall_threshold_ms": 200.0,
+   "stall_count": 0,
+   "stalls": [],
+   "note": "lag of this process's event loop measured by a 100 ms sleeper: the service, the adapter worker and the streams share it; a stall here delays every one of them"
+  },
+  "market_at_end": {
+   "symbol": "BTC-USD",
+   "usable": false,
+   "not_usable_reason": "venue data 1.4s old at the venue, over 1.0s (PROVISIONAL threshold); received 1.2s ago",
+   "freshness": {
+    "state": "stale_venue",
+    "reason": "venue data 1.4s old at the venue, over 1.0s (PROVISIONAL threshold); received 1.2s ago",
+    "receive_age_s": 1.229,
+    "venue_age_s": 1.357,
+    "venue_age_source": "depth E of the last applied batch",
+    "trade_venue_age_s": null,
+    "max_data_age_s": 2.0,
+    "max_venue_age_s": 1.0,
+    "max_venue_age_status": "PROVISIONAL_THRESHOLD: calibrate from the measured venue_age distribution",
+    "venue_clock_offset_ms": 0.0,
+    "venue_clock_offset_status": "not measured: venue_age includes the host-venue offset",
+    "transitions": 1,
+    "last_change_ms": 1791263740299,
+    "stale_receive_episodes": 0,
+    "stale_venue_episodes": 0
+   },
+   "latency": {
+    "depth_receive_minus_event_ms": {
+     "count": 3,
+     "window": 3,
+     "last_ms": 128.0,
+     "ema_ms": 128.0,
+     "min_ms": 128.0,
+     "max_ms": 128.0,
+     "p50_ms": 128.0,
+     "p95_ms": 128.0,
+     "p99_ms": 128.0
+    },
+    "trade_receive_minus_event_ms": {
+     "count": 0,
+     "window": 0,
+     "last_ms": null,
+     "ema_ms": null,
+     "min_ms": null,
+     "max_ms": null,
+     "p50_ms": null,
+     "p95_ms": null,
+     "p99_ms": null
+    },
+    "book_ticker": "no venue event time on Spot bookTicker: not measured, not invented",
+    "ticker_lead_updates_at_batch_arrival": {
+     "count": 0,
+     "window": 0,
+     "last_ms": null,
+     "ema_ms": null,
+     "min_ms": null,
+     "max_ms": null,
+     "p50_ms": null,
+     "p95_ms": null,
+     "p99_ms": null
+    },
+    "ticker_lead_ms_at_batch_arrival": {
+     "count": 0,
+     "window": 0,
+     "last_ms": null,
+     "ema_ms": null,
+     "min_ms": null,
+     "max_ms": null,
+     "p50_ms": null,
+     "p95_ms": null,
+     "p99_ms": null
+    },
+    "note": "receive minus event includes the host-venue clock offset; lead figures need no clock"
+   },
+   "data_age_s": 1.229,
+   "receive_age_s": 1.229,
+   "venue_age_s": 1.357,
+   "max_data_age_s": 2.0,
+   "uptime_s": 2.9,
+   "book": {
+    "symbol": "BTC-USD",
+    "state": "synced",
+    "valid": true,
+    "update_id": 12657961,
+    "first_applied_update_id": 12657946,
+    "last_snapshot_update_id": 12657945,
+    "last_invalid_reason": "",
+    "levels_bid": 692,
+    "levels_ask": 707,
+    "buffered": 0,
+    "best_bid": [
+     85688.0,
+     4.87096
+    ],
+    "best_ask": [
+     85688.01,
+     27.51548
+    ],
+    "mid": 85688.005,
+    "spread": 0.00999999999476131,
+    "spread_bps": 0.0012,
+    "microprice_1": 85688.00150401218,
+    "microprice_5": 85688.00138611346,
+    "imbalance": {
+     "1": -0.6991975654008282,
+     "5": -0.7227773076027534,
+     "10": -0.7153284449051532,
+     "20": -0.6511732501442826
+    },
+    "depth": {
+     "1": [
+      4.87096,
+      27.51548
+     ],
+     "5": [
+      4.97079,
+      30.890559999999997
+     ],
+     "10": [
+      5.136799999999999,
+      30.952509999999997
+     ],
+     "20": [
+      9.722029999999998,
+      46.01927999999999
+     ]
+    },
+    "weighted_mid_5": 85688.00956203546,
+    "concentration_10": [
+     0.9482479364584957,
+     0.888957955267602
+    ],
+    "bids": [
+     [
+      85688.0,
+      4.87096
+     ]
+    ],
+    "asks": [
+     [
+      85688.01,
+      27.51548
+     ]
+    ],
+    "metrics": {
+     "updates_applied": 1,
+     "updates_ignored_old": 2,
+     "updates_buffered": 2,
+     "gaps": 0,
+     "rebuilds": 1,
+     "snapshots_rejected_stale": 0,
+     "crossed_books": 0,
+     "invalidations": 0,
+     "max_buffer": 2
+    },
+    "last_event_time_ms": 1791263740603,
+    "last_received_at_ms": 1791263740731
+   },
+   "stream": {
+    "connected": true,
+    "connections": 1,
+    "disconnects": 0,
+    "connect_failures": 0,
+    "reconnects": 0,
+    "current_connection_s": 2.1,
+    "longest_connection_s": 2.1,
+    "messages": 3,
+    "depth_events": 3,
+    "trade_events": 0,
+    "book_ticker_events": 0,
+    "parse_errors": 0,
+    "dropped_events": 0,
+    "last_error": "",
+    "last_message_age_s": 1.232,
+    "url": "wss://stream.testnet.binance.vision/stream?streams=btcusdt@depth@100ms/btcusdt@trade/btcusdt@bookTicker",
+    "latency_depth_ms": {
+     "count": 3,
+     "window": 3,
+     "last_ms": 128.0,
+     "ema_ms": 128.0,
+     "min_ms": 128.0,
+     "max_ms": 128.0,
+     "p50_ms": 128.0,
+     "p95_ms": 128.0,
+     "p99_ms": 128.0
+    },
+    "latency_trade_ms": {
+     "count": 0,
+     "window": 0,
+     "last_ms": null,
+     "ema_ms": null,
+     "min_ms": null,
+     "max_ms": null,
+     "p50_ms": null,
+     "p95_ms": null,
+     "p99_ms": null
+    },
+    "venue_trade_to_event_ms": {
+     "count": 0,
+     "window": 0,
+     "last_ms": null,
+     "ema_ms": null,
+     "min_ms": null,
+     "max_ms": null,
+     "p50_ms": null,
+     "p95_ms": null,
+     "p99_ms": null
+    }
+   },
+   "sync": {
+    "resyncs": 1,
+    "snapshots_fetched": 1,
+    "resync_failures": 0,
+    "last_resync_error": "",
+    "last_snapshot_update_id": 12657945,
+    "checkpoints_written": 0,
+    "handovers": 0,
+    "last_handover_age_ms": null
+   },
+   "integrity": {
+    "stale_episodes": 0,
+    "max_silence_ms": 433,
+    "hold_active": false,
+    "held_events": 0
+   },
+   "processing_us": {
+    "count": 3,
+    "window": 3,
+    "last_ms": 119.85,
+    "ema_ms": 52.18,
+    "min_ms": 44.35,
+    "max_ms": 119.85,
+    "p50_ms": 48.84,
+    "p95_ms": 119.85,
+    "p99_ms": 119.85
+   },
+   "trades": {
+    "events": 0,
+    "last": null
+   },
+   "recorder": null,
+   "quoting": "disabled \u2014 phase 2 is market data only"
+  }
+ },
+ "latency_ms": {},
+ "journal_tail": [],
+ "first_run_status_before_death": null,
+ "fill_evidence_kind": null
+}

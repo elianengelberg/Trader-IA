@@ -789,12 +789,8 @@ class ServiceValidation:
             await self.build()
             assert self.market is not None and self.service is not None
             self.lag.start()
-            ev.command(f"MarketDataService.start()  [{args.stream_url}; snapshot GET {args.rest_url}/api/v3/depth]")
-            self.market.start()
-            await _wait_until(lambda: bool(self.market and self.market.usable), 60.0)
-            snap = self.market.snapshot(levels=1)
-            ev.responses["market_at_start"] = {k: snap.get(k) for k in ("usable", "not_usable_reason", "freshness")}
-            ev.responses["market_at_start_full"] = snap
+            # The venue's clock against the host's, measured before anything time-sensitive runs
+            # (seven REST round trips, about 1.6 s on Testnet): evidence only, applied nowhere.
             ev.command("GET /api/v3/time x7  [host wall clock before/after each: venue clock offset estimate]")
             clock_start = await _measure_clock_offset(self.public) if self.public is not None else {"n": 0, "error": "no public client"}
             ev.responses["clock"] = {"at_start": clock_start}
@@ -802,8 +798,19 @@ class ServiceValidation:
                 ev.mark("S0b.venue_clock_offset_measured", "PASS", f"venue - host offset {clock_start['offset_ms']:+.1f} ms (+/- {clock_start['error_bound_ms']:.1f} ms, min RTT {clock_start['min_rtt_ms']} ms, n={clock_start['n']}); not applied anywhere")
             else:
                 ev.mark("S0b.venue_clock_offset_measured", "NOT TESTED", f"could not read the venue's time: {clock_start.get('error')}")
-            ev.mark("S1.testnet_market_data_usable", "PASS" if self.market.usable else "FAIL", f"usable={self.market.usable} {snap.get('not_usable_reason') or ''}".strip())
-            if not self.market.usable:
+            ev.command(f"MarketDataService.start()  [{args.stream_url}; snapshot GET {args.rest_url}/api/v3/depth]")
+            self.market.start()
+            await _wait_until(lambda: bool(self.market and self.market.usable), 60.0)
+            # S1 is judged on the picture taken the instant the wait returned: Testnet's feed goes
+            # stale for seconds at a time, and anything awaited between the wait and the judgement
+            # (the 2026-10-06 05:09Z run lost 1.6 s to the clock measurement here) turns a
+            # precondition into a coin toss.
+            snap = self.market.snapshot(levels=1)
+            ev.responses["market_at_start"] = {k: snap.get(k) for k in ("usable", "not_usable_reason", "freshness")}
+            ev.responses["market_at_start_full"] = snap
+            usable_at_wait = bool(snap.get("usable"))
+            ev.mark("S1.testnet_market_data_usable", "PASS" if usable_at_wait else "FAIL", f"usable={usable_at_wait} {snap.get('not_usable_reason') or ''}".strip())
+            if not usable_at_wait:
                 raise RuntimeError("Testnet market data never became usable; the engine would not quote")
 
             ev.command("service.start_live()  [check_grid, worker, account stream, initial reconciliation, ledger seed, subscribe]")

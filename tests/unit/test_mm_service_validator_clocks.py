@@ -82,3 +82,20 @@ def test_a_wall_clock_step_between_enqueue_and_ack_shows_as_drift(harness) -> No
     order = _LiveLike(t_ack=12_566, venue_ack=12_300, fills=[_Fill(t_ms=12_492, received_at_ms=12_619)], mono_span=584.0)  # wall span 1584 ms, monotonic 584 ms
     [row] = harness._order_lifecycle([order])["rows"]
     assert row["host_wall_vs_mono_drift_ms"] == 1_000.0
+
+
+def test_the_clock_measurement_runs_before_the_market_starts_and_s1_is_judged_on_the_picture_at_the_wait(harness) -> None:  # type: ignore[no-untyped-def]
+    """The 2026-10-06 05:09Z run: S1 re-read market.usable 1.6 s after the wait, past the
+    clock measurement, and Testnet's feed had gone stale in between. The measurement now
+    precedes market.start(); between the wait and the S1 judgement nothing is awaited and
+    the judgement reads the snapshot taken at the wait."""
+    import inspect
+
+    source = inspect.getsource(harness.ServiceValidation.run)
+    assert source.index("_measure_clock_offset(self.public)") < source.index("self.market.start()")
+    wait = source.index("await _wait_until(lambda: bool(self.market and self.market.usable)")
+    judged = source.index('ev.mark("S1.testnet_market_data_usable"')
+    between = source[wait + len("await _wait_until"):judged]
+    code = "\n".join(line for line in between.splitlines() if not line.strip().startswith("#"))  # comments may say "awaited"
+    assert "await" not in code, code
+    assert 'usable_at_wait = bool(snap.get("usable"))' in between

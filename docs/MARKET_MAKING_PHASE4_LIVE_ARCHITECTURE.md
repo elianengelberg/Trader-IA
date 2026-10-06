@@ -1041,6 +1041,16 @@ real de −74 ms → host 53 ms y venue 192 ms; compatibilidad con objetos sin l
 monotónico). Diff: ninguna línea eliminada en spread, fair value, toxicidad, inventario, riesgo, autorización,
 quoting, costos, tracker, kill switch, gate ni ledgers.
 
+**Regresión del harness detectada en la primera corrida con esta instrumentación (2026-10-06 05:09Z,
+evidencia `mm_service_testnet_0fc5763_20261006T050913Z.json`, commit `9dfa167`): S1 FAIL, corrida abortada
+antes de cotizar.** La medición del offset de reloj (siete REST, 1635 ms) se había insertado entre la espera
+de "market data usable" y el juicio de S1, que releía `market.usable` después. `market_at_start` muestra
+`usable=True` con 24 ms de edad en el instante de la espera; 1.6 s después el feed de Testnet estaba stale y S1
+falló. Causa: orden de operaciones en el harness, no el feed ni la economía. Corrección: la medición del offset
+va antes de `market.start()`, y S1 se juzga con el snapshot tomado en el instante de la espera, sin ningún
+`await` entre medio; test de regresión sobre el orden del código. La evidencia fallida se conserva tal cual.
+El offset medido en esa corrida: venue − host **+0.0 ms ± 115.5 ms** (RTT mínimo 231 ms, n=7).
+
 ## 11. Modelo de estados de seguridad del maker live
 
 El kill switch del maker (`tia/mm/kill_switch.py`) alimenta el `system_unsafe` del gate global;

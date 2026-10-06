@@ -38,15 +38,20 @@ def _horizons(t_fill: int, price: float, qty: float, side: str, mids: dict[int, 
     return rows
 
 
-def _row(fill_id: str, side: str, price: float, qty: float, t_fill: int, mids: dict[int, tuple[int, float] | None], *, shadow: bool = False, registered: int | None = None) -> dict[str, Any]:
+def _row(fill_id: str, side: str, price: float, qty: float, t_fill: int, mids: dict[int, tuple[int, float] | None], *, shadow: bool = False, registered: int | None = None, reg_seq: int | None = None, mark_seqs: dict[int, int] | None = None) -> dict[str, Any]:
     horizons = _horizons(t_fill, price, qty, side, mids)
     for h in horizons:
         late = max(0, registered - h["target_t_ms"]) if registered is not None else None
         h["late_by_ms"] = late
         h["measured_late"] = bool(h["measured"] and late is not None and late > 0)
         h["effective_horizon_ms"] = (h["mark_t_ms"] - t_fill) if h["measured"] else None
+        if mark_seqs is not None:
+            h["mark_seq"] = mark_seqs.get(h["horizon_ms"]) if h["measured"] else None
     measured = all(h["measured"] for h in horizons)
-    return {"fill_id": fill_id, "shadow": shadow, "side": side, "price": price, "quantity": qty, "notional_usd": price * qty, "t_fill_ms": t_fill, "t_registered_ms": registered, "registration_lag_ms": (registered - t_fill) if registered is not None else None, "mid_at_fill": price, "fill_to_mid_bps": 0.0, "buckets": {}, "tolerance_ms": 1_000, "resolved": measured, "expired": not measured, "pending": False, "horizons": horizons}
+    row = {"fill_id": fill_id, "shadow": shadow, "side": side, "price": price, "quantity": qty, "notional_usd": price * qty, "t_fill_ms": t_fill, "t_registered_ms": registered, "registration_lag_ms": (registered - t_fill) if registered is not None else None, "mid_at_fill": price, "fill_to_mid_bps": 0.0, "buckets": {}, "tolerance_ms": 1_000, "resolved": measured, "expired": not measured, "pending": False, "horizons": horizons}
+    if reg_seq is not None:
+        row["mid_seq_at_registration"] = reg_seq
+    return row
 
 
 def _rows() -> list[dict[str, Any]]:
@@ -204,3 +209,119 @@ def test_the_summary_separates_on_time_from_late_and_reports_the_effective_horiz
     assert s100["effective_horizon_ms"]["min"] == 217 and s100["effective_horizon_ms"]["max"] == 233
     s250 = harness._markout_summary(rows)["250"]
     assert s250["measured_late"] == 0 and s250["measured_on_time"] == 2 and s250["effective_horizon_ms"]["min"] == 289 and s250["markout_bps_on_time"]["count"] == 2
+
+
+# ------------------------------------------------------------------ the 2026-10-06 60-minute run on 9bd4b17, as fixtures
+
+# Fills 2447364 (buy) and 2447492 (sell): 19 fills, every 100 ms horizon measured late (registration
+# lag 120-156 ms), 15,043 mid samples, 0 inversions — and exactly these two reconstruction problems.
+# In both, the series held a sample stamped at or after the target AND at or after the registration
+# stamp that the tracker had already consumed when the fill's confirmation was processed: the depth
+# update caused by the trade that filled us and that trade's execution report leave the venue together,
+# arrive on two connections and are stamped by two receive clocks; the market one was processed first,
+# so the tracker (rightly: nothing is back-filled) resolved the horizon with the NEXT sample, 63 and
+# 80 ms later. Stamps and mids are the run's, relative to t_fill; the registration is placed 130 ms
+# after t_fill (inside the observed band) and stamped in the same millisecond as the sample processed
+# just before it. Fill prices are illustrative (the run's are in its evidence file).
+RUN_60M = {
+    "2447364": ("buy", 85_290.0, 1_791_267_584_469 - 130, 85_298.775, (63, 85_289.455)),
+    "2447492": ("sell", 85_276.0, 1_791_267_741_150 - 130, 85_281.275, (80, 85_267.495)),
+}
+
+
+def _run60(fill_id: str, *, numbered: bool, registered_offset_ms: int = 130) -> tuple[dict[str, Any], list[list[Any]]]:
+    side, price, t_fill, mid_before, (gap, mid_used) = RUN_60M[fill_id]
+    rel = [(-200, mid_before), (50, mid_before), (130, mid_before), (130 + gap, mid_used), (260, mid_used), (510, mid_used), (1_010, mid_used), (2_010, mid_used), (5_010, mid_used)]
+    series = [[t_fill + dt, mid] + ([i + 1] if numbered else []) for i, (dt, mid) in enumerate(rel)]
+    marks = {100: (130 + gap, mid_used), 250: (260, mid_used), 500: (510, mid_used), 1_000: (1_010, mid_used), 2_000: (2_010, mid_used), 5_000: (5_010, mid_used)}
+    row = _row(fill_id, side, price, 0.0002, t_fill, {h: (t_fill + dt, m) for h, (dt, m) in marks.items()}, registered=t_fill + registered_offset_ms, reg_seq=3 if numbered else None, mark_seqs={100: 4, 250: 5, 500: 6, 1_000: 7, 2_000: 8, 5_000: 9} if numbered else None)
+    return row, series
+
+
+@pytest.mark.parametrize("fill_id", sorted(RUN_60M))
+def test_without_the_numbering_the_60_minute_runs_two_problems_are_reproduced_word_for_word(harness, fill_id) -> None:  # type: ignore[no-untyped-def]
+    row, series = _run60(fill_id, numbered=False)
+    _side, _price, t_fill, mid_before, (gap, mid_used) = RUN_60M[fill_id]
+    [problem] = harness._markout_consistency([row], series)
+    assert problem == f"{fill_id}@100: mid series says the first mid seen after registration with stamp >= target is ({t_fill + 130}, {mid_before}), row says ({t_fill + 130 + gap}, {mid_used})"
+    # a stamp one millisecond earlier (the fill clock behind the market clock) says the same
+    row_skew, _ = _run60(fill_id, numbered=False, registered_offset_ms=129)
+    assert len(harness._markout_consistency([row_skew], series)) == 1
+
+
+@pytest.mark.parametrize("fill_id", sorted(RUN_60M))
+def test_with_the_numbering_the_same_two_fills_are_consistent_at_every_horizon(harness, fill_id) -> None:  # type: ignore[no-untyped-def]
+    row, series = _run60(fill_id, numbered=True)
+    assert harness._markout_consistency([row], series) == []
+    assert {hz["horizon_ms"]: hz["measured_late"] for hz in row["horizons"]} == {100: True, 250: False, 500: False, 1_000: False, 2_000: False, 5_000: False}
+    assert harness._mid_series_inversions(series) == []
+    # the fill clock behind the market clock changes nothing: the placement is by number, not by stamp
+    row_skew, _ = _run60(fill_id, numbered=True, registered_offset_ms=121)
+    assert harness._markout_consistency([row_skew], series) == []
+
+
+def test_first_mid_seen_by_number_ignores_the_stamps_order_and_falls_back_to_stamps_without_numbering(harness) -> None:  # type: ignore[no-untyped-def]
+    series = [[T0 + 50, 1.0, 1], [T0 + 130, 1.1, 2], [T0 + 190, 1.2, 3], [T0 + 700, 1.3, 4]]
+    # registered after sample 2 (stamped 130), whatever the registration stamp says: 130 (tie), 125 (behind), 140 (ahead)
+    for after_ms in (T0 + 130, T0 + 125, T0 + 140):
+        assert harness._first_mid_seen(series, after_ms=after_ms, at_or_after_ms=T0 + 100, after_seq=2) == (T0 + 190, 1.2, 3)
+    assert harness._first_mid_seen(series, after_ms=T0 + 130, at_or_after_ms=T0 + 500, after_seq=2) == (T0 + 700, 1.3, 4)
+    assert harness._first_mid_seen(series, after_ms=T0 + 130, at_or_after_ms=T0 + 100, after_seq=4) is None  # nothing numbered after the last
+    # the stamp rule, on the same series, takes the tie as "after registration": the 60-minute run's two problems
+    assert harness._first_mid_seen(series, after_ms=T0 + 130, at_or_after_ms=T0 + 100) == (T0 + 130, 1.1)
+    # no numbering on the row (older evidence) or on the series: the stamp rule, unchanged
+    assert harness._first_mid_seen(series, after_ms=T0 + 130, at_or_after_ms=T0 + 100, after_seq=None) == (T0 + 130, 1.1)
+    unnumbered = [s[:2] for s in series]
+    assert harness._first_mid_seen(unnumbered, after_ms=T0 + 130, at_or_after_ms=T0 + 100, after_seq=2) == (T0 + 130, 1.1)
+    mixed = [series[0], series[1][:2], series[2], series[3]]
+    assert not harness._numbered(mixed) and harness._numbered(series) and not harness._numbered([])
+
+
+def test_the_sequence_fields_are_checked_against_each_other(harness) -> None:  # type: ignore[no-untyped-def]
+    row, series = _run60("2447364", numbered=True)
+    good = harness._markout_consistency([row], series)
+    assert good == []
+    # the mark numbered at or before the registration: impossible for the tracker
+    bad = _run60("2447364", numbered=True)[0]
+    bad["horizons"][0]["mark_seq"] = 3
+    problems = harness._markout_consistency([bad], series)
+    assert any("mark_seq 3 not after mid_seq_at_registration 3" in p for p in problems) and any("mid series says the first mid numbered after registration (mid_seq > 3)" in p for p in problems)
+    # horizons resolving out of order
+    bad = _run60("2447364", numbered=True)[0]
+    bad["horizons"][1]["mark_seq"], bad["horizons"][2]["mark_seq"] = 6, 5
+    problems = harness._markout_consistency([bad], series)
+    assert any("@500: mark_seq 5 before the previous horizon's 6" in p for p in problems)
+    # a row without numbering against a numbered series: judged by stamps, as before
+    plain, _ = _run60("2447364", numbered=False)
+    assert len(harness._markout_consistency([plain], series)) == 1 and "first mid seen after registration with stamp" in harness._markout_consistency([plain], series)[0]
+
+
+def test_tracker_and_exporter_cannot_disagree_wherever_the_registration_lands_and_whatever_it_is_stamped(harness) -> None:  # type: ignore[no-untyped-def]
+    """The real tracker over one series, the fill registered at every processing position and
+    stamped before, in the same millisecond as, or after its neighbours: the numbered series
+    reproduces every measured horizon (resolved, late or expired rows alike), and the stamp rule
+    alone would have disagreed somewhere."""
+    from tia.mm.adverse_selection import FillObservation, MarkoutTracker
+
+    offsets = (-300, -120, 40, 95, 100, 130, 131, 180, 240, 250, 300, 480, 500, 505, 700, 990, 1_000, 1_001, 1_400, 1_990, 2_000, 2_300, 3_100, 4_000, 4_990, 5_000, 5_002, 5_600)
+    stamps = [T0 + d for d in offsets]
+    rows_checked = stamp_rule_disagreements = 0
+    for k in range(1, len(stamps)):  # registered just before sample k is processed
+        for t_reg in (stamps[k - 1] - 1, stamps[k - 1], stamps[k], stamps[k] + 1):
+            tracker = MarkoutTracker()
+            series: list[list[Any]] = []
+            for i, t in enumerate(stamps):
+                if i == k:
+                    tracker.register(FillObservation("f", T0, "buy", 100.0, 1.0, 100.0), t_registered_ms=t_reg)
+                tracker.on_mid(t, 100.0 + 0.01 * i)
+                series.append([t, 100.0 + 0.01 * i, tracker.mids_seen])
+            rows = tracker.raw_rows()
+            assert len(rows) == 1 and rows[0]["mid_seq_at_registration"] == k
+            assert harness._markout_consistency(rows, series) == [], (k, t_reg)
+            rows_checked += 1
+            h100 = rows[0]["horizons"][0]
+            if h100["measured"]:
+                by_stamp = harness._first_mid_seen([s[:2] for s in series], after_ms=t_reg, at_or_after_ms=T0 + 100)
+                stamp_rule_disagreements += int(by_stamp is None or by_stamp[0] != h100["mark_t_ms"])
+    assert rows_checked == 4 * (len(stamps) - 1) and stamp_rule_disagreements > 0
+

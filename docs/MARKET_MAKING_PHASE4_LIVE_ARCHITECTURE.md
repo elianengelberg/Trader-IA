@@ -1051,6 +1051,76 @@ va antes de `market.start()`, y S1 se juzga con el snapshot tomado en el instant
 `await` entre medio; test de regresión sobre el orden del código. La evidencia fallida se conserva tal cual.
 El offset medido en esa corrida: venue − host **+0.0 ms ± 115.5 ms** (RTT mínimo 231 ms, n=7).
 
+### 10.18 S8e en la corrida de 60 minutos sobre `9bd4b17`: dos reconstrucciones a 100 ms, la causa y la numeración de mids (evidencia, sin cambio económico)
+
+**Resultado observado (2026-10-06, 60 min, overrides EXPERIMENTALES).** 19 fills; los seis horizontes medidos en
+todos; 100 ms: 19/19 `measured_late` (lag de registro 120–156 ms, esperado); 250–5000 ms: 0 late; `mid_series`
+15 043 muestras, 0 inversiones. S8e FAIL por exactamente dos problemas de reconstrucción, ambos a 100 ms:
+
+| Fill | `mid_series` dice (primer mid con stamp ≥ target visto "después" del registro) | La fila del tracker dice | Diferencia |
+|---|---|---|---|
+| 2447364@100 | (1791267584469, 85298.775) | (1791267584532, 85289.455) | 63 ms, −1.09 bps |
+| 2447492@100 | (1791267741150, 85281.275) | (1791267741230, 85267.495) | 80 ms, −1.62 bps |
+
+**Flujo auditado, sello por sello.**
+
+| Instante | Quién lo produce | Reloj |
+|---|---|---|
+| `t_fill` | `report.transaction_time_ms` (`T` del executionReport) → `LiveFill.t_ms` → `FillObservation.t_fill_ms` | venue |
+| stamp de cada mid de `mid_series` | `MarketDataStream.on_message`: `received_at_ms = self._now_ms()` al leer el mensaje → `DepthUpdate.received_at_ms` → `MarketDataService._notify(kind, event, received)` → `engine.on_event(kind, event, t_ms)` → `mid_samples.append((t_ms, mid))` y `markouts.on_mid(t_ms, mid)`, en la misma línea y con el mismo valor | **`ReceiveClock`**: wall anclado una vez al monotónico al construir el stream (el harness lo construye sin `now_ms`; producción, `state.py`, igual) |
+| `t_registered_ms` | `BinanceUserDataStream.on_message`: `received_at_ms = self._now_ms()` → `absorb_execution_report(report, received_at_ms)` → `_book_fill(order, fill, t)` → `fill_sink(fill, t)` → `LiveMarketMakerService._on_live_fill` → `engine._on_fill(fill, t)` → `markouts.register(..., t_registered_ms=t)` | **wall** (`clock.timestamp_ms`, inyectado como `now_ms` por el harness y por `state.py`) |
+| `mark_t_ms`, `mid_at_mark` | `MarkoutTracker.on_mid`: el primer `on_mid` **después** de `register` (orden de procesamiento) con `t_ms ≥ t_fill + h` | el del mid (ReceiveClock) |
+
+Dentro de cada camino no hay `await` entre el sello y el procesamiento: ambos `on_message` son sincrónicos hasta el
+engine. El engine agrega el mid a `mid_samples` y se lo entrega al tracker con el mismo `(t_ms, mid)`: dentro de un
+evento no hay dos selecciones de mid. Lo que no existe es un orden común entre los dos caminos: el fill y el depth
+update que lo causa son el **mismo trade** en la venue, salen juntos, llegan por dos conexiones y cada uno recibe el
+sello de su propio reloj cuando su tarea lo lee. En los dos casos el evento de mercado se procesó primero (el tracker
+lo consumió con el fill todavía desconocido) y la confirmación del fill después; el tracker resolvió, correctamente
+(nada se rellena hacia atrás), con el mid **siguiente**, 63 y 80 ms más tarde. El harness, que ubicaba el registro
+por su sello (`processed ≥ t_registered` ⇒ "después del registro"), tomó el mid anterior porque su sello era ≥ el del
+registro: basta un empate al milisegundo con el mismo reloj (`callback_ms` p50 = 1 ms en la corrida anterior), y con
+dos relojes basta que el wall vaya unos ms detrás del `ReceiveClock`. Los dos casos se reprodujeron con el
+`MarkoutTracker` real y el `_first_mid_seen` real bajo ambas mecánicas (empate y desfase de 9 ms), con el texto exacto
+del problema. Cuál de las dos ocurrió en la corrida lo dice `t_registered_ms` de la evidencia (igual al sello del mid
+anterior: empate; menor: desfase); la conclusión no cambia.
+
+**Causa raíz.** "Primer mid observado después del registro" es una afirmación sobre el **orden de procesamiento** del
+tracker. El exportador la reconstruía comparando **sellos de dos colas con dos relojes**, y dos sellos no pueden decir
+cuál de los dos eventos se procesó primero (ni siquiera con un solo reloj, a resolución de milisegundo). No es un bug
+del tracker ni un bug aislado del harness: es una propiedad que la evidencia no registraba.
+
+**Definición única adoptada.** El tracker numera los mids en el orden en que los ve (`mids_seen`, desde 1). Un fill
+registrado cuando se habían visto `n` mids lleva `mid_seq_at_registration = n` y sólo puede resolverse con mids
+numerados > n; cada horizonte resuelto lleva `mark_seq`, el número del mid que lo resolvió. El engine guarda en
+`mid_samples` **la misma muestra que acaba de consumir el tracker con el número que éste le dio**:
+`(t_ms, mid, mids_seen)`. Reconstrucción: *primer mid con `mid_seq > mid_seq_at_registration` y stamp ≥ target*.
+Ningún sello se compara entre colas; la regla del tracker no cambia en nada (sigue leyendo stamps para los
+horizontes y el orden para "después del registro"); sólo queda registrado lo que ya hacía. `HORIZON_RULE` lo dice.
+
+**Cambios (sólo evidencia).** `adverse_selection.py`: `Markout.mid_seq_at_registration`, `Markout.mark_seq`,
+`MarkoutTracker.mids_seen`, `register` y `on_mid` los rellenan, `raw()` los exporta; `as_dict()` (la fila del
+journal) intacto. `engine.py`: `mid_samples` guarda `(t, mid, seq)` después de entregar el mid al tracker.
+Harness: `_first_mid_seen(..., after_seq=)` usa la numeración cuando fila y serie la traen y mantiene la regla por
+sellos para evidencia anterior (las fixtures de `5ac604e` siguen pasando sin cambios); `_markout_consistency` exige
+además `mark_seq > mid_seq_at_registration` y `mark_seq` no decreciente entre horizontes; `responses.mid_series`
+exporta `[t, mid, seq]` y declara la regla. Ninguna tolerancia se amplió.
+
+**Tests.** `tests/unit/mm/test_markout_raw_export.py`: numeración en orden visto, fill que recuerda cuántos había
+visto, horizonte no medido sin `mark_seq`, **los dos fills de la corrida** (stamps y mids reales, empate y desfase de
+9 ms: por número la serie reproduce la marca, por sellos no), la serie del engine numerada 1..N y cada marca
+apuntando a su muestra, hashes dorados intactos. `tests/unit/test_mm_service_validator_markouts.py`: los dos
+problemas reproducidos **palabra por palabra** sin numeración y consistentes con ella, `_first_mid_seen` por número
+(empate, atraso, adelanto, sin numeración, serie mixta), campos de secuencia verificados entre sí, y la prueba
+genérica: el `MarkoutTracker` real con el registro en **cada** posición de procesamiento y sellado antes, igual o
+después de sus vecinos (108 combinaciones; filas resueltas, tardías y expiradas): la serie numerada reproduce todos
+los horizontes medidos y la regla por sellos sola discrepa en alguna.
+
+**Qué sigue siendo verdad de la corrida de 60 minutos.** Los 19 fills y sus 114 horizontes medidos son correctos tal
+como los midió el tracker; los dos problemas eran de **reconstrucción**, no de medición: la evidencia de `9bd4b17`
+no trae la numeración y su S8e no puede recalcularse a PASS desde los sellos sin suponer el orden. Si hace falta un
+S8e PASS con la regla definitiva, hace falta una corrida con esta instrumentación; esa decisión queda abierta.
+
 ## 11. Modelo de estados de seguridad del maker live
 
 El kill switch del maker (`tia/mm/kill_switch.py`) alimenta el `system_unsafe` del gate global;

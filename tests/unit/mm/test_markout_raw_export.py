@@ -37,8 +37,9 @@ def test_raw_rows_carry_every_horizon_with_its_mark_delay_mid_and_values() -> No
     by_h = {hz["horizon_ms"]: hz for hz in row["horizons"]}
     assert tuple(by_h) == HORIZONS_MS
     # 100 ms: the first mid at or after T0+100 is the one at T0+300 (the +50 one is too early)
-    assert by_h[100] == {"horizon_ms": 100, "target_t_ms": T0 + 100, "mark_t_ms": T0 + 300, "delay_ms": 200, "mid_at_mark": 100.2, "markout_bps": pytest.approx(20.0), "markout_usd": pytest.approx(0.4), "measured": True, "late_by_ms": None, "measured_late": False, "effective_horizon_ms": 300}
+    assert by_h[100] == {"horizon_ms": 100, "target_t_ms": T0 + 100, "mark_t_ms": T0 + 300, "mark_seq": 2, "delay_ms": 200, "mid_at_mark": 100.2, "markout_bps": pytest.approx(20.0), "markout_usd": pytest.approx(0.4), "measured": True, "late_by_ms": None, "measured_late": False, "effective_horizon_ms": 300}
     assert row["t_registered_ms"] is None and row["registration_lag_ms"] is None  # registered without a clock: unknown, never guessed
+    assert row["mid_seq_at_registration"] == 0 and [hz["mark_seq"] for hz in row["horizons"]] == [2, 2, 3, 4, 5, 6]  # registered before any mid; the second mid resolved 100 and 250
     assert by_h[250]["mark_t_ms"] == T0 + 300 and by_h[250]["delay_ms"] == 50
     assert by_h[500]["mark_t_ms"] == T0 + 600 and by_h[500]["markout_bps"] == pytest.approx(30.0)
     assert by_h[1_000]["mark_t_ms"] == T0 + 1_100 and by_h[1_000]["markout_bps"] == pytest.approx(-10.0) and by_h[1_000]["markout_usd"] == pytest.approx(-0.2)
@@ -68,7 +69,7 @@ def test_a_data_gap_leaves_the_horizon_unmeasured_and_keeps_the_fill_as_unresolv
     assert row["expired"] and not row["resolved"] and not row["pending"]
     by_h = {hz["horizon_ms"]: hz for hz in row["horizons"]}
     assert by_h[100]["measured"] and by_h[250]["measured"]
-    assert not by_h[500]["measured"] and by_h[500] == {"horizon_ms": 500, "target_t_ms": T0 + 500, "mark_t_ms": None, "delay_ms": None, "mid_at_mark": None, "markout_bps": None, "markout_usd": None, "measured": False, "late_by_ms": None, "measured_late": False, "effective_horizon_ms": None}
+    assert not by_h[500]["measured"] and by_h[500] == {"horizon_ms": 500, "target_t_ms": T0 + 500, "mark_t_ms": None, "mark_seq": None, "delay_ms": None, "mid_at_mark": None, "markout_bps": None, "markout_usd": None, "measured": False, "late_by_ms": None, "measured_late": False, "effective_horizon_ms": None}
     assert not by_h[5_000]["measured"]
 
 
@@ -170,17 +171,105 @@ def test_the_fill_record_has_the_context_and_the_mid_series_reproduces_every_mar
     [row] = engine.markouts.raw_rows()
     mids = sorted(engine.mid_samples)
     assert mids == list(engine.mid_samples)  # recorded in time order
+    # Each sample carries the number the tracker gave it: consecutive from 1, in processing order.
+    assert [m[2] for m in engine.mid_samples] == list(range(1, len(engine.mid_samples) + 1)) and engine.markouts.mids_seen == len(engine.mid_samples)
     assert all(hz["measured"] for hz in row["horizons"])
     # The paper path registers the fill on the event that produced it: no registration lag,
     # nothing late, the effective horizon is the nominal one plus the series' own delay.
     assert row["t_registered_ms"] == row["t_fill_ms"] and row["registration_lag_ms"] == 0
     assert all(hz["late_by_ms"] == 0 and not hz["measured_late"] and hz["effective_horizon_ms"] == hz["horizon_ms"] + hz["delay_ms"] for hz in row["horizons"])
+    # The fill was registered on the event that produced it, before that event's mid was shown.
+    assert row["mid_seq_at_registration"] == sum(1 for m in mids if m[0] < row["t_registered_ms"])
     for hz in row["horizons"]:
-        first = next(m for m in mids if m[0] >= hz["target_t_ms"])
-        assert first[0] == hz["mark_t_ms"] and first[1] == hz["mid_at_mark"]
+        first = next(m for m in mids if m[2] > row["mid_seq_at_registration"] and m[0] >= hz["target_t_ms"])
+        assert first[0] == hz["mark_t_ms"] and first[1] == hz["mid_at_mark"] and first[2] == hz["mark_seq"]
+        assert first == next(m for m in mids if m[0] >= hz["target_t_ms"])  # one clock, in order: the stamp rule agrees here
         assert hz["markout_bps"] == pytest.approx((first[1] - row["price"]) / row["price"] * 1e4)
         assert hz["markout_usd"] == pytest.approx(hz["markout_bps"] / 1e4 * row["price"] * row["quantity"])
         assert 0 <= hz["delay_ms"] <= row["tolerance_ms"]
+
+
+# ------------------------------------------------------------------ the tracker numbers the mids it sees
+
+
+def _engine_like(tracker: MarkoutTracker, series: list[tuple[int, float, int]], t: int, mid: float) -> None:
+    """One market event as the engine does it: the tracker consumes the sample, the series
+    keeps that very sample with the number the tracker gave it."""
+    tracker.on_mid(t, mid)
+    series.append((t, mid, tracker.mids_seen))
+
+
+def test_mids_are_numbered_in_the_order_the_tracker_sees_them_and_a_fill_remembers_how_many_it_had_seen() -> None:
+    tracker = MarkoutTracker()
+    series: list[tuple[int, float, int]] = []
+    assert tracker.mids_seen == 0
+    _engine_like(tracker, series, T0 - 500, 100.0)
+    _engine_like(tracker, series, T0 - 200, 100.0)  # numbered even with nothing pending
+    tracker.register(_buy("n1", t=T0), t_registered_ms=T0 + 5)
+    for dt, mid in [(110, 100.1), (260, 100.2), (510, 100.3), (1_010, 100.4), (2_010, 100.5), (5_010, 100.6)]:
+        _engine_like(tracker, series, T0 + dt, mid)
+    assert [s[2] for s in series] == [1, 2, 3, 4, 5, 6, 7, 8]
+    [m] = tracker.resolved
+    assert m.mid_seq_at_registration == 2 and m.mark_seq == {100: 3, 250: 4, 500: 5, 1_000: 6, 2_000: 7, 5_000: 8}
+    [row] = tracker.raw_rows()
+    assert row["mid_seq_at_registration"] == 2 and [hz["mark_seq"] for hz in row["horizons"]] == [3, 4, 5, 6, 7, 8]
+    # the journal row is untouched: the numbering is evidence, like t_registered
+    assert "mark_seq" not in m.as_dict() and "mid_seq_at_registration" not in m.as_dict()
+    assert "mid_seq" in HORIZON_RULE and "mark_seq" in HORIZON_RULE
+
+
+def test_a_horizon_never_measured_has_no_mark_seq_and_a_shadow_is_numbered_like_any_fill() -> None:
+    tracker = MarkoutTracker()
+    series: list[tuple[int, float, int]] = []
+    _engine_like(tracker, series, T0 + 50, 100.0)
+    tracker.register(_buy("gap", t=T0), t_registered_ms=T0 + 60)
+    _engine_like(tracker, series, T0 + 120, 100.1)
+    _engine_like(tracker, series, T0 + 1_500, 100.2)  # a gap: 250 and 500 expire, 1000 is measured (within tolerance)
+    [row] = tracker.raw_rows()
+    by_h = {hz["horizon_ms"]: hz for hz in row["horizons"]}
+    assert row["expired"] and row["mid_seq_at_registration"] == 1
+    assert by_h[100]["mark_seq"] == 2 and by_h[250]["mark_seq"] is None and not by_h[250]["measured"]
+
+
+# ------------------------------------------------------------------ the 2026-10-06 60-minute run on 9bd4b17: two fills, one pattern
+
+# Fills 2447364 (buy) and 2447492 (sell), both with the 100 ms horizon measured late (registration
+# lag 120-156 ms on every fill of that run). The series held a sample stamped at or after the target
+# and at or after the registration stamp that the tracker had ALREADY consumed when the fill's
+# confirmation was processed. The depth update caused by the trade that filled us and the execution
+# report of that same trade leave the venue together and arrive on two connections, each stamped
+# by its own receive clock (the market stream by ReceiveClock, the account stream by the wall clock);
+# the market one was processed first. Stamps and mids below are the run's; the fill prices are
+# illustrative (the run's are in its evidence file) and the lag is placed inside the observed band.
+RUN_60M = [
+    ("2447364", "buy", 85_290.0, (1_791_267_584_380, 85_298.775), (1_791_267_584_469, 85_298.775), (1_791_267_584_532, 85_289.455)),
+    ("2447492", "sell", 85_276.0, (1_791_267_741_060, 85_281.275), (1_791_267_741_150, 85_281.275), (1_791_267_741_230, 85_267.495)),
+]
+
+
+@pytest.mark.parametrize(("fill_id", "side", "price", "before", "consumed_first", "used"), RUN_60M)
+@pytest.mark.parametrize("skew_ms", [0, 9], ids=["same_millisecond", "fill_clock_9ms_behind"])
+def test_the_two_fills_of_the_60_minute_run_are_resolved_by_the_mid_numbered_after_registration_whatever_the_stamps_say(fill_id: str, side: str, price: float, before: tuple[int, float], consumed_first: tuple[int, float], used: tuple[int, float], skew_ms: int) -> None:
+    t_registered = consumed_first[0] - skew_ms  # stamped in the same millisecond as the sample processed just before it, or earlier
+    t_fill = t_registered - 130
+    tracker = MarkoutTracker()
+    series: list[tuple[int, float, int]] = []
+    _engine_like(tracker, series, *before)
+    _engine_like(tracker, series, *consumed_first)  # processed first: the fill is not known yet
+    tracker.register(FillObservation(fill_id, t_fill, side, price, 0.0002, consumed_first[1]), t_registered_ms=t_registered)
+    _engine_like(tracker, series, *used)
+    [row] = tracker.raw_rows()
+    h100 = row["horizons"][0]
+    assert h100["measured_late"] and (h100["mark_t_ms"], h100["mid_at_mark"]) == used
+    assert row["mid_seq_at_registration"] == 2 and h100["mark_seq"] == 3
+    # By number, the series reproduces the mark exactly; by stamps, it cannot: the sample the
+    # tracker consumed before the fill was known is stamped at or after both the target and the
+    # registration, and nothing in a stamp says it was processed first.
+    target = t_fill + 100
+    by_number = next(s for s in series if s[2] > row["mid_seq_at_registration"] and s[0] >= target)
+    assert by_number == (*used, 3)
+    by_stamp = next(s for s in series if s[0] >= t_registered and s[0] >= target)
+    assert (by_stamp[0], by_stamp[1]) == consumed_first != used
 
 
 def test_a_failure_while_recording_never_reaches_the_booking_path(monkeypatch: pytest.MonkeyPatch) -> None:

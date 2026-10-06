@@ -142,9 +142,11 @@ class MarketMakerEngine:
         self._active: list[SimulatedOrder] = []
         self._order_regimes: dict[str, dict[str, str]] = {}
         # ---- evidence only, nothing below is read by any decision --------------------------
-        #: Every mid the markout tracker was shown, with its instant: the series an offline
-        #: reader needs to recompute every markout by the tracker's own rule.
-        self.mid_samples: deque[tuple[int, float]] = deque(maxlen=MID_SAMPLES_KEEP)
+        #: Every mid the markout tracker was shown, with its instant and the number the
+        #: tracker gave it (``MarkoutTracker.mids_seen`` after that delivery): the series an
+        #: offline reader needs to recompute every markout by the tracker's own rule, placing
+        #: each fill's registration by that number rather than by comparing stamps.
+        self.mid_samples: deque[tuple[int, float, int]] = deque(maxlen=MID_SAMPLES_KEEP)
         #: What the engine knew when it quoted each order (fair value, confidence, both quotes,
         #: the half-spread, the toxicity reading, the data age), kept while the order lives.
         self._order_quotes: dict[str, dict[str, Any]] = {}
@@ -196,8 +198,9 @@ class MarketMakerEngine:
             bid, ask, mid = self.book.best_bid(), self.book.best_ask(), self.book.mid
             if bid is not None and ask is not None and mid is not None:
                 self.ledger.mark(t_ms, bid=bid[0], ask=ask[0])
-                self.mid_samples.append((t_ms, mid))  # evidence: the same mid the tracker sees
-                for markout in self.markouts.on_mid(t_ms, mid):
+                newly = self.markouts.on_mid(t_ms, mid)
+                self.mid_samples.append((t_ms, mid, self.markouts.mids_seen))  # evidence: the very sample the tracker consumed, with the number it gave it
+                for markout in newly:
                     if not markout.observation.shadow:
                         # Only confirmed fills teach toxicity and cost the ledger.
                         self.toxicity.observe(markout)

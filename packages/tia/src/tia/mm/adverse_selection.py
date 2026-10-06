@@ -38,7 +38,12 @@ HORIZON_RULE = (
     "not when it happened at the venue (t_fill): a horizon whose moment had already passed at "
     "registration can only be resolved by the first mid observed AFTER registration, is flagged "
     "measured_late with late_by_ms = t_registered - (t_fill + h), and its effective_horizon_ms = "
-    "mark_time - t_fill says what was actually measured. Nothing is back-filled."
+    "mark_time - t_fill says what was actually measured. Nothing is back-filled. Mids are numbered in the "
+    "order the tracker sees them (mid_seq, from 1); a fill registered when n mids had been seen carries "
+    "mid_seq_at_registration = n and can only be resolved by mids numbered above n, and each resolved horizon "
+    "carries the number of the mid that resolved it (mark_seq). 'First mid observed after registration' is a "
+    "statement about this order, never about timestamps: the fill's confirmation and the market events arrive "
+    "on different connections with their own receive stamps, and two stamps cannot say which was processed first."
 )
 
 
@@ -130,6 +135,13 @@ class Markout:
     #: When the fill was registered here (the engine's clock), as opposed to when it
     #: happened at the venue (``observation.t_fill_ms``). Evidence only.
     t_registered_ms: int | None = None
+    #: How many mids the tracker had been shown when this fill was registered: the mid
+    #: numbered ``mid_seq_at_registration + 1`` is the first one that could resolve anything.
+    #: Evidence only.
+    mid_seq_at_registration: int | None = None
+    #: The number (in the order the tracker saw them) of the mid that resolved each horizon.
+    #: Evidence only.
+    mark_seq: dict[int, int] = field(default_factory=dict)
 
     @property
     def resolved(self) -> bool:
@@ -184,6 +196,7 @@ class Markout:
                 "horizon_ms": h,
                 "target_t_ms": target_t,
                 "mark_t_ms": mark_t,
+                "mark_seq": self.mark_seq.get(h),
                 "delay_ms": (mark_t - target_t) if mark_t is not None else None,
                 "mid_at_mark": self.mid_at_mark.get(h),
                 "markout_bps": bps,
@@ -205,6 +218,7 @@ class Markout:
             "t_fill_ms": obs.t_fill_ms,
             "t_registered_ms": registered,
             "registration_lag_ms": (registered - obs.t_fill_ms) if registered is not None else None,
+            "mid_seq_at_registration": self.mid_seq_at_registration,
             "mid_at_fill": obs.mid_at_fill,
             "fill_to_mid_bps": obs.fill_to_mid_bps,
             "buckets": dict(obs.buckets),
@@ -244,17 +258,23 @@ class MarkoutTracker:
         self.unresolved: deque[Markout] = deque(maxlen=keep)
         self.expired = 0
         self.registered = 0
+        #: How many mids this tracker has been shown; the number it gave the last one.
+        #: Evidence only: the resolution rule reads stamps, the evidence reads this order.
+        self.mids_seen = 0
 
     # ------------------------------------------------------------------ inputs
 
     def register(self, observation: FillObservation, *, t_registered_ms: int | None = None) -> None:
         """``t_registered_ms`` is when the caller learnt of the fill (its clock); it is kept for
-        the evidence and changes nothing about how horizons resolve."""
-        self._pending.append(Markout(observation=observation, horizons_bps=dict.fromkeys(self.horizons_ms), t_registered_ms=t_registered_ms))
+        the evidence and changes nothing about how horizons resolve. The fill also remembers
+        how many mids had been seen so far (``mid_seq_at_registration``), for the same reason."""
+        self._pending.append(Markout(observation=observation, horizons_bps=dict.fromkeys(self.horizons_ms), t_registered_ms=t_registered_ms, mid_seq_at_registration=self.mids_seen))
         self.registered += 1
 
     def on_mid(self, t_ms: int, mid: float) -> list[Markout]:
         """A mid observed at ``t_ms`` resolves every horizon whose moment has passed."""
+        self.mids_seen += 1
+        seq = self.mids_seen
         newly: list[Markout] = []
         still: list[Markout] = []
         for markout in self._pending:
@@ -268,6 +288,7 @@ class MarkoutTracker:
                 markout.horizons_bps[h] = obs.sign * (mid - obs.price) / obs.price * 10_000.0
                 markout.resolved_at_ms[h] = t_ms
                 markout.mid_at_mark[h] = mid
+                markout.mark_seq[h] = seq
             if markout.expired:
                 self.expired += 1
                 self.unresolved.append(markout)

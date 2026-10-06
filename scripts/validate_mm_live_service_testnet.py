@@ -459,13 +459,31 @@ def _mid_series_inversions(samples: list[Any]) -> list[dict[str, Any]]:
     return out
 
 
-def _first_mid_seen(samples: list[Any], *, after_ms: int | None, at_or_after_ms: int) -> tuple[int, float] | None:
+def _numbered(samples: list[Any]) -> bool:
+    """Whether the series carries the tracker's numbering (a third element per sample)."""
+    return bool(samples) and all(len(sample) >= 3 and sample[2] is not None for sample in samples)
+
+
+def _first_mid_seen(samples: list[Any], *, after_ms: int | None, at_or_after_ms: int, after_seq: int | None = None) -> tuple[Any, ...] | None:
     """The tracker's own rule, replayed on the series in PROCESSING order: the first sample
-    processed after the fill was registered (``after_ms``) whose stamp is at or after the
-    target. A sample's processing instant is never earlier than the largest stamp processed
-    before it, so a stamp that went backwards (a stale timestamp) is placed by that envelope,
-    not by its own value. Without ``after_ms`` (registration unknown) only the target rule
-    applies."""
+    the tracker saw after the fill was registered whose stamp is at or after the target.
+
+    With the numbering (``after_seq`` = the row's ``mid_seq_at_registration`` and a third
+    element per sample), "after the fill was registered" is exactly the samples numbered
+    above ``after_seq``: the fill's confirmation and the market events arrive on different
+    connections, so their receive stamps cannot say which was processed first, and the
+    numbering is the only record of that order. Returns ``(t, mid, seq)``.
+
+    Without it (older evidence), the registration is placed by its stamp: a sample's processing
+    instant is never earlier than the largest stamp processed before it, so a stamp that went
+    backwards (a stale timestamp) is placed by that envelope, not by its own value; a sample
+    stamped in the same millisecond as the registration is ambiguous and is taken as after it.
+    Without ``after_ms`` (registration unknown) only the target rule applies. Returns ``(t, mid)``."""
+    if after_seq is not None and _numbered(samples):
+        for sample in samples:
+            if int(sample[2]) > after_seq and int(sample[0]) >= at_or_after_ms:
+                return int(sample[0]), float(sample[1]), int(sample[2])
+        return None
     run_max: int | None = None
     for sample in samples:
         t = int(sample[0])
@@ -483,19 +501,24 @@ def _markout_consistency(rows: list[dict[str, Any]], mids: list[Any] | None = No
     or after the target and within tolerance; late_by_ms, measured_late and the effective
     horizon follow from t_registered; the bps and usd values match the mid and the price;
     and, when the mid series is given (in processing order), the mid at mark is the first
-    mid observed after registration whose stamp is at or after the target. Returns the
-    problems found (empty means consistent). Timestamp inversions in the series are a
-    separate finding: see ``_mid_series_inversions``."""
+    mid observed after registration whose stamp is at or after the target — "after
+    registration" by the tracker's numbering when the row and the series carry it
+    (``mid_seq_at_registration``, ``mark_seq``, a third element per sample), by stamps
+    otherwise. Returns the problems found (empty means consistent). Timestamp inversions in
+    the series are a separate finding: see ``_mid_series_inversions``."""
     problems: list[str] = []
     series = list(mids) if mids else None
+    numbered = bool(series) and _numbered(series)
     for r in rows:
         if r.get("shadow"):
             continue
         sign = 1.0 if r["side"] == "buy" else -1.0
         notional = r["price"] * r["quantity"]
         registered = r.get("t_registered_ms")
+        reg_seq = r.get("mid_seq_at_registration")
         if registered is not None and r.get("registration_lag_ms") is not None and r["registration_lag_ms"] != registered - r["t_fill_ms"]:
             problems.append(f"{r['fill_id']}: registration_lag_ms inconsistent with t_registered - t_fill")
+        previous_seq: int | None = None
         for hz in r["horizons"]:
             tag = f"{r['fill_id']}@{hz['horizon_ms']}"
             if hz["target_t_ms"] != r["t_fill_ms"] + hz["horizon_ms"]:
@@ -521,11 +544,27 @@ def _markout_consistency(rows: list[dict[str, Any]], mids: list[Any] | None = No
                 problems.append(f"{tag}: markout_bps {hz['markout_bps']} != {expected_bps} from mid {hz['mid_at_mark']}")
             if abs(hz["markout_bps"] / 10_000.0 * notional - hz["markout_usd"]) > 1e-9:
                 problems.append(f"{tag}: markout_usd inconsistent")
+            mark_seq = hz.get("mark_seq")
+            if mark_seq is not None:
+                # The tracker's own order: a horizon is resolved by a mid numbered after the
+                # registration, and the horizons resolve in the order the mids came.
+                if reg_seq is not None and mark_seq <= reg_seq:
+                    problems.append(f"{tag}: mark_seq {mark_seq} not after mid_seq_at_registration {reg_seq}")
+                if previous_seq is not None and mark_seq < previous_seq:
+                    problems.append(f"{tag}: mark_seq {mark_seq} before the previous horizon's {previous_seq}")
+                previous_seq = mark_seq
             if series:
-                first = _first_mid_seen(series, after_ms=registered, at_or_after_ms=hz["target_t_ms"])
-                if first is None or first[0] != hz["mark_t_ms"] or abs(first[1] - hz["mid_at_mark"]) > 1e-9:
-                    rule = "first mid seen after registration with stamp >= target" if registered is not None else "first mid >= target (registration time unknown)"
-                    problems.append(f"{tag}: mid series says the {rule} is {first}, row says ({hz['mark_t_ms']}, {hz['mid_at_mark']})")
+                by_number = numbered and reg_seq is not None
+                first = _first_mid_seen(series, after_ms=registered, at_or_after_ms=hz["target_t_ms"], after_seq=reg_seq if by_number else None)
+                expected = (hz["mark_t_ms"], hz["mid_at_mark"], mark_seq) if by_number else (hz["mark_t_ms"], hz["mid_at_mark"])
+                agrees = first is not None and first[0] == hz["mark_t_ms"] and abs(first[1] - hz["mid_at_mark"]) <= 1e-9 and (not by_number or first[2] == mark_seq)
+                if not agrees:
+                    rule = (
+                        f"first mid numbered after registration (mid_seq > {reg_seq}) with stamp >= target" if by_number
+                        else "first mid seen after registration with stamp >= target" if registered is not None
+                        else "first mid >= target (registration time unknown)"
+                    )
+                    problems.append(f"{tag}: mid series says the {rule} is {first}, row says {expected}")
     return problems
 
 
@@ -682,7 +721,7 @@ class ServiceValidation:
         self.markout_rows: list[dict[str, Any]] = []
         self.markout_tracker: dict[str, Any] | None = None
         self.toxicity_final: dict[str, Any] | None = None
-        self.mid_series: list[tuple[int, float]] = []
+        self.mid_series: list[tuple[int, ...]] = []
 
     def now_ms(self) -> int:
         return self.clock.timestamp_ms()
@@ -1050,7 +1089,7 @@ class ServiceValidation:
         fills: list[dict[str, Any]] = getattr(self, "fills", [])
         records: list[dict[str, Any]] = getattr(self, "fill_records", [])
         markout_rows: list[dict[str, Any]] = getattr(self, "markout_rows", [])
-        mid_series: list[tuple[int, float]] = getattr(self, "mid_series", [])
+        mid_series: list[tuple[int, ...]] = getattr(self, "mid_series", [])
         fills = _fill_evidence(fills, records, markout_rows) if (records or markout_rows) else fills
         ev.responses["order_lifecycle"] = lifecycle
         ev.responses["fills"] = fills
@@ -1068,10 +1107,11 @@ class ServiceValidation:
             "count": len(mid_series),
             "t_first_ms": mid_series[0][0] if mid_series else None,
             "t_last_ms": mid_series[-1][0] if mid_series else None,
-            "samples": [[t, m] for t, m in mid_series],
+            "samples": [list(sample) for sample in mid_series],
             "order": "processing order (the order the tracker saw them), not sorted by stamp",
+            "sequence": "third element: the number the tracker gave the sample (mid_seq, from 1, in processing order); a fill's row carries mid_seq_at_registration and, per horizon, mark_seq" if _numbered(mid_series) else "not carried (series without numbering)",
             "inversions": {"count": len(inversions), "max_backwards_ms": max((i["backwards_ms"] for i in inversions), default=0), "examples": inversions[:10]},
-            "note": "every mid the markout tracker was shown (local book, same instants); recompute a markout as the first sample processed after the fill's t_registered_ms whose stamp is at or after t_fill + horizon, within the tolerance; an inversion is a sample stamped earlier than one already processed and means a caller fed the engine a stale timestamp",
+            "note": "every mid the markout tracker was shown (local book, same instants); recompute a markout as the first sample numbered above the fill's mid_seq_at_registration whose stamp is at or after t_fill + horizon, within the tolerance (the fill's confirmation and the market events arrive on different connections: their receive stamps cannot say which was processed first, the numbering can); an inversion is a sample stamped earlier than one already processed and means a caller fed the engine a stale timestamp",
         }
         if lifecycle is not None:
             lc = lifecycle

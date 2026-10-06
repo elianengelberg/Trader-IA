@@ -37,7 +37,7 @@ async def test_the_reconciliation_tick_is_stamped_after_the_venue_answered_and_t
     t_tick = engine.mid_samples[-1][0]
     assert t_tick >= started + 600, (t_tick - started)  # stamped after the REST delay, not at the start
     assert service.execution.venue_balances_at_ms >= started + 600  # the balances too
-    stamps = [t for t, _ in engine.mid_samples]
+    stamps = [sample[0] for sample in engine.mid_samples]
     assert stamps == sorted(stamps)  # no sample older than one already processed
     await _teardown(live)
 
@@ -54,6 +54,6 @@ async def test_without_a_fresh_stamp_the_series_would_have_inverted(monkeypatch)
     live.clock.advance_by(timedelta(milliseconds=600))
     await live.feed(1)
     engine.on_event("tick", None, stale_t)  # the old behaviour, by hand
-    stamps = [t for t, _ in engine.mid_samples]
+    stamps = [sample[0] for sample in engine.mid_samples]
     assert stamps != sorted(stamps) and stamps[-1] == stale_t
     await _teardown(live)

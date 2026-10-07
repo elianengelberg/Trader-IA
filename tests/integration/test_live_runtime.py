@@ -32,6 +32,7 @@ from tia.domain.orders import Fill, Order, OrderIntent
 from tia.domain.portfolio import PortfolioState, Position
 from tia.execution.provider import ExecutionCapabilities, ExecutionProvider
 from tia.execution.state_machine import transition
+from tia.learning.scoreboard import MIN_TRADES_TO_JUDGE
 from tia.live.gate import (
     CONFIRMATION_PHRASE,
     REQUIRED_CHECKS,
@@ -1671,6 +1672,134 @@ async def test_absorbed_evidence_credits_the_strategies_it_names() -> None:
     assert result["strategies_credited"] == 1
     board = runtime.snapshot()["strategies"]
     assert [r["strategy_id"] for r in board] == ["trend_following"]
+
+
+# ------------------------------------------------------------ evidence provenance
+
+
+def _synthetic_review(strategy_id: str, net_bps: float, n: int) -> dict[str, Any]:
+    """One persisted row as a training simulation writes it, after schema v7."""
+    return {
+        "regime": "trending_up", "direction": "long", "confidence": 0.6,
+        "expected_net_bps": 5.0, "net_bps": net_bps, "fees_bps": 4.0,
+        "closed_at": datetime.now(UTC), "signal_id": f"sim-{n}", "symbol": "BTC-USD",
+        "entry_price": 100.0, "quantity": 1.0, "exploratory": False,
+        "strategy_id": strategy_id, "market_data": "synthetic",
+        "execution_mode": "simulated", "strategy_version": None,
+    }
+
+
+async def _close_through_the_stop(runtime: LiveRuntime, execution: FakeExecution, market: FakeMarketData) -> None:
+    market.advance()
+    await runtime._cycle_once()
+    stop = next(o for o in execution.orders.values() if o.order_type is OrderType.STOP)
+    execution.fill_resting(stop)
+    market.advance()
+    await runtime._cycle_once()
+
+
+async def test_a_paper_live_round_trip_is_persisted_as_real_market_data_with_simulated_fills() -> None:
+    """Paper-live is the venue's prices through the simulator. The row says exactly that
+    — real + simulated — and names the version of the strategy that proposed the entry,
+    read from that strategy's own opinion rather than the fusion's joined string."""
+    saved: list[tuple[str, dict[str, Any]]] = []
+    runtime, execution, market = build_runtime_paper_with(
+        persist=lambda kind, payload: saved.append((kind, payload)),
+    )
+    assert execution.is_live is False
+    await runtime.start()
+    try:
+        await _open_a_position(runtime, execution, market)
+        beliefs = dict(runtime._entry_beliefs)
+        assert beliefs["strategy_id"] and beliefs["strategy_version"]
+        assert "+" not in beliefs["strategy_version"]  # one strategy's version, not the fusion's
+        await _close_through_the_stop(runtime, execution, market)
+
+        outcome = next(p for k, p in saved if k == "edge_outcome")
+        assert outcome["source"] == "live"
+        assert outcome["market_data"] == "real"
+        assert outcome["execution_mode"] == "simulated"
+        assert outcome["strategy_id"] == beliefs["strategy_id"]
+        assert outcome["strategy_version"] == beliefs["strategy_version"]
+        # The retrospective and the estimator saw the trade exactly as before.
+        assert runtime._retro.reviews == 1
+    finally:
+        await runtime.stop()
+
+
+async def test_the_sessions_own_round_trips_count_under_real_only_and_synthetic_evidence_does_not() -> None:
+    runtime, execution, market = build_runtime_paper_with(scoreboard_policy="real_only")
+    await runtime.start()
+    try:
+        assert runtime.snapshot()["scoreboard_policy"] == "real_only"
+        await _open_a_position(runtime, execution, market)
+        strategy_id = runtime._entry_beliefs["strategy_id"]
+        await _close_through_the_stop(runtime, execution, market)
+        row = next(r for r in runtime.snapshot()["strategies"] if r["strategy_id"] == strategy_id)
+        assert row["trades"] == 1 and row["judged"] == 1  # its own trade, against real prices
+
+        # A training batch lands mid-session: a hundred synthetic losers for the same
+        # strategy. They are tallied, they credit nothing, and they cannot mute it.
+        result = runtime.absorb_evidence(
+            reviews=[_synthetic_review(strategy_id, -40.0, n) for n in range(100)],
+        )
+        assert result["absorbed_reviews"] == 100 and result["strategies_credited"] == 0
+        row = next(r for r in runtime.snapshot()["strategies"] if r["strategy_id"] == strategy_id)
+        assert row["trades"] == 1 and row["judged"] == 1 and row["excluded_synthetic"] == 100
+        assert row["muted"] is False
+        assert runtime._scoreboard.is_muted(strategy_id) is False
+    finally:
+        await runtime.stop()
+
+
+async def test_a_session_started_over_a_synthetic_losing_record_is_muted_under_legacy_and_not_under_real_only() -> None:
+    """The 5-hour paper-live session of 2026-10-06, replayed in miniature: the store
+    held nothing but training-simulation losers for the strategies, and the session
+    refused their signals as muted before it had closed a single trade of its own."""
+    prior = [_synthetic_review("trend_following", -30.0 + (2.0 if n % 2 else -2.0), n) for n in range(100)]
+    outcomes: dict[str, Any] = {}
+    for policy in ("legacy", "real_only"):
+        scenario = get_scenario("trend_up")
+        candles = generate_series(
+            scenario, symbol="BTC-USD", timeframe="1m",
+            start=datetime.now(UTC) - timedelta(minutes=scenario.total_bars + 5), seed=9,
+        )
+        clock = SimulatedClock(candles[149].close_time + timedelta(seconds=1))
+        market = FakeMarketData(candles, clock)
+        execution = FakeExecution()
+        runtime = LiveRuntime(
+            live_settings(scoreboard_policy=policy),
+            activation=None, market_data=market, execution=execution, clock=clock,
+            prior_reviews=prior, poll_interval_seconds=0.0,
+        )
+        refusals: list[dict[str, Any]] = []
+        runtime._on_event = lambda e, sink=refusals: sink.append(e) if e["type"] == "live.no_trade" else None
+        await runtime.start()
+        try:
+            _seed_every_bucket(runtime)
+            for _ in range(200):
+                market.advance()
+                await runtime._cycle_once()
+            outcomes[policy] = {
+                "muted": runtime._scoreboard.is_muted("trend_following"),
+                "refusals": runtime.counters["strategy_muted"],
+                "reasons": [str(e["data"].get("reason", "")) for e in refusals],
+                "row": next(r for r in runtime.snapshot()["strategies"] if r["strategy_id"] == "trend_following"),
+                "own_trades": runtime._retro.reviews - len(prior),  # the prior ones are not its own
+            }
+        finally:
+            await runtime.stop()
+
+    legacy, real_only = outcomes["legacy"], outcomes["real_only"]
+    # Legacy: exactly what the session did on the night — muted on synthetic losses.
+    assert legacy["muted"] is True and legacy["row"]["judged"] == 100
+    assert legacy["refusals"] > 0 and any("muted" in r for r in legacy["reasons"])
+    # Real-only: the same store, the same bars, and the strategy may propose — and does.
+    # The only trades on its record are the ones this session closed itself.
+    assert real_only["muted"] is False
+    assert real_only["row"]["excluded_synthetic"] == 100
+    assert real_only["row"]["judged"] == real_only["own_trades"] < MIN_TRADES_TO_JUDGE
+    assert real_only["refusals"] == 0 and not any("muted" in r for r in real_only["reasons"])
 
 
 # --------------------------------------------------------------------------- the tide

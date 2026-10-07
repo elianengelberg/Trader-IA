@@ -303,3 +303,79 @@ async def test_a_failed_persistence_write_does_not_pretend_to_be_state(
         count = await EdgeStateRepository(session).count()
     await database.close()
     assert count == 0  # nothing written, nothing claimed
+
+
+def test_v7_backfills_provenance_from_what_the_rows_already_say(tmp_path: Path) -> None:
+    """A v6 database with evidence from every writer upgrades to v7 with each row's
+    provenance filled in from ``source`` and the run's mode — and nothing else: no row
+    is lost, no existing column changes, and ``strategy_version`` is never invented."""
+    import sqlite3
+
+    db = tmp_path / "v6.db"
+    result = _alembic(db, "upgrade", "0006")
+    assert result.returncode == 0, result.stderr
+
+    conn = sqlite3.connect(db)
+    # ``edge_outcomes`` was built from the current metadata by 0002, so on a fresh
+    # database it already carries the v7 columns. A genuine v6 database does not:
+    # drop them so the migration's add-column path is the one exercised.
+    for column in ("market_data", "execution_mode", "strategy_version"):
+        conn.execute(f"ALTER TABLE edge_outcomes DROP COLUMN {column}")
+    conn.execute(
+        "INSERT INTO runs (run_id, mode, scenario, started_at, initial_capital, seed, "
+        "symbols, config_digest, notes) VALUES "
+        "('run_pl', 'paper-live', 'live', CURRENT_TIMESTAMP, 10000.0, 0, '[]', '', ''), "
+        "('run_lv', 'live', 'live', CURRENT_TIMESTAMP, 100.0, 0, '[]', '', ''), "
+        "('run_demo', 'paper', 'trend_up', CURRENT_TIMESTAMP, 10000.0, 7, '[]', '', '')"
+    )
+    rows = [
+        ("o_sim", "run_sim", "sim"),         # a training batch; its run is not on record
+        ("o_paper", "run_demo", "paper"),    # the demo engine
+        ("o_pl", "run_pl", "live"),          # the 24/7 session, paper-live
+        ("o_lv", "run_lv", "live"),          # a live session over an armed provider
+        ("o_orphan", "run_gone", "live"),    # a live row whose run is not on record
+    ]
+    for outcome_id, run_id, source in rows:
+        conn.execute(
+            "INSERT INTO edge_outcomes (outcome_id, run_id, signal_id, symbol, regime, "
+            "direction, confidence, entry_price, exit_price, quantity, gross_bps, fees_bps, "
+            "net_bps, exploratory, expected_net_bps, closed_at, source, exit_reason, "
+            "strategy_id) VALUES (?, ?, 'sig', 'BTC-USD', 'trending_up', 'long', 0.6, "
+            "100.0, 101.0, 1.0, 100.0, 10.0, 90.0, 0, 5.0, CURRENT_TIMESTAMP, ?, "
+            "'target reached', 'trend_following')",
+            (outcome_id, run_id, source),
+        )
+    conn.commit()
+    conn.close()
+
+    result = _alembic(db, "upgrade", "head")
+    assert result.returncode == 0, result.stderr
+
+    conn = sqlite3.connect(db)
+    assert conn.execute("SELECT version FROM schema_info").fetchone()[0] == SCHEMA_VERSION == 7
+    got = {
+        r[0]: r[1:]
+        for r in conn.execute(
+            "SELECT outcome_id, market_data, execution_mode, strategy_version, source, "
+            "strategy_id, net_bps FROM edge_outcomes"
+        )
+    }
+    assert len(got) == len(rows)  # nothing deleted
+    assert got["o_sim"][:2] == ("synthetic", "simulated")
+    assert got["o_paper"][:2] == ("synthetic", "simulated")
+    assert got["o_pl"][:2] == ("real", "simulated")
+    assert got["o_lv"][:2] == ("real", "real")
+    assert got["o_orphan"][:2] == ("real", None)  # undeterminable stays null, not guessed
+    for values in got.values():
+        assert values[2] is None  # strategy_version is never reconstructed
+        assert values[3:] == (values[3], "trend_following", 90.0)  # existing columns untouched
+    assert {v[3] for v in got.values()} == {"sim", "paper", "live"}
+
+    # Running the upgrade again is harmless, and the downgrade takes the columns away
+    # without touching the rows.
+    result = _alembic(db, "downgrade", "0006")
+    assert result.returncode == 0, result.stderr
+    columns = {r[1] for r in conn.execute("PRAGMA table_info(edge_outcomes)")}
+    assert not {"market_data", "execution_mode", "strategy_version"} & columns
+    assert conn.execute("SELECT COUNT(*) FROM edge_outcomes").fetchone()[0] == len(rows)
+    assert conn.execute("SELECT version FROM schema_info").fetchone()[0] == 6

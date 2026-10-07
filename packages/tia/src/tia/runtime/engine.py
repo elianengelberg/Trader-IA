@@ -67,6 +67,7 @@ from tia.execution.exits import tighten_stop
 from tia.execution.paper import PaperExecutionProvider
 from tia.execution.reconciliation import LedgerSnapshot, ReconciliationEngine
 from tia.learning.retrospective import RetrospectiveEngine
+from tia.learning.scoreboard import credited_strategy_version
 from tia.llm.context import ContextRequest, ContextService
 from tia.llm.governance import LLMGovernor
 from tia.llm.provider import MockLLMProvider, build_provider
@@ -719,6 +720,7 @@ class RuntimeEngine:
             "confidence": signal.confidence,
             "signal_id": signal.signal_id,
             "strategy_id": signal.strategy_id,
+            "strategy_version": credited_strategy_version(signal),
             "expected_net_bps": evaluation.net_edge_bps if evaluation else 0.0,
         }
         await self._submit(decision, signal, candle)
@@ -923,8 +925,14 @@ class RuntimeEngine:
                 "expected_net_bps": beliefs["expected_net_bps"],
                 "exit_reason": exit_reason,
                 "strategy_id": beliefs.get("strategy_id"),
+                "strategy_version": beliefs.get("strategy_version"),
                 "closed_at": closed_at,
                 "source": "paper",
+                # This engine replays a generated scenario through the paper simulator:
+                # synthetic prices, simulated fills. Said explicitly so a scoreboard
+                # under ``real_only`` can tell this evidence from a real session's.
+                "market_data": "synthetic",
+                "execution_mode": "simulated",
             },
         )
         self._log(

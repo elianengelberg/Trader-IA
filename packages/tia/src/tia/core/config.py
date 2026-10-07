@@ -311,6 +311,14 @@ class LiveConfig(FrozenModel):
     #: ignored outright over a live execution provider, no matter what this says, because
     #: with real money "I don't know yet" is a reason not to trade, not an experiment.
     exploration_trades_per_day: int = Field(0, ge=0, le=50)
+    #: Which closed trades the strategy scoreboard may judge a strategy by. ``legacy``
+    #: credits every persisted row that names a strategy, whatever produced it — the
+    #: behaviour every deployment has had so far. ``real_only`` credits only rows whose
+    #: ``market_data`` is ``real`` (round trips closed against the venue's own prices);
+    #: rows from synthetic scenarios, and rows written before provenance was recorded,
+    #: are tallied but never judge. The mute rule is identical under both. Defaults to
+    #: ``legacy`` so that upgrading changes nothing until someone opts in on purpose.
+    scoreboard_policy: Literal["legacy", "real_only"] = "legacy"
     #: How the 24/7 session enters. ``market`` crosses the spread and pays the taker fee
     #: on the way in; ``limit`` rests a post-only order at the touch and pays the maker
     #: fee with no spread crossed — roughly half the round-trip cost, which is the single

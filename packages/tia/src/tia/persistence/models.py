@@ -44,7 +44,7 @@ from sqlalchemy.types import JSON
 
 #: Bumped on any schema change. `ensure_schema()` refuses to run against a database
 #: written by a newer version rather than silently misreading it.
-SCHEMA_VERSION = 6
+SCHEMA_VERSION = 7
 #: v1 -> v2: edge_outcomes, activation_attempts, reconciliations, capital_events,
 #: incidents, latency_samples. The Alembic migration `0002` performs the upgrade;
 #: `ensure_schema` still refuses a *newer* database rather than misreading it.
@@ -435,6 +435,19 @@ class EdgeOutcomeRow(Base):
     #: its own record — see :mod:`tia.learning.scoreboard`. Null on rows written before
     #: strategies were credited; those rows judge nobody.
     strategy_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    #: Where the prices that produced this round trip came from: ``synthetic`` (a
+    #: generated scenario) or ``real`` (the venue's own market data). The scoreboard's
+    #: ``real_only`` policy judges a strategy by the latter alone. Null where the origin
+    #: could not be established at migration time; such rows judge nobody under
+    #: ``real_only`` and count as they always did under ``legacy``.
+    market_data: Mapped[str | None] = mapped_column(String(16), nullable=True)
+    #: How the fills happened: ``simulated`` (the paper simulator) or ``real`` (orders
+    #: the venue executed). Paper-live is real market data with simulated fills; only a
+    #: session over an armed live execution provider writes ``real``. Null when unknown.
+    execution_mode: Mapped[str | None] = mapped_column(String(16), nullable=True)
+    #: The version of the strategy that proposed the entry, as that strategy reports it.
+    #: Null on rows written before it was recorded — never reconstructed after the fact.
+    strategy_version: Mapped[str | None] = mapped_column(String(64), nullable=True)
     #: Wall-clock moment the row was written, server-side. ``closed_at`` is *bar* time and
     #: a simulation's bars can predate rows written yesterday, so "what is new since the
     #: session last looked" is answered by this column and never by closed_at.

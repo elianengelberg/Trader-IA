@@ -25,7 +25,8 @@ T0 = 1_789_754_400_000
 
 
 async def test_journal_fills_and_ledger_round_trip_and_stay_apart(tmp_path: Path) -> None:
-    assert SCHEMA_VERSION == 6 and {MarketMakerJournalRow, MarketMakerFillRow, MarketMakerLedgerRow} <= set(ALL_TABLES)
+    # The market maker's tables arrived with schema v6 and stay in every later version.
+    assert SCHEMA_VERSION >= 6 and {MarketMakerJournalRow, MarketMakerFillRow, MarketMakerLedgerRow} <= set(ALL_TABLES)
     db = Database(f"sqlite+aiosqlite:///{tmp_path / 'mm.db'}")
     await db.create_schema()
     ledger = MarketMakerLedger(10_000.0)

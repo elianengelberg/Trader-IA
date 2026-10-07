@@ -226,3 +226,38 @@ async def test_the_budget_never_grows_after_a_loss_during_a_real_run() -> None:
     if losses:
         assert engine._consecutive_losses >= 0
         assert engine.economics_snapshot()["budget"]["streak_multiplier"] <= 1.0
+
+
+# --------------------------------------------------------------------------- provenance
+
+
+async def test_the_scenario_engine_persists_its_evidence_as_synthetic_and_simulated() -> None:
+    """This engine replays a generated scenario through the paper simulator, so every
+    row it writes says so: synthetic market data, simulated fills. That is what lets a
+    scoreboard under ``real_only`` keep a training batch from muting a strategy that
+    trades real prices — and it is stated on the row, not inferred from ``source``."""
+    saved: list[tuple[str, dict]] = []
+    config = RuntimeConfig(scenario="trend_up", bar_interval_seconds=0.0, initial_capital=10_000.0)
+    engine = RuntimeEngine(
+        settings_for_env(Environment.DEMO), config,
+        persist=lambda kind, payload: saved.append((kind, payload)),
+    )
+    await engine.start()
+    for _ in range(80_000):
+        await asyncio.sleep(0)
+        if not engine.is_running:
+            break
+    await engine.stop()
+
+    outcomes = [p for k, p in saved if k == "edge_outcome"]
+    assert outcomes and len(outcomes) == len(engine.closed_trades)
+    for row in outcomes:
+        assert row["source"] == "paper"
+        assert row["market_data"] == "synthetic"
+        assert row["execution_mode"] == "simulated"
+        assert row["strategy_id"]
+        # The credited strategy's own version — or nothing, when the credit went to the
+        # fusion and no single strategy's opinion can be named.
+        assert (row["strategy_version"] is not None) is (row["strategy_id"] != "fusion")
+        if row["strategy_version"] is not None:
+            assert "+" not in row["strategy_version"]

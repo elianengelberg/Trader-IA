@@ -356,6 +356,11 @@ class AppState:
             "quantity": row.quantity,
             "exploratory": bool(getattr(row, "exploratory", False)),
             "strategy_id": getattr(row, "strategy_id", None),
+            # Provenance (schema v7). Null on rows that predate it: under the scoreboard's
+            # ``real_only`` policy such rows judge nobody; under ``legacy`` they count.
+            "market_data": getattr(row, "market_data", None),
+            "execution_mode": getattr(row, "execution_mode", None),
+            "strategy_version": getattr(row, "strategy_version", None),
         }
 
     async def _load_prior_reviews(self) -> list[dict[str, Any]]:

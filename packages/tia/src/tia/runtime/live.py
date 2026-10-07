@@ -59,7 +59,7 @@ from tia.economics.expected_value import EdgeEstimator, ExpectedValueEngine, Out
 from tia.execution.exits import r_multiple, tighten_stop
 from tia.execution.provider import ExecutionProvider
 from tia.learning.retrospective import RetrospectiveEngine
-from tia.learning.scoreboard import StrategyScoreboard
+from tia.learning.scoreboard import StrategyScoreboard, credited_strategy_version
 from tia.live.gate import LiveActivationToken, configuration_fingerprint
 from tia.portfolio.capital import CapitalLedger, CapitalPolicy
 from tia.quant.features import FeatureBuilder
@@ -325,7 +325,9 @@ class LiveRuntime:
         #: Each strategy answers for its own closed trades; one whose record is negative
         #: with enough trades to mean it is muted before risk sees its signals. Rebuilt
         #: from the same persisted rows as the estimator, where they name a strategy.
-        self._scoreboard = StrategyScoreboard()
+        #: Which of those rows may judge is the configured policy's call (``legacy``:
+        #: all of them; ``real_only``: those closed against real market data).
+        self._scoreboard = StrategyScoreboard(policy=settings.live.scoreboard_policy)
         self._scoreboard.record_many(list(prior_reviews))
         if execution.is_live:
             # Real money: the configured ceiling, whose fail-closed default of zero is
@@ -1300,6 +1302,7 @@ class LiveRuntime:
             "confidence": signal.confidence,
             "signal_id": signal.signal_id,
             "strategy_id": signal.strategy_id,
+            "strategy_version": credited_strategy_version(signal),
             "size_fraction": size_fraction,
             "expected_net_bps": evaluation.net_edge_bps,
             # An exploration entry carries no claim about its own outcome: it was taken
@@ -2144,9 +2147,13 @@ class LiveRuntime:
             notional_usd=notional,
             exploratory=bool(beliefs.get("exploratory")),
         )
+        # This session's own round trips close against the venue's prices — real market
+        # data whichever execution provider filled them — so they count under every
+        # scoreboard policy.
         self._scoreboard.record(
             str(beliefs.get("strategy_id") or ""), net_bps,
             exploratory=bool(beliefs.get("exploratory")),
+            market_data="real",
         )
         self._consecutive_losses = 0 if net_bps > 0 else self._consecutive_losses + 1
         self._ledger.record_realised_pnl(
@@ -2200,8 +2207,14 @@ class LiveRuntime:
                 "exploratory": bool(beliefs.get("exploratory")),
                 "exit_reason": self._exit_reason or "signal reversed",
                 "strategy_id": beliefs.get("strategy_id"),
+                "strategy_version": beliefs.get("strategy_version"),
                 "closed_at": exit_fill.filled_at,
                 "source": "live",
+                # Real market data either way; the fills are simulated unless the
+                # execution provider is the armed live one. Paper-live is therefore
+                # real + simulated, and only a live session ever writes real + real.
+                "market_data": "real",
+                "execution_mode": "real" if self._execution.is_live else "simulated",
             },
         )
 
@@ -2645,6 +2658,7 @@ class LiveRuntime:
                 "last": self._last_size,
             },
             "strategies": self._scoreboard.report(),
+            "scoreboard_policy": self._scoreboard.policy,
             "feed": (
                 self._market_data.feed_state()
                 if callable(getattr(self._market_data, "feed_state", None))

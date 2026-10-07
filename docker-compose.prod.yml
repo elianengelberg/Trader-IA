@@ -86,6 +86,11 @@ services:
       # Paper-only exploration: trades/day the session may take in buckets that LACK
       # evidence, to buy lessons with simulated money. Ignored over live execution.
       TIA_LIVE__EXPLORATION_TRADES_PER_DAY: ${TIA_LIVE__EXPLORATION_TRADES_PER_DAY:-20}
+      # Which closed trades may mute a strategy: legacy (every persisted row that names
+      # one, as always) or real_only (only rows closed against real market data; the
+      # scenario generator's rows are tallied but judge nobody). Default legacy: the
+      # upgrade changes nothing until this is set on purpose.
+      TIA_LIVE__SCOREBOARD_POLICY: ${TIA_LIVE__SCOREBOARD_POLICY:-legacy}
       # The risk budget profile: conservative (0.25% per trade, 8 entries a day),
       # balanced (0.5%, 20 a day) or aggressive (1%, 40 a day). The profile's daily cap
       # is the tightest throttle on how often the paper account trades.

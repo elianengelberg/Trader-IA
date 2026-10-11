@@ -28,6 +28,7 @@ from __future__ import annotations
 
 import asyncio
 import contextlib
+import math
 from collections import deque
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
@@ -113,13 +114,31 @@ class FundingMonitor:
     timeout_seconds: float = 6.0
     history_limit: int = 1000
 
+    #: A reading's shelf life (Phase 1.5). A rate read more than this many seconds ago is
+    #: *stale* and is not a rate: :meth:`latest_rate` returns ``None`` for it and
+    #: :meth:`status` says ``stale``, so the accrual and the expected value treat it as
+    #: unknown and count it rather than charging yesterday's number. One hour is twelve
+    #: missed five-minute polls — a product decision recorded in the Phase 1.5 report,
+    #: conservative in the direction of "unknown"; ``LiveConfig.funding_max_age_seconds``
+    #: sets it for the application.
+    max_age_seconds: float = 3600.0
+
     _latest: FundingReading | None = None
     _history: deque[FundingReading] = field(default_factory=lambda: deque(maxlen=1100))
     _health: dict[str, Any] = field(default_factory=dict)
     _task: asyncio.Task[Any] | None = None
     _polls: int = 0
     _history_loaded: bool = False
+    #: The eight-hour period the history was last refreshed in. A settlement that has
+    #: happened since is fetched on the next poll (the last few rows), so ``rate_at`` can
+    #: answer for it within one poll of the settlement (Phase 1.8).
+    _history_period: tuple[str, int] | None = None
+    _history_refreshes: int = 0
     _owns_client: bool = False
+    #: When the last *valid* (finite) reading was taken, on this monitor's clock.
+    _valid_at: datetime | None = None
+    _consecutive_failures: int = 0
+    _invalid_readings: int = 0
 
     def __post_init__(self) -> None:
         self._health = {"ok": None, "detail": "", "failures": 0, "last_attempt": None}
@@ -170,16 +189,28 @@ class FundingMonitor:
         try:
             if self.client is None:  # pragma: no cover - __post_init__ guarantees one
                 raise RuntimeError("funding client not initialised")
-            if not self._history_loaded:
+            now = self.clock.now()
+            period = (now.date().isoformat(), now.hour // 8)
+            if not self._history_loaded or period != self._history_period:
+                # The whole record once; afterwards only the settlements since the last
+                # refresh — one request per eight-hour period, never the current reading
+                # dressed up as a realised rate (Phase 1.8).
+                limit = self.history_limit if not self._history_loaded else 3
                 response = await self.client.get(
-                    FUNDING_HISTORY_URL, params={"symbol": self.symbol, "limit": self.history_limit}
+                    FUNDING_HISTORY_URL, params={"symbol": self.symbol, "limit": limit}
                 )
                 response.raise_for_status()
                 if len(response.content) > MAX_BODY_BYTES:
                     raise ValueError("funding history exceeds size cap")
+                known = {r.at for r in self._history}
                 for reading in parse_funding_history(response.json()):
-                    self._history.append(reading)
+                    if reading.at not in known:
+                        self._history.append(reading)
+                        known.add(reading.at)
+                if self._history_loaded:
+                    self._history_refreshes += 1
                 self._history_loaded = True
+                self._history_period = period
             response = await self.client.get(PREMIUM_INDEX_URL, params={"symbol": self.symbol})
             response.raise_for_status()
             if len(response.content) > MAX_BODY_BYTES:
@@ -188,19 +219,77 @@ class FundingMonitor:
         except Exception as exc:
             self._health["ok"] = False
             self._health["failures"] = int(self._health.get("failures", 0)) + 1
+            self._consecutive_failures += 1
             self._health["detail"] = f"{type(exc).__name__}: {str(exc)[:160]}"
             _log.warning("funding_fetch_failed", error=self._health["detail"])
+            return None
+        if not math.isfinite(reading.funding_rate):
+            # A number that is not a number never becomes the rate (Phase 1.5): the last
+            # valid reading stands (and ages), the failure is counted and said.
+            self._invalid_readings += 1
+            self._consecutive_failures += 1
+            self._health["ok"] = False
+            self._health["failures"] = int(self._health.get("failures", 0)) + 1
+            self._health["detail"] = "invalid: non-finite funding rate in the venue's response"
+            _log.warning("funding_rate_invalid", value=repr(reading.funding_rate))
             return None
         self._health["ok"] = True
         self._health["detail"] = "quoted"
         self._latest = reading
+        self._valid_at = self.clock.now()
+        self._consecutive_failures = 0
         return reading
 
     # ------------------------------------------------------------------ reading
 
+    def status(self) -> dict[str, Any]:
+        """What the monitor can vouch for right now (Phase 1.5).
+
+        ``state`` is ``absent`` (no valid reading yet), ``stale`` (the last valid reading
+        is older than ``max_age_seconds``) or ``ok``; ``rate`` is set only when ``ok``.
+        The failure counters travel with it so a consumer can say *why* it priced
+        nothing instead of pricing zero.
+        """
+        age: float | None = None
+        if self._valid_at is not None:
+            age = (self.clock.now() - self._valid_at).total_seconds()
+        if self._latest is None or age is None:
+            state = "absent"
+        elif age > self.max_age_seconds:
+            state = "stale"
+        else:
+            state = "ok"
+        return {
+            "state": state,
+            "rate": self._latest.funding_rate if state == "ok" and self._latest else None,
+            "age_seconds": round(age, 1) if age is not None else None,
+            "valid_at": self._valid_at.isoformat() if self._valid_at else None,
+            "max_age_seconds": self.max_age_seconds,
+            "consecutive_failures": self._consecutive_failures,
+            "invalid_readings": self._invalid_readings,
+            "failures": int(self._health.get("failures", 0)),
+            "history_settlements": len(self._history),
+            "history_refreshes": self._history_refreshes,
+        }
+
     def latest_rate(self) -> float | None:
-        """The last funding rate read, per eight-hour period, or None before the first."""
-        return self._latest.funding_rate if self._latest is not None else None
+        """The last funding rate read, per eight-hour period — ``None`` before the first
+        valid reading and ``None`` again once it is older than ``max_age_seconds``."""
+        return self.status()["rate"]
+
+    def rate_at(self, settlement_at: datetime) -> float | None:
+        """The realised rate the venue reported for the settlement at ``settlement_at``,
+        from the loaded history (Phase 1.7).
+
+        ``None`` when the history does not hold that settlement, or holds a non-finite
+        number for it. Never the current reading: a session settling a period it was not
+        there for asks for *that* settlement's rate or settles nothing.
+        """
+        target = settlement_at if settlement_at.tzinfo is not None else settlement_at.replace(tzinfo=UTC)
+        for reading in reversed(self._history):
+            if abs((reading.at - target).total_seconds()) <= 60.0:
+                return reading.funding_rate if math.isfinite(reading.funding_rate) else None
+        return None
 
     def report(self) -> dict[str, Any]:
         latest = self._latest
@@ -235,6 +324,7 @@ class FundingMonitor:
             "running": self.is_running,
             "polls": self._polls,
             "health": dict(self._health),
+            "status": self.status(),
             "latest": (
                 {
                     "at": latest.at.isoformat(),

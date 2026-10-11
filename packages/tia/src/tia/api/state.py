@@ -23,8 +23,8 @@ import os
 import signal
 import sys
 from collections import deque
-from collections.abc import Awaitable, Callable
-from datetime import UTC, datetime
+from collections.abc import Awaitable, Callable, Sequence
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -33,12 +33,14 @@ from tia.core.logging import get_logger
 from tia.learning.antipatterns import AntiPatternMonitor
 from tia.learning.mentor import MentorEngine
 from tia.persistence import (
+    AccountJournalRepository,
     ActivationRepository,
     AssessmentRepository,
     BacktestRepository,
     Database,
     DecisionRepository,
     EdgeStateRepository,
+    EventRepository,
     FillRepository,
     IncidentRepository,
     LogRepository,
@@ -47,6 +49,7 @@ from tia.persistence import (
     OrderRepository,
     PortfolioRepository,
     ReconciliationRepository,
+    RiskStateRepository,
     RunRepository,
 )
 from tia.runtime.engine import RuntimeConfig, RuntimeEngine, RuntimeState
@@ -64,6 +67,10 @@ SUBSCRIBER_QUEUE_SIZE = 512
 #: seen. A minute is far below the pace at which a training batch produces them and far
 #: above the cost of a row count, which is all a quiet check does.
 EVIDENCE_REFRESH_SECONDS = 60.0
+#: How long a boot that found a fresh heartbeat on the interrupted run waits before
+#: reading it again (Phase 1.3, G9): longer than the runtime's heartbeat interval, so a
+#: live writer has stamped at least once more; a dead one has not.
+LEASE_PROBE_SECONDS = 45.0
 
 #: How long the money-record answer is reused. It reads every closed trade, and the
 #: number moves on the timescale of trades closing, not of a browser polling.
@@ -83,12 +90,25 @@ class AppState:
         #: The live session, if one was armed and started. At most one, and its state
         #: machine — not this reference's existence — is what the API reports.
         self.live_runtime: Any | None = None
+        #: Serialises every start and arm of a session: two concurrent requests cannot
+        #: both pass the "already active" check and build two runtimes over one account.
+        #: Process-local by nature — see docs/PHASE_1_2_REPAIR_REPORT.md for the limit.
+        self._session_lock = asyncio.Lock()
         self.started_at = datetime.now(UTC)
 
         self._subscribers: set[asyncio.Queue[dict[str, Any]]] = set()
         self._live_activity: deque[dict[str, Any]] = deque(maxlen=150)
         self._loop: asyncio.AbstractEventLoop | None = None
         self._dropped_events = 0
+        #: Persistence accounting (Phase 1.4). Every write the engines schedule goes
+        #: through :meth:`_persist`, which absorbs failures so the trading loop never
+        #: stops for the store; absorbed is not hidden — the counts reach the health
+        #: endpoint, the system status and the metrics, and a failure in the last ten
+        #: minutes reports the ``persistence`` component degraded.
+        self._persist_writes = 0
+        self._persist_failures = 0
+        self._persist_last_error: str | None = None
+        self._persist_last_failed_at: datetime | None = None
         self._request_errors = 0
         self._recent_backtests: deque[dict[str, Any]] = deque(maxlen=25)
         #: The read-only Advisor and the behaviour auditor. The Advisor is built lazily and
@@ -131,6 +151,12 @@ class AppState:
         #: forward from here instead of re-reading the record.
         self._evidence_watermark: datetime | None = None
         self._evidence_task: asyncio.Task[Any] | None = None
+        #: The boot's deferred lease probe (Phase 1.3, G9): when the interrupted run's
+        #: heartbeat is fresh, the boot waits this long and reads it again before deciding
+        #: whether another process is running it (heartbeat advanced) or it died hard
+        #: (heartbeat unchanged). The API comes up meanwhile.
+        self._lease_probe_task: asyncio.Task[Any] | None = None
+        self._lease_probe_seconds: float = LEASE_PROBE_SECONDS
         #: (computed_at, payload) for :meth:`money_record` — it scans the whole trade
         #: record, and the dashboard polls it.
         self._money_cache: tuple[float, dict[str, Any]] | None = None
@@ -158,8 +184,18 @@ class AppState:
                 await self._evidence_task
         if self.runtime is not None and self.runtime.is_running:
             await self.runtime.stop()
+        if self._lease_probe_task is not None:
+            self._lease_probe_task.cancel()
+            with contextlib.suppress(asyncio.CancelledError, Exception):
+                await self._lease_probe_task
         if self.live_runtime is not None and self.live_runtime.is_running:
             await self.live_runtime.stop(reason="application shutdown")
+            # The row stays unstamped (a shutdown is not an operator stop: the next boot
+            # resumes it) but its heartbeat is released, so that boot does not have to
+            # wait out the lease to tell a redeploy from a second process (G9).
+            with contextlib.suppress(Exception):
+                async with self.database.session() as session:
+                    await RunRepository(session).release_lease(self.live_runtime.run_id)
         if self._intel is not None:
             with contextlib.suppress(Exception):
                 await self._intel.close()
@@ -220,6 +256,13 @@ class AppState:
     # ------------------------------------------------------------------ run control
 
     async def start_run(self, payload: dict[str, Any]) -> dict[str, Any]:
+        """Start a scenario run under the session lock — see :meth:`_start_run_locked`.
+        Two concurrent requests cannot both pass the "already active" check: the second
+        waits and is refused (Phase 1.4; the paper-live path has had this since 1.2)."""
+        async with self._session_lock:
+            return await self._start_run_locked(payload)
+
+    async def _start_run_locked(self, payload: dict[str, Any]) -> dict[str, Any]:
         if self.runtime is not None and self.runtime.is_running:
             raise ValueError("a run is already active; stop it before starting another")
 
@@ -249,8 +292,13 @@ class AppState:
             persist=self._persist,
             prior_outcomes=await self._load_prior_outcomes(),
         )
-        self.runtime = engine
 
+        # The row first, the loop second, the reference last (Phase 1.4, the F8 contract
+        # the sessions already follow): a row that cannot be written starts nothing and
+        # installs nothing, and a start that fails stamps its row as over with the
+        # failure in its notes. Before, the engine was installed as "the run" before its
+        # row existed or its loop ran, so a failed start left the API reporting a run the
+        # store did not know and a stop stamping a row that was never written.
         async with self.database.session() as session:
             await RunRepository(session).create(
                 run_id=engine.run_id,
@@ -261,8 +309,17 @@ class AppState:
                 seed=config.seed,
                 symbols=config.symbols,
             )
-
-        await engine.start()
+        try:
+            await engine.start()
+        except Exception as exc:
+            with contextlib.suppress(Exception):
+                async with self.database.session() as session:
+                    await RunRepository(session).stop(engine.run_id, datetime.now(UTC))
+                    await RunRepository(session).annotate(
+                        engine.run_id, f"start_failed: {str(exc)[:300]}"
+                    )
+            raise
+        self.runtime = engine
         return engine.snapshot()
 
     def _dispatch_alert(self, incident: dict[str, Any]) -> None:
@@ -319,6 +376,9 @@ class AppState:
                     direction=Direction(row.direction),
                     confidence=row.confidence,
                     net_return_bps=row.net_bps,
+                    fees_bps=row.fees_bps,
+                    gross_return_bps=row.gross_bps,
+                    market_data=getattr(row, "market_data", None),
                 )
                 for row in rows
             ]
@@ -337,6 +397,9 @@ class AppState:
             direction=Direction(row.direction),
             confidence=row.confidence,
             net_return_bps=row.net_bps,
+            fees_bps=row.fees_bps,
+            gross_return_bps=row.gross_bps,
+            market_data=getattr(row, "market_data", None),
         )
 
     @staticmethod
@@ -586,12 +649,25 @@ class AppState:
         )
 
     async def stop_run(self) -> dict[str, Any]:
-        if self.runtime is None:
+        """Stop the scenario run, under the session lock (Phase 1.5).
+
+        One lock for start, stop and reset of a run: a stop that arrives while a start is
+        still writing its row waits for it and then stops the engine it installed, instead
+        of answering "no run was active" while that engine goes on. The lock is held for
+        the engine's bounded stop (loop timeout plus persistence flush), never for an
+        operation without a bound.
+        """
+        async with self._session_lock:
+            return await self._stop_run_locked()
+
+    async def _stop_run_locked(self) -> dict[str, Any]:
+        runtime = self.runtime
+        if runtime is None:
             return {"state": "stopped", "detail": "no run was active"}
-        await self.runtime.stop()
+        await runtime.stop()
         async with self.database.session() as session:
-            await RunRepository(session).stop(self.runtime.run_id, datetime.now(UTC))
-        return self.runtime.snapshot()
+            await RunRepository(session).stop(runtime.run_id, datetime.now(UTC))
+        return runtime.snapshot()
 
     def pause_run(self) -> dict[str, Any]:
         self._require_runtime().pause()
@@ -619,11 +695,19 @@ class AppState:
         Deletes rather than archives, because the alternative — leaving orphaned runs in
         the database — makes "what is my P&L?" ambiguous, and an ambiguous P&L is worse
         than a deleted one in a simulation whose data is disposable by design.
+
+        Under the session lock (Phase 1.5): a reset racing a start would otherwise see no
+        run, delete nothing, and let the start install a run the operator believed reset.
         """
-        if self.runtime is not None:
-            run_id = self.runtime.run_id
-            if self.runtime.is_running:
-                await self.runtime.stop()
+        async with self._session_lock:
+            return await self._reset_account_locked(initial_capital, by=by)
+
+    async def _reset_account_locked(self, initial_capital: float, *, by: str) -> dict[str, Any]:
+        runtime = self.runtime
+        if runtime is not None:
+            run_id = runtime.run_id
+            if runtime.is_running:
+                await runtime.stop()
             async with self.database.session() as session:
                 await RunRepository(session).delete(run_id)
             self.runtime = None
@@ -681,6 +765,25 @@ class AppState:
                         latency_scenario=payload["latency_scenario"],
                         at=datetime.now(UTC),
                     )
+                elif kind == "account_event":
+                    await EventRepository(session).append(payload["run_id"], payload["envelope"])
+                elif kind == "account_events":
+                    # Several account events that belong together — a funding settlement
+                    # and the plan that records it as settled — in one session, so they
+                    # commit together or not at all (Phase 1.8).
+                    repository = EventRepository(session)
+                    for envelope in payload["envelopes"]:
+                        await repository.append(payload["run_id"], envelope)
+                elif kind == "run_stop":
+                    # The runtime ended its own session (deadline): stamp the run row so
+                    # the next boot does not resume it as crash-interrupted. A stamped run
+                    # holds no lease (G9).
+                    await RunRepository(session).stop(payload["run_id"], payload["stopped_at"])
+                    await RunRepository(session).release_lease(payload["run_id"])
+                elif kind == "run_heartbeat":
+                    # The session is alive: another process reads this before it resumes
+                    # or starts a session over the same account (Phase 1.3, G9).
+                    await RunRepository(session).heartbeat(payload["run_id"], payload["at"])
                 elif kind == "reconciliation":
                     await ReconciliationRepository(session).record(payload)
                 elif kind == "incident":
@@ -699,8 +802,30 @@ class AppState:
                         self.runtime.execution.portfolio,
                         payload["at"],
                     )
+            self._persist_writes += 1
         except Exception as exc:
+            # Absorbed so the loop goes on; counted so it is not hidden (Phase 1.4). The
+            # payload never reaches the log: it may carry an order or an account event.
+            self._persist_failures += 1
+            self._persist_last_error = f"{kind}: {type(exc).__name__}: {str(exc)[:200]}"
+            self._persist_last_failed_at = datetime.now(UTC)
             _log.warning("persist_failed", kind=kind, error=str(exc)[:300])
+
+    def persistence_status(self) -> dict[str, Any]:
+        """What the store has absorbed: writes, failures, the last failure and when."""
+        return {
+            "writes": self._persist_writes,
+            "failures": self._persist_failures,
+            "last_error": self._persist_last_error,
+            "last_failed_at": (
+                self._persist_last_failed_at.isoformat() if self._persist_last_failed_at else None
+            ),
+            "degraded": self._persistence_recently_failed(),
+        }
+
+    def _persistence_recently_failed(self, *, window: timedelta = timedelta(minutes=10)) -> bool:
+        at = self._persist_last_failed_at
+        return at is not None and datetime.now(UTC) - at < window
 
     # ------------------------------------------------------------------ views
 
@@ -1564,7 +1689,10 @@ class AppState:
             from tia.core.clock import SystemClock
             from tia.data.funding import FundingMonitor
 
-            self._funding = FundingMonitor(clock=SystemClock())
+            self._funding = FundingMonitor(
+                clock=SystemClock(),
+                max_age_seconds=float(self.settings.live.funding_max_age_seconds),
+            )
         return self._funding
 
     async def funding_report(self, *, force: bool = False) -> dict[str, Any]:
@@ -2014,6 +2142,11 @@ class AppState:
         }
 
     async def arm_live(self, *, operator: str, confirmation: str) -> dict[str, Any]:
+        """Arm under the session lock — see :meth:`_arm_live_locked`."""
+        async with self._session_lock:
+            return await self._arm_live_locked(operator=operator, confirmation=confirmation)
+
+    async def _arm_live_locked(self, *, operator: str, confirmation: str) -> dict[str, Any]:
         """Arm, then actually start the live runtime — and report only what happened.
 
         Every attempt is persisted, pass or fail, with the report that decided it. On a
@@ -2079,22 +2212,30 @@ class AppState:
         runtime_state = ""
         detail = ""
         try:
+            from tia.runtime.session_limits import encode_session_notes
+
             runtime = await self._build_live_runtime(token)
-            await runtime.start()
+            # The same contract as the paper path (Phase 1.3, G10): the run row exists
+            # before the loop takes a decision, and a start that fails leaves a stamped
+            # row, never a session. Nothing of an earlier run is stamped "orphaned" here —
+            # a real venue keeps its orders; the reconciliation reports what it finds.
+            await self._start_session_with_run_row(
+                runtime,
+                mode="live",
+                scenario="live",
+                initial_capital=float(self.settings.live.max_live_capital),
+                seed=0,
+                symbols=(self.settings.live.symbol,),
+                notes=encode_session_notes(
+                    deadline=getattr(runtime, "session_deadline", None),
+                    max_hours=self.settings.live.session_max_hours or None,
+                ),
+                orphan_earlier_orders=False,
+            )
             self.live_runtime = runtime
             self._start_evidence_refresh()
             runtime_started = runtime.state.value == "running"
             runtime_state = runtime.state.value
-            async with self.database.session() as session:
-                await RunRepository(session).create(
-                    run_id=runtime.run_id,
-                    mode="live",
-                    scenario="live",
-                    started_at=datetime.now(UTC),
-                    initial_capital=self.settings.live.max_live_capital,
-                    seed=0,
-                    symbols=(self.settings.live.symbol,),
-                )
         except Exception as exc:
             detail = f"gate passed but the runtime did not start: {exc}"[:1000]
             runtime_state = "error"
@@ -2152,6 +2293,14 @@ class AppState:
             simulated=live.use_testnet,
         )
         prior_outcomes, prior_reviews = await self._load_live_evidence()
+        # Today's entries and the last entry's time, rebuilt from the execution record
+        # the way the paper path does (Phase 1.3, G10): a live restart must not hand the
+        # day's frequency limits a fresh zero. The account itself is NOT restored from
+        # the journal here — over a real venue the venue is the authority on cash and
+        # position, and the reconciliation reads it. The configured span becomes the
+        # session's deadline, as it does for a paper session.
+        risk_restore = await self._load_risk_restore()
+        hours = float(live.session_max_hours or 0.0)
         return LiveRuntime(
             self.settings,
             activation=token,
@@ -2163,6 +2312,9 @@ class AppState:
             on_event=self.broadcast,
             prior_outcomes=prior_outcomes,
             prior_reviews=prior_reviews,
+            prior_risk_state=risk_restore,
+            session_deadline=(datetime.now(UTC) + timedelta(hours=hours)) if hours > 0 else None,
+            session_max_hours=hours if hours > 0 else None,
         )
 
     async def _record_activation(self, **values: Any) -> None:
@@ -2188,12 +2340,42 @@ class AppState:
         except Exception as exc:
             _log.warning("activation_record_failed", error=str(exc)[:300])
 
-    async def start_paper_realtime(self, *, actor: str) -> dict[str, Any]:
+    async def start_paper_realtime(
+        self,
+        *,
+        actor: str,
+        max_duration_hours: float | None = None,
+        session_deadline: datetime | None = None,
+    ) -> dict[str, Any]:
+        """Start a 24/7 paper-realtime session under the session lock — see
+        :meth:`_start_paper_realtime_locked`. Two concurrent requests cannot both pass the
+        "already active" check: the second waits and is refused."""
+        async with self._session_lock:
+            return await self._start_paper_realtime_locked(
+                actor=actor, max_duration_hours=max_duration_hours, session_deadline=session_deadline,
+            )
+
+    async def _start_paper_realtime_locked(
+        self,
+        *,
+        actor: str,
+        max_duration_hours: float | None = None,
+        session_deadline: datetime | None = None,
+    ) -> dict[str, Any]:
         """Start a 24/7 paper-realtime session: real market data, simulated fills.
 
         No activation token — nothing here can spend real money, and the provider layer
         guarantees it independently. This is the session the 7-day paper track record
         runs on; its closed round trips persist as source="paper" evidence.
+
+        A *validation* session is the same session with a deadline: ``max_duration_hours``
+        (else the configured ``live.session_max_hours``) is enforced by the runtime itself
+        and written into the run row, so a restart resumes under the same deadline
+        (``session_deadline``) rather than a fresh one. Semantics of the argument (F15):
+        ``None`` means "the configured span"; an explicit ``0`` means "no deadline at all"
+        and **overrides** a configured ``session_max_hours`` — an operator asking for the
+        24/7 session on purpose — exactly as ``session_max_hours = 0`` in configuration
+        means the 24/7 session.
         """
         from tia.core.clock import SystemClock
         from tia.core.errors import LiveActivationError
@@ -2202,10 +2384,21 @@ class AppState:
         from tia.domain.instruments import DEFAULT_UNIVERSE
         from tia.execution.paper import PaperExecutionProvider
         from tia.runtime.live import LiveRuntime
+        from tia.runtime.session_limits import encode_session_notes
 
         if self.live_runtime is not None and self.live_runtime.is_running:
             raise LiveActivationError(
                 "a realtime session is already active; stop it before starting another"
+            )
+        # Another *process* over the same store (a second container, a stale deploy): its
+        # run row carries a fresh heartbeat. Two sessions over one account is the F5 race
+        # across processes, and the lock above cannot see it (Phase 1.3, G9).
+        held = await self._foreign_session_lease(mode="paper-live")
+        if held is not None:
+            run_id, age = held
+            raise LiveActivationError(
+                f"another process holds an active paper session (run {run_id}, heartbeat "
+                f"{age:.0f}s ago); stop it before starting another"
             )
 
         clock = SystemClock()
@@ -2224,24 +2417,48 @@ class AppState:
                 clock=clock,
             )
             market.start()
-        # One account across restarts: the simulated balance starts from the configured
-        # capital plus whatever the record says this account has already realised, and
-        # the runtime books that carried P&L as realised rather than as a deposit.
+        # One account across restarts. The engine is seeded from the account's own
+        # journal — cash, position, realised P&L, fees, the equity peak and the UTC day's
+        # opening equity — never from base capital plus a sum of strategy outcomes. A
+        # journal that cannot be read or does not reconcile leaves the engine at base
+        # capital *and* the runtime refusing entries until a person reconciles.
         capital = float(self.settings.live.paper_capital)
-        prior_pnl = await self._carried_session_pnl()
+        symbol = self.settings.live.symbol
+        account_restore = await self._load_account_restore(symbol=symbol, initial_capital=capital)
         execution = PaperExecutionProvider(
             self.settings.execution,
             DEFAULT_UNIVERSE,
             clock,
             RngRegistry(self.settings.seed),
-            initial_capital=capital + prior_pnl,
+            initial_capital=capital,
         )
+        if account_restore.complete:
+            execution.restore_portfolio(account_restore.portfolio_state())
+        prior_pnl = float(account_restore.realized_pnl) if account_restore.complete else 0.0
         funding_rate = None
+        funding_status = None
+        funding_rate_at = None
         if self.settings.live.charge_funding:
             monitor = self._get_funding()
             monitor.start()
             funding_rate = monitor.latest_rate
+            funding_status = monitor.status
+            funding_rate_at = monitor.rate_at
         prior_outcomes, prior_reviews = await self._load_live_evidence()
+        # Today's entries, by symbol, and the last entry's time, rebuilt from the orders
+        # and fills earlier sessions persisted — so a restart does not hand the day's
+        # frequency limits a fresh zero. An unreadable store yields an *incomplete*
+        # rebuild, and the runtime then refuses new entries until one succeeds.
+        risk_restore = await self._load_risk_restore()
+        hours = (
+            float(max_duration_hours)
+            if max_duration_hours is not None
+            else float(self.settings.live.session_max_hours)
+        )
+        span: float | None = None
+        if session_deadline is None and hours > 0:
+            session_deadline = datetime.now(UTC) + timedelta(hours=hours)
+            span = hours
         runtime = LiveRuntime(
             self.settings,
             activation=None,
@@ -2255,47 +2472,212 @@ class AppState:
             prior_reviews=prior_reviews,
             prior_realised_pnl=prior_pnl,
             funding_rate=funding_rate,
+            funding_status=funding_status,
+            funding_rate_at=funding_rate_at,
             poll_interval_seconds=10.0,
+            prior_risk_state=risk_restore,
+            session_deadline=session_deadline,
+            session_max_hours=span,
+            prior_account_state=account_restore,
         )
-        try:
-            await runtime.start()
-        except Exception:
-            # A refused start must not leave a feed task reconnecting in the background.
-            closer = getattr(market, "close", None)
+        # The run row — deadline included — exists before the loop takes its first
+        # decision, and a start that fails leaves a stamped row (F8). Orders earlier
+        # paper sessions left open belong to an engine that no longer exists and are
+        # stamped as orphaned — paper sessions only: a live run's orders are the venue's.
+        orphaned = await self._start_session_with_run_row(
+            runtime,
+            mode="paper-live",
+            scenario="realtime",
+            initial_capital=capital,
+            seed=self.settings.seed,
+            symbols=(symbol,),
+            notes=encode_session_notes(deadline=runtime.session_deadline, max_hours=hours or None),
+            orphan_earlier_orders=True,
+            market=market,
+        )
+        self.live_runtime = runtime
+        self._start_evidence_refresh()
+        _log.info(
+            "paper_realtime_started", run_id=runtime.run_id, actor=actor,
+            deadline=runtime.session_deadline.isoformat() if runtime.session_deadline else None,
+            account_verified=account_restore.complete, orphaned_orders=orphaned,
+        )
+        return runtime.snapshot()
+
+    async def _start_session_with_run_row(
+        self,
+        runtime: Any,
+        *,
+        mode: str,
+        scenario: str,
+        initial_capital: float,
+        seed: int,
+        symbols: Sequence[str],
+        notes: str = "",
+        orphan_earlier_orders: bool,
+        market: Any | None = None,
+    ) -> int:
+        """Write the run row, then start the loop — in that order, for every session kind.
+
+        The row exists before the loop takes its first decision: an order persisted for a
+        run the store does not know is an order the store refuses, and a session the
+        store does not know cannot be resumed or rebuilt from (F8). If the row cannot be
+        written, nothing starts. If the start fails, the row is stamped as over with the
+        failure in its notes, so a boot neither resumes it nor rebuilds on it, and the
+        feed (``market``) is closed. Returns how many earlier orders were stamped
+        orphaned (paper sessions only: an engine that restarts holds none of them; a real
+        venue keeps its orders and the reconciliation reports them).
+        Shared by the paper and the live path since Phase 1.3 (G10).
+        """
+        from tia.core.errors import LiveActivationError
+
+        async def close_feed() -> None:
+            closer = getattr(market, "close", None) if market is not None else None
             if callable(closer):
                 with contextlib.suppress(Exception):
                     await closer()
-            raise
-        self.live_runtime = runtime
-        self._start_evidence_refresh()
-        async with self.database.session() as session:
-            await RunRepository(session).create(
-                run_id=runtime.run_id,
-                mode="paper-live",
-                scenario="realtime",
-                started_at=datetime.now(UTC),
-                initial_capital=capital,
-                seed=self.settings.seed,
-                symbols=(self.settings.live.symbol,),
-            )
-        _log.info("paper_realtime_started", run_id=runtime.run_id, actor=actor)
-        return runtime.snapshot()
 
-    async def _carried_session_pnl(self) -> float:
-        """Realised P&L the 24/7 account has already made, in dollars, from the record.
-
-        Every closed live round trip is priced at the size it carried; the sum is what
-        one continuous account would hold beyond its starting capital. Zero when the
-        record cannot be read: a session that starts from its base is better than one
-        that does not start.
-        """
+        started_at = datetime.now(UTC)
+        orphaned = 0
         try:
-            async with self.database.session() as db:
-                record = await EdgeStateRepository(db).dollar_record()
-            return float((record.get("live") or {}).get("pnl_usd", 0.0) or 0.0)
+            async with self.database.session() as session:
+                await RunRepository(session).create(
+                    run_id=runtime.run_id,
+                    mode=mode,
+                    scenario=scenario,
+                    started_at=started_at,
+                    initial_capital=initial_capital,
+                    seed=seed,
+                    symbols=tuple(symbols),
+                    notes=notes,
+                )
+                if orphan_earlier_orders:
+                    orphaned = await AccountJournalRepository(session).orphan_open_orders(
+                        exclude_run_id=runtime.run_id, at=started_at, modes=(mode,)
+                    )
         except Exception as exc:
-            _log.warning("carried_pnl_unavailable", error=str(exc)[:200])
-            return 0.0
+            await close_feed()
+            raise LiveActivationError(
+                f"the session's run row could not be persisted; nothing was started: {exc}"
+            ) from exc
+        try:
+            await runtime.start()
+        except Exception as exc:
+            await close_feed()
+            with contextlib.suppress(Exception):
+                async with self.database.session() as session:
+                    await RunRepository(session).stop(runtime.run_id, datetime.now(UTC))
+                    await RunRepository(session).annotate(
+                        runtime.run_id, f"start_failed: {str(exc)[:300]}"
+                    )
+            raise
+        return orphaned
+
+    async def _foreign_session_lease(self, *, mode: str) -> tuple[str, float] | None:
+        """``(run_id, heartbeat age)`` of an open run of ``mode`` another process is still
+        running — its heartbeat is younger than the lease — or ``None`` (Phase 1.3, G9).
+        The session this process runs, if any, is not foreign."""
+        from tia.runtime.session_limits import lease_age_seconds, lease_is_held
+
+        own = self.live_runtime.run_id if self.live_runtime is not None else None
+        now = datetime.now(UTC)
+        try:
+            async with self.database.session() as session:
+                rows = await RunRepository(session).open_sessions(mode=mode)
+        except Exception as exc:
+            _log.warning("session_lease_check_failed", error=str(exc)[:300])
+            return None
+        for run_id, notes in rows:
+            if run_id == own:
+                continue
+            if lease_is_held(notes, now=now):
+                return run_id, float(lease_age_seconds(notes, now=now) or 0.0)
+        return None
+
+    async def _load_account_restore(self, *, symbol: str, initial_capital: float) -> Any:
+        """Rebuild the paper account from its journal; incomplete on any failure.
+
+        Never degrades to base capital: a store that cannot be read is an account that
+        cannot be trusted, and the runtime refuses entries on it until
+        :meth:`reconcile_session_state` succeeds.
+        """
+        from tia.portfolio.account_journal import AccountRestore
+
+        try:
+            async with self.database.session() as session:
+                # Paper-live runs only (Phase 1.3, G11): a live run's fills belong to the
+                # venue's account, and folding them here would move the paper account.
+                return await AccountJournalRepository(session).rebuild(
+                    now=datetime.now(UTC), initial_capital=initial_capital, symbol=symbol,
+                    modes=("paper-live",),
+                )
+        except Exception as exc:
+            _log.error("account_restore_failed", error=str(exc)[:300])
+            return AccountRestore.failed(str(exc), initial_capital=initial_capital)
+
+    async def _load_risk_restore(self) -> Any:
+        """Rebuild the frequency state from the store; incomplete on any failure.
+
+        Unlike the evidence loaders this does **not** degrade to "nothing": a session
+        that cannot read today's entries must not start taking entries as if there had
+        been none. The runtime receives the failure and refuses new entries until
+        :meth:`reconcile_risk_state` succeeds.
+        """
+        from tia.risk.restore import RiskRestore
+
+        now = datetime.now(UTC)
+        # The read must cover the longest cooldown the configuration can ask for; two
+        # days was a fixed assumption, now the floor (F10).
+        lookback = max(
+            timedelta(days=2), timedelta(seconds=2 * int(self.settings.risk.trade_cooldown_seconds))
+        )
+        try:
+            async with self.database.session() as session:
+                return await RiskStateRepository(session).rebuild(now=now, lookback=lookback)
+        except Exception as exc:
+            _log.error("risk_state_restore_failed", error=str(exc)[:300])
+            return RiskRestore.failed(str(exc), day=now.date().isoformat())
+
+    async def reconcile_risk_state(self, *, actor: str) -> dict[str, Any]:
+        """Kept for the earlier route: reconciliation is now whole — see
+        :meth:`reconcile_session_state`."""
+        return await self.reconcile_session_state(actor=actor)
+
+    async def reconcile_session_state(self, *, actor: str) -> dict[str, Any]:
+        """Re-read the store into the running session: frequency state **and** account.
+
+        The operator's path out of a start that could not read the store, or a session
+        whose venue and record disagreed. Entries are allowed again only when both the
+        frequency rebuild and the account rebuild are complete and the engine's own
+        position agrees with the journal. Counters alone never lift the block.
+        """
+        live = self.live_runtime
+        if live is None:
+            return {"verified": False, "reason": "no 24/7 session is running"}
+        risk_restore = await self._load_risk_restore()
+        risk_report = live.restore_risk_state(risk_restore)
+        account_restore = await self._load_account_restore(
+            symbol=self.settings.live.symbol, initial_capital=float(self.settings.live.paper_capital),
+        )
+        venue_position: float | None = None
+        with contextlib.suppress(Exception):
+            positions = await live._execution.get_positions()
+            held = positions.get(self.settings.live.symbol)
+            venue_position = float(held.quantity) if held is not None else 0.0
+        account_report = live.restore_account_state(account_restore, venue_position=venue_position)
+        verified = not live.entry_blocks
+        _log.info(
+            "session_state_reconciled", actor=actor, verified=verified,
+            risk_complete=risk_restore.complete, account_complete=account_restore.complete,
+            blocks=list(live.entry_blocks),
+        )
+        return {
+            "verified": verified,
+            "entry_blocks": live.entry_blocks,
+            "risk_state": risk_report,
+            "account_state": account_report,
+            "venue_position": venue_position,
+        }
 
     async def stop_realtime_session(self, *, reason: str) -> dict[str, Any]:
         """Stop the live/paper-realtime session AND stamp its run row.
@@ -2303,7 +2685,15 @@ class AppState:
         The stamp is what makes operator intent survive a restart: startup resumes only
         runs with no ``stopped_at``, so a session stopped through this method stays
         stopped, while one interrupted by a crash or redeploy comes back on its own.
+
+        Under the session lock (Phase 1.4): a stop that arrives while a start is still
+        building the session waits for it and then stops it, instead of answering
+        "disarmed" to the operator while the session it did not see goes on running.
         """
+        async with self._session_lock:
+            return await self._stop_realtime_session_locked(reason=reason)
+
+    async def _stop_realtime_session_locked(self, *, reason: str) -> dict[str, Any]:
         live = self.live_runtime
         if live is None:
             return {"active": False, "state": "disarmed"}
@@ -2311,6 +2701,8 @@ class AppState:
         with contextlib.suppress(Exception):  # the stop itself must not fail on a stamp
             async with self.database.session() as session:
                 await RunRepository(session).stop(live.run_id, datetime.now(UTC))
+                # A stamped run holds no lease: its heartbeat goes with it (G9).
+                await RunRepository(session).release_lease(live.run_id)
         return live.snapshot()
 
     async def _maybe_resume_paper_realtime(self) -> None:
@@ -2333,12 +2725,14 @@ class AppState:
         """
         from sqlalchemy import text
 
+        from tia.runtime.session_limits import resume_decision
+
         try:
             async with self.database.session() as session:
                 row = (
                     await session.execute(
                         text(
-                            "SELECT run_id FROM runs WHERE mode = 'paper-live' "
+                            "SELECT run_id, notes FROM runs WHERE mode = 'paper-live' "
                             "AND stopped_at IS NULL ORDER BY started_at DESC LIMIT 1"
                         )
                     )
@@ -2346,6 +2740,7 @@ class AppState:
                 if row is None:
                     return
                 interrupted = str(row[0])
+                notes = str(row[1] or "")
                 halts = (
                     await session.execute(
                         text(
@@ -2355,24 +2750,44 @@ class AppState:
                         {"run": interrupted},
                     )
                 ).scalar()
-                # Either way this run is over; the question is only whether a new one
-                # starts unattended.
+                decision = resume_decision(
+                    notes=notes, halts=int(halts or 0), now=datetime.now(UTC)
+                )
+                if decision.held_by_other:
+                    # A fresh heartbeat: either another process is running this run, or
+                    # the process died hard moments ago and nothing released the lease.
+                    # The row is left alone for now — stamping it would make a running
+                    # session look over — and the question is answered after a probe
+                    # interval, in the background, by whether the heartbeat advanced
+                    # (Phase 1.3, G9). The API comes up meanwhile.
+                    _log.warning(
+                        "paper_realtime_lease_held", run_id=interrupted,
+                        reason=decision.reason, probe_seconds=self._lease_probe_seconds,
+                    )
+                    self._lease_probe_task = asyncio.get_running_loop().create_task(
+                        self._probe_lease_then_resume(interrupted, notes, int(halts or 0))
+                    )
+                    return
+                # The run is over either way — the process that owned it is gone; the
+                # question is only whether a new one starts unattended.
                 await RunRepository(session).stop(interrupted, datetime.now(UTC))
         except Exception as exc:
             _log.warning("paper_realtime_resume_check_failed", error=str(exc)[:300])
             return
 
-        if halts:
+        if not decision.resume:
             _log.warning(
-                "paper_realtime_not_resumed",
-                run_id=interrupted,
-                reason="an operator-level halt was engaged; restart it deliberately",
+                "paper_realtime_not_resumed", run_id=interrupted, reason=decision.reason,
             )
             return
 
         try:
-            await self.start_paper_realtime(actor="startup-recovery")
-            _log.info("paper_realtime_resumed", interrupted_run=interrupted)
+            await self.start_paper_realtime(
+                actor="startup-recovery", session_deadline=decision.deadline
+            )
+            _log.info(
+                "paper_realtime_resumed", interrupted_run=interrupted, reason=decision.reason,
+            )
         except Exception as exc:
             _log.warning(
                 "paper_realtime_resume_failed", run_id=interrupted, error=str(exc)[:300]
@@ -2383,6 +2798,60 @@ class AppState:
                     "reason": str(exc)[:300],
                     "actor": "startup-recovery",
                     "run_id": interrupted,
+                    "at": datetime.now(UTC).isoformat(),
+                }
+            )
+
+    async def _probe_lease_then_resume(self, run_id: str, notes_before: str, halts: int) -> None:
+        """Wait a probe interval, read the run's heartbeat again, and decide.
+
+        Advanced: another process is running the session — alert, touch nothing.
+        Unchanged: the writer is dead — stamp the row and resume as a crash-interrupted
+        run, under the same rules as a boot that found a stale heartbeat (G9).
+        """
+        from tia.runtime.session_limits import decode_heartbeat, resume_decision
+
+        await asyncio.sleep(self._lease_probe_seconds)
+        try:
+            async with self.database.session() as session:
+                run = await RunRepository(session).get(run_id)
+                if run is None or run.stopped_at is not None:
+                    return  # stamped meanwhile by whoever owns it
+                notes_after = str(run.notes or "")
+                if decode_heartbeat(notes_after) != decode_heartbeat(notes_before):
+                    reason = (
+                        f"run {run_id}'s heartbeat advanced during the {self._lease_probe_seconds:.0f}s "
+                        "probe: another process is running this session; nothing started here"
+                    )
+                    _log.warning("paper_realtime_held_by_other_process", run_id=run_id, reason=reason)
+                    self._dispatch_alert(
+                        {
+                            "kind": "paper_session_held_by_other_process", "reason": reason,
+                            "actor": "startup-recovery", "run_id": run_id,
+                            "at": datetime.now(UTC).isoformat(),
+                        }
+                    )
+                    return
+                # Dead: decide as for any interrupted run, the lease set aside.
+                decision = resume_decision(
+                    notes=notes_after, halts=halts, now=datetime.now(UTC), lease_seconds=0.0
+                )
+                await RunRepository(session).stop(run_id, datetime.now(UTC))
+        except Exception as exc:
+            _log.warning("paper_realtime_lease_probe_failed", run_id=run_id, error=str(exc)[:300])
+            return
+        if not decision.resume:
+            _log.warning("paper_realtime_not_resumed", run_id=run_id, reason=decision.reason)
+            return
+        try:
+            await self.start_paper_realtime(actor="startup-recovery", session_deadline=decision.deadline)
+            _log.info("paper_realtime_resumed", interrupted_run=run_id, reason=decision.reason)
+        except Exception as exc:
+            _log.warning("paper_realtime_resume_failed", run_id=run_id, error=str(exc)[:300])
+            self._dispatch_alert(
+                {
+                    "kind": "paper_resume_failed", "reason": str(exc)[:300],
+                    "actor": "startup-recovery", "run_id": run_id,
                     "at": datetime.now(UTC).isoformat(),
                 }
             )
@@ -2552,6 +3021,9 @@ class AppState:
 
         components = {
             "database": "online" if database_ok else "offline",
+            # A write the store refused in the last ten minutes: the engines went on
+            # (by design), the record did not (Phase 1.4).
+            "persistence": "degraded" if self._persistence_recently_failed() else "online",
             "market_data": market_data_state,
             "paper_execution": "online" if (runtime or live_active) else "unknown",
             "risk_engine": risk_engine_state,
@@ -2614,6 +3086,7 @@ class AppState:
             **health,
             "subscribers": len(self._subscribers),
             "dropped_events": self._dropped_events,
+            "persistence": self.persistence_status(),
             "run": self.runtime_snapshot(),
             "scenario": (
                 {
@@ -2642,6 +3115,12 @@ class AppState:
             "# HELP tia_events_dropped_total Events dropped for slow subscribers",
             "# TYPE tia_events_dropped_total counter",
             f"tia_events_dropped_total {self._dropped_events}",
+            "# HELP tia_persist_writes_total Persistence writes that landed",
+            "# TYPE tia_persist_writes_total counter",
+            f"tia_persist_writes_total {self._persist_writes}",
+            "# HELP tia_persist_failures_total Persistence writes the store refused",
+            "# TYPE tia_persist_failures_total counter",
+            f"tia_persist_failures_total {self._persist_failures}",
         ]
         for name, value in counters.items():
             lines.append(f"# TYPE tia_runtime_{name} counter")

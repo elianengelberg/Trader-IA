@@ -945,7 +945,14 @@ def _register_routes(app: FastAPI, settings: Settings) -> None:
 
     @app.post("/api/live/paper-start")
     async def paper_realtime_start(
-        request: Request, user: User = Depends(require_operator)
+        request: Request,
+        user: User = Depends(require_operator),
+        max_hours: float | None = Query(
+            default=None, ge=0, le=720,
+            description="Validation session: stop itself after this many hours. 0 = explicitly "
+            "no deadline, overriding a configured live.session_max_hours (the 24/7 session); "
+            "omitted = the configured live.session_max_hours",
+        ),
     ) -> dict[str, Any]:
         """Start the 24/7 paper-realtime session: real market data, simulated fills.
 
@@ -956,7 +963,9 @@ def _register_routes(app: FastAPI, settings: Settings) -> None:
         `POST /api/live/stop` as a live session.
         """
         try:
-            return await tia(request).start_paper_realtime(actor=user.username)
+            return await tia(request).start_paper_realtime(
+                actor=user.username, max_duration_hours=max_hours
+            )
         except LiveActivationError as exc:
             raise HTTPException(409, str(exc)) from exc
         except ProviderUnavailableError as exc:
@@ -1034,6 +1043,22 @@ def _register_routes(app: FastAPI, settings: Settings) -> None:
         except (ValueError, InvalidStateTransitionError) as exc:
             raise HTTPException(409, str(exc)) from exc
         return live.snapshot()
+
+    @app.post("/api/live/reconcile")
+    async def live_reconcile(
+        request: Request, user: User = Depends(require_operator)
+    ) -> dict[str, Any]:
+        """Re-read the store into the running session: today's entries, the account's
+        journal, and the engine's own position. Entries are allowed again only when all
+        three agree. The way out of a start that could not read the store."""
+        return await tia(request).reconcile_session_state(actor=user.username)
+
+    @app.post("/api/live/risk-state/reconcile")
+    async def live_risk_state_reconcile(
+        request: Request, user: User = Depends(require_operator)
+    ) -> dict[str, Any]:
+        """Earlier name of ``/api/live/reconcile``; same whole-session reconciliation."""
+        return await tia(request).reconcile_session_state(actor=user.username)
 
     @app.post("/api/live/kill-switch")
     async def live_kill_switch(

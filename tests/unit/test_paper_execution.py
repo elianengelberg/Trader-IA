@@ -599,3 +599,48 @@ async def test_the_snapshot_agrees_with_the_public_api(
     provider.on_bar(bar())
 
     assert provider.snapshot() == await provider.state_snapshot()
+
+
+# ------------------------------------------------------------------- resting orders fill at their price
+
+
+async def test_a_limit_order_fills_at_its_limit_with_no_slippage(
+    provider: PaperExecutionProvider, clock: SimulatedClock
+) -> None:
+    """A resting order is taken at its own price. The trade-through requirement is the
+    queue it waited in; slippage on top would fill a limit worse than its limit, which no
+    venue does, and the open's better price is improvement only a taker receives."""
+    await provider.submit_order(intent(order_type=OrderType.LIMIT, limit_price=99.0))
+    clock.advance_to(START + timedelta(minutes=2))
+    through = bar(open_=100.0, high=101.0, low=98.5, close=99.5)
+    fill = provider.on_bar(through)[0]
+    assert fill.price == pytest.approx(99.0)
+    assert fill.slippage_bps == 0.0
+    assert fill.liquidity == "maker"
+    assert fill.fee == pytest.approx(99.0 * 1.0 * DETERMINISTIC.maker_fee_bps / 10_000.0)
+
+
+async def test_a_sell_limit_fills_at_its_limit_even_when_the_bar_opens_above_it(
+    provider: PaperExecutionProvider, clock: SimulatedClock
+) -> None:
+    await provider.submit_order(
+        intent(side=Side.SELL, order_type=OrderType.LIMIT, limit_price=101.0, quantity=0.5)
+    )
+    clock.advance_to(START + timedelta(minutes=2))
+    # The bar opens 1 % above the sell limit and trades through it. The old model paid
+    # the maker the open (price improvement a resting order never receives) and then
+    # charged slippage against it; the fill is the limit, no more and no less.
+    gapped_above = bar(open_=102.0, high=103.0, low=101.5, close=102.5)
+    fill = provider.on_bar(gapped_above)[0]
+    assert fill.price == pytest.approx(101.0)
+    assert fill.slippage_bps == 0.0
+    assert fill.liquidity == "maker"
+
+
+async def test_market_orders_still_pay_slippage_after_the_maker_change(
+    provider: PaperExecutionProvider, clock: SimulatedClock
+) -> None:
+    await provider.submit_order(intent(side=Side.BUY))
+    clock.advance_to(START + timedelta(minutes=2))
+    fill = provider.on_bar(bar())[0]
+    assert fill.liquidity == "taker" and fill.slippage_bps > 0

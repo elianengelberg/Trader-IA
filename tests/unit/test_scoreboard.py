@@ -39,14 +39,20 @@ def test_a_red_but_noisy_record_does_not_mute() -> None:
     assert board.is_muted("noisy") is False
 
 
-def test_exploration_trades_are_recorded_but_never_judge() -> None:
+def test_exploration_trades_are_judged_like_any_other_and_still_counted_apart() -> None:
+    """An exploration trade is the strategy's own signal, approved by the same risk engine
+    and closed by the same exits; only its size was reduced because the *estimator* lacked
+    evidence. Leaving it out of the verdict meant a fresh system — every bucket unproven,
+    every trade exploratory — could never judge a strategy at all."""
     board = StrategyScoreboard()
     for _ in range(MIN_TRADES_TO_JUDGE + 5):
         board.record("explorer", -50.0, exploratory=True)
     row = board.report()[0]
     assert row["trades"] == MIN_TRADES_TO_JUDGE + 5
-    assert row["judged"] == 0
-    assert board.is_muted("explorer") is False
+    assert row["exploratory"] == MIN_TRADES_TO_JUDGE + 5
+    assert row["judged"] == MIN_TRADES_TO_JUDGE + 5
+    assert board.is_muted("explorer") is True
+    assert row["evidence_state"] == "unfavourable"
 
 
 def test_rows_without_a_strategy_are_skipped_not_invented() -> None:
@@ -219,13 +225,49 @@ def test_the_historical_synthetic_record_cannot_mute_anyone_under_real_only() ->
     assert all(r["judged"] == 0 for r in real_only.report())
 
 
-def test_exploration_is_recorded_but_never_judges_under_real_only_either() -> None:
+def test_real_exploration_is_judged_under_real_only_too() -> None:
     board = StrategyScoreboard(policy="real_only")
     for _ in range(MIN_TRADES_TO_JUDGE + 5):
         board.record("explorer", -50.0, exploratory=True, market_data="real")
     row = board.report()[0]
     assert row["trades"] == MIN_TRADES_TO_JUDGE + 5 and row["exploratory"] == row["trades"]
-    assert row["judged"] == 0 and board.is_muted("explorer") is False
+    assert row["judged"] == MIN_TRADES_TO_JUDGE + 5 and board.is_muted("explorer") is True
+
+
+def test_evidence_states_follow_the_record_without_inventing_thresholds() -> None:
+    """Five states, recomputed from the record with the constants the mute already uses.
+    No state latches: the same board moves through them as trades arrive."""
+    board = StrategyScoreboard()
+    assert board.is_muted("fresh") is False
+
+    board.record("fresh", 4.0)
+    rows = {r["strategy_id"]: r for r in board.report()}
+    assert rows["fresh"]["evidence_state"] == "insufficient"
+
+    # At the floor with a mean well inside its own noise: inconclusive, not unfavourable.
+    for i in range(MIN_TRADES_TO_JUDGE):
+        board.record("noisy", 1.0 + (60.0 if i % 2 else -60.0))
+    rows = {r["strategy_id"]: r for r in board.report()}
+    assert rows["noisy"]["evidence_state"] == "inconclusive"
+    assert board.is_muted("noisy") is False
+
+    # At the floor and clearly positive: favourable.
+    for i in range(MIN_TRADES_TO_JUDGE):
+        board.record("good", 20.0 + (2.0 if i % 2 else -2.0))
+    rows = {r["strategy_id"]: r for r in board.report()}
+    assert rows["good"]["evidence_state"] == "favourable"
+
+    # At the floor and more than one standard error below zero: unfavourable == muted.
+    for i in range(MIN_TRADES_TO_JUDGE):
+        board.record("bad", -20.0 + (2.0 if i % 2 else -2.0))
+    rows = {r["strategy_id"]: r for r in board.report()}
+    assert rows["bad"]["evidence_state"] == "unfavourable"
+    assert board.is_muted("bad") is True
+
+    # Nothing credited yet (only excluded rows under real_only): unevaluated.
+    real_only = StrategyScoreboard(policy="real_only")
+    real_only.record("ghost", -99.0, market_data="synthetic")
+    assert real_only.report()[0]["evidence_state"] == "unevaluated"
 
 
 def test_an_unknown_policy_is_refused_rather_than_guessed() -> None:

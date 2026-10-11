@@ -167,9 +167,15 @@ class StrategyEngine:
             entry_reference=entry,
             stop_reference=result.stop_reference,
             target_reference=result.target_reference,
+            # Credited to the opinion that set the trade's levels — the strongest agreeing
+            # one — never to whichever strategy was evaluated first. The co-signers travel
+            # alongside, so an agreement is recorded rather than hidden behind one name.
             strategy_id=(
-                result.contributing[0].strategy_id if result.contributing else "fusion"
+                result.primary.strategy_id
+                if result.primary is not None
+                else (result.contributing[0].strategy_id if result.contributing else "fusion")
             ),
+            contributing_strategy_ids=tuple(o.strategy_id for o in result.contributing),
             strategy_version=strategy_version,
             model_version=context.model_id if context else "",
             prompt_version=context.prompt_version if context else "",

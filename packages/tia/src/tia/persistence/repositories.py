@@ -13,7 +13,7 @@ key rather than by hoping it does not happen.
 from __future__ import annotations
 
 from collections.abc import Sequence
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Any
 
 from sqlalchemy import case, delete, desc, func, select
@@ -79,6 +79,7 @@ class RunRepository:
         seed: int,
         symbols: Sequence[str],
         config_digest: str = "",
+        notes: str = "",
     ) -> RunRecord:
         record = RunRecord(
             run_id=run_id,
@@ -89,6 +90,7 @@ class RunRepository:
             seed=seed,
             symbols=list(symbols),
             config_digest=config_digest,
+            notes=notes,
         )
         self._session.add(record)
         await self._session.flush()
@@ -98,6 +100,57 @@ class RunRepository:
         run = await self._session.get(RunRecord, run_id)
         if run is not None:
             run.stopped_at = stopped_at
+
+    async def annotate(self, run_id: str, note: str) -> None:
+        """Add a note to the run row. JSON notes (the session deadline) keep their keys;
+        free-text notes are appended."""
+        import json
+
+        run = await self._session.get(RunRecord, run_id)
+        if run is None:
+            return
+        existing = run.notes or ""
+        try:
+            payload = json.loads(existing) if existing else {}
+        except ValueError:
+            payload = None
+        if isinstance(payload, dict):
+            payload["note"] = note
+            run.notes = json.dumps(payload, sort_keys=True)
+        else:
+            run.notes = (existing + "\n" if existing else "") + note
+
+    async def heartbeat(self, run_id: str, at: datetime) -> None:
+        """Stamp the run's heartbeat into its notes document (Phase 1.3, G9). The
+        deadline and any note already there are kept."""
+        from tia.runtime.session_limits import encode_heartbeat
+
+        run = await self._session.get(RunRecord, run_id)
+        if run is None:
+            return
+        run.notes = encode_heartbeat(run.notes, at=at)
+
+    async def release_lease(self, run_id: str) -> None:
+        """Drop the run's heartbeat: a clean shutdown (a redeploy's SIGTERM) says it is
+        no longer running, so the next boot resumes at once instead of waiting out the
+        lease (Phase 1.3, G9)."""
+        from tia.runtime.session_limits import clear_heartbeat
+
+        run = await self._session.get(RunRecord, run_id)
+        if run is None:
+            return
+        run.notes = clear_heartbeat(run.notes) or ""
+
+    async def open_sessions(self, *, mode: str) -> list[tuple[str, str]]:
+        """``(run_id, notes)`` of every run of ``mode`` with no ``stopped_at``, newest
+        first — the rows a boot or a start must read before claiming the account."""
+        result = await self._session.execute(
+            select(RunRecord.run_id, RunRecord.notes)
+            .where(RunRecord.mode == mode)
+            .where(RunRecord.stopped_at.is_(None))
+            .order_by(desc(RunRecord.started_at))
+        )
+        return [(str(run_id), str(notes or "")) for run_id, notes in result.all()]
 
     async def get(self, run_id: str) -> RunRecord | None:
         return await self._session.get(RunRecord, run_id)
@@ -984,3 +1037,163 @@ __all__ = [
     "ReconciliationRepository",
     "RunRepository",
 ]
+
+
+class RiskStateRepository:
+    """Reads the execution record the risk engine's frequency state is rebuilt from.
+
+    One query family, no writes. The rebuild itself is the pure function
+    :func:`tia.risk.restore.rebuild_risk_state`; this class only hands it the rows of
+    the sessions that share the account (``paper-live`` and ``live`` runs — never the
+    scenario engine's or the backtester's, which are other accounts entirely).
+    """
+
+    SESSION_MODES: tuple[str, ...] = ("paper-live", "live")
+
+    def __init__(self, session: AsyncSession) -> None:
+        self._session = session
+
+    async def rebuild(
+        self,
+        *,
+        now: datetime,
+        lookback: timedelta = timedelta(days=2),
+        modes: Sequence[str] = SESSION_MODES,
+    ) -> Any:
+        """The frequency state at ``now`` from orders and fills since ``now - lookback``.
+
+        The lookback must cover the longest cooldown the configuration can ask for; two
+        days covers every value the current limits accept while keeping the read small.
+        Exploration round trips closed today are counted from the outcome record, by
+        source ``live``, for the exploration budget's lower bound.
+        """
+        from tia.risk.restore import (
+            persisted_fill_from_row,
+            persisted_order_from_row,
+            rebuild_risk_state,
+            utc_day_start,
+        )
+
+        since = now - lookback
+        session_runs = select(RunRecord.run_id).where(RunRecord.mode.in_(list(modes)))
+        orders = (
+            await self._session.execute(
+                select(OrderRow)
+                .where(OrderRow.run_id.in_(session_runs))
+                .where(OrderRow.created_at >= since)
+            )
+        ).scalars().all()
+        fills = (
+            await self._session.execute(
+                select(FillRow)
+                .where(FillRow.run_id.in_(session_runs))
+                .where(FillRow.filled_at >= since)
+            )
+        ).scalars().all()
+        exploration_today = int(
+            (
+                await self._session.execute(
+                    select(func.count(EdgeOutcomeRow.outcome_id))
+                    .where(EdgeOutcomeRow.source == "live")
+                    .where(EdgeOutcomeRow.exploratory.is_(True))
+                    .where(EdgeOutcomeRow.closed_at >= utc_day_start(now))
+                    .where(EdgeOutcomeRow.closed_at <= now)
+                )
+            ).scalar()
+            or 0
+        )
+        return rebuild_risk_state(
+            now=now,
+            orders=[persisted_order_from_row(row) for row in orders],
+            fills=[persisted_fill_from_row(row) for row in fills],
+            exploration_closed_today=exploration_today,
+            source=f"store: {len(orders)} orders, {len(fills)} fills since {since.isoformat()}",
+        )
+
+
+class AccountJournalRepository:
+    """Reads the paper account's event journal and the rows it is reconciled against.
+
+    The journal is the ``events`` table filtered to the ``account.*`` types of the
+    sessions that share the account (``paper-live`` and ``live`` runs). The rebuild is
+    :func:`tia.portfolio.account_journal.fold_account_events`, a pure function; the
+    cross-check against the ``fills`` table is what makes a lost write visible.
+    """
+
+    SESSION_MODES: tuple[str, ...] = ("paper-live", "live")
+
+    def __init__(self, session: AsyncSession) -> None:
+        self._session = session
+
+    async def rebuild(
+        self,
+        *,
+        now: datetime,
+        initial_capital: float,
+        symbol: str,
+        modes: Sequence[str] = SESSION_MODES,
+    ) -> Any:
+        from tia.portfolio.account_journal import (
+            ACCOUNT_EVENT_TYPES,
+            AccountEventRecord,
+            cross_check,
+            fold_account_events,
+        )
+
+        session_runs = select(RunRecord.run_id).where(RunRecord.mode.in_(list(modes)))
+        rows = (
+            await self._session.execute(
+                select(EventRecord)
+                .where(EventRecord.run_id.in_(session_runs))
+                .where(EventRecord.event_type.in_(list(ACCOUNT_EVENT_TYPES)))
+                .order_by(EventRecord.occurred_at, EventRecord.sequence, EventRecord.event_id)
+            )
+        ).scalars().all()
+        events = [
+            AccountEventRecord(
+                event_type=row.event_type, occurred_at=row.occurred_at, sequence=int(row.sequence or 0),
+                event_id=row.event_id, payload=dict(row.payload or {}),
+            )
+            for row in rows
+        ]
+        restore = fold_account_events(
+            events, initial_capital=initial_capital, symbol=symbol, now=now,
+            source=f"journal: {len(events)} events",
+        )
+        fills = (
+            await self._session.execute(
+                select(FillRow.side, FillRow.quantity, FillRow.fee)
+                .where(FillRow.run_id.in_(session_runs))
+                .where(FillRow.symbol == symbol)
+            )
+        ).all()
+        net = sum(float(q) if str(side) == "buy" else -float(q) for side, q, _ in fills)
+        fees = sum(float(f or 0.0) for _, _, f in fills)
+        return cross_check(
+            restore, fill_rows_net_quantity=net, fill_rows_count=len(fills), fill_rows_fees=fees,
+        )
+
+    async def orphan_open_orders(
+        self, *, exclude_run_id: str, at: datetime, modes: Sequence[str] = SESSION_MODES
+    ) -> int:
+        """Stamp as cancelled the orders earlier sessions left open: a process that
+        restarts gets a fresh matching engine, and an order the engine no longer holds can
+        never fill. Returns how many rows were stamped."""
+        from sqlalchemy import update
+
+        from tia.execution.state_machine import terminal_states
+
+        terminal = [state.value for state in terminal_states()]
+        session_runs = select(RunRecord.run_id).where(RunRecord.mode.in_(list(modes)))
+        result = await self._session.execute(
+            update(OrderRow)
+            .where(OrderRow.run_id.in_(session_runs))
+            .where(OrderRow.run_id != exclude_run_id)
+            .where(OrderRow.state.notin_(terminal))
+            .values(
+                state="cancelled",
+                reject_reason="orphaned: the process restarted and the engine no longer holds it",
+                updated_at=at,
+            )
+        )
+        return int(result.rowcount or 0)

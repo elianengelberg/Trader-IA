@@ -91,6 +91,7 @@ services:
       # scenario generator's rows are tallied but judge nobody). Default legacy: the
       # upgrade changes nothing until this is set on purpose.
       TIA_LIVE__SCOREBOARD_POLICY: ${TIA_LIVE__SCOREBOARD_POLICY:-legacy}
+      TIA_LIVE__EV_EVIDENCE_POLICY: ${TIA_LIVE__EV_EVIDENCE_POLICY:-legacy}
       # The risk budget profile: conservative (0.25% per trade, 8 entries a day),
       # balanced (0.5%, 20 a day) or aggressive (1%, 40 a day). The profile's daily cap
       # is the tightest throttle on how often the paper account trades.

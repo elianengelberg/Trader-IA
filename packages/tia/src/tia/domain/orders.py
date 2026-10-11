@@ -133,6 +133,10 @@ class Order(BaseModel):
     updated_at: datetime
     fills: list[Fill] = Field(default_factory=list)
     correlation_id: str = ""
+    #: Carried from the intent so the venue that fills the order can enforce it: a
+    #: reduce-only order may close or shrink the position, never open or flip one
+    #: (Phase 1.3, G5). Persisted order rows do not carry it; a rebuilt order reads False.
+    reduce_only: bool = False
 
     @field_validator("created_at", "updated_at")
     @classmethod

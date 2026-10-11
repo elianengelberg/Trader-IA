@@ -35,7 +35,7 @@ approval and an order, and both refuse far more often than the risk engine does:
 from __future__ import annotations
 
 import asyncio
-import contextlib
+import time
 from collections import deque
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
@@ -80,6 +80,7 @@ from tia.risk.budget import (
     RiskProfileName,
 )
 from tia.risk.engine import RiskEngine
+from tia.risk.sizing import apply_risk_budget
 from tia.runtime.scenarios import (
     Scenario,
     generate_series,
@@ -158,6 +159,9 @@ class Counters:
     #: strategy does not clear its costs.
     ev_no_evidence: int = 0
     suppressed_position_open: int = 0
+    #: Entries whose size the risk budget's multipliers shrank below the risk engine's
+    #: approval (Phase 1.3): the budget now sizes, not only permits.
+    sized_down: int = 0
     stops_tightened: int = 0
     intents: int = 0
     orders_rejected: int = 0
@@ -168,6 +172,10 @@ class Counters:
     reconciliations: int = 0
     reconciliation_breaks: int = 0
     errors: int = 0
+    #: Persistence writes that failed in this engine's own hands (Phase 1.4): a persister
+    #: that raised, or a scheduled write whose task failed. The application's own
+    #: dispatcher counts the failures it absorbs separately (``AppState``).
+    persist_failures: int = 0
 
     def as_dict(self) -> dict[str, int]:
         return dict(self.__dict__)
@@ -259,6 +267,21 @@ class RuntimeEngine:
         self._stop_requested = False
         self._pause_requested = False
         self._new_trades_allowed = True
+        #: Persistence writes in flight, run one at a time in the order they were
+        #: scheduled (Phase 1.4). A fill row references its order row; two writes on
+        #: separate sessions can interleave at the database, and the fill then arrives
+        #: before the order it belongs to and is refused by the foreign key — a round
+        #: trip the next restart cannot rebuild. The 24/7 session has sequenced its writes
+        #: since 1.3; this engine wrote fire-and-forget, and ``stop()`` returned with
+        #: writes still in flight (the restart-recovery flake).
+        self._persist_lock = asyncio.Lock()
+        self._persist_tasks: set[asyncio.Task[Any]] = set()
+        #: Whether the last stop saw every scheduled write land (``None``: never stopped).
+        self.persistence_flushed: bool | None = None
+        self._flush_timeout_seconds = 10.0
+        #: How long ``stop()`` waits for the loop before cancelling it. A loop that does
+        #: not stop is cancelled and the fact recorded, never left RUNNING without a task.
+        self._stop_timeout_seconds = 10.0
 
         # Constructed once and shared by every component below. It must never be
         # *replaced* afterwards: rebinding this attribute would leave each component
@@ -474,15 +497,48 @@ class RuntimeEngine:
         self._task = asyncio.create_task(self._loop(), name=f"runtime-{self.run_id}")
 
     async def stop(self) -> None:
+        """Stop the loop, then wait for the writes it scheduled to land.
+
+        Idempotent. A loop that does not yield within ``_stop_timeout_seconds`` is
+        cancelled and the fact recorded in ``last_error`` — before Phase 1.4 the timeout
+        escaped this method after cancelling the task, and the engine was left RUNNING
+        with no task behind it. Persistence is flushed after the loop ends, so the caller
+        (which stamps the run row next) never stamps over writes still in flight.
+        """
         self._stop_requested = True
         if self._task is not None:
-            with contextlib.suppress(asyncio.CancelledError):
-                await asyncio.wait_for(self._task, timeout=10.0)
+            try:
+                await asyncio.wait_for(self._task, timeout=self._stop_timeout_seconds)
+            except asyncio.CancelledError:
+                pass
+            except TimeoutError:
+                self.counters.errors += 1
+                self.last_error = (
+                    f"the loop did not stop within {self._stop_timeout_seconds:.0f}s and was "
+                    "cancelled; the last bar may be half-processed"
+                )
+                _log.error(
+                    "runtime_stop_timeout", run_id=self.run_id,
+                    timeout_seconds=self._stop_timeout_seconds,
+                )
             self._task = None
         self.state = RuntimeState.STOPPED
         self.stopped_at = datetime.now(UTC_TZ)
         self._log("INFO", "runtime", "system", "paper trading stopped")
         self._emit("runtime.stopped", {"run_id": self.run_id})
+        self.persistence_flushed = await self.flush_persistence(
+            timeout_seconds=self._flush_timeout_seconds
+        )
+        if not self.persistence_flushed:
+            pending = sum(1 for t in self._persist_tasks if not t.done())
+            self.last_error = (
+                f"{pending} persistence write(s) still in flight after "
+                f"{self._flush_timeout_seconds:.0f}s at stop; the record may be incomplete"
+            )
+            _log.error(
+                "persistence_flush_incomplete", run_id=self.run_id, pending=pending,
+                timeout_seconds=self._flush_timeout_seconds,
+            )
 
     def pause(self) -> None:
         self._pause_requested = True
@@ -710,6 +766,41 @@ class RuntimeEngine:
                 "engine is observing rather than enforcing; the outcome becomes a sample",
             )
 
+        if budget is not None:
+            # The sizing contract shared with the 24/7 session and the backtester
+            # (Phase 1.3): the budget's multipliers shrink the risk engine's approval;
+            # a size that no longer meets the venue's minimum is refused, not raised.
+            instrument = self._universe.get(symbol)
+            budgeted = apply_risk_budget(
+                approved_quantity=decision.approved_quantity,
+                entry_price=signal.entry_reference,
+                stop_price=decision.stop_price,
+                limit_risk_currency=(
+                    decision.sizing.risk_budget_currency if decision.sizing is not None else 0.0
+                ),
+                budget_risk_currency=budget.risk_currency,
+                conviction_fraction=1.0,
+                step_size=instrument.lot_size if instrument is not None else None,
+                min_notional=instrument.min_notional if instrument is not None else 0.0,
+                allows_new_trades=budget.allows_new_trades,
+            )
+            if not budgeted.accepted:
+                self.counters.budget_rejected += 1
+                self._log(
+                    "INFO", "risk", symbol,
+                    f"no order: risk budget sizing refused ({budgeted.refused_reason}; allowed "
+                    f"risk {budgeted.allowed_risk_currency:.2f})",
+                )
+                return
+            if budgeted.quantity < decision.approved_quantity * (1.0 - 1e-9):
+                self.counters.sized_down += 1
+                decision = decision.model_copy(update={"approved_quantity": budgeted.quantity})
+                self._log(
+                    "INFO", "risk", symbol,
+                    f"size reduced to {budgeted.quantity:.6f} by the risk budget "
+                    f"({budgeted.limiting_constraint}; risk at stop {budgeted.effective_risk_currency:.2f})",
+                )
+
         self._stop_price[symbol] = decision.stop_price or 0.0
         self._initial_stop[symbol] = decision.stop_price or 0.0
         self._stop_kind[symbol] = "protective"
@@ -859,6 +950,9 @@ class RuntimeEngine:
                 direction=beliefs["direction"],
                 confidence=beliefs["confidence"],
                 net_return_bps=net_bps,
+                fees_bps=fees_bps,
+                gross_return_bps=gross_bps,
+                market_data="synthetic",
             )
         )
         self._retro.review(
@@ -1498,10 +1592,45 @@ class RuntimeEngine:
         try:
             result = self._persist(kind, payload)
             if asyncio.iscoroutine(result):
-                task = asyncio.create_task(result)
-                task.add_done_callback(_swallow_task_error)
-        except Exception as exc:
+                task = asyncio.ensure_future(self._sequenced(result))
+                self._persist_tasks.add(task)
+                task.add_done_callback(self._persist_tasks.discard)
+                task.add_done_callback(self._on_persist_done)
+        except Exception as exc:  # persistence must never stop the loop
+            self.counters.persist_failures += 1
             _log.warning("persist_failed", kind=kind, error=str(exc)[:200])
+
+    async def _sequenced(self, write: Any) -> None:
+        """Run persistence writes one at a time, in the order they were scheduled."""
+        async with self._persist_lock:
+            await write
+
+    def _on_persist_done(self, task: asyncio.Task[Any]) -> None:
+        """Persistence failures are counted and logged, never raised into the loop."""
+        if task.cancelled():
+            return
+        exc = task.exception()
+        if exc is not None:
+            self.counters.persist_failures += 1
+            _log.warning("persist_task_failed", error=str(exc)[:300])
+
+    async def flush_persistence(self, *, timeout_seconds: float = 10.0) -> bool:
+        """Wait for the persistence writes scheduled so far to finish.
+
+        ``True`` when every write landed (or failed, which is counted) within
+        ``timeout_seconds``; ``False`` when some were still in flight. Writes scheduled
+        while waiting are waited for too.
+        """
+        deadline = time.monotonic() + max(0.0, timeout_seconds)
+        while self._persist_tasks:
+            pending = [t for t in self._persist_tasks if not t.done()]
+            if not pending:
+                break
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                return False
+            await asyncio.wait(pending, timeout=remaining)
+        return True
 
     def snapshot(self) -> dict[str, Any]:
         """Everything the dashboard needs in one object."""
@@ -1683,15 +1812,6 @@ def _jsonable(payload: dict[str, Any]) -> dict[str, Any]:
         else:
             out[key] = value
     return out
-
-
-def _swallow_task_error(task: asyncio.Task[Any]) -> None:
-    """Persistence failures are logged, never raised into the trading loop."""
-    if task.cancelled():
-        return
-    exc = task.exception()
-    if exc is not None:
-        _log.warning("persist_task_failed", error=str(exc)[:300])
 
 
 __all__ = [

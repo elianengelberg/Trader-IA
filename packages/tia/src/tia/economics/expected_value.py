@@ -22,9 +22,10 @@ So the edge estimate here comes from **realised outcomes**, not from confidence:
   twice the standard error — a coarser claim, priced as one. Never across regimes or
   directions, and never to a guess: below both floors it returns ``None``, which the
   caller must treat as NO_TRADE.
-* The estimate is the bucket's mean realised return, shrunk toward zero by its own
-  standard error — so a bucket of eleven trades that averaged +40 bps does not get to
-  claim +40 bps.
+* The estimate is the bucket's mean realised **gross** return (before costs), shrunk
+  toward zero by its own standard error — so a bucket of eleven trades that averaged
+  +40 bps does not get to claim +40 bps. The costs of the trade under consideration are
+  subtracted once, by the engine; see :class:`Outcome` for why the sample must be gross.
 
 The consequence, stated plainly: **a fresh system trades nothing until it has evidence.**
 That is the correct behaviour and it is the reason the paper-trading and backtesting paths
@@ -83,14 +84,40 @@ def band_of(confidence: float) -> tuple[float, float]:
 
 @dataclass(frozen=True)
 class Outcome:
-    """One closed trade, as the estimator consumes it."""
+    """One closed trade, as the estimator consumes it.
+
+    **Cost convention (the only one).** The estimator estimates the *gross* edge — the
+    price move captured between entry and exit, before any cost — and the engine subtracts
+    the costs of the trade being considered exactly once, downstream. Feeding it net
+    returns would charge costs twice: once inside the sample, again in the engine. That is
+    what happened before this field existed, and it made the effective bar roughly the
+    configured threshold plus two round trips of fees.
+
+    ``net_return_bps`` stays because other readers (the loss streak, reports) want the
+    realised number; ``fees_bps`` is what was actually paid, so ``gross`` can be recovered
+    for rows that only recorded net. Zero fees means "no costs recorded", not "free".
+    """
 
     regime: MarketRegime
     direction: Direction
     confidence: float
-    #: Realised return in basis points of the entry notional, **net of the costs actually
-    #: paid**. Gross would double-count: costs are subtracted again downstream.
+    #: Realised return in basis points of the entry notional, net of the costs paid.
     net_return_bps: float
+    #: Costs paid on this round trip, in basis points of the entry notional.
+    fees_bps: float = 0.0
+    #: Realised return before costs. Derived as ``net + fees`` when not given explicitly.
+    gross_return_bps: float | None = None
+    #: Where the prices came from (``real`` for a venue feed, ``synthetic`` for a generated
+    #: scenario, ``None`` when the row predates provenance). The estimator does not look at
+    #: it; the evidence policy that decides what the estimator may see does.
+    market_data: str | None = None
+
+    @property
+    def edge_sample_bps(self) -> float:
+        """The number the estimator records: the gross return."""
+        if self.gross_return_bps is not None:
+            return float(self.gross_return_bps)
+        return float(self.net_return_bps) + float(self.fees_bps)
 
 
 @dataclass(frozen=True)
@@ -171,7 +198,7 @@ class EdgeEstimator:
 
     def record(self, outcome: Outcome) -> None:
         key = (outcome.regime.value, outcome.direction.value, band_of(outcome.confidence))
-        self._buckets[key].append(outcome.net_return_bps)
+        self._buckets[key].append(outcome.edge_sample_bps)
 
     def record_many(self, outcomes: list[Outcome]) -> None:
         for outcome in outcomes:
@@ -379,7 +406,13 @@ class ExpectedValue:
 
     @property
     def is_tradeable(self) -> bool:
-        return self.edge_estimate is not None and self.net_edge_bps >= self.threshold_bps
+        # An estimate missing a cost it needed (a carry with no rate) is not a smaller
+        # cost; it is an unknown one, and an unknown cost never clears the bar (Phase 1.3).
+        return (
+            self.edge_estimate is not None
+            and self.costs.complete
+            and self.net_edge_bps >= self.threshold_bps
+        )
 
     @property
     def cost_ratio(self) -> float:
@@ -395,6 +428,10 @@ class ExpectedValue:
                 "The system declines rather than guessing."
             )
         verdict = "TRADE" if self.is_tradeable else "NO_TRADE"
+        incomplete = "" if self.costs.complete else (
+            " The cost estimate is incomplete (a carry over the holding horizon could not be "
+            "priced: no funding rate); an unknown cost never clears the bar."
+        )
         # Spoken in the dollars of this specific trade when its size is priced — basis
         # points stay the decision unit, but nobody outside the engine thinks in them.
         notional = self.costs.notional
@@ -416,14 +453,14 @@ class ExpectedValue:
                 f"trades) minus costs {usd(self.costs.total_bps)} "
                 f"({self.costs.dominant_component} dominant) = net "
                 f"{usd(self.net_edge_bps)}, against a required minimum of "
-                f"{usd(self.threshold_bps)}.{pooled_note}"
+                f"{usd(self.threshold_bps)}.{pooled_note}{incomplete}"
             )
         return (
             f"{verdict} — expected gross {self.gross_edge_bps:.2f} bps "
             f"(from {self.edge_estimate.samples} past trades) minus costs "
             f"{self.costs.total_bps:.2f} bps ({self.costs.dominant_component} dominant) "
             f"= net {self.net_edge_bps:.2f} bps, against a threshold of "
-            f"{self.threshold_bps:.2f} bps."
+            f"{self.threshold_bps:.2f} bps.{incomplete}"
         )
 
     def as_dict(self) -> dict[str, Any]:

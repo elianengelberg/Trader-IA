@@ -72,6 +72,9 @@ class FakeMarketData(MarketDataProvider):
 
     async def get_candles(self, symbol, timeframe, *, limit=500, end=None):  # type: ignore[no-untyped-def]
         window = self._candles[: self.cursor]
+        if end is not None:
+            # History on request, like a venue's klines with endTime (Phase 1.7).
+            window = [c for c in window if c.close_time <= end]
         return window[-limit:]
 
 
@@ -107,7 +110,9 @@ class FakeExecution(ExecutionProvider):
         self.rest_limits = False
         self.cancelled: list[str] = []
         self.adjustments: list[tuple[float, str]] = []
-        self._clock_now = SystemClock().now
+        # Orders and fills are stamped on the session's clock when one is given, so a
+        # fill never post-dates a settlement the simulated session has not reached yet.
+        self._clock_now = (clock or SystemClock()).now
 
     async def submit_order(self, intent: OrderIntent) -> Order:
         if intent.client_order_id in self.orders:
@@ -788,7 +793,7 @@ async def test_a_resolved_present_order_is_adopted_not_retried() -> None:
     from tia.domain.orders import OrderIntent as OI
 
     intent = runtime._build_intent(
-        symbol="BTC-USD", side=Side.BUY, quantity=0.01, signal_id="s-adopt"
+        symbol="BTC-USD", side=Side.BUY, quantity=0.01, signal_id="s-adopt", reference_price=50_000.0,  # Phase 1.1: entries are judged against the minimum notional
     )
     assert isinstance(intent, OI)
 
@@ -805,10 +810,19 @@ async def test_a_resolved_present_order_is_adopted_not_retried() -> None:
             def to_side():
                 return Side.BUY
 
+    # Phase 1.1: an entry is judged against the minimum notional at the last closed
+    # bar; a submit driven by hand needs one bar in the buffer, as a real cycle has.
+    runtime._buffer.append(market_bar := _market_candles(runtime)[150])
+    assert market_bar.close > 0
     await runtime._submit(Decision(), Signal(), "corr-1")
     assert runtime.counters["orders"] == 1  # adopted, counted once, never re-sent
     await runtime.stop()
 
+
+
+def _market_candles(runtime: LiveRuntime) -> list[Candle]:
+    """The fake feed's full series, for tests that drive a step by hand."""
+    return list(runtime._market_data._candles)  # type: ignore[attr-defined]
 
 # --------------------------------------------------------------------------- kill switch
 
@@ -847,7 +861,7 @@ async def test_emergency_flatten() -> None:
     from tia.domain.enums import Side
 
     intent = runtime._build_intent(
-        symbol="BTC-USD", side=Side.BUY, quantity=0.02, signal_id="s-flat"
+        symbol="BTC-USD", side=Side.BUY, quantity=0.02, signal_id="s-flat", reference_price=50_000.0,  # Phase 1.1: entries are judged against the minimum notional
     )
     await execution.submit_order(intent)
     assert (await execution.get_positions())["BTC-USD"].quantity == pytest.approx(0.02)
@@ -1138,6 +1152,15 @@ async def test_selectivity_splits_the_record_by_what_todays_rules_would_take() -
 # ------------------------------------------------------------- maker entries
 
 
+def _previous_funding_block(now):  # type: ignore[no-untyped-def]
+    """The eight-hour period before the one ``now`` is in. Handed to ``_funding_period``
+    so the next check sees exactly one boundary crossed since the last one — what a
+    session watching the clock sees at a settlement (Phase 1.7)."""
+    from tia.runtime.live import funding_period_from_index, funding_period_index, funding_period_of
+
+    return funding_period_from_index(funding_period_index(funding_period_of(now)) - 1)
+
+
 def _seed_every_bucket(runtime: LiveRuntime, net_bps: float = 200.0) -> None:
     from tia.domain.enums import Direction, MarketRegime
     from tia.economics.expected_value import Outcome
@@ -1403,14 +1426,23 @@ class QuotingMarketData(FakeMarketData):
 
         mid = self._candles[self.cursor - 1].close
         half = mid * self.spread_bps / 10_000.0 / 2.0
+        # Stamped on the session's own clock when it drives one, like the bars: a book
+        # dated minutes into the session's future is a clock fault, not a fresh quote
+        # (Phase 1.6), and this fake stands for a coherent feed.
+        at = self._clock.now() if self._clock is not None else SystemClock().now()
         return Quote(
-            symbol=symbol, timestamp=SystemClock().now(), bid=mid - half, ask=mid + half,
+            symbol=symbol, timestamp=at, bid=mid - half, ask=mid + half,
             bid_size=5.0, ask_size=5.0, provider="fake-book",
         )
 
 
 def build_runtime_paper_with(  # type: ignore[no-untyped-def]
-    *, quoting: bool = False, persist=None, **live_overrides: Any
+    *,
+    quoting: bool = False,
+    persist=None,
+    prior_outcomes: Any = (),
+    prior_reviews: Any = (),
+    **live_overrides: Any,
 ):
     """A paper-realtime runtime with live-config overrides and, optionally, a quoting feed."""
     scenario = get_scenario("trend_up")
@@ -1421,7 +1453,7 @@ def build_runtime_paper_with(  # type: ignore[no-untyped-def]
     )
     clock = SimulatedClock(candles[149].close_time + timedelta(seconds=1))
     market = (QuotingMarketData if quoting else FakeMarketData)(candles, clock)
-    execution = FakeExecution()
+    execution = FakeExecution(clock=clock)
     runtime = LiveRuntime(
         live_settings(**live_overrides),
         activation=None,
@@ -1429,6 +1461,8 @@ def build_runtime_paper_with(  # type: ignore[no-untyped-def]
         execution=execution,
         clock=clock,
         persist=persist,
+        prior_outcomes=list(prior_outcomes),
+        prior_reviews=list(prior_reviews),
         poll_interval_seconds=0.0,
     )
     return runtime, execution, market
@@ -1532,7 +1566,10 @@ async def test_a_break_even_stop_names_its_exit_and_the_record_credits_the_strat
 
 async def test_a_wide_spread_waits_and_a_normal_one_prices_the_costs() -> None:
     runtime, _execution, market = build_runtime_paper_with(quoting=True, max_spread_bps=10.0)
-    market.spread_bps = 50.0
+    # Over the session's gate (10) and under the risk engine's hard limit (25): since
+    # Phase 1.5 the risk engine sees the observed spread too, and a book over its limit
+    # is refused there first — that case has its own test in test_spread_gate.py.
+    market.spread_bps = 15.0
     await runtime.start()
     try:
         _seed_every_bucket(runtime)
@@ -1543,7 +1580,7 @@ async def test_a_wide_spread_waits_and_a_normal_one_prices_the_costs() -> None:
         assert runtime.counters["orders"] == 0
         market_view = runtime.snapshot()["market"]
         assert market_view["spread_source"] == "venue top of book"
-        assert market_view["quote"]["spread_bps"] == pytest.approx(50.0, rel=1e-3)
+        assert market_view["quote"]["spread_bps"] == pytest.approx(15.0, rel=1e-3)
 
         market.spread_bps = 1.0
         for _ in range(200):
@@ -2087,9 +2124,9 @@ async def test_funding_is_charged_once_per_settlement_at_the_live_rate() -> None
         paid_before = runtime.funding["payments"]
         equity_before = runtime._ledger.snapshot().equity
 
-        # The next bar belongs to a new eight-hour period as far as the session knows.
-        runtime._funding_period = ("1970-01-01", 0)
-        market.advance()
+        # The next check sees one eight-hour boundary crossed, as at a settlement.
+        market.advance()  # first: the bar may itself enter a new period
+        runtime._funding_period = _previous_funding_block(runtime._clock.now())
         await runtime._cycle_once()
         assert runtime._open_trade is not None, "the position closed before funding settled"
         assert runtime.funding["payments"] == paid_before + 1
@@ -2108,8 +2145,8 @@ async def test_without_a_funding_reading_nothing_is_charged_and_it_is_counted() 
     await runtime.start()
     try:
         await _open_a_position(runtime, _execution, market)
-        runtime._funding_period = ("1970-01-01", 0)  # force the next bar to be a new period
         market.advance()
+        runtime._funding_period = _previous_funding_block(runtime._clock.now())  # one boundary crossed
         await runtime._cycle_once()
         assert runtime.funding["payments"] == 0
         assert runtime.funding["skipped_no_rate"] == 1
@@ -2181,8 +2218,9 @@ async def test_the_funnel_says_where_every_signal_went() -> None:
 
 
 async def test_exploration_buys_lessons_in_unproven_buckets_but_never_in_disproven_ones() -> None:
-    """A positive mean that has not cleared its noise is worth a cheap lesson in paper;
-    a bucket whose mean is at or below zero is respected and never traded."""
+    """A mean that has not cleared its own noise — positive or red — is worth a cheap
+    lesson in paper; a bucket whose mean sits more than one standard error below zero is
+    disproven and never traded. "Disproven" is a verdict about evidence, not about sign."""
     runtime, _execution, market = build_runtime_paper_with(exploration_trades_per_day=3)
     await runtime.start()
     try:
@@ -2202,10 +2240,29 @@ async def test_exploration_buys_lessons_in_unproven_buckets_but_never_in_disprov
     finally:
         await runtime.stop()
 
+    # A red mean still inside its own noise (-5 ± 90 over 40 trades: SE ≈ 14) is the
+    # absence of evidence, not evidence of a loss. It stays explorable.
     runtime, _execution, market = build_runtime_paper_with(exploration_trades_per_day=3)
     await runtime.start()
     try:
-        _seed_unproven(runtime, mean_bps=-5.0)  # disproven: the mean itself is red
+        _seed_unproven(runtime, mean_bps=-5.0)
+        for _ in range(300):
+            market.advance()
+            await runtime._cycle_once()
+            if runtime.counters["exploration_trades"] >= 1:
+                break
+        assert runtime.counters["ev_disproven"] == 0
+        assert runtime.counters["ev_unproven"] > 0
+        assert runtime.counters["exploration_trades"] >= 1
+    finally:
+        await runtime.stop()
+
+    # A mean more than one standard error below zero (-60 ± 90: adjusted ≈ -46) is
+    # disproven by the estimator's own shrink, and is never explored.
+    runtime, _execution, market = build_runtime_paper_with(exploration_trades_per_day=3)
+    await runtime.start()
+    try:
+        _seed_unproven(runtime, mean_bps=-60.0)
         for _ in range(200):
             market.advance()
             await runtime._cycle_once()
@@ -2289,5 +2346,225 @@ async def test_the_spread_check_prices_the_idea_against_the_live_book() -> None:
         assert check["max_round_trips_per_s"] == 5.0
         assert "cover the fees" in check["verdict"]
         assert check["caveats"]
+    finally:
+        await runtime.stop()
+
+
+# --------------------------------------------------------------- evidence policy and integrity
+
+
+def _synthetic_rows(count: int, *, net_bps: float = 40.0, market_data: str | None = "synthetic"):  # type: ignore[no-untyped-def]
+    """Persisted-row shaped evidence for both learners: an Outcome and its review dict."""
+    from tia.domain.enums import Direction, MarketRegime
+    from tia.economics.expected_value import Outcome
+
+    outcomes = [
+        Outcome(
+            regime=MarketRegime.TRENDING_UP, direction=Direction.LONG, confidence=0.65,
+            net_return_bps=net_bps + (3.0 if i % 2 else -3.0), fees_bps=10.0,
+            market_data=market_data,
+        )
+        for i in range(count)
+    ]
+    reviews = [
+        {
+            "regime": "trending_up", "direction": "long", "confidence": 0.65,
+            "expected_net_bps": 5.0, "net_bps": net_bps + (3.0 if i % 2 else -3.0),
+            "fees_bps": 10.0, "closed_at": datetime(2026, 1, 1, tzinfo=UTC) + timedelta(minutes=i),
+            "signal_id": f"sig-{i}", "symbol": "BTC-USD", "entry_price": 50_000.0,
+            "quantity": 0.01, "exploratory": False, "strategy_id": "trend_following",
+            "market_data": market_data,
+        }
+        for i in range(count)
+    ]
+    return outcomes, reviews
+
+
+async def test_under_real_only_thousands_of_synthetic_rows_teach_the_estimator_nothing() -> None:
+    """Five thousand synthetic winners: under ``legacy`` they make a bucket tradeable, under
+    ``real_only`` the estimator starts empty, the retrospective has no memory of them, and
+    the snapshot says how many were excluded. Market evidence then enters normally."""
+    synthetic, reviews = _synthetic_rows(5_000)
+
+    legacy, _, _ = build_runtime_paper_with(prior_outcomes=synthetic, prior_reviews=reviews)
+    assert sum(legacy._edges.coverage().values()) == 5_000
+    assert legacy.snapshot()["evidence_policy"] == "legacy"
+    assert legacy.snapshot()["evidence_excluded"] == 0
+
+    strict, _, _ = build_runtime_paper_with(
+        ev_evidence_policy="real_only", prior_outcomes=synthetic, prior_reviews=reviews
+    )
+    assert strict._edges.coverage() == {}
+    assert strict._retro.memory() == []
+    snapshot = strict.snapshot()
+    assert snapshot["evidence_policy"] == "real_only"
+    assert snapshot["evidence_excluded"] == 5_000
+    # The scoreboard keeps its own, independent policy: legacy here, so it still credits.
+    assert any(r["trades"] == 5_000 for r in snapshot["strategies"])
+
+    # Absorbing more synthetic rows mid-session changes nothing either.
+    more, more_reviews = _synthetic_rows(1_000)
+    result = strict.absorb_evidence(outcomes=more, reviews=more_reviews)
+    assert result["absorbed_outcomes"] == 0 and result["excluded_outcomes"] == 1_000
+    assert strict._edges.coverage() == {}
+
+    # Real market rows are admitted, and only they shape the buckets.
+    real, real_reviews = _synthetic_rows(40, market_data="real")
+    result = strict.absorb_evidence(outcomes=real, reviews=real_reviews)
+    assert result["absorbed_outcomes"] == 40
+    assert sum(strict._edges.coverage().values()) == 40
+    assert strict.snapshot()["evidence_excluded"] == 6_000
+
+
+async def test_rows_without_provenance_are_excluded_under_real_only() -> None:
+    unknown, reviews = _synthetic_rows(100, market_data=None)
+    strict, _, _ = build_runtime_paper_with(
+        ev_evidence_policy="real_only", prior_outcomes=unknown, prior_reviews=reviews
+    )
+    assert strict._edges.coverage() == {}
+    assert strict.snapshot()["evidence_excluded"] == 100
+
+
+async def test_a_refusal_names_the_strategy_confidence_direction_and_regime_it_refused() -> None:
+    """A funnel that only knows where signals died cannot say whose died there."""
+    runtime, _execution, market = build_runtime_paper_with()
+    refusals: list[dict[str, Any]] = []
+    runtime._on_event = lambda e: refusals.append(e["data"]) if e["type"] == "live.no_trade" else None
+    await runtime.start()
+    try:
+        for _ in range(120):
+            market.advance()
+            await runtime._cycle_once()
+            if refusals:
+                break
+        assert refusals, "the empty estimator must have refused at least one signal"
+        first = refusals[0]
+        assert first["stage"] in {"expected_value", "risk", "budget", "spread", "tide"}
+        assert first["strategy_id"] in {"trend_following", "mean_reversion", "breakout", "fusion"}
+        assert first["direction"] in {"long", "short"}
+        assert isinstance(first["confidence"], float)
+        assert isinstance(first["regime"], str) and first["regime"]
+        assert isinstance(first["contributing_strategy_ids"], list)
+        recent = runtime.snapshot()["funnel"]["recent_refusals"][0]
+        assert recent["strategy_id"] == first["strategy_id"]
+        assert recent["regime"] == first["regime"]
+    finally:
+        await runtime.stop()
+
+
+async def test_an_intent_is_quantized_to_the_instruments_lot_when_no_venue_filters_exist() -> None:
+    """Paper-live carries no venue filters. An intent with more decimals than the lot left
+    a residue no fill could cover, and an order 99.99 % filled is still open to every state
+    machine — which is how a filled entry came to be reported as expired."""
+    runtime, _execution, _market = build_runtime_paper_with()
+    intent = runtime._build_intent(
+        symbol="BTC-USD", side=Side.SELL, quantity=0.01204375, signal_id="sig-lot",
+        order_type=OrderType.MARKET,
+        # Phase 1.1: an entry is also judged against the instrument's minimum notional,
+        # at a reference price; without one it is refused rather than assumed.
+        reference_price=50_000.0,
+    )
+    assert intent.quantity == pytest.approx(0.012043)
+    assert runtime._lot_size("BTC-USD") == pytest.approx(1e-6)
+
+
+async def test_a_resting_entry_filled_to_within_one_lot_is_done_not_expired() -> None:
+    """The venue reports 0.012043 of 0.0120435 filled: dust it can never fill. The order is
+    complete for every practical purpose — the position is open and protected — and must
+    neither block the next signal as "resting" nor be counted as an expiry."""
+    runtime, execution, market = build_runtime_paper_with(entry_order_type="limit")
+    execution.rest_limits = True
+    await runtime.start()
+    try:
+        _seed_every_bucket(runtime)
+        for _ in range(300):
+            market.advance()
+            await runtime._cycle_once()
+            if runtime._resting is not None:
+                break
+        assert runtime._resting is not None, "a limit entry should be resting"
+        order = next(o for o in execution.orders.values() if o.order_type is OrderType.LIMIT)
+        now = runtime._clock.now()
+        dust = 5e-7  # half a lot: below anything the venue can fill
+        partial = Fill(
+            fill_id="f-partial", order_id=order.order_id, sequence=1, symbol=order.symbol,
+            side=order.side, quantity=order.quantity - dust, price=execution.price,
+            fee=0.25, filled_at=now,
+        )
+        order.register_fill(partial)
+        transition(order, OrderState.PARTIALLY_FILLED, at=now)
+        order.fills = [*order.fills, partial]
+        execution.positions[order.symbol] = Position(
+            symbol=order.symbol, quantity=partial.signed_quantity, average_price=execution.price
+        )
+
+        market.advance()
+        await runtime._cycle_once()
+
+        assert runtime._resting is None, "dust must not keep the order resting"
+        assert runtime.counters["orders_expired"] == 0
+        assert runtime.counters["entries_filled"] == 1
+        assert runtime._open_trade is not None
+        assert order.order_id in execution.cancelled, "the dust remainder is cancelled"
+    finally:
+        await runtime.stop()
+
+
+async def test_a_filled_order_is_persisted_with_its_fill_not_only_its_placement() -> None:
+    saved: list[tuple[str, dict[str, Any]]] = []
+    runtime, execution, market = build_runtime_paper_with(
+        entry_order_type="limit",
+        persist=lambda kind, payload: saved.append((kind, payload)),
+    )
+    execution.rest_limits = True
+    await runtime.start()
+    try:
+        _seed_every_bucket(runtime)
+        for _ in range(300):
+            market.advance()
+            await runtime._cycle_once()
+            if runtime._resting is not None:
+                break
+        order = next(o for o in execution.orders.values() if o.order_type is OrderType.LIMIT)
+        placed = [p["order"] for k, p in saved if k == "order" and p["order"].order_id == order.order_id]
+        assert placed and placed[-1].state is OrderState.ACKNOWLEDGED
+
+        execution.fill_resting(order)
+        market.advance()
+        await runtime._cycle_once()
+
+        rows = [p["order"] for k, p in saved if k == "order" and p["order"].order_id == order.order_id]
+        assert rows[-1].state is OrderState.FILLED
+        assert rows[-1].filled_quantity == pytest.approx(order.quantity)
+    finally:
+        await runtime.stop()
+
+
+async def test_an_entry_fill_arms_the_risk_engines_frequency_limits() -> None:
+    """The cooldown and the daily caps count executions. The 24/7 session never told the
+    risk engine about its fills, so a stop-out could be followed by a re-entry on the very
+    next bar while the configured cooldown said wait."""
+    runtime, execution, market = build_runtime_paper_with()
+    await runtime.start()
+    try:
+        assert runtime._risk.state.trades_today == 0
+        await _open_a_position(runtime, execution, market)
+        assert runtime.counters["entries_filled"] == 1
+        assert runtime._risk.state.trades_today == 1
+        assert "BTC-USD" in runtime._risk.state.last_trade_at
+    finally:
+        await runtime.stop()
+
+
+async def test_round_trips_are_counted_when_they_close_not_when_orders_are_sent() -> None:
+    runtime, execution, market = build_runtime_paper_with()
+    await runtime.start()
+    try:
+        await _open_a_position(runtime, execution, market)
+        assert runtime.counters["entries_filled"] == 1
+        assert runtime.counters["round_trips"] == 0
+        await runtime._close_position("signal reversed")
+        assert runtime.counters["round_trips"] == 1
+        assert runtime.counters["orders"] == 2  # the entry and the market exit
     finally:
         await runtime.stop()

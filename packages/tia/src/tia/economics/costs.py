@@ -33,6 +33,8 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from tia.domain.enums import Direction
+
 #: One basis point as a fraction. Named because the number of places a bare `1e-4` could
 #: mean something else is exactly the number of places this gets read wrong.
 BPS = 1e-4
@@ -84,12 +86,29 @@ class MarketConditions(BaseModel):
     bar_seconds: float = Field(60.0, gt=0)
 
 
+#: Perpetual funding settles every eight hours.
+FUNDING_PERIOD_SECONDS = 8 * 3600
+
+
 @dataclass(frozen=True)
 class TradeCosts:
     """The itemised round-trip cost of a proposed trade, in basis points of notional.
 
     Basis points rather than currency so the number is comparable across price levels and
     directly subtractable from an expected return expressed the same way.
+
+    **One semantics for every cost (Phase 1.3).** Five execution components, each a cost
+    of *doing* the round trip — fees (both legs, itemised as ``entry_fee_bps`` and
+    ``exit_fee_bps`` with the liquidity each leg was priced at), the spread crossed, the
+    slippage past the touch, the adverse drift over the measured latency and our own
+    impact — plus two components of *holding* it: ``funding_bps`` (the perpetual's carry
+    over the expected holding horizon, charged when it is paid, never credited when it
+    would be received) and ``borrow_bps`` (the cost of borrowing the asset for a short on
+    a venue that lends; zero on a perpetual). A component the model could not price —
+    funding over a horizon with no rate known — leaves ``funding_known`` False and the
+    estimate **incomplete**: an incomplete estimate never makes a trade tradeable. What is
+    *measured* here is nothing: every component is a model of a configured or observed
+    input, and the fee schedule says so (:attr:`FeeSchedule.verified_at_source`).
     """
 
     fee_bps: float
@@ -98,16 +117,32 @@ class TradeCosts:
     latency_bps: float
     impact_bps: float
     notional: float
+    entry_fee_bps: float = 0.0
+    exit_fee_bps: float = 0.0
+    entry_maker: bool = False
+    exit_maker: bool = False
+    funding_bps: float = 0.0
+    borrow_bps: float = 0.0
+    funding_known: bool = True
+
+    @property
+    def execution_bps(self) -> float:
+        """The cost of doing the round trip, fees aside: spread, slippage, latency, impact."""
+        return self.spread_bps + self.slippage_bps + self.latency_bps + self.impact_bps
+
+    @property
+    def carry_bps(self) -> float:
+        """The cost of holding it: funding and borrow."""
+        return self.funding_bps + self.borrow_bps
+
+    @property
+    def complete(self) -> bool:
+        """False when a component that was needed could not be priced."""
+        return self.funding_known
 
     @property
     def total_bps(self) -> float:
-        return (
-            self.fee_bps
-            + self.spread_bps
-            + self.slippage_bps
-            + self.latency_bps
-            + self.impact_bps
-        )
+        return self.fee_bps + self.execution_bps + self.carry_bps
 
     @property
     def total_currency(self) -> float:
@@ -122,18 +157,30 @@ class TradeCosts:
             "slippage": self.slippage_bps,
             "latency": self.latency_bps,
             "impact": self.impact_bps,
+            "funding": self.funding_bps,
+            "borrow": self.borrow_bps,
         }
         return max(components, key=lambda name: components[name])
 
     def as_dict(self) -> dict[str, Any]:
         return {
             "fee_bps": round(self.fee_bps, 4),
+            "entry_fee_bps": round(self.entry_fee_bps, 4),
+            "exit_fee_bps": round(self.exit_fee_bps, 4),
+            "entry_maker": self.entry_maker,
+            "exit_maker": self.exit_maker,
             "spread_bps": round(self.spread_bps, 4),
             "slippage_bps": round(self.slippage_bps, 4),
             "latency_bps": round(self.latency_bps, 4),
             "impact_bps": round(self.impact_bps, 4),
+            "funding_bps": round(self.funding_bps, 4),
+            "borrow_bps": round(self.borrow_bps, 4),
+            "funding_known": self.funding_known,
+            "execution_bps": round(self.execution_bps, 4),
+            "carry_bps": round(self.carry_bps, 4),
             "total_bps": round(self.total_bps, 4),
             "total_currency": round(self.total_currency, 6),
+            "complete": self.complete,
             "dominant": self.dominant_component,
         }
 
@@ -175,15 +222,44 @@ class CostModel:
         conditions: MarketConditions,
         entry_maker: bool = False,
         exit_maker: bool = False,
+        direction: Direction | None = None,
+        funding_rate: float | None = None,
+        funding_periods: float = 0.0,
+        borrow_rate_bps_per_day: float = 0.0,
+        holding_days: float = 0.0,
     ) -> TradeCosts:
         """Price the round trip.
 
         ``quantity`` is in base units. Both legs are priced, because a strategy that only
         counts the entry is measuring half of what it pays.
+
+        Carry (Phase 1.3): ``funding_periods`` eight-hour settlements are expected to pass
+        while the position is held (zero: an intraday hold the caller does not expect to
+        cross a settlement). With a rate, a long pays a positive rate and a short a
+        negative one; a payment the position would *receive* is not credited — the
+        estimate never improves for a carry it may not collect. With periods but no finite
+        rate the carry cannot be priced and the estimate is marked incomplete rather than
+        charged zero. ``borrow_rate_bps_per_day`` over ``holding_days`` applies to a short
+        on a venue that lends the asset; a perpetual has no borrow and passes zero.
         """
         notional = abs(quantity) * conditions.price
 
         fee_bps = self._fees.round_trip_bps(entry_maker=entry_maker, exit_maker=exit_maker)
+        entry_fee_bps = self._fees.leg_bps(is_maker=entry_maker)
+        exit_fee_bps = self._fees.leg_bps(is_maker=exit_maker)
+
+        funding_bps = 0.0
+        funding_known = True
+        if funding_periods > 0:
+            if funding_rate is None or not math.isfinite(float(funding_rate)):
+                funding_known = False
+            else:
+                sign = -1.0 if direction is Direction.SHORT else 1.0
+                paid = sign * float(funding_rate) * float(funding_periods) / BPS
+                funding_bps = max(0.0, paid)
+        borrow_bps = 0.0
+        if direction is Direction.SHORT and borrow_rate_bps_per_day > 0 and holding_days > 0:
+            borrow_bps = float(borrow_rate_bps_per_day) * float(holding_days)
 
         # Crossing the spread costs half of it per leg when the mid is the reference —
         # so one full spread for a round trip that crosses both ways. A maker leg does
@@ -202,6 +278,13 @@ class CostModel:
             latency_bps=latency_bps,
             impact_bps=impact_bps,
             notional=notional,
+            entry_fee_bps=entry_fee_bps,
+            exit_fee_bps=exit_fee_bps,
+            entry_maker=entry_maker,
+            exit_maker=exit_maker,
+            funding_bps=funding_bps,
+            borrow_bps=borrow_bps,
+            funding_known=funding_known,
         )
 
     def _slippage(self, quantity: float, conditions: MarketConditions) -> float:
@@ -258,6 +341,7 @@ class CostModel:
 
 __all__ = [
     "BPS",
+    "FUNDING_PERIOD_SECONDS",
     "CostModel",
     "FeeSchedule",
     "MarketConditions",

@@ -219,6 +219,9 @@ class SignalCandidate(BaseModel):
     data_freshness_score: float = Field(1.0, ge=0.0, le=1.0)
 
     opinions: tuple[StrategyOpinion, ...] = ()
+    #: Every strategy that agreed with the direction, strongest first is not guaranteed;
+    #: ``strategy_id`` names the one whose levels the signal carries.
+    contributing_strategy_ids: tuple[str, ...] = ()
     findings: tuple[AgentFinding, ...] = ()
     context_assessment_id: str | None = None
     context_modifier_applied: float = 0.0

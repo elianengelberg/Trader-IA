@@ -319,6 +319,15 @@ class LiveConfig(FrozenModel):
     #: are tallied but never judge. The mute rule is identical under both. Defaults to
     #: ``legacy`` so that upgrading changes nothing until someone opts in on purpose.
     scoreboard_policy: Literal["legacy", "real_only"] = "legacy"
+    #: Which persisted round trips the expected-value estimator and the retrospective may
+    #: learn from. ``legacy`` feeds them every row, as every deployment has so far — which
+    #: lets a scenario generator's engineered drift declare a bucket tradeable or lost.
+    #: ``real_only`` admits only rows whose ``market_data`` is ``real``; synthetic rows and
+    #: rows without provenance are counted as excluded and never enter a bucket, so a
+    #: fresh system starts from "unknown" and earns its evidence through exploration.
+    #: Same shape and same default as ``scoreboard_policy``, and independent of it, so an
+    #: operator can turn one on without the other.
+    ev_evidence_policy: Literal["legacy", "real_only"] = "legacy"
     #: How the 24/7 session enters. ``market`` crosses the spread and pays the taker fee
     #: on the way in; ``limit`` rests a post-only order at the touch and pays the maker
     #: fee with no spread crossed — roughly half the round-trip cost, which is the single
@@ -383,8 +392,33 @@ class LiveConfig(FrozenModel):
     maintenance_margin_pct: float = Field(0.5, gt=0, le=50)
     liquidation_fee_bps: float = Field(50.0, ge=0, le=1000)
     charge_funding: bool = True
+    #: A funding reading older than this is unknown, not a rate (Phase 1.5): nothing is
+    #: charged or priced from it and the omission is counted. One hour is twelve missed
+    #: five-minute polls — a product decision recorded in the Phase 1.5 report, chosen
+    #: conservative in the direction of "unknown".
+    funding_max_age_seconds: float = Field(3600.0, ge=60, le=86_400)
+    #: What an entry with a bounded horizon (a time stop) does when the carry over it
+    #: cannot be priced — no monitor, no reading, a stale or an invalid one.
+    #: ``allow_unpriced`` takes the entry and marks the estimate and the round trip as
+    #: "carry not priced" (in paper the accrual charges nothing for such a period either,
+    #: so the estimate stays the cost the simulator will charge); ``block`` refuses it at
+    #: the ``funding`` stage. Paper-live defaults to allow; a venue that charges funding
+    #: on real money should run ``block``.
+    funding_unknown_policy: str = Field("allow_unpriced", pattern="^(allow_unpriced|block)$")
+    #: A quote older than this cannot verify the spread gate (Phase 1.5): with the gate
+    #: on, a quoting feed that shows no fresh, valid quote has the entry refused rather
+    #: than a constant read as a book. Six ten-second cycles.
+    quote_max_age_seconds: float = Field(60.0, ge=1, le=3600)
     #: Costs may not exceed this fraction of the expected gross edge.
     max_cost_ratio: float = Field(0.6, gt=0, le=1.0)
+    #: A validation session's own clock: after this many hours the runtime stops taking
+    #: entries, lets an open position run out under its stop for ``session_wind_down_bars``
+    #: more bars, then closes it at market and stops itself — checked inside the loop,
+    #: persisted with the run so a restart keeps the same deadline. Zero (the default)
+    #: is the 24/7 session: no deadline. ``POST /api/live/paper-start?max_hours=`` sets
+    #: it per session without touching configuration.
+    session_max_hours: float = Field(0.0, ge=0, le=720)
+    session_wind_down_bars: int = Field(30, ge=0, le=10_000)
 
     binance_api_key: SecretStr | None = None
     binance_api_secret: SecretStr | None = None
@@ -593,6 +627,16 @@ class Settings(BaseSettings):
             raise ValueError("event_bus='redis' requires redis_url")
         if self.mode is TradingMode.BACKTEST and self.env is Environment.PAPER:
             raise ValueError("backtest mode cannot run under the paper environment profile")
+        # Two spread limits, one relation (Phase 1.5): ``risk.max_spread_bps`` is the hard
+        # ceiling the risk engine applies to an observed spread; ``live.max_spread_bps`` is
+        # the session's tighter gate on the same observation (zero disables the gate, not
+        # the ceiling). A gate looser than the ceiling would never bind and would read as
+        # a limit that is not one.
+        if self.live.max_spread_bps > 0 and self.live.max_spread_bps > self.risk.max_spread_bps:
+            raise ValueError(
+                "live.max_spread_bps (the session's spread gate) must not exceed "
+                "risk.max_spread_bps (the risk engine's hard spread limit)"
+            )
         return self
 
     @property
@@ -623,6 +667,13 @@ class Settings(BaseSettings):
         for key in ("binance_api_key", "binance_api_secret"):
             if data["live"].get(key) is not None:
                 data["live"][key] = "***"
+        # A webhook URL is a credential: Discord's and Slack's embed the token in the
+        # path. The host says where alerts go; the rest never leaves (Phase 1.4).
+        webhook = str(data.get("observability", {}).get("alert_webhook_url") or "")
+        if webhook:
+            scheme, _, rest = webhook.partition("://")
+            host = rest.split("/", 1)[0].rsplit("@", 1)[-1]
+            data["observability"]["alert_webhook_url"] = f"{scheme}://{host}/***" if scheme else "***"
         if "://" in str(data.get("database_url", "")) and "@" in str(data["database_url"]):
             scheme, _, rest = str(data["database_url"]).partition("://")
             data["database_url"] = f"{scheme}://***@{rest.rsplit('@', 1)[-1]}"
@@ -658,6 +709,9 @@ def settings_for_env(env: Environment, **overrides: Any) -> Settings:
             "llm": LLMConfig(enabled=True, provider="stub"),
             "database_url": "sqlite+aiosqlite:///:memory:",
             "observability": ObservabilityConfig(log_level="WARNING", metrics_enabled=False),
+            # No network from a test: no venue WebSocket, no funding poller (Phase 1.5).
+            # Tests that exercise either build their own LiveConfig and their own fakes.
+            "live": LiveConfig(market_stream=False, charge_funding=False),
         },
         Environment.BACKTEST: {
             "mode": TradingMode.BACKTEST,

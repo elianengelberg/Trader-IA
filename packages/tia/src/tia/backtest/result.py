@@ -85,6 +85,17 @@ class DecisionRecord(BaseModel):
     regime: MarketRegime = MarketRegime.UNKNOWN
     feature_hash: str = ""
     signal_id: str = ""
+    #: Phase 1.3 parity with the 24/7 session's funnel: where the bar's decision ended
+    #: (``sent``, ``risk``, ``budget``, ``expected_value``, ``filters``, ``position_open``,
+    #: ``signal_reversed``, ``resting``, ``no_trade``) and why, in the runtime's words.
+    stage: str = ""
+    reason: str = ""
+    #: The expected-value reading at this bar, when one was taken (an approved entry).
+    ev_net_bps: float | None = None
+    ev_tradeable: bool | None = None
+    #: The risk budget's total multiplier and the size the contract arrived at.
+    budget_multiplier: float | None = None
+    sized_quantity: float = 0.0
 
     @field_validator("bar_close_time")
     @classmethod
@@ -127,6 +138,16 @@ class DecisionCounts(BaseModel):
     fills: int = 0
     protective_stops_unplaced: int = 0
     approvals_suppressed_position_open: int = 0
+    #: Phase 1.3 parity: the session's gates after risk approval, counted the same way.
+    budget_rejected: int = 0
+    ev_would_reject: int = 0
+    ev_no_evidence: int = 0
+    ev_rejected: int = 0
+    filter_rejected: int = 0
+    sized_down: int = 0
+    entries_skipped_resting: int = 0
+    stops_tightened: int = 0
+    exits_requested: dict[str, int] = Field(default_factory=dict)
 
     @property
     def actionable_signal_rate(self) -> float:

@@ -49,6 +49,10 @@ DEFAULT_USER_STREAM_URL = "wss://ws-api.binance.com:443/ws-api/v3"
 TESTNET_USER_STREAM_URL = "wss://ws-api.testnet.binance.vision/ws-api/v3"
 #: How long the venue gets to answer the subscription request before the attempt is a failure.
 SUBSCRIBE_TIMEOUT_S = 10.0
+#: How long ``close()`` waits for the stream's task to finish after cancelling it. A task
+#: that outlives this is abandoned — counted, logged, told to stop — never awaited without
+#: bound: a lost cancellation (asyncio races on 3.11) must not hang a shutdown (Phase 1.8).
+CLOSE_TIMEOUT_S = 5.0
 BACKOFF = (1.0, 2.0, 4.0, 8.0, 15.0, 30.0)
 
 #: Events that end the subscription or announce the connection's end. Each one is a drop:
@@ -200,6 +204,10 @@ class BinanceUserDataStream:
         self.responses = 0
         self.parse_errors = 0
         self.last_error = ""
+        #: Set by ``close()``; the loop never dials again once it is set, whatever
+        #: happened to its cancellation.
+        self._closing = False
+        self.close_timeouts = 0
         self._connected_at_ms: int | None = None
         self._last_message_ms: int | None = None
 
@@ -212,20 +220,40 @@ class BinanceUserDataStream:
     def start(self) -> None:
         if self.is_running:
             return
+        self._closing = False
         self._task = asyncio.get_running_loop().create_task(self._run(), name="binance-user-stream")
 
-    async def close(self) -> None:
-        if self._task is not None:
-            self._task.cancel()
+    async def close(self, *, timeout_s: float = CLOSE_TIMEOUT_S) -> None:
+        """Stop the stream: no more dials, the task cancelled and waited for — bounded.
+
+        ``_closing`` is set first, so the loop ends on its own at its next decision point
+        even if the cancellation is lost in a library race. The wait is ``asyncio.wait``
+        with a timeout, which neither raises on timeout nor swallows a cancellation of
+        ``close()`` itself. A task still alive after ``timeout_s`` is abandoned: counted
+        in ``close_timeouts``, logged, cancelled once more and left to die with the loop.
+        The stream reports closed either way (Phase 1.8).
+        """
+        self._closing = True
+        task, self._task = self._task, None
+        if task is not None and not task.done():
+            task.cancel()
+            _done, pending = await asyncio.wait({task}, timeout=max(0.0, timeout_s))
+            if pending:
+                self.close_timeouts += 1
+                _log.warning("binance_user_stream_close_timeout", timeout_s=timeout_s)
+                task.cancel()
+            else:
+                with contextlib.suppress(asyncio.CancelledError, Exception):
+                    task.result()  # retrieve, so a failure is not "never retrieved"
+        elif task is not None:
             with contextlib.suppress(asyncio.CancelledError, Exception):
-                await self._task
-            self._task = None
+                task.result()
         self._mark_down("closed")
         self.subscription_id = None
 
     async def _run(self) -> None:
         attempt = 0
-        while True:
+        while not self._closing:
             try:
                 async with self._connector(self._base_url) as socket:
                     self.subscription_id = await self._subscribe(socket)
@@ -248,6 +276,8 @@ class BinanceUserDataStream:
                 self.last_error = f"{type(exc).__name__}: {str(exc)[:200]}"
                 self._mark_down(self.last_error)
                 self.subscription_id = None
+                if self._closing:
+                    return  # closed while connected or connecting: no reconnect, no backoff
                 self.reconnects += 1
                 delay = BACKOFF[min(attempt, len(BACKOFF) - 1)]
                 attempt += 1
@@ -275,7 +305,21 @@ class BinanceUserDataStream:
             remaining = deadline - loop.time()
             if remaining <= 0:
                 raise TimeoutError(f"no answer to the subscription request within {self._subscribe_timeout_s:g} s")
-            raw = await asyncio.wait_for(socket.recv(), remaining)
+            # ``asyncio.wait`` rather than ``wait_for``: it never swallows a cancellation
+            # of this task while the inner read completes (a 3.11 ``wait_for`` race), and
+            # a timed-out read is cancelled by hand (Phase 1.8).
+            read = asyncio.ensure_future(socket.recv())
+            try:
+                done, _pending = await asyncio.wait({read}, timeout=remaining)
+            except BaseException:
+                read.cancel()
+                raise
+            if not done:
+                read.cancel()
+                with contextlib.suppress(asyncio.CancelledError, Exception):
+                    await read
+                raise TimeoutError(f"no answer to the subscription request within {self._subscribe_timeout_s:g} s")
+            raw = read.result()
             frame = self._decode(raw)
             if isinstance(frame, dict) and frame.get("id") == request_id:
                 self.responses += 1

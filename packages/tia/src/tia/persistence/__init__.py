@@ -6,6 +6,7 @@ SQLite by default so the demo needs no daemon; PostgreSQL by changing one URL.
 from tia.persistence.database import Database
 from tia.persistence.models import SCHEMA_VERSION, Base
 from tia.persistence.repositories import (
+    AccountJournalRepository,
     ActivationRepository,
     AssessmentRepository,
     BacktestRepository,
@@ -22,11 +23,13 @@ from tia.persistence.repositories import (
     OrderRepository,
     PortfolioRepository,
     ReconciliationRepository,
+    RiskStateRepository,
     RunRepository,
 )
 
 __all__ = [
     "SCHEMA_VERSION",
+    "AccountJournalRepository",
     "ActivationRepository",
     "AssessmentRepository",
     "BacktestRepository",
@@ -45,5 +48,6 @@ __all__ = [
     "OrderRepository",
     "PortfolioRepository",
     "ReconciliationRepository",
+    "RiskStateRepository",
     "RunRepository",
 ]

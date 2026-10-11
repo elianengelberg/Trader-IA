@@ -10,6 +10,7 @@ from tia.risk.budget import (
     RiskProfileName,
 )
 from tia.risk.engine import RiskEngine, RiskState
+from tia.risk.restore import RiskRestore, rebuild_risk_state
 from tia.risk.ruin import RuinEstimate, max_safe_risk_fraction, monte_carlo_ruin
 from tia.risk.sizing import MIN_STOP_DISTANCE_PCT, compute_size, implied_risk
 
@@ -23,10 +24,12 @@ __all__ = [
     "RiskEngine",
     "RiskProfile",
     "RiskProfileName",
+    "RiskRestore",
     "RiskState",
     "RuinEstimate",
     "compute_size",
     "implied_risk",
     "max_safe_risk_fraction",
     "monte_carlo_ruin",
+    "rebuild_risk_state",
 ]

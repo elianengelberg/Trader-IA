@@ -37,6 +37,7 @@ from tia.domain.instruments import Instrument, InstrumentUniverse
 from tia.domain.market import Candle
 from tia.domain.orders import Fill, Order, OrderIntent
 from tia.domain.portfolio import PortfolioState, Position
+from tia.execution.filters import OrderFilterError, filters_for, validate_quantity
 from tia.execution.provider import ExecutionCapabilities, ExecutionProvider
 from tia.execution.state_machine import resolve_fill_state, transition
 
@@ -93,8 +94,21 @@ class PaperExecutionProvider(ExecutionProvider):
     def config(self) -> ExecutionSimConfig:
         return self._config
 
+    def _resolve(self, order_ref: str) -> Order | None:
+        """An order by its venue id *or* its client id.
+
+        The runtime addresses orders by ``client_order_id`` (the id it chose and the one a
+        real venue cancels by); this engine indexes by its own ``order_id``. Resolving both
+        here is what makes "cancel" mean the same thing against every provider.
+        """
+        order = self._orders.get(order_ref)
+        if order is None:
+            mapped = self._by_client_id.get(order_ref)
+            order = self._orders.get(mapped) if mapped else None
+        return order
+
     async def get_order(self, order_id: str) -> Order | None:
-        return self._orders.get(order_id)
+        return self._resolve(order_id)
 
     async def get_orders(self, *, open_only: bool = False) -> list[Order]:
         orders = list(self._orders.values())
@@ -170,12 +184,48 @@ class PaperExecutionProvider(ExecutionProvider):
             created_at=now,
             updated_at=now,
             correlation_id=intent.correlation_id,
+            reduce_only=intent.reduce_only,
         )
         self._orders[order.order_id] = order
         self._by_client_id[intent.client_order_id] = order.order_id
 
         if instrument is None:
             transition(order, OrderState.REJECTED, at=now, reason="unknown instrument")
+            return order
+
+        # The venue's entry check, the same rule set the intent builder applied: a whole
+        # number of lots, at least one lot, and — for an order that opens or adds
+        # exposure — the instrument's minimum notional at the price it will be judged
+        # at (its limit, else the last close this engine has seen). A reducing order
+        # is exempt: a position must always be closable. With no price known at all the
+        # notional cannot be judged here and the intent builder's check stands alone.
+        held = self._portfolio.positions.get(intent.symbol)
+        held_quantity = held.quantity if held is not None else 0.0
+        reducing = intent.reduce_only or (
+            held_quantity != 0.0 and (intent.side is Side.SELL) == (held_quantity > 0)
+        )
+        judged_at = intent.limit_price or self._last_price.get(intent.symbol)
+        try:
+            validate_quantity(
+                filters_for(intent.symbol, self._universe),
+                intent.quantity,
+                reference_price=judged_at,
+                reduce_only=reducing,
+                notional_required=False,
+            )
+        except OrderFilterError as exc:
+            transition(order, OrderState.REJECTED, at=now, reason=str(exc))
+            return order
+
+        if intent.reduce_only and not self._reduces(order, held_quantity):
+            # What a futures venue does with a reduce-only order that would open or add:
+            # refuses it. Before 1.3 the flag only exempted the minimum notional, and a
+            # "reduce-only" close sent over a position the stop had just taken out
+            # opened the position the other way (Phase 1.3, G5).
+            transition(
+                order, OrderState.REJECTED, at=now,
+                reason="reduce-only order would not reduce the position",
+            )
             return order
 
         if intent.side is Side.SELL and not instrument.shortable:
@@ -212,7 +262,9 @@ class PaperExecutionProvider(ExecutionProvider):
         return order
 
     async def cancel_order(self, order_id: str) -> Order:
-        order = self._orders.get(order_id)
+        """Cancel by venue id or client id. A cancelled order leaves the resting book at
+        once and can never be matched by a later bar."""
+        order = self._resolve(order_id)
         if order is None:
             raise DuplicateOrderError(f"unknown order {order_id}", order_id=order_id)
         now = self._clock.now()
@@ -220,8 +272,8 @@ class PaperExecutionProvider(ExecutionProvider):
             return order
         transition(order, OrderState.CANCEL_REQUESTED, at=now)
         transition(order, OrderState.CANCELLED, at=now, reason="cancelled by caller")
-        if order_id in self._resting:
-            self._resting.remove(order_id)
+        if order.order_id in self._resting:
+            self._resting.remove(order.order_id)
         return order
 
     # ------------------------------------------------------------------ matching
@@ -258,10 +310,34 @@ class PaperExecutionProvider(ExecutionProvider):
         self._portfolio.mark(candle.symbol, candle.close, candle.close_time)
         return produced
 
+    @staticmethod
+    def _reduces(order: Order, held_quantity: float) -> bool:
+        """Whether ``order`` would shrink a position of ``held_quantity`` (signed)."""
+        if abs(held_quantity) < 1e-12:
+            return False
+        return (order.side is Side.SELL) == (held_quantity > 0)
+
     def _try_fill(self, order: Order, candle: Candle) -> Fill | None:
         instrument = self._universe.get(order.symbol)
         if instrument is None:
             return None
+
+        if order.reduce_only:
+            # Enforced at the fill, against the position as it is *now*: another order
+            # (the protective stop, an earlier close) may have reduced or closed it since
+            # this one was accepted. A reduce-only order never fills past flat; one with
+            # nothing left to reduce expires, as the venue's would (Phase 1.3, G5).
+            held = self._portfolio.positions.get(order.symbol)
+            held_quantity = held.quantity if held is not None else 0.0
+            if not self._reduces(order, held_quantity):
+                transition(
+                    order, OrderState.EXPIRED, at=candle.close_time,
+                    reason="reduce-only order had nothing left to reduce",
+                )
+                return None
+            reducible = abs(held_quantity)
+        else:
+            reducible = float("inf")
 
         trigger = self._fill_price(order, candle)
         if trigger is None:
@@ -282,9 +358,22 @@ class PaperExecutionProvider(ExecutionProvider):
         quantity = instrument.round_quantity(quantity)
         if quantity <= 0:
             return None
+        if order.reduce_only and quantity > reducible * (1.0 + 1e-9) + 1e-12:
+            # Never past flat: the remainder is sized to exactly what is held, float
+            # residue included, so the position lands on zero rather than on dust.
+            quantity = reducible
 
-        price, slippage_bps = self._apply_slippage(order, trigger, quantity, candle, instrument)
         liquidity = "maker" if order.order_type in _MAKER_TYPES else "taker"
+        if liquidity == "maker":
+            # No slippage on a resting order: a limit never fills worse than its limit at
+            # any venue. The queue it had to wait in is what the trade-through requirement
+            # in ``_fill_price`` models; charging slippage on top of it priced a cost that
+            # cannot occur and distorted every paper-live round trip by that amount.
+            price, slippage_bps = instrument.round_price(trigger), 0.0
+        else:
+            price, slippage_bps = self._apply_slippage(
+                order, trigger, quantity, candle, instrument
+            )
         fee_bps = (
             self._config.maker_fee_bps if liquidity == "maker" else self._config.taker_fee_bps
         )
@@ -315,6 +404,16 @@ class PaperExecutionProvider(ExecutionProvider):
             transition(order, target, at=candle.close_time)
         elif target is OrderState.PARTIALLY_FILLED:
             transition(order, OrderState.PARTIALLY_FILLED, at=candle.close_time)
+        if (
+            order.reduce_only
+            and not order.state.is_terminal
+            and abs((self._portfolio.positions.get(order.symbol) or Position(symbol=order.symbol)).quantity) < 1e-12
+        ):
+            # The position is flat: what remains of a reduce-only order can never fill.
+            transition(
+                order, OrderState.EXPIRED, at=candle.close_time,
+                reason="reduce-only order: position flat, remainder expired",
+            )
 
         return fill
 
@@ -333,11 +432,13 @@ class PaperExecutionProvider(ExecutionProvider):
             if limit is None:
                 return None
             # Require the price to trade through the limit, not merely touch it: at the
-            # exact limit there is no guarantee of queue priority.
+            # exact limit there is no guarantee of queue priority. Once it does, a resting
+            # order is taken at its own price — the taker who crosses it gets the price
+            # improvement, the maker never does — so the fill is the limit, not the open.
             if order.side is Side.BUY and candle.low < limit:
-                return min(limit, candle.open)
+                return limit
             if order.side is Side.SELL and candle.high > limit:
-                return max(limit, candle.open)
+                return limit
             return None
 
         if order.order_type in (OrderType.STOP, OrderType.STOP_LIMIT):
@@ -454,6 +555,27 @@ class PaperExecutionProvider(ExecutionProvider):
     def mark_all(self, prices: dict[str, float], at: datetime) -> None:
         for symbol, price in prices.items():
             self._portfolio.mark(symbol, price, at)
+
+    def restore_portfolio(self, state: PortfolioState) -> None:
+        """Hand the engine the account the journal says it holds.
+
+        A restarted process must not start flat at base capital while the record says
+        otherwise: cash, position, realised P&L, fees, the equity peak and the UTC day's
+        opening equity all come from the rebuilt journal. Resting orders are *not*
+        restored — an order the engine no longer holds cannot fill, and the runtime
+        re-creates the one order that matters (the protective stop) from its own plan.
+        """
+        self._portfolio = state.model_copy(deep=True)
+        for symbol, position in self._portfolio.positions.items():
+            if position.last_price > 0:
+                self._last_price[symbol] = float(position.last_price)
+        _log.info(
+            "paper_portfolio_restored",
+            cash=round(self._portfolio.cash, 4),
+            positions={s: p.quantity for s, p in self._portfolio.positions.items()},
+            peak_equity=round(self._portfolio.peak_equity, 4),
+            day_start_equity=round(self._portfolio.day_start_equity, 4),
+        )
 
     def reset(self, *, initial_capital: float | None = None) -> None:
         """Clear all state. Used between backtest runs."""

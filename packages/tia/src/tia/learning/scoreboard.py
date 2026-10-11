@@ -12,8 +12,13 @@ trades to mean it is **muted**: its signals are refused before risk, before expe
 value, before anything. This can only ever refuse a trade — it never authorises one — so
 it sits comfortably with every other learned influence in the system.
 
-Exploration trades are recorded but do not count toward muting: they were taken because
-the bucket had no evidence, not because the strategy claimed one.
+Exploration trades count like any other closed trade. They were taken at a reduced size
+because the *estimator* lacked evidence for the bucket, but the signal was the strategy's
+own proposal, approved by the same risk engine and closed by the same exits — a fair sample
+of what that strategy's signals do. An earlier version left them out of the verdict, which,
+with every bucket of a fresh system starting unproven, meant the only trades the system
+could take were the ones it refused to learn from: a strategy could never be judged at all.
+They are still counted separately so a report can say how much of a record is exploration.
 
 **Which evidence may judge.** Every persisted round trip says where its prices came from
 (``market_data``: ``synthetic`` for a generated scenario, ``real`` for the venue's own
@@ -86,7 +91,7 @@ class StrategyRecord:
 
     @property
     def judged(self) -> int:
-        """Trades that count toward the verdict: everything but exploration."""
+        """Trades that count toward the verdict: every credited trade, exploration included."""
         return len(self._net)
 
     @property
@@ -96,12 +101,35 @@ class StrategyRecord:
             return False
         return mean + MUTE_SE * se < 0.0
 
+    @property
+    def evidence_state(self) -> str:
+        """Where this strategy's record stands, recomputed from the record every time.
+
+        ``unevaluated``: nothing credited yet. ``insufficient``: credited trades below the
+        floor; nothing can be said. ``unfavourable``: at the floor and the mean sits more
+        than :data:`MUTE_SE` standard errors below zero — the mute condition, stated as a
+        state. ``favourable``: at the floor and the mean sits more than the same distance
+        above zero. ``inconclusive``: at the floor and zero is inside the mean's own noise.
+        No state latches: the next trade can move the record to any other state.
+        """
+        if self.trades == 0:
+            return "unevaluated"
+        mean, se = self.mean_bps, self.standard_error_bps
+        if self.judged < MIN_TRADES_TO_JUDGE or mean is None or se is None:
+            return "insufficient"
+        if mean + MUTE_SE * se < 0.0:
+            return "unfavourable"
+        if mean - MUTE_SE * se > 0.0:
+            return "favourable"
+        return "inconclusive"
+
     def as_dict(self) -> dict[str, Any]:
         mean = self.mean_bps
         return {
             "strategy_id": self.strategy_id,
             "trades": self.trades,
             "judged": self.judged,
+            "evidence_state": self.evidence_state,
             "wins": self.wins,
             "win_rate": round(self.wins / self.trades, 4) if self.trades else None,
             "exploratory": self.exploratory,
@@ -165,8 +193,7 @@ class StrategyScoreboard:
             record.wins += 1
         if exploratory:
             record.exploratory += 1
-        else:
-            record._net.append(float(net_bps))
+        record._net.append(float(net_bps))
 
     def record_many(self, rows: list[dict[str, Any]]) -> int:
         """Rows with ``strategy_id``, ``net_bps`` and optionally ``exploratory`` and

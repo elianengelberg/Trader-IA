@@ -27,6 +27,7 @@ from datetime import datetime
 
 from tia.core.clock import Clock, ensure_utc
 from tia.core.config import RiskLimits
+from tia.core.errors import RiskError
 from tia.core.ids import deterministic_id
 from tia.core.logging import get_logger
 from tia.domain.enums import Direction, RiskVerdict, SystemMode
@@ -36,6 +37,7 @@ from tia.domain.quality import DataQualityReport
 from tia.domain.risk import PositionSizing, RiskCheck, RiskDecision
 from tia.domain.signals import SignalCandidate
 from tia.quant.features import FeatureSet
+from tia.risk.restore import RiskRestore
 from tia.risk.sizing import compute_size, margin_available
 
 _log = get_logger("risk.engine")
@@ -130,6 +132,34 @@ class RiskEngine:
     def record_execution(self, symbol: str, at: datetime) -> None:
         """Called after a fill so frequency limits and cooldowns stay accurate."""
         self._state.record_trade(symbol, ensure_utc(at))
+
+    def restore(self, restore: RiskRestore) -> None:
+        """Seed the frequency state from a rebuild of the persisted execution record.
+
+        Only a *complete* rebuild is accepted: an incomplete one carries no information,
+        and seeding zeros from it would be the exact failure a restore exists to prevent.
+        The day marker is set to the rebuild's day so :meth:`RiskState.roll_day` keeps the
+        counters while that UTC day lasts and clears them at the next midnight, as it
+        would have had the process never restarted.
+        """
+        if not restore.complete:
+            raise RiskError(
+                "risk state cannot be restored from an incomplete rebuild: "
+                + (restore.error or "unknown error")
+            )
+        self._state.current_day = restore.day
+        self._state.trades_today = int(restore.entries_today)
+        self._state.trades_today_by_symbol = dict(restore.entries_today_by_symbol)
+        self._state.last_trade_at = {
+            symbol: ensure_utc(at) for symbol, at in restore.last_entry_at.items()
+        }
+        _log.info(
+            "risk_state_restored",
+            day=restore.day,
+            trades_today=self._state.trades_today,
+            by_symbol=dict(self._state.trades_today_by_symbol),
+            cooldown_anchors=len(self._state.last_trade_at),
+        )
 
     # ------------------------------------------------------------------ evaluation
 

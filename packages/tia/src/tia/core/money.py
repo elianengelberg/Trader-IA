@@ -57,6 +57,27 @@ def quantize_down(value: float | str | Decimal, step: float | str | Decimal) -> 
     return (D(value) / step_d).to_integral_value(rounding=ROUND_DOWN) * step_d
 
 
+def quantize_price_passive(
+    price: float | str | Decimal, tick: float | str | Decimal, *, buy: bool
+) -> Decimal:
+    """Put a limit price on the venue's tick grid without making it more aggressive.
+
+    A buy rounds **down** and a sell rounds **up**; a price already on the grid is
+    returned as it is. Rounding to nearest could move a resting order across the touch
+    and fill it as a taker at a price nobody sized for; this direction can only make it
+    more passive. One rule for every mode — the live session and the backtester quantize
+    through it (Phase 1.6).
+    """
+    tick_d = D(tick)
+    if tick_d <= 0:
+        raise ValueError("tick must be positive")
+    price_d = D(price)
+    floored = (price_d / tick_d).to_integral_value(rounding=ROUND_DOWN) * tick_d
+    if buy or floored == price_d:
+        return floored
+    return floored + tick_d
+
+
 def format_venue_decimal(value: float | str | Decimal) -> str:
     """Render for a venue API: plain notation, no exponent, no trailing zeros.
 
@@ -83,4 +104,5 @@ __all__ = [
     "meets_min_notional",
     "money",
     "quantize_down",
+    "quantize_price_passive",
 ]

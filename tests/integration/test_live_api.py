@@ -41,10 +41,14 @@ API_SECRET = "SECRET-VALUE-THAT-MUST-NEVER-APPEAR"  # noqa: S105 - the canary
 
 
 def _settings(tmp_path: Path, *, live: LiveConfig | None = None):  # type: ignore[no-untyped-def]
+    # No network from a test (Phase 1.5): whatever live config a test asks for, the venue
+    # WebSocket and the funding poller stay off — the fake public feed stands in for the
+    # venue, and the funding monitor has its own tests against a mock transport.
+    live = (live or LiveConfig()).model_copy(update={"market_stream": False, "charge_funding": False})
     return settings_for_env(Environment.TESTING).model_copy(
         update={
             "database_url": f"sqlite+aiosqlite:///{tmp_path / 'live.db'}",
-            "live": live or LiveConfig(),
+            "live": live,
         }
     )
 

@@ -153,3 +153,51 @@ def proportional_series(
         )
         price = nxt
     return candles
+
+
+# ----------------------------------------------------------------- no real network, ever
+#
+# The rule at the top of this file, enforced by behaviour rather than by convention
+# (Phase 1.8): every real HTTP transport and every websocket dial is replaced for the
+# duration of each test, in every suite. Fakes are untouched — ``httpx.MockTransport``,
+# ``httpx.ASGITransport`` and scripted connectors never reach these seams — so a test
+# that uses them passes, and a test that reaches the network fails here, loudly, with the
+# URL it tried, on a machine where the network is open as much as on one where it is not.
+
+
+@pytest.fixture(autouse=True)
+def _no_real_network(monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:
+    import httpx
+
+    async def refuse_async(self: object, request: httpx.Request) -> httpx.Response:
+        raise AssertionError(
+            f"a test tried a real HTTP request to {request.url}; use httpx.MockTransport, "
+            "httpx.ASGITransport or a fake provider"
+        )
+
+    def refuse_sync(self: object, request: httpx.Request) -> httpx.Response:
+        raise AssertionError(
+            f"a test tried a real HTTP request to {request.url}; use httpx.MockTransport or a fake"
+        )
+
+    monkeypatch.setattr(httpx.AsyncHTTPTransport, "handle_async_request", refuse_async)
+    monkeypatch.setattr(httpx.HTTPTransport, "handle_request", refuse_sync)
+
+    try:
+        import websockets
+        import websockets.asyncio.client as ws_client
+    except ImportError:  # pragma: no cover - the package is a dependency
+        websockets = None  # type: ignore[assignment]
+        ws_client = None  # type: ignore[assignment]
+
+    if websockets is not None:
+
+        def refuse_dial(*args: object, **kwargs: object) -> object:
+            target = args[0] if args else kwargs.get("uri", "?")
+            raise AssertionError(
+                f"a test tried to open a real websocket to {target}; inject a scripted connector"
+            )
+
+        monkeypatch.setattr(websockets, "connect", refuse_dial)
+        monkeypatch.setattr(ws_client, "connect", refuse_dial)
+    yield

@@ -71,6 +71,9 @@ class FusionResult:
     target_reference: float | None = None
     context_modifier_applied: float = 0.0
     context_assessment_id: str | None = None
+    #: The agreeing opinion with the most strength — the one whose entry, stop and target
+    #: the result carries. Attribution follows it, not the order strategies were listed in.
+    primary: StrategyOpinion | None = None
 
     @property
     def is_actionable(self) -> bool:
@@ -316,6 +319,7 @@ def fuse(
         target_reference=primary.target_reference,
         context_modifier_applied=modifier_applied,
         context_assessment_id=context.assessment_id if context else None,
+        primary=primary,
     )
 
 

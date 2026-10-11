@@ -11,6 +11,7 @@ socket is reported as what it is, and a venue-ended subscription is a reconnect.
 from __future__ import annotations
 
 import asyncio
+import contextlib
 import json
 from contextlib import asynccontextmanager
 from datetime import UTC, datetime
@@ -173,7 +174,18 @@ class ScriptedSigner:
 WS_URL = "wss://ws-api.testnet.binance.vision/ws-api/v3"
 
 
-async def _stream(*, socket: ScriptedSocket | None = None, signer: ScriptedSigner | None = None):  # type: ignore[no-untyped-def]
+async def _wait_until(predicate, *, timeout_s: float = 2.0, what: str = "condition") -> None:  # type: ignore[no-untyped-def]
+    """Yield until ``predicate`` holds, or fail with ``what`` after ``timeout_s`` seconds.
+    Tests wait for the state they assert, not for a fixed number of milliseconds (Phase 1.8)."""
+    loop = asyncio.get_running_loop()
+    deadline = loop.time() + timeout_s
+    while not predicate():
+        if loop.time() > deadline:
+            raise AssertionError(f"{what} not reached within {timeout_s:g} s")
+        await asyncio.sleep(0.005)
+
+
+async def _stream(*, socket: ScriptedSocket | None = None, signer: ScriptedSigner | None = None, settle: bool = True):  # type: ignore[no-untyped-def]
     import tia.data.providers.binance_user_stream as module
 
     module.BACKOFF = (0.01,)
@@ -187,7 +199,8 @@ async def _stream(*, socket: ScriptedSocket | None = None, signer: ScriptedSigne
         on_status=lambda c, reason, t: statuses.append((c, reason, t)), base_url=WS_URL, connector=socket.connector(), subscribe_timeout_s=0.5,
     )
     stream.start()
-    await asyncio.sleep(0.05)
+    if settle:
+        await _wait_until(lambda: stream.connections + stream.connect_failures >= 1, what="first attempt")
     return stream, socket, signer, clock, reports, balances, statuses
 
 
@@ -217,7 +230,7 @@ async def test_the_stream_subscribes_with_a_signed_request_delivers_reports_and_
 async def test_a_dropped_socket_is_reported_as_a_drop_and_a_fresh_signature_is_sent_on_reconnect() -> None:
     stream, socket, signer, _clock, _reports, _balances, statuses = await _stream()
     await socket.drop()
-    await asyncio.sleep(0.08)
+    await _wait_until(lambda: stream.reconnects >= 1 and stream.connected and signer.calls >= 2, what="reconnect")
     assert any(s[0] is False and "scripted drop" in s[1] for s in statuses)
     assert stream.disconnects == 1 and stream.reconnects >= 1 and signer.calls == 2 and len(socket.urls) == 2
     assert [f["params"]["signature"] for f in socket.sent] == ["sig-1", "sig-2"]
@@ -229,7 +242,7 @@ async def test_a_refused_subscription_is_never_reported_as_connected_and_names_t
     socket = ScriptedSocket()
     socket.refuse = (401, -2015, "Invalid API-key, IP, or permissions for action.")
     stream, socket, _signer, _clock, _reports, _balances, statuses = await _stream(socket=socket)
-    await asyncio.sleep(0.06)
+    await _wait_until(lambda: stream.connect_failures >= 2, what="two refused attempts")
     assert not stream.connected and stream.subscription_id is None and stream.connect_failures >= 2 and statuses == []
     assert "status 401" in stream.last_error and "-2015" in stream.last_error
     assert "pub-key-abc" not in stream.last_error and "sig-" not in stream.last_error
@@ -240,7 +253,7 @@ async def test_a_venue_that_does_not_answer_the_subscription_is_a_failed_attempt
     socket = ScriptedSocket()
     socket.answer_subscriptions = False
     stream, socket, _signer, _clock, _reports, _balances, statuses = await _stream(socket=socket)
-    await asyncio.sleep(0.7)
+    await _wait_until(lambda: stream.connect_failures >= 1, what="a timed-out subscription")
     assert not stream.connected and stream.connect_failures >= 1 and statuses == [] and "TimeoutError" in stream.last_error
     await stream.close()
 
@@ -249,7 +262,7 @@ async def test_a_signer_that_cannot_sign_keeps_retrying_without_pretending_to_be
     signer = ScriptedSigner()
     signer.fail = True
     stream, socket, _signer, _clock, _reports, _balances, statuses = await _stream(signer=signer)
-    await asyncio.sleep(0.06)
+    await _wait_until(lambda: stream.connect_failures >= 2, what="two failed signatures")
     assert not stream.connected and stream.connect_failures >= 2 and statuses == [] and "no signer for you" in stream.last_error
     assert socket.sent == []  # nothing left the process without a signature
     await stream.close()
@@ -258,7 +271,7 @@ async def test_a_signer_that_cannot_sign_keeps_retrying_without_pretending_to_be
 async def test_a_subscription_the_venue_terminates_is_a_drop_followed_by_a_new_subscription() -> None:
     stream, socket, signer, _clock, _reports, _balances, statuses = await _stream()
     await socket.event({"e": "eventStreamTerminated", "E": T_MS})
-    await asyncio.sleep(0.08)
+    await _wait_until(lambda: stream.disconnects >= 1 and stream.connected and stream.subscription_id == 1, what="resubscription")
     assert any(s[0] is False and "terminated" in s[1] for s in statuses)
     assert stream.disconnects == 1 and signer.calls == 2 and stream.connected and stream.subscription_id == 1
     await stream.close()
@@ -270,6 +283,77 @@ async def test_an_unreadable_report_is_reported_not_guessed() -> None:
     assert reports == [] and stream.parse_errors == 1
     assert statuses[-1][0] is True and statuses[-1][1].startswith("unparseable report")
     await stream.close()
+
+
+# ------------------------------------------------------------------ closing (Phase 1.8)
+
+
+async def test_close_returns_within_its_timeout_even_when_the_task_ignores_the_cancellation() -> None:
+    """The failure the suite stalled on: a cancellation lost in a library race leaves the
+    task alive and ``await task`` never returns. ``close()`` now waits a bounded time,
+    counts the abandonment and reports closed; the task is told to stop and left to the
+    loop. Simulated with a task that swallows its cancellation."""
+    stream, _socket, _signer, _clock, _reports, _balances, statuses = await _stream()
+    released = asyncio.Event()
+
+    async def stubborn() -> None:
+        while not released.is_set():
+            with contextlib.suppress(asyncio.CancelledError):  # the lost cancellation
+                await asyncio.sleep(0.005)
+
+    real = stream._task
+    real.cancel()
+    with contextlib.suppress(asyncio.CancelledError):
+        await real
+    stream._task = asyncio.get_running_loop().create_task(stubborn())
+    await asyncio.sleep(0)  # let it reach its first await, where a cancellation would land
+    loop = asyncio.get_running_loop()
+    started = loop.time()
+    await stream.close(timeout_s=0.1)
+    assert loop.time() - started < 1.0, "bounded"
+    assert stream.close_timeouts == 1 and stream._task is None and not stream.is_running
+    assert not stream.connected and statuses[-1][1] == "closed"
+    released.set()
+    await asyncio.sleep(0.02)
+
+
+async def test_after_close_the_stream_never_dials_again_even_mid_reconnect() -> None:
+    socket = ScriptedSocket()
+    socket.refuse = (401, -2015, "refused")
+    stream, socket, _signer, _clock, _reports, _balances, _statuses = await _stream(socket=socket)
+    await _wait_until(lambda: stream.connect_failures >= 2, what="a reconnect loop")
+    await stream.close()
+    dials = len(socket.urls)
+    await asyncio.sleep(0.05)
+    assert len(socket.urls) == dials and not stream.is_running and stream.close_timeouts == 0
+
+
+async def test_a_subscription_that_times_out_cancels_its_read_and_leaves_no_task_behind() -> None:
+    socket = ScriptedSocket()
+    socket.answer_subscriptions = False
+    import tia.data.providers.binance_user_stream as module
+
+    module.BACKOFF = (0.01,)
+    stream = BinanceUserDataStream(
+        ScriptedSigner(), now_ms=lambda: T_MS, on_report=lambda r, t: None, base_url=WS_URL,
+        connector=socket.connector(), subscribe_timeout_s=0.05,
+    )
+    stream.start()
+    await _wait_until(lambda: stream.connect_failures >= 2, what="two timed-out subscriptions")
+    assert "TimeoutError" in stream.last_error
+    await stream.close()
+    await asyncio.sleep(0)
+    stray = {t for t in asyncio.all_tasks() if t is not asyncio.current_task() and not t.done()}
+    assert stray == set(), f"tasks left behind: {[t.get_name() for t in stray]}"
+
+
+async def test_closing_twice_is_harmless_and_closing_a_never_started_stream_too() -> None:
+    stream, _socket, _signer, _clock, _reports, _balances, _statuses = await _stream()
+    await stream.close()
+    await stream.close()
+    fresh = BinanceUserDataStream(ScriptedSigner(), now_ms=lambda: T_MS, on_report=lambda r, t: None, connector=ScriptedSocket().connector())
+    await fresh.close()
+    assert not fresh.connected and fresh.close_timeouts == 0
 
 
 # ------------------------------------------------------------------ the adapter's side of it

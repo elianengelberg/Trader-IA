@@ -11,11 +11,13 @@ from tia.domain.orders import Fill
 from tia.domain.portfolio import PortfolioState
 from tia.portfolio.account_journal import (
     EVENT_ADJUSTMENT,
+    EVENT_BASELINE,
     EVENT_FILL,
     EVENT_MARK,
     EVENT_PLAN,
     AccountEventRecord,
     AccountRestore,
+    check_baseline,
     cross_check,
     fold_account_events,
 )
@@ -219,3 +221,95 @@ def test_the_funding_a_leg_paid_travels_with_its_plan_and_older_plans_read_zero(
     closed = [*events, fill_event("f2", "sell", 0.1, 51_000.0, 2.55, T0 + timedelta(hours=18))]
     flat = fold_account_events(closed, initial_capital=10_000.0, symbol=SYMBOL, now=T0 + timedelta(hours=19))
     assert not flat.has_position and flat.plan is None, "a closed leg leaves no tally behind"
+
+
+# ------------------------------------------------------------ the operator's baseline
+
+
+def baseline_event(at: datetime, *, symbol: str = SYMBOL, legacy_fills: int = 0, legacy_net: float = 0.0,
+                   legacy_fees: float = 0.0, event_id: str | None = None) -> AccountEventRecord:
+    return AccountEventRecord(
+        event_type=EVENT_BASELINE, occurred_at=at, sequence=0, event_id=event_id or f"evt_base_{at.isoformat()}",
+        payload={"symbol": symbol, "at": at.isoformat(), "reason": "fills predate the journal", "actor": "op",
+                 "legacy_fills": legacy_fills, "legacy_runs": ["run_old"], "legacy_net_quantity": legacy_net,
+                 "legacy_fees": legacy_fees},
+    )
+
+
+def test_a_baseline_opens_the_record_at_base_capital_on_its_own_day() -> None:
+    base = baseline_event(T0, legacy_fills=5, legacy_net=-0.276436, legacy_fees=16.993117)
+    restore = fold_account_events([base], initial_capital=10_000.0, symbol=SYMBOL, now=T0 + timedelta(hours=1))
+    assert restore.complete and restore.consulted
+    assert restore.baseline_at == T0 and restore.baseline["legacy_fills"] == 5
+    assert restore.cash == 10_000.0 and restore.position_quantity == 0.0 and restore.fills_seen == 0
+    assert restore.current_day == T0.date().isoformat() and restore.last_event_at == T0
+    assert restore.checks["baseline_at"] == T0.isoformat()
+    assert restore.as_dict()["baseline_at"] == T0.isoformat()
+
+
+def test_events_after_the_baseline_fold_exactly_as_they_would_without_one() -> None:
+    fills = [fill_event("f1", "buy", 0.1, 50_000.0, 2.5, T0 + timedelta(minutes=5)),
+             mark_event(50_500.0, T0 + timedelta(minutes=6))]
+    plain = fold_account_events(fills, initial_capital=10_000.0, symbol=SYMBOL, now=T0 + timedelta(minutes=7))
+    opened = fold_account_events([baseline_event(T0), *fills], initial_capital=10_000.0, symbol=SYMBOL,
+                                 now=T0 + timedelta(minutes=7))
+    for field in ("cash", "position_quantity", "position_average_price", "fees_paid", "equity", "fills_seen"):
+        assert getattr(opened, field) == getattr(plain, field), field
+    assert opened.complete and opened.baseline_at == T0 and plain.baseline_at is None
+
+
+def test_a_baseline_that_follows_a_folded_event_is_refused_and_folds_nothing_away() -> None:
+    """A baseline may open a record, never rewrite one: the fill before it stays folded and
+    the rebuild is incomplete until a person looks."""
+    events = [fill_event("f1", "buy", 0.1, 50_000.0, 2.5, T0), baseline_event(T0 + timedelta(minutes=1))]
+    restore = fold_account_events(events, initial_capital=10_000.0, symbol=SYMBOL, now=T0 + timedelta(minutes=2))
+    assert restore.complete is False and "never rewrite" in restore.error
+    assert restore.baseline_at is None and restore.fills_seen == 1
+    assert restore.position_quantity == pytest.approx(0.1), "the fill is not hidden behind the baseline"
+
+
+def test_a_second_baseline_is_refused() -> None:
+    events = [baseline_event(T0, event_id="b1"), baseline_event(T0 + timedelta(minutes=1), event_id="b2")]
+    restore = fold_account_events(events, initial_capital=10_000.0, symbol=SYMBOL, now=T0 + timedelta(minutes=2))
+    assert restore.complete is False and "second baseline" in restore.error
+    assert restore.baseline_at == T0, "the first one still marks where the record opened"
+
+
+def test_a_baseline_of_another_symbol_opens_nothing_here() -> None:
+    restore = fold_account_events([baseline_event(T0, symbol="ETH-USD")], initial_capital=10_000.0,
+                                  symbol=SYMBOL, now=T0 + timedelta(minutes=1))
+    assert restore.complete and restore.baseline_at is None and restore.checks["baseline_at"] is None
+
+
+def test_the_baseline_check_holds_the_legacy_set_to_what_was_pinned() -> None:
+    base = baseline_event(T0, legacy_fills=5, legacy_net=-0.276436, legacy_fees=16.993117)
+    restore = fold_account_events([base], initial_capital=10_000.0, symbol=SYMBOL, now=T0 + timedelta(hours=1))
+    agree = check_baseline(restore, legacy_fill_rows_count=5, legacy_fill_rows_net_quantity=-0.276436,
+                           legacy_fill_rows_fees=16.993117)
+    assert agree.complete is True
+    assert agree.checks["legacy_fills_excluded"] == 5 and agree.checks["legacy_fills_pinned"] == 5
+    assert agree.checks["legacy_net_quantity_table"] == pytest.approx(-0.276436)
+    grew = check_baseline(restore, legacy_fill_rows_count=6, legacy_fill_rows_net_quantity=-0.3,
+                          legacy_fill_rows_fees=20.0)
+    assert grew.complete is False and "disagrees with its baseline" in grew.error
+    assert "6 fills before the baseline" in grew.error and "20.000000 before the baseline" in grew.error
+    # The reconciliation of the rows from the baseline on is untouched by the legacy set.
+    reconciled = cross_check(agree, fill_rows_net_quantity=0.0, fill_rows_count=0, fill_rows_fees=0.0)
+    assert reconciled.complete is True and reconciled.checks["fills_in_table"] == 0
+    assert reconciled.checks["legacy_fills_excluded"] == 5, "the legacy figures stay in view"
+
+
+def test_without_a_baseline_the_baseline_check_changes_nothing() -> None:
+    restore = fold_account_events([fill_event("f1", "buy", 0.1, 50_000.0, 2.5, T0)], initial_capital=10_000.0,
+                                  symbol=SYMBOL, now=T0 + timedelta(minutes=1))
+    assert check_baseline(restore, legacy_fill_rows_count=0, legacy_fill_rows_net_quantity=0.0,
+                          legacy_fill_rows_fees=0.0) is restore
+
+
+def test_a_later_problem_keeps_the_earlier_one_in_the_error() -> None:
+    """The cross-check and the baseline check append to what the fold already found, so a
+    person reading the error sees every reason the account could not be trusted."""
+    events = [fill_event("f1", "buy", 0.1, 50_000.0, 2.5, T0), baseline_event(T0 + timedelta(minutes=1))]
+    restore = fold_account_events(events, initial_capital=10_000.0, symbol=SYMBOL, now=T0 + timedelta(minutes=2))
+    both = cross_check(restore, fill_rows_net_quantity=0.0, fill_rows_count=0, fill_rows_fees=0.0)
+    assert "never rewrite" in both.error and "fills table" in both.error

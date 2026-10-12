@@ -607,3 +607,226 @@ async def test_a_restored_position_whose_side_disagrees_with_the_engine_blocks_e
     # The engine was NOT seeded (flat): the journal and the venue disagree.
     report = runtime.restore_account_state(restore_long, venue_position=0.0)
     assert report["verified"] is False and "venue holds" in runtime.entry_blocks["account_state"]
+
+
+# ------------------------------------------- a record that predates the journal (baseline)
+
+
+async def _write_legacy_fills(db: Database, run_id: str, fills: list[Fill]) -> None:
+    """Rows exactly as a pre-journal session (deployments up to ab68d1c) left them: the
+    order row and the fill row, and no account event of any kind."""
+    async with db.session() as session:
+        for fill in fills:
+            order = Order(order_id=fill.order_id, client_order_id=f"coid_{fill.order_id}", intent_id="int",
+                          signal_id="sig_x", symbol=SYMBOL, side=fill.side, order_type=OrderType.MARKET,
+                          quantity=fill.quantity, state=OrderState.FILLED, filled_quantity=fill.quantity,
+                          average_fill_price=fill.price, fees_paid=fill.fee, created_at=fill.filled_at,
+                          updated_at=fill.filled_at, fills=[fill])
+            await OrderRepository(session).upsert(run_id, order)
+            await FillRepository(session).append(run_id, fill)
+
+
+def _legacy_day(t0: datetime) -> list[Fill]:
+    """Two closed round trips and one short left open when the session ended — the shape
+    of the record found on the VPS: more sells than buys, fees that no event explains."""
+    return [
+        _fill("lf1", Side.SELL, 0.012043, 83_026.00, 0.25, t0, "lo_1"),
+        _fill("lf2", Side.BUY, 0.012043, 83_116.49, 0.7507, t0 + timedelta(minutes=2), "lo_2"),
+        _fill("lf3", Side.SELL, 0.012093, 82_681.15, 0.25, t0 + timedelta(hours=2), "lo_3"),
+        _fill("lf4", Side.BUY, 0.012093, 82_793.09, 0.7509, t0 + timedelta(hours=2, minutes=1), "lo_4"),
+        _fill("lf5", Side.SELL, 0.276436, 83_000.00, 14.9916, t0 + timedelta(hours=3), "lo_5"),
+    ]
+
+
+async def _stop_run(db: Database, run_id: str, at: datetime) -> None:
+    async with db.session() as session:
+        await RunRepository(session).stop(run_id, at)
+
+
+async def test_legacy_fills_before_an_operator_baseline_are_set_aside_pinned_and_still_in_view(tmp_path: Path) -> None:
+    """The VPS finding: fills from pre-journal sessions, zero account events. The cross-check
+    refuses the account (right), the operator opens the record with a baseline (one event,
+    nothing deleted), and from then on the account is complete, flat, at base capital — with
+    the legacy set reported next to it and held to what the baseline pinned."""
+    db = _db(tmp_path)
+    await db.create_schema()
+    try:
+        t0 = datetime.now(UTC) - timedelta(days=3)
+        legacy = _legacy_day(t0)
+        await register_run(db, "run_legacy", started_at=t0 - timedelta(minutes=1))
+        await _write_legacy_fills(db, "run_legacy", legacy)
+        await _stop_run(db, "run_legacy", t0 + timedelta(hours=12))
+
+        before = await rebuild(db)
+        assert before.complete is False and "fills table" in before.error
+        assert before.checks["fills_in_table"] == 5 and before.checks["fills_in_journal"] == 0
+        assert before.checks["net_quantity_table"] == pytest.approx(-0.276436)
+
+        at = t0 + timedelta(days=1)
+        async with db.session() as session:
+            written = await AccountJournalRepository(session).open_baseline(
+                symbol=SYMBOL, at=at, reason="fills predate the account journal", actor="op",
+                modes=("paper-live",),
+            )
+        assert written["run_id"] == "run_legacy" and written["payload"]["legacy_fills"] == 5
+        assert written["payload"]["legacy_net_quantity"] == pytest.approx(-0.276436)
+        assert written["payload"]["legacy_fees"] == pytest.approx(sum(f.fee for f in legacy))
+
+        after = await rebuild(db)
+        assert after.complete is True, after.error
+        assert after.baseline_at == at and not after.has_position
+        assert after.cash == CAPITAL and after.realized_pnl == 0.0 and after.fees_paid == 0.0
+        assert after.checks["fills_in_table"] == 0 and after.checks["fills_in_journal"] == 0
+        assert after.checks["legacy_fills_excluded"] == 5 and after.checks["legacy_fills_pinned"] == 5
+        assert after.checks["legacy_net_quantity_table"] == pytest.approx(-0.276436)
+        # Nothing was deleted: every legacy row is still there to be read.
+        async with db.session() as session:
+            rows = await AccountJournalRepository(session).fill_rows(symbol=SYMBOL, modes=("paper-live",))
+        assert [row["fill_id"] for row in rows] == ["lf1", "lf2", "lf3", "lf4", "lf5"]
+        assert rows[0]["run_mode"] == "paper-live" and rows[0]["run_stopped_at"] is not None
+
+        # A journal-aware session after the baseline is reconciled exactly as before...
+        t1 = at + timedelta(hours=1)
+        await register_run(db, "run_new", started_at=t1 - timedelta(minutes=1))
+        await write_session_day(db, "run_new", [_fill("nf1", Side.BUY, 0.1, 50_000.0, 2.5, t1, "no_1")],
+                                [(50_500.0, t1 + timedelta(minutes=1))])
+        with_new = await rebuild(db)
+        assert with_new.complete and with_new.position_quantity == pytest.approx(0.1)
+        assert with_new.checks["fills_in_table"] == 1 and with_new.checks["legacy_fills_excluded"] == 5
+        # ...and a lost journal write after the baseline is still caught.
+        await write_session_day(db, "run_new", [_fill("nf2", Side.SELL, 0.1, 50_600.0, 2.5,
+                                                      t1 + timedelta(minutes=2), "no_2")], [], skip_fill_rows=True)
+        lost = await rebuild(db)
+        assert lost.complete is False and "fills table" in lost.error
+        assert lost.checks["fills_in_journal"] == 2 and lost.checks["fills_in_table"] == 1
+    finally:
+        await db.close()
+
+
+async def test_a_baseline_seeds_a_runtime_flat_at_base_capital_and_lifts_the_block(tmp_path: Path) -> None:
+    db = _db(tmp_path)
+    await db.create_schema()
+    try:
+        t0 = datetime.now(UTC) - timedelta(days=2)
+        await register_run(db, "run_legacy", started_at=t0)
+        await _write_legacy_fills(db, "run_legacy", _legacy_day(t0))
+        await _stop_run(db, "run_legacy", t0 + timedelta(hours=12))
+        blocked = await rebuild(db)
+        runtime_a, _, _, _ = build(account=blocked)
+        await runtime_a.start()
+        try:
+            assert "account_state" in runtime_a.entry_blocks
+        finally:
+            await runtime_a.stop()
+        async with db.session() as session:
+            await AccountJournalRepository(session).open_baseline(
+                symbol=SYMBOL, at=t0 + timedelta(days=1), reason="fills predate the account journal",
+                modes=("paper-live",),
+            )
+        opened = await rebuild(db)
+        runtime_b, engine, _, _ = build(account=opened)
+        await runtime_b.start()
+        try:
+            assert "account_state" not in runtime_b.entry_blocks
+            portfolio = await engine.get_portfolio()
+            assert portfolio.cash == CAPITAL and portfolio.position(SYMBOL).is_flat
+            report = runtime_b.account_state_report()
+            assert report["verified"] is True
+            assert report["restore"]["checks"]["legacy_fills_excluded"] == 5
+            assert report["restore"]["baseline_at"] == (t0 + timedelta(days=1)).isoformat()
+        finally:
+            await runtime_b.stop()
+    finally:
+        await db.close()
+
+
+async def test_a_baseline_pins_the_legacy_set_so_it_cannot_grow_or_shrink_silently(tmp_path: Path) -> None:
+    db = _db(tmp_path)
+    await db.create_schema()
+    try:
+        t0 = datetime.now(UTC) - timedelta(days=2)
+        await register_run(db, "run_legacy", started_at=t0)
+        await _write_legacy_fills(db, "run_legacy", _legacy_day(t0))
+        await _stop_run(db, "run_legacy", t0 + timedelta(hours=12))
+        at = t0 + timedelta(days=1)
+        async with db.session() as session:
+            await AccountJournalRepository(session).open_baseline(
+                symbol=SYMBOL, at=at, reason="fills predate the account journal", modes=("paper-live",),
+            )
+        assert (await rebuild(db)).complete
+        # A row dated before the baseline that appears afterwards is not quietly set aside.
+        await _write_legacy_fills(db, "run_legacy", [_fill("lf6", Side.SELL, 0.01, 83_000.0, 0.25,
+                                                           t0 + timedelta(hours=4), "lo_6")])
+        grown = await rebuild(db)
+        assert grown.complete is False and "disagrees with its baseline" in grown.error
+        assert grown.checks["legacy_fills_excluded"] == 6 and grown.checks["legacy_fills_pinned"] == 5
+    finally:
+        await db.close()
+
+
+async def test_a_baseline_refuses_to_open_a_journal_that_already_has_a_record(tmp_path: Path) -> None:
+    db = _db(tmp_path)
+    await db.create_schema()
+    try:
+        t0 = datetime.now(UTC) - timedelta(days=1)
+        await register_run(db, "run_a", started_at=t0 - timedelta(minutes=1))
+        await write_session_day(db, "run_a", [_fill("f1", Side.BUY, 0.1, 50_000.0, 2.5, t0, "ord_1")], [])
+        await _stop_run(db, "run_a", t0 + timedelta(hours=1))
+        async with db.session() as session:
+            with pytest.raises(ValueError, match="never rewrite"):
+                await AccountJournalRepository(session).open_baseline(
+                    symbol=SYMBOL, at=t0 + timedelta(hours=2), reason="x", modes=("paper-live",),
+                )
+        async with db.session() as session:
+            assert await AccountJournalRepository(session).account_event_count(modes=("paper-live",)) == 1
+        assert (await rebuild(db)).complete, "nothing was written"
+    finally:
+        await db.close()
+
+
+async def test_a_baseline_needs_legacy_fills_a_stopped_session_and_a_time_after_every_fill(tmp_path: Path) -> None:
+    db = _db(tmp_path)
+    await db.create_schema()
+    try:
+        t0 = datetime.now(UTC) - timedelta(days=1)
+        async with db.session() as session:
+            with pytest.raises(ValueError, match="no BTC-USD fills to set aside"):
+                await AccountJournalRepository(session).open_baseline(
+                    symbol=SYMBOL, at=t0, reason="x", modes=("paper-live",),
+                )
+        await register_run(db, "run_legacy", started_at=t0)
+        await _write_legacy_fills(db, "run_legacy", _legacy_day(t0))
+        async with db.session() as session:
+            with pytest.raises(ValueError, match="not stopped"):
+                await AccountJournalRepository(session).open_baseline(
+                    symbol=SYMBOL, at=t0 + timedelta(days=1), reason="x", modes=("paper-live",),
+                )
+        async with db.session() as session:
+            with pytest.raises(ValueError, match="at or after the baseline"):
+                await AccountJournalRepository(session).open_baseline(
+                    symbol=SYMBOL, at=t0 + timedelta(hours=1), reason="x", modes=("paper-live",),
+                    allow_active_run=True,
+                )
+        async with db.session() as session:
+            with pytest.raises(ValueError, match="needs a reason"):
+                await AccountJournalRepository(session).open_baseline(
+                    symbol=SYMBOL, at=t0 + timedelta(days=1), reason="  ", modes=("paper-live",),
+                    allow_active_run=True,
+                )
+        async with db.session() as session:
+            assert await AccountJournalRepository(session).account_event_count(modes=("paper-live",)) == 0
+        # Re-running the same baseline is idempotent: one row per symbol, never a second baseline.
+        await _stop_run(db, "run_legacy", t0 + timedelta(hours=12))
+        for _ in range(2):
+            async with db.session() as session:
+                try:
+                    await AccountJournalRepository(session).open_baseline(
+                        symbol=SYMBOL, at=t0 + timedelta(days=1), reason="x", modes=("paper-live",),
+                    )
+                except ValueError as exc:
+                    assert "already holds 1 account event" in str(exc)
+        async with db.session() as session:
+            assert await AccountJournalRepository(session).account_event_count(modes=("paper-live",)) == 1
+        assert (await rebuild(db)).complete
+    finally:
+        await db.close()

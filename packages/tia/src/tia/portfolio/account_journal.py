@@ -50,7 +50,12 @@ EVENT_FILL = "account.fill"
 EVENT_ADJUSTMENT = "account.adjustment"
 EVENT_MARK = "account.mark"
 EVENT_PLAN = "account.plan"
-ACCOUNT_EVENT_TYPES: tuple[str, ...] = (EVENT_FILL, EVENT_ADJUSTMENT, EVENT_MARK, EVENT_PLAN)
+#: An operator's declaration that the account's record starts here — see
+#: :class:`AccountBaselinePayload`. The runtime never writes one.
+EVENT_BASELINE = "account.baseline"
+ACCOUNT_EVENT_TYPES: tuple[str, ...] = (
+    EVENT_FILL, EVENT_ADJUSTMENT, EVENT_MARK, EVENT_PLAN, EVENT_BASELINE,
+)
 
 
 class AccountFillPayload(BaseModel):
@@ -125,6 +130,35 @@ class AccountPlanPayload(BaseModel):
     model_version: int = ACCOUNT_MODEL_VERSION
 
 
+class AccountBaselinePayload(BaseModel):
+    """Where an operator opened the journal over a record that predates it.
+
+    Before the journal existed (deployments up to ``ab68d1c``) a session wrote its fills
+    to the ``fills`` table but carried no account across restarts: every session began
+    at base capital, and a position left open when a session ended was never closed in
+    the record. Those rows are history, not a balance, and the cross-check rightly
+    refuses to reconcile them against an empty journal. A baseline is the operator
+    saying so explicitly, once, in the journal itself: the account's record starts at
+    ``at`` at base capital; fills before ``at`` are **set aside, not deleted** — the
+    payload pins how many there were, their net quantity and their fees, and the rebuild
+    refuses a legacy set that no longer matches what was pinned. A baseline may only
+    *open* a journal: one that follows any folded event is refused, so it can never be
+    used to rewrite an account that has a record.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    symbol: str
+    at: datetime
+    reason: str
+    actor: str = ""
+    legacy_fills: int = 0
+    legacy_runs: list[str] = []
+    legacy_net_quantity: float = 0.0
+    legacy_fees: float = 0.0
+    model_version: int = ACCOUNT_MODEL_VERSION
+
+
 @dataclass(frozen=True)
 class AccountEventRecord:
     """One journal row as the rebuild consumes it."""
@@ -169,6 +203,12 @@ class AccountRestore:
     #: pointer written after a settlement can be lost to a crash, a row on disk cannot
     #: (Phase 1.8).
     funding_settled: dict[str, float] = field(default_factory=dict)
+    #: Where an operator opened the journal over a legacy record (see
+    #: :class:`AccountBaselinePayload`): nothing before it is folded, and the fills table
+    #: before it is set aside and reported — pinned to what the baseline recorded — rather
+    #: than reconciled. ``None`` for a journal that was never baselined.
+    baseline_at: datetime | None = None
+    baseline: dict[str, Any] | None = None
     events_seen: int = 0
     fills_seen: int = 0
     source: str = ""
@@ -245,6 +285,8 @@ class AccountRestore:
             "plan": self.plan,
             "beliefs": self.beliefs,
             "funding_settled": dict(self.funding_settled),
+            "baseline_at": self.baseline_at.isoformat() if self.baseline_at else None,
+            "baseline": dict(self.baseline) if self.baseline else None,
             "events_seen": self.events_seen,
             "fills_seen": self.fills_seen,
             "source": self.source,
@@ -253,12 +295,17 @@ class AccountRestore:
         }
 
 
-def _as_utc(value: datetime | str) -> datetime:
+def as_utc(value: datetime | str) -> datetime:
+    """A stored timestamp as an aware UTC datetime. Rows read back from SQLite come
+    naive and are UTC by construction; an ISO string in a payload may end in ``Z``."""
     if isinstance(value, str):
         value = datetime.fromisoformat(value.replace("Z", "+00:00"))
     if value.tzinfo is None or value.tzinfo.utcoffset(value) is None:
         return value.replace(tzinfo=UTC)
     return ensure_utc(value)
+
+
+_as_utc = as_utc
 
 
 def fold_account_events(
@@ -303,16 +350,44 @@ def fold_account_events(
     open_leg_fees = 0.0
     fills_seen = 0
     funding_settled: dict[str, float] = {}
+    # Events folded for this symbol so far: a baseline is honoured only while this is
+    # zero — it may open a record, never rewrite one.
+    applied = 0
+    baseline_at: datetime | None = None
+    baseline: dict[str, Any] | None = None
+    baseline_problems: list[str] = []
     for event in ordered:
         if event.event_id in seen:
             continue
         seen.add(event.event_id)
         payload = event.payload
         at = _as_utc(event.occurred_at)
+        if event.event_type == EVENT_BASELINE:
+            if payload.get("symbol") != symbol:
+                continue
+            if baseline_at is not None:
+                baseline_problems.append(
+                    f"a second baseline at {at.isoformat()} follows the one that opened the "
+                    f"journal at {baseline_at.isoformat()}"
+                )
+                continue
+            if applied:
+                baseline_problems.append(
+                    f"the baseline at {at.isoformat()} is preceded by {applied} folded journal "
+                    "event(s); a baseline may open an account's record, never rewrite it"
+                )
+                continue
+            baseline_at = at
+            baseline = dict(payload)
+            last_at = at
+            # The record opens here, at base capital, on this UTC day.
+            state.current_day = at.date().isoformat()
+            continue
         last_at = at
         if event.event_type == EVENT_FILL:
             if payload.get("symbol") != symbol:
                 continue
+            applied += 1
             fill = Fill(
                 fill_id=str(payload["fill_id"]),
                 order_id=str(payload["order_id"]),
@@ -338,6 +413,7 @@ def fold_account_events(
             else:
                 open_leg_fees += fill.fee
         elif event.event_type == EVENT_ADJUSTMENT:
+            applied += 1
             amount = float(payload.get("amount", 0.0))
             state.cash += amount
             state.updated_at = at
@@ -348,11 +424,13 @@ def fold_account_events(
         elif event.event_type == EVENT_MARK:
             if payload.get("symbol") != symbol:
                 continue
+            applied += 1
             last_price = float(payload["price"])
             state.mark(symbol, last_price, at)
         elif event.event_type == EVENT_PLAN:
             if payload.get("symbol") != symbol:
                 continue
+            applied += 1
             plan = {
                 "symbol": symbol,
                 "stop": payload.get("stop"),
@@ -374,16 +452,21 @@ def fold_account_events(
     else:
         state._refresh_peaks(now)
     position = state.positions.get(symbol)
-    checks: dict[str, Any] = {"symbol": symbol, "future_events": len(future)}
-    error = ""
+    checks: dict[str, Any] = {
+        "symbol": symbol,
+        "future_events": len(future),
+        "baseline_at": baseline_at.isoformat() if baseline_at else None,
+    }
+    problems: list[str] = []
     if future:
         first = _as_utc(future[0].occurred_at)
-        error = (
+        problems.append(
             f"{len(future)} journal event(s) are dated after now (first at {first.isoformat()}, "
             f"now {now.isoformat()}); the writing clock was ahead — reconcile before trading"
         )
+    problems.extend(baseline_problems)
     return AccountRestore(
-        complete=not future,
+        complete=not problems,
         consulted=True,
         initial_capital=initial_capital,
         cash=state.cash,
@@ -403,12 +486,68 @@ def fold_account_events(
         plan=plan if position and not position.is_flat else None,
         beliefs=beliefs if position and not position.is_flat else None,
         funding_settled=funding_settled,
+        baseline_at=baseline_at,
+        baseline=baseline,
         events_seen=len(seen),
         fills_seen=fills_seen,
         source=source,
-        error=error,
+        error="; ".join(problems),
         checks=checks,
     )
+
+
+def _with_checks(restore: AccountRestore, checks: dict[str, Any], problems: list[str], headline: str) -> AccountRestore:
+    """``restore`` with ``checks`` recorded and, when ``problems`` is not empty, marked
+    incomplete — keeping whatever earlier problem it already carried."""
+    if not problems:
+        return AccountRestore(**{**restore.__dict__, "checks": checks})
+    message = f"{headline}: " + "; ".join(problems)
+    error = f"{restore.error}; {message}" if restore.error else message
+    return AccountRestore(**{**restore.__dict__, "complete": False, "checks": checks, "error": error})
+
+
+def check_baseline(
+    restore: AccountRestore,
+    *,
+    legacy_fill_rows_count: int,
+    legacy_fill_rows_net_quantity: float,
+    legacy_fill_rows_fees: float,
+) -> AccountRestore:
+    """Hold the fills set aside by the baseline against what the baseline pinned.
+
+    The rows before the baseline are not reconciled into the account — that is the point
+    of a baseline — but they are not forgotten either: the baseline recorded how many
+    there were, their net quantity and their fees, and a legacy set that differs from the
+    pin (a row inserted before the baseline afterwards, a row that disappeared) makes the
+    rebuild **incomplete**. Without a baseline there is nothing to check.
+    """
+    if restore.baseline_at is None:
+        return restore
+    pinned = restore.baseline or {}
+    pinned_count = int(pinned.get("legacy_fills") or 0)
+    pinned_net = float(pinned.get("legacy_net_quantity") or 0.0)
+    pinned_fees = float(pinned.get("legacy_fees") or 0.0)
+    checks = dict(restore.checks)
+    checks.update({
+        "legacy_fills_excluded": legacy_fill_rows_count,
+        "legacy_fills_pinned": pinned_count,
+        "legacy_net_quantity_table": legacy_fill_rows_net_quantity,
+        "legacy_net_quantity_pinned": pinned_net,
+        "legacy_fees_table": round(legacy_fill_rows_fees, 8),
+        "legacy_fees_pinned": round(pinned_fees, 8),
+    })
+    problems: list[str] = []
+    if legacy_fill_rows_count != pinned_count:
+        problems.append(
+            f"{legacy_fill_rows_count} fills before the baseline in the fills table, {pinned_count} pinned"
+        )
+    if abs(legacy_fill_rows_net_quantity - pinned_net) > 1e-9:
+        problems.append(
+            f"net quantity {legacy_fill_rows_net_quantity} before the baseline, {pinned_net} pinned"
+        )
+    if abs(legacy_fill_rows_fees - pinned_fees) > 1e-6:
+        problems.append(f"fees {legacy_fill_rows_fees:.6f} before the baseline, {pinned_fees:.6f} pinned")
+    return _with_checks(restore, checks, problems, "legacy record disagrees with its baseline")
 
 
 def cross_check(restore: AccountRestore, *, fill_rows_net_quantity: float, fill_rows_count: int, fill_rows_fees: float) -> AccountRestore:
@@ -417,7 +556,9 @@ def cross_check(restore: AccountRestore, *, fill_rows_net_quantity: float, fill_
     The journal and the fills table are written by the same process from the same fills;
     they may disagree only when one write was lost. A disagreement in net quantity or in
     the count of fills makes the rebuild **incomplete**: an account whose record is
-    missing a fill cannot be trusted to hold what it says.
+    missing a fill cannot be trusted to hold what it says. Over a baselined journal the
+    caller passes the rows *from the baseline on*; the rows before it are
+    :func:`check_baseline`'s.
     """
     checks = dict(restore.checks)
     checks.update({
@@ -437,27 +578,26 @@ def cross_check(restore: AccountRestore, *, fill_rows_net_quantity: float, fill_
         )
     if abs(restore.fees_paid - fill_rows_fees) > 1e-6:
         problems.append(f"fees {restore.fees_paid:.6f} in the journal, {fill_rows_fees:.6f} in the fills table")
-    if not problems:
-        return AccountRestore(**{**restore.__dict__, "checks": checks})
-    return AccountRestore(
-        **{**restore.__dict__, "complete": False, "checks": checks,
-           "error": "account record inconsistent: " + "; ".join(problems)},
-    )
+    return _with_checks(restore, checks, problems, "account record inconsistent")
 
 
 __all__ = [
     "ACCOUNT_EVENT_TYPES",
     "ACCOUNT_MODEL_VERSION",
     "EVENT_ADJUSTMENT",
+    "EVENT_BASELINE",
     "EVENT_FILL",
     "EVENT_MARK",
     "EVENT_PLAN",
     "AccountAdjustmentPayload",
+    "AccountBaselinePayload",
     "AccountEventRecord",
     "AccountFillPayload",
     "AccountMarkPayload",
     "AccountPlanPayload",
     "AccountRestore",
+    "as_utc",
+    "check_baseline",
     "cross_check",
     "fold_account_events",
 ]

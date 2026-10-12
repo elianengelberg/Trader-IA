@@ -158,6 +158,13 @@ evidence, rebuilds its track record, and deduplicates orders by deterministic
 `clientOrderId`. Proven by `tests/integration/test_restart_recovery.py`, which the gate's
 `restart_recovery` check requires to have passed.
 
+One exception needs a person: a store whose `fills` rows predate the account journal
+(deployments up to `ab68d1c`) fails the account cross-check — N fills, no `account.*`
+events — and the session starts with entries blocked (`account_state` in
+`/api/live` → `entry_blocks`). The repair is one operator-written `account.baseline`
+event, never a deletion: see `docs/ACCOUNT_BASELINE_RUNBOOK.md` and
+`scripts/account_baseline.py` (dry run by default).
+
 ## 16. Shutdown
 
 ```bash

@@ -1118,12 +1118,30 @@ class AccountJournalRepository:
     sessions that share the account (``paper-live`` and ``live`` runs). The rebuild is
     :func:`tia.portfolio.account_journal.fold_account_events`, a pure function; the
     cross-check against the ``fills`` table is what makes a lost write visible.
+
+    A store whose fills predate the journal (deployments up to ``ab68d1c``) fails that
+    cross-check by construction — N fills, no events — and stays failed until an operator
+    opens the record with :meth:`open_baseline`: one ``account.baseline`` event that sets
+    the legacy rows aside, pinned, and reconciles everything from there on as usual.
+    ``scripts/account_baseline.py`` is the operator's door to it; the runtime never writes
+    one. See ``docs/ACCOUNT_BASELINE_RUNBOOK.md``.
     """
 
     SESSION_MODES: tuple[str, ...] = ("paper-live", "live")
 
     def __init__(self, session: AsyncSession) -> None:
         self._session = session
+
+    @staticmethod
+    def _session_runs(modes: Sequence[str]) -> Any:
+        return select(RunRecord.run_id).where(RunRecord.mode.in_(list(modes)))
+
+    @staticmethod
+    def _fill_sums(rows: Sequence[Any]) -> tuple[float, float]:
+        """``(net quantity, fees)`` of ``(side, quantity, fee, ...)`` rows."""
+        net = sum(float(row[1]) if str(row[0]) == "buy" else -float(row[1]) for row in rows)
+        fees = sum(float(row[2] or 0.0) for row in rows)
+        return net, fees
 
     async def rebuild(
         self,
@@ -1136,11 +1154,13 @@ class AccountJournalRepository:
         from tia.portfolio.account_journal import (
             ACCOUNT_EVENT_TYPES,
             AccountEventRecord,
+            as_utc,
+            check_baseline,
             cross_check,
             fold_account_events,
         )
 
-        session_runs = select(RunRecord.run_id).where(RunRecord.mode.in_(list(modes)))
+        session_runs = self._session_runs(modes)
         rows = (
             await self._session.execute(
                 select(EventRecord)
@@ -1162,16 +1182,171 @@ class AccountJournalRepository:
         )
         fills = (
             await self._session.execute(
-                select(FillRow.side, FillRow.quantity, FillRow.fee)
+                select(FillRow.side, FillRow.quantity, FillRow.fee, FillRow.filled_at)
                 .where(FillRow.run_id.in_(session_runs))
                 .where(FillRow.symbol == symbol)
             )
         ).all()
-        net = sum(float(q) if str(side) == "buy" else -float(q) for side, q, _ in fills)
-        fees = sum(float(f or 0.0) for _, _, f in fills)
+        if restore.baseline_at is not None:
+            # An operator opened the journal over a legacy record: the rows before the
+            # baseline are held against what it pinned, the rows from it on are
+            # reconciled against the journal as always. Nothing is dropped from view.
+            legacy = [row for row in fills if as_utc(row[3]) < restore.baseline_at]
+            fills = [row for row in fills if as_utc(row[3]) >= restore.baseline_at]
+            legacy_net, legacy_fees = self._fill_sums(legacy)
+            restore = check_baseline(
+                restore, legacy_fill_rows_count=len(legacy),
+                legacy_fill_rows_net_quantity=legacy_net, legacy_fill_rows_fees=legacy_fees,
+            )
+        net, fees = self._fill_sums(fills)
         return cross_check(
             restore, fill_rows_net_quantity=net, fill_rows_count=len(fills), fill_rows_fees=fees,
         )
+
+    async def fill_rows(
+        self, *, symbol: str, modes: Sequence[str] = SESSION_MODES, before: datetime | None = None
+    ) -> list[dict[str, Any]]:
+        """The fills of the sessions that share the account, oldest first, each with its
+        run's mode and lifetime — what an operator reads before opening a baseline. With
+        ``before``, only the rows filled earlier than it."""
+        query = (
+            select(FillRow, RunRecord.mode, RunRecord.started_at, RunRecord.stopped_at)
+            .join(RunRecord, RunRecord.run_id == FillRow.run_id)
+            .where(FillRow.run_id.in_(self._session_runs(modes)))
+            .where(FillRow.symbol == symbol)
+            .order_by(FillRow.filled_at, FillRow.fill_id)
+        )
+        if before is not None:
+            query = query.where(FillRow.filled_at < before)
+        rows = (await self._session.execute(query)).all()
+        return [
+            {
+                "fill_id": fill.fill_id,
+                "run_id": fill.run_id,
+                "run_mode": mode,
+                "run_started_at": started_at,
+                "run_stopped_at": stopped_at,
+                "order_id": fill.order_id,
+                "symbol": fill.symbol,
+                "side": fill.side,
+                "quantity": float(fill.quantity),
+                "price": float(fill.price),
+                "fee": float(fill.fee or 0.0),
+                "liquidity": fill.liquidity,
+                "filled_at": fill.filled_at,
+            }
+            for fill, mode, started_at, stopped_at in rows
+        ]
+
+    async def account_event_count(self, *, modes: Sequence[str] = SESSION_MODES) -> int:
+        """How many ``account.*`` events the sessions that share the account have written."""
+        from tia.portfolio.account_journal import ACCOUNT_EVENT_TYPES
+
+        return int(
+            (
+                await self._session.execute(
+                    select(func.count())
+                    .select_from(EventRecord)
+                    .where(EventRecord.run_id.in_(self._session_runs(modes)))
+                    .where(EventRecord.event_type.in_(list(ACCOUNT_EVENT_TYPES)))
+                )
+            ).scalar()
+            or 0
+        )
+
+    async def open_baseline(
+        self,
+        *,
+        symbol: str,
+        at: datetime,
+        reason: str,
+        actor: str = "operator",
+        modes: Sequence[str] = SESSION_MODES,
+        allow_active_run: bool = False,
+        now: datetime | None = None,
+    ) -> dict[str, Any]:
+        """Open the journal over a legacy record: one ``account.baseline`` event, by hand.
+
+        Refuses — raising ``ValueError`` and writing nothing — when the journal already
+        holds an account event (a baseline opens a record, never rewrites one), when there
+        is no legacy fill to set aside (an empty journal over an empty table is already
+        complete), when a fill is dated at or after ``at``, or when a session run is still
+        unstopped (its engine may be writing) unless ``allow_active_run``. The event is
+        carried by the most recent run of ``modes`` — the baseline closes the legacy era
+        on its last session — and is idempotent per symbol: re-running updates the one
+        row rather than adding a second baseline. Deletes nothing. ``now`` stamps when
+        the row was written (the caller's clock; this layer reads none) and defaults to
+        ``at``.
+        """
+        from tia.core.clock import ensure_utc
+        from tia.core.ids import deterministic_id
+        from tia.portfolio.account_journal import EVENT_BASELINE, AccountBaselinePayload, as_utc
+
+        at = ensure_utc(at, field="baseline time")
+        recorded = ensure_utc(now, field="baseline write time") if now is not None else at
+        if not reason.strip():
+            raise ValueError("a baseline needs a reason: say why the record is being opened here")
+        events = await self.account_event_count(modes=modes)
+        if events:
+            raise ValueError(
+                f"the journal already holds {events} account event(s) for {list(modes)}; "
+                "a baseline may open an account's record, never rewrite it"
+            )
+        rows = await self.fill_rows(symbol=symbol, modes=modes)
+        if not rows:
+            raise ValueError(
+                f"no {symbol} fills to set aside for {list(modes)}: an empty journal over an "
+                "empty fills table is already complete"
+            )
+        late = [row for row in rows if as_utc(row["filled_at"]) >= at]
+        if late:
+            raise ValueError(
+                f"{len(late)} fill(s) are dated at or after the baseline {at.isoformat()}; a "
+                "baseline must follow every legacy fill"
+            )
+        runs = (
+            await self._session.execute(
+                select(RunRecord)
+                .where(RunRecord.mode.in_(list(modes)))
+                .order_by(desc(RunRecord.started_at), desc(RunRecord.run_id))
+            )
+        ).scalars().all()
+        active = [run.run_id for run in runs if run.stopped_at is None]
+        if active and not allow_active_run:
+            raise ValueError(
+                f"{len(active)} session run(s) are not stopped ({', '.join(active[:3])}); stop "
+                "the session first, or pass allow_active_run"
+            )
+        carrier = runs[0]
+        net, fees = self._fill_sums([(row["side"], row["quantity"], row["fee"]) for row in rows])
+        payload = AccountBaselinePayload(
+            symbol=symbol, at=at, reason=reason.strip(), actor=actor,
+            legacy_fills=len(rows), legacy_runs=sorted({row["run_id"] for row in rows}),
+            legacy_net_quantity=net, legacy_fees=fees,
+        )
+        envelope: EventEnvelope[Any] = EventEnvelope(
+            event_id=deterministic_id("evt", EVENT_BASELINE, symbol),
+            event_type=EVENT_BASELINE,
+            source="operator",
+            occurred_at=at,
+            ingestion_at=recorded,
+            recorded_at=recorded,
+            correlation_id=carrier.run_id,
+            idempotency_key=f"{EVENT_BASELINE}:{symbol}"[:128],
+            payload=payload,
+        )
+        await EventRepository(self._session).append(carrier.run_id, envelope)
+        _log.info(
+            "account_baseline_staged", symbol=symbol, at=at.isoformat(), run_id=carrier.run_id,
+            legacy_fills=len(rows), legacy_net_quantity=net, legacy_fees=round(fees, 8), actor=actor,
+            detail="commits or rolls back with the caller's session",
+        )
+        return {
+            "event_id": envelope.event_id,
+            "event_type": EVENT_BASELINE,
+            "run_id": carrier.run_id,
+            "payload": payload.model_dump(mode="json"),
+        }
 
     async def orphan_open_orders(
         self, *, exclude_run_id: str, at: datetime, modes: Sequence[str] = SESSION_MODES

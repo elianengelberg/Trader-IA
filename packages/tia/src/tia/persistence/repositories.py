@@ -1238,17 +1238,22 @@ class AccountJournalRepository:
             for fill, mode, started_at, stopped_at in rows
         ]
 
-    async def account_event_count(self, *, modes: Sequence[str] = SESSION_MODES) -> int:
-        """How many ``account.*`` events the sessions that share the account have written."""
-        from tia.portfolio.account_journal import ACCOUNT_EVENT_TYPES
+    async def account_event_count(
+        self, *, modes: Sequence[str] = SESSION_MODES, moving_only: bool = False
+    ) -> int:
+        """How many ``account.*`` events the sessions that share the account have written.
+        With ``moving_only``, only those that move cash or position (fills and
+        adjustments) — the ones a baseline may never follow."""
+        from tia.portfolio.account_journal import ACCOUNT_EVENT_TYPES, ACCOUNT_MOVING_EVENT_TYPES
 
+        types = ACCOUNT_MOVING_EVENT_TYPES if moving_only else ACCOUNT_EVENT_TYPES
         return int(
             (
                 await self._session.execute(
                     select(func.count())
                     .select_from(EventRecord)
                     .where(EventRecord.run_id.in_(self._session_runs(modes)))
-                    .where(EventRecord.event_type.in_(list(ACCOUNT_EVENT_TYPES)))
+                    .where(EventRecord.event_type.in_(list(types)))
                 )
             ).scalar()
             or 0
@@ -1286,12 +1291,16 @@ class AccountJournalRepository:
         recorded = ensure_utc(now, field="baseline write time") if now is not None else at
         if not reason.strip():
             raise ValueError("a baseline needs a reason: say why the record is being opened here")
-        events = await self.account_event_count(modes=modes)
-        if events:
+        moving = await self.account_event_count(modes=modes, moving_only=True)
+        if moving:
             raise ValueError(
-                f"the journal already holds {events} account event(s) for {list(modes)}; "
-                "a baseline may open an account's record, never rewrite it"
+                f"the journal already holds {moving} account event(s) that move the account "
+                f"(fills or adjustments) for {list(modes)}; a baseline may open an account's "
+                "record, never rewrite it"
             )
+        # Marks and plans a journal-aware session wrote over the unverified account move
+        # nothing; the rebuild skips the ones before the baseline. Reported, not refused.
+        informational = await self.account_event_count(modes=modes) - moving
         rows = await self.fill_rows(symbol=symbol, modes=modes)
         if not rows:
             raise ValueError(
@@ -1339,12 +1348,14 @@ class AccountJournalRepository:
         _log.info(
             "account_baseline_staged", symbol=symbol, at=at.isoformat(), run_id=carrier.run_id,
             legacy_fills=len(rows), legacy_net_quantity=net, legacy_fees=round(fees, 8), actor=actor,
+            informational_events_before=informational,
             detail="commits or rolls back with the caller's session",
         )
         return {
             "event_id": envelope.event_id,
             "event_type": EVENT_BASELINE,
             "run_id": carrier.run_id,
+            "informational_events_before": informational,
             "payload": payload.model_dump(mode="json"),
         }
 

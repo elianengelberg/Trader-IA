@@ -830,3 +830,41 @@ async def test_a_baseline_needs_legacy_fills_a_stopped_session_and_a_time_after_
         assert (await rebuild(db)).complete
     finally:
         await db.close()
+
+
+async def test_a_session_resumed_after_the_deploy_leaves_marks_that_do_not_block_the_baseline(tmp_path: Path) -> None:
+    """The deploy's edge: the new image resumes an unstopped pre-journal run and journals
+    marks and plans every bar over the still-unverified account. Those move nothing, so the
+    operator can stop that session and still open the record; a fill event would refuse."""
+    db = _db(tmp_path)
+    await db.create_schema()
+    try:
+        t0 = datetime.now(UTC) - timedelta(days=2)
+        await register_run(db, "run_legacy", started_at=t0)
+        await _write_legacy_fills(db, "run_legacy", _legacy_day(t0))
+        await _stop_run(db, "run_legacy", t0 + timedelta(hours=12))
+        # The resumed, journal-aware session: marks and a plan, no fills.
+        t1 = t0 + timedelta(hours=20)
+        await register_run(db, "run_resumed", started_at=t1)
+        await write_session_day(db, "run_resumed", [], [(83_000.0, t1), (83_050.0, t1 + timedelta(minutes=1))],
+                                plan={"at": t1 + timedelta(minutes=1), "stop": None, "kind": None})
+        async with db.session() as session:
+            repo = AccountJournalRepository(session)
+            assert await repo.account_event_count(modes=("paper-live",)) == 3
+            assert await repo.account_event_count(modes=("paper-live",), moving_only=True) == 0
+            with pytest.raises(ValueError, match="not stopped"):
+                await repo.open_baseline(symbol=SYMBOL, at=t1 + timedelta(hours=1), reason="x", modes=("paper-live",))
+        await _stop_run(db, "run_resumed", t1 + timedelta(minutes=30))
+        async with db.session() as session:
+            written = await AccountJournalRepository(session).open_baseline(
+                symbol=SYMBOL, at=t1 + timedelta(hours=1), reason="fills predate the account journal",
+                modes=("paper-live",),
+            )
+        assert written["run_id"] == "run_resumed" and written["informational_events_before"] == 3
+        assert written["payload"]["legacy_fills"] == 5
+        after = await rebuild(db)
+        assert after.complete is True, after.error
+        assert after.checks["events_before_baseline"] == 3 and after.checks["legacy_fills_excluded"] == 5
+        assert after.cash == CAPITAL and not after.has_position
+    finally:
+        await db.close()

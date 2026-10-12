@@ -108,6 +108,7 @@ async def run(args: argparse.Namespace) -> int:
                 before = await repo.rebuild(now=now, initial_capital=args.capital, symbol=args.symbol, modes=modes)
                 fills = await repo.fill_rows(symbol=args.symbol, modes=modes)
                 events = await repo.account_event_count(modes=modes)
+                moving = await repo.account_event_count(modes=modes, moving_only=True)
                 runs = (
                     await session.execute(
                         select(RunRecord).where(RunRecord.mode.in_(list(modes))).order_by(RunRecord.started_at)
@@ -119,6 +120,8 @@ async def run(args: argparse.Namespace) -> int:
 
         report["before"] = before.as_dict()
         report["account_events"] = events
+        report["account_events_moving"] = moving
+        report["account_events_informational"] = events - moving
         report["runs"] = [
             {"run_id": r.run_id, "mode": r.mode, "scenario": r.scenario, "started_at": _iso(r.started_at),
              "stopped_at": _iso(r.stopped_at) or None}
@@ -132,7 +135,8 @@ async def run(args: argparse.Namespace) -> int:
             print(f"  database: {redact(url)}   symbol: {args.symbol}   modes: {', '.join(modes)}")
             print(f"  now: {now.isoformat()}   baseline at: {at.isoformat()}")
             _print_restore("Rebuild before", before, as_json=False)
-            print(f"\nSession runs ({len(runs)}) and account.* events ({events})")
+            print(f"\nSession runs ({len(runs)}) and account.* events ({events}: {moving} moving the account "
+                  f"[fills/adjustments, block a baseline], {events - moving} informational [marks/plans, skipped])")
             for r in runs:
                 print(f"  {r.run_id}  {r.mode:10s} {r.scenario:10s} started {_iso(r.started_at)}  "
                       f"stopped {_iso(r.stopped_at) or '— (not stopped)'}")

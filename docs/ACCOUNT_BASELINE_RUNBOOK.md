@@ -57,7 +57,20 @@ $PSQL "SELECT f.run_id, f.symbol, COUNT(*), SUM(CASE WHEN f.side='buy' THEN f.qu
 
 Qué esperar y qué significa:
 
-- 2.3 vacío + 2.2 con 5 filas → formato legacy confirmado.
+- **Si el backup cuenta 7 filas en `fills` y el rebuild decía 5**: el rebuild cuenta solo
+  los fills de runs `paper-live` del símbolo de la cuenta; el bloque `COPY public.fills`
+  del dump tiene *todas* las filas de la tabla, incluidas las de runs de escenario
+  (`mode` distinto de `paper-live`), de otro símbolo o de un `mode` `live`. La consulta
+  2.2 (con `r.mode` y `f.symbol`) debe explicar cada fila sobrante. Si las 7 fueran
+  `paper-live` + `BTC-USD`, es que una sesión siguió operando entre el diagnóstico y el
+  backup: el baseline fijará el conjunto **tal como esté al aplicarlo** (el dry-run lo
+  lista entero), y la sesión debe estar detenida antes (el script lo exige).
+- 2.3 vacío + 2.2 con 5 filas `paper-live` → formato legacy confirmado.
+- **Marks o plans en 2.3 sin fills**: el backend nuevo reanuda cualquier run `paper-live`
+  sin `stopped_at` y escribe `account.mark` por barra aunque la cuenta no esté verificada.
+  No mueven caja ni posición: el baseline los omite y los reporta
+  (`events_before_baseline`). Solo `account.fill` y `account.adjustment` anteriores al
+  baseline lo rechazan.
 - Si 2.5 muestra el neto −0,276436 concentrado en **un fill de venta sin su cierre**, es una
   pierna que la sesión antigua dejó abierta al terminar y que, por diseño de esa época, la
   siguiente sesión no heredó. Nunca existió como posición después de ese reinicio.
@@ -81,10 +94,13 @@ Propiedades del fix (código en `1c914c5` + este cambio):
 
 - El runtime **nunca** escribe un baseline; solo lo hace `scripts/account_baseline.py`
   (o `AccountJournalRepository.open_baseline`) a mano, con dry-run por defecto.
-- Un baseline solo puede **abrir** un journal: si lo precede cualquier evento plegado, la
-  reconstrucción queda incompleta con el error "a baseline may open an account's record,
-  never rewrite it". Dos baselines también la dejan incompleta. No sirve para ocultar
-  pérdidas de una cuenta que ya tiene registro.
+- Un baseline solo puede **abrir** un journal: si lo precede cualquier evento que mueva
+  la cuenta (`account.fill` del símbolo o `account.adjustment`), la reconstrucción queda
+  incompleta con el error "a baseline may open an account's record, never rewrite it".
+  Dos baselines también la dejan incompleta. No sirve para ocultar pérdidas de una cuenta
+  que ya tiene registro. Los `account.mark` y `account.plan` anteriores (una sesión que
+  corrió sobre la cuenta sin verificar) no mueven nada: se omiten y se cuentan en
+  `checks.events_before_baseline`.
 - `cross_check` sigue activo para **todos** los fills desde el baseline en adelante.
 - Los fills anteriores al baseline se comparan con lo fijado en el evento
   (`check_baseline`): si aparece o desaparece una fila fechada antes del baseline, la
@@ -103,9 +119,19 @@ como caja: es exactamente lo que hacía el runtime de esa época en cada arranqu
 
 ## 4. Procedimiento
 
-Con la imagen `trader-ia:1c914c5` desplegada (el script y el código nuevo viven en la
-imagen: `COPY scripts/`, `COPY packages/`). Ninguna sesión paper debe estar corriendo
-(el script lo comprueba: una run sin `stopped_at` lo hace rechazar).
+Con la imagen construida desde `f25d485` o posterior desplegada (el script y el código
+nuevo viven en la imagen: `COPY scripts/`, `COPY packages/`). Ninguna sesión paper debe
+estar corriendo (el script lo comprueba: una run sin `stopped_at` lo hace rechazar).
+Atención al arranque del backend nuevo: si la base tenía una run `paper-live` sin
+`stopped_at`, el backend la **reanuda** solo (con la cuenta sin verificar y las entradas
+bloqueadas). Antes del baseline hay que detenerla por la vía oficial:
+
+```bash
+# ¿quedó algo reanudado?
+$PSQL "SELECT run_id, started_at, notes FROM runs WHERE mode='paper-live' AND stopped_at IS NULL;"
+# detenerla (sesión de operador con cookie)
+curl -s -b cookie.txt -X POST https://<host>/api/live/stop
+```
 
 ### 4.1 Backup verificado (antes de cualquier escritura)
 
@@ -115,7 +141,7 @@ bash scripts/backup.sh                     # PASS  postgres dump ...: backups/ti
 F=$(ls -1t backups/tia-*.sql.gz | head -1)
 gzip -t "$F" && echo "gzip OK"             # integridad del archivo
 zcat "$F" | grep -c "^COPY public.fills "   # 1: la tabla fills está en el dump
-zcat "$F" | sed -n '/^COPY public.fills /,/^\\\./p' | grep -vc "^COPY\|^\\\." # 5: las cinco filas están
+zcat "$F" | sed -n '/^COPY public.fills /,/^\\\./p' | grep -vc "^COPY\|^\\\." # filas de TODA la tabla fills (7 en el VPS: ver §2, no solo las 5 de la cuenta)
 zcat "$F" | grep -c "^COPY public.events "  # 1
 ```
 
@@ -125,7 +151,8 @@ servidor y contar.
 ```bash
 docker compose -f docker-compose.prod.yml exec -T postgres createdb -U tia tia_verify
 zcat "$F" | docker compose -f docker-compose.prod.yml exec -T postgres psql -q -U tia -d tia_verify
-docker compose -f docker-compose.prod.yml exec -T postgres psql -U tia -d tia_verify -At -c "SELECT COUNT(*) FROM fills;"   # 5
+docker compose -f docker-compose.prod.yml exec -T postgres psql -U tia -d tia_verify -At -c "SELECT COUNT(*) FROM fills;"   # igual al conteo del dump (7)
+docker compose -f docker-compose.prod.yml exec -T postgres psql -U tia -d tia_verify -At -c "SELECT r.mode, f.symbol, COUNT(*) FROM fills f JOIN runs r ON r.run_id=f.run_id GROUP BY 1,2;"
 docker compose -f docker-compose.prod.yml exec -T postgres dropdb -U tia tia_verify   # solo la base temporal
 ```
 

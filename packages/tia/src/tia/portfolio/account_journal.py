@@ -308,6 +308,25 @@ def as_utc(value: datetime | str) -> datetime:
 _as_utc = as_utc
 
 
+#: The journal events that move cash or position: what a baseline may never follow.
+ACCOUNT_MOVING_EVENT_TYPES: tuple[str, ...] = (EVENT_FILL, EVENT_ADJUSTMENT)
+
+
+def _account_moving_events(events: Iterable[AccountEventRecord], symbol: str) -> list[AccountEventRecord]:
+    """The fills of ``symbol`` and the adjustments among ``events``, deduplicated by id."""
+    seen: set[str] = set()
+    moving: list[AccountEventRecord] = []
+    for event in events:
+        if event.event_id in seen:
+            continue
+        seen.add(event.event_id)
+        if event.event_type == EVENT_ADJUSTMENT or (
+            event.event_type == EVENT_FILL and event.payload.get("symbol") == symbol
+        ):
+            moving.append(event)
+    return moving
+
+
 def fold_account_events(
     events: Iterable[AccountEventRecord],
     *,
@@ -350,44 +369,60 @@ def fold_account_events(
     open_leg_fees = 0.0
     fills_seen = 0
     funding_settled: dict[str, float] = {}
-    # Events folded for this symbol so far: a baseline is honoured only while this is
-    # zero — it may open a record, never rewrite one.
-    applied = 0
     baseline_at: datetime | None = None
     baseline: dict[str, Any] | None = None
     baseline_problems: list[str] = []
-    for event in ordered:
+    # A baseline is honoured only when nothing before it *moves* the account: no fill of
+    # this symbol, no adjustment. It may open a record, never rewrite one. Marks and
+    # plans written before it (a journal-aware session that ran over the unverified
+    # account) move nothing — a flat account marked at any price is still base capital —
+    # and are skipped rather than used as a reason to refuse: the rebuild re-marks at
+    # ``now`` anyway.
+    honoured: int | None = None
+    opening = next(
+        (i for i, e in enumerate(ordered)
+         if e.event_type == EVENT_BASELINE and e.payload.get("symbol") == symbol),
+        None,
+    )
+    if opening is not None:
+        moving = _account_moving_events(ordered[:opening], symbol)
+        if moving:
+            baseline_problems.append(
+                f"the baseline at {_as_utc(ordered[opening].occurred_at).isoformat()} is preceded "
+                f"by {len(moving)} journal event(s) that move the account (fills or adjustments); "
+                "a baseline may open an account's record, never rewrite it"
+            )
+        else:
+            honoured = opening
+    skipped_before_baseline = 0
+    for index, event in enumerate(ordered):
         if event.event_id in seen:
             continue
         seen.add(event.event_id)
         payload = event.payload
         at = _as_utc(event.occurred_at)
+        if honoured is not None and index < honoured:
+            skipped_before_baseline += 1
+            continue
         if event.event_type == EVENT_BASELINE:
             if payload.get("symbol") != symbol:
                 continue
-            if baseline_at is not None:
+            if index == honoured:
+                baseline_at = at
+                baseline = dict(payload)
+                last_at = at
+                # The record opens here, at base capital, on this UTC day.
+                state.current_day = at.date().isoformat()
+            elif honoured is not None:
                 baseline_problems.append(
                     f"a second baseline at {at.isoformat()} follows the one that opened the "
-                    f"journal at {baseline_at.isoformat()}"
+                    f"journal at {baseline_at.isoformat() if baseline_at else '?'}"
                 )
-                continue
-            if applied:
-                baseline_problems.append(
-                    f"the baseline at {at.isoformat()} is preceded by {applied} folded journal "
-                    "event(s); a baseline may open an account's record, never rewrite it"
-                )
-                continue
-            baseline_at = at
-            baseline = dict(payload)
-            last_at = at
-            # The record opens here, at base capital, on this UTC day.
-            state.current_day = at.date().isoformat()
             continue
         last_at = at
         if event.event_type == EVENT_FILL:
             if payload.get("symbol") != symbol:
                 continue
-            applied += 1
             fill = Fill(
                 fill_id=str(payload["fill_id"]),
                 order_id=str(payload["order_id"]),
@@ -413,7 +448,6 @@ def fold_account_events(
             else:
                 open_leg_fees += fill.fee
         elif event.event_type == EVENT_ADJUSTMENT:
-            applied += 1
             amount = float(payload.get("amount", 0.0))
             state.cash += amount
             state.updated_at = at
@@ -424,13 +458,11 @@ def fold_account_events(
         elif event.event_type == EVENT_MARK:
             if payload.get("symbol") != symbol:
                 continue
-            applied += 1
             last_price = float(payload["price"])
             state.mark(symbol, last_price, at)
         elif event.event_type == EVENT_PLAN:
             if payload.get("symbol") != symbol:
                 continue
-            applied += 1
             plan = {
                 "symbol": symbol,
                 "stop": payload.get("stop"),
@@ -456,6 +488,7 @@ def fold_account_events(
         "symbol": symbol,
         "future_events": len(future),
         "baseline_at": baseline_at.isoformat() if baseline_at else None,
+        "events_before_baseline": skipped_before_baseline,
     }
     problems: list[str] = []
     if future:
@@ -584,6 +617,7 @@ def cross_check(restore: AccountRestore, *, fill_rows_net_quantity: float, fill_
 __all__ = [
     "ACCOUNT_EVENT_TYPES",
     "ACCOUNT_MODEL_VERSION",
+    "ACCOUNT_MOVING_EVENT_TYPES",
     "EVENT_ADJUSTMENT",
     "EVENT_BASELINE",
     "EVENT_FILL",

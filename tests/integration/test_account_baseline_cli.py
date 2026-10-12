@@ -55,6 +55,7 @@ async def test_dry_run_then_apply_over_a_legacy_record(tmp_path: Path, cli, caps
     out = capsys.readouterr().out
     assert "DRY RUN" in out and "nothing written" in out and "s3cret" not in out
     assert out.count("run run_legacy (paper-live)") == 5 and "lf5" in out
+    assert "account.* events (0: 0 moving the account" in out
     assert '"legacy_fills": 5' in out
     db = _db(tmp_path, "cli.db")
     try:

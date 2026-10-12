@@ -313,3 +313,29 @@ def test_a_later_problem_keeps_the_earlier_one_in_the_error() -> None:
     restore = fold_account_events(events, initial_capital=10_000.0, symbol=SYMBOL, now=T0 + timedelta(minutes=2))
     both = cross_check(restore, fill_rows_net_quantity=0.0, fill_rows_count=0, fill_rows_fees=0.0)
     assert "never rewrite" in both.error and "fills table" in both.error
+
+
+def test_marks_and_plans_written_before_the_baseline_are_skipped_not_refused() -> None:
+    """A journal-aware session that ran over the unverified account (a resumed run after
+    the deploy) leaves marks and plans but moves nothing: the baseline still opens the
+    record, those rows are skipped and counted, and the account is base capital."""
+    events = [
+        mark_event(83_000.0, T0 - timedelta(minutes=10)),
+        plan_event(T0 - timedelta(minutes=9), stop=None, kind=None, direction=None),
+        mark_event(83_100.0, T0 - timedelta(minutes=1)),
+        baseline_event(T0, legacy_fills=5, legacy_net=-0.276436, legacy_fees=16.993117),
+        mark_event(83_200.0, T0 + timedelta(minutes=1)),
+    ]
+    restore = fold_account_events(events, initial_capital=10_000.0, symbol=SYMBOL, now=T0 + timedelta(minutes=2))
+    assert restore.complete is True, restore.error
+    assert restore.baseline_at == T0 and restore.checks["events_before_baseline"] == 3
+    assert restore.cash == 10_000.0 and restore.equity == 10_000.0 and not restore.has_position
+    assert restore.last_price == 83_200.0, "the mark after the baseline is folded as usual"
+    assert restore.events_seen == 5
+
+
+def test_an_adjustment_before_the_baseline_is_refused_like_a_fill() -> None:
+    events = [adj_event(-1.5, T0 - timedelta(minutes=1), "funding:x"), baseline_event(T0)]
+    restore = fold_account_events(events, initial_capital=10_000.0, symbol=SYMBOL, now=T0 + timedelta(minutes=1))
+    assert restore.complete is False and "move the account" in restore.error and "never rewrite" in restore.error
+    assert restore.baseline_at is None and restore.cash == pytest.approx(9_998.5), "the adjustment stays folded"

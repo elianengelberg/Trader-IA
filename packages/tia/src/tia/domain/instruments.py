@@ -7,6 +7,7 @@ from datetime import date, datetime, timedelta
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
+from tia.core.money import STEP_FLOAT_TOLERANCE
 from tia.domain.enums import AssetClass
 
 _TIMEFRAME_RE = re.compile(r"^(\d+)(s|m|h|d|w)$")
@@ -90,8 +91,17 @@ class Instrument(BaseModel):
         return round(round(price / self.tick_size) * self.tick_size, 10)
 
     def round_quantity(self, quantity: float) -> float:
-        """Round *down* to a valid lot. Rounding up could exceed a risk-approved size."""
-        lots = int(abs(quantity) / self.lot_size)
+        """Round *down* to a valid lot. Rounding up could exceed a risk-approved size.
+
+        A quantity within a float's rounding of a whole number of lots is that number
+        of lots — the same rule as :func:`tia.core.money.quantize_down`, so the simulator
+        never fills one lot less than the order it was sent and leaves the difference as
+        unclosable dust.
+        """
+        raw = abs(quantity) / self.lot_size
+        lots = round(raw)
+        if abs(raw - lots) > float(STEP_FLOAT_TOLERANCE):
+            lots = int(raw)
         rounded = lots * self.lot_size
         return round(rounded if quantity >= 0 else -rounded, 12)
 

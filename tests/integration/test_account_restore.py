@@ -49,6 +49,7 @@ from tia.risk.engine import RiskEngine
 from tia.risk.restore import RiskRestore
 from tia.runtime.live import LiveRuntime
 from tia.runtime.scenarios import generate_series, get_scenario
+from tia.runtime.states import LiveState
 
 SYMBOL = "BTC-USD"
 CAPITAL = 10_000.0
@@ -866,5 +867,116 @@ async def test_a_session_resumed_after_the_deploy_leaves_marks_that_do_not_block
         assert after.complete is True, after.error
         assert after.checks["events_before_baseline"] == 3 and after.checks["legacy_fills_excluded"] == 5
         assert after.cash == CAPITAL and not after.has_position
+    finally:
+        await db.close()
+
+
+# ------------------------------------- float residue of partial fills (12 h run, 2026-10-12)
+#
+# The production leg was a short; quantization does not depend on the side, and these
+# legs are long so the restart path under test is the one that works today. A restored
+# *short* also trips a separate start-up defect: the paper allocation is cash less
+# realised P&L, and cash holds the open short's sale proceeds, which overstates the
+# allocation past the paper-capital ceiling. That defect is reported with this fix and
+# is not changed by it.
+
+
+def _long_leg_plan(price: float, at: datetime) -> dict[str, Any]:
+    return {
+        "at": at, "stop": round(price * 0.8, 2), "initial_stop": round(price * 0.8, 2),
+        "target": round(price * 1.5, 2), "kind": "trailing", "direction": "long",
+        "beliefs": {"regime": "trending_up", "direction": "long", "confidence": 0.7,
+                    "signal_id": "sig_partial", "strategy_id": "trend_following",
+                    "strategy_version": "1.1.0", "size_fraction": 0.25,
+                    "expected_net_bps": 0.0, "exploratory": True},
+    }
+
+
+async def _adopt(db: Database, fills: list[Fill], *, price: float, at: datetime):  # type: ignore[no-untyped-def]
+    """A session that adopts the leg the journal holds, over a fresh engine seeded from it."""
+    await register_run(db, "run_a", started_at=at - timedelta(minutes=30))
+    await write_session_day(db, "run_a", fills, [(price, fills[-1].filled_at)],
+                            plan=_long_leg_plan(price, fills[1].filled_at + timedelta(seconds=30)))
+    restore = await rebuild(db)
+    assert restore.complete, restore.error
+    _probe_runtime, _probe_engine, market, clock = build()
+    settings = live_settings()
+    seeded = engine_for(clock, settings)
+    seeded.restore_portfolio(restore.portfolio_state())
+    # As AppState.start_paper_realtime builds it: the realised P&L the record carries is
+    # handed over, so the start allocates the base capital, not the base plus the P&L.
+    runtime = LiveRuntime(
+        settings, activation=None, market_data=market, execution=seeded, clock=clock,
+        persist=None, poll_interval_seconds=0.0, prior_account_state=restore,
+        prior_realised_pnl=float(restore.realized_pnl),
+    )
+    return restore, runtime, seeded, market
+
+
+async def test_a_leg_entered_in_two_partial_fills_is_protected_and_closes_flat(tmp_path: Path) -> None:
+    """0.001932 + 0.002064 is 0.0039959999999999996 in float. The stop for the whole
+    position was refused and the exit left one lot of dust; both must take the position
+    as the 0.003996 it is."""
+    db = _db(tmp_path)
+    await db.create_schema()
+    try:
+        _, _, probe, clock = build()
+        price = probe._candles[probe.cursor - 1].close
+        t = clock.now() - timedelta(minutes=20)
+        fills = [
+            _fill("p1", Side.BUY, 0.001932, price, 0.04, t, "ord_entry"),
+            _fill("p2", Side.BUY, 0.002064, price, 0.04, t + timedelta(minutes=1), "ord_entry"),
+        ]
+        restore, runtime, engine, market = await _adopt(db, fills, price=price, at=t)
+        assert restore.position_quantity == 0.0039959999999999996
+        await runtime.start()
+        try:
+            assert runtime._open_trade is not None and "account_state" not in runtime.entry_blocks
+            await runtime._sync_protective_stop(restore.position_quantity)
+            stops = [o for o in await engine.get_orders(open_only=True) if o.order_type is OrderType.STOP]
+            assert len(stops) == 1, "the whole position is protected"
+            assert await runtime._close_position("time stop") is True
+            market.advance()
+            await runtime._cycle_once()
+            assert (await engine.get_positions()) == {}, "no dust left behind"
+            assert runtime._open_trade is None
+            assert runtime.machine.state is not LiveState.HALT_NEW_ORDERS
+        finally:
+            await runtime.stop()
+    finally:
+        await db.close()
+
+
+async def test_the_residue_the_12h_session_left_is_one_whole_lot_and_closes_flat(tmp_path: Path) -> None:
+    """The leg the session of 2026-10-12 could not close: two partial entries, an exit
+    of 0.003995, and 9.999999999992654e-07 BTC left. Adopted by a session, it is one
+    whole lot: protected, closed at market, and the session is not halted."""
+    db = _db(tmp_path)
+    await db.create_schema()
+    try:
+        _, _, probe, clock = build()
+        price = probe._candles[probe.cursor - 1].close
+        t = clock.now() - timedelta(minutes=40)
+        fills = [
+            _fill("p1", Side.BUY, 0.001932, price, 0.04, t, "ord_entry"),
+            _fill("p2", Side.BUY, 0.002064, price, 0.04, t + timedelta(minutes=1), "ord_entry"),
+            _fill("x1", Side.SELL, 0.003995, price * 1.003, 0.25, t + timedelta(minutes=24), "ord_exit"),
+        ]
+        restore, runtime, engine, market = await _adopt(db, fills, price=price, at=t)
+        assert 0 < restore.position_quantity < 1e-6, "the sub-lot residue, as production held it"
+        await runtime.start()
+        try:
+            assert runtime._open_trade is not None
+            await runtime._sync_protective_stop(restore.position_quantity)
+            stops = [o for o in await engine.get_orders(open_only=True) if o.order_type is OrderType.STOP]
+            assert len(stops) == 1, "the residue is protected like any leg"
+            assert await runtime._close_position("session deadline") is True
+            assert runtime.machine.state is not LiveState.HALT_NEW_ORDERS, "the exit was not refused"
+            market.advance()
+            await runtime._cycle_once()
+            assert (await engine.get_positions()) == {}
+            assert runtime._open_trade is None
+        finally:
+            await runtime.stop()
     finally:
         await db.close()

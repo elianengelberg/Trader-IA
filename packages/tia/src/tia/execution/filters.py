@@ -28,7 +28,7 @@ from decimal import Decimal
 from typing import Any
 
 from tia.core.errors import OrderRejectedError
-from tia.core.money import D, meets_min_notional, quantize_down
+from tia.core.money import STEP_FLOAT_TOLERANCE, D, meets_min_notional, quantize_down
 from tia.domain.instruments import Instrument, InstrumentUniverse
 
 
@@ -134,8 +134,8 @@ def validate_quantity(
     q = D(repr(quantity))
     whole = quantize_down(q, filters.step_size)
     # A quantity that is not a whole number of lots was never quantized by anyone. The
-    # tolerance is a float's rounding, not a lot's worth.
-    if abs(q - whole) > filters.step_size * D("1e-6"):
+    # tolerance is a float's rounding, not a lot's worth — the same one quantization uses.
+    if abs(q - whole) > filters.step_size * STEP_FLOAT_TOLERANCE:
         raise OrderFilterError(
             f"{filters.symbol}: quantity {quantity} is not a whole multiple of the lot "
             f"step {filters.step_size} ({filters.source})"

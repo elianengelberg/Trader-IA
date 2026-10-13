@@ -44,17 +44,33 @@ def money(value: float | int | str | Decimal) -> Decimal:
     return D(value).quantize(MONEY_PLACES, rounding=ROUND_HALF_EVEN)
 
 
+#: How far a value may sit from a whole number of steps, in steps, and still *be* that
+#: whole number: a float's rounding, never a step's worth. Two partial fills of 0.001932
+#: and 0.002064 BTC add up to 0.0039959999999999996 in float; flooring that to the 1e-6
+#: lot gave 0.003995, refused the protective stop for the whole position, and left a
+#: 9.999999999992654e-07 BTC residue no exit could close (12-hour paper session of
+#: 2026-10-12). The same tolerance judges "is this a whole number of lots" in
+#: :func:`tia.execution.filters.validate_quantity`, so rounding and validation agree.
+STEP_FLOAT_TOLERANCE = Decimal("1e-6")
+
+
 def quantize_down(value: float | str | Decimal, step: float | str | Decimal) -> Decimal:
     """Round ``value`` down to a multiple of ``step``.
 
     This is how a desired quantity becomes a venue-legal one. Down, never nearest: the
     nearest multiple can be *above* the desired quantity, and an order for more than was
-    sized is a risk-limit violation manufactured by rounding.
+    sized is a risk-limit violation manufactured by rounding. The one exception is a
+    value within :data:`STEP_FLOAT_TOLERANCE` of a whole number of steps: that is a
+    float's binary error, not a smaller size, and it is the whole number it represents.
     """
     step_d = D(step)
     if step_d <= 0:
         raise ValueError("step must be positive")
-    return (D(value) / step_d).to_integral_value(rounding=ROUND_DOWN) * step_d
+    steps = D(value) / step_d
+    nearest = steps.to_integral_value(rounding=ROUND_HALF_EVEN)
+    if abs(steps - nearest) <= STEP_FLOAT_TOLERANCE:
+        return nearest * step_d
+    return steps.to_integral_value(rounding=ROUND_DOWN) * step_d
 
 
 def quantize_price_passive(

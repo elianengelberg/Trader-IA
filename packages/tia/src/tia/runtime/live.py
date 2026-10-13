@@ -1187,15 +1187,48 @@ class LiveRuntime:
 
             # 3. The venue must answer, and the balance funds the ledger.
             balance = await self._execution.get_balance()
+            carried = self._prior_realised
+            wiped = float(balance) <= 0
             if self._execution.is_live:
                 # The ceiling governs real money. A live ceiling of zero funds nothing,
                 # which is the fail-closed default doing its job.
                 allocation = min(float(balance), self._settings.live.max_live_capital)
                 note = f"live start: min(venue balance {balance}, ceiling)"
+            elif self._activation is None:
+                # Paper-realtime: the simulated account's starting capital is allocated,
+                # and everything the record has made or lost since — closed trades,
+                # funding, fees — is carried as realised, exactly as the ledger books it
+                # during a session. Cash is not the measure: an open short holds its sale
+                # proceeds in cash and an open long has paid for itself out of it, so
+                # "cash less realised P&L" overstated or understated the allocation by the
+                # open leg's cost — and a restored short tripped the paper-capital ceiling
+                # and refused to start (the 12-hour session of 2026-10-12 left one).
+                #
+                # The base is the account's own starting capital, bounded by the
+                # paper-capital ceiling the ledger was built with. What the account is
+                # worth at cost — cash plus what its open leg cost — less that base is the
+                # record's result. Wiped out means that value is gone, or, with nothing
+                # open, that the cash is: a leveraged long leaves cash negative by design.
+                portfolio = await self._execution.get_portfolio()
+                book_value = float(portfolio.equity) - float(portfolio.unrealized_pnl)
+                allocation = min(
+                    float(portfolio.initial_capital), float(self._settings.live.paper_capital)
+                )
+                carried = book_value - allocation
+                flat = all(position.is_flat for position in portfolio.positions.values())
+                wiped = book_value <= 0 or (flat and float(balance) <= 0)
+                note = (
+                    f"paper-realtime start: simulated capital {allocation}"
+                    + (
+                        f"; {carried:+.2f} realised P&L carried from the record"
+                        if abs(carried) > 1e-9
+                        else ""
+                    )
+                )
             else:
-                # Paper-realtime: simulated capital, already capped at construction.
-                # Binding it to the *live* ceiling would make the safe default
-                # (max_live_capital=0) refuse a session that cannot spend anything.
+                # A token over a simulated venue (rehearsals): simulated capital, already
+                # capped at construction. Binding it to the *live* ceiling would make the
+                # safe default (max_live_capital=0) refuse a session that cannot spend.
                 allocation = float(balance) - self._prior_realised
                 note = (
                     f"paper-realtime start: simulated balance {balance}"
@@ -1206,20 +1239,20 @@ class LiveRuntime:
                         else ""
                     )
                 )
-            if allocation <= 0 or float(balance) <= 0:
+            if allocation <= 0 or wiped:
                 raise LiveActivationError(
                     f"venue balance {balance} funds no allocation under the ceiling "
                     f"{self._settings.live.max_live_capital}; nothing to trade with"
                     + (
                         " — the simulated account is wiped out; reset it to continue"
-                        if not self._execution.is_live and float(balance) <= 0
+                        if not self._execution.is_live and wiped
                         else ""
                     )
                 )
             self._ledger.allocate(allocation, at=self._clock.now(), note=note)
-            if self._prior_realised:
-                self._ledger.record_realised_pnl(self._prior_realised, at=self._clock.now())
-            self._peak_equity = allocation + self._prior_realised
+            if abs(carried) > 1e-12:
+                self._ledger.record_realised_pnl(carried, at=self._clock.now())
+            self._peak_equity = allocation + carried
         except Exception as exc:
             self.last_error = str(exc)[:500]
             self.machine.transition(LiveState.STOPPING, reason=f"startup failed: {exc}")

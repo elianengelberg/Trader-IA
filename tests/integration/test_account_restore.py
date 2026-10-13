@@ -37,9 +37,11 @@ from tia.persistence import (
     RunRepository,
 )
 from tia.portfolio.account_journal import (
+    EVENT_ADJUSTMENT,
     EVENT_FILL,
     EVENT_MARK,
     EVENT_PLAN,
+    AccountAdjustmentPayload,
     AccountFillPayload,
     AccountMarkPayload,
     AccountPlanPayload,
@@ -873,30 +875,47 @@ async def test_a_session_resumed_after_the_deploy_leaves_marks_that_do_not_block
 
 # ------------------------------------- float residue of partial fills (12 h run, 2026-10-12)
 #
-# The production leg was a short; quantization does not depend on the side, and these
-# legs are long so the restart path under test is the one that works today. A restored
-# *short* also trips a separate start-up defect: the paper allocation is cash less
-# realised P&L, and cash holds the open short's sale proceeds, which overstates the
-# allocation past the paper-capital ceiling. That defect is reported with this fix and
-# is not changed by it.
+# The production leg was a short. The quantization regressions below hold for either
+# side and run on a long; the start-up regressions after them restore shorts, which
+# used to over-allocate by the open leg's sale proceeds and trip the paper-capital
+# ceiling.
 
 
-def _long_leg_plan(price: float, at: datetime) -> dict[str, Any]:
+def _leg_plan(price: float, at: datetime, direction: str) -> dict[str, Any]:
+    long = direction == "long"
+    stop = round(price * (0.8 if long else 1.2), 2)
     return {
-        "at": at, "stop": round(price * 0.8, 2), "initial_stop": round(price * 0.8, 2),
-        "target": round(price * 1.5, 2), "kind": "trailing", "direction": "long",
-        "beliefs": {"regime": "trending_up", "direction": "long", "confidence": 0.7,
-                    "signal_id": "sig_partial", "strategy_id": "trend_following",
+        "at": at, "stop": stop, "initial_stop": stop,
+        "target": round(price * (1.5 if long else 0.5), 2), "kind": "trailing", "direction": direction,
+        "beliefs": {"regime": "trending_up" if long else "trending_down", "direction": direction,
+                    "confidence": 0.7, "signal_id": "sig_partial", "strategy_id": "trend_following",
                     "strategy_version": "1.1.0", "size_fraction": 0.25,
                     "expected_net_bps": 0.0, "exploratory": True},
     }
 
 
-async def _adopt(db: Database, fills: list[Fill], *, price: float, at: datetime):  # type: ignore[no-untyped-def]
+async def _write_funding(db: Database, run_id: str, amount: float, at: datetime, period: str) -> None:
+    """A funding settlement as a session journals it: cash moved, keyed by period."""
+    async with db.session() as session:
+        await EventRepository(session).append(run_id, EventEnvelope(
+            event_id=deterministic_id("evt", EVENT_ADJUSTMENT, f"funding:{period}"),
+            event_type=EVENT_ADJUSTMENT, source="live", occurred_at=at, ingestion_at=at, recorded_at=at,
+            correlation_id=run_id, idempotency_key=f"{EVENT_ADJUSTMENT}:funding:{period}",
+            payload=AccountAdjustmentPayload(symbol=SYMBOL, amount=amount, reason="funding", at=at,
+                                             kind="funding", period=period),
+        ))
+
+
+async def _adopt(  # type: ignore[no-untyped-def]
+    db: Database, fills: list[Fill], *, price: float, at: datetime, direction: str = "long",
+    funding: tuple[tuple[float, datetime, str], ...] = (),
+):
     """A session that adopts the leg the journal holds, over a fresh engine seeded from it."""
     await register_run(db, "run_a", started_at=at - timedelta(minutes=30))
     await write_session_day(db, "run_a", fills, [(price, fills[-1].filled_at)],
-                            plan=_long_leg_plan(price, fills[1].filled_at + timedelta(seconds=30)))
+                            plan=_leg_plan(price, fills[1].filled_at + timedelta(seconds=30), direction))
+    for amount, when, period in funding:
+        await _write_funding(db, "run_a", amount, when, period)
     restore = await rebuild(db)
     assert restore.complete, restore.error
     _probe_runtime, _probe_engine, market, clock = build()
@@ -904,7 +923,7 @@ async def _adopt(db: Database, fills: list[Fill], *, price: float, at: datetime)
     seeded = engine_for(clock, settings)
     seeded.restore_portfolio(restore.portfolio_state())
     # As AppState.start_paper_realtime builds it: the realised P&L the record carries is
-    # handed over, so the start allocates the base capital, not the base plus the P&L.
+    # handed over with the account.
     runtime = LiveRuntime(
         settings, activation=None, market_data=market, execution=seeded, clock=clock,
         persist=None, poll_interval_seconds=0.0, prior_account_state=restore,
@@ -976,6 +995,93 @@ async def test_the_residue_the_12h_session_left_is_one_whole_lot_and_closes_flat
             await runtime._cycle_once()
             assert (await engine.get_positions()) == {}
             assert runtime._open_trade is None
+        finally:
+            await runtime.stop()
+    finally:
+        await db.close()
+
+
+async def _assert_books_agree_at_start(runtime: LiveRuntime, engine: PaperExecutionProvider) -> None:
+    """The ledger allocates the base capital and carries the rest as realised, so its
+    equity is the engine's — and the session's first reconciliation is clean."""
+    portfolio = await engine.get_portfolio()
+    snapshot = runtime._ledger.snapshot(unrealised_pnl=portfolio.unrealized_pnl)
+    assert snapshot.allocated_capital == pytest.approx(CAPITAL)
+    assert snapshot.equity == pytest.approx(float(portfolio.equity), abs=1e-6)
+    await runtime._reconcile()
+    assert runtime._last_reconciliation_clean is True
+    assert runtime.counters["reconciliation_breaks"] == 0
+
+
+@pytest.mark.parametrize("direction", ["short", "long"])
+async def test_a_restored_open_leg_starts_at_its_base_capital_and_the_books_agree(
+    tmp_path: Path, direction: str,
+) -> None:
+    """Cash is not the measure of what was allocated: a short holds its sale proceeds in
+    cash, a long has paid for itself out of it. Before, the start allocated cash less
+    realised P&L — 10,199 for this short against a 10,000 ceiling, refused — and a long
+    under-allocated by its cost."""
+    db = _db(tmp_path)
+    await db.create_schema()
+    try:
+        _, _, probe, clock = build()
+        price = probe._candles[probe.cursor - 1].close
+        t = clock.now() - timedelta(minutes=20)
+        side = Side.SELL if direction == "short" else Side.BUY
+        fills = [
+            _fill("p1", side, 0.001932, price, 0.04, t, "ord_entry"),
+            _fill("p2", side, 0.002064, price, 0.04, t + timedelta(minutes=1), "ord_entry"),
+        ]
+        _restore, runtime, engine, market = await _adopt(db, fills, price=price, at=t, direction=direction)
+        await runtime.start()
+        try:
+            assert runtime.machine.state is LiveState.RUNNING, runtime.last_error
+            await _assert_books_agree_at_start(runtime, engine)
+            assert await runtime._close_position("time stop") is True
+            market.advance()
+            await runtime._cycle_once()
+            assert (await engine.get_positions()) == {}
+        finally:
+            await runtime.stop()
+    finally:
+        await db.close()
+
+
+async def test_the_12h_session_s_short_residue_with_its_funding_starts_and_closes(tmp_path: Path) -> None:
+    """The production account exactly as the next session finds it: a short entered in
+    two partials, 0.003995 closed, 9.999999999992654e-07 BTC left, and funding received
+    on it. Cash less realised P&L was 10,000.08 against a 10,000 ceiling and the start
+    was refused; the base capital is allocated now, the record carried as realised, and
+    the residue is closed."""
+    db = _db(tmp_path)
+    await db.create_schema()
+    try:
+        _, _, probe, clock = build()
+        price = probe._candles[probe.cursor - 1].close
+        t = clock.now() - timedelta(minutes=60)
+        fills = [
+            _fill("p1", Side.SELL, 0.001932, price, 0.04, t, "ord_entry"),
+            _fill("p2", Side.SELL, 0.002064, price, 0.04, t + timedelta(minutes=1), "ord_entry"),
+            _fill("x1", Side.BUY, 0.003995, price * 0.997, 0.25, t + timedelta(minutes=24), "ord_exit"),
+        ]
+        funding = tuple(
+            (0.0000053, t + timedelta(minutes=30 + 5 * k), f"2026-10-13:{k}") for k in range(3)
+        )
+        restore, runtime, engine, market = await _adopt(
+            db, fills, price=price, at=t, direction="short", funding=funding,
+        )
+        assert -1e-6 < restore.position_quantity < 0, "the short sub-lot residue"
+        assert sum(restore.funding_settled.values()) == pytest.approx(0.0000159)
+        await runtime.start()
+        try:
+            assert runtime.machine.state is LiveState.RUNNING, runtime.last_error
+            await _assert_books_agree_at_start(runtime, engine)
+            assert await runtime._close_position("session deadline") is True
+            market.advance()
+            await runtime._cycle_once()
+            assert (await engine.get_positions()) == {}
+            assert runtime._open_trade is None
+            assert runtime.machine.state is not LiveState.HALT_NEW_ORDERS
         finally:
             await runtime.stop()
     finally:

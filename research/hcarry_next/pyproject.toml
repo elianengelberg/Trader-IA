@@ -1,0 +1,16 @@
+[project]
+name = "hcarry-next"
+version = "0.1.0"
+description = "H-CARRY Next: laboratorio de investigación de carry BTC spot/perpetuo (solo simulación)"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "hypothesis>=6"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-p no:cacheprovider"
+
+[tool.ruff]
+line-length = 120

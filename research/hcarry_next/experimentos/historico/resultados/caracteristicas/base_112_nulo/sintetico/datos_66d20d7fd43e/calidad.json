@@ -1,0 +1,89 @@
+{
+ "directorio": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/caracteristicas/base_112_nulo",
+ "procedencia": "sintetico",
+ "manifiesto_sha256": "66d20d7fd43e1b7100de74d77689585ed86414ac9039e47c1b03987f3c673b3d",
+ "umbrales": {
+  "horas_rellenadas_frac_max": 0.005,
+  "racha_rellenada_max_h": 24,
+  "base_mediana_abs_max": 0.002,
+  "mark_perp_p99_abs_max": 0.01,
+  "funding_bloqueantes": [
+   "A2",
+   "A2b",
+   "A4",
+   "A7",
+   "A8"
+  ],
+  "coherencia_bloqueantes": [
+   "A6",
+   "P2"
+  ]
+ },
+ "filtros": {
+  "C1_procedencia": {
+   "ok": true,
+   "procedencia": "sintetico",
+   "via": "fabricado en formato oficial para ensayar el pipeline",
+   "archivos": 400,
+   "sin_checksum": 0,
+   "checksum_no_coincide": []
+  },
+  "C2_cobertura": {
+   "ok": true,
+   "inicio_comun": "2019-10-01",
+   "hasta": "2026-06-01",
+   "meses": 80,
+   "primer_mes": {
+    "spot": "2019-10",
+    "perp": "2019-10",
+    "mark": "2019-10",
+    "funding": "2019-10",
+    "premium": "2019-10"
+   },
+   "faltan": {},
+   "meses_con_prima": 80
+  },
+  "C3_horas": {
+   "ok": true,
+   "horas": 58440,
+   "rellenadas": 0,
+   "fraccion": 0.0,
+   "racha_max_h": 0
+  },
+  "C4_funding": {
+   "ok": true,
+   "incidencias": [],
+   "eventos": 7305,
+   "intervalos_h": {
+    "8": 7304
+   },
+   "cambios": [],
+   "tasa_modal": {
+    "tasa": 0.0001,
+    "fraccion": 0.5070499657768651
+   },
+   "fraccion_negativas": 0.16344969199178644,
+   "apr_medio_nocional": 0.19483208186857817
+  },
+  "C5_coherencia": {
+   "ok": true,
+   "incidencias": [],
+   "base_abs_mediana": 0.0005213581779745513,
+   "base_abs_p99": 0.0024694914287943792,
+   "base_abs_max": 0.003948414883333862,
+   "mark_perp_abs_p99": 0.0006563735362126177,
+   "mark_perp_abs_max": 0.0012638273127872912
+  },
+  "C6_periodo": {
+   "ok": true,
+   "inicio": "2019-10-01T00:00Z",
+   "fin": "2026-06-01T00:00Z"
+  }
+ },
+ "apto": true,
+ "horas": 58440,
+ "ventana": [
+  "2019-10-01T00:00Z",
+  "2026-06-01T00:00Z"
+ ]
+}

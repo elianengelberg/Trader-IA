@@ -1,0 +1,357 @@
+{
+ "protocolo_sha256": "10d33629cca50e5c19d173609d1ffca3e7739e863f4f30447459938b63a3de69",
+ "configuraciones": [
+  {
+   "nombre": "referencia",
+   "datos": {
+    "fuente": "sintetico",
+    "semilla": 105,
+    "variante": "base"
+   },
+   "division": "test",
+   "politica": {
+    "nombre": "siempre",
+    "params": {
+     "rho": 1.0,
+     "banda": [
+      0.5,
+      1.5
+     ]
+    }
+   },
+   "costes": {},
+   "filtros": {},
+   "motor": {}
+  },
+  {
+   "nombre": "referencia__costes_x2",
+   "datos": {
+    "fuente": "sintetico",
+    "semilla": 105,
+    "variante": "base"
+   },
+   "division": "test",
+   "politica": {
+    "nombre": "siempre",
+    "params": {
+     "rho": 1.0,
+     "banda": [
+      0.5,
+      1.5
+     ]
+    }
+   },
+   "costes": {
+    "multiplicador": 2.0
+   },
+   "filtros": {},
+   "motor": {}
+  },
+  {
+   "nombre": "referencia__retraso_1h",
+   "datos": {
+    "fuente": "sintetico",
+    "semilla": 105,
+    "variante": "base"
+   },
+   "division": "test",
+   "politica": {
+    "nombre": "siempre",
+    "params": {
+     "rho": 1.0,
+     "banda": [
+      0.5,
+      1.5
+     ]
+    }
+   },
+   "costes": {},
+   "filtros": {},
+   "motor": {
+    "retraso_barras": 1
+   }
+  },
+  {
+   "nombre": "referencia__pata_adversa",
+   "datos": {
+    "fuente": "sintetico",
+    "semilla": 105,
+    "variante": "base"
+   },
+   "division": "test",
+   "politica": {
+    "nombre": "siempre",
+    "params": {
+     "rho": 1.0,
+     "banda": [
+      0.5,
+      1.5
+     ]
+    }
+   },
+   "costes": {},
+   "filtros": {},
+   "motor": {
+    "pata_perp_adversa": true
+   }
+  },
+  {
+   "nombre": "referencia__funding_x075",
+   "datos": {
+    "fuente": "sintetico",
+    "semilla": 105,
+    "variante": "base"
+   },
+   "division": "test",
+   "politica": {
+    "nombre": "siempre",
+    "params": {
+     "rho": 1.0,
+     "banda": [
+      0.5,
+      1.5
+     ]
+    }
+   },
+   "costes": {},
+   "filtros": {},
+   "motor": {},
+   "estres": {
+    "funding_factor": 0.75
+   }
+  },
+  {
+   "nombre": "siempre_rho05",
+   "datos": {
+    "fuente": "sintetico",
+    "semilla": 105,
+    "variante": "base"
+   },
+   "division": "test",
+   "politica": {
+    "nombre": "siempre",
+    "params": {
+     "rho": 0.5,
+     "banda": [
+      0.3,
+      0.75
+     ]
+    }
+   },
+   "costes": {},
+   "filtros": {},
+   "motor": {}
+  },
+  {
+   "nombre": "siempre_rho05__costes_x2",
+   "datos": {
+    "fuente": "sintetico",
+    "semilla": 105,
+    "variante": "base"
+   },
+   "division": "test",
+   "politica": {
+    "nombre": "siempre",
+    "params": {
+     "rho": 0.5,
+     "banda": [
+      0.3,
+      0.75
+     ]
+    }
+   },
+   "costes": {
+    "multiplicador": 2.0
+   },
+   "filtros": {},
+   "motor": {}
+  },
+  {
+   "nombre": "siempre_rho05__retraso_1h",
+   "datos": {
+    "fuente": "sintetico",
+    "semilla": 105,
+    "variante": "base"
+   },
+   "division": "test",
+   "politica": {
+    "nombre": "siempre",
+    "params": {
+     "rho": 0.5,
+     "banda": [
+      0.3,
+      0.75
+     ]
+    }
+   },
+   "costes": {},
+   "filtros": {},
+   "motor": {
+    "retraso_barras": 1
+   }
+  },
+  {
+   "nombre": "siempre_rho05__pata_adversa",
+   "datos": {
+    "fuente": "sintetico",
+    "semilla": 105,
+    "variante": "base"
+   },
+   "division": "test",
+   "politica": {
+    "nombre": "siempre",
+    "params": {
+     "rho": 0.5,
+     "banda": [
+      0.3,
+      0.75
+     ]
+    }
+   },
+   "costes": {},
+   "filtros": {},
+   "motor": {
+    "pata_perp_adversa": true
+   }
+  },
+  {
+   "nombre": "siempre_rho05__funding_x075",
+   "datos": {
+    "fuente": "sintetico",
+    "semilla": 105,
+    "variante": "base"
+   },
+   "division": "test",
+   "politica": {
+    "nombre": "siempre",
+    "params": {
+     "rho": 0.5,
+     "banda": [
+      0.3,
+      0.75
+     ]
+    }
+   },
+   "costes": {},
+   "filtros": {},
+   "motor": {},
+   "estres": {
+    "funding_factor": 0.75
+   }
+  },
+  {
+   "nombre": "prima_v72_e0.1_s0.0",
+   "datos": {
+    "fuente": "sintetico",
+    "semilla": 105,
+    "variante": "base"
+   },
+   "division": "test",
+   "politica": {
+    "nombre": "umbral_prima",
+    "params": {
+     "ventana_h": 72,
+     "entrada": 0.1,
+     "salida": 0.0,
+     "permanencia_h": 24
+    }
+   },
+   "costes": {},
+   "filtros": {},
+   "motor": {}
+  },
+  {
+   "nombre": "prima_v72_e0.1_s0.0__costes_x2",
+   "datos": {
+    "fuente": "sintetico",
+    "semilla": 105,
+    "variante": "base"
+   },
+   "division": "test",
+   "politica": {
+    "nombre": "umbral_prima",
+    "params": {
+     "ventana_h": 72,
+     "entrada": 0.1,
+     "salida": 0.0,
+     "permanencia_h": 24
+    }
+   },
+   "costes": {
+    "multiplicador": 2.0
+   },
+   "filtros": {},
+   "motor": {}
+  },
+  {
+   "nombre": "prima_v72_e0.1_s0.0__retraso_1h",
+   "datos": {
+    "fuente": "sintetico",
+    "semilla": 105,
+    "variante": "base"
+   },
+   "division": "test",
+   "politica": {
+    "nombre": "umbral_prima",
+    "params": {
+     "ventana_h": 72,
+     "entrada": 0.1,
+     "salida": 0.0,
+     "permanencia_h": 24
+    }
+   },
+   "costes": {},
+   "filtros": {},
+   "motor": {
+    "retraso_barras": 1
+   }
+  },
+  {
+   "nombre": "prima_v72_e0.1_s0.0__pata_adversa",
+   "datos": {
+    "fuente": "sintetico",
+    "semilla": 105,
+    "variante": "base"
+   },
+   "division": "test",
+   "politica": {
+    "nombre": "umbral_prima",
+    "params": {
+     "ventana_h": 72,
+     "entrada": 0.1,
+     "salida": 0.0,
+     "permanencia_h": 24
+    }
+   },
+   "costes": {},
+   "filtros": {},
+   "motor": {
+    "pata_perp_adversa": true
+   }
+  },
+  {
+   "nombre": "prima_v72_e0.1_s0.0__funding_x075",
+   "datos": {
+    "fuente": "sintetico",
+    "semilla": 105,
+    "variante": "base"
+   },
+   "division": "test",
+   "politica": {
+    "nombre": "umbral_prima",
+    "params": {
+     "ventana_h": 72,
+     "entrada": 0.1,
+     "salida": 0.0,
+     "permanencia_h": 24
+    }
+   },
+   "costes": {},
+   "filtros": {},
+   "motor": {},
+   "estres": {
+    "funding_factor": 0.75
+   }
+  }
+ ]
+}

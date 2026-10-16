@@ -1,0 +1,144 @@
+"""Borrador H-CARRY 1.1 rev. 5: registra las decisiones PROVISIONALES del responsable (2026-10-16) y precisa funding,
+filtros, liquidación/ejecución, amenazas y la solicitud de exchangeInfo. No cambia umbrales, criterios, costes, capital,
+ventana, reequilibrio ni R0 (se comprueba). protocolo_hcarry.json (1.0) no se toca."""
+import hashlib
+import json
+import sys
+from pathlib import Path
+
+RUTA = Path(sys.argv[1])
+assert hashlib.sha256((RUTA.parent / "protocolo_hcarry.json").read_bytes()).hexdigest() == \
+    "edde54cc1f8509a120564e8d71d06d6a3700f6a357020bbbec385b55982de9f5"
+d = json.loads(RUTA.read_text(encoding="utf-8"))
+congelado = lambda x: json.dumps([x["criterios"], x["costes_por_pata_bps"], x["capital_usdt"], x["ventana"],  # noqa: E731
+                                  x["reequilibrio"], x["comparador"], x["metricas_decisorias"]["D2"],
+                                  x["metricas_decisorias"]["D3"], x["metricas_decisorias"]["D4"]], sort_keys=True, ensure_ascii=False)
+antes = congelado(d)
+
+d["revision"] += ("; decisiones PROVISIONALES del responsable del 2026-10-16: D1 con 850,9583 días fijos, D4 con equity "
+                  "final, R0 y umbrales congelados, funding estricto, sin firmas, exchangeInfo solo con autorización aparte")
+
+d["metricas_decisorias"]["D1"] = (
+    "CAGR = (E_final / 10 000)^(365/D) − 1, con D = 850,9583 días, FIJO: (20 424 horas de la ventana − 1)/24, de la apertura "
+    "de la primera hora (2024-02-01T00:00Z) a la apertura de la última (2026-05-31T23:00Z). Se usa aunque la entrada se "
+    "retrase: el capital cuenta como comprometido desde el inicio de la ventana. E_final = U + W tras salir. El 1.0 no fija "
+    "el recuento de días ('neto anualizado'): no hay conflicto")
+
+d["datos"]["integridad_del_funding"] = {
+    "detectables_y_bloqueantes": {
+        "regla": "toda omisión que deje una huella en el calendario observado da SIN VEREDICTO; nada se rellena ni se inventa",
+        "casos": ["hueco o intervalo fuera de {1, 2, 4, 8} h (A2): p. ej., una omitida en 8 h deja 16 h",
+                  "alargamiento del intervalo (A2b): una omitida en 4 h deja 8 h, en 1 h deja 2 h",
+                  "falta al principio o al final de la ventana (A2)", "desalineación con su intervalo (A2)",
+                  "duplicados o desorden (A7)", "desfase > 60 s (A8)", "tasa implausible (A4)", "símbolo ajeno (P1)",
+                  "markPrice incompatible con el mark (P2)"],
+    },
+    "indetectables": {
+        "caso": "omisiones que dejan un calendario regular con intervalo admitido: p. ej., un calendario real de 4 h del que "
+                "se publican solo las de 00, 08 y 16 h parece uno de 8 h; o la ausencia completa de un período sin huella",
+        "efecto": "NO se puede garantizar su dirección: si lo omitido tenía tasas negativas, el resultado observado "
+                  "SOBRESTIMA el real; si positivas, lo SUBESTIMA (demostrado con datos sintéticos, "
+                  "tests/test_hc_decisiones.py::test_a2)",
+    },
+    "clasificacion": "VEREDICTO LIMITADO: el protocolo emite el veredicto, pero SOLO condicionado a S10 (registro de "
+                     "liquidaciones completo). La condición va dentro de resultado.json ('condiciones_del_veredicto') y del "
+                     "informe; el veredicto no puede presentarse sin ella. No se declara completa la integridad del funding",
+    "informacion_para_el_revisor": "número de liquidaciones, intervalos observados, cambios, tasa modal y su fracción; una "
+                                   "referencia independiente del calendario (no disponible ahora) cambiaría la limitación",
+}
+
+f = d["filtros_de_cantidad"]
+f["materialidad"] = {
+    "validable_con_metadatos_actuales": [
+        "que los tipos y campos vigentes de BTCUSDT caben en la lista cerrada (si no, M1)",
+        "que los valores vigentes se interpretan (decimales, banderas) y dan una retícula no vacía con mínimos múltiplos "
+        "de sus pasos (si no, Q1)", "los valores VIGENTES de paso, mínimos, máximos y nocionales"],
+    "no_validable": "qué filtros regían en cada fecha de 2024-2026; si una orden simulada habría sido aceptada en su fecha",
+    "limitaciones_de_aplicarlos_retrospectivamente": [
+        "un paso o un mínimo históricos mayores habrían rechazado o redondeado órdenes que el modelo ejecuta, y al revés",
+        "un nocional mínimo histórico distinto cambia qué reequilibrios pequeños se ejecutan",
+        "tipos de filtro antiguos o retirados no se modelan"],
+    "expectativa_no_verificada": "con 10 000 USDT la posición sería del orden de 0,05–0,2 BTC y, con valores como los "
+                                 "recordados (S1), solo actuaría el paso; NO está verificado",
+    "interpretacion_admisible": "el veredicto vale bajo los filtros VIGENTES en la descarga (condición S8 del resultado, "
+                                "con el número de órdenes impedidas, limitadas y divididas). Si ninguna orden quedó "
+                                "impedida, limitada o dividida, solo actuó el paso vigente. El escenario 'sin_filtros' "
+                                "mide cuánto pesa la retícula EN EL MODELO; NO reconstruye la realidad histórica",
+    "fuentes_historicas_posibles": "anuncios de Binance, capturas archivadas de exchangeInfo, proveedores de metadatos; "
+                                   "requieren autorización aparte y filtros por fecha en el código (no hechos)",
+}
+d["filtros_de_cantidad"].pop("como_se_mide", None)
+
+d["liquidacion"]["riesgos_no_modelados_y_clasificacion"] = {
+    "no_modelados": [
+        "margen de mantenimiento por tramos y comisión de liquidación reales (el modelo usa un 1 % fijo, sin comisión)",
+        "ADL y fondo de seguros; precio mark atípico dentro de la hora más allá del máximo horario publicado",
+        "liquidación parcial; margen cruzado compartido con otras posiciones",
+        "retraso o fallo de transferencias y reequilibrios; caídas del exchange o de la API",
+        "ejecución por patas: exposición direccional entre la orden spot y la del perpetuo",
+        "slippage dependiente del tamaño, de la volatilidad o de la profundidad; latencia; nivel de comisiones y "
+        "comisión en BTC",
+        "base dentro de la hora: el modelo solo ve aperturas y cierres horarios"],
+    "medido_sin_modelo_nuevo": "distancia mínima del mark máximo horario a la liquidación del MODELO y base máxima en "
+                               "los cierres (informativo, 'riesgo_no_decisorio'); en el caso sintético de referencia la "
+                               "distancia es ≈ +98 %: D2 casi nunca se activa en el modelo",
+    "direccion": "estos riesgos NO tienen una dirección garantizada sobre el resultado (una liquidación real deja la pata "
+                 "spot sin cubrir; la ejecución por patas puede ganar o perder)",
+    "clasificacion": "no impiden emitir el veredicto del protocolo, que está definido respecto del modelo; lo LIMITAN: "
+                     "DESCARTADA significa 'no supera los criterios bajo el modelo y los costes registrados'; NO DESCARTADA "
+                     "significa 'pasa bajo el modelo', nunca 'rentable en la realidad'. D2 no es evidencia de ausencia de "
+                     "riesgo de liquidación real. No hace falta un modelo nuevo para evitar un resultado engañoso, siempre "
+                     "que el veredicto se presente con sus condiciones (resultado.json las incluye)",
+}
+
+d["controles_externos"]["modelo_de_amenazas"] = [
+    {"amenaza": "error accidental: código, protocolo o plan cambiados; bytecode viejo; módulo olvidado", "protegido": "sí, código (B3)"},
+    {"amenaza": "datos corruptos, truncados, de otra serie, de otro activo o ≥ corte", "protegido": "sí, código (P1, P2, B1, A*)"},
+    {"amenaza": "interrupción o error durante cualquier etapa", "protegido": "sí, código (B2, C2; el verificador rechaza)"},
+    {"amenaza": "evaluar dos veces la misma carpeta", "protegido": "sí, código (B4)"},
+    {"amenaza": "usar una autorización con otro ledger o con otra descarga", "protegido": "sí, código (B5)"},
+    {"amenaza": "presentar datos de prueba como evaluación del protocolo", "protegido": "sí, código, frente a confusión accidental (modo y transporte)"},
+    {"amenaza": "copiar la carpeta tras autorizar la descarga, descargar otra vez y evaluar la copia",
+     "protegido": "NO por el código: exige falsificar la autorización de evaluación; lo cubre el procedimiento (el "
+                  "responsable conserva las anclas y emite una sola autorización)"},
+    {"amenaza": "falsificar autorizaciones o anclas (son JSON sin firma)", "protegido": "NO: el revisor las compara con los originales del responsable"},
+    {"amenaza": "modificar el código (también el verificador) y recalcular el inventario",
+     "protegido": "NO por el código: el revisor compara las huellas con un inventario obtenido por un canal independiente"},
+    {"amenaza": "ejecutar en una máquina con red manipulada (respuestas falsas bien formadas)",
+     "protegido": "parcialmente: forma, rango, corte y coherencia entre series; NO valores falsos plausibles"},
+    {"amenaza": "conocimiento previo del analista sobre 2024-2026", "protegido": "no aplica: reglas sin parámetros elegibles, fijadas antes (ver contaminacion)"},
+]
+
+d["solicitud_exchangeinfo"] = {
+    "objeto": "validar, ANTES de congelar, que los metadatos VIGENTES caben en la lista cerrada (M1) y dan una retícula "
+              "no vacía (Q1)",
+    "peticiones": ["GET https://api.binance.com/api/v3/exchangeInfo?symbol=BTCUSDT",
+                   "GET https://fapi.binance.com/fapi/v1/exchangeInfo"],
+    "excluido": "velas, funding, operaciones, libro, cualquier dato de mercado o histórico, claves",
+    "herramienta": "h_carry/prechequeo_exchangeinfo.py (exige --autorizacion; sin ella no conecta)",
+    "estado": "NO ejecutada: requiere autorización explícita aparte",
+    "efecto": "si aparece M1 o Q1, cualquier cambio de la lista cerrada se decide y documenta antes de congelar (cambia el "
+              "plan); no aporta información sobre el resultado económico",
+}
+
+d["informe_de_resultados"]["condiciones_del_veredicto"] = (
+    "todo veredicto económico (DESCARTADA o NO DESCARTADA) lleva en resultado.json e informe sus condiciones no "
+    "verificadas: S10 (funding completo; sesgo de dirección no garantizada), S8 (filtros vigentes, con recuento de órdenes "
+    "impedidas, limitadas y divididas), S11–S13 (margen y liquidación del modelo, con la distancia mínima a la liquidación), "
+    "S12 (ejecución simultánea) y S1 (API)")
+
+d["decisiones_pendientes_de_aprobacion"] = [
+    "DECIDIDO PROVISIONALMENTE (2026-10-16): D1 con 850,9583 días fijos; D4 con equity final y costes de salida; R0 y "
+    "umbrales congelados; funding estricto sin relleno ni supuesto de dirección; sin firmas criptográficas; exchangeInfo "
+    "solo con autorización aparte; evaluación histórica prohibida en esta etapa",
+    "1 aprobación final del borrador rev. 5 tras la revisión independiente (convierte las decisiones provisionales en "
+    "definitivas)",
+    "2 autorizar o no la comprobación previa del exchangeInfo actual (2 peticiones de metadatos)",
+    "3 responsable, revisor independiente, máquina autorizada y ubicación de la carpeta del experimento",
+    "4 aceptar las limitaciones materiales: veredicto condicionado a S10, S8, S11–S13, S12 y S1",
+    "5 autorización explícita, aparte y posterior a la revisión, para congelar, descargar y evaluar una sola vez",
+]
+
+assert antes == congelado(d), "un criterio, umbral o parámetro congelado cambió"
+RUTA.write_text(json.dumps(d, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+print(hashlib.sha256(RUTA.read_bytes()).hexdigest())

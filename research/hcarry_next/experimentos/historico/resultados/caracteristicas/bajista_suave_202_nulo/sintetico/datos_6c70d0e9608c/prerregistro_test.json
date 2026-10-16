@@ -1,0 +1,690 @@
+{
+ "prerregistro_sha256": "90642cd1c29c076243ca87e4ab3c014a7ea41fdf24d3249ff7cef56b144466bd",
+ "configuraciones": [
+  {
+   "nombre": "rev5",
+   "datos": {
+    "fuente": "binance_vision",
+    "directorio": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/caracteristicas/bajista_suave_202_nulo",
+    "desde": "2019-10-01",
+    "hasta": "2026-06-01"
+   },
+   "division": "test",
+   "politica": {
+    "nombre": "siempre",
+    "params": {
+     "rho": 1.0,
+     "banda": [
+      0.5,
+      1.5
+     ]
+    }
+   },
+   "costes": {
+    "spot_comision_bps": 10.0,
+    "spot_slippage_bps": 5.0,
+    "perp_comision_bps": 5.0,
+    "perp_slippage_bps": 5.0
+   },
+   "filtros": {},
+   "motor": {
+    "capital": 10000.0,
+    "mmr": 0.01,
+    "apalancamiento_max": 2.0,
+    "al_inviable": "omitir"
+   }
+  },
+  {
+   "nombre": "rev5__costes_x05",
+   "datos": {
+    "fuente": "binance_vision",
+    "directorio": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/caracteristicas/bajista_suave_202_nulo",
+    "desde": "2019-10-01",
+    "hasta": "2026-06-01"
+   },
+   "division": "test",
+   "politica": {
+    "nombre": "siempre",
+    "params": {
+     "rho": 1.0,
+     "banda": [
+      0.5,
+      1.5
+     ]
+    }
+   },
+   "costes": {
+    "spot_comision_bps": 10.0,
+    "spot_slippage_bps": 5.0,
+    "perp_comision_bps": 5.0,
+    "perp_slippage_bps": 5.0,
+    "multiplicador": 0.5
+   },
+   "filtros": {},
+   "motor": {
+    "capital": 10000.0,
+    "mmr": 0.01,
+    "apalancamiento_max": 2.0,
+    "al_inviable": "omitir"
+   }
+  },
+  {
+   "nombre": "rev5__costes_x2",
+   "datos": {
+    "fuente": "binance_vision",
+    "directorio": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/caracteristicas/bajista_suave_202_nulo",
+    "desde": "2019-10-01",
+    "hasta": "2026-06-01"
+   },
+   "division": "test",
+   "politica": {
+    "nombre": "siempre",
+    "params": {
+     "rho": 1.0,
+     "banda": [
+      0.5,
+      1.5
+     ]
+    }
+   },
+   "costes": {
+    "spot_comision_bps": 10.0,
+    "spot_slippage_bps": 5.0,
+    "perp_comision_bps": 5.0,
+    "perp_slippage_bps": 5.0,
+    "multiplicador": 2.0
+   },
+   "filtros": {},
+   "motor": {
+    "capital": 10000.0,
+    "mmr": 0.01,
+    "apalancamiento_max": 2.0,
+    "al_inviable": "omitir"
+   }
+  },
+  {
+   "nombre": "rev5__costes_x3",
+   "datos": {
+    "fuente": "binance_vision",
+    "directorio": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/caracteristicas/bajista_suave_202_nulo",
+    "desde": "2019-10-01",
+    "hasta": "2026-06-01"
+   },
+   "division": "test",
+   "politica": {
+    "nombre": "siempre",
+    "params": {
+     "rho": 1.0,
+     "banda": [
+      0.5,
+      1.5
+     ]
+    }
+   },
+   "costes": {
+    "spot_comision_bps": 10.0,
+    "spot_slippage_bps": 5.0,
+    "perp_comision_bps": 5.0,
+    "perp_slippage_bps": 5.0,
+    "multiplicador": 3.0
+   },
+   "filtros": {},
+   "motor": {
+    "capital": 10000.0,
+    "mmr": 0.01,
+    "apalancamiento_max": 2.0,
+    "al_inviable": "omitir"
+   }
+  },
+  {
+   "nombre": "rev5__retraso_1h",
+   "datos": {
+    "fuente": "binance_vision",
+    "directorio": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/caracteristicas/bajista_suave_202_nulo",
+    "desde": "2019-10-01",
+    "hasta": "2026-06-01"
+   },
+   "division": "test",
+   "politica": {
+    "nombre": "siempre",
+    "params": {
+     "rho": 1.0,
+     "banda": [
+      0.5,
+      1.5
+     ]
+    }
+   },
+   "costes": {
+    "spot_comision_bps": 10.0,
+    "spot_slippage_bps": 5.0,
+    "perp_comision_bps": 5.0,
+    "perp_slippage_bps": 5.0
+   },
+   "filtros": {},
+   "motor": {
+    "capital": 10000.0,
+    "mmr": 0.01,
+    "apalancamiento_max": 2.0,
+    "al_inviable": "omitir",
+    "retraso_barras": 1
+   }
+  },
+  {
+   "nombre": "rev5__retraso_3h",
+   "datos": {
+    "fuente": "binance_vision",
+    "directorio": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/caracteristicas/bajista_suave_202_nulo",
+    "desde": "2019-10-01",
+    "hasta": "2026-06-01"
+   },
+   "division": "test",
+   "politica": {
+    "nombre": "siempre",
+    "params": {
+     "rho": 1.0,
+     "banda": [
+      0.5,
+      1.5
+     ]
+    }
+   },
+   "costes": {
+    "spot_comision_bps": 10.0,
+    "spot_slippage_bps": 5.0,
+    "perp_comision_bps": 5.0,
+    "perp_slippage_bps": 5.0
+   },
+   "filtros": {},
+   "motor": {
+    "capital": 10000.0,
+    "mmr": 0.01,
+    "apalancamiento_max": 2.0,
+    "al_inviable": "omitir",
+    "retraso_barras": 3
+   }
+  },
+  {
+   "nombre": "rev5__pata_adversa",
+   "datos": {
+    "fuente": "binance_vision",
+    "directorio": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/caracteristicas/bajista_suave_202_nulo",
+    "desde": "2019-10-01",
+    "hasta": "2026-06-01"
+   },
+   "division": "test",
+   "politica": {
+    "nombre": "siempre",
+    "params": {
+     "rho": 1.0,
+     "banda": [
+      0.5,
+      1.5
+     ]
+    }
+   },
+   "costes": {
+    "spot_comision_bps": 10.0,
+    "spot_slippage_bps": 5.0,
+    "perp_comision_bps": 5.0,
+    "perp_slippage_bps": 5.0
+   },
+   "filtros": {},
+   "motor": {
+    "capital": 10000.0,
+    "mmr": 0.01,
+    "apalancamiento_max": 2.0,
+    "al_inviable": "omitir",
+    "pata_perp_adversa": true
+   }
+  },
+  {
+   "nombre": "rev5__funding_x075",
+   "datos": {
+    "fuente": "binance_vision",
+    "directorio": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/caracteristicas/bajista_suave_202_nulo",
+    "desde": "2019-10-01",
+    "hasta": "2026-06-01"
+   },
+   "division": "test",
+   "politica": {
+    "nombre": "siempre",
+    "params": {
+     "rho": 1.0,
+     "banda": [
+      0.5,
+      1.5
+     ]
+    }
+   },
+   "costes": {
+    "spot_comision_bps": 10.0,
+    "spot_slippage_bps": 5.0,
+    "perp_comision_bps": 5.0,
+    "perp_slippage_bps": 5.0
+   },
+   "filtros": {},
+   "motor": {
+    "capital": 10000.0,
+    "mmr": 0.01,
+    "apalancamiento_max": 2.0,
+    "al_inviable": "omitir"
+   },
+   "estres": {
+    "funding_factor": 0.75
+   }
+  },
+  {
+   "nombre": "rev5__nocional_min_perp_5",
+   "datos": {
+    "fuente": "binance_vision",
+    "directorio": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/caracteristicas/bajista_suave_202_nulo",
+    "desde": "2019-10-01",
+    "hasta": "2026-06-01"
+   },
+   "division": "test",
+   "politica": {
+    "nombre": "siempre",
+    "params": {
+     "rho": 1.0,
+     "banda": [
+      0.5,
+      1.5
+     ]
+    }
+   },
+   "costes": {
+    "spot_comision_bps": 10.0,
+    "spot_slippage_bps": 5.0,
+    "perp_comision_bps": 5.0,
+    "perp_slippage_bps": 5.0
+   },
+   "filtros": {
+    "nocional_min_perp": 5.0
+   },
+   "motor": {
+    "capital": 10000.0,
+    "mmr": 0.01,
+    "apalancamiento_max": 2.0,
+    "al_inviable": "omitir"
+   }
+  },
+  {
+   "nombre": "umbral",
+   "datos": {
+    "fuente": "binance_vision",
+    "directorio": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/caracteristicas/bajista_suave_202_nulo",
+    "desde": "2019-10-01",
+    "hasta": "2026-06-01"
+   },
+   "division": "test",
+   "politica": {
+    "nombre": "umbral_funding",
+    "params": {
+     "ventana": 21,
+     "entrada": 0.1,
+     "salida": 0.03,
+     "permanencia_h": 72,
+     "rho": 1.0,
+     "banda": [
+      0.5,
+      1.5
+     ]
+    }
+   },
+   "costes": {
+    "spot_comision_bps": 10.0,
+    "spot_slippage_bps": 5.0,
+    "perp_comision_bps": 5.0,
+    "perp_slippage_bps": 5.0
+   },
+   "filtros": {},
+   "motor": {
+    "capital": 10000.0,
+    "mmr": 0.01,
+    "apalancamiento_max": 2.0,
+    "al_inviable": "omitir"
+   }
+  },
+  {
+   "nombre": "umbral__costes_x05",
+   "datos": {
+    "fuente": "binance_vision",
+    "directorio": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/caracteristicas/bajista_suave_202_nulo",
+    "desde": "2019-10-01",
+    "hasta": "2026-06-01"
+   },
+   "division": "test",
+   "politica": {
+    "nombre": "umbral_funding",
+    "params": {
+     "ventana": 21,
+     "entrada": 0.1,
+     "salida": 0.03,
+     "permanencia_h": 72,
+     "rho": 1.0,
+     "banda": [
+      0.5,
+      1.5
+     ]
+    }
+   },
+   "costes": {
+    "spot_comision_bps": 10.0,
+    "spot_slippage_bps": 5.0,
+    "perp_comision_bps": 5.0,
+    "perp_slippage_bps": 5.0,
+    "multiplicador": 0.5
+   },
+   "filtros": {},
+   "motor": {
+    "capital": 10000.0,
+    "mmr": 0.01,
+    "apalancamiento_max": 2.0,
+    "al_inviable": "omitir"
+   }
+  },
+  {
+   "nombre": "umbral__costes_x2",
+   "datos": {
+    "fuente": "binance_vision",
+    "directorio": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/caracteristicas/bajista_suave_202_nulo",
+    "desde": "2019-10-01",
+    "hasta": "2026-06-01"
+   },
+   "division": "test",
+   "politica": {
+    "nombre": "umbral_funding",
+    "params": {
+     "ventana": 21,
+     "entrada": 0.1,
+     "salida": 0.03,
+     "permanencia_h": 72,
+     "rho": 1.0,
+     "banda": [
+      0.5,
+      1.5
+     ]
+    }
+   },
+   "costes": {
+    "spot_comision_bps": 10.0,
+    "spot_slippage_bps": 5.0,
+    "perp_comision_bps": 5.0,
+    "perp_slippage_bps": 5.0,
+    "multiplicador": 2.0
+   },
+   "filtros": {},
+   "motor": {
+    "capital": 10000.0,
+    "mmr": 0.01,
+    "apalancamiento_max": 2.0,
+    "al_inviable": "omitir"
+   }
+  },
+  {
+   "nombre": "umbral__costes_x3",
+   "datos": {
+    "fuente": "binance_vision",
+    "directorio": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/caracteristicas/bajista_suave_202_nulo",
+    "desde": "2019-10-01",
+    "hasta": "2026-06-01"
+   },
+   "division": "test",
+   "politica": {
+    "nombre": "umbral_funding",
+    "params": {
+     "ventana": 21,
+     "entrada": 0.1,
+     "salida": 0.03,
+     "permanencia_h": 72,
+     "rho": 1.0,
+     "banda": [
+      0.5,
+      1.5
+     ]
+    }
+   },
+   "costes": {
+    "spot_comision_bps": 10.0,
+    "spot_slippage_bps": 5.0,
+    "perp_comision_bps": 5.0,
+    "perp_slippage_bps": 5.0,
+    "multiplicador": 3.0
+   },
+   "filtros": {},
+   "motor": {
+    "capital": 10000.0,
+    "mmr": 0.01,
+    "apalancamiento_max": 2.0,
+    "al_inviable": "omitir"
+   }
+  },
+  {
+   "nombre": "umbral__retraso_1h",
+   "datos": {
+    "fuente": "binance_vision",
+    "directorio": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/caracteristicas/bajista_suave_202_nulo",
+    "desde": "2019-10-01",
+    "hasta": "2026-06-01"
+   },
+   "division": "test",
+   "politica": {
+    "nombre": "umbral_funding",
+    "params": {
+     "ventana": 21,
+     "entrada": 0.1,
+     "salida": 0.03,
+     "permanencia_h": 72,
+     "rho": 1.0,
+     "banda": [
+      0.5,
+      1.5
+     ]
+    }
+   },
+   "costes": {
+    "spot_comision_bps": 10.0,
+    "spot_slippage_bps": 5.0,
+    "perp_comision_bps": 5.0,
+    "perp_slippage_bps": 5.0
+   },
+   "filtros": {},
+   "motor": {
+    "capital": 10000.0,
+    "mmr": 0.01,
+    "apalancamiento_max": 2.0,
+    "al_inviable": "omitir",
+    "retraso_barras": 1
+   }
+  },
+  {
+   "nombre": "umbral__retraso_3h",
+   "datos": {
+    "fuente": "binance_vision",
+    "directorio": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/caracteristicas/bajista_suave_202_nulo",
+    "desde": "2019-10-01",
+    "hasta": "2026-06-01"
+   },
+   "division": "test",
+   "politica": {
+    "nombre": "umbral_funding",
+    "params": {
+     "ventana": 21,
+     "entrada": 0.1,
+     "salida": 0.03,
+     "permanencia_h": 72,
+     "rho": 1.0,
+     "banda": [
+      0.5,
+      1.5
+     ]
+    }
+   },
+   "costes": {
+    "spot_comision_bps": 10.0,
+    "spot_slippage_bps": 5.0,
+    "perp_comision_bps": 5.0,
+    "perp_slippage_bps": 5.0
+   },
+   "filtros": {},
+   "motor": {
+    "capital": 10000.0,
+    "mmr": 0.01,
+    "apalancamiento_max": 2.0,
+    "al_inviable": "omitir",
+    "retraso_barras": 3
+   }
+  },
+  {
+   "nombre": "umbral__pata_adversa",
+   "datos": {
+    "fuente": "binance_vision",
+    "directorio": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/caracteristicas/bajista_suave_202_nulo",
+    "desde": "2019-10-01",
+    "hasta": "2026-06-01"
+   },
+   "division": "test",
+   "politica": {
+    "nombre": "umbral_funding",
+    "params": {
+     "ventana": 21,
+     "entrada": 0.1,
+     "salida": 0.03,
+     "permanencia_h": 72,
+     "rho": 1.0,
+     "banda": [
+      0.5,
+      1.5
+     ]
+    }
+   },
+   "costes": {
+    "spot_comision_bps": 10.0,
+    "spot_slippage_bps": 5.0,
+    "perp_comision_bps": 5.0,
+    "perp_slippage_bps": 5.0
+   },
+   "filtros": {},
+   "motor": {
+    "capital": 10000.0,
+    "mmr": 0.01,
+    "apalancamiento_max": 2.0,
+    "al_inviable": "omitir",
+    "pata_perp_adversa": true
+   }
+  },
+  {
+   "nombre": "umbral__funding_x075",
+   "datos": {
+    "fuente": "binance_vision",
+    "directorio": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/caracteristicas/bajista_suave_202_nulo",
+    "desde": "2019-10-01",
+    "hasta": "2026-06-01"
+   },
+   "division": "test",
+   "politica": {
+    "nombre": "umbral_funding",
+    "params": {
+     "ventana": 21,
+     "entrada": 0.1,
+     "salida": 0.03,
+     "permanencia_h": 72,
+     "rho": 1.0,
+     "banda": [
+      0.5,
+      1.5
+     ]
+    }
+   },
+   "costes": {
+    "spot_comision_bps": 10.0,
+    "spot_slippage_bps": 5.0,
+    "perp_comision_bps": 5.0,
+    "perp_slippage_bps": 5.0
+   },
+   "filtros": {},
+   "motor": {
+    "capital": 10000.0,
+    "mmr": 0.01,
+    "apalancamiento_max": 2.0,
+    "al_inviable": "omitir"
+   },
+   "estres": {
+    "funding_factor": 0.75
+   }
+  },
+  {
+   "nombre": "umbral__nocional_min_perp_5",
+   "datos": {
+    "fuente": "binance_vision",
+    "directorio": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/caracteristicas/bajista_suave_202_nulo",
+    "desde": "2019-10-01",
+    "hasta": "2026-06-01"
+   },
+   "division": "test",
+   "politica": {
+    "nombre": "umbral_funding",
+    "params": {
+     "ventana": 21,
+     "entrada": 0.1,
+     "salida": 0.03,
+     "permanencia_h": 72,
+     "rho": 1.0,
+     "banda": [
+      0.5,
+      1.5
+     ]
+    }
+   },
+   "costes": {
+    "spot_comision_bps": 10.0,
+    "spot_slippage_bps": 5.0,
+    "perp_comision_bps": 5.0,
+    "perp_slippage_bps": 5.0
+   },
+   "filtros": {
+    "nocional_min_perp": 5.0
+   },
+   "motor": {
+    "capital": 10000.0,
+    "mmr": 0.01,
+    "apalancamiento_max": 2.0,
+    "al_inviable": "omitir"
+   }
+  },
+  {
+   "nombre": "rev5__R0",
+   "datos": {
+    "fuente": "binance_vision",
+    "directorio": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/caracteristicas/bajista_suave_202_nulo",
+    "desde": "2019-10-01",
+    "hasta": "2026-06-01"
+   },
+   "division": "test",
+   "politica": {
+    "nombre": "siempre",
+    "params": {
+     "rho": 1.0,
+     "banda": [
+      0.5,
+      1.5
+     ]
+    }
+   },
+   "costes": {
+    "spot_comision_bps": 10.0,
+    "spot_slippage_bps": 5.0,
+    "perp_comision_bps": 5.0,
+    "perp_slippage_bps": 5.0
+   },
+   "filtros": {},
+   "motor": {
+    "capital": 10000.0,
+    "mmr": 0.01,
+    "apalancamiento_max": 2.0,
+    "al_inviable": "detener"
+   }
+  }
+ ]
+}

@@ -1,0 +1,824 @@
+{
+ "categoria": "sintetico",
+ "procedencia": "sintetico",
+ "via": "fabricado en formato oficial para ensayar el pipeline",
+ "prerregistro_sha256": "90642cd1c29c076243ca87e4ab3c014a7ea41fdf24d3249ff7cef56b144466bd",
+ "codigo_sha256": "2e35b68ff663b93698a3b38f78c17321e85bfe4af9885bfd5c5403c006220b00",
+ "fecha_utc": "2026-10-16T19:35:16.877411+00:00",
+ "calidad_apta": true,
+ "manifiesto_sha256": "15c2cf5d4f0d8e896c617fdf9656e36e52545ad3e008eae79d8abf4c71f8f505",
+ "diagnostico_previo_desarrollo": {
+  "aplicable": true,
+  "bloque_dias": 7,
+  "bloques": 169,
+  "correlacion": -0.04051603105649912,
+  "fraccion_negativas": 0.1941638608305275,
+  "prediccion": "UmbralFunding no debería aportar (correlación < 0,2)"
+ },
+ "desarrollo": {
+  "rev5": {
+   "estado": "completada",
+   "final": 11016.98015745122,
+   "pnl_neto": 1016.9801574512203,
+   "cagr_neto": 0.030205150436056982,
+   "caida_maxima": 0.0019461431019367481,
+   "funding_neto": 1047.600339396219,
+   "funding_cobrado": 1707.2998566566164,
+   "funding_pagado": 659.699517260397,
+   "costes": 28.706301945000007,
+   "pnl_precio_patas": -1.9138799999986418,
+   "tiempo_en_mercado": 1.0,
+   "rent_capital_comprometido": 0.029365055893596084,
+   "liquidaciones": 0,
+   "entradas": 1,
+   "n_operaciones": 28,
+   "rotacion_anual": 0.6631149893309788,
+   "sharpe": 5.304126257739049,
+   "vol_anual": 0.005613340073540052,
+   "distancia_min_liquidacion": 0.8253879826747799,
+   "base_adversa_p95_bps": 16.276449229999276,
+   "por_ano": {
+    "2019": 0.015967281076675777,
+    "2020": 0.04204405903086261,
+    "2021": 0.024268557479845798,
+    "2022": 0.015974768131922223
+   },
+   "comparador_5": {
+    "final": 11720.99270479163,
+    "exceso_final": -704.0125473404096
+   },
+   "rev5_d1_d4": "DESCARTADA"
+  },
+  "umbral": {
+   "estado": "completada",
+   "final": 10345.514305509685,
+   "pnl_neto": 345.5143055096851,
+   "cagr_neto": 0.01049129325654663,
+   "caida_maxima": 0.01779417979060327,
+   "funding_neto": 1613.8503559597305,
+   "funding_cobrado": 2671.6066978145755,
+   "funding_pagado": 1057.756341854846,
+   "costes": 1267.6848004499998,
+   "pnl_precio_patas": -0.651250000045593,
+   "tiempo_en_mercado": 0.7690715864052471,
+   "rent_capital_comprometido": 0.013627165730882332,
+   "liquidaciones": 0,
+   "entradas": 48,
+   "n_operaciones": 116,
+   "rotacion_anual": 30.768500249707245,
+   "sharpe": 0.881105133249053,
+   "vol_anual": 0.011925345493992101,
+   "distancia_min_liquidacion": 0.47728666678918996,
+   "base_adversa_p95_bps": 13.31281936815801,
+   "por_ano": {
+    "2019": 0.001480293505175645,
+    "2020": 0.013289659305259605,
+    "2021": 0.0019228005218885347,
+    "2022": 0.0175173121918073
+   },
+   "comparador_5": {
+    "final": 11720.99270479163,
+    "exceso_final": -1375.4783992819448
+   },
+   "rev5_d1_d4": "DESCARTADA"
+  },
+  "umbral_menos_rev5": {
+   "pnl": -671.4658519415352,
+   "bootstrap": {
+    "aplicable": true,
+    "dias": 1188,
+    "media_diaria": -5.278460643056913e-05,
+    "media_anual": -0.019266381347157732,
+    "intervalo_anual": [
+     -0.029181228012528055,
+     -0.00949380413250292
+    ],
+    "p_mayor_que_cero": 0.0015,
+    "bloque": 20,
+    "remuestreos": 2000,
+    "semilla": 20261016,
+    "nivel": 0.9
+   }
+  }
+ },
+ "validacion": {
+  "rev5": {
+   "estado": "completada",
+   "final": 10721.415414362344,
+   "pnl_neto": 721.4154143623437,
+   "cagr_neto": 0.06631823484320032,
+   "caida_maxima": 0.0029546151645687413,
+   "funding_neto": 801.6025836523389,
+   "funding_cobrado": 1321.6859118701218,
+   "funding_pagado": 520.0833282177842,
+   "costes": 74.27641928999999,
+   "pnl_precio_patas": -5.910749999995275,
+   "tiempo_en_mercado": 1.0,
+   "rent_capital_comprometido": 0.0640984780218443,
+   "liquidaciones": 0,
+   "entradas": 1,
+   "n_operaciones": 16,
+   "rotacion_anual": 5.279943449822274,
+   "sharpe": 5.815364224841273,
+   "vol_anual": 0.011052034953165051,
+   "distancia_min_liquidacion": 0.4791946425108802,
+   "base_adversa_p95_bps": 31.086880872288017,
+   "por_ano": {
+    "2023": 0.06955834189075127,
+    "2024": 0.002415202092591384
+   },
+   "comparador_5": {
+    "final": 10543.541682443589,
+    "exceso_final": 177.87373191875486
+   },
+   "rev5_d1_d4": "NO DESCARTADA"
+  },
+  "umbral": {
+   "estado": "completada",
+   "final": 10187.158889579478,
+   "pnl_neto": 187.15888957947755,
+   "cagr_neto": 0.01724003262914775,
+   "caida_maxima": 0.01574947677619276,
+   "funding_neto": 613.7781726894781,
+   "funding_cobrado": 1053.9094973035267,
+   "funding_pagado": 440.13132461404894,
+   "costes": 425.91352310999997,
+   "pnl_precio_patas": -0.7057600000005664,
+   "tiempo_en_mercado": 0.8250026307481848,
+   "rent_capital_comprometido": 0.02068418365877566,
+   "liquidaciones": 0,
+   "entradas": 16,
+   "n_operaciones": 37,
+   "rotacion_anual": 31.06828692301622,
+   "sharpe": 1.330654947273813,
+   "vol_anual": 0.012907035185102564,
+   "distancia_min_liquidacion": 0.4757143666446022,
+   "base_adversa_p95_bps": 17.3934873045479,
+   "por_ano": {
+    "2023": 0.01931954147563042,
+    "2024": -0.0005922112675371682
+   },
+   "comparador_5": {
+    "final": 10543.541682443589,
+    "exceso_final": -356.38279286411125
+   },
+   "rev5_d1_d4": "DESCARTADA"
+  },
+  "umbral_menos_rev5": {
+   "pnl": -534.2565247828661,
+   "bootstrap": {
+    "aplicable": true,
+    "dias": 396,
+    "media_diaria": -0.00012903232453325328,
+    "media_anual": -0.04709679845463745,
+    "intervalo_anual": [
+     -0.06393773114650007,
+     -0.03090530043016212
+    ],
+    "p_mayor_que_cero": 0.0,
+    "bloque": 20,
+    "remuestreos": 2000,
+    "semilla": 20261016,
+    "nivel": 0.9
+   }
+  }
+ },
+ "test": {
+  "rev5": {
+   "estado": "completada",
+   "final": 11536.420831417427,
+   "pnl_neto": 1536.4208314174266,
+   "cagr_neto": 0.06322220725507233,
+   "caida_maxima": 0.00298695158965423,
+   "funding_neto": 1618.7950773974057,
+   "funding_cobrado": 2749.9946179736735,
+   "funding_pagado": 1131.1995405762639,
+   "costes": 73.00055598,
+   "pnl_precio_patas": -9.373689999979149,
+   "tiempo_en_mercado": 1.0,
+   "rent_capital_comprometido": 0.061641893248767676,
+   "liquidaciones": 0,
+   "entradas": 1,
+   "n_operaciones": 18,
+   "rotacion_anual": 2.3431096499820905,
+   "sharpe": 5.679821045414772,
+   "vol_anual": 0.010803957123748854,
+   "distancia_min_liquidacion": 0.46922310488359864,
+   "base_adversa_p95_bps": 14.305364511691383,
+   "por_ano": {
+    "2024": 0.05019826339496114,
+    "2025": 0.06563612505038297,
+    "2026": 0.030839044283777595
+   },
+   "comparador_5": {
+    "final": 11204.708875785174,
+    "exceso_final": 331.7119556322523
+   },
+   "rev5_d1_d4": "NO DESCARTADA"
+  },
+  "umbral": {
+   "estado": "completada",
+   "final": 10356.73204132133,
+   "pnl_neto": 356.73204132132923,
+   "cagr_neto": 0.015148230567857857,
+   "caida_maxima": 0.00978949357911063,
+   "funding_neto": 1172.0077988213527,
+   "funding_cobrado": 1974.6780851650685,
+   "funding_pagado": 802.6702863437166,
+   "costes": 838.9743674999996,
+   "pnl_precio_patas": 23.698609999976156,
+   "tiempo_en_mercado": 0.7536111247123342,
+   "rent_capital_comprometido": 0.02008807672595089,
+   "liquidaciones": 0,
+   "entradas": 32,
+   "n_operaciones": 74,
+   "rotacion_anual": 28.513570593437063,
+   "sharpe": 1.2988565976705568,
+   "vol_anual": 0.011626952295468649,
+   "distancia_min_liquidacion": 0.47574622562236346,
+   "base_adversa_p95_bps": 11.556240369797939,
+   "por_ano": {
+    "2024": 0.002349946040525408,
+    "2025": 0.01479518745231867,
+    "2026": 0.018180955720748626
+   },
+   "comparador_5": {
+    "final": 11204.708875785174,
+    "exceso_final": -847.9768344638451
+   },
+   "rev5_d1_d4": "DESCARTADA"
+  },
+  "bootstrap_umbral_menos_rev5": {
+   "aplicable": true,
+   "dias": 851,
+   "media_diaria": -0.00012674739546700636,
+   "media_anual": -0.04626279934545732,
+   "intervalo_anual": [
+    -0.05426654342135518,
+    -0.03876479662937323
+   ],
+   "p_mayor_que_cero": 0.0,
+   "bloque": 30,
+   "remuestreos": 2000,
+   "semilla": 20261016,
+   "nivel": 0.9
+  },
+  "sensibilidad": {
+   "costes_x05": {
+    "rev5": {
+     "estado": "completada",
+     "final": 11575.873450688645,
+     "pnl_neto": 1575.8734506886449,
+     "cagr_neto": 0.0647802875269059,
+     "caida_maxima": 0.002986812520896387,
+     "funding_neto": 1621.8388672036467,
+     "funding_cobrado": 2754.964565021432,
+     "funding_pagado": 1133.1256978177921,
+     "costes": 36.56867651500001,
+     "pnl_precio_patas": -9.396740000001827,
+     "tiempo_en_mercado": 1.0,
+     "rent_capital_comprometido": 0.06311521021902189,
+     "liquidaciones": 0,
+     "entradas": 1,
+     "n_operaciones": 18,
+     "rotacion_anual": 2.343433251386022,
+     "sharpe": 5.846172502269877,
+     "vol_anual": 0.010746940074755506,
+     "distancia_min_liquidacion": 0.4690284924641739,
+     "base_adversa_p95_bps": 14.305364511691383,
+     "por_ano": {
+      "2024": 0.05165806356485092,
+      "2025": 0.06668894139935344,
+      "2026": 0.031909050594027155
+     },
+     "comparador_5": {
+      "final": 11204.708875785174,
+      "exceso_final": 371.16457490347057
+     },
+     "rev5_d1_d4": "NO DESCARTADA"
+    },
+    "umbral": {
+     "estado": "completada",
+     "final": 10796.720776364326,
+     "pnl_neto": 796.7207763643255,
+     "cagr_neto": 0.03342703987354567,
+     "caida_maxima": 0.004448164033470037,
+     "funding_neto": 1201.045634244316,
+     "funding_cobrado": 2021.574281600797,
+     "funding_pagado": 820.5286473564781,
+     "costes": 428.37671788000006,
+     "pnl_precio_patas": 24.051860000009526,
+     "tiempo_en_mercado": 0.7536111247123342,
+     "rent_capital_comprometido": 0.04382506539706707,
+     "liquidaciones": 0,
+     "entradas": 32,
+     "n_operaciones": 74,
+     "rotacion_anual": 28.47978604874475,
+     "sharpe": 3.2997501214517584,
+     "vol_anual": 0.009979575670350892,
+     "distancia_min_liquidacion": 0.4757619942809983,
+     "base_adversa_p95_bps": 11.556240369797939,
+     "por_ano": {
+      "2024": 0.02091767470739536,
+      "2025": 0.03374117997895665,
+      "2026": 0.023032262937645598
+     },
+     "comparador_5": {
+      "final": 11204.708875785174,
+      "exceso_final": -407.9880994208488
+     },
+     "rev5_d1_d4": "DESCARTADA"
+    },
+    "umbral_menos_rev5_pnl": -779.1526743243194
+   },
+   "costes_x2": {
+    "rev5": {
+     "estado": "completada",
+     "final": 11457.904730067163,
+     "pnl_neto": 1457.9047300671627,
+     "cagr_neto": 0.0601123359134359,
+     "caida_maxima": 0.003976507835478649,
+     "funding_neto": 1612.6641708971604,
+     "funding_cobrado": 2739.988559696463,
+     "funding_pagado": 1127.3243887993042,
+     "costes": 145.43278083,
+     "pnl_precio_patas": -9.326659999997617,
+     "tiempo_en_mercado": 1.0,
+     "rent_capital_comprometido": 0.058694819542164905,
+     "liquidaciones": 0,
+     "entradas": 1,
+     "n_operaciones": 18,
+     "rotacion_anual": 2.3420902016008727,
+     "sharpe": 5.2908086352734935,
+     "vol_anual": 0.011045118153544696,
+     "distancia_min_liquidacion": 0.46974836254434105,
+     "base_adversa_p95_bps": 14.305364511691383,
+     "por_ano": {
+      "2024": 0.047284147483237504,
+      "2025": 0.06353784799193107,
+      "2026": 0.028697601897057057
+     },
+     "comparador_5": {
+      "final": 11204.708875785174,
+      "exceso_final": 253.19585428198843
+     },
+     "rev5_d1_d4": "NO DESCARTADA"
+    },
+    "umbral": {
+     "estado": "completada",
+     "final": 9529.803478748177,
+     "pnl_neto": -470.19652125182256,
+     "cagr_neto": -0.020445701496356272,
+     "caida_maxima": 0.057206530223571805,
+     "funding_neto": 1116.5334256381846,
+     "funding_cobrado": 1885.0075061471007,
+     "funding_pagado": 768.4740805089183,
+     "costes": 1609.7439968900003,
+     "pnl_precio_patas": 23.014049999993176,
+     "tiempo_en_mercado": 0.7536111247123342,
+     "rent_capital_comprometido": -0.02773543338457003,
+     "liquidaciones": 0,
+     "entradas": 32,
+     "n_operaciones": 74,
+     "rotacion_anual": 28.58036773989463,
+     "sharpe": -1.2516982119448712,
+     "vol_anual": 0.016395022591814166,
+     "distancia_min_liquidacion": 0.4757700750912479,
+     "base_adversa_p95_bps": 11.556240369797939,
+     "por_ano": {
+      "2024": -0.03377879799084982,
+      "2025": -0.022060165290615052,
+      "2026": 0.008544917227967241
+     },
+     "comparador_5": {
+      "final": 11204.708875785174,
+      "exceso_final": -1674.9053970369969
+     },
+     "rev5_d1_d4": "DESCARTADA"
+    },
+    "umbral_menos_rev5_pnl": -1928.1012513189853
+   },
+   "costes_x3": {
+    "rev5": {
+     "estado": "completada",
+     "final": 11380.005901813365,
+     "pnl_neto": 1380.0059018133652,
+     "cagr_neto": 0.057014863473574984,
+     "caida_maxima": 0.005216532690430209,
+     "funding_neto": 1606.6091092383697,
+     "funding_cobrado": 2730.101608736348,
+     "funding_pagado": 1123.4924994979754,
+     "costes": 217.32231742500002,
+     "pnl_precio_patas": -9.280890000004462,
+     "tiempo_en_mercado": 1.0,
+     "rent_capital_comprometido": 0.05575109547040845,
+     "liquidaciones": 0,
+     "entradas": 1,
+     "n_operaciones": 18,
+     "rotacion_anual": 2.3412954797003973,
+     "sharpe": 4.85002273532745,
+     "vol_anual": 0.011446482861553035,
+     "distancia_min_liquidacion": 0.4700007766977885,
+     "base_adversa_p95_bps": 14.305364511691383,
+     "por_ano": {
+      "2024": 0.044381309626424725,
+      "2025": 0.06144885668059197,
+      "2026": 0.026559963919200902
+     },
+     "comparador_5": {
+      "final": 11204.708875785174,
+      "exceso_final": 175.29702602819088
+     },
+     "rev5_d1_d4": "DESCARTADA"
+    },
+    "umbral": {
+     "estado": "completada",
+     "final": 8768.887126774851,
+     "pnl_neto": -1231.112873225149,
+     "cagr_neto": -0.05479223620178908,
+     "caida_maxima": 0.1256471480356055,
+     "funding_neto": 1064.3491736298463,
+     "funding_cobrado": 1800.5402322070192,
+     "funding_pagado": 736.1910585771732,
+     "costes": 2317.815576855001,
+     "pnl_precio_patas": 22.35353000000532,
+     "tiempo_en_mercado": 0.7536111247123342,
+     "rent_capital_comprometido": -0.07602288062228933,
+     "liquidaciones": 0,
+     "entradas": 32,
+     "n_operaciones": 74,
+     "rotacion_anual": 28.64582240360688,
+     "sharpe": -2.546422607662674,
+     "vol_anual": 0.02203110566584924,
+     "distancia_min_liquidacion": 0.47575357617239766,
+     "base_adversa_p95_bps": 11.556240369797939,
+     "por_ano": {
+      "2024": -0.06860517245056941,
+      "2025": -0.057575199907610175,
+      "2026": -0.0010035338416464201
+     },
+     "comparador_5": {
+      "final": 11204.708875785174,
+      "exceso_final": -2435.8217490103234
+     },
+     "rev5_d1_d4": "DESCARTADA"
+    },
+    "umbral_menos_rev5_pnl": -2611.1187750385143
+   },
+   "retraso_1h": {
+    "rev5": {
+     "estado": "completada",
+     "final": 11537.052558829406,
+     "pnl_neto": 1537.0525588294058,
+     "cagr_neto": 0.06324717966467097,
+     "caida_maxima": 0.0029932969297317147,
+     "funding_neto": 1618.1749034044112,
+     "funding_cobrado": 2750.9894708366737,
+     "funding_pagado": 1132.8145674322639,
+     "costes": 72.879564575,
+     "pnl_precio_patas": -8.242780000005396,
+     "tiempo_en_mercado": 0.9999510355971208,
+     "rent_capital_comprometido": 0.061663348710329656,
+     "liquidaciones": 0,
+     "entradas": 1,
+     "n_operaciones": 18,
+     "rotacion_anual": 2.3389773099388433,
+     "sharpe": 5.664168515774112,
+     "vol_anual": 0.010838025226415537,
+     "distancia_min_liquidacion": 0.46951012703686823,
+     "base_adversa_p95_bps": 15.004413062665641,
+     "por_ano": {
+      "2024": 0.05029607865960428,
+      "2025": 0.06576649730745565,
+      "2026": 0.0306733890995603
+     },
+     "comparador_5": {
+      "final": 11204.708875785174,
+      "exceso_final": 332.3436830442315
+     },
+     "rev5_d1_d4": "NO DESCARTADA"
+    },
+    "umbral": {
+     "estado": "completada",
+     "final": 10351.568349451358,
+     "pnl_neto": 351.5683494513578,
+     "cagr_neto": 0.014931103759163733,
+     "caida_maxima": 0.009668556227062086,
+     "funding_neto": 1172.2451507313517,
+     "funding_cobrado": 1974.8761080623372,
+     "funding_pagado": 802.6309573309849,
+     "costes": 839.8941012799996,
+     "pnl_precio_patas": 19.217300000005707,
+     "tiempo_en_mercado": 0.753562160309455,
+     "rent_capital_comprometido": 0.019799916869839593,
+     "liquidaciones": 0,
+     "entradas": 32,
+     "n_operaciones": 74,
+     "rotacion_anual": 28.54684001127459,
+     "sharpe": 1.2756345616401277,
+     "vol_anual": 0.011671330819435121,
+     "distancia_min_liquidacion": 0.474477062472624,
+     "base_adversa_p95_bps": 13.089494745503675,
+     "por_ano": {
+      "2024": 0.002606751140062924,
+      "2025": 0.014307560283629117,
+      "2026": 0.01790176359917872
+     },
+     "comparador_5": {
+      "final": 11204.708875785174,
+      "exceso_final": -853.1405263338165
+     },
+     "rev5_d1_d4": "DESCARTADA"
+    },
+    "umbral_menos_rev5_pnl": -1185.484209378048
+   },
+   "retraso_3h": {
+    "rev5": {
+     "estado": "completada",
+     "final": 11542.9922335507,
+     "pnl_neto": 1542.9922335507,
+     "cagr_neto": 0.06348193894458398,
+     "caida_maxima": 0.002993483126546126,
+     "funding_neto": 1624.1773899106838,
+     "funding_cobrado": 2760.398071869199,
+     "funding_pagado": 1136.2206819585153,
+     "costes": 72.99799636,
+     "pnl_precio_patas": -8.187159999983919,
+     "tiempo_en_mercado": 0.9998531067913626,
+     "rent_capital_comprometido": 0.06189746925787353,
+     "liquidaciones": 0,
+     "entradas": 1,
+     "n_operaciones": 18,
+     "rotacion_anual": 2.3424420649120927,
+     "sharpe": 5.662943214696049,
+     "vol_anual": 0.010879439265074462,
+     "distancia_min_liquidacion": 0.4587107234225247,
+     "base_adversa_p95_bps": 16.514806378131667,
+     "por_ano": {
+      "2024": 0.05042381411930652,
+      "2025": 0.06583222138821432,
+      "2026": 0.03101503622510604
+     },
+     "comparador_5": {
+      "final": 11204.708875785174,
+      "exceso_final": 338.2833577655256
+     },
+     "rev5_d1_d4": "NO DESCARTADA"
+    },
+    "umbral": {
+     "estado": "completada",
+     "final": 10340.939591614053,
+     "pnl_neto": 340.9395916140529,
+     "cagr_neto": 0.014483982966660536,
+     "caida_maxima": 0.009553443035290043,
+     "funding_neto": 1171.595480229049,
+     "funding_cobrado": 1973.8730325941892,
+     "funding_pagado": 802.2775523651399,
+     "costes": 837.912918615,
+     "pnl_precio_patas": 7.257030000003965,
+     "tiempo_en_mercado": 0.7534642315036968,
+     "rent_capital_comprometido": 0.019212620329283645,
+     "liquidaciones": 0,
+     "entradas": 32,
+     "n_operaciones": 74,
+     "rotacion_anual": 28.492028562313294,
+     "sharpe": 1.2382113087546815,
+     "vol_anual": 0.011668185820933624,
+     "distancia_min_liquidacion": 0.46283436846685855,
+     "base_adversa_p95_bps": 12.22897937599169,
+     "por_ano": {
+      "2024": 0.0021806939588850938,
+      "2025": 0.014348561413680905,
+      "2026": 0.017247781305838483
+     },
+     "comparador_5": {
+      "final": 11204.708875785174,
+      "exceso_final": -863.7692841711214
+     },
+     "rev5_d1_d4": "DESCARTADA"
+    },
+    "umbral_menos_rev5_pnl": -1202.052641936647
+   },
+   "pata_adversa": {
+    "rev5": {
+     "estado": "completada",
+     "final": 11418.560796440424,
+     "pnl_neto": 1418.5607964404244,
+     "cagr_neto": 0.05854942077189995,
+     "caida_maxima": 0.004036183887167533,
+     "funding_neto": 1612.3668210354363,
+     "funding_cobrado": 2740.61827917814,
+     "funding_pagado": 1128.2514581427015,
+     "costes": 72.501384595,
+     "pnl_precio_patas": -121.30464000001187,
+     "tiempo_en_mercado": 1.0,
+     "rent_capital_comprometido": 0.057179561334929796,
+     "liquidaciones": 0,
+     "entradas": 1,
+     "n_operaciones": 18,
+     "rotacion_anual": 2.337975583627614,
+     "sharpe": 5.0253188654584635,
+     "vol_anual": 0.011335662061686501,
+     "distancia_min_liquidacion": 0.46903208260438367,
+     "base_adversa_p95_bps": 152.8027797546785,
+     "por_ano": {
+      "2024": 0.04702977172893519,
+      "2025": 0.06085849108743724,
+      "2026": 0.028004180974124937
+     },
+     "comparador_5": {
+      "final": 11204.708875785174,
+      "exceso_final": 213.85192065525007
+     },
+     "rev5_d1_d4": "DESCARTADA"
+    },
+    "umbral": {
+     "estado": "completada",
+     "final": 9243.313777321371,
+     "pnl_neto": -756.6862226786288,
+     "cagr_neto": -0.033186877971914774,
+     "caida_maxima": 0.07869732555629494,
+     "funding_neto": 1108.1560851863726,
+     "funding_cobrado": 1872.0492865716828,
+     "funding_pagado": 763.8932013853056,
+     "costes": 800.8667978649997,
+     "pnl_precio_patas": -1063.9755100000016,
+     "tiempo_en_mercado": 0.7536111247123342,
+     "rent_capital_comprometido": -0.04500330428360395,
+     "liquidaciones": 0,
+     "entradas": 32,
+     "n_operaciones": 74,
+     "rotacion_anual": 28.6551541321705,
+     "sharpe": -1.5670327322169866,
+     "vol_anual": 0.021389234160577173,
+     "distancia_min_liquidacion": 0.4753225883113408,
+     "base_adversa_p95_bps": 125.70896469990683,
+     "por_ano": {
+      "2024": -0.03411816470947471,
+      "2025": -0.04032236065777761,
+      "2026": -0.00280906566521677
+     },
+     "comparador_5": {
+      "final": 11204.708875785174,
+      "exceso_final": -1961.3950984638032
+     },
+     "rev5_d1_d4": "DESCARTADA"
+    },
+    "umbral_menos_rev5_pnl": -2175.247019119053
+   },
+   "funding_x075": {
+    "rev5": {
+     "estado": "completada",
+     "final": 11112.393715697675,
+     "pnl_neto": 1112.3937156976754,
+     "cagr_neto": 0.04628061422671159,
+     "caida_maxima": 0.0024719994053041816,
+     "funding_neto": 1191.392936402692,
+     "funding_cobrado": 2026.8973910371983,
+     "funding_pagado": 835.5044546345076,
+     "costes": 71.484320705,
+     "pnl_precio_patas": -7.514900000016567,
+     "tiempo_en_mercado": 1.0,
+     "rent_capital_comprometido": 0.04542623374531137,
+     "liquidaciones": 0,
+     "entradas": 1,
+     "n_operaciones": 18,
+     "rotacion_anual": 2.335399248192393,
+     "sharpe": 4.668510428747694,
+     "vol_anual": 0.009700992157034231,
+     "distancia_min_liquidacion": 0.4654745314257467,
+     "base_adversa_p95_bps": 14.305364511691383,
+     "por_ano": {
+      "2024": 0.03678970166342288,
+      "2025": 0.048475144503688616,
+      "2026": 0.022253970504808374
+     },
+     "comparador_5": {
+      "final": 11204.708875785174,
+      "exceso_final": -92.31516008749895
+     },
+     "rev5_d1_d4": "DESCARTADA"
+    },
+    "umbral": {
+     "estado": "completada",
+     "final": 9905.102275725105,
+     "pnl_neto": -94.89772427489515,
+     "cagr_neto": -0.004081515391251012,
+     "caida_maxima": 0.02348410036127524,
+     "funding_neto": 785.5616299800913,
+     "funding_cobrado": 1341.0885426108223,
+     "funding_pagado": 555.5269126307287,
+     "costes": 848.358504255,
+     "pnl_precio_patas": -32.10084999998651,
+     "tiempo_en_mercado": 0.6921118346961759,
+     "rent_capital_comprometido": -0.00594469649396332,
+     "liquidaciones": 0,
+     "entradas": 33,
+     "n_operaciones": 76,
+     "rotacion_anual": 29.41236902133195,
+     "sharpe": -0.37268478125924465,
+     "vol_anual": 0.010816633999546089,
+     "distancia_min_liquidacion": 0.46849150205996626,
+     "base_adversa_p95_bps": 11.884033938590136,
+     "por_ano": {
+      "2024": -0.014759143615741821,
+      "2025": -0.0017069823819434449,
+      "2026": 0.007067353859112391
+     },
+     "comparador_5": {
+      "final": 11204.708875785174,
+      "exceso_final": -1299.6066000600695
+     },
+     "rev5_d1_d4": "DESCARTADA"
+    },
+    "umbral_menos_rev5_pnl": -1207.2914399725705
+   },
+   "nocional_min_perp_5": {
+    "rev5": {
+     "estado": "completada",
+     "final": 11536.420831417427,
+     "pnl_neto": 1536.4208314174266,
+     "cagr_neto": 0.06322220725507233,
+     "caida_maxima": 0.00298695158965423,
+     "funding_neto": 1618.7950773974057,
+     "funding_cobrado": 2749.9946179736735,
+     "funding_pagado": 1131.1995405762639,
+     "costes": 73.00055598,
+     "pnl_precio_patas": -9.373689999979149,
+     "tiempo_en_mercado": 1.0,
+     "rent_capital_comprometido": 0.061641893248767676,
+     "liquidaciones": 0,
+     "entradas": 1,
+     "n_operaciones": 18,
+     "rotacion_anual": 2.3431096499820905,
+     "sharpe": 5.679821045414772,
+     "vol_anual": 0.010803957123748854,
+     "distancia_min_liquidacion": 0.46922310488359864,
+     "base_adversa_p95_bps": 14.305364511691383,
+     "por_ano": {
+      "2024": 0.05019826339496114,
+      "2025": 0.06563612505038297,
+      "2026": 0.030839044283777595
+     },
+     "comparador_5": {
+      "final": 11204.708875785174,
+      "exceso_final": 331.7119556322523
+     },
+     "rev5_d1_d4": "NO DESCARTADA"
+    },
+    "umbral": {
+     "estado": "completada",
+     "final": 10356.73204132133,
+     "pnl_neto": 356.73204132132923,
+     "cagr_neto": 0.015148230567857857,
+     "caida_maxima": 0.00978949357911063,
+     "funding_neto": 1172.0077988213527,
+     "funding_cobrado": 1974.6780851650685,
+     "funding_pagado": 802.6702863437166,
+     "costes": 838.9743674999996,
+     "pnl_precio_patas": 23.698609999976156,
+     "tiempo_en_mercado": 0.7536111247123342,
+     "rent_capital_comprometido": 0.02008807672595089,
+     "liquidaciones": 0,
+     "entradas": 32,
+     "n_operaciones": 74,
+     "rotacion_anual": 28.513570593437063,
+     "sharpe": 1.2988565976705568,
+     "vol_anual": 0.011626952295468649,
+     "distancia_min_liquidacion": 0.47574622562236346,
+     "base_adversa_p95_bps": 11.556240369797939,
+     "por_ano": {
+      "2024": 0.002349946040525408,
+      "2025": 0.01479518745231867,
+      "2026": 0.018180955720748626
+     },
+     "comparador_5": {
+      "final": 11204.708875785174,
+      "exceso_final": -847.9768344638451
+     },
+     "rev5_d1_d4": "DESCARTADA"
+    },
+    "umbral_menos_rev5_pnl": -1179.6887900960974
+   }
+  },
+  "rev5_R0_d1_d4": {
+   "resultado": "SIN VEREDICTO",
+   "criterios_activos": [
+    "D1"
+   ],
+   "banda": null
+  }
+ },
+ "conclusion": {
+  "P1_umbral_vs_rev5": "EVIDENCIA INSUFICIENTE",
+  "P2_carry_rev5": "EVIDENCIA INSUFICIENTE",
+  "motivo": "datos SINTÉTICOS: por definición no aportan evidencia económica (ensayo del pipeline)",
+  "detalles": {
+   "dif_pnl_test": -1179.6887900960974,
+   "p_dif_mayor_que_cero": 0.0,
+   "estres_ok": false,
+   "validacion_mismo_signo": false,
+   "riesgo_ok": true
+  }
+ }
+}

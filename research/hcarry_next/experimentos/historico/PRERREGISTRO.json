@@ -1,0 +1,165 @@
+{
+ "bootstrap": {
+  "bloque_dias": 30,
+  "remuestreos": 2000,
+  "semilla": 20261016
+ },
+ "costes_base": {
+  "perp_comision_bps": 5.0,
+  "perp_slippage_bps": 5.0,
+  "spot_comision_bps": 10.0,
+  "spot_slippage_bps": 5.0
+ },
+ "criterios": {
+  "EVIDENCIA INSUFICIENTE": [
+   "datos no históricos o calidad no apta, o resultado intermedio (0,5 ≤ P < 0,95 o fallo de solo algún estrés o de la validación)"
+  ],
+  "HIPÓTESIS NO RESPALDADA": [
+   "datos HISTÓRICOS y calidad apta, y en test: PnL neto de umbral ≤ rev5 o P(dif > 0) < 0,5"
+  ],
+  "P2_carry_rev5": "VENTAJA RESPALDADA si en test el CAGR neto de rev5 > 5 % y con costes ×2 > 0; NO RESPALDADA si el CAGR neto ≤ 0; si no, EVIDENCIA INSUFICIENTE",
+  "VENTAJA RESPALDADA": [
+   "datos HISTÓRICOS y calidad apta",
+   "test: PnL neto de umbral > rev5",
+   "test: P(diferencia diaria media > 0) ≥ 0,95",
+   "test: caída máxima de umbral ≤ caída de rev5 + 5 pp, y sin liquidaciones",
+   "test: umbral > rev5 también con costes ×2, con pata adversa y con retraso de 3 h",
+   "validación: umbral ≥ rev5 (mismo signo que en test)"
+  ]
+ },
+ "datos": {
+  "filtros_calidad": {
+   "base_mediana_abs_max": 0.002,
+   "coherencia_bloqueantes": [
+    "A6",
+    "P2"
+   ],
+   "funding_bloqueantes": [
+    "A2",
+    "A2b",
+    "A4",
+    "A7",
+    "A8"
+   ],
+   "horas_rellenadas_frac_max": 0.005,
+   "mark_perp_p99_abs_max": 0.01,
+   "racha_rellenada_max_h": 24
+  },
+  "fin": "2026-06-01",
+  "fuente": "data.binance.vision",
+  "inicio": "primer mes común de las series requeridas (y no antes de 2019-10-01)",
+  "procedencia_requerida_para_historico": "historico_oficial",
+  "series_requeridas": [
+   "spot",
+   "perp",
+   "mark",
+   "funding"
+  ],
+  "simbolo": "BTCUSDT"
+ },
+ "diagnostico_previo": {
+  "prediccion": "si la correlación es < 0,2, UmbralFunding no debería aportar ventaja",
+  "que": "correlación entre medias de funding de bloques consecutivos de 7 días y fracción de eventos negativos, SOLO en desarrollo"
+ },
+ "divisiones": {
+  "desarrollo": [
+   "2019-10-01",
+   "2023-01-01"
+  ],
+  "test": [
+   "2024-02-01",
+   "2026-06-01"
+  ],
+  "validacion": [
+   "2023-01-01",
+   "2024-02-01"
+  ]
+ },
+ "fecha": "2026-10-16",
+ "motor_base": {
+  "al_inviable": "omitir",
+  "apalancamiento_max": 2.0,
+  "capital": 10000.0,
+  "mmr": 0.01
+ },
+ "parametros_umbral_origen": "fijados a priori (valores por defecto del laboratorio), sin optimizar con datos reales",
+ "politicas": {
+  "rev5": {
+   "nombre": "siempre",
+   "params": {
+    "banda": [
+     0.5,
+     1.5
+    ],
+    "rho": 1.0
+   }
+  },
+  "umbral": {
+   "nombre": "umbral_funding",
+   "params": {
+    "banda": [
+     0.5,
+     1.5
+    ],
+    "entrada": 0.1,
+    "permanencia_h": 72,
+    "rho": 1.0,
+    "salida": 0.03,
+    "ventana": 21
+   }
+  }
+ },
+ "preguntas": [
+  "P1: ¿mejora UmbralFunding de forma neta y robusta al carry permanente de rev. 5, con los mismos datos, costes y restricciones?",
+  "P2: ¿tiene el carry permanente de rev. 5 una ventaja económica neta (CAGR neto > comparador del 5 % y > 0 con costes ×2)?"
+ ],
+ "rev5_r0": {
+  "motor": {
+   "al_inviable": "detener"
+  },
+  "uso": "solo para informar D1–D4 de rev. 5 (reconstrucción)"
+ },
+ "sensibilidad": {
+  "costes_x05": {
+   "costes": {
+    "multiplicador": 0.5
+   }
+  },
+  "costes_x2": {
+   "costes": {
+    "multiplicador": 2.0
+   }
+  },
+  "costes_x3": {
+   "costes": {
+    "multiplicador": 3.0
+   }
+  },
+  "funding_x075": {
+   "estres": {
+    "funding_factor": 0.75
+   }
+  },
+  "nocional_min_perp_5": {
+   "filtros": {
+    "nocional_min_perp": 5.0
+   }
+  },
+  "pata_adversa": {
+   "motor": {
+    "pata_perp_adversa": true
+   }
+  },
+  "retraso_1h": {
+   "motor": {
+    "retraso_barras": 1
+   }
+  },
+  "retraso_3h": {
+   "motor": {
+    "retraso_barras": 3
+   }
+  }
+ },
+ "version": 1
+}

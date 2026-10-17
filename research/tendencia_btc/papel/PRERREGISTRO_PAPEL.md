@@ -55,3 +55,15 @@ La salida incluye la huella del código y el hash de las reglas. Si alguno no co
   - cambiar reglas, parámetros o criterios;
   - usar cortes intermedios para ajustar nada;
   - evaluar dentro del período reservado.
+
+## Adenda 1 (2026-10-17): decisión del usuario y estado inicial — sin cambios en las reglas
+
+- **Rama elegida: A.** El usuario autoriza usar los **precios** del período reservado de H-CARRY solo como historia de la señal. Nada se evalúa dentro de ese período.
+  - Primera ejecución: **2026-10-18**, con la decisión tomada al cierre del 2026-10-17. Ese cierre es justo el día 180 de la historia que empieza el 2026-04-20.
+  - Evaluar con `rama="A"`. Las reglas (`d2e4e1fb…`) y el código (`73b22f3e…`) no cambiaron.
+- **Historia de la señal descargada:** `datos_papel/{BTCUSDT,ETHUSDT}`, 2026-04-20 → 2026-10-16. Son 180 archivos diarios oficiales por activo, sin ausentes; los manifiestos se versionan y los datos, no.
+- **Monitor del carry al 2026-10-01** (90 días: 2026-07-03 → 2026-09-30; fundingRate mensual oficial, cobertura 100 %): **6,5 % anual**. Por debajo del disparador del 12 %, así que **no se reabre H-CARRY**. También queda por debajo del ≈ 9,3 % que rev. 5 necesitaba para el 5 %.
+- **Plan acordado:** papel y monitor, sin más desarrollo.
+  - Primer corte con consecuencias a los 12 meses (2027-10-18). Revisión informativa a los 6 meses (2027-04-18).
+  - El monitor puede consultarse en cualquier momento.
+  - Script de estado: `papel/estado_inicial.py`, que no altera la huella de `src/`.

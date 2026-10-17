@@ -1,0 +1,1271 @@
+{
+ "archivos": [
+  {
+   "bytes": 237,
+   "checksum_oficial": "169292df6d76a897853e65e37533e7b9b1d58dc219a97a1bb7711bfd32e39f0c",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-04-20.zip",
+   "sha256": "169292df6d76a897853e65e37533e7b9b1d58dc219a97a1bb7711bfd32e39f0c",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "eb1783acdc9d19891b798a50e0359339908773b2658e1453e738fb5115b4c9a9",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-04-21.zip",
+   "sha256": "eb1783acdc9d19891b798a50e0359339908773b2658e1453e738fb5115b4c9a9",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "bbcb6c52e240cc42047495703f4fec6f0970cbebf379d1d431adcdc7c2814c73",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-04-22.zip",
+   "sha256": "bbcb6c52e240cc42047495703f4fec6f0970cbebf379d1d431adcdc7c2814c73",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 238,
+   "checksum_oficial": "e632ebf30586d022ccf4b949319ddd5e6c1b1968f427193f0c0242330365d1d3",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-04-23.zip",
+   "sha256": "e632ebf30586d022ccf4b949319ddd5e6c1b1968f427193f0c0242330365d1d3",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "43a9947c68ae68a0f8ed3156cd7187763545a7461ebfbe63063b00e08df25932",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-04-24.zip",
+   "sha256": "43a9947c68ae68a0f8ed3156cd7187763545a7461ebfbe63063b00e08df25932",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 234,
+   "checksum_oficial": "82ec4ecc54d586690e097b1da3141641ef8be15e4be7f5b3f226116160c375b2",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-04-25.zip",
+   "sha256": "82ec4ecc54d586690e097b1da3141641ef8be15e4be7f5b3f226116160c375b2",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "942440e9d9b6e241d4cf2622c720670b7bc80564366396d1bc5aa7a9afbec58f",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-04-26.zip",
+   "sha256": "942440e9d9b6e241d4cf2622c720670b7bc80564366396d1bc5aa7a9afbec58f",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 237,
+   "checksum_oficial": "febb63ff04b66dfbd7c46b19f3a4be46dd244b892ace93bd28ded273ffd5abde",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-04-27.zip",
+   "sha256": "febb63ff04b66dfbd7c46b19f3a4be46dd244b892ace93bd28ded273ffd5abde",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 237,
+   "checksum_oficial": "aad97f6b0c13fba4e71edac68433f92520e9b023266415402f89cfc44c54a10d",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-04-28.zip",
+   "sha256": "aad97f6b0c13fba4e71edac68433f92520e9b023266415402f89cfc44c54a10d",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 237,
+   "checksum_oficial": "46a99c904ddcf94299c68e3130a7b561ee56ad604cea6d8487882c3affec0906",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-04-29.zip",
+   "sha256": "46a99c904ddcf94299c68e3130a7b561ee56ad604cea6d8487882c3affec0906",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 233,
+   "checksum_oficial": "66542fc0928751997f6ef4a0f9010c785e3fdd3fd62b1f237be6b333d509bf33",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-04-30.zip",
+   "sha256": "66542fc0928751997f6ef4a0f9010c785e3fdd3fd62b1f237be6b333d509bf33",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "48f591d12ecaff6054f64bf6f58a203e67cda91d4ffb8d1206351aa90da3aa70",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-05-01.zip",
+   "sha256": "48f591d12ecaff6054f64bf6f58a203e67cda91d4ffb8d1206351aa90da3aa70",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "5271fe92792af106069b73ecbf74f633a576a8ab8928bf6bb2d0a890ec6db8f5",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-05-02.zip",
+   "sha256": "5271fe92792af106069b73ecbf74f633a576a8ab8928bf6bb2d0a890ec6db8f5",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "b8c6c7daba740b0cad43e2fed7ee26b5fbe19a84f6673d1610e850587bd26c56",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-05-03.zip",
+   "sha256": "b8c6c7daba740b0cad43e2fed7ee26b5fbe19a84f6673d1610e850587bd26c56",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 237,
+   "checksum_oficial": "4d04341d6528ad663e173c8f4154c1b7897a65e7272d22349d91f0246033524e",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-05-04.zip",
+   "sha256": "4d04341d6528ad663e173c8f4154c1b7897a65e7272d22349d91f0246033524e",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 237,
+   "checksum_oficial": "4c7e5c8739093317cdc8d6ac567fcc57a545be74dc3d1f4e3d7bb354740d0d7d",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-05-05.zip",
+   "sha256": "4c7e5c8739093317cdc8d6ac567fcc57a545be74dc3d1f4e3d7bb354740d0d7d",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 237,
+   "checksum_oficial": "ee025cad04756ffdd0ec57dde2a6df6ecb27b3166a17b2f6cc6dfebf4a75b060",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-05-06.zip",
+   "sha256": "ee025cad04756ffdd0ec57dde2a6df6ecb27b3166a17b2f6cc6dfebf4a75b060",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "d1e7ea0ebb2a11365e2d38dceea6bd190a54342fc2e04252cc102d2781813cd0",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-05-07.zip",
+   "sha256": "d1e7ea0ebb2a11365e2d38dceea6bd190a54342fc2e04252cc102d2781813cd0",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 238,
+   "checksum_oficial": "2bbe8181f2965c868fb118a2518fecd9dfe8d39b815d5115e6d141f11df75abe",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-05-08.zip",
+   "sha256": "2bbe8181f2965c868fb118a2518fecd9dfe8d39b815d5115e6d141f11df75abe",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 233,
+   "checksum_oficial": "659cb22879dad3a781ec8011704f7668d893c3c8d81ca3b20f40e9b853b6c27e",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-05-09.zip",
+   "sha256": "659cb22879dad3a781ec8011704f7668d893c3c8d81ca3b20f40e9b853b6c27e",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "2433c99b1f3e7f8b91c734837b38880ebe8a2cad109cda4f25cae16b40227ba0",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-05-10.zip",
+   "sha256": "2433c99b1f3e7f8b91c734837b38880ebe8a2cad109cda4f25cae16b40227ba0",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "6e56a15b9f3807a7a7b15b3652855cfc9e27178a9eeeac52499350de79cbbac3",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-05-11.zip",
+   "sha256": "6e56a15b9f3807a7a7b15b3652855cfc9e27178a9eeeac52499350de79cbbac3",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "ee0dfc3a8f848e2b9dfd23592c10f5b47f42241fd479e22cbfe80b025d88dab0",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-05-12.zip",
+   "sha256": "ee0dfc3a8f848e2b9dfd23592c10f5b47f42241fd479e22cbfe80b025d88dab0",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "a4bad6826f90fbf4d8678c7edf72954762c052f81f7ebb4e04a0b2376ea872b4",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-05-13.zip",
+   "sha256": "a4bad6826f90fbf4d8678c7edf72954762c052f81f7ebb4e04a0b2376ea872b4",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 237,
+   "checksum_oficial": "8f1f666e2abfafd35530c19b64edc0d25ba921bac40f53f0b48fef29fee3cdeb",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-05-14.zip",
+   "sha256": "8f1f666e2abfafd35530c19b64edc0d25ba921bac40f53f0b48fef29fee3cdeb",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 234,
+   "checksum_oficial": "ee8e4726062884da357d9ad4c2a2966a81ecf18c2e6b0043d71ef82b2162222a",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-05-15.zip",
+   "sha256": "ee8e4726062884da357d9ad4c2a2966a81ecf18c2e6b0043d71ef82b2162222a",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 234,
+   "checksum_oficial": "4bc4c323edd14da96c1226c574d058fa658bbe4494a501fc5f1942a4415ec5aa",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-05-16.zip",
+   "sha256": "4bc4c323edd14da96c1226c574d058fa658bbe4494a501fc5f1942a4415ec5aa",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 233,
+   "checksum_oficial": "299461ac2b49d8716b06ae522035b40d3045dbb54d92a01ee56022f2d2681964",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-05-17.zip",
+   "sha256": "299461ac2b49d8716b06ae522035b40d3045dbb54d92a01ee56022f2d2681964",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "848ac5d332691923fe8c98e3ec82ee95cf4b570c414f826dc1cc492bd97c8bc6",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-05-18.zip",
+   "sha256": "848ac5d332691923fe8c98e3ec82ee95cf4b570c414f826dc1cc492bd97c8bc6",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 234,
+   "checksum_oficial": "59465a97ec35f804e1ae92b59d52fa8d3c9c2dacab64cb62e81f08b425b758b9",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-05-19.zip",
+   "sha256": "59465a97ec35f804e1ae92b59d52fa8d3c9c2dacab64cb62e81f08b425b758b9",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 234,
+   "checksum_oficial": "f278f2a8b576d05931139f12313ac89168c7f77386aff74e771654b6f36a7860",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-05-20.zip",
+   "sha256": "f278f2a8b576d05931139f12313ac89168c7f77386aff74e771654b6f36a7860",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "334a628905e7abc3a8f7fb86721bbade68e80f6ebfba8880dd2a1d8f26e255f8",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-05-21.zip",
+   "sha256": "334a628905e7abc3a8f7fb86721bbade68e80f6ebfba8880dd2a1d8f26e255f8",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "b29bdf74458978863d34eae1b64685d7e39a3caebf1c6f47fdbaa6858b2fd611",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-05-22.zip",
+   "sha256": "b29bdf74458978863d34eae1b64685d7e39a3caebf1c6f47fdbaa6858b2fd611",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 239,
+   "checksum_oficial": "fbb3e954e206ba08833011a45487e66426b3ac8805a0b6f8fb32c7a709498c3a",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-05-23.zip",
+   "sha256": "fbb3e954e206ba08833011a45487e66426b3ac8805a0b6f8fb32c7a709498c3a",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "45bbb5795c50b5738ad629adefaa0f50876d54e062ead7c6c6e4683d291900de",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-05-24.zip",
+   "sha256": "45bbb5795c50b5738ad629adefaa0f50876d54e062ead7c6c6e4683d291900de",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "15b7f1cbc668d277fc97ac737684b6c8a594ff72e99b0818d9a95bdb1326cc96",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-05-25.zip",
+   "sha256": "15b7f1cbc668d277fc97ac737684b6c8a594ff72e99b0818d9a95bdb1326cc96",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "27e231be6b89a7075a0b526baac9eb300a44c1d6b33b2f10e02edcd1272fe479",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-05-26.zip",
+   "sha256": "27e231be6b89a7075a0b526baac9eb300a44c1d6b33b2f10e02edcd1272fe479",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "37da4b26c391383c3574731eb8edda03e428fbabd599d7cdf2d3f6150a1d059a",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-05-27.zip",
+   "sha256": "37da4b26c391383c3574731eb8edda03e428fbabd599d7cdf2d3f6150a1d059a",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "314919159b30fd198cb1b41f5ab82ad400ed511c7846f6c207c94c9cff887ae8",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-05-28.zip",
+   "sha256": "314919159b30fd198cb1b41f5ab82ad400ed511c7846f6c207c94c9cff887ae8",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "fa746ade6a176382e75032753d0b6928a05000c117c8c168202683afc455fae6",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-05-29.zip",
+   "sha256": "fa746ade6a176382e75032753d0b6928a05000c117c8c168202683afc455fae6",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "3bbe1f34aca17fe2d19984e12aff41e7dc7425169704422d51002bc5d66903eb",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-05-30.zip",
+   "sha256": "3bbe1f34aca17fe2d19984e12aff41e7dc7425169704422d51002bc5d66903eb",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 237,
+   "checksum_oficial": "8acac6fde9994bc8d371d3835f6f3f0eb796e02d78fe9d8343f63a60a3a3ba50",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-05-31.zip",
+   "sha256": "8acac6fde9994bc8d371d3835f6f3f0eb796e02d78fe9d8343f63a60a3a3ba50",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "23fdea009b7c27397bf11daae385aeeefb4ddaf5d4e1a4fa0d35d412a685effc",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-06-01.zip",
+   "sha256": "23fdea009b7c27397bf11daae385aeeefb4ddaf5d4e1a4fa0d35d412a685effc",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 237,
+   "checksum_oficial": "7e7351865076f445a622f80adbe5ef7f88d4cd2dc2a24f587e3164f96df179a9",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-06-02.zip",
+   "sha256": "7e7351865076f445a622f80adbe5ef7f88d4cd2dc2a24f587e3164f96df179a9",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 238,
+   "checksum_oficial": "cf73651ebe80ea84ba7291a232239af1ca495587a9fe6932fdb7d401fafa31a6",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-06-03.zip",
+   "sha256": "cf73651ebe80ea84ba7291a232239af1ca495587a9fe6932fdb7d401fafa31a6",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 237,
+   "checksum_oficial": "6d20064bb549877084518e980cc290b475003d2a3fc848f53fe312b7a49655cb",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-06-04.zip",
+   "sha256": "6d20064bb549877084518e980cc290b475003d2a3fc848f53fe312b7a49655cb",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "1bb498498e625ff0958f15897649982948b8bcd7d37081a5ea7f7da7e8970d5b",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-06-05.zip",
+   "sha256": "1bb498498e625ff0958f15897649982948b8bcd7d37081a5ea7f7da7e8970d5b",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "0feb4e9cd2b20133577ea0173ba2bf9c1114c353c884621e0ee897e91d0a5680",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-06-06.zip",
+   "sha256": "0feb4e9cd2b20133577ea0173ba2bf9c1114c353c884621e0ee897e91d0a5680",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 237,
+   "checksum_oficial": "90e1cb163d1b16fe0ceff648230adff620e5ee7ba9e57cb9fbe024c65375e561",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-06-07.zip",
+   "sha256": "90e1cb163d1b16fe0ceff648230adff620e5ee7ba9e57cb9fbe024c65375e561",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 234,
+   "checksum_oficial": "a54413496d2bfcd2283dddc208f2903a58db865d2b5694c8a16fd34d0e598597",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-06-08.zip",
+   "sha256": "a54413496d2bfcd2283dddc208f2903a58db865d2b5694c8a16fd34d0e598597",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "92bf8e54a44640582d69a810fc964fa0ade78994bf711999cda5e469fb64571b",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-06-09.zip",
+   "sha256": "92bf8e54a44640582d69a810fc964fa0ade78994bf711999cda5e469fb64571b",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "8629ab8ea1de6420cfef918c07606308173844eb9b473a3b67bc85a17b5a5a15",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-06-10.zip",
+   "sha256": "8629ab8ea1de6420cfef918c07606308173844eb9b473a3b67bc85a17b5a5a15",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 234,
+   "checksum_oficial": "f310ff8a757b0123f89dc1801a032c01a30d21a1875cb27bbec4c8bd2b7838b4",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-06-11.zip",
+   "sha256": "f310ff8a757b0123f89dc1801a032c01a30d21a1875cb27bbec4c8bd2b7838b4",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "2d61daf08fded827809ea9dd33d69d2ce26f9d0573a4cbbfea25e86e8890ff10",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-06-12.zip",
+   "sha256": "2d61daf08fded827809ea9dd33d69d2ce26f9d0573a4cbbfea25e86e8890ff10",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 231,
+   "checksum_oficial": "9f9943c961b0be99a0dc4e5f33454402a67d590527260eb48618a16b9518a805",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-06-13.zip",
+   "sha256": "9f9943c961b0be99a0dc4e5f33454402a67d590527260eb48618a16b9518a805",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 232,
+   "checksum_oficial": "d2ea8451920a932bda966269eabb6038cd9f87bc625e102815213c92c7c02db1",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-06-14.zip",
+   "sha256": "d2ea8451920a932bda966269eabb6038cd9f87bc625e102815213c92c7c02db1",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 234,
+   "checksum_oficial": "a9213cb82e79482765eb194f3bbf4f3e494fdcf03b3a0e2a9b4cc3a8a389b299",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-06-15.zip",
+   "sha256": "a9213cb82e79482765eb194f3bbf4f3e494fdcf03b3a0e2a9b4cc3a8a389b299",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 232,
+   "checksum_oficial": "f216eac12758e0fe83414d811635f6e8466ba597103fb4d17d891d80383c70b3",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-06-16.zip",
+   "sha256": "f216eac12758e0fe83414d811635f6e8466ba597103fb4d17d891d80383c70b3",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 238,
+   "checksum_oficial": "5bf994ed3db8cc485a747a37c083d3f599679eb155552ca2683f391a00daba2e",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-06-17.zip",
+   "sha256": "5bf994ed3db8cc485a747a37c083d3f599679eb155552ca2683f391a00daba2e",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "4d6c176efb50f78228226664d18a451cf908c81cbe889f3e8c0a12c86902e34c",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-06-18.zip",
+   "sha256": "4d6c176efb50f78228226664d18a451cf908c81cbe889f3e8c0a12c86902e34c",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 232,
+   "checksum_oficial": "0f0f3b124c9c1aa6d6520b3deaed925e3a451dc6e6f3af1b0690901f224d4908",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-06-19.zip",
+   "sha256": "0f0f3b124c9c1aa6d6520b3deaed925e3a451dc6e6f3af1b0690901f224d4908",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 233,
+   "checksum_oficial": "a9966e2933d091d7c98247bf5bd74d0852f70d95f59ea497413ee6a32bb8898f",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-06-20.zip",
+   "sha256": "a9966e2933d091d7c98247bf5bd74d0852f70d95f59ea497413ee6a32bb8898f",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 230,
+   "checksum_oficial": "4118e891a54b92c0a7744e92f234fcd87971f3e37b91be4e0c2baa752e3b067e",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-06-21.zip",
+   "sha256": "4118e891a54b92c0a7744e92f234fcd87971f3e37b91be4e0c2baa752e3b067e",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 232,
+   "checksum_oficial": "a842cf8d9d83090e42bcf58ca5940e194a2cd3ad7114bdb949fbc902ee797eb3",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-06-22.zip",
+   "sha256": "a842cf8d9d83090e42bcf58ca5940e194a2cd3ad7114bdb949fbc902ee797eb3",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "01c69276bcb19e21c546cc405a8de37c5d97a7092cf09139ddfc9c84517789b0",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-06-23.zip",
+   "sha256": "01c69276bcb19e21c546cc405a8de37c5d97a7092cf09139ddfc9c84517789b0",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "74f78d2958e26c1b0471085088326d722bdaf2e0b2c7b558189a3e170db406e7",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-06-24.zip",
+   "sha256": "74f78d2958e26c1b0471085088326d722bdaf2e0b2c7b558189a3e170db406e7",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "9307e6e6949bdf6fe145a131209ab1f3785a77018fddb290d5892b1568c470cb",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-06-25.zip",
+   "sha256": "9307e6e6949bdf6fe145a131209ab1f3785a77018fddb290d5892b1568c470cb",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "ec7f3c443c8a6436a17c31ffcaee17fd6f10c2dd94fe90d10e9e822491ac656c",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-06-26.zip",
+   "sha256": "ec7f3c443c8a6436a17c31ffcaee17fd6f10c2dd94fe90d10e9e822491ac656c",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 234,
+   "checksum_oficial": "260621a6456836d01985c1d5a421bd6cab51d559344bd792b7d830cc94e33a96",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-06-27.zip",
+   "sha256": "260621a6456836d01985c1d5a421bd6cab51d559344bd792b7d830cc94e33a96",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 233,
+   "checksum_oficial": "0a272da44ab1f4f4baa2a4e1e9561dad2fd5fb7f6a34b4f8128cc055bb5552de",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-06-28.zip",
+   "sha256": "0a272da44ab1f4f4baa2a4e1e9561dad2fd5fb7f6a34b4f8128cc055bb5552de",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "4447b68aa0e4785912423d1de4f82012f7d9917cedb33149ed58b9798008cd75",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-06-29.zip",
+   "sha256": "4447b68aa0e4785912423d1de4f82012f7d9917cedb33149ed58b9798008cd75",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "b1795cb258190e5c48928883399bd3cb4708f7113f6b40ee2aa681b3de7450c2",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-06-30.zip",
+   "sha256": "b1795cb258190e5c48928883399bd3cb4708f7113f6b40ee2aa681b3de7450c2",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "0a3b3141a9ceb665f3dd09d0c285c05b03b405dd9ffdd9cb083474a10c6fef0c",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-07-01.zip",
+   "sha256": "0a3b3141a9ceb665f3dd09d0c285c05b03b405dd9ffdd9cb083474a10c6fef0c",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 237,
+   "checksum_oficial": "3ab0302432d18d3ec473b49129fbdcbdd473a77a739d92089270b6bb072e7b47",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-07-02.zip",
+   "sha256": "3ab0302432d18d3ec473b49129fbdcbdd473a77a739d92089270b6bb072e7b47",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 237,
+   "checksum_oficial": "c6021913cc02b26c44fa103772344f74c429d7a4eb4796d915a680fc59012d18",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-07-03.zip",
+   "sha256": "c6021913cc02b26c44fa103772344f74c429d7a4eb4796d915a680fc59012d18",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 232,
+   "checksum_oficial": "1c3e32fab70fb8528a90f5e0483b834ae908d8c36fcf3decaeb51660213fc02e",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-07-04.zip",
+   "sha256": "1c3e32fab70fb8528a90f5e0483b834ae908d8c36fcf3decaeb51660213fc02e",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "7883abda96e109ac8939a46b19bf66c1fd35c3dfd57a42c2466f7908eaf979f4",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-07-05.zip",
+   "sha256": "7883abda96e109ac8939a46b19bf66c1fd35c3dfd57a42c2466f7908eaf979f4",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "6aafd140bbd60a6dfbed41f7a2b9d3c4dff925c19199df6674ed540e7a7deb7a",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-07-06.zip",
+   "sha256": "6aafd140bbd60a6dfbed41f7a2b9d3c4dff925c19199df6674ed540e7a7deb7a",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "08136bd56156506ed6db25d41d54408393def9eaf8618d4ac77ef25a98a93332",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-07-07.zip",
+   "sha256": "08136bd56156506ed6db25d41d54408393def9eaf8618d4ac77ef25a98a93332",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 234,
+   "checksum_oficial": "24ab5156278e39b69e4383032c63f7b73cdeb76c00ba708f56cc454a7b103e15",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-07-08.zip",
+   "sha256": "24ab5156278e39b69e4383032c63f7b73cdeb76c00ba708f56cc454a7b103e15",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 234,
+   "checksum_oficial": "bdbba6a36e44c503c99b78e1c3f7a6074ea2a8aef0c1c42642bb70d19be2df94",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-07-09.zip",
+   "sha256": "bdbba6a36e44c503c99b78e1c3f7a6074ea2a8aef0c1c42642bb70d19be2df94",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "5da9ebbaf283b49921b08d0a4354433184d48b8608d3236106a1f71f15945921",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-07-10.zip",
+   "sha256": "5da9ebbaf283b49921b08d0a4354433184d48b8608d3236106a1f71f15945921",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 232,
+   "checksum_oficial": "64d743e7584a8f9e2bacac31355cdb5776ec291fd710bf67cf4a31f04646b619",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-07-11.zip",
+   "sha256": "64d743e7584a8f9e2bacac31355cdb5776ec291fd710bf67cf4a31f04646b619",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 233,
+   "checksum_oficial": "7c3ae8824fbe81d9fc4aceeb27540a7b3173bcf0b7d9a6f96c5b2df47acca44b",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-07-12.zip",
+   "sha256": "7c3ae8824fbe81d9fc4aceeb27540a7b3173bcf0b7d9a6f96c5b2df47acca44b",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 234,
+   "checksum_oficial": "fabbd09c20516b098036d4fe8fadf5ea50ee284c190267a1e113031f37c10eb0",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-07-13.zip",
+   "sha256": "fabbd09c20516b098036d4fe8fadf5ea50ee284c190267a1e113031f37c10eb0",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "6375b3dc233f4f501cf7d1ef660518e3086c91a6f00970601a2ec040949b5417",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-07-14.zip",
+   "sha256": "6375b3dc233f4f501cf7d1ef660518e3086c91a6f00970601a2ec040949b5417",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "41ad0bb960645f0831cea01f9500b8a2cb68cc466028659ca85305c263654763",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-07-15.zip",
+   "sha256": "41ad0bb960645f0831cea01f9500b8a2cb68cc466028659ca85305c263654763",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "feb19a77b78fb492090b1cc73dd7f4ea7552e83d928182df278fcafb273f822b",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-07-16.zip",
+   "sha256": "feb19a77b78fb492090b1cc73dd7f4ea7552e83d928182df278fcafb273f822b",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "6629155757d5127bf3167c1f36365cc06e1bad8b7f6dfd5d4c1aa5c29ac709ab",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-07-17.zip",
+   "sha256": "6629155757d5127bf3167c1f36365cc06e1bad8b7f6dfd5d4c1aa5c29ac709ab",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 232,
+   "checksum_oficial": "fd1d3b500488bf07f8f2c039a758a5da257eaac068327353984be81526455d73",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-07-18.zip",
+   "sha256": "fd1d3b500488bf07f8f2c039a758a5da257eaac068327353984be81526455d73",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 234,
+   "checksum_oficial": "93e02e9ae4f1f45fdc82ae6b76319c5b4e4fbf418be005c2715ad281e5f54b27",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-07-19.zip",
+   "sha256": "93e02e9ae4f1f45fdc82ae6b76319c5b4e4fbf418be005c2715ad281e5f54b27",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 234,
+   "checksum_oficial": "4c2a14d53a0285d062044ba2ed0bc34d48889b0043e8decb0712185a8da20bda",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-07-20.zip",
+   "sha256": "4c2a14d53a0285d062044ba2ed0bc34d48889b0043e8decb0712185a8da20bda",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "a81f91e8d5dcbe5508a5c2fffdfda93e173ee951b37883de122d5b9644bc9705",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-07-21.zip",
+   "sha256": "a81f91e8d5dcbe5508a5c2fffdfda93e173ee951b37883de122d5b9644bc9705",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "e6cbe1c554b563e43ab5cf6fa30d91613067d99809996064101831989092eb86",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-07-22.zip",
+   "sha256": "e6cbe1c554b563e43ab5cf6fa30d91613067d99809996064101831989092eb86",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "f3b60314756bd3a6317331c60d99d2eb7661d510cc0e4e0ad34def3c3fefd230",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-07-23.zip",
+   "sha256": "f3b60314756bd3a6317331c60d99d2eb7661d510cc0e4e0ad34def3c3fefd230",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "0405982e00dfbf0a443c2d26b55758d9a4fb79f9019061a5b9ea0a4e8b84e2ec",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-07-24.zip",
+   "sha256": "0405982e00dfbf0a443c2d26b55758d9a4fb79f9019061a5b9ea0a4e8b84e2ec",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "78ab6729c643a3a838c15756abe3ced02e2a9466a36f5ed0f8372518b3f68655",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-07-25.zip",
+   "sha256": "78ab6729c643a3a838c15756abe3ced02e2a9466a36f5ed0f8372518b3f68655",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "2ac12ae15734435e82cd67cf92da0e67a3cedad3ebbec6cc9e46d102a1c6a202",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-07-26.zip",
+   "sha256": "2ac12ae15734435e82cd67cf92da0e67a3cedad3ebbec6cc9e46d102a1c6a202",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 234,
+   "checksum_oficial": "ee6b5bb17665bd8ec091e9fb7cfd45106942a97a7e72cfaa1b4fb1d56486b6a8",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-07-27.zip",
+   "sha256": "ee6b5bb17665bd8ec091e9fb7cfd45106942a97a7e72cfaa1b4fb1d56486b6a8",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "6c505bd2a957236dda5bfb7de8f935f12d521d3a8447070fa5d55e0f9834caa9",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-07-28.zip",
+   "sha256": "6c505bd2a957236dda5bfb7de8f935f12d521d3a8447070fa5d55e0f9834caa9",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "d75a5cc01ee802197ca5567d40e276c782d4f1c5d3f9eeb381874100fb714fd7",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-07-29.zip",
+   "sha256": "d75a5cc01ee802197ca5567d40e276c782d4f1c5d3f9eeb381874100fb714fd7",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 233,
+   "checksum_oficial": "c463d0ebd80ffd2715fcebe91385e60ec2ce215431e7fc8e043fe42867fb945a",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-07-30.zip",
+   "sha256": "c463d0ebd80ffd2715fcebe91385e60ec2ce215431e7fc8e043fe42867fb945a",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "48233f1d85e5bfb70e4f1a540bf2399014c5b251f3b06849773d482a9cf348cb",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-07-31.zip",
+   "sha256": "48233f1d85e5bfb70e4f1a540bf2399014c5b251f3b06849773d482a9cf348cb",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "d5b3a7edaa8795b41e213042bb11e4e365914784baaf349f070d6a191c1f0489",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-08-01.zip",
+   "sha256": "d5b3a7edaa8795b41e213042bb11e4e365914784baaf349f070d6a191c1f0489",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 234,
+   "checksum_oficial": "7f7f76ec9f2dd7c785cbf8c7a87f333711e46f6c18925651fa8cd0e64c231697",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-08-02.zip",
+   "sha256": "7f7f76ec9f2dd7c785cbf8c7a87f333711e46f6c18925651fa8cd0e64c231697",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 232,
+   "checksum_oficial": "d4e1562f03131210bba4b66e6f6c23011bd4e6d48c7e3c75eb662e6f2ae543a0",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-08-03.zip",
+   "sha256": "d4e1562f03131210bba4b66e6f6c23011bd4e6d48c7e3c75eb662e6f2ae543a0",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 234,
+   "checksum_oficial": "9c6e2bacfd7c0862076a2f552a6cd0790e81803c7809b8426d29d8199399aa4a",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-08-04.zip",
+   "sha256": "9c6e2bacfd7c0862076a2f552a6cd0790e81803c7809b8426d29d8199399aa4a",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "73610bfce908494dfeec01895be0389fbd9e5801edb6349e59648972f24d101f",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-08-05.zip",
+   "sha256": "73610bfce908494dfeec01895be0389fbd9e5801edb6349e59648972f24d101f",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 231,
+   "checksum_oficial": "390a7f77cb0ac27a740ee24df975497cb282ed9e20308a3ea5bab3fa4f20cfdc",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-08-06.zip",
+   "sha256": "390a7f77cb0ac27a740ee24df975497cb282ed9e20308a3ea5bab3fa4f20cfdc",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "7679af254ceda85f55297006fe4c2338d3094886f15e2f521abdd1b5483f9dfa",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-08-07.zip",
+   "sha256": "7679af254ceda85f55297006fe4c2338d3094886f15e2f521abdd1b5483f9dfa",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 233,
+   "checksum_oficial": "95359438abcaa0cb87d3ca2913207dc117b4b1570b81e77e9c36d3dd98dc1d0b",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-08-08.zip",
+   "sha256": "95359438abcaa0cb87d3ca2913207dc117b4b1570b81e77e9c36d3dd98dc1d0b",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 233,
+   "checksum_oficial": "3283cd3c977110136158e9dc0648d096c837de9a1e715a143a615375e3d50d2e",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-08-09.zip",
+   "sha256": "3283cd3c977110136158e9dc0648d096c837de9a1e715a143a615375e3d50d2e",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 232,
+   "checksum_oficial": "a3b9cfa9790f3fafc223ddda835c8a5b736ccf076a16f41d83daf449b5a0dcb9",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-08-10.zip",
+   "sha256": "a3b9cfa9790f3fafc223ddda835c8a5b736ccf076a16f41d83daf449b5a0dcb9",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 234,
+   "checksum_oficial": "b49bf99c5da644022339561ffc1954c191b34c394c0308b790e0d9991b75f41b",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-08-11.zip",
+   "sha256": "b49bf99c5da644022339561ffc1954c191b34c394c0308b790e0d9991b75f41b",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "9b4aec2aa47e4d46256449f063e4045f08a0473ad556cd5583fa983b90bcaa53",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-08-12.zip",
+   "sha256": "9b4aec2aa47e4d46256449f063e4045f08a0473ad556cd5583fa983b90bcaa53",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "69d52a6adf3c40389650abaa52490aa14e3faae12a20755dce6241fcda834852",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-08-13.zip",
+   "sha256": "69d52a6adf3c40389650abaa52490aa14e3faae12a20755dce6241fcda834852",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 233,
+   "checksum_oficial": "b99a0eef2de5b33f279e6c84ac6ebd5aa984f6965afb928a692e29f84146aaf9",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-08-14.zip",
+   "sha256": "b99a0eef2de5b33f279e6c84ac6ebd5aa984f6965afb928a692e29f84146aaf9",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 231,
+   "checksum_oficial": "b497cb7af3e9eb637994d64388f361d1d73a0c66d1367da489c90cec2d461b1b",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-08-15.zip",
+   "sha256": "b497cb7af3e9eb637994d64388f361d1d73a0c66d1367da489c90cec2d461b1b",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 234,
+   "checksum_oficial": "68613d78f7a9cf7481cf366343f993a9d3cce36ed8857b3a70329669d48680ee",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-08-16.zip",
+   "sha256": "68613d78f7a9cf7481cf366343f993a9d3cce36ed8857b3a70329669d48680ee",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 234,
+   "checksum_oficial": "1406d425ed49690b39aeab1812b8969e072ee98458dcfa80ecb17247a95ed5a6",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-08-17.zip",
+   "sha256": "1406d425ed49690b39aeab1812b8969e072ee98458dcfa80ecb17247a95ed5a6",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 233,
+   "checksum_oficial": "e2bbbbeb5064679e58d3bfd4ef76dbbc4a99d8ebf6afe4ca2fca635cd6dc30b4",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-08-18.zip",
+   "sha256": "e2bbbbeb5064679e58d3bfd4ef76dbbc4a99d8ebf6afe4ca2fca635cd6dc30b4",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 239,
+   "checksum_oficial": "55599088f9a98f3dde36d39b703b12173e5622e2af5f17f950dfebae56ad7e6d",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-08-19.zip",
+   "sha256": "55599088f9a98f3dde36d39b703b12173e5622e2af5f17f950dfebae56ad7e6d",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 238,
+   "checksum_oficial": "9267e550c111c6b5f3132c4a5ede59144ee15cb877d66e7e83e56bb2f150ee93",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-08-20.zip",
+   "sha256": "9267e550c111c6b5f3132c4a5ede59144ee15cb877d66e7e83e56bb2f150ee93",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 237,
+   "checksum_oficial": "0ea565304206c7fd09458a5f2661cb060eb08dade7cc79174fa4df8502fdb0e7",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-08-21.zip",
+   "sha256": "0ea565304206c7fd09458a5f2661cb060eb08dade7cc79174fa4df8502fdb0e7",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 238,
+   "checksum_oficial": "2b4f5409a379ce518c1aed924af8a4d2f757180b23f44d544e29d726c98514c9",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-08-22.zip",
+   "sha256": "2b4f5409a379ce518c1aed924af8a4d2f757180b23f44d544e29d726c98514c9",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 238,
+   "checksum_oficial": "5ca67ccdd1e2a9d4a1f44687ecf68b735f60f4122a7fde42b7266d23f1b433f7",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-08-23.zip",
+   "sha256": "5ca67ccdd1e2a9d4a1f44687ecf68b735f60f4122a7fde42b7266d23f1b433f7",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 238,
+   "checksum_oficial": "6bcc4bd3b6d2f9c63da41f51ce7aae5bc657521c2e529749693b1eb769b87f6f",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-08-24.zip",
+   "sha256": "6bcc4bd3b6d2f9c63da41f51ce7aae5bc657521c2e529749693b1eb769b87f6f",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 234,
+   "checksum_oficial": "ab9dddde09a457031cd6071bb840197530653150f0955878e629f65a94c0d067",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-08-25.zip",
+   "sha256": "ab9dddde09a457031cd6071bb840197530653150f0955878e629f65a94c0d067",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 239,
+   "checksum_oficial": "fe10d534c0002870840e5a4d7d9486c0d8888bbdd290050872a90fe142b89194",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-08-26.zip",
+   "sha256": "fe10d534c0002870840e5a4d7d9486c0d8888bbdd290050872a90fe142b89194",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "2280fa8ccc940d13801fea70d3fcd11f3cfb95c849594942d74a65aaf86c9390",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-08-27.zip",
+   "sha256": "2280fa8ccc940d13801fea70d3fcd11f3cfb95c849594942d74a65aaf86c9390",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 238,
+   "checksum_oficial": "38e396f3dabea292d889d10c722517380ad0fda0c8664e72c174cfcd42911b0d",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-08-28.zip",
+   "sha256": "38e396f3dabea292d889d10c722517380ad0fda0c8664e72c174cfcd42911b0d",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "26442bb8a5cde9f57ea41a8789f8556ebeee195fed7ea91f6765040eaa2d9ce3",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-08-29.zip",
+   "sha256": "26442bb8a5cde9f57ea41a8789f8556ebeee195fed7ea91f6765040eaa2d9ce3",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "4cdaab033c483391569b085b715e31f0d6e320bc72c3af1c89e91fa737782880",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-08-30.zip",
+   "sha256": "4cdaab033c483391569b085b715e31f0d6e320bc72c3af1c89e91fa737782880",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "60972c14d1d1dfd7fa72959fde2e3084a7aebd54f9df0c45ca88c76096974cd9",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-08-31.zip",
+   "sha256": "60972c14d1d1dfd7fa72959fde2e3084a7aebd54f9df0c45ca88c76096974cd9",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "91291d94e38a32a46b5d864d02cce88a1971757482110a933dccd3998a452ae6",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-09-01.zip",
+   "sha256": "91291d94e38a32a46b5d864d02cce88a1971757482110a933dccd3998a452ae6",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "1ad373fd62fbab96b934286280ae120591630319d27305c3fb8221090f3ffa88",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-09-02.zip",
+   "sha256": "1ad373fd62fbab96b934286280ae120591630319d27305c3fb8221090f3ffa88",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 234,
+   "checksum_oficial": "60701dcc5809a98ec861b0ba42119575155a61a904a7ecb351e9820cbaba3304",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-09-03.zip",
+   "sha256": "60701dcc5809a98ec861b0ba42119575155a61a904a7ecb351e9820cbaba3304",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "4fe94e3d2bf7fd4c7ac9ea23878404c60845e438d70c5b0bf8e7dab30083801c",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-09-04.zip",
+   "sha256": "4fe94e3d2bf7fd4c7ac9ea23878404c60845e438d70c5b0bf8e7dab30083801c",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "3250f2aec2c7be6378bbb3672250befae0d5d57bc48c3ac6773fdfe196972ad9",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-09-05.zip",
+   "sha256": "3250f2aec2c7be6378bbb3672250befae0d5d57bc48c3ac6773fdfe196972ad9",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 237,
+   "checksum_oficial": "2143f6194778db63873d3d0a13b31187c049bc7d1ca8d769f4deb8b22c5959b5",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-09-06.zip",
+   "sha256": "2143f6194778db63873d3d0a13b31187c049bc7d1ca8d769f4deb8b22c5959b5",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "2ce434f22294dc3e4112bb644edbb874c58d8e1c2da7e6ff94d048752ecc59e3",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-09-07.zip",
+   "sha256": "2ce434f22294dc3e4112bb644edbb874c58d8e1c2da7e6ff94d048752ecc59e3",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "e777085096571a7d29dc0dfaa5470ff996aef0362386bfa59fbf7826ae8f402a",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-09-08.zip",
+   "sha256": "e777085096571a7d29dc0dfaa5470ff996aef0362386bfa59fbf7826ae8f402a",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "9346b61b178b1a5eb0c7226826bdb052c2cf275a9aab238839f94f0994883f36",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-09-09.zip",
+   "sha256": "9346b61b178b1a5eb0c7226826bdb052c2cf275a9aab238839f94f0994883f36",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "5bfb29193e8b2cc8c4c385e4ada93751256592df0e5f57efc0d31cd67b2dfbf3",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-09-10.zip",
+   "sha256": "5bfb29193e8b2cc8c4c385e4ada93751256592df0e5f57efc0d31cd67b2dfbf3",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 239,
+   "checksum_oficial": "579275ecea378225304b7fb6f06254a899df148fe0b3c8f854fb061ca82810c0",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-09-11.zip",
+   "sha256": "579275ecea378225304b7fb6f06254a899df148fe0b3c8f854fb061ca82810c0",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "3a310ed9c868d1a18159cc736071fcd71cd11bb3bd1b7e341a99db1f8a802192",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-09-12.zip",
+   "sha256": "3a310ed9c868d1a18159cc736071fcd71cd11bb3bd1b7e341a99db1f8a802192",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "6fd6079f339c863f99940837b2ac5f6a0ba6534179b8f96a343838b7dfe6bb14",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-09-13.zip",
+   "sha256": "6fd6079f339c863f99940837b2ac5f6a0ba6534179b8f96a343838b7dfe6bb14",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 238,
+   "checksum_oficial": "bf079214bb9d5a4fd9e37de00fcd405bff0e21b6010a26a133900f46749666c2",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-09-14.zip",
+   "sha256": "bf079214bb9d5a4fd9e37de00fcd405bff0e21b6010a26a133900f46749666c2",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "27792adf2fe6e613c2c1be3262b35db826922e08269b5b5b3080a1f9944b181e",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-09-15.zip",
+   "sha256": "27792adf2fe6e613c2c1be3262b35db826922e08269b5b5b3080a1f9944b181e",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "ed44dd09afe4ee843d5d4c8af491c8be5ec6284120a43580784f2eea9161386c",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-09-16.zip",
+   "sha256": "ed44dd09afe4ee843d5d4c8af491c8be5ec6284120a43580784f2eea9161386c",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "f6384e330d4e624354deb3de94cfab7d8880d5ef2049b75e4fdc664c3ecd929d",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-09-17.zip",
+   "sha256": "f6384e330d4e624354deb3de94cfab7d8880d5ef2049b75e4fdc664c3ecd929d",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 239,
+   "checksum_oficial": "56a3783b85483d693f1b4364c974d76b1c135e81a9ebc76bd863041ee23abbb4",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-09-18.zip",
+   "sha256": "56a3783b85483d693f1b4364c974d76b1c135e81a9ebc76bd863041ee23abbb4",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "9e1034393ebea514323977dac806074ea6d340bdc6c1ab43330bf1c51afafea8",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-09-19.zip",
+   "sha256": "9e1034393ebea514323977dac806074ea6d340bdc6c1ab43330bf1c51afafea8",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 234,
+   "checksum_oficial": "113ecb1603f8372afa92fedabd5fbd2bb323b5a36e78efe68c82db0318d217d7",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-09-20.zip",
+   "sha256": "113ecb1603f8372afa92fedabd5fbd2bb323b5a36e78efe68c82db0318d217d7",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 239,
+   "checksum_oficial": "93cc50ccbbd0f4b9c37e382d3aa7187a745a2894ddab0d13531b9aae944b7402",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-09-21.zip",
+   "sha256": "93cc50ccbbd0f4b9c37e382d3aa7187a745a2894ddab0d13531b9aae944b7402",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "0328d6de6d2cb011db3baa418efddd54cbdbe8975856b9b6ea5807d38343f335",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-09-22.zip",
+   "sha256": "0328d6de6d2cb011db3baa418efddd54cbdbe8975856b9b6ea5807d38343f335",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "09b3edb17ce7ea2d709c767eebce60af0769ae57fa8a62d3ccbb73cdb3af5284",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-09-23.zip",
+   "sha256": "09b3edb17ce7ea2d709c767eebce60af0769ae57fa8a62d3ccbb73cdb3af5284",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "0f252fc084ec0e65f8a6d411761e1324fc29c5683503bc78a001c73c9676da1c",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-09-24.zip",
+   "sha256": "0f252fc084ec0e65f8a6d411761e1324fc29c5683503bc78a001c73c9676da1c",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 238,
+   "checksum_oficial": "426c228ea915f2233b3c261786e3c863b1e2c243e5e09d0e6d840b244de1a810",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-09-25.zip",
+   "sha256": "426c228ea915f2233b3c261786e3c863b1e2c243e5e09d0e6d840b244de1a810",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "5860cfaa45402ca86e27917041a689d934f6d9a110e8f08fc7df0bff31d4efbf",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-09-26.zip",
+   "sha256": "5860cfaa45402ca86e27917041a689d934f6d9a110e8f08fc7df0bff31d4efbf",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "e20e3d17a54f30621a9d94e66c80c014b71d79af6cea14a5b77fdaa266805461",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-09-27.zip",
+   "sha256": "e20e3d17a54f30621a9d94e66c80c014b71d79af6cea14a5b77fdaa266805461",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "190a4708ffd712e8b67b08f4d18f13deb6877d553b79f81777ad18e968438db4",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-09-28.zip",
+   "sha256": "190a4708ffd712e8b67b08f4d18f13deb6877d553b79f81777ad18e968438db4",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "3a7ac83d59dd6440d0e2ef8aa8eaf4d4d5bade4da7e569fb9485b1181f2c88ac",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-09-29.zip",
+   "sha256": "3a7ac83d59dd6440d0e2ef8aa8eaf4d4d5bade4da7e569fb9485b1181f2c88ac",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 237,
+   "checksum_oficial": "aedbb3b65758d9dae8af2dfdd4d44d06d3a0abe99d34fd284a7879abd645f991",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-09-30.zip",
+   "sha256": "aedbb3b65758d9dae8af2dfdd4d44d06d3a0abe99d34fd284a7879abd645f991",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 237,
+   "checksum_oficial": "950b3ae5dbcdbc0d24a7c9f380b77efbaeb481b82abe1932a21f2142fd8dd229",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-10-01.zip",
+   "sha256": "950b3ae5dbcdbc0d24a7c9f380b77efbaeb481b82abe1932a21f2142fd8dd229",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 237,
+   "checksum_oficial": "cb40f462cf8e3649ddfc155dadea35f11e41dbae0bc233a89ab9622046e9ff9e",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-10-02.zip",
+   "sha256": "cb40f462cf8e3649ddfc155dadea35f11e41dbae0bc233a89ab9622046e9ff9e",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 233,
+   "checksum_oficial": "d6dd5cb0934c8a115c73b66adbd75e89675dc399bc982d582a87685075102c25",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-10-03.zip",
+   "sha256": "d6dd5cb0934c8a115c73b66adbd75e89675dc399bc982d582a87685075102c25",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "3cf5a3fc0505fb3ecd700df69ac0135d3a222e78f9781eb5d5e5619132159439",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-10-04.zip",
+   "sha256": "3cf5a3fc0505fb3ecd700df69ac0135d3a222e78f9781eb5d5e5619132159439",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "f14f79f261fe7d9df6f9bcc12a67f0bc97ca1f60dce891aa9c4a2cdf14198a84",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-10-05.zip",
+   "sha256": "f14f79f261fe7d9df6f9bcc12a67f0bc97ca1f60dce891aa9c4a2cdf14198a84",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 235,
+   "checksum_oficial": "a6dd358d14e474613e1fd3c915b4d62c67117c659c88a56971500614ff130559",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-10-06.zip",
+   "sha256": "a6dd358d14e474613e1fd3c915b4d62c67117c659c88a56971500614ff130559",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 238,
+   "checksum_oficial": "2c6e3ecc9835c837141ef7d1275a108d1e547c86153ada571728bcde2d1c617e",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-10-07.zip",
+   "sha256": "2c6e3ecc9835c837141ef7d1275a108d1e547c86153ada571728bcde2d1c617e",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 237,
+   "checksum_oficial": "27b3fed20183061db5f34341a4c82b118397c23cc7976a3f9128eb947758f30f",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-10-08.zip",
+   "sha256": "27b3fed20183061db5f34341a4c82b118397c23cc7976a3f9128eb947758f30f",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "f11d32f67942f6fe863146cc203237342447cc50b93b64da07c2e5cdb7791746",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-10-09.zip",
+   "sha256": "f11d32f67942f6fe863146cc203237342447cc50b93b64da07c2e5cdb7791746",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "9ab5f91484b55f3c652106923ffa4be50ad04fc8f63dedcd9a1c4dda2c329b6d",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-10-10.zip",
+   "sha256": "9ab5f91484b55f3c652106923ffa4be50ad04fc8f63dedcd9a1c4dda2c329b6d",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "6bdfb590454085ebd17e356667572b84860b99ee3a1693cd1db6054dbd60fed0",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-10-11.zip",
+   "sha256": "6bdfb590454085ebd17e356667572b84860b99ee3a1693cd1db6054dbd60fed0",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "58f74da33787c64220569443d781303778a882557e908a1779e7eb29ca6e8e81",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-10-12.zip",
+   "sha256": "58f74da33787c64220569443d781303778a882557e908a1779e7eb29ca6e8e81",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 238,
+   "checksum_oficial": "803071bd586bcef0cd8c0a1fd72f90bb3601a3b7478e201a932edb36f1f61fa3",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-10-13.zip",
+   "sha256": "803071bd586bcef0cd8c0a1fd72f90bb3601a3b7478e201a932edb36f1f61fa3",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 236,
+   "checksum_oficial": "ed08c738a90304e88fadbfcf2b97096137c1364ef54ec45308ed0f21e8ea63d7",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-10-14.zip",
+   "sha256": "ed08c738a90304e88fadbfcf2b97096137c1364ef54ec45308ed0f21e8ea63d7",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 239,
+   "checksum_oficial": "c07f7216fbc8602f4df5984fe8007d2c19c30d2d433c02bae5c2b859d4019b8b",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-10-15.zip",
+   "sha256": "c07f7216fbc8602f4df5984fe8007d2c19c30d2d433c02bae5c2b859d4019b8b",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 238,
+   "checksum_oficial": "422f8caf2dcc867ed44b41baf4bf19d4794238b0ccd43fd0d0e0eed0d2cafd59",
+   "ruta": "spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2026-10-16.zip",
+   "sha256": "422f8caf2dcc867ed44b41baf4bf19d4794238b0ccd43fd0d0e0eed0d2cafd59",
+   "tipo": "spot_1d"
+  }
+ ],
+ "ausentes": [],
+ "desde": "2026-04-20",
+ "fecha_utc": "2026-10-17T15:11:24.137561+00:00",
+ "hasta": "2026-10-17",
+ "procedencia": "historico_oficial",
+ "simbolo": "ETHUSDT",
+ "uso": "evaluaci\u00f3n en papel (prospectiva)"
+}

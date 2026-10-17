@@ -1,0 +1,29 @@
+{
+ "rama": "A (autorizada por el usuario el 2026-10-17: precios del reservado solo como historia)",
+ "prerregistro_sha256": "d2e4e1fb43b8219b80e19736ba7a9abed22d6e858f0b8955171496fa06e74939",
+ "codigo_sha256": "73b22f3e3a8f21513d5533fb11a7553becae30b87c8736fb6880bccc36c11d2b",
+ "simbolos": {
+  "BTCUSDT": {
+   "archivos": 180,
+   "no_publicados": [],
+   "dias_ausentes": [],
+   "apto": true,
+   "ultimo_cierre": "2026-10-16",
+   "exposicion_regla_tras_ultimo_cierre": null
+  },
+  "ETHUSDT": {
+   "archivos": 180,
+   "no_publicados": [],
+   "dias_ausentes": [],
+   "apto": true,
+   "ultimo_cierre": "2026-10-16",
+   "exposicion_regla_tras_ultimo_cierre": null
+  }
+ },
+ "monitor_carry_a_2026_10_01": {
+  "apr_90d": 0.0650387416666666,
+  "eventos": 270,
+  "cobertura": 1.0,
+  "disparador_12pct": false
+ }
+}

@@ -2,6 +2,7 @@
 
   python -m hcarry estructura
   python -m hcarry descargar  --destino datos/binance_vision --desde 2019-10 --hasta 2026-06     (necesita red)
+  python -m hcarry completar-diarios --directorio datos/binance_vision   (horas ausentes de los mensuales)
   python -m hcarry importar   --origen COPIA_APORTADA --destino datos/binance_vision     (verifica .CHECKSUM oficiales)
   python -m hcarry calidad    --directorio datos/binance_vision [--salida informe_calidad.md]
   python -m hcarry fabricar-sintetico --destino DIR [--semilla N]   (SINTÉTICO en formato oficial, para ensayos)
@@ -26,6 +27,9 @@ def main(argv: list[str] | None = None) -> int:
     d.add_argument("--destino", type=Path, required=True)
     d.add_argument("--desde", required=True)
     d.add_argument("--hasta", required=True)
+    cd = sub.add_parser("completar-diarios", help="completa horas ausentes de los mensuales con diarios oficiales")
+    cd.add_argument("--directorio", type=Path, required=True)
+    cd.add_argument("--hasta", default="2026-06-01")
     im = sub.add_parser("importar", help="importa una copia oficial aportada (zips + .CHECKSUM)")
     im.add_argument("--origen", type=Path, required=True)
     im.add_argument("--destino", type=Path, required=True)
@@ -64,6 +68,12 @@ def main(argv: list[str] | None = None) -> int:
         from hcarry.data.binance_vision import descargar
         man = descargar(a.destino, a.desde, a.hasta)
         print(f"{len(man['archivos'])} archivos verificados contra su .CHECKSUM en {a.destino}")
+    elif a.cmd == "completar-diarios":
+        from hcarry.data.binance_vision import completar_con_diarios
+        man = completar_con_diarios(a.directorio, a.hasta)
+        c = man["complementos_diarios"][-1]
+        print(f"{c['archivos_nuevos']} diarios oficiales verificados; días con horas ausentes: "
+              f"{ {k: len(v) for k, v in c['dias_con_horas_ausentes'].items()} }; no publicados: {len(man['ausentes_diarios'])}")
     elif a.cmd == "importar":
         from hcarry.data.binance_vision import importar
         man = importar(a.origen, a.destino)

@@ -1,0 +1,50 @@
+{
+ "categoria": "HISTÓRICO, solo desarrollo",
+ "manifiesto_sha256": "5a0805a7e22797637c400a1e939ec6c2d10e0cdc26410566f212708211b6367b",
+ "T_bruto": {
+  "metricas": {
+   "dias": 1417,
+   "final": 57504.684868936776,
+   "rendimiento_total": 4.750468486893678,
+   "cagr": 0.569239594983199,
+   "vol_anual": 0.48947133611618265,
+   "sharpe": 1.1651102586759479,
+   "sortino": 1.7682279221716308,
+   "caida_maxima": 0.49284136664970124,
+   "caida_duracion_dias": 508,
+   "calmar": 1.1550158600785627,
+   "exposicion_media": 0.5632044014792434,
+   "tiempo_en_mercado": 0.8143966125617502,
+   "operaciones": 178,
+   "costes": 0.0,
+   "costes_pp_anual": 0.0,
+   "rotacion_anual": 15.411165791754494,
+   "peor_dia": -0.1347057385938384,
+   "por_ano": {
+    "2018": -0.2631682636411714,
+    "2019": 0.7820180464676263,
+    "2020": 1.816095014415478,
+    "2021": 0.5551615244510761
+   }
+  },
+  "exposicion_media": 0.5632044014792434,
+  "exceso_anual": 0.16466704398283405,
+  "bootstrap": {
+   "aplicable": true,
+   "dias": 1417,
+   "media_diaria": 0.00045114258625433975,
+   "media_anual": 0.16466704398283402,
+   "intervalo_anual": [
+    -0.05569351284402363,
+    0.39191442098605084
+   ],
+   "p_mayor_que_cero": 0.885,
+   "bloque": 20,
+   "remuestreos": 2000,
+   "semilla": 20261017,
+   "nivel": 0.9
+  },
+  "percentil_nulo": 0.911,
+  "pasa": false
+ }
+}

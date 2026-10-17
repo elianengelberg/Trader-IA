@@ -1,0 +1,14 @@
+[project]
+name = "tendencia-btc"
+version = "0.1.0"
+description = "Trader-IA: investigación de seguimiento de tendencia long/flat en BTCUSDT spot (solo simulación)"
+requires-python = ">=3.11"
+dependencies = []
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-p no:cacheprovider"
+pythonpath = ["src", "../hcarry_next/src"]
+
+[tool.ruff]
+line-length = 120

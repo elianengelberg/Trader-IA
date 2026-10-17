@@ -1,0 +1,17 @@
+{
+ "categoria": "historico",
+ "calidad_apta": true,
+ "conclusion": {
+  "P1_umbral_vs_rev5": "HIPÓTESIS NO RESPALDADA",
+  "P2_carry_rev5": "EVIDENCIA INSUFICIENTE",
+  "motivo": "criterios prerregistrados aplicados a datos históricos",
+  "detalles": {
+   "dif_pnl_test": -264.34413884471724,
+   "p_dif_mayor_que_cero": 0.0,
+   "estres_ok": false,
+   "validacion_mismo_signo": false,
+   "riesgo_ok": true
+  }
+ },
+ "destino": "experimentos/historico/resultados/historico/datos_8bdabde706bf"
+}

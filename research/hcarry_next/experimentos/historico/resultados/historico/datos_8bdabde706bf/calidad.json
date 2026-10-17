@@ -1,0 +1,89 @@
+{
+ "directorio": "datos/binance_vision",
+ "procedencia": "historico_oficial",
+ "manifiesto_sha256": "8bdabde706bffadca3f4b7ca39937bff14a95ab3ecdc77707bfe4bb434f381d1",
+ "umbrales": {
+  "horas_rellenadas_frac_max": 0.005,
+  "racha_rellenada_max_h": 24,
+  "base_mediana_abs_max": 0.002,
+  "mark_perp_p99_abs_max": 0.01,
+  "funding_bloqueantes": [
+   "A2",
+   "A2b",
+   "A4",
+   "A7",
+   "A8"
+  ],
+  "coherencia_bloqueantes": [
+   "A6",
+   "P2"
+  ]
+ },
+ "filtros": {
+  "C1_procedencia": {
+   "ok": true,
+   "procedencia": "historico_oficial",
+   "via": "descarga directa",
+   "archivos": 412,
+   "sin_checksum": 0,
+   "checksum_no_coincide": []
+  },
+  "C2_cobertura": {
+   "ok": true,
+   "inicio_comun": "2020-01-01",
+   "hasta": "2026-06-01",
+   "meses": 77,
+   "primer_mes": {
+    "spot": "2019-10",
+    "perp": "2020-01",
+    "mark": "2020-01",
+    "funding": "2020-01",
+    "premium": "2020-01"
+   },
+   "faltan": {},
+   "meses_con_prima": 77
+  },
+  "C3_horas": {
+   "ok": true,
+   "horas": 56232,
+   "rellenadas": 39,
+   "fraccion": 0.0006935552710200598,
+   "racha_max_h": 6
+  },
+  "C4_funding": {
+   "ok": true,
+   "incidencias": [],
+   "eventos": 7029,
+   "intervalos_h": {
+    "8": 7028
+   },
+   "cambios": [],
+   "tasa_modal": {
+    "tasa": 0.0001,
+    "fraccion": 0.34770237587138997
+   },
+   "fraccion_negativas": 0.14354815763266468,
+   "apr_medio_nocional": 0.12044836427656541
+  },
+  "C5_coherencia": {
+   "ok": true,
+   "incidencias": [],
+   "base_abs_mediana": 0.00045721983766067176,
+   "base_abs_p99": 0.0017279516754356017,
+   "base_abs_max": 0.0257305551373459,
+   "mark_perp_abs_p99": 0.0010451264949058459,
+   "mark_perp_abs_max": 0.0257447963356936
+  },
+  "C6_periodo": {
+   "ok": true,
+   "inicio": "2020-01-01T00:00Z",
+   "fin": "2026-06-01T00:00Z"
+  }
+ },
+ "apto": true,
+ "horas": 56232,
+ "ventana": [
+  "2020-01-01T00:00Z",
+  "2026-06-01T00:00Z"
+ ]
+}

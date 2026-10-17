@@ -145,3 +145,93 @@ def test_un_archivo_sintetico_no_puede_entrar_en_un_manifiesto_historico(fabrica
     (falso / "MANIFIESTO.json").write_text(json.dumps(man))
     with pytest.raises(ValueError, match="SINTÉTICO en un manifiesto histórico"):
         BV.construir_panel(falso, "2024-11-01", "2025-02-01")
+
+
+# ------------------------------------------------------------------ datos reales: velas irregulares y diarios oficiales
+def _zip_oficial(nombre_csv: str, lineas: list[str]) -> bytes:
+    """Zip con el formato oficial y SIN la marca sintética (simula un archivo del emisor)."""
+    import io
+    import zipfile
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as z:
+        z.writestr(nombre_csv, "\n".join(lineas) + "\n")
+    return buf.getvalue()
+
+
+def _velas(t0: int, n: int, precio: float, cab: bool) -> list[str]:
+    from hcarry.conventions import HORA_MS
+    filas = [f"{t0 + k * HORA_MS},{precio},{precio + 1},{precio - 1},{precio},1,{t0 + (k + 1) * HORA_MS - 1},"
+             f"{precio},10,0,0,0" for k in range(n)]
+    return ([("open_time,open,high,low,close,volume,close_time,quote_volume,count,taker_buy_volume,"
+             "taker_buy_quote_volume,ignore")] if cab else []) + filas
+
+
+def test_vela_irregular_se_excluye_y_se_anota_en_vez_de_abortar() -> None:
+    from hcarry.conventions import HORA_MS, ms
+    t = ms("2020-02-19T11:00")
+    lineas = _velas(t - HORA_MS, 1, 100.0, False) + [f"{t},100,101,99,100,1,{t + 35 * 60000},100,10,0,0,0"]
+    z = _zip_oficial("x.csv", lineas)
+    with pytest.raises(ValueError, match="no dura 1 h"):
+        BV.leer_klines(z)
+    irr: list = []
+    velas = BV.leer_klines(z, irregulares=irr)
+    assert t not in velas and t - HORA_MS in velas and irr == [(t, t + 35 * 60000)]
+
+
+def test_diarios_oficiales_completan_solo_las_horas_ausentes(tmp_path: Path) -> None:
+    from hcarry.conventions import HORA_MS, ms
+    t0, n = ms("2024-12-01"), 31 * 24
+    dia = ms("2024-12-10")
+    sin_dia = [x for x in _velas(t0, n, 100.0, True) if not x[:13].isdigit() or not dia <= int(x[:13]) < dia + 24 * HORA_MS]
+    sin_dia.insert(1 + 9 * 24, _velas(dia, 1, 100.0, False)[0])  # el mensual conserva la primera hora del día
+    fuente = {
+        BV.ruta_mensual("spot", "BTCUSDT", 2024, 12): _zip_oficial("s.csv", _velas(t0, n, 100.0, False)),
+        BV.ruta_mensual("perp", "BTCUSDT", 2024, 12): _zip_oficial("p.csv", _velas(t0, n, 100.1, True)),
+        BV.ruta_mensual("mark", "BTCUSDT", 2024, 12): _zip_oficial("m.csv", sin_dia),
+        BV.ruta_mensual("funding", "BTCUSDT", 2024, 12): _zip_oficial("f.csv", [
+            "calc_time,funding_interval_hours,last_funding_rate"] + [f"{t0 + k * 8 * HORA_MS},8,0.0001"
+                                                                    for k in range(31 * 3)]),
+        # diario oficial del mark: 24 h; la primera coincide con el mensual
+        BV.ruta_diaria("mark", "BTCUSDT", "2024-12-10"): _zip_oficial("d.csv", _velas(dia, 24, 100.0, True)),
+    }
+
+    def abrir(url: str) -> bytes:
+        import hashlib
+        rel = url.removeprefix(BV.BASE + "/")
+        base = rel.removesuffix(".CHECKSUM")
+        if base not in fuente:
+            raise BV.NoPublicado(url)
+        if rel.endswith(".CHECKSUM"):
+            return f"{hashlib.sha256(fuente[base]).hexdigest()}  {base.rsplit('/', 1)[1]}\n".encode()
+        return fuente[base]
+
+    d = tmp_path / "hist"
+    BV.descargar(d, "2024-12", "2025-01", tipos=BV.REQUERIDOS, abrir=abrir)
+    _, inf = BV.construir_panel(d, "2024-12-01", "2025-01-01")
+    assert inf.info["horas_rellenadas"] == 23  # sin el diario: 23 h de mark ausentes
+    man = BV.completar_con_diarios(d, hasta="2025-01-01", abrir=abrir)
+    assert [a["ruta"] for a in man["archivos"] if a.get("granularidad") == "diaria"] == [
+        BV.ruta_diaria("mark", "BTCUSDT", "2024-12-10")]
+    assert BV.cobertura(d)["mark"] == ["2024-12"]  # el diario no altera la cobertura mensual
+    antes = (d / "MANIFIESTO.json").read_bytes()
+    BV.completar_con_diarios(d, hasta="2025-01-01", abrir=abrir)  # idempotente: sin cambios no reescribe
+    assert (d / "MANIFIESTO.json").read_bytes() == antes
+    _, inf = BV.construir_panel(d, "2024-12-01", "2025-01-01")
+    assert inf.info["horas_rellenadas"] == 0 and inf.info["horas_de_archivos_diarios"] == {"mark": 23}
+    assert "D1" not in inf.clases()
+    # si el diario contradice al mensual en una hora común, es una incidencia (bloqueante en calidad)
+    fuente[BV.ruta_diaria("mark", "BTCUSDT", "2024-12-10")] = _zip_oficial("d.csv", _velas(dia, 24, 100.5, True))
+    d2 = tmp_path / "hist2"
+    BV.descargar(d2, "2024-12", "2025-01", tipos=BV.REQUERIDOS, abrir=abrir)
+    BV.completar_con_diarios(d2, hasta="2025-01-01", abrir=abrir)
+    _, inf2 = BV.construir_panel(d2, "2024-12-01", "2025-01-01")
+    assert "D1" in inf2.clases()
+    # una diferencia SOLO de volumen no bloquea: se conserva el mensual y queda anotada
+    vol = _velas(dia, 24, 100.0, True)
+    vol[1] = vol[1].replace(",100.0,10,", ",123.0,10,")
+    fuente[BV.ruta_diaria("mark", "BTCUSDT", "2024-12-10")] = _zip_oficial("d.csv", vol)
+    d3 = tmp_path / "hist3"
+    BV.descargar(d3, "2024-12", "2025-01", tipos=BV.REQUERIDOS, abrir=abrir)
+    BV.completar_con_diarios(d3, hasta="2025-01-01", abrir=abrir)
+    _p3, inf3 = BV.construir_panel(d3, "2024-12-01", "2025-01-01")
+    assert "D1" not in inf3.clases() and len(inf3.info["volumen_distinto_diario_mensual"]) == 1

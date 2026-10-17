@@ -89,3 +89,22 @@ Cada decisión: qué se eligió, alternativas, debilidades y qué la refutaría.
 - `importar` no puede saber quién aportó una copia. El campo `via` describe la importación («importación de una copia externa verificada contra sus .CHECKSUM oficiales» o «importación de archivos FABRICADOS…») y no la atribuye a nadie.
 - Antes escribía «copia aportada por el usuario» también para archivos que yo había fabricado. El ensayo afectado se conserva con un `ERRATA.md`.
 - Los cambios de código posteriores al prerregistro se documentan en una adenda **antes** de ver datos, con una verificación de que no alteran ningún cálculo: el ensayo sintético se reproduce bit a bit.
+
+## D-17 Huecos de los archivos mensuales: diarios oficiales, nunca otra fuente
+- Una hora ausente en un archivo mensual se busca en el archivo **diario** de la misma serie y del mismo emisor, con su `.CHECKSUM`. Nunca se toma de otra fuente.
+- Se usa solo para horas ausentes. En las horas comunes, el diario debe coincidir en precios (D1).
+- Las velas irregulares por paradas del exchange se excluyen: la hora queda sin datos y cuenta en C3.
+- Lectura estricta documentada: solo con mensuales, la muestra no habría sido apta.
+
+## D-18 Orden de trabajo frente a la misión del 2026-10-16
+- **Prevalece el prerregistro:** el test es 2024-02 → 2026-05, de uso único.
+- El diagnóstico y el desarrollo de candidatos se hicieron solo en 2020–2022, antes del test.
+- El período reservado no se tocó.
+- Tras el test, toda la muestra es exploratoria.
+
+## D-19 No se sumaron candidatos al test
+El techo con oráculo de las reglas de salida en desarrollo era de 0,17 pp/año. Variar el tamaño según el funding es apalancamiento, con un riesgo que el motor no modela.
+
+## D-20 Recomendación: detener la línea, con un criterio de reapertura
+- **Motivo:** el carry no supera al efectivo desde 2022, y el funding se comprimió en todo el mercado.
+- **Reapertura:** con un funding de 90 días de BTCUSDT > 12 % anual, mediante una prueba prospectiva prerregistrada. Ver `ESTADO_EJECUTIVO_HISTORICO.md`.

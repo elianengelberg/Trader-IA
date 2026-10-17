@@ -4,7 +4,7 @@ Laboratorio de investigación del carry delta-neutral en BTCUSDT: largo spot y c
 
 **Solo simulación:** ningún módulo envía órdenes, usa claves ni toca producción.
 
-> **Estado (2026-10-16):** motor, pruebas y laboratorio funcionando. **Todos los resultados económicos son SINTÉTICOS**: la red del entorno bloquea los datos de mercado (ver `experimentos/DATOS_REALES.md`). No hay ninguna conclusión sobre la rentabilidad real.
+> **Estado (2026-10-17): línea CERRADA** (ver `INFORME_CIERRE_HCARRY.md`). Motor, pruebas y laboratorio funcionando. Validación histórica con datos oficiales **ejecutada** (test de uso único consumido): P1 no respaldada y P2 con evidencia insuficiente. Ver `ESTADO_EJECUTIVO_HISTORICO.md`. Los resultados anteriores a esa fecha eran sintéticos.
 
 ## Uso rápido
 
@@ -35,11 +35,16 @@ Las dependencias de ejecución son solo la biblioteca estándar (Python ≥ 3.11
 | `src/hcarry/metricas.py` | Métricas sobre el capital total y comprometido; clasificador D1–D4 de rev. 5 |
 | `src/hcarry/lab/` | Divisiones, experimentos con registro, bootstrap pareado y protocolo desarrollo → validación → test |
 | `src/hcarry/analisis.py` | Aritmética de la estructura de capital |
-| `tests/` | 78 pruebas: casos a mano, regresión rev. 5, propiedades, look-ahead, datos, laboratorio |
+| `tests/` | 81 pruebas: casos a mano, regresión rev. 5, propiedades, look-ahead, datos, laboratorio |
 | `recuperado/` | Material original recuperado de rev. 5, en solo lectura con sus hashes |
 | `experimentos/` | Scripts, registros y resúmenes de los experimentos (sintéticos) |
 | `PROVENANCE.md`, `DECISIONS.md`, `CHANGELOG.md` | Recuperado frente a reconstruido frente a nuevo; decisiones; cambios |
 | `INFORME_HCARRY_NEXT.md` | Informe de la fase: resultados, limitaciones y próximo experimento |
+| `INFORME_CIERRE_HCARRY.md` | **Cierre de H-CARRY (2026-10-17): qué es original y qué reconstruido, aprendizajes, límites, preservación** |
+| `INFORME_CAUSAL_COSTOS_VS_SENAL.md`, `DIAGNOSTICO_SENAL_EJECUCION_CAPITAL.md` | ¿Costes o señal? Escenarios A–E, descomposición por pata y cascada del déficit; señal, ejecución y capital por separado |
+| `ESTADO_EJECUTIVO_HISTORICO.md` | **Estado y recomendación tras la validación histórica con datos oficiales (2026-10-16)** |
+| `INFORME_ECONOMICO_HISTORICO.md` | Comparación rev. 5 / UmbralFunding con datos oficiales: test, sensibilidad, atribución y análisis exploratorios |
+| `REGISTRO_DEFECTOS.md`, `REPRODUCIR.md` | Defectos y limitaciones; cómo reproducir todo sin Claude |
 | `INFORME_VALIDACION_HISTORICA.md` | Validación histórica rev. 5 frente a UmbralFunding: estado, prerregistro, ensayo y características (sintéticas) y conclusión |
 
 ## Convenciones clave

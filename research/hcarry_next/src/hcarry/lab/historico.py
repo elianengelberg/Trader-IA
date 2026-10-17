@@ -116,9 +116,38 @@ def _persistencia(funding, dias: int = 7) -> dict:  # type: ignore[no-untyped-de
                            else "persistencia suficiente para que UmbralFunding pueda aportar")}
 
 
+CERROJO_TEST = "TEST_CONSUMIDO.json"
+
+
+class TestYaConsumido(RuntimeError):
+    """El test histórico prerregistrado ya se ejecutó (con estos u otros datos): no se repite."""
+
+
+def _cerrojo(raiz_resultados: Path) -> Path:
+    return raiz_resultados / "historico" / CERROJO_TEST
+
+
+def comprobar_test_disponible(raiz_resultados: Path) -> None:
+    """El registro por carpeta de datos no basta: una descarga nueva tiene otro manifiesto (otra fecha) y por tanto otra
+    carpeta y otro registro. Este cerrojo es global para la categoría histórica y no depende de los datos."""
+    c = _cerrojo(raiz_resultados)
+    if c.exists():
+        raise TestYaConsumido(f"el test histórico prerregistrado ya se consumió: {c.read_text(encoding='utf-8')}")
+
+
+def reservar_test(raiz_resultados: Path, info: dict) -> None:
+    """Marca el test como consumido ANTES de ejecutarlo (creación exclusiva): un fallo a mitad también lo consume."""
+    c = _cerrojo(raiz_resultados)
+    c.parent.mkdir(parents=True, exist_ok=True)
+    with c.open("x", encoding="utf-8") as f:
+        f.write(json.dumps(info, ensure_ascii=False, indent=1, default=str) + "\n")
+
+
 def evaluar(directorio: Path, raiz_resultados: Path) -> dict:
     man = leer_manifiesto(directorio)
     categoria = "historico" if man["procedencia"] == "historico_oficial" else "sintetico"
+    if categoria == "historico":
+        comprobar_test_disponible(raiz_resultados)
     inf_cal = calidad.evaluar(directorio)
     destino = raiz_resultados / categoria / f"datos_{inf_cal['manifiesto_sha256'][:12]}"
     destino.mkdir(parents=True, exist_ok=True)
@@ -161,6 +190,10 @@ def evaluar(directorio: Path, raiz_resultados: Path) -> dict:
     pre = destino / "prerregistro_test.json"
     pre.write_text(json.dumps({"prerregistro_sha256": hash_prerregistro(), "configuraciones": configs},
                               ensure_ascii=False, indent=1), encoding="utf-8")
+    if categoria == "historico":
+        reservar_test(raiz_resultados, {"prerregistro_sha256": hash_prerregistro(), "codigo_sha256": X.huella_codigo(),
+                                        "manifiesto_sha256": inf_cal["manifiesto_sha256"], "destino": str(destino),
+                                        "fecha_utc": dt.datetime.now(dt.UTC).isoformat(), "configuraciones": len(configs)})
     res = {c["nombre"]: X.correr(c, registro, pre) for c in configs}
     rev5, umb = res["rev5"], res["umbral"]
     boot = comparar(umb[0], rev5[0], bloque=PRERREGISTRO["bootstrap"]["bloque_dias"],

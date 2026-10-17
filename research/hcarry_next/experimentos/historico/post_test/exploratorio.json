@@ -1,0 +1,125 @@
+{
+ "categoria": "EXPLORATORIO posterior al test (no independiente)",
+ "codigo_sha256": "8a7cb0424b28fd966a9520bbfd702fa955b07a92b08d30892f21a62a6aa3840b",
+ "funding_por_ano": {
+  "2020": {
+   "eventos": 1098,
+   "apr": 0.1719261594262295,
+   "frac_en_base_0_01": 0.5045537340619308,
+   "frac_positiva_bajo_base": 0.08469945355191257,
+   "frac_sobre_base": 0.2677595628415301,
+   "frac_negativa": 0.1429872495446266
+  },
+  "2021": {
+   "eventos": 1095,
+   "apr": 0.30608423,
+   "frac_en_base_0_01": 0.43105022831050227,
+   "frac_positiva_bajo_base": 0.06666666666666667,
+   "frac_sobre_base": 0.4292237442922374,
+   "frac_negativa": 0.0730593607305936
+  },
+  "2022": {
+   "eventos": 1095,
+   "apr": 0.04164925,
+   "frac_en_base_0_01": 0.30776255707762556,
+   "frac_positiva_bajo_base": 0.4712328767123288,
+   "frac_sobre_base": 0.0,
+   "frac_negativa": 0.22100456621004566
+  },
+  "2023": {
+   "eventos": 1095,
+   "apr": 0.07865711999999998,
+   "frac_en_base_0_01": 0.38538812785388127,
+   "frac_positiva_bajo_base": 0.4502283105022831,
+   "frac_sobre_base": 0.06301369863013699,
+   "frac_negativa": 0.10136986301369863
+  },
+  "2024": {
+   "eventos": 1098,
+   "apr": 0.11924213920765028,
+   "frac_en_base_0_01": 0.4207650273224044,
+   "frac_positiva_bajo_base": 0.30145719489981787,
+   "frac_sobre_base": 0.19398907103825136,
+   "frac_negativa": 0.08378870673952642
+  },
+  "2025": {
+   "eventos": 1095,
+   "apr": 0.05126428,
+   "frac_en_base_0_01": 0.17168949771689498,
+   "frac_positiva_bajo_base": 0.6995433789954338,
+   "frac_sobre_base": 0.0,
+   "frac_negativa": 0.12876712328767123
+  },
+  "2026": {
+   "eventos": 453,
+   "apr": 0.008601913907284769,
+   "frac_en_base_0_01": 0.019867549668874173,
+   "frac_positiva_bajo_base": 0.5695364238410596,
+   "frac_sobre_base": 0.0,
+   "frac_negativa": 0.4105960264900662
+  }
+ },
+ "funding_por_trimestre": {
+  "2020T1": 0.2339,
+  "2020T2": 0.0707,
+  "2020T3": 0.2006,
+  "2020T4": 0.1821,
+  "2021T1": 0.6627,
+  "2021T2": 0.2828,
+  "2021T3": 0.0848,
+  "2021T4": 0.2016,
+  "2022T1": 0.051,
+  "2022T2": 0.0395,
+  "2022T3": 0.0453,
+  "2022T4": 0.031,
+  "2023T1": 0.0821,
+  "2023T2": 0.0629,
+  "2023T3": 0.0476,
+  "2023T4": 0.122,
+  "2024T1": 0.2233,
+  "2024T2": 0.0934,
+  "2024T3": 0.0346,
+  "2024T4": 0.1265,
+  "2025T1": 0.0525,
+  "2025T2": 0.0354,
+  "2025T3": 0.0702,
+  "2025T4": 0.0468,
+  "2026T1": 0.0122,
+  "2026T2": 0.0032
+ },
+ "techo_salidas_pp_anual": {
+  "desarrollo": {
+   "0.5": 0.26774332369939513,
+   "1": 0.16965371006994673,
+   "2": 0.08637108153330005
+  },
+  "validacion": {
+   "0.5": 0.0,
+   "1": 0.0,
+   "2": 0.0
+  },
+  "test": {
+   "0.5": 0.03485442496081896,
+   "1": 0.0,
+   "2": 0.0
+  }
+ },
+ "rev5_por_division": {
+  "desarrollo": {
+   "funding_neto_apr_sobre_nocional": 0.17475315878958164,
+   "nocional_medio_sobre_capital": 0.6250168689279039,
+   "costes_pp_anual_equity": 0.3763429662353345
+  },
+  "validacion": {
+   "funding_neto_apr_sobre_nocional": 0.08578406499522825,
+   "nocional_medio_sobre_capital": 0.5127206941824957,
+   "costes_pp_anual_equity": 0.35694283759339157
+  },
+  "test": {
+   "funding_neto_apr_sobre_nocional": 0.07244680900533322,
+   "nocional_medio_sobre_capital": 0.5617850003413248,
+   "costes_pp_anual_equity": 0.19368293254487587
+  }
+ },
+ "funding_apr_necesario_para_5pct": 0.09244965475029308
+}

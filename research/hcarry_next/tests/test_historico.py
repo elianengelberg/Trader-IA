@@ -55,3 +55,19 @@ def test_datos_no_aptos_detienen_la_evaluacion_y_se_archivan_como_sinteticos(tmp
     assert not (Path(s["destino"]) / "registro.jsonl").exists()
     texto = (Path(s["destino"]) / "INFORME.md").read_text(encoding="utf-8")
     assert "SINTÉTICO" in texto and "No es evidencia económica" in texto and "prospectiva: **ninguna**" in texto
+
+
+def test_el_test_historico_tiene_un_cerrojo_global_independiente_de_los_datos(tmp_path: Path, monkeypatch) -> None:
+    import pytest
+    raiz = tmp_path / "resultados"
+    H.comprobar_test_disponible(raiz)  # libre
+    H.reservar_test(raiz, {"manifiesto_sha256": "a" * 64})
+    with pytest.raises(H.TestYaConsumido):
+        H.comprobar_test_disponible(raiz)
+    with pytest.raises(FileExistsError):  # la reserva es exclusiva
+        H.reservar_test(raiz, {"manifiesto_sha256": "b" * 64})
+    # una descarga nueva (otro manifiesto, otra carpeta) tampoco puede repetir el test: se rechaza antes de todo
+    monkeypatch.setattr(H, "leer_manifiesto", lambda d: {"procedencia": "historico_oficial"})
+    with pytest.raises(H.TestYaConsumido):
+        H.evaluar(tmp_path / "otra_descarga", raiz)
+

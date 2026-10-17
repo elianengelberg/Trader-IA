@@ -92,7 +92,8 @@ def _klines(ini: int, n: int, precio: float, cabecera: bool, micro: bool = False
     for k in range(n):
         t = ini + k * HORA_MS
         f = 1000 if micro else 1
-        filas.append(f"{t * f},{precio},{precio * 1.01},{precio * 0.99},{precio},1.5,{(t + HORA_MS - 1) * f},"
+        # formato real: cierre = apertura + 1 h − 1 unidad (−1 µs en el spot desde 2025, comprobado con datos oficiales)
+        filas.append(f"{t * f},{precio},{precio * 1.01},{precio * 0.99},{precio},1.5,{(t + HORA_MS) * f - 1},"
                      f"{precio * 1.5},100,0.7,{precio * 0.7},0")
     return filas
 

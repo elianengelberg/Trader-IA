@@ -34,7 +34,8 @@ def _zip(nombre_csv: str, lineas: list[str]) -> bytes:
 def _kline(t: int, o: float, h: float, low: float, c: float, qv: float, micro: bool) -> str:
     f = 1000 if micro else 1
     vol = qv / c if c else 0.0
-    return f"{t * f},{o:.2f},{h:.2f},{low:.2f},{c:.2f},{vol:.6f},{(t + HORA_MS - 1) * f},{qv:.2f},1000,0,0,0"
+    # como en los archivos oficiales: cierre = apertura + 1 h − 1 unidad (1 ms, o 1 µs en el spot desde 2025)
+    return f"{t * f},{o:.2f},{h:.2f},{low:.2f},{c:.2f},{vol:.6f},{(t + HORA_MS) * f - 1},{qv:.2f},1000,0,0,0"
 
 
 def fabricar_sintetico(panel: Panel, destino: Path, simbolo: str = "BTCUSDT", omitir: set[tuple[str, str]] = frozenset()) -> dict:

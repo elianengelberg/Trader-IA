@@ -1,0 +1,38 @@
+{
+ "BTCUSDT": {
+  "simbolo": "BTCUSDT",
+  "archivos": 106,
+  "meses_no_publicados": [],
+  "primer_dia": "2017-08-17",
+  "ultimo_dia": "2026-05-31",
+  "dias": 3210,
+  "dias_ausentes": [],
+  "duracion_irregular": [],
+  "repetidas": [],
+  "ohlc_incoherente": [],
+  "precio_no_positivo": [],
+  "manifiesto_sha256": "5a0805a7e22797637c400a1e939ec6c2d10e0cdc26410566f212708211b6367b",
+  "apto": true
+ },
+ "ETHUSDT": {
+  "simbolo": "ETHUSDT",
+  "archivos": 106,
+  "meses_no_publicados": [],
+  "primer_dia": "2017-08-17",
+  "ultimo_dia": "2026-05-31",
+  "dias": 3210,
+  "dias_ausentes": [],
+  "duracion_irregular": [],
+  "repetidas": [],
+  "ohlc_incoherente": [],
+  "precio_no_positivo": [],
+  "manifiesto_sha256": "3998305bb38909a08a94f6365317695f930dea4ea10933b19a22e17b40998f6a",
+  "apto": true
+ },
+ "contraste_btc_diario_vs_horario": {
+  "comparados": 2435,
+  "distintos": 0,
+  "sin_horaria": 0,
+  "ejemplos": []
+ }
+}

@@ -1,0 +1,15 @@
+# Datos históricos descargados: NO se versionan (se reproducen con los comandos de REPRODUCIR.md / INFORME_NUEVA_LINEA.md;
+# los manifiestos con el SHA-256 de cada archivo SÍ se versionan).
+hcarry_next/datos/**/*.zip
+hcarry_next/datos/**/*.CHECKSUM
+hcarry_next/datos/**/*.tmp
+tendencia_btc/datos/**/*.zip
+tendencia_btc/datos/**/*.CHECKSUM
+tendencia_btc/datos/**/*.tmp
+# series externas descargadas (procedencia, URL y SHA-256 en sus PROCEDENCIA.json)
+hcarry_next/experimentos/historico/post_test/externos/DTB3.csv
+hcarry_next/experimentos/historico/causal/externos/aave_v3_usdt_ethereum.json
+# ZIP de entrega que contienen datos descargados o duplican contenido ya versionado (hashes en SHA256SUMS_2026-10-17)
+entregas_hcarry/hcarry_next_historico_2026-10-16.zip
+entregas_hcarry/hcarry_next_final.zip
+entregas_hcarry/hcarry_next_snapshot*.zip

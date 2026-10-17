@@ -1,0 +1,10 @@
+{
+ "aave_v3_usdt_ethereum.json": {
+  "fuente": "DefiLlama Yields API (agregador de terceros de tasas on-chain): pool Aave v3, USDT, Ethereum",
+  "url": "https://yields.llama.fi/chart/f981a304-bb6c-45b8-b0c5-fd2f515ad23a",
+  "descargado_utc": "2026-10-17",
+  "sha256": "2129f1ec557951161a57379001b3bb10eed01c2e910f987558ab96e3ac71456a",
+  "cobertura": "2023-02-13 en adelante (no cubre desarrollo 2020-2022)",
+  "uso": "SOLO diagnóstico (escenario E): rendimiento de stablecoin accesible en DeFi. NO equivale a T-bills ni a efectivo en Binance: riesgo de contrato inteligente, de stablecoin (despegue), costes de gas y transferencia; no verificado on-chain."
+ }
+}

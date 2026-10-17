@@ -1,0 +1,551 @@
+{
+ "archivos": [
+  {
+   "bytes": 795,
+   "checksum_oficial": "0ce8da3b2ee7eceb6616efa215a2a1b1aab7b5b04becebe73634a95ec0abfa90",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2020-01.zip",
+   "sha256": "0ce8da3b2ee7eceb6616efa215a2a1b1aab7b5b04becebe73634a95ec0abfa90",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 911,
+   "checksum_oficial": "5a1de843dc3f098e86ca3c0979b38591d57d18664a1079588e61def93224fa06",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2020-02.zip",
+   "sha256": "5a1de843dc3f098e86ca3c0979b38591d57d18664a1079588e61def93224fa06",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 785,
+   "checksum_oficial": "0b9edb31ec6aedad0248d54e89b7ea5ff3cc4ab719519751db3de334caf54303",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2020-03.zip",
+   "sha256": "0b9edb31ec6aedad0248d54e89b7ea5ff3cc4ab719519751db3de334caf54303",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 698,
+   "checksum_oficial": "ce2208113358208182eaae41971fb5762e1794a04b4a606368416d08eea2d41b",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2020-04.zip",
+   "sha256": "ce2208113358208182eaae41971fb5762e1794a04b4a606368416d08eea2d41b",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 769,
+   "checksum_oficial": "77f5790ae26f95caee52b58317ee65d13b0eeb61f73d83482fd5d3aa153ab300",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2020-05.zip",
+   "sha256": "77f5790ae26f95caee52b58317ee65d13b0eeb61f73d83482fd5d3aa153ab300",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 700,
+   "checksum_oficial": "2e6af078edbe3e0df30d12d0d381652949572ce514222a257efe1f4eb145dae0",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2020-06.zip",
+   "sha256": "2e6af078edbe3e0df30d12d0d381652949572ce514222a257efe1f4eb145dae0",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 774,
+   "checksum_oficial": "1983ad90e1d1f98eefd2c23b9eb209d26e4e2efba2f4e8b5e662e8a7d563bc56",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2020-07.zip",
+   "sha256": "1983ad90e1d1f98eefd2c23b9eb209d26e4e2efba2f4e8b5e662e8a7d563bc56",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 918,
+   "checksum_oficial": "d4e766270a078741387ba564103d285ad9a2c05c7e6df9ad0b03619248bb041f",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2020-08.zip",
+   "sha256": "d4e766270a078741387ba564103d285ad9a2c05c7e6df9ad0b03619248bb041f",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 807,
+   "checksum_oficial": "cdee5c299c22dda85a5d5449e19250f7bc66c0d52759f9de0a49cc233520510d",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2020-09.zip",
+   "sha256": "cdee5c299c22dda85a5d5449e19250f7bc66c0d52759f9de0a49cc233520510d",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 852,
+   "checksum_oficial": "47749a38b41b185d786af96bf41c796edf8ea517cf76d6d61402974c629e0239",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2020-10.zip",
+   "sha256": "47749a38b41b185d786af96bf41c796edf8ea517cf76d6d61402974c629e0239",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 889,
+   "checksum_oficial": "9b02376eaa04be4ec2e201b492ef2a3c34dc61542492c715b5cea5dec5f01d36",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2020-11.zip",
+   "sha256": "9b02376eaa04be4ec2e201b492ef2a3c34dc61542492c715b5cea5dec5f01d36",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 901,
+   "checksum_oficial": "f99267a3fef35dd201e76c8338be877fb52883376b4cd0acb890a1387de0b0d4",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2020-12.zip",
+   "sha256": "f99267a3fef35dd201e76c8338be877fb52883376b4cd0acb890a1387de0b0d4",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 1017,
+   "checksum_oficial": "4c18c1df8904dea9770aeba5326d26b3fa9a3ffac4891f5f7125d4be2da847c0",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2021-01.zip",
+   "sha256": "4c18c1df8904dea9770aeba5326d26b3fa9a3ffac4891f5f7125d4be2da847c0",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 950,
+   "checksum_oficial": "15e9a939f253a11fc1af2858bb3844f3d39019ccf7efa66a9456f0f60afba3dd",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2021-02.zip",
+   "sha256": "15e9a939f253a11fc1af2858bb3844f3d39019ccf7efa66a9456f0f60afba3dd",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 997,
+   "checksum_oficial": "2bcaadc8206cb8d76a26f0f3cbf97020b747545b0e75c3dd8a3b195b435478a5",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2021-03.zip",
+   "sha256": "2bcaadc8206cb8d76a26f0f3cbf97020b747545b0e75c3dd8a3b195b435478a5",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 954,
+   "checksum_oficial": "2fee34e8b9b6e828d01bab0df1c67104f7a98f3c063668c8db627b802ffa5a95",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2021-04.zip",
+   "sha256": "2fee34e8b9b6e828d01bab0df1c67104f7a98f3c063668c8db627b802ffa5a95",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 913,
+   "checksum_oficial": "21809ef6691a1441bd55ba4af4494a038d1a399ae0ae432e80cb41b47d71f3bd",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2021-05.zip",
+   "sha256": "21809ef6691a1441bd55ba4af4494a038d1a399ae0ae432e80cb41b47d71f3bd",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 827,
+   "checksum_oficial": "8e58ccf8f52c69c55754492daafadab92d4ca8c8bd027f4532582d06e9f36063",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2021-06.zip",
+   "sha256": "8e58ccf8f52c69c55754492daafadab92d4ca8c8bd027f4532582d06e9f36063",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 892,
+   "checksum_oficial": "f8f538bedf642052e428cd25f3134784de6e62a136e76f6a07ea6e79dfc9c39d",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2021-07.zip",
+   "sha256": "f8f538bedf642052e428cd25f3134784de6e62a136e76f6a07ea6e79dfc9c39d",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 857,
+   "checksum_oficial": "0120b284bde23d077e1e26e5e4b56fd3e2d1d82a3a7fe0e9de26825b9fc9c0db",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2021-08.zip",
+   "sha256": "0120b284bde23d077e1e26e5e4b56fd3e2d1d82a3a7fe0e9de26825b9fc9c0db",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 826,
+   "checksum_oficial": "4b4a94cdafbb8fea7762c266aa79b183700b7c9dcf7e981f7fdbe9372f2eec66",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2021-09.zip",
+   "sha256": "4b4a94cdafbb8fea7762c266aa79b183700b7c9dcf7e981f7fdbe9372f2eec66",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 935,
+   "checksum_oficial": "4dfb8698f6951b2c66229e1c687977eae0778bb703d6268232da2ceb3e9b5e6d",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2021-10.zip",
+   "sha256": "4dfb8698f6951b2c66229e1c687977eae0778bb703d6268232da2ceb3e9b5e6d",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 838,
+   "checksum_oficial": "d9a7e22a237717f23d4b0505f14613359b7ea7831b23a78653a891cbbe3d521c",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2021-11.zip",
+   "sha256": "d9a7e22a237717f23d4b0505f14613359b7ea7831b23a78653a891cbbe3d521c",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 806,
+   "checksum_oficial": "788d5c57e7cbc8e6b94ed4d7672618a85311edf1d7f0888083410d0d3389d811",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2021-12.zip",
+   "sha256": "788d5c57e7cbc8e6b94ed4d7672618a85311edf1d7f0888083410d0d3389d811",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 950,
+   "checksum_oficial": "9f5bd01450b05a8c5e48cdc99fa147e85c82ecf7ee7919fa543a4e6039a2b98d",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2022-01.zip",
+   "sha256": "9f5bd01450b05a8c5e48cdc99fa147e85c82ecf7ee7919fa543a4e6039a2b98d",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 898,
+   "checksum_oficial": "9c35e30327ac8915cc1333415b7d5018425781c81918e349d26b734525fcdfe5",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2022-02.zip",
+   "sha256": "9c35e30327ac8915cc1333415b7d5018425781c81918e349d26b734525fcdfe5",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 866,
+   "checksum_oficial": "3de0714a2b2582029b32147815298b6e67e972e776ca3f68a4208823b4109404",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2022-03.zip",
+   "sha256": "3de0714a2b2582029b32147815298b6e67e972e776ca3f68a4208823b4109404",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 941,
+   "checksum_oficial": "7c306ac8b6275a857b064916080e0b6ec502b25a4501c84c3fd2c0b077425de3",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2022-04.zip",
+   "sha256": "7c306ac8b6275a857b064916080e0b6ec502b25a4501c84c3fd2c0b077425de3",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 972,
+   "checksum_oficial": "c458330243c9d8e048ffc7168c9e3c077c01bb82b1644097a4893fee34069b78",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2022-05.zip",
+   "sha256": "c458330243c9d8e048ffc7168c9e3c077c01bb82b1644097a4893fee34069b78",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 980,
+   "checksum_oficial": "f6f3a69b656b91500b41501a230e663ccc3c1a65f46273595b00682d8f6fabb1",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2022-06.zip",
+   "sha256": "f6f3a69b656b91500b41501a230e663ccc3c1a65f46273595b00682d8f6fabb1",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 953,
+   "checksum_oficial": "17826e5591af8660a7fed74d60e24eee77c822cf0d901dd8af355a10a36699aa",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2022-07.zip",
+   "sha256": "17826e5591af8660a7fed74d60e24eee77c822cf0d901dd8af355a10a36699aa",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 1000,
+   "checksum_oficial": "a2680549de5e087566f4d323b3a812c2b9863528c6bc49b0e551cb42c381bb4d",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2022-08.zip",
+   "sha256": "a2680549de5e087566f4d323b3a812c2b9863528c6bc49b0e551cb42c381bb4d",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 1016,
+   "checksum_oficial": "816e4de946d9f854cc457c86ca396b9cb49b46e80cf44941b59b9ad2124f2ef8",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2022-09.zip",
+   "sha256": "816e4de946d9f854cc457c86ca396b9cb49b46e80cf44941b59b9ad2124f2ef8",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 1004,
+   "checksum_oficial": "e434c29eb544cc57ff574e38685535bb7d04703aee54bc5d52f53cea372810e6",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2022-10.zip",
+   "sha256": "e434c29eb544cc57ff574e38685535bb7d04703aee54bc5d52f53cea372810e6",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 987,
+   "checksum_oficial": "4f4e52f176f69e99353959d287874a4d4a135b5bb4ea85514dd5a3e65958b2d7",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2022-11.zip",
+   "sha256": "4f4e52f176f69e99353959d287874a4d4a135b5bb4ea85514dd5a3e65958b2d7",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 964,
+   "checksum_oficial": "8cd0e885d63b85ee602d80eaae956f9ee3e0e25db264eb5c74026a9ae0d71f4e",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2022-12.zip",
+   "sha256": "8cd0e885d63b85ee602d80eaae956f9ee3e0e25db264eb5c74026a9ae0d71f4e",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 819,
+   "checksum_oficial": "5647d5978092d220eb14e11c7854d86815d0eb6204197e37b4808cc599e986f3",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2023-01.zip",
+   "sha256": "5647d5978092d220eb14e11c7854d86815d0eb6204197e37b4808cc599e986f3",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 821,
+   "checksum_oficial": "7da37820c15fb08600ae668551d0b724326b8f71d761582990721059280a221b",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2023-02.zip",
+   "sha256": "7da37820c15fb08600ae668551d0b724326b8f71d761582990721059280a221b",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 963,
+   "checksum_oficial": "5110b60cbbc5f26048ce02575c26444ea2ed497baed9a5609e118359e1ca3b51",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2023-03.zip",
+   "sha256": "5110b60cbbc5f26048ce02575c26444ea2ed497baed9a5609e118359e1ca3b51",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 945,
+   "checksum_oficial": "fa3a3cf7c3b8285687ae8c8014eed8bc58ad3ceb33ccb62ff4298048213c0e6c",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2023-04.zip",
+   "sha256": "fa3a3cf7c3b8285687ae8c8014eed8bc58ad3ceb33ccb62ff4298048213c0e6c",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 990,
+   "checksum_oficial": "bf890ea68d979942ed296b058390eb98b0b495547fee2117d3b76d5e7f629b24",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2023-05.zip",
+   "sha256": "bf890ea68d979942ed296b058390eb98b0b495547fee2117d3b76d5e7f629b24",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 888,
+   "checksum_oficial": "b3ddac1309f9a684f4e811776a6c09fb2239bb8d1ae0ff4bd342a1c32a5e171f",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2023-06.zip",
+   "sha256": "b3ddac1309f9a684f4e811776a6c09fb2239bb8d1ae0ff4bd342a1c32a5e171f",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 861,
+   "checksum_oficial": "82577976d8acd886fda84179ee38c9e7ef445732c3b6a062d6ffd2a9e3cc30bf",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2023-07.zip",
+   "sha256": "82577976d8acd886fda84179ee38c9e7ef445732c3b6a062d6ffd2a9e3cc30bf",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 897,
+   "checksum_oficial": "cf749429c366cef3302a804b3e702937e5f1a77aeddc5b628dca7da547a8935a",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2023-08.zip",
+   "sha256": "cf749429c366cef3302a804b3e702937e5f1a77aeddc5b628dca7da547a8935a",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 902,
+   "checksum_oficial": "41ac7eb67a46d14d97daec4c37e8229df5ac6b165639ad4b2c54bc7374930341",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2023-09.zip",
+   "sha256": "41ac7eb67a46d14d97daec4c37e8229df5ac6b165639ad4b2c54bc7374930341",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 849,
+   "checksum_oficial": "ccaf4474f0dc94adedd4330c14995f338186caa2cc9fd0d2e2c55f74cf263a5c",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2023-10.zip",
+   "sha256": "ccaf4474f0dc94adedd4330c14995f338186caa2cc9fd0d2e2c55f74cf263a5c",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 699,
+   "checksum_oficial": "153ec1450eb5d999ce253e2c7ca2e81b79a523ff52dd18b14faefab8212b999b",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2023-11.zip",
+   "sha256": "153ec1450eb5d999ce253e2c7ca2e81b79a523ff52dd18b14faefab8212b999b",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 801,
+   "checksum_oficial": "91bdf41566cebb86c6f0e3646b0037de9c22e14ee2f592c5722c7e4a19c91119",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2023-12.zip",
+   "sha256": "91bdf41566cebb86c6f0e3646b0037de9c22e14ee2f592c5722c7e4a19c91119",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 685,
+   "checksum_oficial": "5a71469b0b363886df904e784dddefc484dd943334b1fb7454713ce4ed715a4b",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2024-01.zip",
+   "sha256": "5a71469b0b363886df904e784dddefc484dd943334b1fb7454713ce4ed715a4b",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 770,
+   "checksum_oficial": "915fad950c48935f3875d88992b8d78290bc8a6fada44408e3ed14aef9a56670",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2024-02.zip",
+   "sha256": "915fad950c48935f3875d88992b8d78290bc8a6fada44408e3ed14aef9a56670",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 941,
+   "checksum_oficial": "e9c1d0f3e7e3b493277c7f826afb223482d56bdc7611144d398ac10e47307907",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2024-03.zip",
+   "sha256": "e9c1d0f3e7e3b493277c7f826afb223482d56bdc7611144d398ac10e47307907",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 834,
+   "checksum_oficial": "b54c9f05af116ccd921b32b25960ae26954c4983992d44f2390bf1de08b2c724",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2024-04.zip",
+   "sha256": "b54c9f05af116ccd921b32b25960ae26954c4983992d44f2390bf1de08b2c724",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 836,
+   "checksum_oficial": "8350ab4d61b12ec61539611e30809039f54814213bc4c937609360b1ff28b5e0",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2024-05.zip",
+   "sha256": "8350ab4d61b12ec61539611e30809039f54814213bc4c937609360b1ff28b5e0",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 758,
+   "checksum_oficial": "def13f4a478c28b0111fb24c57f95fcee80e71982ed74f12e465d20d328e2275",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2024-06.zip",
+   "sha256": "def13f4a478c28b0111fb24c57f95fcee80e71982ed74f12e465d20d328e2275",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 831,
+   "checksum_oficial": "9d236281ab6430250ad2b472cbbf03812a40aed42e73c8339fc6be55a2417a82",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2024-07.zip",
+   "sha256": "9d236281ab6430250ad2b472cbbf03812a40aed42e73c8339fc6be55a2417a82",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 944,
+   "checksum_oficial": "e17684bc761924eb5e1912c52cfa997eddeb99da303e68e28f6f37369f672b9d",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2024-08.zip",
+   "sha256": "e17684bc761924eb5e1912c52cfa997eddeb99da303e68e28f6f37369f672b9d",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 908,
+   "checksum_oficial": "ffb6e7441053137cb7ca81cc83bcdd996612f7dbb15aa2e168a7ee521f8cbbca",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2024-09.zip",
+   "sha256": "ffb6e7441053137cb7ca81cc83bcdd996612f7dbb15aa2e168a7ee521f8cbbca",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 748,
+   "checksum_oficial": "2124978c335473a5d9c0f0e9f238193d56c21ac7e250e065a36e9d1201beb049",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2024-10.zip",
+   "sha256": "2124978c335473a5d9c0f0e9f238193d56c21ac7e250e065a36e9d1201beb049",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 809,
+   "checksum_oficial": "636a4c7c86445c2774b4eae8598c480fcbc57de7dde5d40f6937c7fac510797c",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2024-11.zip",
+   "sha256": "636a4c7c86445c2774b4eae8598c480fcbc57de7dde5d40f6937c7fac510797c",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 837,
+   "checksum_oficial": "11a0847e8aacb32eeb725611fda4fe6a8419c03eb0c16e14dfc3b9287e78ecc9",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2024-12.zip",
+   "sha256": "11a0847e8aacb32eeb725611fda4fe6a8419c03eb0c16e14dfc3b9287e78ecc9",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 768,
+   "checksum_oficial": "88c95b99d2784a7baac529fe578563d7e05038a1b8a498b2f59bf81b216fee20",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2025-01.zip",
+   "sha256": "88c95b99d2784a7baac529fe578563d7e05038a1b8a498b2f59bf81b216fee20",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 868,
+   "checksum_oficial": "9e116dd6754484a19ecc41ced40b8dfa7f62c33d41cdc3317336b1e1f043767f",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2025-02.zip",
+   "sha256": "9e116dd6754484a19ecc41ced40b8dfa7f62c33d41cdc3317336b1e1f043767f",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 934,
+   "checksum_oficial": "62464a8bfb7ba515628acb76d3e2172d33b88805faa2e701a22537c51a17d139",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2025-03.zip",
+   "sha256": "62464a8bfb7ba515628acb76d3e2172d33b88805faa2e701a22537c51a17d139",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 940,
+   "checksum_oficial": "7db62cb5e9f32397dacabb3d571b96397024bda3810bde0799c90f61cb773679",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2025-04.zip",
+   "sha256": "7db62cb5e9f32397dacabb3d571b96397024bda3810bde0799c90f61cb773679",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 919,
+   "checksum_oficial": "996aff38f046b50510301532ac5cbdca115afca971c49cb548f50e5d70e18d99",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2025-05.zip",
+   "sha256": "996aff38f046b50510301532ac5cbdca115afca971c49cb548f50e5d70e18d99",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 928,
+   "checksum_oficial": "ae7ca242249ca3df06d1222a0c264fe83b18c4b2c19fe656e864f7d081d5e198",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2025-06.zip",
+   "sha256": "ae7ca242249ca3df06d1222a0c264fe83b18c4b2c19fe656e864f7d081d5e198",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 854,
+   "checksum_oficial": "5f2d840c5669ca946529c33f6df32433c5d0cd973eb4adfd40459270c460e7f8",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2025-07.zip",
+   "sha256": "5f2d840c5669ca946529c33f6df32433c5d0cd973eb4adfd40459270c460e7f8",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 922,
+   "checksum_oficial": "c3fca21c71afb4962e89f8e3d84afe5832019ed8f570ee7c7c299f2436a28b62",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2025-08.zip",
+   "sha256": "c3fca21c71afb4962e89f8e3d84afe5832019ed8f570ee7c7c299f2436a28b62",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 934,
+   "checksum_oficial": "2fa09df245aadc73cf43f837a72c3009fcd7d10c8c4e3db48b2d1021c331841a",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2025-09.zip",
+   "sha256": "2fa09df245aadc73cf43f837a72c3009fcd7d10c8c4e3db48b2d1021c331841a",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 953,
+   "checksum_oficial": "1ae86c5fb1f15d8792906b746cc7598ebe7e6e7194b74501db79c874e37d7e14",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2025-10.zip",
+   "sha256": "1ae86c5fb1f15d8792906b746cc7598ebe7e6e7194b74501db79c874e37d7e14",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 956,
+   "checksum_oficial": "a3a8abb219373ec1e02e8d1a47015665d180d6130cfe1df71d2fa8fc9de59e59",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2025-11.zip",
+   "sha256": "a3a8abb219373ec1e02e8d1a47015665d180d6130cfe1df71d2fa8fc9de59e59",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 985,
+   "checksum_oficial": "ef9e84f53a5fa07702958c8700077c8be0a90ec8b3e25110f5611109c3c0090c",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2025-12.zip",
+   "sha256": "ef9e84f53a5fa07702958c8700077c8be0a90ec8b3e25110f5611109c3c0090c",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 979,
+   "checksum_oficial": "830cf7797ea6ecdc554ac2d9047a141df1a6a544f4ea58e7028227930462b139",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2026-01.zip",
+   "sha256": "830cf7797ea6ecdc554ac2d9047a141df1a6a544f4ea58e7028227930462b139",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 939,
+   "checksum_oficial": "e445f00c81a7fa8361d99b3660f24b4f58e5d952fe301d70bbc72c319bc01a77",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2026-02.zip",
+   "sha256": "e445f00c81a7fa8361d99b3660f24b4f58e5d952fe301d70bbc72c319bc01a77",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 1002,
+   "checksum_oficial": "9f5625846c503a1e94fcdecd2deb37dc8852e341add353fa48c2b9a0cc70df6a",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2026-03.zip",
+   "sha256": "9f5625846c503a1e94fcdecd2deb37dc8852e341add353fa48c2b9a0cc70df6a",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 963,
+   "checksum_oficial": "86160f455478a8b262d96d1516f583355e6e0cec7beeb5784e69dda76f599e98",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2026-04.zip",
+   "sha256": "86160f455478a8b262d96d1516f583355e6e0cec7beeb5784e69dda76f599e98",
+   "tipo": "funding"
+  },
+  {
+   "bytes": 980,
+   "checksum_oficial": "ff926ad3fc48493c26c85af16620b19c695cc1854faa1e7f0ea2ab9fdafc2084",
+   "ruta": "futures/um/monthly/fundingRate/ETHUSDT/ETHUSDT-fundingRate-2026-05.zip",
+   "sha256": "ff926ad3fc48493c26c85af16620b19c695cc1854faa1e7f0ea2ab9fdafc2084",
+   "tipo": "funding"
+  }
+ ],
+ "ausentes": [],
+ "desde": "2020-01",
+ "fecha_utc": "2026-10-16T20:52:52.673360+00:00",
+ "fuente": "https://data.binance.vision/data",
+ "hasta": "2026-06",
+ "procedencia": "historico_oficial",
+ "simbolo": "ETHUSDT",
+ "via": "descarga directa"
+}

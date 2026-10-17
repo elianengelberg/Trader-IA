@@ -1,0 +1,27 @@
+{
+ "categoria": "HISTÓRICO verificado, SOLO desarrollo",
+ "codigo_sha256": "8a7cb0424b28fd966a9520bbfd702fa955b07a92b08d30892f21a62a6aa3840b",
+ "E1_atribucion": {
+  "diferencia_pnl": -543.7275358699953,
+  "funding_rev5_mientras_umbral_fuera_positivo": 516.2591861858915,
+  "funding_rev5_mientras_umbral_fuera_negativo_evitado": -233.95910805686069,
+  "funding_neto_umbral_menos_rev5": -313.7255047750118,
+  "costes_extra_umbral": 241.2033510950001,
+  "resto_patas_y_tamano": 11.20132000001658
+ },
+ "E3_techo_oraculo": {
+  "funding_siempre_frac_nocional": 0.5202542599999909,
+  "oraculo_frac_nocional": 0.5304396799999893,
+  "ganancia_oraculo_frac_nocional": 0.010185419999998446,
+  "tramos_fuera_oraculo": 1,
+  "ganancia_oraculo_pp_equity_anual": 0.16965371006994673,
+  "coste_ida_vuelta_frac_nocional": 0.005,
+  "anos": 3.001826484018265,
+  "nota": "techo NO realizable: conoce el futuro; con coste ×2 el techo sería menor"
+ },
+ "E3_techo_pp_anual_por_coste": {
+  "0.5": 0.26774332369939513,
+  "1": 0.16965371006994673,
+  "2": 0.08637108153330005
+ }
+}

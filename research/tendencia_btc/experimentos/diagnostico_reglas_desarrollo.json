@@ -1,0 +1,141 @@
+{
+ "categoria": "HISTÓRICO, solo desarrollo (diagnóstico; parámetros a priori)",
+ "ventana": [
+  "2018-02-14",
+  "2022-01-01"
+ ],
+ "manifiesto_sha256": "5a0805a7e22797637c400a1e939ec6c2d10e0cdc26410566f212708211b6367b",
+ "metricas": {
+  "T_tendencia": {
+   "dias": 1417,
+   "final": 52647.97772365631,
+   "rendimiento_total": 4.264797772365631,
+   "cagr": 0.5339745340975337,
+   "vol_anual": 0.48962920631818857,
+   "sharpe": 1.118419413545358,
+   "sortino": 1.695282833441176,
+   "caida_maxima": 0.502286670476841,
+   "caida_duracion_dias": 509,
+   "calmar": 1.0630872079297071,
+   "exposicion_media": 0.563442307942767,
+   "tiempo_en_mercado": 0.8143966125617502,
+   "operaciones": 178,
+   "costes": 2083.3115128507975,
+   "costes_pp_anual": 5.366328173539457,
+   "rotacion_anual": 15.408010339875432,
+   "peor_dia": -0.13472953607619076,
+   "por_ano": {
+    "2018": -0.2838872532448843,
+    "2019": 0.7511473304451572,
+    "2020": 1.7667735729223475,
+    "2021": 0.5174136434444467
+   }
+  },
+  "V_volatilidad": {
+   "dias": 1417,
+   "final": 38497.736229238086,
+   "rendimiento_total": 2.8497736229238084,
+   "cagr": 0.41514249698922634,
+   "vol_anual": 0.5421779399363241,
+   "sharpe": 0.9174475135970694,
+   "sortino": 1.3147089922208073,
+   "caida_maxima": 0.5863761150791089,
+   "caida_duracion_dias": 497,
+   "calmar": 0.7079798892102193,
+   "exposicion_media": 0.7572835847433457,
+   "tiempo_en_mercado": 1.0,
+   "operaciones": 75,
+   "costes": 267.86906270187364,
+   "costes_pp_anual": 0.6899944099236688,
+   "rotacion_anual": 2.5905799325254186,
+   "peor_dia": -0.31935680843924896,
+   "por_ano": {
+    "2018": -0.5021410297244366,
+    "2019": 1.0822928483125627,
+    "2020": 1.6851170661778294,
+    "2021": 0.38300523375315887
+   }
+  },
+  "buy_and_hold": {
+   "dias": 1417,
+   "final": 54133.81015843856,
+   "rendimiento_total": 4.413381015843856,
+   "cagr": 0.5450109860906263,
+   "vol_anual": 0.7476772919427858,
+   "sharpe": 0.9640916908521935,
+   "sortino": 1.400817482064323,
+   "caida_maxima": 0.7218864207540374,
+   "caida_duracion_dias": 485,
+   "calmar": 0.7549816292725687,
+   "exposicion_media": 1.0013797052695927,
+   "tiempo_en_mercado": 1.0,
+   "operaciones": 1,
+   "costes": 15.0,
+   "costes_pp_anual": 0.03863796753705011,
+   "rotacion_anual": 0.11853978359269499,
+   "peor_dia": -0.39568693290314483,
+   "por_ano": {
+    "2018": -0.5676597835778316,
+    "2019": 0.9464059530496174,
+    "2020": 3.0252168603762923,
+    "2021": 0.598159985304149
+   }
+  },
+  "estatica_misma_exposicion_T": {
+   "dias": 1417,
+   "final": 34152.805713483365,
+   "rendimiento_total": 2.4152805713483367,
+   "cagr": 0.3721557492926466,
+   "vol_anual": 0.42075772059214517,
+   "sharpe": 0.9644323672960519,
+   "sortino": 1.401395367822369,
+   "caida_maxima": 0.48996003961748336,
+   "caida_duracion_dias": 473,
+   "calmar": 0.7595634729378997,
+   "exposicion_media": 0.5637134224087322,
+   "tiempo_en_mercado": 1.0,
+   "operaciones": 1417,
+   "costes": 0.0,
+   "costes_pp_anual": 0.0,
+   "rotacion_anual": 2.5970613851887885,
+   "peor_dia": -0.22258628055700647,
+   "por_ano": {
+    "2018": -0.33836235702395145,
+    "2019": 0.5393936558592236,
+    "2020": 1.3759055376241025,
+    "2021": 0.4113259258076165
+   }
+  }
+ },
+ "exposicion_media_T": 0.563442307942767,
+ "T_exceso_vs_estatica": {
+  "media_diaria": 0.00038854368563368273,
+  "bootstrap": {
+   "aplicable": true,
+   "dias": 1417,
+   "media_diaria": 0.0003885436856336825,
+   "media_anual": 0.1418184452562941,
+   "intervalo_anual": [
+    -0.08052587489745976,
+    0.3715953476744197
+   ],
+   "p_mayor_que_cero": 0.842,
+   "bloque": 20,
+   "remuestreos": 2000,
+   "semilla": 20261017,
+   "nivel": 0.9
+  },
+  "percentil_nulo_circular": 0.912
+ },
+ "V_sharpe_vs_buy_and_hold": {
+  "dif_sharpe": -0.046660644749813796,
+  "p_mayor_que_cero": 0.379,
+  "bloque": 20,
+  "remuestreos": 2000,
+  "semilla": 20261017
+ },
+ "pasa_a_validacion": {
+  "T": false,
+  "V": false
+ }
+}

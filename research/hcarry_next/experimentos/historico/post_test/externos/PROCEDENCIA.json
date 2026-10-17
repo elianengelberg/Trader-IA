@@ -1,0 +1,10 @@
+{
+ "DTB3.csv": {
+  "fuente": "FRED (Federal Reserve Bank of St. Louis), serie DTB3: 3-Month Treasury Bill Secondary Market Rate, Discount Basis (Board of Governors of the Federal Reserve System, H.15)",
+  "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DTB3&cosd=2019-12-01&coed=2026-05-31",
+  "descargado_utc": "2026-10-16T20:50:13Z",
+  "sha256": "f9526199ff6f639914e4de934e1666211b44154dc9f17332f29b215d30429444",
+  "uso": "SOLO análisis exploratorio posterior al test: aproximación del rendimiento del efectivo ocioso (coste de oportunidad). No es un rendimiento realizable en el exchange sin fricción.",
+  "categoria": "dato público oficial externo; no forma parte del prerregistro"
+ }
+}

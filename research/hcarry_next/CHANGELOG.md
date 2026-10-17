@@ -76,3 +76,31 @@ Huella del código: `68ddc304dc0cb06b05a7ccf113e98ad9d4b3b249847200dda9d6caba535
 - **Lint:** sin efecto en cálculos. Verificado: el ensayo sintético se reproduce bit a bit con la huella del prerregistro (`2e35b68f…`).
 - **Características operativas de la regla prerregistrada:** 40 mundos sintéticos por el pipeline real (`experimentos/historico/caracteristicas_regla.py`, `resumir_caracteristicas.py`). Resultados: 0/20 falsos positivos en mundos nulos; 6/12 detecciones en el mundo base.
 - **`INFORME_VALIDACION_HISTORICA.md`:** P1 y P2 = EVIDENCIA INSUFICIENTE, porque no hay datos históricos (`data.binance.vision` sigue en 403).
+
+## 0.3.0 (2026-10-16): validación histórica con datos oficiales
+
+**Huellas:**
+- prerregistro `90642cd1…` (sin cambios; adendas 2 y 3);
+- código del test `8a7cb042…`;
+- código actual `9d11ecbe…` (replicación idéntica);
+- datos `8bdabde7…`.
+
+**Datos:**
+- 412 archivos oficiales de data.binance.vision verificados: 388 mensuales y 24 diarios;
+- calidad apta según C1–C6 (`experimentos/historico/INFORME_DATOS.md`).
+
+**Defectos corregidos antes de simular** (con pruebas):
+- formato de cierre en µs del spot desde 2025;
+- velas irregulares que abortaban la lectura;
+- emulación sintética incorrecta del formato;
+- cerrojo del test dependiente del manifiesto: ahora es global (`TEST_CONSUMIDO.json`).
+
+**Nuevo:**
+- `completar_con_diarios` y el subcomando `completar-diarios`: archivos diarios oficiales solo para horas ausentes, con D1 sobre los precios. Es idempotente; una ejecución repetida tras el test reescribió el manifiesto y se restauró byte a byte antes de seguir.
+- Scripts de diagnóstico de desarrollo y análisis exploratorios posteriores al test.
+
+**Resultado del test** (una vez, 2026-10-16 20:47 UTC):
+- P1 HIPÓTESIS NO RESPALDADA;
+- P2 EVIDENCIA INSUFICIENTE.
+
+Ver `INFORME_ECONOMICO_HISTORICO.md` y `ESTADO_EJECUTIVO_HISTORICO.md`. Pruebas: 81.

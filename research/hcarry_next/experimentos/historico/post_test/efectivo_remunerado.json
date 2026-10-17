@@ -1,0 +1,108 @@
+{
+ "categoria": "EXPLORATORIO posterior al test (no independiente); supuesto de efectivo remunerado",
+ "codigo_sha256": "8a7cb0424b28fd966a9520bbfd702fa955b07a92b08d30892f21a62a6aa3840b",
+ "fuente_tasa": "FRED DTB3 (ver post_test/externos/PROCEDENCIA.json)",
+ "resultados": {
+  "desarrollo": {
+   "tbill_media": 0.008064689781021879,
+   "rev5": {
+    "cagr_efectivo_0": 0.0947935353280569,
+    "cagr_U_recorte_0": 0.0947935353280569,
+    "cagr_U_recorte_0.01": 0.0947935353280569,
+    "cagr_U_y_margen_recorte_0": 0.09832033714970945
+   },
+   "umbral": {
+    "cagr_efectivo_0": 0.07947521260383383,
+    "cagr_U_recorte_0": 0.08661432118144052,
+    "cagr_U_recorte_0.01": 0.08380472496046942,
+    "cagr_U_y_margen_recorte_0": 0.08726586351997856
+   },
+   "efectivo": {
+    "cagr_efectivo_0": 0.0,
+    "cagr_U_recorte_0": 0.007999359849986787,
+    "cagr_U_recorte_0.01": 0.004302413083064893,
+    "cagr_U_y_margen_recorte_0": 0.007999359849986787
+   }
+  },
+  "validacion": {
+   "tbill_media": 0.05077171717171706,
+   "rev5": {
+    "cagr_efectivo_0": 0.04040459445882161,
+    "cagr_U_recorte_0": 0.04040459445882161,
+    "cagr_U_recorte_0.01": 0.04040459445882161,
+    "cagr_U_y_margen_recorte_0": 0.07708683008534756
+   },
+   "umbral": {
+    "cagr_efectivo_0": 0.02798892960876498,
+    "cagr_U_recorte_0": 0.048924474353639225,
+    "cagr_U_recorte_0.01": 0.04487210632323757,
+    "cagr_U_y_margen_recorte_0": 0.06551760605722112
+   },
+   "efectivo": {
+    "cagr_efectivo_0": 0.0,
+    "cagr_U_recorte_0": 0.050659845907839784,
+    "cagr_U_recorte_0.01": 0.040698704741586766,
+    "cagr_U_y_margen_recorte_0": 0.050659845907839784
+   }
+  },
+  "test": {
+   "tbill_media": 0.04327414806110469,
+   "rev5": {
+    "cagr_efectivo_0": 0.03763427594074398,
+    "cagr_U_recorte_0": 0.03763427594074398,
+    "cagr_U_recorte_0.01": 0.03763427594074398,
+    "cagr_U_y_margen_recorte_0": 0.0673957987051712
+   },
+   "umbral": {
+    "cagr_efectivo_0": 0.026764297749931165,
+    "cagr_U_recorte_0": 0.04863039680466663,
+    "cagr_U_recorte_0.01": 0.04328657731451635,
+    "cagr_U_y_margen_recorte_0": 0.061010949119512325
+   },
+   "efectivo": {
+    "cagr_efectivo_0": 0.0,
+    "cagr_U_recorte_0": 0.0420873275106437,
+    "cagr_U_recorte_0.01": 0.03256399859931869,
+    "cagr_U_y_margen_recorte_0": 0.0420873275106437
+   }
+  }
+ },
+ "techo_oraculo_alternancia_carry_efectivo": {
+  "desarrollo": {
+   "1": {
+    "oraculo_pp_anual": 9.950336641909022,
+    "siempre_carry_pp_anual": 9.52576832643361,
+    "siempre_efectivo_pp_anual": 0.8051918032163662
+   },
+   "2": {
+    "oraculo_pp_anual": 9.81882050926062,
+    "siempre_carry_pp_anual": 9.52576832643361,
+    "siempre_efectivo_pp_anual": 0.8051918032163662
+   }
+  },
+  "validacion": {
+   "1": {
+    "oraculo_pp_anual": 5.631337753570551,
+    "siempre_carry_pp_anual": 4.306341974000658,
+    "siempre_efectivo_pp_anual": 5.073311585815008
+   },
+   "2": {
+    "oraculo_pp_anual": 5.399280189214694,
+    "siempre_carry_pp_anual": 4.306341974000658,
+    "siempre_efectivo_pp_anual": 5.073311585815008
+   }
+  },
+  "test": {
+   "1": {
+    "oraculo_pp_anual": 5.357320820947087,
+    "siempre_carry_pp_anual": 3.8978099996564888,
+    "siempre_efectivo_pp_anual": 4.326216520589524
+   },
+   "2": {
+    "oraculo_pp_anual": 5.18706505653137,
+    "siempre_carry_pp_anual": 3.8978099996564888,
+    "siempre_efectivo_pp_anual": 4.326216520589524
+   }
+  }
+ }
+}

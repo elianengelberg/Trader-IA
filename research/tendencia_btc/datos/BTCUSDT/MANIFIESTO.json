@@ -1,0 +1,754 @@
+{
+ "archivos": [
+  {
+   "bytes": 1150,
+   "checksum_oficial": "c92970f74893163b848f117a37fa5e7110ee1d800c0d9ada949940fccccfdd2f",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2017-08.zip",
+   "sha256": "c92970f74893163b848f117a37fa5e7110ee1d800c0d9ada949940fccccfdd2f",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2213,
+   "checksum_oficial": "c4bc3912fdb4b2c2de57080b58e4912e2e3b1a95c92319f6b93b6fe433a7d8b0",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2017-09.zip",
+   "sha256": "c4bc3912fdb4b2c2de57080b58e4912e2e3b1a95c92319f6b93b6fe433a7d8b0",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2253,
+   "checksum_oficial": "30aefbcc8dda4810360a7973e51e48dc610369e266dd6e4f0e55a58a31324e8d",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2017-10.zip",
+   "sha256": "30aefbcc8dda4810360a7973e51e48dc610369e266dd6e4f0e55a58a31324e8d",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2252,
+   "checksum_oficial": "4e434af9451501eb144826ca919cfcfea8a21de47257c47edd18f8d68fa362f5",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2017-11.zip",
+   "sha256": "4e434af9451501eb144826ca919cfcfea8a21de47257c47edd18f8d68fa362f5",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2291,
+   "checksum_oficial": "45bf1c515b1108668b6bf10f7af323585f30cdf68e096cb71e6e3bb6aa0e9cb4",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2017-12.zip",
+   "sha256": "45bf1c515b1108668b6bf10f7af323585f30cdf68e096cb71e6e3bb6aa0e9cb4",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2201,
+   "checksum_oficial": "0e4810cc35a40c0ed0314dbffd9ae0fae7b14721a46a493d686120556e1a1f75",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2018-01.zip",
+   "sha256": "0e4810cc35a40c0ed0314dbffd9ae0fae7b14721a46a493d686120556e1a1f75",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 1992,
+   "checksum_oficial": "037b2a4846cde6fb748aeb556e9dd84d964c1418097b979a2a4063fa3e9321e3",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2018-02.zip",
+   "sha256": "037b2a4846cde6fb748aeb556e9dd84d964c1418097b979a2a4063fa3e9321e3",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2149,
+   "checksum_oficial": "b950843522c5933b14bd41786b735ff329d8bc9ad9f1044b396fc0f2b4502b3a",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2018-03.zip",
+   "sha256": "b950843522c5933b14bd41786b735ff329d8bc9ad9f1044b396fc0f2b4502b3a",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2095,
+   "checksum_oficial": "4c785201412d4e19acdb00095f1eca6512694bd4a009eb025fdf320a3d17a799",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2018-04.zip",
+   "sha256": "4c785201412d4e19acdb00095f1eca6512694bd4a009eb025fdf320a3d17a799",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2158,
+   "checksum_oficial": "5fe73fb39b58af85095e9426e4b48438a30f2c8aa30662cafe4036437ba431fe",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2018-05.zip",
+   "sha256": "5fe73fb39b58af85095e9426e4b48438a30f2c8aa30662cafe4036437ba431fe",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2099,
+   "checksum_oficial": "9cd929f61b53ef27850b51824f3ae9bfbd32500398f60c8248d2502c8cc272d6",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2018-06.zip",
+   "sha256": "9cd929f61b53ef27850b51824f3ae9bfbd32500398f60c8248d2502c8cc272d6",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2157,
+   "checksum_oficial": "d1a387dc6b141c2b651fc591247923c4aba79d04e604d9b9ac898c4484a323f6",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2018-07.zip",
+   "sha256": "d1a387dc6b141c2b651fc591247923c4aba79d04e604d9b9ac898c4484a323f6",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2163,
+   "checksum_oficial": "dc7607655efcc6a6abeaa012c2b9c25b49f1bcd44662978ce679402fbfb91494",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2018-08.zip",
+   "sha256": "dc7607655efcc6a6abeaa012c2b9c25b49f1bcd44662978ce679402fbfb91494",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2084,
+   "checksum_oficial": "67306134323d0bdd11fe31af648552083d9f850a1689fcd8078bde392b5f0ec0",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2018-09.zip",
+   "sha256": "67306134323d0bdd11fe31af648552083d9f850a1689fcd8078bde392b5f0ec0",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2113,
+   "checksum_oficial": "50483687294e6aa225ded362010a0cd6deef013c36413f2b15ebe887ae8324bd",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2018-10.zip",
+   "sha256": "50483687294e6aa225ded362010a0cd6deef013c36413f2b15ebe887ae8324bd",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2115,
+   "checksum_oficial": "1765dea3f7e23349d6c5f225b9c0b8a5bb11c924bc8847d53b8965769cf83013",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2018-11.zip",
+   "sha256": "1765dea3f7e23349d6c5f225b9c0b8a5bb11c924bc8847d53b8965769cf83013",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2160,
+   "checksum_oficial": "5fccaa5d3e0fd00ba8592d5c3dce5bf64b41ae3f24c8b309e9329f1582417dfc",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2018-12.zip",
+   "sha256": "5fccaa5d3e0fd00ba8592d5c3dce5bf64b41ae3f24c8b309e9329f1582417dfc",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2149,
+   "checksum_oficial": "445904985d35f847c5c0cb4dc582c10e07967aaa6a424ee30373194b2f815519",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2019-01.zip",
+   "sha256": "445904985d35f847c5c0cb4dc582c10e07967aaa6a424ee30373194b2f815519",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 1955,
+   "checksum_oficial": "9bcdcbc003cce89ba5917367cd617bdd5abf17e427e4f7625b62f9ab9cc7439c",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2019-02.zip",
+   "sha256": "9bcdcbc003cce89ba5917367cd617bdd5abf17e427e4f7625b62f9ab9cc7439c",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2119,
+   "checksum_oficial": "385bd09eea4a950b5a509cc2dac8812b5945d4b7edc180a26e43287a5812a7b4",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2019-03.zip",
+   "sha256": "385bd09eea4a950b5a509cc2dac8812b5945d4b7edc180a26e43287a5812a7b4",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2074,
+   "checksum_oficial": "73774cf609ff32f08ca86e999f72aa6451cf76aaf55dc51a4c7922f20c805bd3",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2019-04.zip",
+   "sha256": "73774cf609ff32f08ca86e999f72aa6451cf76aaf55dc51a4c7922f20c805bd3",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2190,
+   "checksum_oficial": "924f9b192e6817ebc627581d826b1272747e1d36e2725a805e616558a231919e",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2019-05.zip",
+   "sha256": "924f9b192e6817ebc627581d826b1272747e1d36e2725a805e616558a231919e",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2147,
+   "checksum_oficial": "a027352795179a3255ecf05cf3be4f8030e836deee0dc6a5f14ebdc173b345e2",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2019-06.zip",
+   "sha256": "a027352795179a3255ecf05cf3be4f8030e836deee0dc6a5f14ebdc173b345e2",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2217,
+   "checksum_oficial": "52afd0bad5ac94a8cfec04d8922e2ec19806783c3a905d4e1149246561c4a331",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2019-07.zip",
+   "sha256": "52afd0bad5ac94a8cfec04d8922e2ec19806783c3a905d4e1149246561c4a331",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2212,
+   "checksum_oficial": "b33dc2c6b606598d8daa5db45d60b568b42d2d4ec33b8f4cd9303da1ee6a58c4",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2019-08.zip",
+   "sha256": "b33dc2c6b606598d8daa5db45d60b568b42d2d4ec33b8f4cd9303da1ee6a58c4",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2120,
+   "checksum_oficial": "9d1d72fb97ea4324615b096af10a78c0511ba99569e729e483acd983fd2d0677",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2019-09.zip",
+   "sha256": "9d1d72fb97ea4324615b096af10a78c0511ba99569e729e483acd983fd2d0677",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2184,
+   "checksum_oficial": "f117e45966cefc57a57ba5c9296bee5b989b125b145bca5459da7201c7191db7",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2019-10.zip",
+   "sha256": "f117e45966cefc57a57ba5c9296bee5b989b125b145bca5459da7201c7191db7",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2123,
+   "checksum_oficial": "d8e85503c78a4e8a0289046607f3a9e2b304d511812167ad97b3be82923df39e",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2019-11.zip",
+   "sha256": "d8e85503c78a4e8a0289046607f3a9e2b304d511812167ad97b3be82923df39e",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2168,
+   "checksum_oficial": "1d0cf3ae0ab25953a733b51cc84c21b4685089ed86f278ad9fc7ea3acdd4be17",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2019-12.zip",
+   "sha256": "1d0cf3ae0ab25953a733b51cc84c21b4685089ed86f278ad9fc7ea3acdd4be17",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2192,
+   "checksum_oficial": "b77d84cc335299783f64e6ef845ffbab6cc6198a2c396cc1c2c6f8dd1a9db5a5",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2020-01.zip",
+   "sha256": "b77d84cc335299783f64e6ef845ffbab6cc6198a2c396cc1c2c6f8dd1a9db5a5",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2045,
+   "checksum_oficial": "808ebfc66e77113d4d5f4ead3a5e0eab4404b62548fa786b07830a4d73972152",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2020-02.zip",
+   "sha256": "808ebfc66e77113d4d5f4ead3a5e0eab4404b62548fa786b07830a4d73972152",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2222,
+   "checksum_oficial": "26a062af0efb4dbba71fa3db7a041629ee7cc4cf636ed13a98bf90f8fe0e1d0d",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2020-03.zip",
+   "sha256": "26a062af0efb4dbba71fa3db7a041629ee7cc4cf636ed13a98bf90f8fe0e1d0d",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2126,
+   "checksum_oficial": "bf4674f7aaf5baafea9e1d73c95344558b381dfe0c117110a156a0d64d8d5cf5",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2020-04.zip",
+   "sha256": "bf4674f7aaf5baafea9e1d73c95344558b381dfe0c117110a156a0d64d8d5cf5",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2183,
+   "checksum_oficial": "7ae5d56d12ce599fbceac80ae04bde51c7421b39f22f924f1f46a53e560a1f75",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2020-05.zip",
+   "sha256": "7ae5d56d12ce599fbceac80ae04bde51c7421b39f22f924f1f46a53e560a1f75",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2103,
+   "checksum_oficial": "19e9ffb7c77e0b8c7bc17d6c47fdc52eb50fcb61ac8d94d32b9c13eb17c700d6",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2020-06.zip",
+   "sha256": "19e9ffb7c77e0b8c7bc17d6c47fdc52eb50fcb61ac8d94d32b9c13eb17c700d6",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2174,
+   "checksum_oficial": "76fab627ce54ba1457c63e3906e2afd3162cf053283709672fb3eb676b3dde3b",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2020-07.zip",
+   "sha256": "76fab627ce54ba1457c63e3906e2afd3162cf053283709672fb3eb676b3dde3b",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2197,
+   "checksum_oficial": "ff20895a43680f991fa26ee2c9b34376c17487404d57a22f088af8c7ed1fd9ec",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2020-08.zip",
+   "sha256": "ff20895a43680f991fa26ee2c9b34376c17487404d57a22f088af8c7ed1fd9ec",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2148,
+   "checksum_oficial": "d6f9590a181d58a992e6a3ce2346a4dbc96ecf5310c12df66c57be4818bfc28a",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2020-09.zip",
+   "sha256": "d6f9590a181d58a992e6a3ce2346a4dbc96ecf5310c12df66c57be4818bfc28a",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2210,
+   "checksum_oficial": "e240ecb14f1120af34290ed9c7e8937e7cd8a80f0d0bbc88a924f7e520e78cec",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2020-10.zip",
+   "sha256": "e240ecb14f1120af34290ed9c7e8937e7cd8a80f0d0bbc88a924f7e520e78cec",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2161,
+   "checksum_oficial": "4a7b8bd36409c7ae92916489621e298d750e5dda7be5b7389dc814dffb16a29e",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2020-11.zip",
+   "sha256": "4a7b8bd36409c7ae92916489621e298d750e5dda7be5b7389dc814dffb16a29e",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2231,
+   "checksum_oficial": "77e2c7fa9a940828b3f36f7212f6def777acfc1402d173bdfad958d2e37ea469",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2020-12.zip",
+   "sha256": "77e2c7fa9a940828b3f36f7212f6def777acfc1402d173bdfad958d2e37ea469",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2295,
+   "checksum_oficial": "6ff53d94f600e2a208882bfd5c00e2133cff8f07e57b7f373af29f85f86e0284",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2021-01.zip",
+   "sha256": "6ff53d94f600e2a208882bfd5c00e2133cff8f07e57b7f373af29f85f86e0284",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2103,
+   "checksum_oficial": "f18254dc4a70f396494be83a6081cfafd1935aaef42aef5a12f18b0244edeb27",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2021-02.zip",
+   "sha256": "f18254dc4a70f396494be83a6081cfafd1935aaef42aef5a12f18b0244edeb27",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2282,
+   "checksum_oficial": "f43e48b5efc8e0b06e0520b91aad4e5668844c766933c0c5cf403115dba03303",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2021-03.zip",
+   "sha256": "f43e48b5efc8e0b06e0520b91aad4e5668844c766933c0c5cf403115dba03303",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2189,
+   "checksum_oficial": "3dd852f06608173dec98b7210f6a38728ef221f08717b362b4f3f09436e0a5fe",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2021-04.zip",
+   "sha256": "3dd852f06608173dec98b7210f6a38728ef221f08717b362b4f3f09436e0a5fe",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2283,
+   "checksum_oficial": "3122e1ebaa1376937d479964563dced19f850636a700bb7cb97d7872ea8c8f28",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2021-05.zip",
+   "sha256": "3122e1ebaa1376937d479964563dced19f850636a700bb7cb97d7872ea8c8f28",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2204,
+   "checksum_oficial": "9875e11e890f75ef6eb0188ef7f952e5c0ba6919bd6d72d3da4d6847b84c5ccf",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2021-06.zip",
+   "sha256": "9875e11e890f75ef6eb0188ef7f952e5c0ba6919bd6d72d3da4d6847b84c5ccf",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2264,
+   "checksum_oficial": "636f588a6abb568f977aea3ae798f34ced4135f2f96fbc1493a2f9ab54a844eb",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2021-07.zip",
+   "sha256": "636f588a6abb568f977aea3ae798f34ced4135f2f96fbc1493a2f9ab54a844eb",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2246,
+   "checksum_oficial": "68612e3fb74c184f97e4d3b2e061dd3743156401a6813ab897014b0b35caedd7",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2021-08.zip",
+   "sha256": "68612e3fb74c184f97e4d3b2e061dd3743156401a6813ab897014b0b35caedd7",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2156,
+   "checksum_oficial": "9f6535a0fe8a417b0909d230e4a02f6a9933eb23c770f54c9f6bf140e8d02257",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2021-09.zip",
+   "sha256": "9f6535a0fe8a417b0909d230e4a02f6a9933eb23c770f54c9f6bf140e8d02257",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2210,
+   "checksum_oficial": "ba50ff3dab5726ca8b9fa26065fe3a8f612aed4baa978ecdd9d39647cd108684",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2021-10.zip",
+   "sha256": "ba50ff3dab5726ca8b9fa26065fe3a8f612aed4baa978ecdd9d39647cd108684",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2166,
+   "checksum_oficial": "64162d8ec11458e9d02f49d8569e47765517852bcf0a908cd4d71211e3912e62",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2021-11.zip",
+   "sha256": "64162d8ec11458e9d02f49d8569e47765517852bcf0a908cd4d71211e3912e62",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2196,
+   "checksum_oficial": "6231b57d3a3b71fb76a1a34078a01a01275a59870857bf60408ccd3ba4618e75",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2021-12.zip",
+   "sha256": "6231b57d3a3b71fb76a1a34078a01a01275a59870857bf60408ccd3ba4618e75",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2183,
+   "checksum_oficial": "a4a2e0432a8f0b42e2da71ac26599b2e6385b579ca4feba692a95cb897decdcd",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2022-01.zip",
+   "sha256": "a4a2e0432a8f0b42e2da71ac26599b2e6385b579ca4feba692a95cb897decdcd",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2011,
+   "checksum_oficial": "faffa5eadb9ebf0b32742773777596d0dbf3f282e94a16dd05cf1eb7b53a3763",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2022-02.zip",
+   "sha256": "faffa5eadb9ebf0b32742773777596d0dbf3f282e94a16dd05cf1eb7b53a3763",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2206,
+   "checksum_oficial": "452129b478585b18931f728f89daed9d2a19d4824b932af7a099366efd4db639",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2022-03.zip",
+   "sha256": "452129b478585b18931f728f89daed9d2a19d4824b932af7a099366efd4db639",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2117,
+   "checksum_oficial": "70413f67212d012ebfd600a6ebf20c03a9c8311bf764ab6d21d1bfd2d21d1b19",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2022-04.zip",
+   "sha256": "70413f67212d012ebfd600a6ebf20c03a9c8311bf764ab6d21d1bfd2d21d1b19",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2212,
+   "checksum_oficial": "53eee1be2d5b461dabc67645ad706610b0465d8bbacd5f9cd99fc790c68f18f5",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2022-05.zip",
+   "sha256": "53eee1be2d5b461dabc67645ad706610b0465d8bbacd5f9cd99fc790c68f18f5",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2169,
+   "checksum_oficial": "dd5047ce33c16231bcb01f534951a709937bbfe0c0667c61f20f188cf9b94de4",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2022-06.zip",
+   "sha256": "dd5047ce33c16231bcb01f534951a709937bbfe0c0667c61f20f188cf9b94de4",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2245,
+   "checksum_oficial": "216567f1a8bc1dbeaada097f7eddff12dafde177c16b26507c762a613a57eb5f",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2022-07.zip",
+   "sha256": "216567f1a8bc1dbeaada097f7eddff12dafde177c16b26507c762a613a57eb5f",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2237,
+   "checksum_oficial": "fc8bd69e95141afb6f83c5a4450c3f6b49c4a1cb16e42d90eb960c3ffa9e766e",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2022-08.zip",
+   "sha256": "fc8bd69e95141afb6f83c5a4450c3f6b49c4a1cb16e42d90eb960c3ffa9e766e",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2213,
+   "checksum_oficial": "68a8357e23277ebd98842fd88d492b012d53dd578b5061cafb8c070c440b235e",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2022-09.zip",
+   "sha256": "68a8357e23277ebd98842fd88d492b012d53dd578b5061cafb8c070c440b235e",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2219,
+   "checksum_oficial": "5b086535cba596ef1b465f247a26385b4ccfd12673a76f225e2dd9e00dddadfd",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2022-10.zip",
+   "sha256": "5b086535cba596ef1b465f247a26385b4ccfd12673a76f225e2dd9e00dddadfd",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2191,
+   "checksum_oficial": "142202b226078f54342c4a1d74c8c6081a98c655d7d6f6fba06314f9c101e2d9",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2022-11.zip",
+   "sha256": "142202b226078f54342c4a1d74c8c6081a98c655d7d6f6fba06314f9c101e2d9",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2222,
+   "checksum_oficial": "aff24746afa9a3dbd355dd3462bcef80e59e96ed9aa55f79007532f9e07991bf",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2022-12.zip",
+   "sha256": "aff24746afa9a3dbd355dd3462bcef80e59e96ed9aa55f79007532f9e07991bf",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2250,
+   "checksum_oficial": "a9fd53b75add7cc42fb4779a545811606260f79810f3826215d6ebecda11bb36",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2023-01.zip",
+   "sha256": "a9fd53b75add7cc42fb4779a545811606260f79810f3826215d6ebecda11bb36",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2072,
+   "checksum_oficial": "13df1e3633f15be3eeba4768d0cc323ef221191002657b53936a6d0fb5e6556f",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2023-02.zip",
+   "sha256": "13df1e3633f15be3eeba4768d0cc323ef221191002657b53936a6d0fb5e6556f",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2265,
+   "checksum_oficial": "1cb1209700ec74fa4592048de2e4ea4a38ab2bd622dfe03f1d6195c249501381",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2023-03.zip",
+   "sha256": "1cb1209700ec74fa4592048de2e4ea4a38ab2bd622dfe03f1d6195c249501381",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2108,
+   "checksum_oficial": "999e86be73731ebc347c6ada94abceb5e291b65e7f1b4df2ce390af1aa2a4a08",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2023-04.zip",
+   "sha256": "999e86be73731ebc347c6ada94abceb5e291b65e7f1b4df2ce390af1aa2a4a08",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2168,
+   "checksum_oficial": "c343e4689784c29f83d25147a096dd44b6ae5c1063c909f8adda82b56414469d",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2023-05.zip",
+   "sha256": "c343e4689784c29f83d25147a096dd44b6ae5c1063c909f8adda82b56414469d",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2099,
+   "checksum_oficial": "634919565c55a29729543d730927ca4b547c0e52d118a38de730f37fdd7617ef",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2023-06.zip",
+   "sha256": "634919565c55a29729543d730927ca4b547c0e52d118a38de730f37fdd7617ef",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2132,
+   "checksum_oficial": "32363d37de02e6ad8d334ac332c685f8cdf5684733a9f2cfbca40e15e591396b",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2023-07.zip",
+   "sha256": "32363d37de02e6ad8d334ac332c685f8cdf5684733a9f2cfbca40e15e591396b",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2160,
+   "checksum_oficial": "8c5e47bfe3f0b0273534379e8ba5c93e69c84d67e8b9a03f293d6621bead2a5f",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2023-08.zip",
+   "sha256": "8c5e47bfe3f0b0273534379e8ba5c93e69c84d67e8b9a03f293d6621bead2a5f",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2080,
+   "checksum_oficial": "2fe68ecad48d6927a9280d89700e991cb6481dc2767698c785f2b2d1c0b14744",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2023-09.zip",
+   "sha256": "2fe68ecad48d6927a9280d89700e991cb6481dc2767698c785f2b2d1c0b14744",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2154,
+   "checksum_oficial": "358b83bf0c2a5d5390a4bc4d4ae14fa9df0f56139642ad996c0df0f7bc712400",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2023-10.zip",
+   "sha256": "358b83bf0c2a5d5390a4bc4d4ae14fa9df0f56139642ad996c0df0f7bc712400",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2102,
+   "checksum_oficial": "fac9823cac7bf56a3a6038c3b79417e949b00c172939e62000451c8c25edd7c1",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2023-11.zip",
+   "sha256": "fac9823cac7bf56a3a6038c3b79417e949b00c172939e62000451c8c25edd7c1",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2177,
+   "checksum_oficial": "056dad65795c9264ef90ee668a4c245e8fec73ebcbb272d28f5596c389913979",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2023-12.zip",
+   "sha256": "056dad65795c9264ef90ee668a4c245e8fec73ebcbb272d28f5596c389913979",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2190,
+   "checksum_oficial": "474c1ce6fbb09e42cfc7231fee249aecc58af2fb5918570ffeba37998926b4a4",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2024-01.zip",
+   "sha256": "474c1ce6fbb09e42cfc7231fee249aecc58af2fb5918570ffeba37998926b4a4",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2053,
+   "checksum_oficial": "4dae0b3d6b8ea59e39e6493b7964040c52459ea7b0a50b9c2793dcbfae53800d",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2024-02.zip",
+   "sha256": "4dae0b3d6b8ea59e39e6493b7964040c52459ea7b0a50b9c2793dcbfae53800d",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2224,
+   "checksum_oficial": "f7cd4fcafe79d1fac0c830d5fe152f7b3b9100e7c97e40352188766388af0ae0",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2024-03.zip",
+   "sha256": "f7cd4fcafe79d1fac0c830d5fe152f7b3b9100e7c97e40352188766388af0ae0",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2141,
+   "checksum_oficial": "b4a8542c33e5251fb53f8a3352dd4e6f3cde4ac25f2c24935db8089aa1a2c3a0",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2024-04.zip",
+   "sha256": "b4a8542c33e5251fb53f8a3352dd4e6f3cde4ac25f2c24935db8089aa1a2c3a0",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2185,
+   "checksum_oficial": "0175f696039b9e30f06c6398d218c99e577661ac30424869c648fe9770507248",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2024-05.zip",
+   "sha256": "0175f696039b9e30f06c6398d218c99e577661ac30424869c648fe9770507248",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2095,
+   "checksum_oficial": "8a0f6416c2a83cfa15ba26c688d716fdafe35bb1748dd244f0550e8b2f7e38f7",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2024-06.zip",
+   "sha256": "8a0f6416c2a83cfa15ba26c688d716fdafe35bb1748dd244f0550e8b2f7e38f7",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2203,
+   "checksum_oficial": "9a2963ef6541b4d7630eff8df7b2eaee48ece33180af03c34b0bf92675692899",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2024-07.zip",
+   "sha256": "9a2963ef6541b4d7630eff8df7b2eaee48ece33180af03c34b0bf92675692899",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2190,
+   "checksum_oficial": "df41fe3260920b85da86855b4880f34618982e689081317d3d63b9b3bbcb1d53",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2024-08.zip",
+   "sha256": "df41fe3260920b85da86855b4880f34618982e689081317d3d63b9b3bbcb1d53",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2106,
+   "checksum_oficial": "89e459b2a8f4b138dc742d9358c0084fcabf719d40468e156c3149a3635f3359",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2024-09.zip",
+   "sha256": "89e459b2a8f4b138dc742d9358c0084fcabf719d40468e156c3149a3635f3359",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2203,
+   "checksum_oficial": "d442a5f158d45d9ff7b1584b35023a4161cf915a3857f5e71a2a2e6aa68c69c5",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2024-10.zip",
+   "sha256": "d442a5f158d45d9ff7b1584b35023a4161cf915a3857f5e71a2a2e6aa68c69c5",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2157,
+   "checksum_oficial": "b197219d9e8b5e933226e1cd24fe2b7bfc3a2e8a3e74e6f7dc08a48f314da8c3",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2024-11.zip",
+   "sha256": "b197219d9e8b5e933226e1cd24fe2b7bfc3a2e8a3e74e6f7dc08a48f314da8c3",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2218,
+   "checksum_oficial": "82ec90210f492694b9d01722f97f579108ee787968b8485b53d736ea735700da",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2024-12.zip",
+   "sha256": "82ec90210f492694b9d01722f97f579108ee787968b8485b53d736ea735700da",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2254,
+   "checksum_oficial": "3a3eb1b723d944deb4dbef5ae361bbe39340a17fe987fe22e397ef03dca268d2",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2025-01.zip",
+   "sha256": "3a3eb1b723d944deb4dbef5ae361bbe39340a17fe987fe22e397ef03dca268d2",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2039,
+   "checksum_oficial": "27cfde08c9eb8e3801fb049e3be351a3e50ab46abd8553c24023fa98ea5e919e",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2025-02.zip",
+   "sha256": "27cfde08c9eb8e3801fb049e3be351a3e50ab46abd8553c24023fa98ea5e919e",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2249,
+   "checksum_oficial": "5874e405f55c46f040de1a8ea9daae583dc12b5bcaef6078b21aae9c627cedcc",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2025-03.zip",
+   "sha256": "5874e405f55c46f040de1a8ea9daae583dc12b5bcaef6078b21aae9c627cedcc",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2165,
+   "checksum_oficial": "8068a571425857cb0f5f71f75e733d3bc1e731362a09f84f835bbea6e087aeb2",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2025-04.zip",
+   "sha256": "8068a571425857cb0f5f71f75e733d3bc1e731362a09f84f835bbea6e087aeb2",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2253,
+   "checksum_oficial": "2b87aa0c63641ba1e954855bcfed96d7fc4eb21efe7936f354ff74e8e06cfcea",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2025-05.zip",
+   "sha256": "2b87aa0c63641ba1e954855bcfed96d7fc4eb21efe7936f354ff74e8e06cfcea",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2170,
+   "checksum_oficial": "dc4bbe2c75f04372b909febe8e6b379b053f88423d78cdb3ad8b0be3a66d6ede",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2025-06.zip",
+   "sha256": "dc4bbe2c75f04372b909febe8e6b379b053f88423d78cdb3ad8b0be3a66d6ede",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2232,
+   "checksum_oficial": "1ea64a346f6be0aaf455eb1ce107e6d38367164d97d0dd3719b9f9bb239796f4",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2025-07.zip",
+   "sha256": "1ea64a346f6be0aaf455eb1ce107e6d38367164d97d0dd3719b9f9bb239796f4",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2237,
+   "checksum_oficial": "6720b573210cfbb98765f4a0de6826033d203fda42a6c8364455144b703ceace",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2025-08.zip",
+   "sha256": "6720b573210cfbb98765f4a0de6826033d203fda42a6c8364455144b703ceace",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2154,
+   "checksum_oficial": "9934e6d98a90139039bb070a90ba409ff1832ad80116920adcf088090ce4c996",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2025-09.zip",
+   "sha256": "9934e6d98a90139039bb070a90ba409ff1832ad80116920adcf088090ce4c996",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2262,
+   "checksum_oficial": "3597639a18f343c768e374157e8bd08dd046bb33693495ff4e13380abac1260e",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2025-10.zip",
+   "sha256": "3597639a18f343c768e374157e8bd08dd046bb33693495ff4e13380abac1260e",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2185,
+   "checksum_oficial": "9eded1225f9e3f3d4f127fad46111eb403553c1125cf6d11995e69d91d037290",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2025-11.zip",
+   "sha256": "9eded1225f9e3f3d4f127fad46111eb403553c1125cf6d11995e69d91d037290",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2230,
+   "checksum_oficial": "b12a106198f3be3ba5916195f75c1c6d34d8e5302ab77b8fd7c4b1b58b6144f4",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2025-12.zip",
+   "sha256": "b12a106198f3be3ba5916195f75c1c6d34d8e5302ab77b8fd7c4b1b58b6144f4",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2237,
+   "checksum_oficial": "b7775ddec3ddd3edafc6ad5abcc94d6ab8b8f063a0911d8a3f3daae6a8bbad2e",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2026-01.zip",
+   "sha256": "b7775ddec3ddd3edafc6ad5abcc94d6ab8b8f063a0911d8a3f3daae6a8bbad2e",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2030,
+   "checksum_oficial": "f8806308002477a1a28d6cc55ec9ea7bd91bfd4b44c04500d9fc4aec50fd9464",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2026-02.zip",
+   "sha256": "f8806308002477a1a28d6cc55ec9ea7bd91bfd4b44c04500d9fc4aec50fd9464",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2242,
+   "checksum_oficial": "b81fb1942f9653564f355e3bd62dc06e0552d1c64bc966f7dce5a9c1f8780c47",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2026-03.zip",
+   "sha256": "b81fb1942f9653564f355e3bd62dc06e0552d1c64bc966f7dce5a9c1f8780c47",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2151,
+   "checksum_oficial": "1f7da05da9f9a8f30945bde41872ca649c61d6e6e324e916f4c3cbafa0a9276a",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2026-04.zip",
+   "sha256": "1f7da05da9f9a8f30945bde41872ca649c61d6e6e324e916f4c3cbafa0a9276a",
+   "tipo": "spot_1d"
+  },
+  {
+   "bytes": 2223,
+   "checksum_oficial": "978936e8f1f80b570248f8d4478d6fe08d94b98bc1c7d372feb27573ff466cde",
+   "ruta": "spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2026-05.zip",
+   "sha256": "978936e8f1f80b570248f8d4478d6fe08d94b98bc1c7d372feb27573ff466cde",
+   "tipo": "spot_1d"
+  }
+ ],
+ "ausentes": [],
+ "desde": "2017-08",
+ "fecha_utc": "2026-10-17T01:25:58.771814+00:00",
+ "fuente": "https://data.binance.vision/data",
+ "hasta": "2026-06",
+ "intervalo": "1d",
+ "procedencia": "historico_oficial",
+ "simbolo": "BTCUSDT"
+}

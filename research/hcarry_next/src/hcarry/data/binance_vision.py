@@ -60,6 +60,19 @@ def ruta_mensual(tipo: str, simbolo: str, ano: int, mes: int, intervalo: str = "
     return rutas[tipo]
 
 
+def ruta_diaria(tipo: str, simbolo: str, fecha: str, intervalo: str = "1h") -> str:
+    """Archivo DIARIO oficial ('AAAA-MM-DD'). Solo se usa para completar horas que faltan en el archivo mensual de la
+    misma serie (el funding no tiene archivos diarios)."""
+    s, i = simbolo, intervalo
+    rutas = {
+        "spot": f"spot/daily/klines/{s}/{i}/{s}-{i}-{fecha}.zip",
+        "perp": f"futures/um/daily/klines/{s}/{i}/{s}-{i}-{fecha}.zip",
+        "mark": f"futures/um/daily/markPriceKlines/{s}/{i}/{s}-{i}-{fecha}.zip",
+        "premium": f"futures/um/daily/premiumIndexKlines/{s}/{i}/{s}-{i}-{fecha}.zip",
+    }
+    return rutas[tipo]
+
+
 def meses(desde: str, hasta: str) -> list[tuple[int, int]]:
     """Meses [desde, hasta) en formato 'AAAA-MM'. Rechaza cualquier mes que toque el período reservado."""
     a, m = int(desde[:4]), int(desde[5:7])
@@ -117,51 +130,111 @@ def _checksum_de(texto: bytes, nombre: str) -> str:
     return partes[0].lower()
 
 
+def _bajar_verificado(destino: Path, rel: str, abrir: Callable[[str], bytes], reintentos: int) -> dict | None:
+    """Baja un archivo y su .CHECKSUM oficial, lo verifica y lo guarda. None si la fuente no lo publica (404).
+    Reanudable: si ya existe con el hash oficial no se vuelve a bajar. Solo se reintentan los fallos de red."""
+    import time
+    nombre = rel.rsplit("/", 1)[1]
+    url = f"{BASE}/{rel}"
+    for intento in range(reintentos + 1):
+        try:
+            check = abrir(url + ".CHECKSUM")
+            oficial = _checksum_de(check, nombre)
+            p = destino / rel
+            if p.exists() and hashlib.sha256(p.read_bytes()).hexdigest() == oficial:
+                cuerpo = p.read_bytes()
+            else:
+                cuerpo = abrir(url)
+            break
+        except NoPublicado:
+            return None
+        except OSError as exc:  # fallos transitorios de red; un formato o un hash erróneos no se reintentan
+            if intento == reintentos:
+                raise RuntimeError(f"no se pudo descargar {rel}: {exc}") from exc
+            time.sleep(2 ** intento)
+    sha = hashlib.sha256(cuerpo).hexdigest()
+    if sha != oficial:
+        raise ValueError(f"checksum distinto en {rel}: {sha} ≠ {oficial}")
+    _escribir(destino / rel, cuerpo)
+    _escribir(destino / (rel + ".CHECKSUM"), check)
+    return {"sha256": sha, "bytes": len(cuerpo), "checksum_oficial": oficial}
+
+
 def descargar(destino: Path, desde: str, hasta: str, simbolo: str = "BTCUSDT", tipos: tuple[str, ...] = TIPOS,
               abrir: Callable[[str], bytes] = _abrir_http, reintentos: int = 4) -> dict:
     """Descarga los meses [desde, hasta) de cada tipo junto con su .CHECKSUM oficial, verifica cada archivo y escribe
     un manifiesto con procedencia "historico_oficial". Reanudable (no vuelve a bajar lo ya verificado); un mes no
     publicado (404) queda anotado como ausente; nunca sobrescribe un archivo con contenido distinto."""
-    import time
     destino.mkdir(parents=True, exist_ok=True)
     archivos, ausentes = [], []
     for tipo in tipos:
         for a, m in meses(desde, hasta):
             rel = ruta_mensual(tipo, simbolo, a, m)
-            nombre = rel.rsplit("/", 1)[1]
-            url = f"{BASE}/{rel}"
-            for intento in range(reintentos + 1):
-                try:
-                    check = abrir(url + ".CHECKSUM")
-                    oficial = _checksum_de(check, nombre)
-                    p = destino / rel
-                    if p.exists() and hashlib.sha256(p.read_bytes()).hexdigest() == oficial:
-                        cuerpo = p.read_bytes()
-                    else:
-                        cuerpo = abrir(url)
-                    break
-                except NoPublicado:
-                    ausentes.append({"tipo": tipo, "ruta": rel})
-                    cuerpo = None
-                    break
-                except OSError as exc:  # fallos transitorios de red; un formato o un hash erróneos no se reintentan
-                    if intento == reintentos:
-                        raise RuntimeError(f"no se pudo descargar {rel}: {exc}") from exc
-                    time.sleep(2 ** intento)
-            if cuerpo is None:
+            r = _bajar_verificado(destino, rel, abrir, reintentos)
+            if r is None:
+                ausentes.append({"tipo": tipo, "ruta": rel})
                 continue
-            sha = hashlib.sha256(cuerpo).hexdigest()
-            if sha != oficial:
-                raise ValueError(f"checksum distinto en {rel}: {sha} ≠ {oficial}")
-            _escribir(destino / rel, cuerpo)
-            _escribir(destino / (rel + ".CHECKSUM"), check)
-            archivos.append(Archivo(tipo, rel, sha, len(cuerpo), oficial).__dict__)
+            archivos.append(Archivo(tipo, rel, r["sha256"], r["bytes"], r["checksum_oficial"]).__dict__)
     import datetime as _dt
     manifiesto = {"procedencia": "historico_oficial", "fuente": BASE, "via": "descarga directa",
                   "fecha_utc": _dt.datetime.now(_dt.UTC).isoformat(), "simbolo": simbolo, "desde": desde,
                   "hasta": hasta, "archivos": archivos, "ausentes": ausentes}
     _escribir_manifiesto(destino, manifiesto)
     return manifiesto
+
+
+def _es_diario(a: dict) -> bool:
+    return a.get("granularidad") == "diaria"
+
+
+def _horas_mensuales(directorio: Path, man: dict, tipo: str) -> set[int]:
+    horas: set[int] = set()
+    for a in man["archivos"]:
+        if a["tipo"] == tipo and not _es_diario(a):
+            horas.update(leer_klines((directorio / a["ruta"]).read_bytes(), irregulares=[]))
+    return horas
+
+
+def completar_con_diarios(destino: Path, hasta: str = "2026-06-01", simbolo: str = "BTCUSDT",
+                          tipos: tuple[str, ...] = ("spot", "perp", "mark"), abrir: Callable[[str], bytes] = _abrir_http,
+                          reintentos: int = 4) -> dict:
+    """Completa las horas que faltan en los archivos MENSUALES con los archivos DIARIOS oficiales de la misma serie y
+    del mismo emisor (cada uno con su .CHECKSUM). No sustituye nada: ``construir_panel`` solo toma de un diario las
+    horas ausentes del mensual y exige que las horas presentes en ambos coincidan exactamente (D1). Un día que la
+    fuente no publica queda anotado en ``ausentes_diarios``. Solo para manifiestos "historico_oficial"."""
+    import datetime as _dt
+    man = leer_manifiesto(destino)
+    if man["procedencia"] != "historico_oficial":
+        raise ValueError("solo se completan descargas históricas oficiales")
+    ini, fin = ms(inicio_comun(destino)), ms(hasta)
+    comprobar_fuera_de_reservado(ini, fin)
+    ya = {a["ruta"] for a in man["archivos"]}
+    nuevos, ausentes, dias_por_tipo = [], list(man.get("ausentes_diarios", [])), {}
+    for tipo in tipos:
+        presentes = _horas_mensuales(destino, man, tipo)
+        dias = sorted({iso(t)[:10] for t in range(ini, fin, HORA_MS) if t not in presentes})
+        dias_por_tipo[tipo] = dias
+        for dia in dias:
+            rel = ruta_diaria(tipo, simbolo, dia)
+            if rel in ya:
+                continue
+            r = _bajar_verificado(destino, rel, abrir, reintentos)
+            if r is None:
+                if {"tipo": tipo, "ruta": rel} not in ausentes:
+                    ausentes.append({"tipo": tipo, "ruta": rel})
+                continue
+            nuevos.append({**Archivo(tipo, rel, r["sha256"], r["bytes"], r["checksum_oficial"]).__dict__,
+                           "granularidad": "diaria"})
+    if not nuevos and ausentes == man.get("ausentes_diarios", []) and "complementos_diarios" in man:
+        return man  # nada nuevo: el manifiesto (y su hash, que identifica los datos) no se toca
+    man["archivos"] = man["archivos"] + nuevos
+    man["ausentes_diarios"] = ausentes
+    man.setdefault("complementos_diarios", []).append({
+        "fecha_utc": _dt.datetime.now(_dt.UTC).isoformat(), "hasta": hasta, "dias_con_horas_ausentes": dias_por_tipo,
+        "archivos_nuevos": len(nuevos),
+        "motivo": "horas ausentes en los archivos mensuales; se completan con los diarios oficiales del mismo emisor"})
+    _escribir_manifiesto(destino, man)
+    return man
 
 
 def _escribir_manifiesto(destino: Path, manifiesto: dict) -> None:
@@ -226,6 +299,8 @@ def cobertura(directorio: Path) -> dict[str, list[str]]:
     """Meses ('AAAA-MM') disponibles por tipo según el manifiesto."""
     salida: dict[str, list[str]] = {t: [] for t in TIPOS}
     for a in leer_manifiesto(directorio)["archivos"]:
+        if _es_diario(a):
+            continue
         salida[a["tipo"]].append(a["ruta"].rsplit("-", 2)[-2] + "-" + a["ruta"].rsplit("-", 1)[-1][:2])
     return {k: sorted(v) for k, v in salida.items()}
 
@@ -263,8 +338,10 @@ def _ms(valor: str) -> int:
     return v
 
 
-def leer_klines(contenido_zip: bytes) -> dict[int, tuple[float, float, float, float, float]]:
-    """t → (open, high, low, close, quote_volume). Cabecera opcional; 12 columnas exactas."""
+def leer_klines(contenido_zip: bytes, irregulares: list | None = None) -> dict[int, tuple[float, float, float, float, float]]:
+    """t → (open, high, low, close, quote_volume). Cabecera opcional; 12 columnas exactas.
+    Una vela que no dura exactamente 1 h (p. ej., una parada del exchange a mitad de hora) es un error, salvo que se
+    pase ``irregulares``: entonces se EXCLUYE y se anota (apertura, cierre) en esa lista. Su hora queda sin datos."""
     salida: dict[int, tuple[float, float, float, float, float]] = {}
     for k, f in enumerate(_filas_csv(contenido_zip)):
         if k == 0 and not f[0].strip().lstrip("-").isdigit():
@@ -276,8 +353,14 @@ def leer_klines(contenido_zip: bytes) -> dict[int, tuple[float, float, float, fl
         t = _ms(f[0])
         if t % HORA_MS:
             raise ValueError(f"apertura no alineada a la hora: {f[0]}")
-        if _ms(f[6]) != t + HORA_MS - 1:
-            raise ValueError(f"vela que no dura 1 h: {f[0]}–{f[6]}")
+        # el cierre es apertura + 1 h − 1 unidad de la marca: −1 ms, o −1 µs en el spot desde 2025
+        micro = int(f[0]) > 10 ** 15
+        cierre = int(f[6])
+        if cierre != int(f[0]) + HORA_MS * (1000 if micro else 1) - 1:
+            if irregulares is None:
+                raise ValueError(f"vela que no dura 1 h: {f[0]}–{f[6]}")
+            irregulares.append((t, cierre // 1000 if micro else cierre))
+            continue
         if t in salida:
             raise ValueError(f"hora repetida: {iso(t)}")
         salida[t] = (float(f[1]), float(f[2]), float(f[3]), float(f[4]), float(f[7]))
@@ -307,6 +390,9 @@ def construir_panel(directorio: Path, desde: str, hasta: str, simbolo: str = "BT
     inf.info["procedencia"] = man["procedencia"]
     series: dict[str, dict] = {"spot": {}, "perp": {}, "mark": {}, "premium": {}}
     meses_sin_prima = 0
+    irregulares: list[tuple[str, str, float]] = []
+    de_diarios: dict[str, int] = {}
+    vol_distinto: list[tuple[str, str, float, float]] = []
     crudos_funding: list[tuple[int, float, float | None]] = []
     meses_ = meses(desde[:7], _mes_siguiente(hasta) if not hasta.endswith("-01") else hasta[:7])
     for a, m in meses_:
@@ -327,7 +413,31 @@ def construir_panel(directorio: Path, desde: str, hasta: str, simbolo: str = "BT
             if tipo == "funding":
                 crudos_funding += leer_funding(datos)
             else:
-                series[tipo].update(leer_klines(datos))
+                irr: list = []
+                series[tipo].update(leer_klines(datos, irregulares=irr))
+                irregulares += [(tipo, iso(t), round((c - t + 1) / 60000, 1)) for t, c in irr if ini <= t < fin]
+    for a in man["archivos"]:  # diarios oficiales: SOLO horas ausentes del mensual; las comunes deben coincidir
+        if not _es_diario(a):
+            continue
+        dia = a["ruta"].rsplit("-", 3)[-3:]
+        if not ini <= ms("-".join(dia)[:10]) < fin:
+            continue
+        datos = (directorio / a["ruta"]).read_bytes()
+        if hashlib.sha256(datos).hexdigest() != a["sha256"]:
+            raise ValueError(f"{a['ruta']}: su hash no coincide con el manifiesto (¿archivo alterado?)")
+        irr = []
+        for t, v in leer_klines(datos, irregulares=irr).items():
+            previo = series[a["tipo"]].get(t)
+            if previo is None:
+                series[a["tipo"]][t] = v
+                de_diarios[a["tipo"]] = de_diarios.get(a["tipo"], 0) + 1
+            elif previo[:4] != v[:4]:  # precios distintos entre dos archivos oficiales: bloqueante
+                inf.add("D1", f"el diario y el mensual difieren en los precios de {a['tipo']}", t)
+            elif previo != v:  # solo el volumen: se conserva el mensual y se deja constancia
+                vol_distinto.append((a["tipo"], iso(t), previo[4], v[4]))
+    inf.info["velas_irregulares_excluidas"] = irregulares
+    inf.info["horas_de_archivos_diarios"] = de_diarios
+    inf.info["volumen_distinto_diario_mensual"] = vol_distinto
     barras: list[Barra] = []
     rellenas = 0
     previa = None

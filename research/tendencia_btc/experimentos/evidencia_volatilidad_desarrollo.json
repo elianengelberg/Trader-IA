@@ -1,0 +1,53 @@
+{
+ "categoria": "HISTÓRICO, solo desarrollo",
+ "simbolos": {
+  "BTCUSDT": {
+   "persistencia_vol_30d": 0.32385123481978234,
+   "grupos": {
+    "baja_lt50": {
+     "dias": 251,
+     "media_diaria": 0.00305989754734886,
+     "desv_diaria": 0.03222887044224047,
+     "cociente": 0.09494274870205918
+    },
+    "media_50_80": {
+     "dias": 835,
+     "media_diaria": 0.0007113402882795076,
+     "desv_diaria": 0.03801309231749137,
+     "cociente": 0.01871303398151039
+    },
+    "alta_gt80": {
+     "dias": 481,
+     "media_diaria": 0.002409516708837335,
+     "desv_diaria": 0.05314016374372882,
+     "cociente": 0.04534266624501486
+    }
+   },
+   "regla": "sin base"
+  },
+  "ETHUSDT": {
+   "persistencia_vol_30d": 0.15832714706490236,
+   "grupos": {
+    "baja_lt50": {
+     "dias": 40,
+     "media_diaria": 0.007998034021359578,
+     "desv_diaria": 0.04013159659254269,
+     "cociente": 0.19929518634815005
+    },
+    "media_50_80": {
+     "dias": 541,
+     "media_diaria": 0.0027376140765629675,
+     "desv_diaria": 0.04422756590971117,
+     "cociente": 0.06189836632998747
+    },
+    "alta_gt80": {
+     "dias": 986,
+     "media_diaria": 0.0009026119383494155,
+     "desv_diaria": 0.05871413398891243,
+     "cociente": 0.0153729924470974
+    }
+   },
+   "regla": "sin base"
+  }
+ }
+}

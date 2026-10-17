@@ -1,0 +1,50 @@
+{
+ "BTCUSDT": {
+  "exceso_anual_desarrollo": 0.1418184452562941,
+  "error_1_ano": 0.2707845552991025,
+  "anos_necesarios": {
+   "90 %": {
+    "si_efecto_igual_al_desarrollo": 5.988076465302582,
+    "si_efecto_mitad": 23.952305861210327
+   },
+   "95 %": {
+    "si_efecto_igual_al_desarrollo": 9.864188008630038,
+    "si_efecto_mitad": 39.45675203452015
+   }
+  },
+  "error_tras_12_meses": 0.2707845552991025,
+  "error_tras_24_meses": 0.19147359529257904
+ },
+ "ETHUSDT": {
+  "exceso_anual_desarrollo": 0.24574833554056502,
+  "error_1_ano": 0.41459746795277475,
+  "anos_necesarios": {
+   "90 %": {
+    "si_efecto_igual_al_desarrollo": 4.674951592622948,
+    "si_efecto_mitad": 18.699806370491793
+   },
+   "95 %": {
+    "si_efecto_igual_al_desarrollo": 7.701070904502378,
+    "si_efecto_mitad": 30.804283618009514
+   }
+  },
+  "error_tras_12_meses": 0.41459746795277475,
+  "error_tras_24_meses": 0.2931646810521793
+ },
+ "BTC+ETH (media)": {
+  "exceso_anual_desarrollo": 0.19378339039842946,
+  "error_1_ano": 0.31023528169797615,
+  "anos_necesarios": {
+   "90 %": {
+    "si_efecto_igual_al_desarrollo": 4.209730277169035,
+    "si_efecto_mitad": 16.83892110867614
+   },
+   "95 %": {
+    "si_efecto_igual_al_desarrollo": 6.934709528215631,
+    "si_efecto_mitad": 27.738838112862524
+   }
+  },
+  "error_tras_12_meses": 0.31023528169797615,
+  "error_tras_24_meses": 0.21936947145195773
+ }
+}

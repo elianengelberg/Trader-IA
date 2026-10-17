@@ -9,8 +9,9 @@ Línea de investigación posterior a H-CARRY (cerrado en `../hcarry_next/INFORME
 | `FAMILIAS_ESTRATEGIA.md` | Familias consideradas, reglas de decisión fijadas antes de cada cálculo y sus resultados |
 | `INFORME_NUEVA_LINEA.md` | Informe: datos, selección, implementación, resultados, sensibilidad, estrés, decisión y siguiente paso |
 | `src/tendencia/` | Datos diarios oficiales, señales, backtest long/flat, métricas, estadística |
-| `tests/` | 6 pruebas (sin look-ahead, costes exactos, benchmarks, formato oficial) |
+| `tests/` | 10 pruebas (sin look-ahead, costes exactos, benchmarks, formato oficial, guardas y criterios del papel) |
 | `experimentos/` | Scripts y salidas JSON (todo en desarrollo) |
+| `papel/` | **Evaluación en papel con reglas congeladas** (prerregistro, potencia); evaluador en `src/tendencia/papel.py` |
 | `datos/` | Velas diarias oficiales de BTCUSDT y ETHUSDT con manifiesto y `.CHECKSUM` |
 
 Reutiliza `../hcarry_next/src` (pipeline de datos y bootstrap) sin modificarlo. Comandos en `INFORME_NUEVA_LINEA.md` §8.

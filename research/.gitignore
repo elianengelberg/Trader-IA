@@ -13,3 +13,5 @@ hcarry_next/experimentos/historico/causal/externos/aave_v3_usdt_ethereum.json
 entregas_hcarry/hcarry_next_historico_2026-10-16.zip
 entregas_hcarry/hcarry_next_final.zip
 entregas_hcarry/hcarry_next_snapshot*.zip
+tendencia_btc/datos_papel/**/*.zip
+tendencia_btc/datos_papel/**/*.CHECKSUM

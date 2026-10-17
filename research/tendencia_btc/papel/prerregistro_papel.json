@@ -1,0 +1,78 @@
+{
+ "benchmarks": [
+  "buy and hold con coste de entrada",
+  "estática con la misma exposición media (rebalanceo diario, sin costes)",
+  "efectivo al 0 %"
+ ],
+ "criterios": {
+  "EVIDENCIA_INSUFICIENTE": "en cualquier otro caso: continuar",
+  "HIPOTESIS_NO_RESPALDADA_detener": "en un corte con ≥ 12 meses: P(exceso BTC+ETH > 0) < 0,10",
+  "VENTAJA_RESPALDADA": "en un corte con ≥ 24 meses: P(exceso BTC+ETH > 0) ≥ 0,95, P(exceso BTC > 0) ≥ 0,90 y exceso BTC+ETH > 0 con costes ×2",
+  "antes_de_12_meses": "solo informativo: ninguna decisión",
+  "potencia": "con el efecto de desarrollo hacen falta ≈ 7 años para P ≥ 0,95 (papel/potencia.json); con la mitad, ≈ 28. Un resultado de 1–2 años solo puede descartar un fracaso grueso"
+ },
+ "datos": "data.binance.vision spot/daily/klines/{SIMBOLO}/1d con .CHECKSUM; funding: futures/um/monthly/fundingRate",
+ "estrategias": {
+  "T_BTC": {
+   "senal": "tsmom",
+   "simbolo": "BTCUSDT",
+   "ventanas": [
+    30,
+    90,
+    180
+   ]
+  },
+  "T_ETH": {
+   "senal": "tsmom",
+   "simbolo": "ETHUSDT",
+   "ventanas": [
+    30,
+    90,
+    180
+   ]
+  }
+ },
+ "fecha_congelado": "2026-10-17",
+ "inferencia": {
+  "bootstrap_bloque_dias": 20,
+  "remuestreos": 2000,
+  "semilla": 20261017
+ },
+ "metrica_principal": "exceso de timing = media diaria (estrategia − estática con su misma exposición), media BTC+ETH",
+ "monitor_carry": {
+  "disparador": "> 12 % anual: reabrir H-CARRY con un prerregistro prospectivo nuevo",
+  "fuente": "fundingRate mensual oficial (meses completos)",
+  "que": "funding medio de BTCUSDT (USDⓈ-M) de los 90 días previos, anualizado"
+ },
+ "naturaleza": "evaluación prospectiva en papel; sin órdenes, claves ni dinero real",
+ "prohibido": [
+  "cambiar reglas, parámetros o criterios después de ver datos prospectivos",
+  "usar los cortes intermedios para ajustar nada",
+  "evaluar dentro del período reservado"
+ ],
+ "ramas": {
+  "A": {
+   "historia_de_senal_desde": "2026-04-20",
+   "primera_ejecucion": "2026-10-18",
+   "usa_reservado_como_historia": true
+  },
+  "B": {
+   "historia_de_senal_desde": "2026-10-14",
+   "primera_ejecucion": "primer día con 180 cierres ≥ 2026-10-14 (2027-04-13)",
+   "usa_reservado_como_historia": false
+  }
+ },
+ "reglas": {
+  "apalancamiento": "ninguno; sin cortos",
+  "capital": 10000,
+  "costes_bps": {
+   "comision": 10,
+   "slippage": 5
+  },
+  "decision": "con el cierre diario UTC del día d",
+  "efectivo": "USDT al 0 %",
+  "ejecucion": "apertura oficial del día d + 1",
+  "opera": "solo cuando cambia el objetivo (0, 1/3, 2/3, 1)"
+ },
+ "version": 1
+}

@@ -19,6 +19,7 @@ from hcarry.data.binance_vision import _abrir_http, _bajar_verificado, _escribir
 
 DIA_MS = 86_400_000
 RESERVADO_INICIO = "2026-06-01"
+RESERVADO_FIN = "2026-10-14"  # exclusivo; el período reservado de H-CARRY es [2026-06-01, 2026-10-14)
 
 
 def ruta_1d(simbolo: str, ano: int, mes: int) -> str:
@@ -60,8 +61,11 @@ def _ms(v: int) -> tuple[int, int]:
     return (v // 1000, 1000) if v > 10 ** 15 else (v, 1)
 
 
-def leer(directorio: Path) -> tuple[list[Vela], dict]:
-    """Velas diarias ordenadas + informe de calidad. Verifica cada archivo contra el manifiesto."""
+def leer(directorio: Path, permitir_reservado: bool = False, permitir_prospectivo: bool = False
+         ) -> tuple[list[Vela], dict]:
+    """Velas diarias ordenadas + informe de calidad. Verifica cada archivo contra el manifiesto. Por defecto rechaza
+    cualquier día ≥ 2026-06-01. ``permitir_reservado``: solo con autorización del usuario. ``permitir_prospectivo``: días
+    ≥ 2026-10-14 (evaluación en papel)."""
     man = json.loads((directorio / "MANIFIESTO.json").read_text(encoding="utf-8"))
     if man.get("procedencia") != "historico_oficial":
         raise ValueError("solo datos históricos oficiales")
@@ -97,8 +101,10 @@ def leer(directorio: Path) -> tuple[list[Vela], dict]:
             g = (dt.date.fromisoformat(d) - dt.date.fromisoformat(prev)).days
             ausentes += [(dt.date.fromisoformat(prev) + dt.timedelta(days=k)).isoformat() for k in range(1, g)]
         prev = d
-    if dias and dias[-1] >= RESERVADO_INICIO:
-        raise AssertionError("dato del período reservado")
+    if any(RESERVADO_INICIO <= d < RESERVADO_FIN for d in dias) and not permitir_reservado:
+        raise AssertionError("dato del período reservado (2026-06-01 → 2026-10-13) sin autorización")
+    if any(d >= RESERVADO_FIN for d in dias) and not permitir_prospectivo:
+        raise AssertionError("dato prospectivo (≥ 2026-10-14) fuera de la evaluación en papel")
     inf = {"simbolo": man["simbolo"], "archivos": len(man["archivos"]), "meses_no_publicados": man["ausentes"],
            "primer_dia": dias[0] if dias else None, "ultimo_dia": dias[-1] if dias else None, "dias": len(dias),
            "dias_ausentes": ausentes, **{k: v for k, v in inc.items()},

@@ -1,0 +1,57 @@
+# Prerregistro: evaluación EN PAPEL con reglas congeladas (2026-10-17)
+
+- **Naturaleza:** prospectiva y en papel. **Sin órdenes, sin claves y sin dinero real.**
+- **SHA-256 de las reglas** (`prerregistro_papel.json` = `tendencia.papel.PRERREGISTRO_PAPEL`): `d2e4e1fb43b8219b80e19736ba7a9abed22d6e858f0b8955171496fa06e74939`.
+- **Huella del código** (`src/tendencia/*.py`): `73b22f3e3a8f21513d5533fb11a7553becae30b87c8736fb6880bccc36c11d2b`.
+- **Fecha de congelado:** la del commit en GitHub que introduce este archivo. Es anterior a cualquier dato evaluado.
+
+**Nada de esto se modifica después.** Un cambio de reglas es una hipótesis nueva, con su propio prerregistro y su propio período prospectivo.
+
+## Qué se evalúa
+- **T_BTC y T_ETH:** tendencia long/flat, exactamente como en `INFORME_NUEVA_LINEA.md`:
+  - ventanas {30, 90, 180} días;
+  - exposición 0, ⅓, ⅔ o 1;
+  - decisión con el cierre UTC y ejecución en la apertura oficial siguiente;
+  - solo opera cuando cambia el objetivo;
+  - costes de 10 + 5 bps; efectivo al 0 %; sin apalancamiento ni cortos.
+- **Benchmarks:** buy and hold, estática con la misma exposición media (rebalanceo diario sin costes) y efectivo.
+- **Métrica principal:** exceso de timing = media diaria de (estrategia − estática), promediado entre BTC y ETH.
+- **Monitor del carry (H-CARRY):** funding medio de 90 días de BTCUSDT, anualizado. **Si supera el 12 % anual**, se propone reabrir H-CARRY con un prerregistro prospectivo nuevo.
+- **Datos:** `data.binance.vision`, velas 1d **diarias** con `.CHECKSUM` y fundingRate mensual. Se descargan y verifican en cada evaluación.
+
+## Decisiones prerregistradas (en cada corte; bootstrap por bloques de 20 días, 2 000 remuestreos, semilla 20261017)
+
+| Corte | Decisión |
+|---|---|
+| < 12 meses | **Solo informativo**: ninguna decisión |
+| ≥ 12 meses y P(exceso BTC+ETH > 0) < 0,10 | **HIPÓTESIS NO RESPALDADA: detener** |
+| ≥ 24 meses, P(BTC+ETH) ≥ 0,95, P(BTC) ≥ 0,90 y exceso con costes ×2 > 0 | **VENTAJA RESPALDADA** |
+| Cualquier otro caso | **EVIDENCIA INSUFICIENTE: continuar** |
+
+**Potencia** (`papel/potencia.py`; solo desarrollo):
+- con el efecto estimado en desarrollo hacen falta **≈ 7 años** para P ≥ 0,95 (BTC solo, ≈ 10); con la mitad del efecto, ≈ 28 años;
+- un resultado de 1–2 años **solo puede descartar un fracaso grueso** o detectar problemas operativos; **no puede confirmar** una ventaja;
+- la estimación de desarrollo probablemente está inflada, porque se eligió tras verla.
+
+## Período reservado de H-CARRY (2026-06-01 → 2026-10-13): **pendiente de tu decisión**
+La señal necesita 180 días de cierres. Hay dos ramas, ambas fijadas aquí:
+- **Rama A** (si autorizás usar los **precios** del período reservado **solo como historia de la señal**, nunca para evaluar): la primera ejecución es el **2026-10-18**.
+- **Rama B** (si no lo autorizás): la señal solo usa días ≥ 2026-10-14, y la primera ejecución es el **2027-04-13**. El monitor del carry reporta desde que hay 90 días completos sin el período reservado, alrededor de febrero de 2027.
+
+Hasta que decidas, el código funciona en la **rama B** y no descarga ni lee nada del período reservado. Las guardas tienen pruebas en `tests/test_papel.py`.
+
+## Cómo se evalúa (en cualquier fecha; determinista)
+```
+cd research/tendencia_btc; export PYTHONPATH=src:../hcarry_next/src; PY=../hcarry_next/.venv/bin/python
+$PY -B -c "from pathlib import Path; from tendencia import papel as P
+for s in ('BTCUSDT','ETHUSDT'): P.descargar(Path(f'datos_papel/{s}'), s, '2026-10-14', 'AAAA-MM-DD')   # rama B
+print(P.evaluar({'T_BTC': Path('datos_papel/BTCUSDT'), 'T_ETH': Path('datos_papel/ETHUSDT')}, 'AAAA-MM-DD', rama='B'))"
+```
+La salida incluye la huella del código y el hash de las reglas. Si alguno no coincide con los de arriba, el resultado **no vale** como evaluación de este prerregistro.
+
+## Qué no está prohibido y qué sí
+- **Permitido:** recalcular cuando se quiera. Solo los cortes de 12, 24, 36… meses tienen consecuencias.
+- **Prohibido:**
+  - cambiar reglas, parámetros o criterios;
+  - usar cortes intermedios para ajustar nada;
+  - evaluar dentro del período reservado.

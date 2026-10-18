@@ -1,0 +1,651 @@
+{
+ "categoria": "HISTÓRICO con procedencia limitada (Yahoo, contrastado con Nasdaq); no prospectivo",
+ "prerregistro_sha256": "7781e7258916d819abcbc204b0bc0d6ae7e252e5ff349b8c5c1a199c87cee324",
+ "script_sha256": "17d6b947fcf4897c120883e8f64803f206c7286ba4a71752e4b79344648bccde",
+ "codigo_sha256": "73b22f3e3a8f21513d5533fb11a7553becae30b87c8736fb6880bccc36c11d2b",
+ "manifiesto_sha256": "c64f3bf4c055aad4af6ecde32b30cca0dc42a3728580647d92644805514fb4ad",
+ "validacion_sha256": "770e8dcb73105e5b347c2afc8ffd85d3a31d82dcfacd86f2b9951a1fe9ba15cc",
+ "git": {
+  "head": "f518ac1bf15fc41c992e7f9ebefd7142c4f992da",
+  "fecha_commit_head": "2026-10-17T20:29:05+00:00",
+  "prerregistro_y_script_sin_cambios_desde_head": true
+ },
+ "excluidos": [
+  "TLT"
+ ],
+ "clases": {
+  "renta_variable": [
+   "SPY",
+   "IWM",
+   "EFA",
+   "EEM"
+  ],
+  "bonos": [
+   "SHY",
+   "IEF",
+   "LQD"
+  ],
+  "materias_primas": [
+   "GLD",
+   "SLV",
+   "USO",
+   "DBC"
+  ]
+ },
+ "ventana": [
+  "2013-01-02",
+  "2026-10-01"
+ ],
+ "decision_prerregistrada": "EVIDENCIA INSUFICIENTE",
+ "principal": {
+  "E": -0.0048081989051511715,
+  "ic90_bootstrap": [
+   -0.015513340227647684,
+   0.006546791306232242
+  ],
+  "p_bootstrap": 0.2392,
+  "se_newey_west": 0.006867102275273384,
+  "p_newey_west": 0.24190784860253928,
+  "superior_newey_west": 0.006487179178978956,
+  "sesiones": 3457,
+  "P_decision": 0.2392,
+  "superior_decision": 0.006546791306232242,
+  "E_costes_x2": -0.019318376202011857,
+  "E_sin_cada_clase": {
+   "renta_variable": -0.0030240138323489557,
+   "bonos": 9.128648022763903e-05,
+   "materias_primas": -0.0114918693633322
+  },
+  "sesiones_sin_alguna_clase": 0,
+  "primera_y_ultima": [
+   "2013-01-02",
+   "2026-09-30"
+  ]
+ },
+ "secundarios": {
+  "bloques": {
+   "20": {
+    "E": -0.0048081989051511715,
+    "ic90_bootstrap": [
+     -0.015321429969111209,
+     0.005969897419968612
+    ],
+    "p_bootstrap": 0.2304,
+    "se_newey_west": 0.006867102275273384,
+    "p_newey_west": 0.24190784860253928,
+    "superior_newey_west": 0.006487179178978956,
+    "sesiones": 3457
+   },
+   "120": {
+    "E": -0.0048081989051511715,
+    "ic90_bootstrap": [
+     -0.015879599823006553,
+     0.007195686899981109
+    ],
+    "p_bootstrap": 0.24,
+    "se_newey_west": 0.006867102275273384,
+    "p_newey_west": 0.24190784860253928,
+    "superior_newey_west": 0.006487179178978956,
+    "sesiones": 3457
+   }
+  },
+  "estres": {
+   "costes_x2": {
+    "E": -0.019318376202011857,
+    "ic90_bootstrap": [
+     -0.030900742224431496,
+     -0.007153683022567806
+    ],
+    "p_bootstrap": 0.0068,
+    "se_newey_west": 0.007440149958929749,
+    "p_newey_west": 0.00470889584908557,
+    "superior_newey_west": -0.007080418557003415,
+    "sesiones": 3457
+   },
+   "costes_x3": {
+    "E": -0.033831262355584146,
+    "ic90_bootstrap": [
+     -0.04657902091354539,
+     -0.020330175765339124
+    ],
+    "p_bootstrap": 0.0,
+    "se_newey_west": 0.008177777131947322,
+    "p_newey_west": 1.7595695411987133e-05,
+    "superior_newey_west": -0.020380015979699788,
+    "sesiones": 3457
+   },
+   "retraso_1_sesion": {
+    "E": -0.005215074822422854,
+    "ic90_bootstrap": [
+     -0.015684267366361276,
+     0.00592670512922501
+    ],
+    "p_bootstrap": 0.2184,
+    "se_newey_west": 0.006698264206429196,
+    "p_newey_west": 0.21811620912589508,
+    "superior_newey_west": 0.005802589351801429,
+    "sesiones": 3457
+   },
+   "sin_costes": {
+    "E": 0.009699265953697234,
+    "ic90_bootstrap": [
+     -0.00060993848556625,
+     0.020550427590612198
+    ],
+    "p_bootstrap": 0.938,
+    "se_newey_west": 0.006502152633082524,
+    "p_newey_west": 0.932111193674352,
+    "superior_newey_west": 0.020394355295215084,
+    "sesiones": 3457
+   }
+  },
+  "por_clase": {
+   "renta_variable": {
+    "E": -0.008376569050755605,
+    "ic90_bootstrap": [
+     -0.020022201641289785,
+     0.004760127401462265
+    ],
+    "p_bootstrap": 0.1436,
+    "se_newey_west": 0.007573479600759377,
+    "p_newey_west": 0.13435466975928456,
+    "superior_newey_west": 0.00408069633919644,
+    "sesiones": 3457
+   },
+   "bonos": {
+    "E": -0.014607169675908794,
+    "ic90_bootstrap": [
+     -0.0347567538056115,
+     0.006743658836558927
+    ],
+    "p_bootstrap": 0.1252,
+    "se_newey_west": 0.01312302635259472,
+    "p_newey_west": 0.13283390284231866,
+    "superior_newey_west": 0.006978287816736375,
+    "sesiones": 3457
+   },
+   "materias_primas": {
+    "E": 0.008559142011210883,
+    "ic90_bootstrap": [
+     -0.005790060584163095,
+     0.024342283449532452
+    ],
+    "p_bootstrap": 0.833,
+    "se_newey_west": 0.00922313304349865,
+    "p_newey_west": 0.8232983115003947,
+    "superior_newey_west": 0.0237298458496656,
+    "sesiones": 3457
+   }
+  },
+  "por_activo": {
+   "SPY": {
+    "exceso_timing_anual": -0.023240176614356747,
+    "T": {
+     "cagr": 0.09332357824360304,
+     "vol_anual": 0.09938489467155226,
+     "sharpe": 0.9477782346419897,
+     "caida_maxima": 0.1660977183139306,
+     "exposicion_media": 0.7735749587066935,
+     "operaciones": 467,
+     "costes_pp_anual": 0.5696404141631575
+    },
+    "estatica": {
+     "cagr": 0.11517721885294452,
+     "vol_anual": 0.1294898677264093,
+     "sharpe": 0.9069050629070178,
+     "caida_maxima": 0.26997920313157553,
+     "exposicion_media": 0.7736058761929877,
+     "operaciones": 3457,
+     "costes_pp_anual": 0.0
+    },
+    "buy_and_hold": {
+     "cagr": 0.1478964925665176,
+     "vol_anual": 0.16743581073944877,
+     "sharpe": 0.9079247835413661,
+     "caida_maxima": 0.33723546269750226,
+     "exposicion_media": 1.0002252282331632,
+     "operaciones": 1,
+     "costes_pp_anual": 0.0012767417043706532
+    },
+    "E_normalizado": {
+     "E": -0.009010444183582798,
+     "ic90_bootstrap": [
+      -0.02214407618233676,
+      0.0044239715795251645
+     ],
+     "p_bootstrap": 0.1342,
+     "se_newey_west": 0.00801646302105355,
+     "p_newey_west": 0.13050810724503564,
+     "superior_newey_west": 0.004175464091919482,
+     "sesiones": 3457
+    }
+   },
+   "IWM": {
+    "exceso_timing_anual": -0.02381593503140779,
+    "T": {
+     "cagr": 0.04893183625024289,
+     "vol_anual": 0.12950050083258086,
+     "sharpe": 0.43373003979608143,
+     "caida_maxima": 0.287620310893555,
+     "exposicion_media": 0.6602820406765684,
+     "operaciones": 636,
+     "costes_pp_anual": 0.8378550805177649
+    },
+    "estatica": {
+     "cagr": 0.07246260020627604,
+     "vol_anual": 0.1413402415307148,
+     "sharpe": 0.5658982293004934,
+     "caida_maxima": 0.291289224665764,
+     "exposicion_media": 0.6602530522527147,
+     "operaciones": 3457,
+     "costes_pp_anual": 0.0
+    },
+    "buy_and_hold": {
+     "cagr": 0.10310971065819219,
+     "vol_anual": 0.21401608519011708,
+     "sharpe": 0.5661165117898813,
+     "caida_maxima": 0.41142791237512666,
+     "exposicion_media": 1.0002617465439085,
+     "operaciones": 1,
+     "costes_pp_anual": 0.0017006138122902417
+    },
+    "E_normalizado": {
+     "E": -0.00955443024413328,
+     "ic90_bootstrap": [
+      -0.025511326834596625,
+      0.007922169858532783
+     ],
+     "p_bootstrap": 0.1828,
+     "se_newey_west": 0.010099490617603315,
+     "p_newey_west": 0.17206641182663163,
+     "superior_newey_west": 0.007057753528593891,
+     "sesiones": 3457
+    }
+   },
+   "EFA": {
+    "exceso_timing_anual": -0.021975016145174532,
+    "T": {
+     "cagr": 0.031320370766048544,
+     "vol_anual": 0.0989383671833478,
+     "sharpe": 0.36133223120336966,
+     "caida_maxima": 0.18385341794050958,
+     "exposicion_media": 0.6700804171066519,
+     "operaciones": 518,
+     "costes_pp_anual": 0.6578583951394157
+    },
+    "estatica": {
+     "cagr": 0.05281996328454319,
+     "vol_anual": 0.11158844268271177,
+     "sharpe": 0.5172994238774785,
+     "caida_maxima": 0.2385263501792375,
+     "exposicion_media": 0.6701389261034002,
+     "operaciones": 3457,
+     "costes_pp_anual": 0.0
+    },
+    "buy_and_hold": {
+     "cagr": 0.07495767219117266,
+     "vol_anual": 0.16664593219773305,
+     "sharpe": 0.5175782753094657,
+     "caida_maxima": 0.34204702871688175,
+     "exposicion_media": 1.0003503891945276,
+     "operaciones": 1,
+     "costes_pp_anual": 0.0023949483713681468
+    },
+    "E_normalizado": {
+     "E": -0.010970448428447799,
+     "ic90_bootstrap": [
+      -0.027511392474301608,
+      0.00712878566571575
+     ],
+     "p_bootstrap": 0.1606,
+     "se_newey_west": 0.01053446941292175,
+     "p_newey_west": 0.14884823051306678,
+     "superior_newey_west": 0.006357211793405879,
+     "sesiones": 3457
+    }
+   },
+   "EEM": {
+    "exceso_timing_anual": -0.008538916619487939,
+    "T": {
+     "cagr": 0.026060498267453935,
+     "vol_anual": 0.12144860195926034,
+     "sharpe": 0.27276226964020706,
+     "caida_maxima": 0.29264740076930684,
+     "exposicion_media": 0.5852814138330267,
+     "operaciones": 528,
+     "costes_pp_anual": 0.6873266256995113
+    },
+    "estatica": {
+     "cagr": 0.03506202962654448,
+     "vol_anual": 0.1198911028203302,
+     "sharpe": 0.3475279812628479,
+     "caida_maxima": 0.2507844592276054,
+     "exposicion_media": 0.5852986934502051,
+     "operaciones": 3456,
+     "costes_pp_anual": 0.0
+    },
+    "buy_and_hold": {
+     "cagr": 0.05163956402758485,
+     "vol_anual": 0.20497548849907782,
+     "sharpe": 0.34855757137553944,
+     "caida_maxima": 0.3983531206161861,
+     "exposicion_media": 1.0004623523882388,
+     "operaciones": 1,
+     "costes_pp_anual": 0.003223622194859764
+    },
+    "E_normalizado": {
+     "E": -0.003970953346858543,
+     "ic90_bootstrap": [
+      -0.018268332420601663,
+      0.011055511184364347
+     ],
+     "p_bootstrap": 0.3328,
+     "se_newey_west": 0.008835353870541442,
+     "p_newey_west": 0.3265574712874283,
+     "superior_newey_west": 0.01056191051250127,
+     "sesiones": 3457
+    }
+   },
+   "SHY": {
+    "exceso_timing_anual": -0.0040105736151044265,
+    "T": {
+     "cagr": 0.005481357891001792,
+     "vol_anual": 0.010827509125589944,
+     "sharpe": 0.5102769950191972,
+     "caida_maxima": 0.047177878568758325,
+     "exposicion_media": 0.7050785190301616,
+     "operaciones": 526,
+     "costes_pp_anual": 0.6909329864284177
+    },
+    "estatica": {
+     "cagr": 0.009530630138894436,
+     "vol_anual": 0.00999551285454243,
+     "sharpe": 0.9539883119573974,
+     "caida_maxima": 0.04054153734278221,
+     "exposicion_media": 0.7050791663330516,
+     "operaciones": 3412,
+     "costes_pp_anual": 0.0
+    },
+    "buy_and_hold": {
+     "cagr": 0.013484257420491641,
+     "vol_anual": 0.014184024488252043,
+     "sharpe": 0.9514243038900696,
+     "caida_maxima": 0.057096816045553944,
+     "exposicion_media": 1.0004702261502794,
+     "operaciones": 1,
+     "costes_pp_anual": 0.003417726918130408
+    },
+    "E_normalizado": {
+     "E": -0.05410962391305802,
+     "ic90_bootstrap": [
+      -0.09326827236391116,
+      -0.013935703368780694
+     ],
+     "p_bootstrap": 0.0128,
+     "se_newey_west": 0.02451518972384653,
+     "p_newey_west": 0.013650476229035813,
+     "superior_newey_west": -0.013785725180385608,
+     "sesiones": 3457
+    }
+   },
+   "IEF": {
+    "exceso_timing_anual": -0.0004292691299086845,
+    "T": {
+     "cagr": 0.004872051528811205,
+     "vol_anual": 0.041489339316575814,
+     "sharpe": 0.1378755035970666,
+     "caida_maxima": 0.13302637379332882,
+     "exposicion_media": 0.5631462689850535,
+     "operaciones": 595,
+     "costes_pp_anual": 0.7703737699544417
+    },
+    "estatica": {
+     "cagr": 0.005512333615660836,
+     "vol_anual": 0.036129159125522475,
+     "sharpe": 0.1702124497480183,
+     "caida_maxima": 0.14076585897513438,
+     "exposicion_media": 0.5631479259327095,
+     "operaciones": 3456,
+     "costes_pp_anual": 0.0
+    },
+    "buy_and_hold": {
+     "cagr": 0.0089106467955542,
+     "vol_anual": 0.06418667377434638,
+     "sharpe": 0.17028766839805448,
+     "caida_maxima": 0.23933791761513812,
+     "exposicion_media": 1.0004528412304905,
+     "operaciones": 1,
+     "costes_pp_anual": 0.0032796877649678966
+    },
+    "E_normalizado": {
+     "E": 0.004704055749747293,
+     "ic90_bootstrap": [
+      -0.013740938949075307,
+      0.024337133780846527
+     ],
+     "p_bootstrap": 0.6394,
+     "se_newey_west": 0.011705540315363791,
+     "p_newey_west": 0.6561085852682387,
+     "superior_newey_west": 0.0239579561929001,
+     "sesiones": 3457
+    }
+   },
+   "LQD": {
+    "exceso_timing_anual": -0.0028931511629657508,
+    "T": {
+     "cagr": 0.012071244540508452,
+     "vol_anual": 0.042921636297779224,
+     "sharpe": 0.30104706638493833,
+     "caida_maxima": 0.14489506702015786,
+     "exposicion_media": 0.6104551202141331,
+     "operaciones": 547,
+     "costes_pp_anual": 0.7135464061920875
+    },
+    "estatica": {
+     "cagr": 0.014752322265312312,
+     "vol_anual": 0.048391498583880414,
+     "sharpe": 0.32680500330943324,
+     "caida_maxima": 0.1594498673232635,
+     "exposicion_media": 0.6104463231878353,
+     "operaciones": 3457,
+     "costes_pp_anual": 0.0
+    },
+    "buy_and_hold": {
+     "cagr": 0.02313398214567286,
+     "vol_anual": 0.07938003675537217,
+     "sharpe": 0.32775328952425037,
+     "caida_maxima": 0.24963242068819702,
+     "exposicion_media": 1.000413707791552,
+     "operaciones": 1,
+     "costes_pp_anual": 0.0029675999952265787
+    },
+    "E_normalizado": {
+     "E": 0.005584059135584347,
+     "ic90_bootstrap": [
+      -0.014962972709834448,
+      0.026874696115367955
+     ],
+     "p_bootstrap": 0.6508,
+     "se_newey_west": 0.012945502524814023,
+     "p_newey_west": 0.6668935168490151,
+     "superior_newey_west": 0.026877515916234128,
+     "sesiones": 3457
+    }
+   },
+   "GLD": {
+    "exceso_timing_anual": 0.005099560336190504,
+    "T": {
+     "cagr": 0.04197275645532628,
+     "vol_anual": 0.11874801457541506,
+     "sharpe": 0.4059240434421453,
+     "caida_maxima": 0.25616199242821724,
+     "exposicion_media": 0.5731341456156208,
+     "operaciones": 575,
+     "costes_pp_anual": 0.711770400877967
+    },
+    "estatica": {
+     "cagr": 0.03930137149605084,
+     "vol_anual": 0.09531052523660596,
+     "sharpe": 0.4522387615007512,
+     "caida_maxima": 0.23677603322714746,
+     "exposicion_media": 0.5731196311577084,
+     "operaciones": 3439,
+     "costes_pp_anual": 0.0
+    },
+    "buy_and_hold": {
+     "cagr": 0.06356540304659886,
+     "vol_anual": 0.16635861644236216,
+     "sharpe": 0.45399959638595305,
+     "caida_maxima": 0.3861524097623762,
+     "exposicion_media": 1.0005385547973005,
+     "operaciones": 1,
+     "costes_pp_anual": 0.003426209070838479
+    },
+    "E_normalizado": {
+     "E": 0.004459449806253179,
+     "ic90_bootstrap": [
+      -0.013656023624000778,
+      0.02229186569296763
+     ],
+     "p_bootstrap": 0.65,
+     "se_newey_west": 0.011088388410951363,
+     "p_newey_west": 0.6562216235299432,
+     "superior_newey_west": 0.022698225701053194,
+     "sesiones": 3457
+    }
+   },
+   "SLV": {
+    "exceso_timing_anual": -0.023634696773968056,
+    "T": {
+     "cagr": -0.004324975538219422,
+     "vol_anual": 0.22373505522058296,
+     "sharpe": 0.09625814752351156,
+     "caida_maxima": 0.5029410568601802,
+     "exposicion_media": 0.4989599203681315,
+     "operaciones": 599,
+     "costes_pp_anual": 0.762005158747406
+    },
+    "estatica": {
+     "cagr": 0.033701216258831046,
+     "vol_anual": 0.1543468861557344,
+     "sharpe": 0.2926590866238458,
+     "caida_maxima": 0.36738890794565693,
+     "exposicion_media": 0.49889114261108153,
+     "operaciones": 3396,
+     "costes_pp_anual": 0.0
+    },
+    "buy_and_hold": {
+     "cagr": 0.04351457247698631,
+     "vol_anual": 0.30906492754493287,
+     "sharpe": 0.295486048616828,
+     "caida_maxima": 0.6409020665519078,
+     "exposicion_media": 1.0007741033872668,
+     "operaciones": 1,
+     "costes_pp_anual": 0.004848189760937306
+    },
+    "E_normalizado": {
+     "E": -0.0043906974236257775,
+     "ic90_bootstrap": [
+      -0.026078166358539826,
+      0.019457729723567053
+     ],
+     "p_bootstrap": 0.3684,
+     "se_newey_west": 0.013888860711659868,
+     "p_newey_west": 0.3759515936008245,
+     "superior_newey_west": 0.01845444549217175,
+     "sesiones": 3457
+    }
+   },
+   "USO": {
+    "exceso_timing_anual": 0.04589558162085752,
+    "T": {
+     "cagr": 0.037904386646651966,
+     "vol_anual": 0.2137338433911082,
+     "sharpe": 0.28119659374744727,
+     "caida_maxima": 0.5540190428418867,
+     "exposicion_media": 0.5304673892144018,
+     "operaciones": 566,
+     "costes_pp_anual": 0.7464406310957729
+    },
+    "estatica": {
+     "cagr": -0.006106611880415058,
+     "vol_anual": 0.2009105046566337,
+     "sharpe": 0.07070634327234715,
+     "caida_maxima": 0.7587244457753357,
+     "exposicion_media": 0.5304193122705951,
+     "operaciones": 3422,
+     "costes_pp_anual": 0.0
+    },
+    "buy_and_hold": {
+     "cagr": -0.04456958162477587,
+     "vol_anual": 0.37916202386647496,
+     "sharpe": 0.07232883568584242,
+     "caida_maxima": 0.9462928581536568,
+     "exposicion_media": 1.0017206505587082,
+     "operaciones": 1,
+     "costes_pp_anual": 0.008960842254726497
+    },
+    "E_normalizado": {
+     "E": 0.01783921483162931,
+     "ic90_bootstrap": [
+      -0.007722797519090926,
+      0.04795748334962791
+     ],
+     "p_bootstrap": 0.8648,
+     "se_newey_west": 0.017370275917483247,
+     "p_newey_west": 0.8477889745576892,
+     "superior_newey_west": 0.04641077617564943,
+     "sesiones": 3457
+    }
+   },
+   "DBC": {
+    "exceso_timing_anual": 0.01995324014874987,
+    "T": {
+     "cagr": 0.03400966456639298,
+     "vol_anual": 0.11232053353190515,
+     "sharpe": 0.3541483160465855,
+     "caida_maxima": 0.39597819855632865,
+     "exposicion_media": 0.5313412506507358,
+     "operaciones": 559,
+     "costes_pp_anual": 0.7393533538489774
+    },
+    "estatica": {
+     "cagr": 0.015776594119789822,
+     "vol_anual": 0.0912518666314457,
+     "sharpe": 0.2172545986275381,
+     "caida_maxima": 0.3903988932796132,
+     "exposicion_media": 0.5313288735682425,
+     "operaciones": 3454,
+     "costes_pp_anual": 0.0
+    },
+    "buy_and_hold": {
+     "cagr": 0.022638232487452337,
+     "vol_anual": 0.1718657221623607,
+     "sharpe": 0.21651308053212906,
+     "caida_maxima": 0.6223147353065785,
+     "exposicion_media": 1.0007249550157036,
+     "operaciones": 1,
+     "costes_pp_anual": 0.004889693104573026
+    },
+    "E_normalizado": {
+     "E": 0.016328600830586813,
+     "ic90_bootstrap": [
+      -0.007456071360272444,
+      0.04316796507397962
+     ],
+     "p_bootstrap": 0.8618,
+     "se_newey_west": 0.015570939673095217,
+     "p_newey_west": 0.852832377812597,
+     "superior_newey_west": 0.041940517426920045,
+     "sesiones": 3457
+    }
+   }
+  },
+  "correlacion": {
+   "media_dentro_de_clase": 0.4762633825094696,
+   "media_entre_clases": 0.1204591128208081,
+   "activos_efectivos": 3.5078929257409475,
+   "dias_comunes": 3457
+  }
+ }
+}

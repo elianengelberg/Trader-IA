@@ -1,0 +1,442 @@
+{
+ "artefactos": {
+  "INFORME_T_MULTI.md": {
+   "bytes": 9052,
+   "sha256": "07db6b200342db701b4229a9f85c6087c27e47404eb6420e4b88e69beeae7e82"
+  },
+  "PRERREGISTRO_T_MULTI.md": {
+   "bytes": 10102,
+   "sha256": "7781e7258916d819abcbc204b0bc0d6ae7e252e5ff349b8c5c1a199c87cee324"
+  },
+  "datos/BTCUSDT/MANIFIESTO.json": {
+   "bytes": 30785,
+   "sha256": "5a0805a7e22797637c400a1e939ec6c2d10e0cdc26410566f212708211b6367b"
+  },
+  "datos/ETHUSDT/MANIFIESTO.json": {
+   "bytes": 30785,
+   "sha256": "3998305bb38909a08a94f6365317695f930dea4ea10933b19a22e17b40998f6a"
+  },
+  "datos_multi/MANIFIESTO.json": {
+   "bytes": 16873,
+   "sha256": "c64f3bf4c055aad4af6ecde32b30cca0dc42a3728580647d92644805514fb4ad"
+  },
+  "datos_multi/VALIDACION.json": {
+   "bytes": 72937,
+   "sha256": "770e8dcb73105e5b347c2afc8ffd85d3a31d82dcfacd86f2b9951a1fe9ba15cc"
+  },
+  "experimentos/t_multi.json": {
+   "bytes": 18634,
+   "sha256": "9bb4a55c412c5454aff0abac694b56374c23feedba2039226374967e9d079956"
+  },
+  "experimentos/t_multi.py": {
+   "bytes": 27651,
+   "sha256": "17d6b947fcf4897c120883e8f64803f206c7286ba4a71752e4b79344648bccde"
+  }
+ },
+ "cadena_historica_T_fuera_de_muestra": {
+  "INFORME_FUERA_DE_MUESTRA_T.md": {
+   "bytes": 5871,
+   "sha256": "08fa977b76fc03fe9934c237f02f83c9acc3e598960a753d78646969460d5621"
+  },
+  "PRERREGISTRO_FUERA_DE_MUESTRA_T.md": {
+   "bytes": 4417,
+   "sha256": "94a165560ba2a1807bf604b079dbf2c8eea7e7e4401fcc5ccb5db275464db58f"
+  },
+  "REVISION_CRITICA_FUERA_DE_MUESTRA_T.md": {
+   "bytes": 13537,
+   "sha256": "836d8ee38873331c3b139aaf247e45f36a888aa7eb20e9f6461f7794fc5b6c7f"
+  },
+  "experimentos/fuera_de_muestra_T.json": {
+   "bytes": 15713,
+   "sha256": "4f8fafde372931aab29b94612eb658f5fac9259e51cdf7dace7a1b30fc633c45"
+  },
+  "experimentos/fuera_de_muestra_T.py": {
+   "bytes": 7366,
+   "sha256": "941b6e11f6566319b93614ee671b184d60c7b5fbc64a3931a6ff2c8da17fe0fa"
+  },
+  "experimentos/revision_fuera_de_muestra_T.json": {
+   "bytes": 10618,
+   "sha256": "ccb8fcc73260e1207098ab28d568deac1841c98dae49a0b74415e91f01123630"
+  },
+  "experimentos/revision_fuera_de_muestra_T.py": {
+   "bytes": 15057,
+   "sha256": "649c03e00f61f1854e1b651b4e3bc0f3dd0e1422cf71e48311e6593faae51898"
+  }
+ },
+ "codigo_importado": {
+  "hcarry_next/src/hcarry/__init__.py": {
+   "bytes": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "hcarry_next/src/hcarry/conventions.py": {
+   "bytes": 3421,
+   "sha256": "32371a72b8e0955dcde5051cad27d72f417d16510bb188181fd341222e33e89e"
+  },
+  "hcarry_next/src/hcarry/data/__init__.py": {
+   "bytes": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "hcarry_next/src/hcarry/data/binance_vision.py": {
+   "bytes": 24299,
+   "sha256": "c5b64d2997366003234bc1f4a03a3debb6533bb669ac066a7c7081dd7a07c762"
+  },
+  "hcarry_next/src/hcarry/data/schema.py": {
+   "bytes": 3087,
+   "sha256": "87d6aa7de1480ed1fdf06be3bc4bbf996f21e98a5adc0eb8c61c0ae292382780"
+  },
+  "hcarry_next/src/hcarry/data/validacion.py": {
+   "bytes": 5642,
+   "sha256": "4e2339895526b2cb16b2c5de2fd1b16e0a4edc3a186dac47c71fd7701757bd9a"
+  },
+  "hcarry_next/src/hcarry/estrategias.py": {
+   "bytes": 11978,
+   "sha256": "29a34d92c8a1da0a685ad9ccf8783c9a4dfa153871837e17ea75806eee5eb1ec"
+  },
+  "hcarry_next/src/hcarry/lab/__init__.py": {
+   "bytes": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "hcarry_next/src/hcarry/lab/estadistica.py": {
+   "bytes": 1998,
+   "sha256": "6592dfe3e623de8e02ee2c66d0bc22d541df415899a62c61fcf24052675a8b55"
+  },
+  "hcarry_next/src/hcarry/metricas.py": {
+   "bytes": 7576,
+   "sha256": "bd771ba8516307fb6c273295e657d6cfab7d331aed640a8e79451afdd28701cc"
+  },
+  "hcarry_next/src/hcarry/model/__init__.py": {
+   "bytes": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "hcarry_next/src/hcarry/model/cartera.py": {
+   "bytes": 7123,
+   "sha256": "c2efc8ecc29d6c9377477b731ad874c49248b9b12d92ed75f1e33af08cae671a"
+  },
+  "hcarry_next/src/hcarry/model/costes.py": {
+   "bytes": 3862,
+   "sha256": "b95267e5cac7f7ddc6eb5d10c56577d609bc83feaedcc5bde170903a841531eb"
+  },
+  "hcarry_next/src/hcarry/model/motor.py": {
+   "bytes": 16631,
+   "sha256": "b5b6a1e4e4bae73b153cf68826242489f92ddd328294708b862bfaf99e2653cb"
+  },
+  "tendencia_btc/experimentos/t_multi.py": {
+   "bytes": 27651,
+   "sha256": "17d6b947fcf4897c120883e8f64803f206c7286ba4a71752e4b79344648bccde"
+  },
+  "tendencia_btc/src/tendencia/__init__.py": {
+   "bytes": 322,
+   "sha256": "1a59fae66b28327c8ef683797dd02a68250d37152f80b66c3b4c875fa2baf6f3"
+  },
+  "tendencia_btc/src/tendencia/backtest.py": {
+   "bytes": 2820,
+   "sha256": "fcfb83cb8f249aca0e8c55e34bb8edfc452d9d7667c4e99dbf1472aa9e234cfd"
+  },
+  "tendencia_btc/src/tendencia/datos.py": {
+   "bytes": 5580,
+   "sha256": "8a4c82408b7f42f1cd303ebc8450f04c20208f9c3ec9d7fde08c5e641592b1ea"
+  },
+  "tendencia_btc/src/tendencia/estadistica.py": {
+   "bytes": 1504,
+   "sha256": "c3426594698d812a001991412598212214b38be2e436835ea8e9b8a29bedebbc"
+  },
+  "tendencia_btc/src/tendencia/metricas.py": {
+   "bytes": 1963,
+   "sha256": "9358a6a4f575a09979add11183f98ddaaba3d8785b4db4119d324f7c93731c0e"
+  },
+  "tendencia_btc/src/tendencia/papel.py": {
+   "bytes": 10323,
+   "sha256": "b3b3728d38356f75f559987949a376a96a13ebeb6176089f85bcec7ba84d1055"
+  },
+  "tendencia_btc/src/tendencia/senal.py": {
+   "bytes": 1286,
+   "sha256": "7a04ffe083d915e50e39f38ab5fb0cef7313cbea758f9d7613f7e6c913faae27"
+  }
+ },
+ "commits": {
+  "congelado_T_MULTI": "f518ac1bf15fc41c992e7f9ebefd7142c4f992da",
+  "regla_T_congelada": "89278f75f9cfd548c1e6b29bdfb19bea33f5dc15",
+  "remoto_conocido": "c6339e3fcd6041cb6c4ad7f5545f0ff306a4fd2f"
+ },
+ "datos_crudos": {
+  "nasdaq/DBC_dividendos.json": {
+   "bytes": 498,
+   "estado": 200,
+   "fecha_servidor": "Sat, 17 Oct 2026 20:31:30 GMT",
+   "sha256": "b89695b4db2c5ddd1a7ff40f2e2872a52096a694174195396b0fcc9097d47071",
+   "url": "https://api.nasdaq.com/api/quote/DBC/dividends?assetclass=etf"
+  },
+  "nasdaq/DBC_historico.json": {
+   "bytes": 258101,
+   "estado": 200,
+   "fecha_servidor": "Sat, 17 Oct 2026 20:31:25 GMT",
+   "sha256": "52806bd589577feb0c0a4e243ccd2dda7a508f3c6c1c3df95446ba0d948ca530",
+   "url": "https://api.nasdaq.com/api/quote/DBC/historical?assetclass=etf&fromdate=2011-01-03&todate=2026-09-30&limit=9999"
+  },
+  "nasdaq/EEM_dividendos.json": {
+   "bytes": 498,
+   "estado": 200,
+   "fecha_servidor": "Sat, 17 Oct 2026 20:30:01 GMT",
+   "sha256": "b89695b4db2c5ddd1a7ff40f2e2872a52096a694174195396b0fcc9097d47071",
+   "url": "https://api.nasdaq.com/api/quote/EEM/dividends?assetclass=etf"
+  },
+  "nasdaq/EEM_historico.json": {
+   "bytes": 262019,
+   "estado": 200,
+   "fecha_servidor": "Sat, 17 Oct 2026 20:29:56 GMT",
+   "sha256": "5c0a16f471d6d98e4056bdab8a9080491a3f54708280b9a144f8593fc4dd5a74",
+   "url": "https://api.nasdaq.com/api/quote/EEM/historical?assetclass=etf&fromdate=2011-01-03&todate=2026-09-30&limit=9999"
+  },
+  "nasdaq/EFA_dividendos.json": {
+   "bytes": 498,
+   "estado": 200,
+   "fecha_servidor": "Sat, 17 Oct 2026 20:29:48 GMT",
+   "sha256": "b89695b4db2c5ddd1a7ff40f2e2872a52096a694174195396b0fcc9097d47071",
+   "url": "https://api.nasdaq.com/api/quote/EFA/dividends?assetclass=etf"
+  },
+  "nasdaq/EFA_historico.json": {
+   "bytes": 262508,
+   "estado": 200,
+   "fecha_servidor": "Sat, 17 Oct 2026 20:29:45 GMT",
+   "sha256": "a0dbd95475e94cd20474704f6e54fb1d969b84eec37c4a54db70fa5ee987549d",
+   "url": "https://api.nasdaq.com/api/quote/EFA/historical?assetclass=etf&fromdate=2011-01-03&todate=2026-09-30&limit=9999"
+  },
+  "nasdaq/GLD_dividendos.json": {
+   "bytes": 498,
+   "estado": 200,
+   "fecha_servidor": "Sat, 17 Oct 2026 20:30:55 GMT",
+   "sha256": "b89695b4db2c5ddd1a7ff40f2e2872a52096a694174195396b0fcc9097d47071",
+   "url": "https://api.nasdaq.com/api/quote/GLD/dividends?assetclass=etf"
+  },
+  "nasdaq/GLD_historico.json": {
+   "bytes": 269866,
+   "estado": 200,
+   "fecha_servidor": "Sat, 17 Oct 2026 20:30:51 GMT",
+   "sha256": "703f0204fdecc4af51b4770a6e6272b9d41c1289fe3e7c8c6cea4a9d45a7bc36",
+   "url": "https://api.nasdaq.com/api/quote/GLD/historical?assetclass=etf&fromdate=2011-01-03&todate=2026-09-30&limit=9999"
+  },
+  "nasdaq/IEF_dividendos.json": {
+   "bytes": 35779,
+   "estado": 200,
+   "fecha_servidor": "Sat, 17 Oct 2026 20:30:21 GMT",
+   "sha256": "fd06f6e9ec81ba3a0f7476a3692ee98736dac0f3daa55fad7af23b4025f0467a",
+   "url": "https://api.nasdaq.com/api/quote/IEF/dividends?assetclass=etf"
+  },
+  "nasdaq/IEF_historico.json": {
+   "bytes": 266161,
+   "estado": 200,
+   "fecha_servidor": "Sat, 17 Oct 2026 20:30:16 GMT",
+   "sha256": "969618665077158808db51847528af8067d7a8346d70f3a892060f1ceda0b590",
+   "url": "https://api.nasdaq.com/api/quote/IEF/historical?assetclass=etf&fromdate=2011-01-03&todate=2026-09-30&limit=9999"
+  },
+  "nasdaq/IWM_dividendos.json": {
+   "bytes": 498,
+   "estado": 200,
+   "fecha_servidor": "Sat, 17 Oct 2026 20:29:37 GMT",
+   "sha256": "b89695b4db2c5ddd1a7ff40f2e2872a52096a694174195396b0fcc9097d47071",
+   "url": "https://api.nasdaq.com/api/quote/IWM/dividends?assetclass=etf"
+  },
+  "nasdaq/IWM_historico.json": {
+   "bytes": 271366,
+   "estado": 200,
+   "fecha_servidor": "Sat, 17 Oct 2026 20:29:33 GMT",
+   "sha256": "53d2fd59756159b8baafb141ea5a282a58b2111280c8029f9abf278713802982",
+   "url": "https://api.nasdaq.com/api/quote/IWM/historical?assetclass=etf&fromdate=2011-01-03&todate=2026-09-30&limit=9999"
+  },
+  "nasdaq/LQD_dividendos.json": {
+   "bytes": 498,
+   "estado": 200,
+   "fecha_servidor": "Sat, 17 Oct 2026 20:30:44 GMT",
+   "sha256": "b89695b4db2c5ddd1a7ff40f2e2872a52096a694174195396b0fcc9097d47071",
+   "url": "https://api.nasdaq.com/api/quote/LQD/dividends?assetclass=etf"
+  },
+  "nasdaq/LQD_historico.json": {
+   "bytes": 270942,
+   "estado": 200,
+   "fecha_servidor": "Sat, 17 Oct 2026 20:30:38 GMT",
+   "sha256": "32e15dde1e646b6024846000624858d34cf5508e74f7484c349cf948c6d22182",
+   "url": "https://api.nasdaq.com/api/quote/LQD/historical?assetclass=etf&fromdate=2011-01-03&todate=2026-09-30&limit=9999"
+  },
+  "nasdaq/SHY_dividendos.json": {
+   "bytes": 35762,
+   "estado": 200,
+   "fecha_servidor": "Sat, 17 Oct 2026 20:30:10 GMT",
+   "sha256": "7b59bc00f0e981e7ec242b1f07a4596b9a8092fa70e564b12c24335121b9e790",
+   "url": "https://api.nasdaq.com/api/quote/SHY/dividends?assetclass=etf"
+  },
+  "nasdaq/SHY_historico.json": {
+   "bytes": 258503,
+   "estado": 200,
+   "fecha_servidor": "Sat, 17 Oct 2026 20:30:07 GMT",
+   "sha256": "908220afb530a45ffccaa22638fcecc6617c47a9fb119be0955647ead935552f",
+   "url": "https://api.nasdaq.com/api/quote/SHY/historical?assetclass=etf&fromdate=2011-01-03&todate=2026-09-30&limit=9999"
+  },
+  "nasdaq/SLV_dividendos.json": {
+   "bytes": 498,
+   "estado": 200,
+   "fecha_servidor": "Sat, 17 Oct 2026 20:31:06 GMT",
+   "sha256": "b89695b4db2c5ddd1a7ff40f2e2872a52096a694174195396b0fcc9097d47071",
+   "url": "https://api.nasdaq.com/api/quote/SLV/dividends?assetclass=etf"
+  },
+  "nasdaq/SLV_historico.json": {
+   "bytes": 261567,
+   "estado": 200,
+   "fecha_servidor": "Sat, 17 Oct 2026 20:31:01 GMT",
+   "sha256": "28727ac214f5e83c19add8d28e58230be5286d9c958456056e73bb7fbb8c0ab4",
+   "url": "https://api.nasdaq.com/api/quote/SLV/historical?assetclass=etf&fromdate=2011-01-03&todate=2026-09-30&limit=9999"
+  },
+  "nasdaq/SPY_dividendos.json": {
+   "bytes": 498,
+   "estado": 200,
+   "fecha_servidor": "Sat, 17 Oct 2026 20:29:25 GMT",
+   "sha256": "b89695b4db2c5ddd1a7ff40f2e2872a52096a694174195396b0fcc9097d47071",
+   "url": "https://api.nasdaq.com/api/quote/SPY/dividends?assetclass=etf"
+  },
+  "nasdaq/SPY_historico.json": {
+   "bytes": 271875,
+   "estado": 200,
+   "fecha_servidor": "Sat, 17 Oct 2026 20:29:20 GMT",
+   "sha256": "a9f31ec0837ba1d83bd20249e3579483669f30cb8a87a31fce0fb61735faab7a",
+   "url": "https://api.nasdaq.com/api/quote/SPY/historical?assetclass=etf&fromdate=2011-01-03&todate=2026-09-30&limit=9999"
+  },
+  "nasdaq/TLT_dividendos.json": {
+   "bytes": 33155,
+   "estado": 200,
+   "fecha_servidor": "Sat, 17 Oct 2026 20:30:32 GMT",
+   "sha256": "441f9c9dedbf336d713f91941152a76660e5fdd11815a191a96afb1dad6fede9",
+   "url": "https://api.nasdaq.com/api/quote/TLT/dividends?assetclass=etf"
+  },
+  "nasdaq/TLT_historico.json": {
+   "bytes": 267703,
+   "estado": 200,
+   "fecha_servidor": "Sat, 17 Oct 2026 20:30:27 GMT",
+   "sha256": "745ae4ad5140669841b7ed3508de6dda795a7b4149355debb210b3c37e0ef634",
+   "url": "https://api.nasdaq.com/api/quote/TLT/historical?assetclass=etf&fromdate=2011-01-03&todate=2026-09-30&limit=9999"
+  },
+  "nasdaq/USO_dividendos.json": {
+   "bytes": 498,
+   "estado": 200,
+   "fecha_servidor": "Sat, 17 Oct 2026 20:31:18 GMT",
+   "sha256": "b89695b4db2c5ddd1a7ff40f2e2872a52096a694174195396b0fcc9097d47071",
+   "url": "https://api.nasdaq.com/api/quote/USO/dividends?assetclass=etf"
+  },
+  "nasdaq/USO_historico.json": {
+   "bytes": 260706,
+   "estado": 200,
+   "fecha_servidor": "Sat, 17 Oct 2026 20:31:14 GMT",
+   "sha256": "c7fc4f9d6707d3df3b48e117d3f59be26bf909e6478ee06692bd307474bc547f",
+   "url": "https://api.nasdaq.com/api/quote/USO/historical?assetclass=etf&fromdate=2011-01-03&todate=2026-09-30&limit=9999"
+  },
+  "yahoo/DBC.json": {
+   "bytes": 438830,
+   "estado": 200,
+   "fecha_servidor": "Sat, 17 Oct 2026 20:31:20 GMT",
+   "sha256": "50e1a132196e3a3033428af8b7e811bd630ce86b6e4be6dfc3ea36559e6b4ef4",
+   "url": "https://query1.finance.yahoo.com/v8/finance/chart/DBC?period1=1291161600&period2=1790899200&interval=1d&events=div%7Csplit%7CcapitalGains&includeAdjustedClose=true"
+  },
+  "yahoo/EEM.json": {
+   "bytes": 439168,
+   "estado": 200,
+   "fecha_servidor": "Sat, 17 Oct 2026 20:29:50 GMT",
+   "sha256": "8aecf19f3c169e6888e33f7465a93af029e02d11b141299eadbec92439a20b53",
+   "url": "https://query1.finance.yahoo.com/v8/finance/chart/EEM?period1=1291161600&period2=1790899200&interval=1d&events=div%7Csplit%7CcapitalGains&includeAdjustedClose=true"
+  },
+  "yahoo/EFA.json": {
+   "bytes": 433837,
+   "estado": 200,
+   "fecha_servidor": "Sat, 17 Oct 2026 20:29:39 GMT",
+   "sha256": "6c03e6169e8ee916af60ddc6ea914229a07d1a72fe485415a61d819e7385a5e7",
+   "url": "https://query1.finance.yahoo.com/v8/finance/chart/EFA?period1=1291161600&period2=1790899200&interval=1d&events=div%7Csplit%7CcapitalGains&includeAdjustedClose=true"
+  },
+  "yahoo/GLD.json": {
+   "bytes": 439361,
+   "estado": 200,
+   "fecha_servidor": "Sat, 17 Oct 2026 20:30:46 GMT",
+   "sha256": "bc0c8fbb85e4d74cd064d7a8e0f3a98b44da6263c1b1611d9b03b51f95ecf404",
+   "url": "https://query1.finance.yahoo.com/v8/finance/chart/GLD?period1=1291161600&period2=1790899200&interval=1d&events=div%7Csplit%7CcapitalGains&includeAdjustedClose=true"
+  },
+  "yahoo/IEF.json": {
+   "bytes": 442843,
+   "estado": 200,
+   "fecha_servidor": "Sat, 17 Oct 2026 20:30:12 GMT",
+   "sha256": "960e4b85e323d38595b401a596f730a2ae20b24b1dbeea901e2c1d430889c520",
+   "url": "https://query1.finance.yahoo.com/v8/finance/chart/IEF?period1=1291161600&period2=1790899200&interval=1d&events=div%7Csplit%7CcapitalGains&includeAdjustedClose=true"
+  },
+  "yahoo/IWM.json": {
+   "bytes": 443875,
+   "estado": 200,
+   "fecha_servidor": "Sat, 17 Oct 2026 20:29:27 GMT",
+   "sha256": "26d0000b826c35320b636acff547c49b6c5be633b026e46def3260d6a8f415e4",
+   "url": "https://query1.finance.yahoo.com/v8/finance/chart/IWM?period1=1291161600&period2=1790899200&interval=1d&events=div%7Csplit%7CcapitalGains&includeAdjustedClose=true"
+  },
+  "yahoo/LQD.json": {
+   "bytes": 449516,
+   "estado": 200,
+   "fecha_servidor": "Sat, 17 Oct 2026 20:30:34 GMT",
+   "sha256": "c85a2f21ac2ed9be46fe0959d34035c65950dc957fbd4e8310aba1dce4df9534",
+   "url": "https://query1.finance.yahoo.com/v8/finance/chart/LQD?period1=1291161600&period2=1790899200&interval=1d&events=div%7Csplit%7CcapitalGains&includeAdjustedClose=true"
+  },
+  "yahoo/SHY.json": {
+   "bytes": 430908,
+   "estado": 200,
+   "fecha_servidor": "Sat, 17 Oct 2026 20:30:03 GMT",
+   "sha256": "c516c011cd96cb13944635cc12370ec9ac56720e6168a52dc3302cfa68a75ec9",
+   "url": "https://query1.finance.yahoo.com/v8/finance/chart/SHY?period1=1291161600&period2=1790899200&interval=1d&events=div%7Csplit%7CcapitalGains&includeAdjustedClose=true"
+  },
+  "yahoo/SLV.json": {
+   "bytes": 438551,
+   "estado": 200,
+   "fecha_servidor": "Sat, 17 Oct 2026 20:30:57 GMT",
+   "sha256": "523ad06bca3ff8f1e20fc39d54a586626a7b61fe9620a05bad5f5949d5aedab8",
+   "url": "https://query1.finance.yahoo.com/v8/finance/chart/SLV?period1=1291161600&period2=1790899200&interval=1d&events=div%7Csplit%7CcapitalGains&includeAdjustedClose=true"
+  },
+  "yahoo/SPY.json": {
+   "bytes": 441066,
+   "estado": 200,
+   "fecha_servidor": "Sat, 17 Oct 2026 20:29:14 GMT",
+   "sha256": "d26d5145f1a1397c5d19f63f7f6c6cebc0953f70074e86e9bb9d7f9b45552031",
+   "url": "https://query1.finance.yahoo.com/v8/finance/chart/SPY?period1=1291161600&period2=1790899200&interval=1d&events=div%7Csplit%7CcapitalGains&includeAdjustedClose=true"
+  },
+  "yahoo/TLT.json": {
+   "bytes": 446890,
+   "estado": 200,
+   "fecha_servidor": "Sat, 17 Oct 2026 20:30:23 GMT",
+   "sha256": "6bd636a920eb8ab1b80f5a2df89b7b497726928f0ee73b36044e3de2e1c83fb3",
+   "url": "https://query1.finance.yahoo.com/v8/finance/chart/TLT?period1=1291161600&period2=1790899200&interval=1d&events=div%7Csplit%7CcapitalGains&includeAdjustedClose=true"
+  },
+  "yahoo/USO.json": {
+   "bytes": 427836,
+   "estado": 200,
+   "fecha_servidor": "Sat, 17 Oct 2026 20:31:08 GMT",
+   "sha256": "6ae5f750c09e8396875e2ea298f48c53b6a7926c392078847c88eb5a68dc2beb",
+   "url": "https://query1.finance.yahoo.com/v8/finance/chart/USO?period1=1291161600&period2=1790899200&interval=1d&events=div%7Csplit%7CcapitalGains&includeAdjustedClose=true"
+  }
+ },
+ "dependencias_externas": "ninguna (solo biblioteca estándar)",
+ "proposito": "evidencia de T-MULTI: qué se ejecutó, con qué código, datos y criterios; histórico, no prospectivo",
+ "python": "3.11.17",
+ "regla_T": {
+  "codigo_sha256": "73b22f3e3a8f21513d5533fb11a7553becae30b87c8736fb6880bccc36c11d2b",
+  "reglas_sha256": "d2e4e1fb43b8219b80e19736ba7a9abed22d6e858f0b8955171496fa06e74939"
+ },
+ "reproducir": [
+  "cd research/tendencia_btc; export PYTHONPATH=src:../hcarry_next/src",
+  "python -B experimentos/evidencia_t_multi.py verificar   # todos los hashes",
+  "python -B experimentos/t_multi.py autoprueba            # regla y métrica (sin red)",
+  "python -B -c \"import sys, pathlib; sys.path.insert(0, 'experimentos'); import t_multi; t_multi.evaluar(salida=pathlib.Path('/tmp/t_multi_reevaluado.json'))\"   # sin tocar el original; requiere los datos crudos de datos_multi/"
+ ],
+ "resultado": {
+  "E": -0.0048081989051511715,
+  "E_costes_x2": -0.019318376202011857,
+  "P_decision": 0.2392,
+  "decision": "EVIDENCIA INSUFICIENTE",
+  "excluidos": [
+   "TLT"
+  ],
+  "ic90_bootstrap": [
+   -0.015513340227647684,
+   0.006546791306232242
+  ],
+  "superior_decision": 0.006546791306232242
+ }
+}

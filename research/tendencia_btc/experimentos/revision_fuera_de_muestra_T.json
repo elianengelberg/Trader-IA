@@ -1,0 +1,373 @@
+{
+ "categoria": "REVISIÓN POSTERIOR y descriptiva de un resultado histórico ya consumido; no cambia su decisión prerregistrada",
+ "fuera_de_muestra_json_sha256": "4f8fafde372931aab29b94612eb658f5fac9259e51cdf7dace7a1b30fc633c45",
+ "reproduccion": {
+  "exceso_anual": 0.07048894365406465,
+  "ic90": [
+   -0.08820041316896611,
+   0.22869689090470152
+  ],
+  "p": 0.755,
+  "identico_al_json": true
+ },
+ "implementacion_independiente": {
+  "BTC": {
+   "dias": 1612,
+   "exceso_anual": 0.09115545696339697,
+   "max_dif_diaria_con_congelado": 0.0
+  },
+  "ETH": {
+   "dias": 1612,
+   "exceso_anual": 0.049822430344732334,
+   "max_dif_diaria_con_congelado": 0.0
+  }
+ },
+ "dependencia": {
+  "acf_exceso_conjunto": {
+   "1": -0.08643037670464995,
+   "2": 0.030461171566022675,
+   "5": 0.006955611457360122,
+   "10": -0.027181683679141783,
+   "20": -0.025685569185817908,
+   "60": -0.007661231898509706
+  },
+  "acf_cuadrados": {
+   "1": 0.21833459527021373,
+   "5": 0.11152007650424654,
+   "20": 0.05901169432430329,
+   "60": -0.028273101588484884
+  },
+  "se_anual_iid": 0.10177366295590225,
+  "se_anual_newey_west": {
+   "7": 0.09716292953762674,
+   "20": 0.09735295318107823,
+   "60": 0.09560046744650168,
+   "120": 0.08307163443917406
+  },
+  "bootstrap_por_bloque": {
+   "1": {
+    "se_anual": 0.103854063460199,
+    "ic90": [
+     -0.10261482539470079,
+     0.23903464051761242
+    ],
+    "p": 0.748
+   },
+   "5": {
+    "se_anual": 0.0962251315631961,
+    "ic90": [
+     -0.09006756795638607,
+     0.2264849453548252
+    ],
+    "p": 0.7555
+   },
+   "10": {
+    "se_anual": 0.09659748182776297,
+    "ic90": [
+     -0.09515684163551404,
+     0.2226205950420355
+    ],
+    "p": 0.7505
+   },
+   "20": {
+    "se_anual": 0.09632994051300381,
+    "ic90": [
+     -0.08820041316896611,
+     0.22869689090470152
+    ],
+    "p": 0.755
+   },
+   "40": {
+    "se_anual": 0.09738509052742728,
+    "ic90": [
+     -0.0812882645264643,
+     0.23908017420360803
+    ],
+    "p": 0.756
+   },
+   "60": {
+    "se_anual": 0.09228958522741201,
+    "ic90": [
+     -0.07872510061777581,
+     0.22488061736453535
+    ],
+    "p": 0.7585
+   },
+   "120": {
+    "se_anual": 0.08226835310069724,
+    "ic90": [
+     -0.05789211082067722,
+     0.21274668714133516
+    ],
+    "p": 0.811
+   },
+   "250": {
+    "se_anual": 0.06451416203471505,
+    "ic90": [
+     -0.03256885314577092,
+     0.17966385367930104
+    ],
+    "p": 0.862
+   }
+  },
+  "observaciones_efectivas_bloque20": 1799.3401236361126,
+  "observaciones_efectivas_bloque120": 2467.0062048105797
+ },
+ "correlacion_btc_eth": {
+  "diaria": 0.6887875212290537,
+  "sumas_de_20_dias": 0.6802492337266661,
+  "activos_efectivos": 1.1946998353165261
+ },
+ "episodios": {
+  "BTC": {
+   "cambios_de_objetivo": 226,
+   "dias_medios_por_tramo": 7.101321585903084,
+   "entradas_salidas_mitad": 62
+  },
+  "ETH": {
+   "cambios_de_objetivo": 229,
+   "dias_medios_por_tramo": 7.008695652173913,
+   "entradas_salidas_mitad": 87
+  }
+ },
+ "desarrollo_vs_fuera": {
+  "BTC": {
+   "desarrollo": 0.1418184452562941,
+   "fuera": 0.09115545696339697,
+   "diferencia": 0.05066298829289714,
+   "se_diferencia": 0.1678037607668684,
+   "z": 0.30191807419193534,
+   "p_dos_colas": 0.7627145171248912
+  },
+  "ETH": {
+   "desarrollo": 0.24574833554056502,
+   "fuera": 0.049822430344732334,
+   "diferencia": 0.1959259051958327,
+   "se_diferencia": 0.23864200246022166,
+   "z": 0.8210034410371277,
+   "p_dos_colas": 0.41164430818579323
+  },
+  "conjunto": {
+   "desarrollo": 0.19378339039842946,
+   "fuera": 0.07048894365406465,
+   "diferencia": 0.12329444674436481,
+   "se_diferencia": 0.1845873853043441,
+   "z": 0.6679462225497117,
+   "p_dos_colas": 0.5041679207483918
+  }
+ },
+ "estres": {
+  "costes_x2": {
+   "exceso_anual": 0.04379811926601976,
+   "ic90": [
+    -0.11676766684716629,
+    0.203210188726347
+   ],
+   "p": 0.66
+  },
+  "retraso_1_dia": {
+   "exceso_anual": 0.07673169990077226,
+   "ic90": [
+    -0.0748869503642333,
+    0.2238129271995737
+   ],
+   "p": 0.793
+  }
+ },
+ "buy_and_hold": {
+  "BTC": {
+   "cagr": {
+    "T": 0.18829309473230849,
+    "estatica": 0.09420409679824404,
+    "buy_and_hold": 0.11112354759242682
+   },
+   "cagr_por_exposicion_media (estatica - B&H)": -0.016919450794182778,
+   "cagr_por_timing (T - estatica)": 0.09408899793406444,
+   "anio_2022": {
+    "T": -0.3005354017526206,
+    "estatica": -0.397141716408308,
+    "buy_and_hold": -0.6435705572611592,
+    "exposicion_objetivo_media_T_2022": 0.16347031963470318,
+    "exposicion_media_estatica": 0.5429071349974577
+   },
+   "caida_maxima": {
+    "T": 0.30848779522275405,
+    "estatica": 0.42904322291821695,
+    "buy_and_hold": 0.6702860768847294
+   },
+   "sharpe": {
+    "T": 0.7109448168728978,
+    "estatica": 0.4623524592030953,
+    "buy_and_hold": 0.4620325216512657
+   }
+  },
+  "ETH": {
+   "cagr": {
+    "T": 0.02987785954215383,
+    "estatica": -0.005381836768536874,
+    "buy_and_hold": -0.12860970332828503
+   },
+   "cagr_por_exposicion_media (estatica - B&H)": 0.12322786655974816,
+   "cagr_por_timing (T - estatica)": 0.0352596963106907,
+   "anio_2022": {
+    "T": -0.2915050035022364,
+    "estatica": -0.3565408637165074,
+    "buy_and_hold": -0.6761304628123455,
+    "exposicion_objetivo_media_T_2022": 0.22100456621004563,
+    "exposicion_media_estatica": 0.4776900461577969
+   },
+   "caida_maxima": {
+    "T": 0.41306023622964483,
+    "estatica": 0.45094702533036934,
+    "buy_and_hold": 0.7411250533832836
+   },
+   "sharpe": {
+    "T": 0.2642206967337034,
+    "estatica": 0.14926529386567114,
+    "buy_and_hold": 0.14979820290855328
+   }
+  }
+ },
+ "potencia_normal": {
+  "desarrollo (potencia.json)": {
+   "sigma_1_ano": 0.31023528169797615,
+   "punto fuera de muestra": {
+    "anos_para_P95_en_promedio": 52.40767369552823,
+    "anos_para_P95_con_80pct_de_potencia": 119.75909739285734,
+    "prob_P95_a_24_meses": 0.09282985793322318,
+    "prob_detener_a_12_meses": 0.0656797042491804
+   },
+   "mitad": {
+    "anos_para_P95_en_promedio": 209.63069478211293,
+    "anos_para_P95_con_80pct_de_potencia": 479.03638957142937,
+    "prob_P95_a_24_meses": 0.06887912612338842,
+    "prob_detener_a_12_meses": 0.08148422221222684
+   },
+   "desarrollo": {
+    "anos_para_P95_en_promedio": 6.93431852683143,
+    "anos_para_P95_con_80pct_de_potencia": 15.845918531559619,
+    "prob_P95_a_24_meses": 0.22318273979075243,
+    "prob_detener_a_12_meses": 0.02831309110071939
+   },
+   "IC90 superior fuera": {
+    "anos_para_P95_en_promedio": 4.978704678221036,
+    "anos_para_P95_con_80pct_de_potencia": 11.37705867108967,
+    "prob_P95_a_24_meses": 0.2734757821029239,
+    "prob_detener_a_12_meses": 0.02175795820058335
+   }
+  },
+  "fuera de muestra, bloque 20": {
+   "sigma_1_ano": 0.20244048942602713,
+   "punto fuera de muestra": {
+    "anos_para_P95_en_promedio": 22.31553309839446,
+    "anos_para_P95_con_80pct_de_potencia": 50.99421350450416,
+    "prob_P95_a_24_meses": 0.12457214876711431,
+    "prob_detener_a_12_meses": 0.05157744300367889
+   },
+   "mitad": {
+    "anos_para_P95_en_promedio": 89.26213239357784,
+    "anos_para_P95_con_80pct_de_potencia": 203.97685401801664,
+    "prob_P95_a_24_meses": 0.08096018825299645,
+    "prob_detener_a_12_meses": 0.07274476785638795
+   },
+   "desarrollo": {
+    "anos_para_P95_en_promedio": 2.952678561909157,
+    "anos_para_P95_con_80pct_de_potencia": 6.7472966176640865,
+    "prob_P95_a_24_meses": 0.3854809071264085,
+    "prob_detener_a_12_meses": 0.012584860240155538
+   },
+   "IC90 superior fuera": {
+    "anos_para_P95_en_promedio": 2.119965287515764,
+    "anos_para_P95_con_80pct_de_potencia": 4.844426616072837,
+    "prob_P95_a_24_meses": 0.4811699505298358,
+    "prob_detener_a_12_meses": 0.007948953304284467
+   }
+  },
+  "fuera de muestra, bloque 120": {
+   "sigma_1_ano": 0.17288960812479837,
+   "punto fuera de muestra": {
+    "anos_para_P95_en_promedio": 16.276097727672262,
+    "anos_para_P95_con_80pct_de_potencia": 37.19323212604811,
+    "prob_P95_a_24_meses": 0.14270080667397367,
+    "prob_detener_a_12_meses": 0.045584590361224364
+   },
+   "mitad": {
+    "anos_para_P95_en_promedio": 65.10439091068905,
+    "anos_para_P95_con_80pct_de_potencia": 148.77292850419244,
+    "prob_P95_a_24_meses": 0.08746074805867987,
+    "prob_detener_a_12_meses": 0.06871803223131867
+   },
+   "desarrollo": {
+    "anos_para_P95_en_promedio": 2.1535709955991997,
+    "anos_para_P95_con_80pct_de_potencia": 4.9212205087134775,
+    "prob_P95_a_24_meses": 0.47618463908487907,
+    "prob_detener_a_12_meses": 0.008143899321037706
+   },
+   "IC90 superior fuera": {
+    "anos_para_P95_en_promedio": 1.5462217302512902,
+    "anos_para_P95_con_80pct_de_potencia": 3.533339790274204,
+    "prob_P95_a_24_meses": 0.5893432683264641,
+    "prob_detener_a_12_meses": 0.0046025293205932405
+   }
+  }
+ },
+ "potencia_montecarlo_regla_completa_24_meses": {
+  "cero": {
+   "respaldada": 0.028,
+   "detener_p_menor_0_10": 0.133
+  },
+  "punto fuera de muestra": {
+   "respaldada": 0.0835,
+   "detener_p_menor_0_10": 0.0515
+  },
+  "desarrollo": {
+   "respaldada": 0.3385,
+   "detener_p_menor_0_10": 0.0075
+  }
+ },
+ "potencia_montecarlo_12_meses": {
+  "cero": 0.139,
+  "punto fuera de muestra": 0.083
+ },
+ "diseno_multimercado_potencia": {
+  "cripto_normalizado_fuera_de_muestra": {
+   "BTC": {
+    "exceso_a_10pct_vol": 0.01773169425988655,
+    "sigma_1_ano_a_10pct_vol": 0.039358308468244944
+   },
+   "ETH": {
+    "exceso_a_10pct_vol": 0.007149483836605849,
+    "sigma_1_ano_a_10pct_vol": 0.033945810438639645
+   }
+  },
+  "sigma_supuesta_1_ano": 0.0366520594534423,
+  "efecto_cripto_normalizado": 0.012440589048246199,
+  "anos": 13.75,
+  "escenarios": {
+   "rho_dentro=0.3, rho_entre=0.05": {
+    "activos_efectivos": 5.217391304347826,
+    "se_anual": 0.0043273331160237705,
+    "P(respaldada) si efecto=0.50%": 0.3122765900374487,
+    "P(respaldada) si efecto=1.00%": 0.7473067517483167,
+    "P(respaldada) si efecto=1.24%": 0.8906574939362695,
+    "P(sin ventaja) si efecto=0": 0.3122765900374486
+   },
+   "rho_dentro=0.5, rho_entre=0.1": {
+    "activos_efectivos": 3.6363636363636362,
+    "se_anual": 0.00518338395679631,
+    "P(respaldada) si efecto=0.50%": 0.24817852620304848,
+    "P(respaldada) si efecto=1.00%": 0.611943465691308,
+    "P(respaldada) si efecto=1.24%": 0.774946476630437,
+    "P(sin ventaja) si efecto=0": 0.24817852620304853
+   },
+   "rho_dentro=0.7, rho_entre=0.2": {
+    "activos_efectivos": 2.553191489361702,
+    "se_anual": 0.006185934814458177,
+    "P(respaldada) si efecto=0.50%": 0.2014176195465891,
+    "P(respaldada) si efecto=1.00%": 0.48871818600014905,
+    "P(respaldada) si efecto=1.24%": 0.6429127288363827,
+    "P(sin ventaja) si efecto=0": 0.20141761954658916
+   }
+  }
+ }
+}

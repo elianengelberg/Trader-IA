@@ -15,3 +15,5 @@ entregas_hcarry/hcarry_next_final.zip
 entregas_hcarry/hcarry_next_snapshot*.zip
 tendencia_btc/datos_papel/**/*.zip
 tendencia_btc/datos_papel/**/*.CHECKSUM
+tendencia_btc/papel/cortes/**/*.zip
+tendencia_btc/papel/cortes/**/*.CHECKSUM

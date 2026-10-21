@@ -67,3 +67,20 @@ La salida incluye la huella del código y el hash de las reglas. Si alguno no co
   - Primer corte con consecuencias a los 12 meses (2027-10-18). Revisión informativa a los 6 meses (2027-04-18).
   - El monitor puede consultarse en cualquier momento.
   - Script de estado: `papel/estado_inicial.py`, que no altera la huella de `src/`.
+
+## Adenda 2 (2026-10-17, 15:40 UTC; sin observaciones prospectivas todavía): procedimiento operativo — reglas sin cambios
+
+Reglas (`d2e4e1fb…`) y código de `src/` (`73b22f3e…`): **sin cambios**. Esta adenda corrige el **procedimiento**, no la estrategia. Detalle en `papel/VERIFICACION_OPERATIVA_2026-10-17.md`.
+
+1. **Cada corte se ejecuta con `papel/corte.py AAAA-MM-DD`.** El comando de «Cómo se evalúa» corresponde a la rama B. Usado con la rama A, la señal quedaba **sin historia** durante 180 días y el código congelado la tomaba como exposición 0 sin avisar.
+   - El ejecutor descarga la historia completa desde el 2026-04-20 y bloquea la evaluación si falta historia, si hay datos obsoletos o no publicados, si hay huecos o repeticiones, si un archivo ya registrado fue revisado o si las huellas no coinciden.
+   - Registra las decisiones día a día (cierre usado, momento de disponibilidad y precio de referencia) y deja constancia en `papel/cortes/REGISTRO.jsonl`, que solo admite añadidos.
+2. **Fechas de corte** (`corte` es exclusivo; el código mide los meses como días / 30,44):
+
+| Revisión | Corte | Días | Consecuencia |
+|---|---|---|---|
+| 6 meses | 2027-04-18 | 182 | Informativa |
+| 12 meses | **2027-10-19** | 366 | Primera con consecuencias. Con el corte 2027-10-18 serían 365 días = 11,99 «meses», y el código congelado la trataría como informativa |
+| 24 meses | 2028-10-18 | 731 | Posible confirmación |
+
+3. **Monitor del carry:** siempre con meses completos. El ejecutor lo calcula en el primer día del mes del corte, porque con un mes incompleto la función congelada divide por 90 días y sesga el resultado a la baja. Es informativo: no activa nada.

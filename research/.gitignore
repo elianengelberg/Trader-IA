@@ -17,3 +17,5 @@ tendencia_btc/datos_papel/**/*.zip
 tendencia_btc/datos_papel/**/*.CHECKSUM
 tendencia_btc/papel/cortes/**/*.zip
 tendencia_btc/papel/cortes/**/*.CHECKSUM
+tendencia_btc/datos_multi/nasdaq/
+tendencia_btc/datos_multi/yahoo/

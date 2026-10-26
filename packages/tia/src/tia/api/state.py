@@ -95,6 +95,12 @@ class AppState:
         #: both pass the "already active" check and build two runtimes over one account.
         #: Process-local by nature — see docs/PHASE_1_2_REPAIR_REPORT.md for the limit.
         self._session_lock = asyncio.Lock()
+        #: The cross-process half of that exclusion (H11, mission v3): the realtime session
+        #: slot of this store, held for as long as a session runs. A second process over
+        #: the same store is refused at once, whatever it read of the heartbeat lease.
+        from tia.persistence.session_lock import SessionSlotLock
+
+        self._session_slot = SessionSlotLock(self.database)
         self.started_at = datetime.now(UTC)
 
         self._subscribers: set[asyncio.Queue[dict[str, Any]]] = set()
@@ -209,7 +215,9 @@ class AppState:
             self._lease_probe_task.cancel()
             with contextlib.suppress(asyncio.CancelledError, Exception):
                 await self._lease_probe_task
-        if self.live_runtime is not None and self.live_runtime.is_running:
+        # Any session still alive, not only one trading (mission v3): a session in SAFE_MODE
+        # was skipped here, so it was never flushed, recorded or released at shutdown.
+        if self._realtime_session_running():
             with contextlib.suppress(Exception):
                 await self._mark_stopping(self.live_runtime.run_id)
             await self.live_runtime.stop(reason="application shutdown")
@@ -245,6 +253,8 @@ class AppState:
             with contextlib.suppress(Exception):
                 await self._mm_market.close()
         await self._drain_before_close()
+        with contextlib.suppress(Exception):
+            await self._session_slot.release()
         await self.database.close()
 
     # ------------------------------------------------------------ stop records (R19)
@@ -891,6 +901,8 @@ class AppState:
     async def _persist(self, kind: str, payload: Any) -> bool:
         """Write one runtime artefact. Failures are logged, never raised; the answer says
         whether it landed, so the runtime that scheduled it can count it (R19)."""
+        release_slot_after_commit = False
+        verify_slot_after_commit = False
         try:
             async with self.database.session() as session:
                 if kind == "decision":
@@ -945,10 +957,13 @@ class AppState:
                         "status": "writes_failed" if failed else "complete", "pending": 0, "failed_writes": failed,
                         "loop_cancelled": False, "checked_at": datetime.now(UTC).isoformat(), "self_ended": True,
                     })
+                    if live is not None and live.run_id == payload["run_id"]:
+                        release_slot_after_commit = True
                 elif kind == "run_heartbeat":
                     # The session is alive: another process reads this before it resumes
                     # or starts a session over the same account (Phase 1.3, G9).
                     await RunRepository(session).heartbeat(payload["run_id"], payload["at"])
+                    verify_slot_after_commit = True
                 elif kind == "reconciliation":
                     await ReconciliationRepository(session).record(payload)
                 elif kind == "incident":
@@ -968,7 +983,6 @@ class AppState:
                         payload["at"],
                     )
             self._persist_writes += 1
-            return True
         except Exception as exc:
             # Absorbed so the loop goes on; counted so it is not hidden (Phase 1.4). The
             # payload never reaches the log: it may carry an order or an account event.
@@ -993,6 +1007,76 @@ class AppState:
                     error=self._last_failed_incident["error"],
                 )
             return False
+        # After the commit, never inside it (H11): a session that ended on its own frees the
+        # slot once its stamp is on disk; a heartbeat checks that the exclusion still stands.
+        if release_slot_after_commit:
+            with contextlib.suppress(Exception):
+                await self._session_slot.release()
+        if verify_slot_after_commit:
+            with contextlib.suppress(Exception):
+                await self._verify_session_slot()
+        return True
+
+    # ------------------------------------------------------- the session slot (H11)
+
+    def _realtime_session_running(self) -> bool:
+        """Whether a session holds the account: started and not ended. SAFE_MODE, PAUSED and
+        STOPPING count — a session in safe mode still owns its positions and keeps the slot."""
+        from tia.runtime.states import LiveState
+
+        live = self.live_runtime
+        if live is None:
+            return False
+        machine = getattr(live, "machine", None)
+        if machine is None:  # a stand-in without a state machine
+            return bool(getattr(live, "is_running", False))
+        return machine.state not in {LiveState.DISARMED, LiveState.ARMING, LiveState.ARMED,
+                                     LiveState.STOPPED, LiveState.ERROR}
+
+    async def _claim_session_slot(self) -> None:
+        """Take the store's realtime session slot or refuse the start (H11, mission v3).
+
+        The heartbeat lease read later in a start only *detects* another process; two that
+        read it in the same window both pass. This claim excludes: of two processes over the
+        same store, one holds the slot and the other is refused here, before it builds
+        anything. The slot is released when the session stops, ends on its own, fails to
+        start or the application shuts down, and by the server or the kernel when the
+        process dies."""
+        from tia.core.errors import LiveActivationError
+
+        if not await self._session_slot.acquire():
+            raise LiveActivationError(
+                "another process holds the realtime session lock over this store "
+                f"({self._session_slot.holder_hint()}); stop it before starting another"
+            )
+
+    async def _release_session_slot_if_idle(self) -> None:
+        if not self._realtime_session_running():
+            with contextlib.suppress(Exception):
+                await self._session_slot.release()
+
+    async def _verify_session_slot(self) -> bool:
+        """Whether this process still holds the exclusion of its running session. If it
+        lost it (the holding connection died, the lock file was removed), the session takes
+        no new entries: another process may be running the same account. It keeps managing
+        what it holds; a person restarts it once the cause is known."""
+        live = self.live_runtime
+        if live is None or not live.is_running or not self._session_slot.held:
+            return True
+        if await self._session_slot.still_held():
+            return True
+        _log.error("session_lock_lost", run_id=live.run_id, lock=self._session_slot.describe())
+        await self._session_slot.release()
+        regained = False
+        with contextlib.suppress(Exception):
+            regained = await self._session_slot.acquire()
+        live.block_entries(
+            "session_lock_lost",
+            "the realtime session lock over this store was lost"
+            + (" and taken again; another process may have run meanwhile" if regained else
+               " and is now held elsewhere or unavailable"),
+        )
+        return False
 
     def persistence_status(self) -> dict[str, Any]:
         """What the store has absorbed: writes, failures, the last failure and when."""
@@ -1010,6 +1094,8 @@ class AppState:
             # Runs whose stop could not confirm every write (R19): their record may be
             # short; the account rebuild refuses to call itself complete over one.
             "incomplete_runs": sorted(self._incomplete_runs),
+            # The cross-process exclusion of the realtime session (H11).
+            "session_lock": self._session_slot.describe(),
         }
 
     def _persistence_recently_failed(self, *, window: timedelta = timedelta(minutes=10)) -> bool:
@@ -2333,7 +2419,16 @@ class AppState:
     async def arm_live(self, *, operator: str, confirmation: str) -> dict[str, Any]:
         """Arm under the session lock — see :meth:`_arm_live_locked`."""
         async with self._session_lock:
-            return await self._arm_live_locked(operator=operator, confirmation=confirmation)
+            if not self.settings.live.enabled:  # refused below, before any claim
+                return await self._arm_live_locked(operator=operator, confirmation=confirmation)
+            await self._claim_session_slot()
+            try:
+                result = await self._arm_live_locked(operator=operator, confirmation=confirmation)
+            except BaseException:
+                await self._release_session_slot_if_idle()
+                raise
+            await self._release_session_slot_if_idle()  # an answer without a running session holds nothing
+            return result
 
     async def _arm_live_locked(self, *, operator: str, confirmation: str) -> dict[str, Any]:
         """Arm, then actually start the live runtime — and report only what happened.
@@ -2354,7 +2449,9 @@ class AppState:
                 "the live path is disabled in configuration. Enable it deliberately with "
                 "TIA_LIVE__ENABLED=true after every activation check passes."
             )
-        if self.live_runtime is not None and self.live_runtime.is_running:
+        # Alive, not only trading (mission v3): a session in SAFE_MODE, STOPPING or STARTING still
+        # owns its account; with ``is_running`` a second session was built beside it.
+        if self._realtime_session_running():
             raise LiveActivationError(
                 "a live session is already active; stop it before arming another"
             )
@@ -2540,9 +2637,16 @@ class AppState:
         :meth:`_start_paper_realtime_locked`. Two concurrent requests cannot both pass the
         "already active" check: the second waits and is refused."""
         async with self._session_lock:
-            return await self._start_paper_realtime_locked(
-                actor=actor, max_duration_hours=max_duration_hours, session_deadline=session_deadline,
-            )
+            await self._claim_session_slot()
+            try:
+                result = await self._start_paper_realtime_locked(
+                    actor=actor, max_duration_hours=max_duration_hours, session_deadline=session_deadline,
+                )
+            except BaseException:
+                await self._release_session_slot_if_idle()
+                raise
+            await self._release_session_slot_if_idle()  # an answer without a running session holds nothing
+            return result
 
     async def _start_paper_realtime_locked(
         self,
@@ -2575,7 +2679,8 @@ class AppState:
         from tia.runtime.live import LiveRuntime
         from tia.runtime.session_limits import encode_session_notes
 
-        if self.live_runtime is not None and self.live_runtime.is_running:
+        # Alive, not only trading (mission v3): see arm_live.
+        if self._realtime_session_running():
             raise LiveActivationError(
                 "a realtime session is already active; stop it before starting another"
             )
@@ -2898,6 +3003,7 @@ class AppState:
         except Exception as exc:
             _log.error("realtime_stop_stamp_failed", run_id=live.run_id, error=str(exc)[:300])
             report = {**report, "recorded": False}
+        await self._session_slot.release()  # the session is over: another process may start one
         snapshot = live.snapshot()
         snapshot["persistence_at_stop"] = report
         return snapshot

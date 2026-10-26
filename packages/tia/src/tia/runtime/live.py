@@ -1110,6 +1110,11 @@ class LiveRuntime:
             self._incident(f"entries_blocked:{key}", reason=reason[:500])
         self._blocks[key] = reason[:500]
 
+    def block_entries(self, key: str, reason: str) -> None:
+        """Refuse new entries for ``key`` from outside the loop (the application's session
+        lock, H11); the session keeps managing what it holds. Lifted only by a new session."""
+        self._block_entries(key, reason)
+
     def _unblock_entries(self, key: str) -> None:
         if self._blocks.pop(key, None) is not None:
             _log.info("entries_unblocked", cause=key)

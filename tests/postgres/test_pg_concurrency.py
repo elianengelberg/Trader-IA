@@ -120,14 +120,8 @@ async def test_a_second_app_state_reads_the_first_ones_lease(pg_url: str, tmp_pa
         await writer.close()
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason=(
-        "known limit H11 (docs/PHASE_1_4_SYSTEM_AUDIT_REPORT.md): the heartbeat lease detects "
-        "another process but does not exclude two starting in the same window — reproduced "
-        "on PostgreSQL with two AppStates over one database"
-    ),
-)
+# Was a strict xfail (known limit H11): the heartbeat lease detected another process but did
+# not exclude two starting in the same window. The session slot lock (mission v3) excludes.
 async def test_two_processes_starting_together_end_with_at_most_one_session(
     pg: PgDatabases, tmp_path: Path, fake_public_feed: None, monkeypatch: pytest.MonkeyPatch,
 ) -> None:

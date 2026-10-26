@@ -162,4 +162,54 @@ def validate_quantity(
         )
 
 
-__all__ = ["InstrumentFilters", "OrderFilterError", "filters_for", "validate_quantity"]
+def venue_filters_from_exchange_info(
+    payload: dict[str, Any], *, venue_symbol: str, required_order_types: tuple[str, ...] = ("STOP_LOSS",),
+) -> dict[str, Any]:
+    """The venue grid of ``venue_symbol`` from an ``exchangeInfo`` answer, in the keys a live
+    session's ``symbol_filters`` uses (D21, mission v3). Raises :class:`ValueError` for an
+    answer that does not describe a tradable symbol completely: no symbol row, a status other
+    than TRADING, a missing PRICE_FILTER / LOT_SIZE / notional filter, a non-positive grid, or
+    an order type the session needs (its protective stop is a ``STOP_LOSS``) that the venue
+    does not list. The values are kept as the venue's strings, so nothing is lost to a float.
+
+    Field names as documented (developers.binance.com, Spot API "Filters", read 2026-10-26);
+    REQUIRES VALIDATION against the venue itself."""
+    rows = payload.get("symbols") if isinstance(payload, dict) else None
+    if not isinstance(rows, list) or not rows:
+        raise ValueError("exchange information carries no symbols")
+    row = next((r for r in rows if isinstance(r, dict) and str(r.get("symbol", "")).upper() == venue_symbol.upper()), None)
+    if row is None:
+        raise ValueError(f"exchange information does not describe {venue_symbol}")
+    status = str(row.get("status", "")).upper()
+    if status != "TRADING":
+        raise ValueError(f"{venue_symbol} is not trading at the venue: status {status or 'missing'}")
+    order_types = tuple(str(x).upper() for x in (row.get("orderTypes") or ()))
+    missing = [t for t in required_order_types if t not in order_types]
+    if missing:
+        raise ValueError(f"{venue_symbol} does not list the order type(s) {missing} this session needs: {order_types}")
+    by_type = {str(f.get("filterType", "")): f for f in (row.get("filters") or ()) if isinstance(f, dict)}
+    try:
+        price, lot = by_type["PRICE_FILTER"], by_type["LOT_SIZE"]
+    except KeyError as exc:
+        raise ValueError(f"exchange information for {venue_symbol} lacks the {exc.args[0]} filter") from exc
+    notional = by_type.get("NOTIONAL") or by_type.get("MIN_NOTIONAL")
+    if notional is None:
+        raise ValueError(f"exchange information for {venue_symbol} lacks a notional filter")
+    out = {
+        "tick_size": str(price.get("tickSize", "")),
+        "step_size": str(lot.get("stepSize", "")),
+        "min_qty": str(lot.get("minQty", "")),
+        "min_notional": str(notional.get("minNotional", "")),
+        "source": "exchange_info",
+        "order_types": list(order_types),
+    }
+    for key in ("tick_size", "step_size", "min_qty"):
+        try:
+            if D(out[key]) <= 0:
+                raise ValueError
+        except (ArithmeticError, ValueError) as exc:
+            raise ValueError(f"exchange information for {venue_symbol} has an unusable {key}: {out[key]!r}") from exc
+    return out
+
+
+__all__ = ["InstrumentFilters", "OrderFilterError", "filters_for", "validate_quantity", "venue_filters_from_exchange_info"]

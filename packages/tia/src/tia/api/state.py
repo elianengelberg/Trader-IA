@@ -2578,6 +2578,11 @@ class AppState:
             base_url=live.base_url,
             simulated=live.use_testnet,
         )
+        # The venue's own grid for the session's symbol (D21, mission v3): without it the
+        # session sized, priced and protected with the instrument universe's values (BTC-USD:
+        # lot 1e-6), and an order off the venue's grid is refused by its filters. Read before
+        # anything starts; a session that cannot read it is not started.
+        symbol_filters = await self._venue_symbol_filters(execution, live.symbol)
         prior_outcomes, prior_reviews = await self._load_live_evidence()
         # Today's entries and the last entry's time, rebuilt from the execution record
         # the way the paper path does (Phase 1.3, G10): a live restart must not hand the
@@ -2596,12 +2601,32 @@ class AppState:
             venue_time_ms=market.server_time_ms,
             persist=self._persist,
             on_event=self.broadcast,
+            symbol_filters=symbol_filters,
             prior_outcomes=prior_outcomes,
             prior_reviews=prior_reviews,
             prior_risk_state=risk_restore,
             session_deadline=(datetime.now(UTC) + timedelta(hours=hours)) if hours > 0 else None,
             session_max_hours=hours if hours > 0 else None,
         )
+
+    async def _venue_symbol_filters(self, execution: Any, symbol: str) -> dict[str, Any]:
+        """The venue's filters for ``symbol`` as the live session's ``symbol_filters`` (D21).
+        Any failure to read or understand them refuses the start: a live session does not
+        guess the venue's grid."""
+        from tia.core.errors import LiveActivationError
+        from tia.execution.filters import venue_filters_from_exchange_info
+
+        venue_symbol = execution.to_venue_symbol(symbol)
+        try:
+            payload = await execution.get_exchange_info(symbol)
+            filters = venue_filters_from_exchange_info(payload, venue_symbol=venue_symbol)
+        except Exception as exc:
+            raise LiveActivationError(
+                f"the venue's filters for {venue_symbol} could not be read or understood "
+                f"({type(exc).__name__}: {str(exc)[:200]}); the live session is not started"
+            ) from exc
+        _log.info("live_venue_filters_loaded", symbol=symbol, **{k: v for k, v in filters.items() if k != "order_types"})
+        return filters
 
     async def _record_activation(self, **values: Any) -> None:
         try:

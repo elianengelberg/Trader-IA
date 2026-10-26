@@ -57,10 +57,14 @@ services:
     # Exec-array form on purpose: a folded YAML scalar keeps the newline on
     # more-indented continuation lines, and dash refuses a line that begins with
     # "&&" — found on the first real boot, not in review.
+    # `exec` (mission v3): without it dash stays PID 1 with the server as its child, and
+    # dash as PID 1 neither acts on nor forwards SIGTERM — `docker stop` then waited out
+    # its grace period and SIGKILLed the server, so the stop never flushed, recorded or
+    # released anything (reproduced with unshare --pid: reproduction/d3/pid1_sh.sh).
     command:
       - sh
       - -c
-      - python -m alembic upgrade head && python -m tia.api.main
+      - python -m alembic upgrade head && exec python -m tia.api.main
     environment:
       TIA_ENV: paper
       TIA_DATABASE_URL: postgresql+asyncpg://tia:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}@postgres:5432/tia

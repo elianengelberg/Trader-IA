@@ -98,10 +98,13 @@ async def test_the_holding_connection_is_not_left_idle_in_a_transaction(pg: PgDa
     lock = SessionSlotLock(db)
     try:
         assert await lock.acquire()
+        # Only this test's own database (pg_locks is server-wide): another client of the same server,
+        # in another database or under another role, must neither fail this test nor be seen by it.
         async with probe.session() as session:
             states = [r[0] for r in (await session.execute(text(
                 "SELECT a.state FROM pg_locks l JOIN pg_stat_activity a ON a.pid = l.pid "
-                "WHERE l.locktype = 'advisory' AND l.granted"))).all()]
+                "WHERE l.locktype = 'advisory' AND l.granted "
+                "AND l.database = (SELECT oid FROM pg_database WHERE datname = current_database())"))).all()]
         assert states == ["idle"], states
     finally:
         await lock.release()
@@ -148,9 +151,13 @@ async def test_a_terminated_backend_is_reported_as_a_lost_exclusion(pg: PgDataba
     lock = SessionSlotLock(db)
     try:
         assert await lock.acquire()
+        # Terminate only the backend that holds an advisory lock in THIS test's database, never one of
+        # another database or another application on the same server (pg_locks is server-wide).
         async with admin.session() as session:
             await session.execute(text(
-                "SELECT pg_terminate_backend(pid) FROM pg_locks WHERE locktype = 'advisory' AND granted"))
+                "SELECT pg_terminate_backend(pid) FROM pg_locks WHERE locktype = 'advisory' AND granted "
+                "AND database = (SELECT oid FROM pg_database WHERE datname = current_database()) "
+                "AND pid <> pg_backend_pid()"))
         await asyncio.sleep(0.2)
         assert await lock.still_held() is False
         assert lock.held is False

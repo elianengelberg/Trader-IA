@@ -19,6 +19,15 @@
 # * dependencies are pinned (ci/constraints-py311.txt); the drift job runs without the pins;
 # * TZ is set explicitly; the day-boundary tests also run in America/Argentina/Buenos_Aires;
 # * migrations are applied from empty and the newest one is taken down and up again.
+#
+# Review branch (2026-10-26), before the first remote run:
+# * the PostgreSQL suite runs as a role WITHOUT superuser (tia_ci_app: NOSUPERUSER NOCREATEROLE
+#   CREATEDB). The service's superuser (tia_ci) is used only to configure the server, and the
+#   service is a container that lives for this job only: no shared server is ever touched;
+# * the server's time zone is set with ALTER SYSTEM, so it reaches every database the suite
+#   creates (the tests create theirs from template0; ALTER DATABASE tia_ci did not reach them);
+# * the pytest summary lines and the JUnit guard results are written as annotations, so the
+#   counts and durations can be read back from the run without downloading logs.
 
 name: ci
 
@@ -64,39 +73,55 @@ jobs:
       # addopts already carries -q; a second -q hides the summary line. tests/postgres runs in its
       # own job: here, without a server, every one of its tests would be skipped.
       - name: Tests (unit, integration, property, failure, adversarial, e2e)
-        run: >-
-          python -m pytest tests --ignore=tests/postgres -rA
-          --junitxml=junit-python.xml -o junit_family=xunit2
+        run: |
+          set -o pipefail
+          python -m pytest tests --ignore=tests/postgres -rA \
+            --junitxml=junit-python.xml -o junit_family=xunit2 | tee pytest-python.txt
 
       - name: Nothing skipped, only the listed expected failures
         if: always()
-        run: python scripts/ci_check_junit.py junit-python.xml --min-cases 2100 --xfail-allowlist ci/xfail_python.txt
+        run: |
+          set -o pipefail
+          python scripts/ci_check_junit.py junit-python.xml --min-cases 2100 --xfail-allowlist ci/xfail_python.txt | tee guard-python.txt
 
       # The day-sensitive tests in the operating time zone (N-HORA): the risk day is UTC, the
       # host is not.
       - name: Day-boundary tests in America/Argentina/Buenos_Aires
         env:
           TZ: America/Argentina/Buenos_Aires
-        run: >-
-          python -m pytest -rA tests/unit/test_risk_utc_day_boundary.py
-          tests/integration/test_risk_state_persistence.py
-          tests/unit/test_risk_engine.py tests/unit/test_risk_restore.py
-          --junitxml=junit-tz-ba.xml -o junit_family=xunit2
+        run: |
+          set -o pipefail
+          python -m pytest -rA tests/unit/test_risk_utc_day_boundary.py \
+            tests/integration/test_risk_state_persistence.py \
+            tests/unit/test_risk_engine.py tests/unit/test_risk_restore.py \
+            --junitxml=junit-tz-ba.xml -o junit_family=xunit2 | tee pytest-tz-ba.txt
 
       - name: Nothing skipped in the time-zone run
         if: always()
-        run: python scripts/ci_check_junit.py junit-tz-ba.xml --min-cases 60
+        run: |
+          set -o pipefail
+          python scripts/ci_check_junit.py junit-tz-ba.xml --min-cases 60 | tee guard-tz-ba.txt
 
       - name: Migrations apply from empty (SQLite)
         run: |
           mkdir -p "$RUNNER_TEMP/ci-db"
           TIA_DATABASE_URL="sqlite:///$RUNNER_TEMP/ci-db/ci.db" python -m alembic upgrade head
 
+      - name: Counts as annotations
+        if: always()
+        run: |
+          for f in pytest-*.txt guard-*.txt; do
+            [ -f "$f" ] && echo "::notice title=python ${f%.txt}::$(tail -n 1 "$f")" || echo "::warning title=python::$f missing"
+          done
+
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: junit-python
-          path: junit-*.xml
+          path: |
+            junit-*.xml
+            pytest-*.txt
+            guard-*.txt
           if-no-files-found: error
 
   postgres:
@@ -118,7 +143,10 @@ jobs:
     env:
       PYTHONPATH: packages/tia/src
       TZ: UTC
-      TIA_TEST_DATABASE_URL: postgresql+asyncpg://tia_ci:tia_ci_throwaway@127.0.0.1:5432/tia_ci
+      # Configuration only (the service's superuser); the suite never uses it.
+      TIA_CI_ADMIN_URL: postgresql://tia_ci:tia_ci_throwaway@127.0.0.1:5432/tia_ci
+      # The suite: least privilege (NOSUPERUSER NOCREATEROLE CREATEDB), created in the setup step.
+      TIA_TEST_DATABASE_URL: postgresql+asyncpg://tia_ci_app:tia_ci_app_throwaway@127.0.0.1:5432/tia_ci_app
     steps:
       - uses: actions/checkout@v4
 
@@ -134,50 +162,79 @@ jobs:
         run: pip install -c ci/constraints-py311.txt -e ".[api,db,postgres,redis,llm,dev]"
 
       # The server's own zone is not UTC in this job, as on a host that was never configured
-      # (mission v2, pg_zona_del_host): a stamp that depended on it would show here.
-      - name: Database time zone America/Argentina/Buenos_Aires
+      # (mission v2, pg_zona_del_host): a stamp that depended on it would show here. Set for the
+      # whole server (ALTER SYSTEM), so it reaches the databases the tests create from template0.
+      # Then the suite's role, without superuser, and a check of what it really is and sees.
+      - name: Server time zone and a least-privilege test role
         run: |
           python - <<'EOF'
           import asyncio, os, asyncpg
+          ZONE = "America/Argentina/Buenos_Aires"
           async def main():
+              admin = await asyncpg.connect(os.environ["TIA_CI_ADMIN_URL"])
+              await admin.execute(f"ALTER SYSTEM SET timezone TO '{ZONE}'")
+              await admin.fetchval("SELECT pg_reload_conf()")
+              await admin.execute("CREATE ROLE tia_ci_app LOGIN NOSUPERUSER NOCREATEROLE NOREPLICATION "
+                                  "CREATEDB PASSWORD 'tia_ci_app_throwaway'")
+              await admin.execute("CREATE DATABASE tia_ci_app OWNER tia_ci_app")
+              await admin.close()
               url = os.environ["TIA_TEST_DATABASE_URL"].replace("postgresql+asyncpg://", "postgresql://")
-              conn = await asyncpg.connect(url)
-              await conn.execute("ALTER DATABASE tia_ci SET timezone TO 'America/Argentina/Buenos_Aires'")
-              await conn.close()
-              conn = await asyncpg.connect(url)
-              print("server timezone:", await conn.fetchval("SHOW timezone"))
-              await conn.close()
+              app = await asyncpg.connect(url)
+              role = await app.fetchrow("SELECT current_user AS who, rolsuper, rolcreatedb, rolcreaterole "
+                                        "FROM pg_roles WHERE rolname = current_user")
+              await app.execute("CREATE DATABASE tia_ci_tz_probe TEMPLATE template0")
+              for _ in range(50):  # the reload reaches backends started after the postmaster read it
+                  probe = await asyncpg.connect(url.rsplit("/", 1)[0] + "/tia_ci_tz_probe")
+                  zone = await probe.fetchval("SHOW timezone")
+                  await probe.close()
+                  if zone == ZONE:
+                      break
+                  await asyncio.sleep(0.1)
+              await app.execute("DROP DATABASE tia_ci_tz_probe")
+              await app.close()
+              print(f"test role: {dict(role)}; time zone in a database created like the tests': {zone}")
+              assert role["who"] == "tia_ci_app" and not role["rolsuper"] and not role["rolcreaterole"], role
+              assert role["rolcreatedb"], role
+              assert zone == ZONE, zone
           asyncio.run(main())
           EOF
 
       - name: PostgreSQL suite (tests/postgres)
-        run: python -m pytest tests/postgres -rA --junitxml=junit-postgres.xml -o junit_family=xunit2
+        run: |
+          set -o pipefail
+          python -m pytest tests/postgres -rA --junitxml=junit-postgres.xml -o junit_family=xunit2 | tee pytest-postgres.txt
 
       - name: No PostgreSQL test skipped, only the listed expected failures
         if: always()
-        run: python scripts/ci_check_junit.py junit-postgres.xml --min-cases 150 --xfail-allowlist ci/xfail_postgres.txt
+        run: |
+          set -o pipefail
+          python scripts/ci_check_junit.py junit-postgres.xml --min-cases 150 --xfail-allowlist ci/xfail_postgres.txt | tee guard-postgres.txt
 
       # The same suite with the host in the operating time zone: a naive stamp bound through
       # asyncpg used to take the process's zone (mission v2, parche 18).
       - name: PostgreSQL suite, host TZ America/Argentina/Buenos_Aires
         env:
           TZ: America/Argentina/Buenos_Aires
-        run: python -m pytest tests/postgres -rA --junitxml=junit-postgres-tz-ba.xml -o junit_family=xunit2
+        run: |
+          set -o pipefail
+          python -m pytest tests/postgres -rA --junitxml=junit-postgres-tz-ba.xml -o junit_family=xunit2 | tee pytest-postgres-tz-ba.txt
 
       - name: Nothing skipped in the time-zone run (PostgreSQL)
         if: always()
-        run: python scripts/ci_check_junit.py junit-postgres-tz-ba.xml --min-cases 150 --xfail-allowlist ci/xfail_postgres.txt
+        run: |
+          set -o pipefail
+          python scripts/ci_check_junit.py junit-postgres-tz-ba.xml --min-cases 150 --xfail-allowlist ci/xfail_postgres.txt | tee guard-postgres-tz-ba.txt
 
       # From empty, then the newest migration down and up again: a deploy can be walked back
       # one step without restoring a backup (D20).
       - name: Migrations from empty, down one and up again (PostgreSQL)
         env:
-          TIA_DATABASE_URL: postgresql+asyncpg://tia_ci:tia_ci_throwaway@127.0.0.1:5432/tia_ci_migr
+          TIA_DATABASE_URL: postgresql+asyncpg://tia_ci_app:tia_ci_app_throwaway@127.0.0.1:5432/tia_ci_migr
         run: |
           python - <<'EOF'
           import asyncio, asyncpg
           async def main():
-              conn = await asyncpg.connect("postgresql://tia_ci:tia_ci_throwaway@127.0.0.1:5432/tia_ci")
+              conn = await asyncpg.connect("postgresql://tia_ci_app:tia_ci_app_throwaway@127.0.0.1:5432/tia_ci_app")
               await conn.execute("DROP DATABASE IF EXISTS tia_ci_migr")
               await conn.execute("CREATE DATABASE tia_ci_migr")
               await conn.close()
@@ -186,13 +243,23 @@ jobs:
           python -m alembic upgrade head
           python -m alembic downgrade -1
           python -m alembic upgrade head
-          python -m alembic current
+          python -m alembic current | tee alembic-current.txt
+
+      - name: Counts as annotations
+        if: always()
+        run: |
+          for f in pytest-*.txt guard-*.txt alembic-current.txt; do
+            [ -f "$f" ] && echo "::notice title=postgres ${f%.txt}::$(tail -n 1 "$f")" || echo "::warning title=postgres::$f missing"
+          done
 
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: junit-postgres
-          path: junit-*.xml
+          path: |
+            junit-*.xml
+            pytest-*.txt
+            guard-*.txt
           if-no-files-found: error
 
   # Weekly, unpinned: what a fresh install from PyPI brings today. A red run here is a warning

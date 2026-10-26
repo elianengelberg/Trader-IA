@@ -49,7 +49,7 @@ from tia.core.errors import (
 )
 from tia.core.ids import deterministic_id, new_ulid
 from tia.core.logging import get_logger
-from tia.core.money import quantize_price_passive
+from tia.core.money import D, quantize_price_passive
 from tia.data.providers.base import MarketDataProvider
 from tia.data.quality import DataQualityEngine
 from tia.domain.enums import Direction, MarketRegime, OrderState, OrderType, Side, TimeInForce
@@ -3525,6 +3525,19 @@ class LiveRuntime:
         # quantize_price_passive rounds a sell up and a buy down: for a stop, toward the market.
         return float(quantize_price_passive(level, tick, buy=side is Side.BUY))
 
+    def _protective_stop_quantity(self, held: float) -> float:
+        """``held`` down to a whole number of lots (the venue's step when its filters are
+        loaded, the instrument's otherwise); 0 when that is below the minimum lot. A quantity
+        already on the grid comes back as it is (float error within tolerance included)."""
+        try:
+            filters = filters_for(self._symbol, DEFAULT_UNIVERSE, self._filters)
+        except OrderFilterError:
+            return held
+        quantity = filters.quantize(held)
+        if quantity <= 0 or D(repr(quantity)) < filters.min_quantity:
+            return 0.0
+        return quantity
+
     async def _sync_protective_stop(self, position_quantity: float) -> None:
         """Keep exactly one protective stop matching the open position.
 
@@ -3561,7 +3574,14 @@ class LiveRuntime:
         # refused by the venue's PRICE_FILTER, and the comparison with the resting stop below
         # must be made at the level that is actually sent.
         stop_price = self._protective_stop_level(float(stop_price), Side.SELL if position_quantity > 0 else Side.BUY)
-        quantity = abs(position_quantity)
+        # On the lot grid too, DOWN (mission v3): the rule every other order of the session
+        # already follows (``_build_intent``). The venue reports the position as the base
+        # asset it holds, and after a fee paid in that asset the balance is off the step
+        # grid; LOT_SIZE refuses ``quantity % stepSize != 0`` (developers.binance.com, Spot
+        # API "Filters", read 2026-10-26). Down leaves less than one step uncovered; nearest
+        # could ask to sell more than is held.
+        held = abs(position_quantity)
+        quantity = self._protective_stop_quantity(held)
         retry: OrderIntent | None = None
         pending = self._protection.get("pending_intent")
         if pending is not None:
@@ -3585,6 +3605,18 @@ class LiveRuntime:
             same_level = abs(float(pending.stop_price or 0.0) - float(stop_price)) <= 1e-9
             retry = pending if (same_size and same_level) else None
             self._protection["pending_intent"] = None
+
+        if quantity <= 0:
+            # Below one lot: no stop the venue accepts can cover it. Said, not sent — and only
+            # after a submission whose fate was unknown has been resolved above, so a stop that
+            # did execute (and left this dust) is adopted rather than forgotten.
+            self._set_protection(
+                "failed",
+                reason=f"the position ({held} {self._symbol}) is below one lot of the venue's step: no stop "
+                "the venue accepts can cover it",
+                error="below_lot",
+            )
+            return
 
         if (
             retry is None and self._open_trade is not None and self._open_trade.get("restored")

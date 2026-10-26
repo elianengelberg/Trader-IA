@@ -209,6 +209,7 @@ class BinanceExecutionProvider(ExecutionProvider):
         client = await self._http()
         url = f"{path}?{signed.query_string}"
 
+        mutating = method.upper() != "GET"
         try:
             response = await client.request(method, url, headers=signed.headers)
         except httpx.TimeoutException as exc:
@@ -219,14 +220,29 @@ class BinanceExecutionProvider(ExecutionProvider):
                 path=path,
                 key=self._signer.key_fingerprint,
             ) from exc
+        except httpx.ConnectError as exc:
+            # No connection was made: the request never left this host.
+            raise ProviderUnavailableError(
+                f"binance transport error on {method} {path}: {exc}",
+                provider=self.name,
+            ) from exc
         except httpx.HTTPError as exc:
+            if mutating:
+                # The connection existed and broke while the request was in flight (reset,
+                # protocol error, a read that failed): the venue may have it (mission v3).
+                raise ReconciliationError(
+                    f"{method} {path} broke in flight ({type(exc).__name__}: {exc}); the order "
+                    "state at the venue is UNKNOWN. Reconcile before submitting anything else.",
+                    path=path,
+                    key=self._signer.key_fingerprint,
+                ) from exc
             raise ProviderUnavailableError(
                 f"binance transport error on {method} {path}: {exc}",
                 provider=self.name,
             ) from exc
 
         if response.status_code >= 400:
-            self._raise_venue_error(response, path)
+            self._raise_venue_error(response, path, mutating=mutating)
 
         try:
             return response.json()
@@ -236,22 +252,46 @@ class BinanceExecutionProvider(ExecutionProvider):
                 received=response.text[:300],
             ) from exc
 
-    def _raise_venue_error(self, response: httpx.Response, path: str) -> None:
+    def _raise_venue_error(self, response: httpx.Response, path: str, *, mutating: bool = False) -> None:
         """Turn a venue error body into something a human can act on.
 
         The venue's numeric codes are stable and its messages are not, so both are carried
         through rather than summarised. REQUIRES VALIDATION: the ``{"code","msg"}`` body
         shape is documented but unconfirmed here, so a body that does not match is reported
         raw instead of being parsed into a misleading message.
+
+        Not every error status is a refusal (mission v3). The venue documents HTTP ``5XX``
+        as its own internal error, "It is important to NOT treat this as a failure
+        operation; the execution status is UNKNOWN and could have been a success", and code
+        ``-1007`` as "Send status unknown; execution status unknown" (developers.binance.com,
+        Spot API "HTTP Return Codes" and "Error codes", read 2026-10-26). On a request that
+        changes something (an order, a cancel) those are UNKNOWN, exactly like a timeout; on
+        a read they are an outage.
         """
         try:
             body = response.json()
-            code = body.get("code")
-            message = body.get("msg", "")
+            code = body.get("code") if isinstance(body, dict) else None
+            message = body.get("msg", "") if isinstance(body, dict) else str(body)[:300]
         except ValueError:
             code, message = None, response.text[:300]
 
         detail = f"binance rejected {path}: HTTP {response.status_code} code={code} {message}"
+
+        if response.status_code >= 500 or code == -1007:
+            if mutating:
+                raise ReconciliationError(
+                    f"binance answered {path} with HTTP {response.status_code} code={code} {message}: "
+                    "the venue documents this as execution status UNKNOWN, not a refusal. "
+                    "Reconcile against the venue before submitting anything else.",
+                    path=path,
+                    key=self._signer.key_fingerprint,
+                    status_code=response.status_code,
+                    code=code,
+                )
+            raise ProviderUnavailableError(
+                f"binance internal error on {path}: HTTP {response.status_code} code={code} {message}",
+                provider=self.name,
+            )
 
         if response.status_code == 429 or response.status_code == 418:
             retry_after = response.headers.get("Retry-After")

@@ -1,0 +1,2 @@
+# Expected failures of the postgres job (tests/postgres). See ci/xfail_python.txt.
+tests/postgres/test_pg_concurrency.py::test_load_since_is_inclusive_of_its_watermark[sqlite]  # R24-O1, SQLite text timestamps

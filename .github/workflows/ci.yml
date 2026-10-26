@@ -1,29 +1,49 @@
-# CI: lint + every Python test + frontend typecheck/build, on every push and PR.
+# CI: lint + every Python test (SQLite and PostgreSQL) + migrations + frontend, on every push
+# and PR; the same without the version pins once a week, to see dependency drift coming.
 #
-# STATUS: REQUIRES VALIDATION — authored in an environment that cannot reach GitHub
-# Actions, so this workflow has never run. The steps mirror `make verify` (minus the
-# browser smoke test, which needs a display server) so a green local verify is the
-# strongest available predictor of a green CI run.
+# STATUS: REQUIRES VALIDATION ON GITHUB ACTIONS. Mission v3 (2026-10-26) ran every `run:` step of
+# the python and postgres jobs locally, in order, with their env, against PostgreSQL 16.15 and a
+# fresh virtualenv installed from PyPI with ci/constraints-py311.txt
+# (reproduction/ci_v3/emular_workflow.py). What was NOT run: GitHub's runners, its service
+# container, actions/* steps and the network between job and service.
 #
-# Deliberately NOT here: deployment. Deploys are an operator action via
-# scripts/deploy.sh on the target machine — a trading system should not redeploy
-# itself because a branch moved.
+# Deliberately NOT here: deployment. Deploys are an operator action via scripts/deploy.sh on
+# the target machine — a trading system should not redeploy itself because a branch moved.
+#
+# What makes a green run mean something (mission v3):
+# * pytest's exit code is not trusted alone: scripts/ci_check_junit.py fails the job when fewer
+#   cases ran than expected, when any case was skipped, and when an expected failure is not the
+#   listed one (ci/xfail_*.txt) — a new xfail or a stale entry both fail;
+# * tests/postgres is excluded from the SQLite job (there it would be 149 silent skips) and run
+#   in its own job against a real server, whose database time zone is not UTC on purpose;
+# * dependencies are pinned (ci/constraints-py311.txt); the drift job runs without the pins;
+# * TZ is set explicitly; the day-boundary tests also run in America/Argentina/Buenos_Aires;
+# * migrations are applied from empty and the newest one is taken down and up again.
 
 name: ci
 
 on:
   push:
   pull_request:
+  schedule:
+    - cron: "17 6 * * 1"   # drift: Mondays 06:17 UTC
+  workflow_dispatch:
 
 permissions:
   contents: read
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   python:
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 40
     env:
       PYTHONPATH: packages/tia/src
+      TZ: UTC
     steps:
       - uses: actions/checkout@v4
 
@@ -31,22 +51,180 @@ jobs:
         with:
           python-version: "3.11"
           cache: pip
+          cache-dependency-path: |
+            pyproject.toml
+            ci/constraints-py311.txt
 
-      - name: Install
-        run: pip install -e ".[api,db,postgres,redis,llm,dev]"
+      - name: Install (pinned)
+        run: pip install -c ci/constraints-py311.txt -e ".[api,db,postgres,redis,llm,dev]"
 
       - name: Lint (ruff)
-        run: ruff check packages tests scripts
+        run: ruff check --no-cache packages tests scripts
 
-      - name: Tests (unit, property, integration, failure, e2e)
-        run: python -m pytest tests -q
+      # addopts already carries -q; a second -q hides the summary line. tests/postgres runs in its
+      # own job: here, without a server, every one of its tests would be skipped.
+      - name: Tests (unit, integration, property, failure, adversarial, e2e)
+        run: >-
+          python -m pytest tests --ignore=tests/postgres -rA
+          --junitxml=junit-python.xml -o junit_family=xunit2
 
-      - name: Migrations apply from empty
+      - name: Nothing skipped, only the listed expected failures
+        if: always()
+        run: python scripts/ci_check_junit.py junit-python.xml --min-cases 2100 --xfail-allowlist ci/xfail_python.txt
+
+      # The day-sensitive tests in the operating time zone (N-HORA): the risk day is UTC, the
+      # host is not.
+      - name: Day-boundary tests in America/Argentina/Buenos_Aires
         env:
-          TIA_DATABASE_URL: sqlite:///./data/runtime/ci.db
-        run: python -m alembic upgrade head
+          TZ: America/Argentina/Buenos_Aires
+        run: >-
+          python -m pytest -rA tests/unit/test_risk_utc_day_boundary.py
+          tests/integration/test_risk_state_persistence.py
+          tests/unit/test_risk_engine.py tests/unit/test_risk_restore.py
+          --junitxml=junit-tz-ba.xml -o junit_family=xunit2
+
+      - name: Nothing skipped in the time-zone run
+        if: always()
+        run: python scripts/ci_check_junit.py junit-tz-ba.xml --min-cases 60
+
+      - name: Migrations apply from empty (SQLite)
+        run: |
+          mkdir -p "$RUNNER_TEMP/ci-db"
+          TIA_DATABASE_URL="sqlite:///$RUNNER_TEMP/ci-db/ci.db" python -m alembic upgrade head
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: junit-python
+          path: junit-*.xml
+          if-no-files-found: error
+
+  postgres:
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    services:
+      postgres:
+        image: postgres:16-alpine          # the image docker-compose.prod.yml runs
+        env:
+          POSTGRES_USER: tia_ci
+          POSTGRES_PASSWORD: tia_ci_throwaway   # a service container that lives for this job only
+          POSTGRES_DB: tia_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U tia_ci -d tia_ci"
+          --health-interval 5s --health-timeout 5s --health-retries 12
+    env:
+      PYTHONPATH: packages/tia/src
+      TZ: UTC
+      TIA_TEST_DATABASE_URL: postgresql+asyncpg://tia_ci:tia_ci_throwaway@127.0.0.1:5432/tia_ci
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: |
+            pyproject.toml
+            ci/constraints-py311.txt
+
+      - name: Install (pinned)
+        run: pip install -c ci/constraints-py311.txt -e ".[api,db,postgres,redis,llm,dev]"
+
+      # The server's own zone is not UTC in this job, as on a host that was never configured
+      # (mission v2, pg_zona_del_host): a stamp that depended on it would show here.
+      - name: Database time zone America/Argentina/Buenos_Aires
+        run: |
+          python - <<'EOF'
+          import asyncio, os, asyncpg
+          async def main():
+              url = os.environ["TIA_TEST_DATABASE_URL"].replace("postgresql+asyncpg://", "postgresql://")
+              conn = await asyncpg.connect(url)
+              await conn.execute("ALTER DATABASE tia_ci SET timezone TO 'America/Argentina/Buenos_Aires'")
+              await conn.close()
+              conn = await asyncpg.connect(url)
+              print("server timezone:", await conn.fetchval("SHOW timezone"))
+              await conn.close()
+          asyncio.run(main())
+          EOF
+
+      - name: PostgreSQL suite (tests/postgres)
+        run: python -m pytest tests/postgres -rA --junitxml=junit-postgres.xml -o junit_family=xunit2
+
+      - name: No PostgreSQL test skipped, only the listed expected failures
+        if: always()
+        run: python scripts/ci_check_junit.py junit-postgres.xml --min-cases 150 --xfail-allowlist ci/xfail_postgres.txt
+
+      # The same suite with the host in the operating time zone: a naive stamp bound through
+      # asyncpg used to take the process's zone (mission v2, parche 18).
+      - name: PostgreSQL suite, host TZ America/Argentina/Buenos_Aires
+        env:
+          TZ: America/Argentina/Buenos_Aires
+        run: python -m pytest tests/postgres -rA --junitxml=junit-postgres-tz-ba.xml -o junit_family=xunit2
+
+      - name: Nothing skipped in the time-zone run (PostgreSQL)
+        if: always()
+        run: python scripts/ci_check_junit.py junit-postgres-tz-ba.xml --min-cases 150 --xfail-allowlist ci/xfail_postgres.txt
+
+      # From empty, then the newest migration down and up again: a deploy can be walked back
+      # one step without restoring a backup (D20).
+      - name: Migrations from empty, down one and up again (PostgreSQL)
+        env:
+          TIA_DATABASE_URL: postgresql+asyncpg://tia_ci:tia_ci_throwaway@127.0.0.1:5432/tia_ci_migr
+        run: |
+          python - <<'EOF'
+          import asyncio, asyncpg
+          async def main():
+              conn = await asyncpg.connect("postgresql://tia_ci:tia_ci_throwaway@127.0.0.1:5432/tia_ci")
+              await conn.execute("DROP DATABASE IF EXISTS tia_ci_migr")
+              await conn.execute("CREATE DATABASE tia_ci_migr")
+              await conn.close()
+          asyncio.run(main())
+          EOF
+          python -m alembic upgrade head
+          python -m alembic downgrade -1
+          python -m alembic upgrade head
+          python -m alembic current
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: junit-postgres
+          path: junit-*.xml
+          if-no-files-found: error
+
+  # Weekly, unpinned: what a fresh install from PyPI brings today. A red run here is a warning
+  # about the next pin update, not a broken main branch.
+  drift:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      PYTHONPATH: packages/tia/src
+      TZ: UTC
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install (unpinned)
+        run: pip install -e ".[api,db,postgres,redis,llm,dev]"
+      - name: What changed against the pins
+        run: pip freeze --exclude-editable | diff ci/constraints-py311.txt - || true
+      - name: Lint (ruff, unpinned)
+        run: ruff check --no-cache packages tests scripts
+      - name: Tests (unpinned)
+        run: >-
+          python -m pytest tests --ignore=tests/postgres -rA
+          --junitxml=junit-drift.xml -o junit_family=xunit2
+      - name: Nothing skipped, only the listed expected failures
+        if: always()
+        run: python scripts/ci_check_junit.py junit-drift.xml --min-cases 2100 --xfail-allowlist ci/xfail_python.txt
 
   frontend:
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     defaults:

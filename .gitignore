@@ -10,6 +10,9 @@ venv/
 .mypy_cache/
 .ruff_cache/
 .pytest_cache/
+# Hypothesis' example database, written by tests/property. Ignored so a verify run does
+# not leave the tree dirty — R22 binds the verification evidence to a clean tree.
+.hypothesis/
 .coverage
 htmlcov/
 coverage.xml

@@ -93,6 +93,52 @@ def clear_heartbeat(notes: str | None) -> str | None:
     return json.dumps(payload, sort_keys=True)
 
 
+#: What a stop could say about the writes it owed (R19). ``stopping``: written before the
+#: stop drains, so a process killed during the drain leaves the run unconfirmed rather
+#: than unmarked. ``complete``: every write the session scheduled landed. ``incomplete``:
+#: some were still queued when the flush ran out, or the loop was cancelled mid-bar.
+#: ``writes_failed``: all finished, some refused by the store. ``complete_after_stop``:
+#: queued at the stop, landed later while the process lived. ``acknowledged``: an operator
+#: reconciled an unconfirmed record by hand.
+PERSISTENCE_KEY = "persistence"
+UNCONFIRMED_PERSISTENCE = ("stopping", "incomplete", "writes_failed")
+
+
+def persistence_report(
+    *, flushed: bool | None, pending: int, failed_writes: int, loop_cancelled: bool, flush_timeout_seconds: float,
+    at: datetime,
+) -> dict[str, Any]:
+    """The record a stop writes beside its stamp, and returns to whoever asked for it."""
+    if flushed is False or pending > 0 or loop_cancelled:
+        status = "incomplete"
+    elif failed_writes > 0:
+        status = "writes_failed"
+    else:
+        status = "complete"
+    return {
+        "status": status, "pending": int(pending), "failed_writes": int(failed_writes),
+        "loop_cancelled": bool(loop_cancelled), "flush_timeout_seconds": float(flush_timeout_seconds),
+        "checked_at": ensure_utc(at).isoformat(),
+    }
+
+
+def encode_persistence(notes: str | None, report: dict[str, Any]) -> str:
+    """``notes`` with the persistence record set; other keys (deadline, heartbeat, a note)
+    are kept, and free text an older run left there becomes the document's ``note``."""
+    payload = _notes_payload(notes)
+    if payload is None:
+        payload = {"note": notes} if notes else {}
+    payload[PERSISTENCE_KEY] = dict(report)
+    return json.dumps(payload, sort_keys=True)
+
+
+def decode_persistence(notes: str | None) -> dict[str, Any] | None:
+    """The persistence record a stop left, or ``None`` (a run from before R19, or open)."""
+    payload = _notes_payload(notes)
+    record = payload.get(PERSISTENCE_KEY) if payload is not None else None
+    return dict(record) if isinstance(record, dict) else None
+
+
 def decode_heartbeat(notes: str | None) -> datetime | None:
     payload = _notes_payload(notes)
     if payload is None:
@@ -183,13 +229,18 @@ __all__ = [
     "HEARTBEAT_KEY",
     "LEASE_SECONDS",
     "NOTES_KEY",
+    "PERSISTENCE_KEY",
+    "UNCONFIRMED_PERSISTENCE",
     "ResumeDecision",
     "clear_heartbeat",
     "decode_heartbeat",
+    "decode_persistence",
     "decode_session_deadline",
     "encode_heartbeat",
+    "encode_persistence",
     "encode_session_notes",
     "lease_age_seconds",
     "lease_is_held",
+    "persistence_report",
     "resume_decision",
 ]

@@ -1442,14 +1442,19 @@ def build_runtime_paper_with(  # type: ignore[no-untyped-def]
     persist=None,
     prior_outcomes: Any = (),
     prior_reviews: Any = (),
+    series_start: datetime | None = None,
     **live_overrides: Any,
 ):
-    """A paper-realtime runtime with live-config overrides and, optionally, a quoting feed."""
+    """A paper-realtime runtime with live-config overrides and, optionally, a quoting feed.
+
+    ``series_start`` pins the fake feed's first candle (and the runtime's clock, which starts
+    at candle 149) instead of anchoring the series to the wall clock, for a test whose
+    expectation depends on where a funding period or a UTC day falls (mission v2)."""
     scenario = get_scenario("trend_up")
     span_minutes = scenario.total_bars + 5
     candles = generate_series(
         scenario, symbol="BTC-USD", timeframe="1m",
-        start=datetime.now(UTC) - timedelta(minutes=span_minutes), seed=9,
+        start=series_start or datetime.now(UTC) - timedelta(minutes=span_minutes), seed=9,
     )
     clock = SimulatedClock(candles[149].close_time + timedelta(seconds=1))
     market = (QuotingMarketData if quoting else FakeMarketData)(candles, clock)

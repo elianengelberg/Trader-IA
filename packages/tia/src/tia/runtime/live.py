@@ -561,6 +561,9 @@ class LiveRuntime:
             "stops_placed": 0, "exits_stop": 0, "exits_target": 0,
             "exits_reversal": 0, "exits_time": 0, "suppressed_position_open": 0,
             "unprotected_positions": 0,
+            # The protective stop (P0, 2026-10-22): attempts the venue refused, outcomes
+            # nobody knows yet, and entries refused because the venue cannot hold a stop.
+            "protection_failures": 0, "protection_unknown": 0, "protection_unavailable_rejected": 0,
             "stops_tightened": 0, "exits_breakeven": 0, "exits_trail": 0,
             "spread_rejected": 0, "strategy_muted": 0, "sized_down": 0,
             "htf_rejected": 0, "htf_sized_down": 0,
@@ -594,6 +597,22 @@ class LiveRuntime:
         #: The one protective stop covering the open position, if any. Exactly one, sized
         #: to the position: a stop that protects the wrong size is worse than none.
         self._protective: dict[str, Any] | None = None
+        #: What is KNOWN about the open position's protection (P0, 2026-10-22). Only a working
+        #: order the venue acknowledged is "confirmed"; a submission or a read whose outcome
+        #: nobody knows is "unknown" until the venue is asked; a refusal is "failed". Both
+        #: block new entries and halt new orders — resuming is an operator's act.
+        self._protection: dict[str, Any] = {"status": "none", "since": None, "reason": ""}
+        #: Every NEW protective intent gets its own client order id. The id was keyed by the
+        #: bar alone, so a stop re-placed on the bar its predecessor was cancelled on reused
+        #: the cancelled order's id and the venue (or the paper engine) answered with that
+        #: cancelled order. An idempotent retry reuses its intent, not a new id.
+        self._protective_seq = 0
+        #: Every incident gets its own id. The id was keyed by (run, kind, instant) alone, so
+        #: two incidents of one kind in one instant — two exits refused in the same cycle, on a
+        #: simulated clock or within one tick of a real one — shared it: the store refused the
+        #: second by its primary key, the stop turned ``writes_failed`` and the next session was
+        #: blocked over a duplicate (mission v2, phase M).
+        self._incident_seq = 0
         #: The exit levels the entry was approved with, carried from the decision to the
         #: position, and the bar the position opened on (for the optional time stop).
         self._planned_exit: dict[str, Any] = {}
@@ -706,6 +725,10 @@ class LiveRuntime:
         #: the last stop had to give up on some (Phase 1.3, G12).
         self._flush_timeout_seconds = 10.0
         self.persistence_flushed: bool | None = None
+        #: What the last stop left queued, and how many writes the store refused: the run
+        #: row's persistence record is built from these (R19).
+        self.persistence_pending_at_stop = 0
+        self.persist_failed_writes = 0
         #: The run row's heartbeat: written every ``_heartbeat_every_seconds`` of the
         #: session's clock so another process can tell a running session from a dead one
         #: (Phase 1.3, G9). ``None`` until the first write.
@@ -976,13 +999,13 @@ class LiveRuntime:
             _log.warning("account_journal_envelope_failed", event=event_type, error=str(exc)[:200])
             return None
 
-    def _journal_fill(self, fill: Fill) -> None:
+    def _journal_fill(self, fill: Fill, *, closes_outcome: str | None = None) -> None:
         self._journal(
             EVENT_FILL,
             AccountFillPayload(
                 symbol=fill.symbol, fill_id=fill.fill_id, order_id=fill.order_id,
                 side=fill.side.value, quantity=fill.quantity, price=fill.price, fee=fill.fee,
-                filled_at=fill.filled_at,
+                filled_at=fill.filled_at, closes_outcome=closes_outcome,
             ),
             key=fill.fill_id, occurred_at=fill.filled_at,
         )
@@ -1090,6 +1113,59 @@ class LiveRuntime:
     def _unblock_entries(self, key: str) -> None:
         if self._blocks.pop(key, None) is not None:
             _log.info("entries_unblocked", cause=key)
+
+    @property
+    def protection_status(self) -> dict[str, Any]:
+        """The open position's protection as known now — never inferred from a request."""
+        report = {k: v for k, v in self._protection.items() if k != "pending_intent"}
+        if isinstance(report.get("since"), datetime):
+            report["since"] = report["since"].isoformat()
+        pending = self._protection.get("pending_intent")
+        report["pending_client_order_id"] = pending.client_order_id if pending is not None else None
+        return report
+
+    def _set_protection(
+        self, status: str, *, reason: str = "", client_order_id: str = "", order_id: str = "",
+        error: str = "", pending_intent: Any = None,
+    ) -> None:
+        """Record what is known about the protection and act on it.
+
+        ``failed`` and ``unknown`` are never quiet: each attempt is counted, the first one
+        of a run of them is an incident carrying the order's ids, new entries are blocked
+        and new orders halted (a person resumes; reducing orders — the stop itself, exits —
+        remain allowed). ``confirmed`` and ``none`` lift the two protection blocks only.
+        """
+        previous = self._protection.get("status")
+        now = self._clock.now()
+        self._protection = {
+            "status": status,
+            "since": now if status != previous else self._protection.get("since"),
+            "reason": reason[:500],
+            "client_order_id": client_order_id,
+            "order_id": order_id,
+            "error": error[:300],
+            "pending_intent": pending_intent,
+            "venue_checked": self._protection.get("venue_checked", False),
+        }
+        detail = {"client_order_id": client_order_id, "order_id": order_id, "error": error[:300],
+                  "symbol": self._symbol, "previous": previous}
+        if status == "failed":
+            self.counters["protection_failures"] += 1
+            self._block_entries("protection_failed", f"protective stop not in place: {reason}")
+            if status != previous:
+                self._incident("protection_failed", reason=reason[:500], detail=detail)
+            self.halt_new_orders(reason=f"protective stop not in place: {reason[:200]}")
+        elif status == "unknown":
+            self.counters["protection_unknown"] += 1
+            self._block_entries("protection_unverified", f"protective stop unknown: {reason}")
+            if status != previous:
+                self._incident("protection_unknown", reason=reason[:500], detail=detail)
+            self.halt_new_orders(reason=f"protective stop unknown: {reason[:200]}")
+        elif status in ("confirmed", "none"):
+            self._unblock_entries("protection_failed")
+            self._unblock_entries("protection_unverified")
+        if status != previous:
+            self._emit("live.protection", self.protection_status)
 
     @property
     def exploration_enabled(self) -> bool:
@@ -1288,10 +1364,11 @@ class LiveRuntime:
         self.persistence_flushed = await self.flush_persistence(
             timeout_seconds=self._flush_timeout_seconds
         )
+        self.persistence_pending_at_stop = sum(1 for t in self._persist_tasks if not t.done())
         if not self.persistence_flushed:
             # Said, not swallowed: a fill or a stop stamp still in flight when the process
             # goes away is a record the next restart rebuilds from short (Phase 1.3, G12).
-            pending = sum(1 for t in self._persist_tasks if not t.done())
+            pending = self.persistence_pending_at_stop
             self.last_error = (
                 f"{pending} persistence write(s) still in flight after "
                 f"{self._flush_timeout_seconds:.0f}s at stop; the record may be incomplete"
@@ -2393,6 +2470,16 @@ class LiveRuntime:
             self.counters["sized_down"] += 1
             decision = decision.model_copy(update={"approved_quantity": budgeted.quantity})
 
+        if decision.stop_price and not self._execution.capabilities.supports_stop_orders:
+            # The entry is approved with a stop the venue could not hold: opening it would
+            # be a position that is unprotected from its first bar (P0).
+            self.counters["protection_unavailable_rejected"] += 1
+            self._refuse(
+                "protection",
+                "this entry needs a protective stop and the execution venue cannot hold one",
+                correlation_id, signal=signal, regime=regime,
+            )
+            return
         self._planned_exit = {
             "stop": decision.stop_price,
             "initial_stop": decision.stop_price,
@@ -3353,8 +3440,27 @@ class LiveRuntime:
         )
 
         if not holding:
-            if self._protective is not None:
-                await self._cancel_protective()
+            if self._protection.get("pending_intent") is not None:
+                # A stop whose submission never answered may rest at the venue: flat or not,
+                # it is found and cancelled before the session calls itself unprotected-free —
+                # a forgotten stop is a position the other way the day it fires.
+                pending = self._protection["pending_intent"]
+                try:
+                    found = await self._resolve_unknown(pending)
+                except Exception as exc:
+                    self._set_protection(
+                        "unknown", reason=f"flat, but the venue could not be asked about stop {pending.client_order_id}: {str(exc)[:200]}",
+                        client_order_id=pending.client_order_id, pending_intent=pending,
+                    )
+                    return
+                if found is not None and not found.state.is_terminal:
+                    self._protective = {"order_id": found.order_id, "client_order_id": found.client_order_id,
+                                        "quantity": float(pending.quantity), "stop_price": pending.stop_price}
+                self._protection["pending_intent"] = None
+            if self._protective is not None and not await self._cancel_protective():
+                return
+            if self._protection.get("status") != "none":
+                self._set_protection("none", reason="no position")
             return
         if self._pending_exit is not None:
             # A close is in flight: nothing else is placed on the position — not a new
@@ -3400,6 +3506,20 @@ class LiveRuntime:
         self._tighten_stop(candle, long=long)
         await self._sync_protective_stop(position.quantity)
 
+    def _protective_stop_level(self, level: float, side: Side) -> float:
+        """``level`` on the symbol's tick grid, rounded **toward the market**: up for the sell
+        stop that protects a long, down for the buy stop that protects a short. The stop can
+        only end up tighter than planned — by less than one tick — never looser. The tick is the
+        venue's when its filters are loaded, the instrument's otherwise (``filters_for``)."""
+        try:
+            tick = filters_for(self._symbol, DEFAULT_UNIVERSE, self._filters).tick_size
+        except OrderFilterError:
+            return level
+        if tick <= 0:
+            return level
+        # quantize_price_passive rounds a sell up and a buy down: for a stop, toward the market.
+        return float(quantize_price_passive(level, tick, buy=side is Side.BUY))
+
     async def _sync_protective_stop(self, position_quantity: float) -> None:
         """Keep exactly one protective stop matching the open position.
 
@@ -3407,6 +3527,20 @@ class LiveRuntime:
         from the venue's view of the order so a triggered stop closes the round trip
         even on a venue that does not push fills. A position whose entry carried no
         stop is counted as unprotected and said so — never silently.
+
+        What is known about the protection is kept in :attr:`protection_status` (P0,
+        2026-10-22). Before, a stop the venue refused — or that this process's own adapter
+        refused before sending it — was a warning in the log and the next bar tried again,
+        indefinitely, with entries still open. Now:
+
+        * a refusal is ``failed``: counted, an incident with the order's ids, entries
+          blocked, new orders halted;
+        * a submission without an answer (timeout, transport) is ``unknown``: nothing is
+          placed on top of what may rest at the venue; the venue is asked by the same
+          client order id, and only a confirmed absence lets the *same* intent be resent;
+        * a restarted session that finds orders at the venue nobody tracks places no stop
+          over them: ``unknown`` until a person reconciles;
+        * only an order the venue acknowledged as working is ``confirmed``.
         """
         stop_price = self._planned_exit.get("stop")
         if not stop_price or stop_price <= 0:
@@ -3415,11 +3549,80 @@ class LiveRuntime:
                 _log.warning("position_unprotected", symbol=self._symbol)
                 self._protective = {"order_id": "", "client_order_id": "", "quantity": 0.0,
                                     "stop_price": None, "unprotected": True}
+                self._set_protection("unprotected_by_plan", reason="the entry carried no stop level")
             return
 
+        # On the venue's tick grid, toward the market (mission v2): an off-grid stopPrice is
+        # refused by the venue's PRICE_FILTER, and the comparison with the resting stop below
+        # must be made at the level that is actually sent.
+        stop_price = self._protective_stop_level(float(stop_price), Side.SELL if position_quantity > 0 else Side.BUY)
         quantity = abs(position_quantity)
+        retry: OrderIntent | None = None
+        pending = self._protection.get("pending_intent")
+        if pending is not None:
+            # A submission whose fate is unknown is resolved before anything else is sent.
+            try:
+                found = await self._resolve_unknown(pending)
+            except Exception as exc:
+                self._set_protection(
+                    "unknown",
+                    reason=f"the venue could not be asked about protective stop {pending.client_order_id}: {str(exc)[:200]}",
+                    client_order_id=pending.client_order_id, error=type(exc).__name__, pending_intent=pending,
+                )
+                return
+            if found is not None:
+                self._adopt_protective(found, quantity=float(pending.quantity),
+                                       stop_price=float(pending.stop_price or stop_price))
+                return
+            # Confirmed absent at the venue: the same intent may be sent again — same client
+            # order id, so a venue that did take it after all refuses the duplicate.
+            same_size = abs(float(pending.quantity) - quantity) <= max(quantity * 1e-6, 1e-9)
+            same_level = abs(float(pending.stop_price or 0.0) - float(stop_price)) <= 1e-9
+            retry = pending if (same_size and same_level) else None
+            self._protection["pending_intent"] = None
+
+        if (
+            retry is None and self._open_trade is not None and self._open_trade.get("restored")
+            and not self._protection.get("venue_checked")
+        ):
+            # A restarted session adopting a position: what an earlier process left resting
+            # at the venue is not assumed away. A second stop on top of a resting one is the
+            # position the other way once both fire.
+            try:
+                venue_open = [
+                    o for o in await self._execution.get_orders(open_only=True)
+                    if o.symbol == self._symbol and not o.state.is_terminal
+                ]
+            except Exception as exc:
+                self._set_protection(
+                    "unknown", reason=f"restart: the venue's open orders could not be read: {str(exc)[:200]}",
+                    error=type(exc).__name__,
+                )
+                return
+            tracked = {
+                record[key]
+                for record in (self._protective, self._resting, self._pending_exit)
+                if record
+                for key in ("order_id", "client_order_id")
+                if record.get(key)
+            }
+            untracked = [o for o in venue_open if o.order_id not in tracked and o.client_order_id not in tracked]
+            if untracked:
+                self._set_protection(
+                    "unknown",
+                    reason=(
+                        f"restart: the venue holds {len(untracked)} order(s) in {self._symbol} no record here "
+                        "names ("
+                        + ", ".join(f"{o.client_order_id} {o.order_type.value} {o.side.value} {o.quantity}" for o in untracked[:5])
+                        + "); no stop is placed over them until a person reconciles"
+                    ),
+                    client_order_id=untracked[0].client_order_id, order_id=untracked[0].order_id,
+                )
+                return
+            self._protection["venue_checked"] = True
+
         existing = self._protective
-        if existing is not None and existing.get("order_id"):
+        if retry is None and existing is not None and existing.get("order_id"):
             order = await self._poll_protective()
             if order is None:
                 if self._protective is not None and self._protective.get("order_id"):
@@ -3440,10 +3643,12 @@ class LiveRuntime:
                     return
 
         side = Side.SELL if position_quantity > 0 else Side.BUY
-        intent = OrderIntent(
-            intent_id=deterministic_id("int", "stop", self._symbol, quantity, self._clock.now()),
+        if retry is None:
+            self._protective_seq += 1
+        intent = retry or OrderIntent(
+            intent_id=deterministic_id("int", "stop", self._symbol, quantity, self._clock.now(), self._protective_seq),
             client_order_id=OrderIntent.build_client_order_id(
-                signal_id=f"protective:{self._symbol}:{self.run_id}:{self.counters['bars']}",
+                signal_id=f"protective:{self._symbol}:{self.run_id}:{self.counters['bars']}:{self._protective_seq}",
                 symbol=self._symbol,
                 side=side,
                 quantity=quantity,
@@ -3462,13 +3667,34 @@ class LiveRuntime:
         )
         try:
             order = await self._execution.submit_order(intent)
+        except (ReconciliationError, ProviderUnavailableError, TimeoutError) as exc:
+            # No answer: the venue may hold the stop. Unknown, never "probably not".
+            _log.error("protective_stop_unknown", client_order_id=intent.client_order_id, error=str(exc)[:200])
+            self._set_protection(
+                "unknown",
+                reason=f"the submission of protective stop {intent.client_order_id} ended without an answer: {str(exc)[:200]}",
+                client_order_id=intent.client_order_id, error=type(exc).__name__, pending_intent=intent,
+            )
+            return
         except Exception as exc:
-            _log.warning("protective_stop_failed", error=str(exc)[:200])
+            _log.error("protective_stop_failed", client_order_id=intent.client_order_id, error=str(exc)[:200])
+            self._set_protection(
+                "failed", reason=f"protective stop {intent.client_order_id} refused: {str(exc)[:200]}",
+                client_order_id=intent.client_order_id, error=type(exc).__name__,
+            )
             return
         if order.state.is_terminal and not order.fills:
-            _log.warning(
-                "protective_stop_rejected",
+            _log.error(
+                "protective_stop_rejected", client_order_id=order.client_order_id,
                 reason=order.reject_reason or order.state.value,
+            )
+            self._record_order(order)
+            self._save("order", {"run_id": self.run_id, "order": order})
+            self._set_protection(
+                "failed",
+                reason=f"protective stop {order.client_order_id} came back {order.state.value}"
+                + (f": {order.reject_reason}" if order.reject_reason else ""),
+                client_order_id=order.client_order_id, order_id=order.order_id, error="rejected",
             )
             return
         self._protective = {
@@ -3484,9 +3710,39 @@ class LiveRuntime:
             self._on_fill(fill)
         self._record_order(order)
         self._save("order", {"run_id": self.run_id, "order": order})
+        self._set_protection(
+            "confirmed", reason=f"the venue acknowledged stop {order.client_order_id} ({order.state.value})",
+            client_order_id=order.client_order_id, order_id=order.order_id,
+        )
         self._emit(
             "live.stop_placed",
             {"stop_price": float(stop_price), "quantity": quantity, "side": side.value},
+        )
+
+    def _adopt_protective(self, order: Order, *, quantity: float, stop_price: float) -> None:
+        """A stop whose submission timed out, found at the venue: adopted, never resent."""
+        for fill in order.fills:
+            self._on_fill(fill)
+        self._record_order(order)
+        self._save("order", {"run_id": self.run_id, "order": order})
+        self._protection["pending_intent"] = None
+        if order.state.is_terminal:
+            self._protective = None
+            if order.fills:
+                self._set_protection("confirmed", reason=f"stop {order.client_order_id} filled at the venue",
+                                     client_order_id=order.client_order_id, order_id=order.order_id)
+            else:
+                self._set_protection(
+                    "failed", reason=f"the venue holds stop {order.client_order_id} as {order.state.value}, unfilled",
+                    client_order_id=order.client_order_id, order_id=order.order_id, error="terminal",
+                )
+            return
+        self._protective = {"order_id": order.order_id, "client_order_id": order.client_order_id,
+                            "quantity": quantity, "stop_price": stop_price}
+        self.counters["stops_placed"] += 1
+        self._set_protection(
+            "confirmed", reason=f"the venue holds stop {order.client_order_id}, whose submission had no answer",
+            client_order_id=order.client_order_id, order_id=order.order_id,
         )
 
     async def _read_tracked_order(self, record: dict[str, Any]) -> tuple[Order | None, str]:
@@ -3555,9 +3811,24 @@ class LiveRuntime:
         if not existing or not existing.get("order_id"):
             return None
         order, outcome = await self._read_tracked_order(existing)
+        ids = {"client_order_id": existing.get("client_order_id") or "", "order_id": existing.get("order_id") or ""}
         if order is None:
-            if outcome == "unknown" and self._count_unknown(existing, what="protective stop"):
-                self._protective = None
+            if outcome == "unknown":
+                lost = self._count_unknown(existing, what="protective stop")
+                self._set_protection(
+                    "unknown",
+                    reason=f"the venue does not know protective stop {ids['client_order_id'] or ids['order_id']}"
+                    + (" (given up as lost)" if lost else ""),
+                    **ids,
+                )
+                if lost:
+                    self._protective = None
+            else:
+                # The read failed: the stop may rest or may be gone. Not "protected".
+                self._set_protection(
+                    "unknown", reason=f"protective stop {ids['client_order_id'] or ids['order_id']} could not be read from the venue",
+                    error="read_failed", **ids,
+                )
             return None
         existing.pop("unknown_polls", None)
         for fill in order.fills:
@@ -3565,7 +3836,17 @@ class LiveRuntime:
         self._save_order_if_changed(existing, order)
         if order.state.is_terminal:
             self._protective = None
+            if not order.fills:
+                self._set_protection(
+                    "failed", reason=f"the venue reports protective stop {order.client_order_id} {order.state.value}, unfilled",
+                    client_order_id=order.client_order_id, order_id=order.order_id, error="terminal",
+                )
             return None
+        if self._protection.get("status") != "confirmed":
+            self._set_protection(
+                "confirmed", reason=f"the venue reports stop {order.client_order_id} working",
+                client_order_id=order.client_order_id, order_id=order.order_id,
+            )
         return order
 
     async def _cancel(self, order_ref: str, *, purpose: str) -> Order | None:
@@ -3735,17 +4016,37 @@ class LiveRuntime:
                         f"exit ({reason}) timed out and cannot be resolved: {str(exc)[:200]}",
                     )
                     self.halt_new_orders(reason="exit result unknown; manual reconciliation required")
+                    # The stop was cancelled to send this exit and nothing is sent in this
+                    # cycle over a MARKET exit that may have executed: the protection is
+                    # UNKNOWN, said so, until the next venue read of the position answers
+                    # (still holding -> the next bar re-protects it; flat -> the exit
+                    # executed and the tracked leg waits for reconciliation) (R18).
+                    self._set_protection(
+                        "unknown",
+                        reason=f"exit {intent.client_order_id} ({reason}) timed out and could not be resolved; "
+                        "the stop was cancelled for it and nothing is placed until the venue's position is read",
+                        client_order_id=intent.client_order_id, error="exit_unresolved",
+                    )
                     return None
                 if resolved is None:
-                    # The venue confirms it never arrived: nothing is in flight.
+                    # The venue confirms it never arrived: nothing is in flight, and the
+                    # position is re-protected now rather than on the next bar (R18).
+                    sentence = await self._reprotect_after_failed_exit(reason)
                     self._incident(
-                        "exit_not_accepted", reason=f"{reason}: submission timed out; venue confirms absent",
+                        "exit_not_accepted",
+                        reason=f"exit {intent.client_order_id} ({reason}): submission timed out; venue confirms absent; {sentence}",
+                        detail={"client_order_id": intent.client_order_id, "protection": self.protection_status},
                     )
                     return None
                 order = resolved
             except Exception as exc:
                 _log.warning("close_position_failed", reason=reason, error=str(exc)[:200])
-                self._incident("exit_submit_failed", reason=f"{reason}: {str(exc)[:300]}")
+                sentence = await self._reprotect_after_failed_exit(reason)
+                self._incident(
+                    "exit_submit_failed",
+                    reason=f"exit {intent.client_order_id} ({reason}): {str(exc)[:300]}; {sentence}",
+                    detail={"client_order_id": intent.client_order_id, "protection": self.protection_status},
+                )
                 return None
             self.counters["orders"] += 1
             key = {
@@ -3779,10 +4080,15 @@ class LiveRuntime:
                 self._pending_exit = None
                 if not order.fills:
                     self.counters["exits_rejected"] += 1
+                    # Before R18 this said "keeps its protection" while the stop had just
+                    # been cancelled to send the exit; it came back only on the next bar.
+                    sentence = await self._reprotect_after_failed_exit(reason)
                     self._incident(
                         "exit_rejected",
-                        reason=f"{reason}: {order.reject_reason or order.state.value}; the position "
-                        "remains and keeps its protection",
+                        reason=f"exit {order.client_order_id} ({reason}): {order.reject_reason or order.state.value}; "
+                        f"{sentence}",
+                        detail={"client_order_id": order.client_order_id, "order_id": order.order_id,
+                                "protection": self.protection_status},
                     )
             self._emit(
                 "live.exit",
@@ -3818,8 +4124,14 @@ class LiveRuntime:
             if cancelled is None:
                 return False
             self._resting = None
+        had_stop = bool(self._protective and self._protective.get("order_id"))
         if not await self._cancel_protective():
             return False
+        if had_stop:
+            # Deliberate: the stop is cancelled so the close cannot fill on top of it. From
+            # here until the exit fills or fails, nothing claims the position is protected
+            # (R18). A failed exit re-protects at once (see _submit_exit).
+            self._set_protection("released_for_exit", reason=f"stop cancelled to send the exit ({reason})")
         # The cancels may have found the stop (or the resting entry) already filled, and
         # those fills are booked by now: the position is read again, and the close is
         # sized to what is held *after* them. A close sized to the earlier read would be
@@ -3836,6 +4148,33 @@ class LiveRuntime:
         side = Side.SELL if position.quantity > 0 else Side.BUY
         order = await self._submit_exit(symbol=self._symbol, side=side, quantity=quantity, reason=reason)
         return order is not None
+
+    async def _reprotect_after_failed_exit(self, reason: str) -> str:
+        """An exit that did not happen: put the protection back now and say what is true.
+
+        Returns the sentence the incident carries — the protection's actual status after
+        the attempt, never an assumption (R18).
+        """
+        try:
+            position = (await self._execution.get_positions()).get(self._symbol)
+        except Exception as exc:
+            self._set_protection(
+                "unknown", reason=f"after a failed exit ({reason}) the position could not be read: {str(exc)[:200]}",
+                error=type(exc).__name__,
+            )
+            return "the position could not be read; protection is unknown"
+        if position is None or position.is_flat:
+            return "the venue reports no position"
+        if not self.machine.state.accepts_reducing_orders:
+            self._set_protection(
+                "failed", reason=f"after a failed exit ({reason}) the session state {self.machine.state.value} "
+                "accepts no order, so no stop can be placed",
+            )
+            return f"the position remains and protection is failed (state {self.machine.state.value})"
+        await self._sync_protective_stop(position.quantity)
+        state = self._protection.get("status")
+        stop = self._protective.get("client_order_id") if self._protective else ""
+        return f"the position remains and protection is {state}" + (f" (stop {stop})" if state == "confirmed" and stop else "")
 
     async def _resolve_unknown(self, intent: OrderIntent) -> Order | None:
         resolver = getattr(self._execution, "resolve_unknown_order", None)
@@ -3907,10 +4246,18 @@ class LiveRuntime:
             self.counters["maker_fills"] += 1
         self._ledger.record_fee(fill.fee, at=fill.filled_at)
         self._save("fill", {"run_id": self.run_id, "fill": fill})
-        self._journal_fill(fill)
-        self._track_round_trip(fill)
+        # The outcome this fill closes, if any, is scored before the journal event is
+        # scheduled, so the event can name it (R15). The writes keep their order — fill row,
+        # journal event, outcome — each its own commit: a crash between the last two leaves a
+        # journal that says which outcome is missing, and the rebuild refuses to call it whole.
+        outcome = self._track_round_trip(fill)
+        self._journal_fill(fill, closes_outcome=outcome["outcome_id"] if outcome is not None else None)
+        if outcome is not None:
+            self._save("edge_outcome", outcome)
 
-    def _track_round_trip(self, fill: Fill) -> None:
+    def _track_round_trip(self, fill: Fill) -> dict[str, Any] | None:
+        """Fold ``fill`` into the tracked round trip. Returns the outcome row to write when the
+        fill closes a round trip the session scores, else ``None``."""
         if self._open_trade is None:
             self.counters["entries_filled"] += 1
             # The risk engine's frequency limits and cooldown count executions, not
@@ -3931,7 +4278,7 @@ class LiveRuntime:
                 "funding_paid": 0.0,
                 "opened_at": ensure_utc(fill.filled_at),
             }
-            return
+            return None
         trade = self._open_trade
         if fill.side is trade["side"]:
             total = trade["quantity"] + fill.quantity
@@ -3940,14 +4287,18 @@ class LiveRuntime:
             ) / total
             trade["quantity"] = total
             trade["fee"] += fill.fee
-            return
+            return None
         trade["exit_value"] += fill.price * fill.quantity
         trade["exit_quantity"] += fill.quantity
         trade["exit_fees"] += fill.fee
         if trade["exit_quantity"] + 1e-12 >= trade["quantity"]:
-            self._score_round_trip(fill)
+            return self._score_round_trip(fill)
+        return None
 
-    def _score_round_trip(self, exit_fill: Fill) -> None:
+    def _score_round_trip(self, exit_fill: Fill) -> dict[str, Any] | None:
+        """Close the tracked round trip: book it in memory and return its outcome row (the
+        caller writes it after the journal event that names it, R15). ``None`` when there is
+        nothing to score (a restored leg without recorded beliefs)."""
         trade = self._open_trade
         beliefs = self._entry_beliefs
         self._open_trade = None
@@ -3956,7 +4307,7 @@ class LiveRuntime:
         self._planned_exit = {}
         self._best_price = None
         if trade is None or beliefs is None or trade["exit_quantity"] <= 0:
-            return
+            return None
 
         self.counters["round_trips"] += 1
         entry_price = trade["price"]
@@ -4040,8 +4391,7 @@ class LiveRuntime:
                 "source": "live",
             },
         )
-        self._save(
-            "edge_outcome",
+        return (
             {
                 "outcome_id": deterministic_id(
                     "edge", self.run_id, self._symbol, beliefs["signal_id"],
@@ -4073,7 +4423,7 @@ class LiveRuntime:
                 # real + simulated, and only a live session ever writes real + real.
                 "market_data": "real",
                 "execution_mode": "real" if self._execution.is_live else "simulated",
-            },
+            }
         )
 
     # ------------------------------------------------------------------ reconciliation
@@ -4215,10 +4565,11 @@ class LiveRuntime:
     def _incident(
         self, kind: str, *, reason: str, actor: str = "system", detail: dict[str, Any] | None = None
     ) -> None:
+        self._incident_seq += 1
         self._save(
             "incident",
             {
-                "incident_id": deterministic_id("inc", self.run_id, kind, self._clock.now()),
+                "incident_id": deterministic_id("inc", self.run_id, kind, self._clock.now(), self._incident_seq),
                 "at": self._clock.now(),
                 "kind": kind,
                 "actor": actor,
@@ -4248,10 +4599,39 @@ class LiveRuntime:
         separate sessions can interleave at the database, and the fill then arrives
         before the order it belongs to and is refused by the foreign key — a fill the
         record never sees, which is a round trip the next restart cannot rebuild. The
-        lock keeps the schedule order the write order.
+        lock keeps the schedule order the write order. A write the dispatcher could not
+        land (it answers ``False``, or raises) is counted, so a stop never reports it as
+        landed (R19).
         """
         async with self._persist_lock:
-            await write
+            try:
+                landed = await write
+            except Exception:
+                self.persist_failed_writes += 1
+                raise
+            if landed is False:
+                self.persist_failed_writes += 1
+
+    def persistence_report(self) -> dict[str, Any]:
+        """What the last stop can say about the writes this session owed (R19)."""
+        from tia.runtime.session_limits import persistence_report
+
+        return persistence_report(
+            flushed=self.persistence_flushed, pending=self.persistence_pending_at_stop,
+            failed_writes=self.persist_failed_writes, loop_cancelled=False,
+            flush_timeout_seconds=self._flush_timeout_seconds, at=datetime.now(UTC),
+        )
+
+    def pending_persistence(self) -> list[asyncio.Task[Any]]:
+        return [t for t in self._persist_tasks if not t.done()]
+
+    def abandon_persistence(self) -> int:
+        """Cancel the writes still queued (the process is going away without them) and
+        say how many there were. Never called while the loop runs."""
+        pending = self.pending_persistence()
+        for task in pending:
+            task.cancel()
+        return len(pending)
 
     async def flush_persistence(self, *, timeout_seconds: float = 10.0) -> bool:
         """Wait for the persistence writes scheduled so far to finish.
@@ -4608,6 +4988,7 @@ class LiveRuntime:
             "risk_state": self.risk_state_report(),
             "session": self.session_report(),
             "entry_blocks": dict(self._blocks),
+            "protection": self.protection_status,
             "account_state": self.account_state_report(),
             "pending_exit": (
                 {k: (v.value if hasattr(v, "value") else v) for k, v in self._pending_exit.items()}

@@ -31,6 +31,7 @@ from tia.execution.paper import PaperExecutionProvider
 from tia.persistence import (
     AccountJournalRepository,
     Database,
+    EdgeStateRepository,
     EventRepository,
     FillRepository,
     OrderRepository,
@@ -64,15 +65,21 @@ def _db(tmp_path: Path, name: str = "account.db") -> Database:
     return Database(f"sqlite+aiosqlite:///{tmp_path / name}")
 
 
-def persister(db: Database, *, drop: set[str] | None = None, drop_fill_events: int = 0):  # type: ignore[no-untyped-def]
-    """The slice of AppState._persist a session's account rests on. ``drop`` names kinds
-    whose writes fail (a database outage during a write); ``drop_fill_events`` drops that
-    many account fill events (a lost journal write)."""
+def persister(  # type: ignore[no-untyped-def]
+    db: Database, *, drop: set[str] | None = None, drop_fill_events: int = 0, lose: set[str] | None = None,
+):
+    """The slice of AppState._persist a session's account rests on: orders, fills, the account
+    journal, the round trips' outcomes (R15: the rebuild holds the journal against them) and the
+    stop stamp. ``drop`` names kinds whose writes fail (a database outage during a write);
+    ``drop_fill_events`` drops that many account fill events (a lost journal write); ``lose``
+    names kinds that silently never reach the store (a process that died before them)."""
     dropped = {"fill_events": 0}
 
     async def persist(kind: str, payload: dict[str, Any]) -> None:
         if drop and kind in drop:
             raise RuntimeError(f"database unavailable during {kind}")
+        if lose and kind in lose:
+            return
         async with db.session() as session:
             if kind == "order":
                 await OrderRepository(session).upsert(payload["run_id"], payload["order"])
@@ -88,6 +95,8 @@ def persister(db: Database, *, drop: set[str] | None = None, drop_fill_events: i
                 # One session for the batch, as AppState._persist does (Phase 1.8).
                 for env in payload["envelopes"]:
                     await EventRepository(session).append(payload["run_id"], env)
+            elif kind == "edge_outcome":
+                await EdgeStateRepository(session).append(payload)
             elif kind == "run_stop":
                 await RunRepository(session).stop(payload["run_id"], payload["stopped_at"])
 
@@ -123,20 +132,29 @@ def engine_for(clock: SimulatedClock, settings) -> PaperExecutionProvider:  # ty
 def build(  # type: ignore[no-untyped-def]
     *, persist=None, account: AccountRestore | None = None, risk: RiskRestore | None = None,
     engine: PaperExecutionProvider | None = None, clock: SimulatedClock | None = None,
-    market: FakeMarketData | None = None, **live_overrides: Any,
+    market: FakeMarketData | None = None, series_start: datetime | None = None, **live_overrides: Any,
 ):
+    """``series_start`` pins the fake feed's first candle, and with it the runtime's clock
+    (which starts at candle 149), instead of anchoring the series to the wall clock. A test
+    whose expectation depends on where an eight-hour funding period or a UTC day falls passes
+    one, so it says the same thing at any hour it runs (mission v2)."""
     scenario = get_scenario("trend_up")
     candles = generate_series(
         scenario, symbol=SYMBOL, timeframe="1m",
-        start=datetime.now(UTC) - timedelta(minutes=scenario.total_bars + 5), seed=9,
+        start=series_start or datetime.now(UTC) - timedelta(minutes=scenario.total_bars + 5), seed=9,
     )
     clock = clock or SimulatedClock(candles[149].close_time + timedelta(seconds=1))
     market = market or FakeMarketData(candles, clock)
     settings = live_settings(**live_overrides)
     execution = engine or engine_for(clock, settings)
+    # The tests built here drive the cycles by hand (``_cycle_once``). With a zero poll interval
+    # the background loop that ``start()`` launches spun beside them on the same event loop, and
+    # ``settle`` (a 10 s flush) ran out now and then: the same harness artifact the adverse test
+    # had (parche 17), seen here in test_partial_fills_and_fees_rebuild_identically_however_often
+    # (1 of 10 runs; flushes of 5-8 s for 31 writes). Production polls every 5 s or 10 s.
     runtime = LiveRuntime(
         settings, activation=None, market_data=market, execution=execution, clock=clock,
-        persist=persist, poll_interval_seconds=0.0, prior_account_state=account, prior_risk_state=risk,
+        persist=persist, poll_interval_seconds=3600.0, prior_account_state=account, prior_risk_state=risk,
     )
     return runtime, execution, market, clock
 
@@ -218,6 +236,11 @@ def _signal(at: datetime) -> SignalCandidate:
 # ------------------------------------------------------------------- the breakers
 
 
+#: The day of the loss-limit test below, and where its feed starts (runtime clock 08:30 UTC).
+LOSS_DAY_NOW = datetime(2026, 10, 21, 14, 0, tzinfo=UTC)
+LOSS_DAY_SERIES = datetime(2026, 10, 21, 6, 0, tzinfo=UTC)
+
+
 async def test_a_day_that_hit_the_loss_limit_still_refuses_entries_after_a_restart(tmp_path: Path) -> None:
     """Before 1.2 a restart gave the engine a fresh day at the carried balance and the
     daily loss limit measured from there. Now the rebuilt account carries the day's
@@ -225,9 +248,13 @@ async def test_a_day_that_hit_the_loss_limit_still_refuses_entries_after_a_resta
     db = _db(tmp_path)
     await db.create_schema()
     try:
-        now = datetime.now(UTC)
+        # Pinned (mission v2): with the wall clock, the runtime's clock (about six hours behind
+        # it on the feed's series) was on the previous UTC day from 00:00 to 05:55 UTC, and
+        # this test skipped itself for a quarter of every day. A midday in the past, and a
+        # series whose clock starts at 08:30 of the same day, make it run at any hour.
+        now = LOSS_DAY_NOW
         t0 = now - timedelta(hours=2)
-        assert t0.date() == now.date() or True
+        assert t0.date() == now.date()
         await register_run(db, "run_a", started_at=t0)
         # Buy 0.2 at 50,000; sell at 48,700: -260 and fees, -2.65 % of 10,000 in one UTC day.
         fills = [
@@ -239,16 +266,14 @@ async def test_a_day_that_hit_the_loss_limit_still_refuses_entries_after_a_resta
         assert restore.complete, restore.error
         # The rebuild says the same thing on a second read.
         assert (await rebuild(db, now=now)).as_dict() == restore.as_dict()
-        if restore.current_day != t0.date().isoformat():
-            pytest.skip("the UTC day rolled during the test; the day scenario is covered by the unit tests")
+        assert restore.current_day == t0.date().isoformat()
         assert restore.day_start_equity == pytest.approx(CAPITAL)
         assert restore.equity == pytest.approx(CAPITAL - 260.0 - 4.9)
 
         # The engine seeded from it reads a day down 2.65 %: the breaker refuses. The
         # runtime's clock sits on the candle series (bar time), so the feed is fresh.
-        runtime, engine, market, clock = build(account=restore)
-        if clock.now().date().isoformat() != restore.current_day:
-            pytest.skip("the UTC day rolled during the test; the day scenario is covered by the unit tests")
+        runtime, engine, market, clock = build(account=restore, series_start=LOSS_DAY_SERIES)
+        assert clock.now().date().isoformat() == restore.current_day
         engine.restore_portfolio(restore.portfolio_state())
         portfolio = await engine.get_portfolio()
         assert portfolio.day_pnl_pct < -2.0

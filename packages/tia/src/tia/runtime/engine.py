@@ -253,6 +253,13 @@ class RuntimeEngine:
         #: Risk Engine approved for it. A position without a stop has an unbounded loss,
         #: which would make every drawdown number on the dashboard meaningless.
         self._protective: dict[str, str] = {}
+        #: The MARKET exit ``_flatten`` sent per symbol, while it works (R17): its remainder
+        #: is the closing order for that part of the position, so no stop covers it twice.
+        self._exit_orders: dict[str, str] = {}
+        #: Counts every protective stop sent. Part of its client id: a stop placed again in
+        #: the bar its predecessor was cancelled in must not reuse that order's id — the
+        #: simulator would answer with the cancelled order (R17, as R18 in the 24/7 session).
+        self._protective_seq = 0
         self._stop_price: dict[str, float] = {}
         #: Stop management after entry, the same rules the 24/7 session applies (see
         #: tia.execution.exits): the initial stop the trade was sized on, what kind of
@@ -279,6 +286,10 @@ class RuntimeEngine:
         #: Whether the last stop saw every scheduled write land (``None``: never stopped).
         self.persistence_flushed: bool | None = None
         self._flush_timeout_seconds = 10.0
+        #: What the last stop left queued, and whether it cancelled the loop mid-bar: the
+        #: run row's persistence record is built from these (R19).
+        self.persistence_pending_at_stop = 0
+        self.loop_cancelled_at_stop = False
         #: How long ``stop()`` waits for the loop before cancelling it. A loop that does
         #: not stop is cancelled and the fact recorded, never left RUNNING without a task.
         self._stop_timeout_seconds = 10.0
@@ -513,6 +524,7 @@ class RuntimeEngine:
                 pass
             except TimeoutError:
                 self.counters.errors += 1
+                self.loop_cancelled_at_stop = True
                 self.last_error = (
                     f"the loop did not stop within {self._stop_timeout_seconds:.0f}s and was "
                     "cancelled; the last bar may be half-processed"
@@ -529,8 +541,9 @@ class RuntimeEngine:
         self.persistence_flushed = await self.flush_persistence(
             timeout_seconds=self._flush_timeout_seconds
         )
+        self.persistence_pending_at_stop = sum(1 for t in self._persist_tasks if not t.done())
         if not self.persistence_flushed:
-            pending = sum(1 for t in self._persist_tasks if not t.done())
+            pending = self.persistence_pending_at_stop
             self.last_error = (
                 f"{pending} persistence write(s) still in flight after "
                 f"{self._flush_timeout_seconds:.0f}s at stop; the record may be incomplete"
@@ -1154,7 +1167,14 @@ class RuntimeEngine:
                 self._protective.pop(symbol, None)
             return
 
-        quantity = abs(position.quantity)
+        # R17: an exit in flight already closes its remainder. A stop over the same units
+        # is a second closing order: if both execute, the position is closed past zero.
+        quantity = abs(position.quantity) - await self._working_exit_quantity(symbol)
+        if quantity <= max(abs(position.quantity) * 1e-6, 1e-9):
+            if existing_id:
+                await self._execution.cancel_order(existing_id)
+                self._protective.pop(symbol, None)
+            return
         if existing_id:
             existing = await self._execution.get_order(existing_id)
             if existing is not None and not existing.state.is_terminal:
@@ -1167,10 +1187,11 @@ class RuntimeEngine:
             self._protective.pop(symbol, None)
 
         side = Side.SELL if position.quantity > 0 else Side.BUY
+        self._protective_seq += 1
         intent = OrderIntent(
-            intent_id=deterministic_id("int", "stop", symbol, quantity, self._clock.now()),
+            intent_id=deterministic_id("int", "stop", symbol, quantity, self._clock.now(), self._protective_seq),
             client_order_id=OrderIntent.build_client_order_id(
-                signal_id=f"protective:{symbol}:{self.counters.bars}",
+                signal_id=f"protective:{symbol}:{self.counters.bars}:{self._protective_seq}",
                 symbol=symbol,
                 side=side,
                 quantity=quantity,
@@ -1198,10 +1219,27 @@ class RuntimeEngine:
         self._record_order(order)
         self._log("INFO", "risk", symbol, f"protective stop placed at {stop_price:.2f}")
 
+    async def _working_exit_quantity(self, symbol: str) -> float:
+        """What the exit ``_flatten`` sent still has to fill (0 when none is working)."""
+        order_id = self._exit_orders.get(symbol)
+        if not order_id:
+            return 0.0
+        order = await self._execution.get_order(order_id)
+        if order is None or order.state.is_terminal:
+            self._exit_orders.pop(symbol, None)
+            return 0.0
+        return max(0.0, order.quantity - order.filled_quantity)
+
     async def _flatten(self, symbol: str, reason: str, candle: Candle) -> None:
-        """Close an open position with a market order, cancelling its protective stop."""
+        """Close an open position with a market order, cancelling its protective stop.
+
+        One exit at a time (R17): while the previous one works, a reversal approved
+        again on the next bar sends nothing more — the exit already closes the position.
+        """
         position = self._execution.portfolio.positions.get(symbol)
         if position is None or position.is_flat:
+            return
+        if await self._working_exit_quantity(symbol) > 0:
             return
 
         self._exit_reason[symbol] = reason
@@ -1231,11 +1269,19 @@ class RuntimeEngine:
         )
         order = await self._execution.submit_order(intent)
         self.counters.intents += 1
+        if not order.state.is_terminal:
+            self._exit_orders[symbol] = order.order_id
         self._record_order(order)
         self._log(
             "INFO", "trading", symbol,
             f"closing {quantity:.6f} ({reason}) @ ~{candle.close:.2f}",
         )
+        if order.state.is_terminal and not order.filled_quantity:
+            # The exit was refused: the position is still held and its stop was cancelled
+            # for the exit. It is protected again now, not at the next fill (R17).
+            self._log("WARNING", "trading", symbol,
+                      f"exit refused ({order.reject_reason or order.state.value}); protective stop restored")
+            await self._sync_protective_stop(symbol)
 
     async def _submit(
         self, decision: RiskDecision, signal: SignalCandidate, candle: Candle
@@ -1601,9 +1647,35 @@ class RuntimeEngine:
             _log.warning("persist_failed", kind=kind, error=str(exc)[:200])
 
     async def _sequenced(self, write: Any) -> None:
-        """Run persistence writes one at a time, in the order they were scheduled."""
+        """Run persistence writes one at a time, in the order they were scheduled.
+
+        A dispatcher that absorbs a store failure answers ``False`` (the API's does):
+        that write is counted as failed here, so a stop never reports it as landed (R19).
+        """
         async with self._persist_lock:
-            await write
+            if await write is False:
+                self.counters.persist_failures += 1
+
+    def persistence_report(self) -> dict[str, Any]:
+        """What the last stop can say about the writes this run owed (R19)."""
+        from tia.runtime.session_limits import persistence_report
+
+        return persistence_report(
+            flushed=self.persistence_flushed, pending=self.persistence_pending_at_stop,
+            failed_writes=self.counters.persist_failures, loop_cancelled=self.loop_cancelled_at_stop,
+            flush_timeout_seconds=self._flush_timeout_seconds, at=datetime.now(UTC_TZ),
+        )
+
+    def pending_persistence(self) -> list[asyncio.Task[Any]]:
+        return [t for t in self._persist_tasks if not t.done()]
+
+    def abandon_persistence(self) -> int:
+        """Cancel the writes still queued (the process is going away without them) and
+        say how many there were. Never called while the loop runs."""
+        pending = self.pending_persistence()
+        for task in pending:
+            task.cancel()
+        return len(pending)
 
     def _on_persist_done(self, task: asyncio.Task[Any]) -> None:
         """Persistence failures are counted and logged, never raised into the loop."""

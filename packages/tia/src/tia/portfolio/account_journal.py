@@ -30,7 +30,7 @@ earned; this says what the account holds. The two are reconciled, never substitu
 
 from __future__ import annotations
 
-from collections.abc import Iterable
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
 from typing import Any
@@ -69,6 +69,12 @@ class AccountFillPayload(BaseModel):
     price: float
     fee: float
     filled_at: datetime
+    #: The ``edge_outcomes`` row this fill closes, when it closes a round trip the session
+    #: scores (R15). The outcome is a separate commit, after this event: a process that dies
+    #: between the two leaves a journal that closed a round trip and no outcome for it, and the
+    #: rebuild can only see that if the journal says which outcome to expect. ``None`` for every
+    #: other fill and for every event written before R15.
+    closes_outcome: str | None = None
     model_version: int = ACCOUNT_MODEL_VERSION
 
 
@@ -614,6 +620,64 @@ def cross_check(restore: AccountRestore, *, fill_rows_net_quantity: float, fill_
     return _with_checks(restore, checks, problems, "account record inconsistent")
 
 
+def check_stop_persistence(restore: AccountRestore, *, records: dict[str, dict[str, Any]]) -> AccountRestore:
+    """Hold the rebuild against what each session run's stop said about its writes (R19).
+
+    ``records`` is ``run_id -> persistence record`` of the runs that share the account. A
+    run whose stop could not confirm every write (``stopping``: the process died while the
+    stop drained; ``incomplete``: queued when the flush ran out; ``writes_failed``: refused
+    by the store) may be short at its tail in a way
+    the fills cross-check cannot see — the fill and its journal event lost together — so
+    the rebuild is **incomplete** while one stands. An operator's acknowledgement (the
+    record reconciled by hand) lifts it and stays on view. Runs from before R19 carry no
+    record and are not judged here.
+    """
+    from tia.runtime.session_limits import UNCONFIRMED_PERSISTENCE
+
+    unconfirmed = sorted(r for r, rec in records.items() if rec.get("status") in UNCONFIRMED_PERSISTENCE)
+    acknowledged = sorted(r for r, rec in records.items() if rec.get("status") == "acknowledged")
+    checks = dict(restore.checks)
+    checks.update({"session_runs_with_unconfirmed_writes": unconfirmed, "session_runs_acknowledged": acknowledged})
+    problems = [
+        f"run {r} stopped with {records[r].get('pending', 0)} write(s) queued and "
+        f"{records[r].get('failed_writes', 0)} refused ({records[r].get('status')})"
+        for r in unconfirmed
+    ]
+    return _with_checks(restore, checks, problems, "session record unconfirmed at stop")
+
+
+def check_round_trip_outcomes(
+    restore: AccountRestore,
+    *,
+    closing: Sequence[dict[str, str]],
+    recorded: set[str],
+    acknowledged_runs: set[str],
+) -> AccountRestore:
+    """Hold the journal against the outcome record (R15).
+
+    ``closing`` lists the journal's closing fills that name the outcome they close
+    (``{"outcome_id", "run_id", "fill_id"}``); ``recorded`` is which of those outcomes are in
+    ``edge_outcomes``. A closed round trip whose outcome is not on record is a record short in
+    a way the fills cross-check cannot see — the journal and the fills table agree — and the
+    gate's track record, the exploration budget and the learners all read that record: the
+    rebuild is **incomplete** while one stands. An operator's acknowledgement of the run
+    (``RunRepository.acknowledge_persistence``) lifts it, and the gap stays on view.
+    """
+    missing = [dict(c) for c in closing if c["outcome_id"] not in recorded]
+    open_gaps = [c for c in missing if c["run_id"] not in acknowledged_runs]
+    checks = dict(restore.checks)
+    checks.update({
+        "round_trips_closed_in_journal_with_outcome_id": len(closing),
+        "round_trips_without_outcome": open_gaps,
+        "round_trips_without_outcome_acknowledged": [c for c in missing if c["run_id"] in acknowledged_runs],
+    })
+    problems = [
+        f"fill {c['fill_id']} of run {c['run_id']} closed a round trip whose outcome {c['outcome_id']} is not on record"
+        for c in open_gaps
+    ]
+    return _with_checks(restore, checks, problems, "track record short of the journal")
+
+
 __all__ = [
     "ACCOUNT_EVENT_TYPES",
     "ACCOUNT_MODEL_VERSION",
@@ -632,6 +696,8 @@ __all__ = [
     "AccountRestore",
     "as_utc",
     "check_baseline",
+    "check_round_trip_outcomes",
+    "check_stop_persistence",
     "cross_check",
     "fold_account_events",
 ]

@@ -16,12 +16,26 @@ BOLD=$'\033[1m'; RED=$'\033[31m'; GREEN=$'\033[32m'; YELLOW=$'\033[33m'; RESET=$
 declare -a NAMES RESULTS DETAILS
 failures=0
 
+# R22: every area's id, exit code, timestamps and command go to the run directory, and
+# pytest areas leave their junit XML there too. `tia.live.verify_evidence finish` turns
+# that into the marker the activation gate reads — bound to the artifact that was tested.
+EVIDENCE_DIR="data/runtime/verify_run"
+MARKER="data/runtime/verify_passed.json"
+stamp() { date -u +%Y-%m-%dT%H:%M:%SZ; }
+record() {
+  local id="$1" required="$2" status="$3" started="$4" finished="$5"; shift 5
+  printf '%s\t%s\t%s\t%s\t%s\t%s\n' "$id" "$required" "$status" "$started" "$finished" "$*" \
+    >> "$EVIDENCE_DIR/suites.tsv"
+}
+
 run() {
-  local name="$1"; shift
+  local id="$1" name="$2"; shift 2
   printf "\n%s▸ %s%s\n" "$BOLD" "$name" "$RESET"
-  local output
+  local output started
+  started=$(stamp)
   output=$("$@" 2>&1)
   local status=$?
+  record "$id" 1 "$status" "$started" "$(stamp)" "$@"
   echo "$output" | tail -6
   NAMES+=("$name")
   if [ $status -eq 0 ]; then
@@ -32,10 +46,12 @@ run() {
 }
 
 soft() {
-  local name="$1"; shift
+  local id="$1" name="$2"; shift 2
   printf "\n%s▸ %s%s\n" "$BOLD" "$name" "$RESET"
-  local output
+  local output started
+  started=$(stamp)
   output=$("$@" 2>&1); local status=$?
+  record "$id" 0 "$status" "$started" "$(stamp)" "$@"
   echo "$output" | tail -6
   NAMES+=("$name")
   if [ $status -eq 0 ]; then RESULTS+=("PASS"); DETAILS+=("")
@@ -45,16 +61,25 @@ soft() {
 printf "%sTrader-IA — full verification%s\n" "$BOLD" "$RESET"
 printf "Simulation only. No real money, no broker, no custody.\n"
 
-run  "Lint (ruff)"            $RUFF check packages tests scripts
-run  "Unit tests"             $PY -m pytest tests/unit -q
-run  "Integration tests"      $PY -m pytest tests/integration -q
-run  "Property tests"         $PY -m pytest tests/property -q
-run  "Failure injection"      $PY -m pytest tests/failure -q
-run  "Adversarial (synthetic)" $PY -m pytest tests/adversarial -q
-run  "End-to-end pipeline"    $PY -m pytest tests/e2e -q
-soft "Frontend type check"    bash -c 'cd frontend && npm run typecheck --silent'
-soft "Frontend build"         bash -c 'cd frontend && npm run build --silent'
-run  "Smoke test"             ./scripts/smoke.sh
+# Discards any previous marker (an interrupted run leaves no evidence) and records the
+# identity of what is about to be tested: commit, tree, file contents, config, deps.
+mkdir -p data/runtime
+if ! $PY -m tia.live.verify_evidence begin --run-dir "$EVIDENCE_DIR" --marker "$MARKER"; then
+  failures=$((failures+1))
+fi
+mkdir -p "$EVIDENCE_DIR"
+
+J="--junitxml=$EVIDENCE_DIR"
+run  lint        "Lint (ruff)"            $RUFF check packages tests scripts
+run  unit        "Unit tests"             $PY -m pytest tests/unit -q "$J/unit.xml"
+run  integration "Integration tests"      $PY -m pytest tests/integration -q "$J/integration.xml"
+run  property    "Property tests"         $PY -m pytest tests/property -q "$J/property.xml"
+run  failure     "Failure injection"      $PY -m pytest tests/failure -q "$J/failure.xml"
+run  adversarial "Adversarial (synthetic)" $PY -m pytest tests/adversarial -q "$J/adversarial.xml"
+run  e2e         "End-to-end pipeline"    $PY -m pytest tests/e2e -q "$J/e2e.xml"
+soft frontend-typecheck "Frontend type check" bash -c 'cd frontend && npm run typecheck --silent'
+soft frontend-build     "Frontend build"      bash -c 'cd frontend && npm run build --silent'
+run  smoke       "Smoke test"             ./scripts/smoke.sh
 
 printf "\n%s%s%s\n" "$BOLD" "$(printf '─%.0s' {1..66})" "$RESET"
 printf "%sVERIFICATION SUMMARY%s\n\n" "$BOLD" "$RESET"
@@ -69,18 +94,19 @@ done
 
 # Record the outcome where the live activation gate can read it. A file rather than
 # in-process state on purpose: the gate's `tests_pass` check must be satisfiable only by a
-# run that actually happened, in a separate process, against this commit — a check the API
-# could satisfy from its own memory is a check the API could satisfy by being wrong.
-mkdir -p data/runtime
-cat > data/runtime/verify_passed.json <<JSON
-{
-  "passed": $([ "$failures" -eq 0 ] && echo true || echo false),
-  "failed": $failures,
-  "at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
-  "commit": "$(git rev-parse HEAD 2>/dev/null || echo unknown)",
-  "dirty": $(test -n "$(git status --porcelain 2>/dev/null)" && echo true || echo false)
-}
-JSON
+# run that actually happened, in a separate process — a check the API could satisfy from
+# its own memory is a check the API could satisfy by being wrong. Since R22 the file is
+# schema v2: it names the artifact that was tested (and is refused for any other), every
+# area's exit code and junit counts, provenance and timestamps, sealed with a digest.
+# The writer re-identifies the artifact now; if anything changed during the run, the
+# marker records a run that does not pass.
+if ! $PY -m tia.live.verify_evidence finish --run-dir "$EVIDENCE_DIR" --marker "$MARKER" \
+    --entrypoint scripts/verify.sh; then
+  if [ "$failures" -eq 0 ]; then
+    failures=1
+    printf "%sthe evidence could not be bound to the tested artifact — the gate will refuse it%s\n" "$RED" "$RESET"
+  fi
+fi
 
 printf "\n"
 if [ "$failures" -eq 0 ]; then

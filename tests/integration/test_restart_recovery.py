@@ -352,7 +352,7 @@ def test_v7_backfills_provenance_from_what_the_rows_already_say(tmp_path: Path) 
     assert result.returncode == 0, result.stderr
 
     conn = sqlite3.connect(db)
-    assert conn.execute("SELECT version FROM schema_info").fetchone()[0] == SCHEMA_VERSION == 7
+    assert conn.execute("SELECT version FROM schema_info").fetchone()[0] == SCHEMA_VERSION == 8  # head is v8 since 0008 (R24-H1)
     got = {
         r[0]: r[1:]
         for r in conn.execute(

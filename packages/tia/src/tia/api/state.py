@@ -28,6 +28,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from tia import __version__
 from tia.core.config import Settings
 from tia.core.logging import get_logger
 from tia.learning.antipatterns import AntiPatternMonitor
@@ -109,6 +110,20 @@ class AppState:
         self._persist_failures = 0
         self._persist_last_error: str | None = None
         self._persist_last_failed_at: datetime | None = None
+        #: Incidents the store refused (R24-H1): counted apart and named, because an incident
+        #: that is not on disk must not read as recorded. The runtime's own state (blocks,
+        #: halt) does not depend on it; the record of what happened does.
+        self._incident_failures = 0
+        self._last_failed_incident: dict[str, Any] | None = None
+        #: Runs whose stop could not confirm every write (R19): read at startup, kept
+        #: current as stops are recorded, reported by :meth:`persistence_status`.
+        self._incomplete_runs: set[str] = set()
+        #: Stops whose flush ran out: a task per run keeps waiting for the queued writes
+        #: while the process lives and upgrades the run's record when they land (R19).
+        self._late_drains: dict[str, asyncio.Task[Any]] = {}
+        #: How long a shutdown gives the writes still queued before abandoning them and
+        #: saying so on the run row. The same bound as a stop's own flush (R19).
+        self._shutdown_drain_seconds: float = 10.0
         self._request_errors = 0
         self._recent_backtests: deque[dict[str, Any]] = deque(maxlen=25)
         #: The read-only Advisor and the behaviour auditor. The Advisor is built lazily and
@@ -166,6 +181,7 @@ class AppState:
     async def startup(self) -> None:
         self._loop = asyncio.get_running_loop()
         await self.database.ensure_schema()
+        await self._load_unconfirmed_runs()
         await self._maybe_resume_paper_realtime()
         if self.settings.mm.enabled:
             with contextlib.suppress(Exception):
@@ -183,19 +199,33 @@ class AppState:
             with contextlib.suppress(asyncio.CancelledError, Exception):
                 await self._evidence_task
         if self.runtime is not None and self.runtime.is_running:
+            with contextlib.suppress(Exception):
+                await self._mark_stopping(self.runtime.run_id)
             await self.runtime.stop()
+            # Unstamped, as before; its record says whether its writes landed (R19).
+            with contextlib.suppress(Exception):
+                await self._record_stop(self.runtime, stamp=False, release_lease=False)
         if self._lease_probe_task is not None:
             self._lease_probe_task.cancel()
             with contextlib.suppress(asyncio.CancelledError, Exception):
                 await self._lease_probe_task
         if self.live_runtime is not None and self.live_runtime.is_running:
+            with contextlib.suppress(Exception):
+                await self._mark_stopping(self.live_runtime.run_id)
             await self.live_runtime.stop(reason="application shutdown")
             # The row stays unstamped (a shutdown is not an operator stop: the next boot
             # resumes it) but its heartbeat is released, so that boot does not have to
-            # wait out the lease to tell a redeploy from a second process (G9).
-            with contextlib.suppress(Exception):
-                async with self.database.session() as session:
-                    await RunRepository(session).release_lease(self.live_runtime.run_id)
+            # wait out the lease to tell a redeploy from a second process (G9). The same
+            # transaction records whether the session's writes landed (R19).
+            try:
+                await self._record_stop(self.live_runtime, stamp=False, release_lease=True)
+            except Exception as exc:
+                # The record stays "stopping" (unconfirmed, the honest default); the heartbeat
+                # is still released on its own, as before R19.
+                _log.warning("shutdown_persistence_record_failed", run_id=self.live_runtime.run_id, error=str(exc)[:300])
+                with contextlib.suppress(Exception):
+                    async with self.database.session() as session:
+                        await RunRepository(session).release_lease(self.live_runtime.run_id)
         if self._intel is not None:
             with contextlib.suppress(Exception):
                 await self._intel.close()
@@ -214,7 +244,107 @@ class AppState:
         if self._mm_market is not None:
             with contextlib.suppress(Exception):
                 await self._mm_market.close()
+        await self._drain_before_close()
         await self.database.close()
+
+    # ------------------------------------------------------------ stop records (R19)
+
+    async def _load_unconfirmed_runs(self) -> None:
+        try:
+            async with self.database.session() as session:
+                runs = await RunRepository(session).unconfirmed_runs()
+        except Exception as exc:  # the boot goes on; the list stays what it was
+            _log.warning("persistence_records_unreadable", error=str(exc)[:300])
+            return
+        self._incomplete_runs = set(runs)
+        if runs:
+            _log.warning("runs_with_unconfirmed_persistence", runs=runs[:50], count=len(runs))
+
+    def _note_persistence(self, run_id: str, record: dict[str, Any]) -> None:
+        from tia.runtime.session_limits import UNCONFIRMED_PERSISTENCE
+
+        if record.get("status") in UNCONFIRMED_PERSISTENCE:
+            self._incomplete_runs.add(run_id)
+        else:
+            self._incomplete_runs.discard(run_id)
+
+    async def _write_persistence(self, run_id: str, record: dict[str, Any]) -> None:
+        async with self.database.session() as session:
+            await RunRepository(session).mark_persistence(run_id, record)
+        self._note_persistence(run_id, record)
+
+    async def _mark_stopping(self, run_id: str) -> None:
+        """Written before a stop drains: a process killed during the drain leaves the run
+        unconfirmed on disk rather than unmarked (R19)."""
+        await self._write_persistence(run_id, {"status": "stopping", "since": datetime.now(UTC).isoformat()})
+
+    async def _record_stop(self, runtime: Any, *, stamp: bool, release_lease: bool) -> dict[str, Any]:
+        """The stop stamp (when ``stamp``) and the run's persistence record, in one
+        transaction; a stop whose flush ran out keeps waiting for its writes (R19)."""
+        report = runtime.persistence_report()
+        async with self.database.session() as session:
+            repository = RunRepository(session)
+            if stamp:
+                await repository.stop(runtime.run_id, datetime.now(UTC))
+            if release_lease:
+                await repository.release_lease(runtime.run_id)
+            await repository.mark_persistence(runtime.run_id, report)
+        self._note_persistence(runtime.run_id, report)
+        if report["status"] != "complete":
+            _log.error("run_stopped_with_persistence_unconfirmed", run_id=runtime.run_id, **report)
+        if report["status"] == "incomplete" and report["pending"] > 0 and not report["loop_cancelled"]:
+            self._start_late_drain(runtime, report)
+        return report
+
+    def _start_late_drain(self, runtime: Any, report: dict[str, Any]) -> None:
+        run_id = runtime.run_id
+        previous = self._late_drains.pop(run_id, None)
+        if previous is not None:
+            previous.cancel()
+        task = asyncio.get_running_loop().create_task(self._late_drain(runtime, report))
+        self._late_drains[run_id] = task
+        task.add_done_callback(lambda t, r=run_id: self._late_drains.pop(r, None) if self._late_drains.get(r) is t else None)
+
+    async def _late_drain(self, runtime: Any, report: dict[str, Any]) -> None:
+        """Wait for the writes a stop left queued; when every one landed, say so."""
+        pending = runtime.pending_persistence()
+        while pending:
+            await asyncio.wait(pending)
+            pending = runtime.pending_persistence()
+        failed = int(runtime.persistence_report()["failed_writes"])
+        record = {
+            **report, "status": "complete_after_stop" if failed == 0 else "writes_failed",
+            "pending_at_stop": report["pending"], "pending": 0, "failed_writes": failed,
+            "completed_at": datetime.now(UTC).isoformat(),
+        }
+        try:
+            await self._write_persistence(runtime.run_id, record)
+        except Exception as exc:  # the record keeps saying "incomplete": the honest default
+            _log.warning("persistence_upgrade_failed", run_id=runtime.run_id, error=str(exc)[:300])
+            return
+        _log.info("persistence_completed_after_stop", run_id=runtime.run_id, pending_at_stop=report["pending"])
+
+    async def _drain_before_close(self) -> None:
+        """Before the store closes: a last bounded wait for every write still queued,
+        then the ones left are cancelled, counted and recorded on their run (R19)."""
+        runtimes = [rt for rt in (self.runtime, self.live_runtime) if rt is not None and hasattr(rt, "pending_persistence")]
+        waiting: list[asyncio.Task[Any]] = list(self._late_drains.values())
+        for runtime in runtimes:
+            waiting.extend(runtime.pending_persistence())
+        if waiting:
+            await asyncio.wait(waiting, timeout=max(0.0, self._shutdown_drain_seconds))
+        for task in list(self._late_drains.values()):
+            task.cancel()
+            with contextlib.suppress(asyncio.CancelledError, Exception):
+                await task
+        for runtime in runtimes:
+            abandoned = runtime.abandon_persistence()
+            if not abandoned:
+                continue
+            _log.error("persistence_abandoned_at_shutdown", run_id=runtime.run_id, abandoned=abandoned)
+            record = {**runtime.persistence_report(), "status": "incomplete", "abandoned_at_shutdown": abandoned}
+            with contextlib.suppress(Exception):
+                await asyncio.wait_for(self._write_persistence(runtime.run_id, record), timeout=5.0)
 
     # ------------------------------------------------------------------ streaming
 
@@ -492,9 +622,26 @@ class AppState:
         session = self.live_runtime
         if session is None or not session.is_running:
             return {"absorbed": 0, "reason": "no 24/7 session is running"}
+        recovered = 0
         try:
             async with self.database.session() as db:
-                rows = await EdgeStateRepository(db).load_since(self._evidence_watermark)
+                repository = EdgeStateRepository(db)
+                rows = await repository.load_since(self._evidence_watermark)
+                # The watermark is the fast path, not the guarantee (R24-H2): on PostgreSQL a
+                # row's ingested_at is its transaction's *start*, so a batch that opened before
+                # a newer row and committed after the last refresh sits below the watermark.
+                # The table's count against what the session holds says whether anything was
+                # passed over; a mismatch is resolved by id, bounded like the range read.
+                known = self._absorbed_evidence_ids | {row.outcome_id for row in rows}
+                if await repository.count() != len(known):
+                    present = await repository.ids()
+                    self._absorbed_evidence_ids &= present  # rows deleted since are not held
+                    missing = present - known
+                    if missing:
+                        late = await repository.load_ids(sorted(missing))
+                        recovered = len(late)
+                        rows = [*rows, *late]
+                        _log.info("evidence_refresh_recovered_rows", recovered=recovered, missing=len(missing))
         except Exception as exc:
             _log.warning("evidence_refresh_failed", error=str(exc)[:300])
             return {"absorbed": 0, "error": str(exc)[:200]}
@@ -512,13 +659,13 @@ class AppState:
             if self._evidence_watermark is None or newest > self._evidence_watermark:
                 self._evidence_watermark = newest
         if not fresh:
-            return {"absorbed": 0, "scanned": len(rows)}
+            return {"absorbed": 0, "scanned": len(rows), "recovered": recovered}
 
         result = session.absorb_evidence(
             outcomes=[self._as_outcome(row) for row in fresh],
             reviews=[self._as_review(row) for row in fresh],
         )
-        return {"absorbed": len(fresh), "scanned": len(rows), **result}
+        return {"absorbed": len(fresh), "scanned": len(rows), "recovered": recovered, **result}
 
     async def journal_setups(self, *, source: str | None = None) -> list[dict[str, Any]]:
         """Per-setup record — see EdgeStateRepository.setups."""
@@ -661,13 +808,22 @@ class AppState:
             return await self._stop_run_locked()
 
     async def _stop_run_locked(self) -> dict[str, Any]:
+        """Stop, drain, then stamp — and say on the row and in the answer whether the
+        drain confirmed every write (R19). A flush that ran out is not a clean stop: the
+        row reads ``incomplete`` until the queued writes land (``complete_after_stop``)."""
         runtime = self.runtime
         if runtime is None:
             return {"state": "stopped", "detail": "no run was active"}
+        if runtime.persistence_flushed is None:  # the first stop of this run
+            try:
+                await self._mark_stopping(runtime.run_id)
+            except Exception as exc:  # ahead of the stop, best effort; the final record decides
+                _log.warning("persistence_stopping_mark_failed", run_id=runtime.run_id, error=str(exc)[:300])
         await runtime.stop()
-        async with self.database.session() as session:
-            await RunRepository(session).stop(runtime.run_id, datetime.now(UTC))
-        return runtime.snapshot()
+        report = await self._record_stop(runtime, stamp=True, release_lease=False)
+        snapshot = runtime.snapshot()
+        snapshot["persistence_at_stop"] = report
+        return snapshot
 
     def pause_run(self) -> dict[str, Any]:
         self._require_runtime().pause()
@@ -732,8 +888,9 @@ class AppState:
 
     # ------------------------------------------------------------------ persistence
 
-    async def _persist(self, kind: str, payload: Any) -> None:
-        """Write one runtime artefact. Failures are logged, never raised."""
+    async def _persist(self, kind: str, payload: Any) -> bool:
+        """Write one runtime artefact. Failures are logged, never raised; the answer says
+        whether it landed, so the runtime that scheduled it can count it (R19)."""
         try:
             async with self.database.session() as session:
                 if kind == "decision":
@@ -780,6 +937,14 @@ class AppState:
                     # holds no lease (G9).
                     await RunRepository(session).stop(payload["run_id"], payload["stopped_at"])
                     await RunRepository(session).release_lease(payload["run_id"])
+                    # The last write of the session's queue: everything before it has run,
+                    # so its record is the session's own count of refused writes (R19).
+                    live = self.live_runtime
+                    failed = int(live.persist_failed_writes) if live is not None and live.run_id == payload["run_id"] else 0
+                    await RunRepository(session).mark_persistence(payload["run_id"], {
+                        "status": "writes_failed" if failed else "complete", "pending": 0, "failed_writes": failed,
+                        "loop_cancelled": False, "checked_at": datetime.now(UTC).isoformat(), "self_ended": True,
+                    })
                 elif kind == "run_heartbeat":
                     # The session is alive: another process reads this before it resumes
                     # or starts a session over the same account (Phase 1.3, G9).
@@ -803,6 +968,7 @@ class AppState:
                         payload["at"],
                     )
             self._persist_writes += 1
+            return True
         except Exception as exc:
             # Absorbed so the loop goes on; counted so it is not hidden (Phase 1.4). The
             # payload never reaches the log: it may carry an order or an account event.
@@ -810,6 +976,23 @@ class AppState:
             self._persist_last_error = f"{kind}: {type(exc).__name__}: {str(exc)[:200]}"
             self._persist_last_failed_at = datetime.now(UTC)
             _log.warning("persist_failed", kind=kind, error=str(exc)[:300])
+            if kind == "incident" and isinstance(payload, dict):
+                # Which incident, not only that one failed (R24-H1). Its id, kind and run are
+                # not secrets; its reason and detail stay out of the log like any payload.
+                self._incident_failures += 1
+                self._last_failed_incident = {
+                    "incident_id": str(payload.get("incident_id", ""))[:64],
+                    "kind": str(payload.get("kind", ""))[:120],
+                    "run_id": str(payload.get("run_id", ""))[:64],
+                    "at": self._persist_last_failed_at.isoformat(),
+                    "error": f"{type(exc).__name__}: {str(exc)[:200]}",
+                }
+                _log.error(
+                    "incident_not_recorded", incident_id=self._last_failed_incident["incident_id"],
+                    incident_kind=self._last_failed_incident["kind"], run_id=self._last_failed_incident["run_id"],
+                    error=self._last_failed_incident["error"],
+                )
+            return False
 
     def persistence_status(self) -> dict[str, Any]:
         """What the store has absorbed: writes, failures, the last failure and when."""
@@ -821,6 +1004,12 @@ class AppState:
                 self._persist_last_failed_at.isoformat() if self._persist_last_failed_at else None
             ),
             "degraded": self._persistence_recently_failed(),
+            # Incidents the store refused, and the last one by name (R24-H1).
+            "incident_failures": self._incident_failures,
+            "last_failed_incident": dict(self._last_failed_incident) if self._last_failed_incident else None,
+            # Runs whose stop could not confirm every write (R19): their record may be
+            # short; the account rebuild refuses to call itself complete over one.
+            "incomplete_runs": sorted(self._incomplete_runs),
         }
 
     def _persistence_recently_failed(self, *, window: timedelta = timedelta(minutes=10)) -> bool:
@@ -2697,13 +2886,21 @@ class AppState:
         live = self.live_runtime
         if live is None:
             return {"active": False, "state": "disarmed"}
+        if live.is_running:
+            with contextlib.suppress(Exception):
+                await self._mark_stopping(live.run_id)
         await live.stop(reason=reason)
-        with contextlib.suppress(Exception):  # the stop itself must not fail on a stamp
-            async with self.database.session() as session:
-                await RunRepository(session).stop(live.run_id, datetime.now(UTC))
-                # A stamped run holds no lease: its heartbeat goes with it (G9).
-                await RunRepository(session).release_lease(live.run_id)
-        return live.snapshot()
+        report = live.persistence_report()
+        try:  # the stop itself must not fail on a stamp
+            # A stamped run holds no lease: its heartbeat goes with it (G9). The stamp and
+            # the persistence record commit together (R19).
+            report = await self._record_stop(live, stamp=True, release_lease=True)
+        except Exception as exc:
+            _log.error("realtime_stop_stamp_failed", run_id=live.run_id, error=str(exc)[:300])
+            report = {**report, "recorded": False}
+        snapshot = live.snapshot()
+        snapshot["persistence_at_stop"] = report
+        return snapshot
 
     async def _maybe_resume_paper_realtime(self) -> None:
         """Resume a 24/7 paper session that a restart interrupted — and only that.
@@ -3075,7 +3272,7 @@ class AppState:
             "components": components,
             "degraded": degraded,
             "uptime_seconds": (datetime.now(UTC) - self.started_at).total_seconds(),
-            "version": "0.1.0",
+            "version": __version__,
             "simulated_only": simulated_only,
         }
 

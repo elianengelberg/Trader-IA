@@ -81,7 +81,20 @@ _ORDER_TYPE_MAP = {
     OrderType.LIMIT_MAKER: "LIMIT_MAKER",
     OrderType.STOP_LIMIT: "STOP_LOSS_LIMIT",
     OrderType.TAKE_PROFIT: "TAKE_PROFIT_LIMIT",
+    # The runtime's protective stop. Spot STOP_LOSS: mandatory quantity and stopPrice (or
+    # trailingDelta), executed as a MARKET order once the stop price is met; a SELL stop
+    # sits below the market (Spot API "New order (TRADE)", read 2026-10-22). Before this
+    # entry the adapter refused every protective stop locally while declaring
+    # supports_stop_orders=True. REQUIRES VALIDATION against the testnet.
+    OrderType.STOP: "STOP_LOSS",
 }
+#: The venue's type word back to ours, for orders read without a local record (an earlier
+#: session's order found by reconciliation must not be read as a MARKET order).
+_VENUE_ORDER_TYPE = {venue: ours for ours, venue in _ORDER_TYPE_MAP.items()}
+#: Types whose documented mandatory parameters carry no timeInForce: the venue refuses a
+#: parameter "sent when not required" on MARKET and LIMIT_MAKER, and STOP_LOSS executes as
+#: a MARKET order.
+_NO_TIME_IN_FORCE = (OrderType.MARKET, OrderType.LIMIT_MAKER, OrderType.STOP)
 
 _TIF_MAP = {
     TimeInForce.GTC: "GTC",
@@ -311,9 +324,9 @@ class BinanceExecutionProvider(ExecutionProvider):
             "newClientOrderId": intent.client_order_id,
             "newOrderRespType": "FULL",
         }
-        if intent.order_type not in (OrderType.MARKET, OrderType.LIMIT_MAKER):
+        if intent.order_type not in _NO_TIME_IN_FORCE:
             # REQUIRES VALIDATION: the venue refuses a timeInForce on MARKET and on
-            # LIMIT_MAKER ("parameter sent when not required"), so neither carries one.
+            # LIMIT_MAKER ("parameter sent when not required"); STOP_LOSS does not list one.
             params["timeInForce"] = _TIF_MAP.get(intent.time_in_force, "GTC")
         if intent.limit_price is not None:
             params["price"] = _format_decimal(intent.limit_price)
@@ -646,7 +659,9 @@ class BinanceExecutionProvider(ExecutionProvider):
             signal_id=intent.signal_id if intent else (base.signal_id if base else ""),
             symbol=symbol,
             side=side,
-            order_type=intent.order_type if intent else (base.order_type if base else OrderType.MARKET),
+            order_type=intent.order_type if intent else (
+                base.order_type if base else _VENUE_ORDER_TYPE.get(str(payload.get("type", "")).upper(), OrderType.MARKET)
+            ),
             quantity=quantity or 1e-9,
             limit_price=float(payload["price"]) if _positive(payload.get("price")) else None,
             stop_price=float(payload["stopPrice"]) if _positive(payload.get("stopPrice")) else None,

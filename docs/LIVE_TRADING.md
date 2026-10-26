@@ -227,6 +227,18 @@ Writes `data/runtime/verify_passed.json`, which is what satisfies the gate's `te
 check. A file from a separate process on purpose: a check the API could satisfy from its
 own memory is a check the API could satisfy by being wrong.
 
+Since R22 that file is evidence about **one artifact**, not a flag: schema v2 with the
+commit and tree, a digest of every tracked and untracked file, the configuration
+fingerprint, a digest of the installed dependencies, each suite's exit code, timestamps
+and junit counts, provenance, and a digest over its own content. The gate recomputes that
+identity in the process that would trade and refuses on any difference, on uncommitted
+changes (staged, unstaged or untracked), on a missing or failed suite, and on evidence
+older than `TIA_LIVE__VERIFY_EVIDENCE_MAX_AGE_HOURS` (default 24 — a policy decision still
+pending). So: run it from a clean checkout of the exact commit, with the same `.env` and
+virtualenv the server uses, and re-run it after any change. A process that cannot identify
+its own code — no `.git` or no `git`, as in the Docker image — fails the check. The
+self-digest is unkeyed: it catches corruption and naive edits, not a deliberate forger.
+
 ### Step 2 — Create a Binance API key
 
 **Binance → Account → API Management → Create API.**

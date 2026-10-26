@@ -566,12 +566,17 @@ class LiveMarketMakerService(MarketMakerService):
 
     def _incident(self, kind: str, *, reason: str, actor: str, detail: dict[str, Any]) -> None:
         now = self.clock.now()
+        # A sequence in the id, as in the live runtime: two incidents of one kind in one instant
+        # must not share a primary key (mission v2, phase M).
+        self._incident_seq = getattr(self, "_incident_seq", 0) + 1
         self._enqueue(
             "incident",
             {
-                "incident_id": deterministic_id("inc", self.run_id, kind, now),
+                "incident_id": deterministic_id("inc", self.run_id, kind, now, self._incident_seq),
                 "at": now,
-                "kind": kind[:32],
+                # Whole: the repository checks the column's limit and keeps an invalid kind
+                # explicitly rather than cut (R24-H1).
+                "kind": kind,
                 "actor": actor[:120],
                 "reason": reason,
                 "run_id": self.run_id,

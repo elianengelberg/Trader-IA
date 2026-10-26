@@ -9,6 +9,7 @@ venue the rest of the live-runtime tests use, and a real database in between.
 from __future__ import annotations
 
 import asyncio
+from collections.abc import Callable
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -37,15 +38,22 @@ from tia.runtime.states import LiveState
 
 
 def build_runtime_paper_with(  # type: ignore[no-untyped-def]
-    *, persist=None, prior_risk_state: RiskRestore | None = None, **live_overrides: Any
+    *, persist=None, prior_risk_state: RiskRestore | Callable[[datetime], RiskRestore] | None = None,
+    series_start: datetime | None = None, **live_overrides: Any
 ):
-    """The paper-realtime runtime of the live-runtime tests, plus the restore argument."""
+    """The paper-realtime runtime of the live-runtime tests, plus the restore argument.
+
+    ``series_start`` pins the fake feed's first candle, and with it the runtime's clock, instead
+    of the wall clock. ``prior_risk_state`` may be a function of the runtime clock's first
+    instant: a restore for "today" must mean the runtime's today, not the host's (N-HORA)."""
     scenario = get_scenario("trend_up")
     candles = generate_series(
         scenario, symbol="BTC-USD", timeframe="1m",
-        start=datetime.now(UTC) - timedelta(minutes=scenario.total_bars + 5), seed=9,
+        start=series_start or datetime.now(UTC) - timedelta(minutes=scenario.total_bars + 5), seed=9,
     )
     clock = SimulatedClock(candles[149].close_time + timedelta(seconds=1))
+    if callable(prior_risk_state):
+        prior_risk_state = prior_risk_state(clock.now())
     market = FakeMarketData(candles, clock)
     execution = FakeExecution()
     runtime = LiveRuntime(
@@ -273,15 +281,32 @@ async def test_a_still_incomplete_rebuild_keeps_entries_refused() -> None:
     assert "still unavailable" in report["restore"]["error"]
 
 
-async def test_five_restored_entries_for_the_symbol_refuse_the_sixth_after_the_restart() -> None:
-    now = datetime.now(UTC)
-    runtime, execution, market = build_runtime_paper_with(
-        prior_risk_state=RiskRestore(
-            complete=True, day=now.date().isoformat(), entries_today=5,
+#: Where the fake feed starts for the day-sensitive tests below (N-HORA). The test used to take
+#: "today" from the wall clock while the runtime's clock ran about six hours behind it on the
+#: feed's own series: between 00:00 and 05:55 UTC the two were on different UTC days, the restored
+#: count belonged to a day the runtime was not in, and the sixth entry went through. Pinned here,
+#: the runtime's clock starts at 08:30 UTC and the 300 bars it may drive end at 13:30: one day.
+MIDDAY_SERIES = datetime(2026, 10, 21, 6, 0, tzinfo=UTC)
+#: A series whose runtime clock starts at 00:05 UTC: the first minutes of a UTC day.
+JUST_AFTER_MIDNIGHT_SERIES = datetime(2026, 10, 21, 0, 5, tzinfo=UTC) - timedelta(minutes=150, seconds=1)
+
+
+def _five_entries_on(day_of: Callable[[datetime], datetime]) -> Callable[[datetime], RiskRestore]:
+    """A restore of five entries for the symbol on the UTC day of ``day_of(runtime start)``."""
+    def restore(start: datetime) -> RiskRestore:
+        day = day_of(start).astimezone(UTC)
+        return RiskRestore(
+            complete=True, day=day.date().isoformat(), entries_today=5,
             entries_today_by_symbol={"BTC-USD": 5},
-            last_entry_at={"BTC-USD": now - timedelta(hours=2)},
+            last_entry_at={"BTC-USD": day - timedelta(hours=2)},
             entry_orders_today=5,
         )
+    return restore
+
+
+async def test_five_restored_entries_for_the_symbol_refuse_the_sixth_after_the_restart() -> None:
+    runtime, execution, market = build_runtime_paper_with(
+        series_start=MIDDAY_SERIES, prior_risk_state=_five_entries_on(lambda start: start),
     )
     await runtime.start()
     try:
@@ -296,6 +321,32 @@ async def test_five_restored_entries_for_the_symbol_refuse_the_sixth_after_the_r
                 break
         assert any("per-symbol daily trade limit" in r for r in await _refusals(runtime, "risk"))
         assert execution.submissions == 0
+    finally:
+        await runtime.stop()
+
+
+async def test_five_entries_restored_for_the_previous_utc_day_do_not_bind_the_first_minutes_of_the_next() -> None:
+    """The other side of the boundary: the runtime starts at 00:05 UTC and the record it restores
+    counts five entries for the day that just ended. The per-symbol cap is a per-UTC-day cap, so
+    it must not speak (the product rolls the day at UTC midnight; RiskState.roll_day)."""
+    runtime, execution, market = build_runtime_paper_with(
+        series_start=JUST_AFTER_MIDNIGHT_SERIES,
+        prior_risk_state=_five_entries_on(lambda start: start - timedelta(minutes=10)),
+    )
+    assert runtime._clock.now().astimezone(UTC).strftime("%H:%M") == "00:05"
+    await runtime.start()
+    try:
+        _seed_every_bucket(runtime)
+        evaluated = 0
+        for _ in range(300):
+            market.advance()
+            await runtime._cycle_once()
+            refusals = await _refusals(runtime, "risk")
+            evaluated = max(evaluated, len(refusals))
+            assert not any("per-symbol daily trade limit" in r for r in refusals), refusals
+            if execution.submissions:
+                break
+        assert execution.submissions or evaluated, "the drive reached the risk engine"
     finally:
         await runtime.stop()
 

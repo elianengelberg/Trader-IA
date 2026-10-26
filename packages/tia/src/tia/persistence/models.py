@@ -23,7 +23,7 @@ Three design choices worth stating:
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import UTC, datetime
 from typing import Any, ClassVar
 
 from sqlalchemy import (
@@ -39,12 +39,19 @@ from sqlalchemy import (
     UniqueConstraint,
     text,
 )
+from sqlalchemy.engine import Dialect
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from sqlalchemy.types import JSON
+from sqlalchemy.types import JSON, TypeDecorator
 
 #: Bumped on any schema change. `ensure_schema()` refuses to run against a database
 #: written by a newer version rather than silently misreading it.
-SCHEMA_VERSION = 7
+SCHEMA_VERSION = 8
+#: v7 -> v8: `incidents.kind` widened from 32 to INCIDENT_KIND_MAX_LENGTH (migration `0008`).
+
+#: The longest `incidents.kind` the store holds (R24-H1). One constant for the column and for
+#: the repository's check (`incident_kind_problem`): SQLite does not enforce VARCHAR lengths and
+#: PostgreSQL does, so a limit that lived only in the column was a limit only production had.
+INCIDENT_KIND_MAX_LENGTH = 64
 #: v1 -> v2: edge_outcomes, activation_attempts, reconciliations, capital_events,
 #: incidents, latency_samples. The Alembic migration `0002` performs the upgrade;
 #: `ensure_schema` still refuses a *newer* database rather than misreading it.
@@ -54,8 +61,28 @@ class Base(DeclarativeBase):
     type_annotation_map: ClassVar[dict[Any, Any]] = {dict[str, Any]: JSON, list[Any]: JSON}
 
 
+class UTCDateTime(TypeDecorator[datetime]):
+    """``TIMESTAMP WITH TIME ZONE`` whose naive values mean UTC on every dialect.
+
+    The store's convention: every writer stamps UTC, and a naive stamp read back from SQLite
+    *is* UTC (``tia.risk.restore._as_utc``). asyncpg, however, encodes a naive ``datetime``
+    bound to a ``timestamptz`` parameter in the *client process's* local zone, so on a host
+    whose ``TZ`` is not UTC the same naive value landed hours away on PostgreSQL, and a naive
+    query bound selected another window (mission v2, ``tests/postgres/test_pg_host_timezone``).
+    Binding states the convention: a naive value is UTC; an aware one passes unchanged. The
+    column DDL is the same ``DateTime(timezone=True)``, and SQLite stores the same text."""
+
+    impl = DateTime(timezone=True)
+    cache_ok = True
+
+    def process_bind_param(self, value: datetime | None, dialect: Dialect) -> datetime | None:  # noqa: ARG002 (one rule for every dialect)
+        if isinstance(value, datetime) and (value.tzinfo is None or value.tzinfo.utcoffset(value) is None):
+            return value.replace(tzinfo=UTC)
+        return value
+
+
 def _utc_column(**kwargs: Any) -> Mapped[datetime]:
-    return mapped_column(DateTime(timezone=True), **kwargs)
+    return mapped_column(UTCDateTime(), **kwargs)
 
 
 class SchemaInfo(Base):
@@ -82,7 +109,7 @@ class RunRecord(Base):
     mode: Mapped[str] = mapped_column(String(24), nullable=False)
     scenario: Mapped[str] = mapped_column(String(64), default="")
     started_at: Mapped[datetime] = _utc_column(nullable=False)
-    stopped_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    stopped_at: Mapped[datetime | None] = mapped_column(UTCDateTime())
     initial_capital: Mapped[float] = mapped_column(Float, nullable=False)
     seed: Mapped[int] = mapped_column(Integer, nullable=False)
     symbols: Mapped[list[Any]] = mapped_column(JSON, default=list)
@@ -263,7 +290,7 @@ class PositionRow(Base):
     unrealized_pnl: Mapped[float] = mapped_column(Float, default=0.0)
     fees_paid: Mapped[float] = mapped_column(Float, default=0.0)
     last_price: Mapped[float] = mapped_column(Float, default=0.0)
-    opened_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    opened_at: Mapped[datetime | None] = mapped_column(UTCDateTime())
     updated_at: Mapped[datetime] = _utc_column(nullable=False)
 
 
@@ -452,7 +479,7 @@ class EdgeOutcomeRow(Base):
     #: a simulation's bars can predate rows written yesterday, so "what is new since the
     #: session last looked" is answered by this column and never by closed_at.
     ingested_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
+        UTCDateTime(),
         nullable=False,
         server_default=text("CURRENT_TIMESTAMP"),
         index=True,
@@ -532,7 +559,7 @@ class IncidentRow(Base):
     at: Mapped[datetime] = _utc_column(nullable=False)
     #: kill_switch | kill_switch_released | halt_new_orders | cancel_only |
     #: emergency_flatten | safe_mode | capital_halt | risk_profile_change | ...
-    kind: Mapped[str] = mapped_column(String(32), nullable=False, index=True)
+    kind: Mapped[str] = mapped_column(String(INCIDENT_KIND_MAX_LENGTH), nullable=False, index=True)
     actor: Mapped[str] = mapped_column(String(120), default="")
     reason: Mapped[str] = mapped_column(Text, default="")
     run_id: Mapped[str] = mapped_column(String(64), default="")
@@ -632,6 +659,7 @@ ALL_TABLES = (
 
 __all__ = [
     "ALL_TABLES",
+    "INCIDENT_KIND_MAX_LENGTH",
     "SCHEMA_VERSION",
     "ActivationAttemptRow",
     "AssessmentRow",
@@ -655,4 +683,5 @@ __all__ = [
     "ReconciliationRow",
     "RunRecord",
     "SchemaInfo",
+    "UTCDateTime",
 ]

@@ -12,6 +12,7 @@ key rather than by hoping it does not happen.
 
 from __future__ import annotations
 
+import re
 from collections.abc import Sequence
 from datetime import datetime, timedelta
 from typing import Any
@@ -19,6 +20,7 @@ from typing import Any
 from sqlalchemy import case, delete, desc, func, select
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.dialects.sqlite import insert as sqlite_insert
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from tia.core.logging import get_logger
@@ -26,6 +28,7 @@ from tia.domain.orders import Fill, Order
 from tia.domain.portfolio import PortfolioState
 from tia.events.envelope import EventEnvelope
 from tia.persistence.models import (
+    INCIDENT_KIND_MAX_LENGTH,
     ActivationAttemptRow,
     AssessmentRow,
     BacktestRow,
@@ -62,6 +65,22 @@ def _upsert(session: AsyncSession, table: Any, values: dict[str, Any], index_ele
     stmt = statement.values(**values)
     updatable = {k: v for k, v in values.items() if k not in index_elements}
     return stmt.on_conflict_do_update(index_elements=index_elements, set_=updatable)
+
+
+def _is_unique_violation_on(exc: BaseException, constraint: str) -> bool:
+    """Whether ``exc`` is a unique violation (SQLSTATE 23505) of ``constraint``, at any depth of
+    the driver's exception chain (SQLAlchemy wraps the adapter's error, which wraps asyncpg's)."""
+    seen: set[int] = set()
+    current: BaseException | None = exc
+    while current is not None and id(current) not in seen:
+        seen.add(id(current))
+        if getattr(current, "constraint_name", None) == constraint:
+            return True
+        state = getattr(current, "sqlstate", None) or getattr(current, "pgcode", None)
+        if state == "23505" and constraint in str(current):
+            return True
+        current = getattr(current, "orig", None) or current.__cause__ or current.__context__
+    return False
 
 
 class RunRepository:
@@ -141,6 +160,70 @@ class RunRepository:
             return
         run.notes = clear_heartbeat(run.notes) or ""
 
+    async def mark_persistence(self, run_id: str, report: dict[str, Any]) -> None:
+        """Record on the run row what its stop could say about the writes it owed (R19).
+        Called in the same session as :meth:`stop`, so the stamp and the record commit
+        together or not at all. Other keys in the notes document are kept."""
+        from tia.runtime.session_limits import encode_persistence
+
+        run = await self._session.get(RunRecord, run_id)
+        if run is None:
+            return
+        run.notes = encode_persistence(run.notes, report)
+
+    async def persistence_records(self, *, modes: Sequence[str] | None = None) -> dict[str, dict[str, Any]]:
+        """``run_id -> persistence record`` of every run that carries one (R19)."""
+        from tia.runtime.session_limits import PERSISTENCE_KEY, decode_persistence
+
+        query = select(RunRecord.run_id, RunRecord.notes).where(RunRecord.notes.contains(f'"{PERSISTENCE_KEY}"'))
+        if modes is not None:
+            query = query.where(RunRecord.mode.in_(list(modes)))
+        out: dict[str, dict[str, Any]] = {}
+        for run_id, notes in (await self._session.execute(query)).all():
+            record = decode_persistence(notes)
+            if record is not None:
+                out[str(run_id)] = record
+        return out
+
+    async def unconfirmed_runs(self, *, modes: Sequence[str] | None = None) -> list[str]:
+        """Runs whose stop could not confirm every write (R19), oldest id first."""
+        from tia.runtime.session_limits import UNCONFIRMED_PERSISTENCE
+
+        records = await self.persistence_records(modes=modes)
+        return sorted(r for r, rec in records.items() if rec.get("status") in UNCONFIRMED_PERSISTENCE)
+
+    async def acknowledge_persistence(self, run_id: str, *, actor: str, reason: str, at: datetime) -> None:
+        """An operator's statement that an unconfirmed record was reconciled by hand (R19).
+
+        Refuses (``ValueError``, nothing written) without a reason, for a run that does not
+        exist, or for a run whose record is confirmed (``complete``…). A run with **no** record —
+        a process that died without a stop, whose journal may have closed a round trip with no
+        outcome on record (R15) — can be acknowledged too: its record is created as
+        ``acknowledged`` with ``status_before: "unrecorded"``. Keeps what the stop said; adds who,
+        why and when."""
+        from tia.core.clock import ensure_utc
+        from tia.runtime.session_limits import (
+            UNCONFIRMED_PERSISTENCE,
+            decode_persistence,
+            encode_persistence,
+        )
+
+        if not reason.strip() or not actor.strip():
+            raise ValueError("an acknowledgement needs an actor and a reason")
+        run = await self._session.get(RunRecord, run_id)
+        if run is None:
+            raise ValueError(f"run {run_id} does not exist")
+        record = decode_persistence(run.notes)
+        if record is None:
+            record = {"status": "unrecorded"}
+        elif record.get("status") not in UNCONFIRMED_PERSISTENCE:
+            raise ValueError(f"run {run_id} has no unconfirmed persistence record to acknowledge")
+        record.update({
+            "status": "acknowledged", "status_before": record.get("status"), "acknowledged_by": actor,
+            "acknowledged_reason": reason[:500], "acknowledged_at": ensure_utc(at, field="acknowledgement time").isoformat(),
+        })
+        run.notes = encode_persistence(run.notes, record)
+
     async def open_sessions(self, *, mode: str) -> list[tuple[str, str]]:
         """``(run_id, notes)`` of every run of ``mode`` with no ``stopped_at``, newest
         first — the rows a boot or a start must read before claiming the account."""
@@ -177,11 +260,20 @@ class EventRepository:
         self._session = session
 
     async def append(self, run_id: str, envelope: EventEnvelope[Any]) -> bool:
-        """Store an event. Returns ``False`` if it was a duplicate.
+        """Store an event; a redelivery (same ``idempotency_key``) updates its row. Returns ``True``.
 
         Deduplication is enforced by the unique index on ``idempotency_key``, not by a
         prior SELECT: two writers racing the same redelivered event both pass a SELECT and
-        only one survives the constraint.
+        only one row survives the constraint.
+
+        On PostgreSQL the upsert arbitrates only that index, and the envelope repeats its
+        primary key too: a writer that overlaps another writer of the same event waits for it
+        and then fails on ``events_pkey`` (R24-H3). The statement runs in a savepoint, and on
+        exactly that conflict it runs once more: the other writer has committed by then, and the
+        retry meets its row through the conflict target, as a sequential redelivery would. The
+        savepoint keeps the rest of the caller's transaction (an ``account_events`` batch)
+        intact. A reused ``event_id`` under another key is a real conflict and still raises.
+        SQLite serialises writers, so the race cannot happen there and the plain statement runs.
         """
         payload = envelope.payload
         symbol = getattr(payload, "symbol", "") or ""
@@ -200,7 +292,22 @@ class EventRepository:
             "payload": envelope.payload.model_dump(mode="json"),
         }
         stmt = _upsert(self._session, EventRecord, values, ["idempotency_key"])
-        await self._session.execute(stmt)
+        dialect = self._session.bind.dialect.name if self._session.bind is not None else "sqlite"
+        if dialect != "postgresql":
+            await self._session.execute(stmt)
+            return True
+        try:
+            async with self._session.begin_nested():
+                await self._session.execute(stmt)
+        except IntegrityError as exc:
+            if not _is_unique_violation_on(exc, "events_pkey"):
+                raise
+            _log.info(
+                "event_append_raced_another_writer", event_id=envelope.event_id,
+                idempotency_key=envelope.idempotency_key[:128],
+            )
+            async with self._session.begin_nested():
+                await self._session.execute(stmt)
         return True
 
     async def by_correlation(self, correlation_id: str) -> list[EventRecord]:
@@ -528,6 +635,21 @@ class EdgeStateRepository:
             (await self._session.execute(select(func.count(EdgeOutcomeRow.outcome_id)))).scalar()
             or 0
         )
+
+    async def ids(self) -> set[str]:
+        """Every outcome id in the table: the evidence refresher's completeness check (R24-H2)."""
+        return set((await self._session.execute(select(EdgeOutcomeRow.outcome_id))).scalars().all())
+
+    async def load_ids(self, outcome_ids: Sequence[str], *, limit: int = 20_000) -> list[EdgeOutcomeRow]:
+        """The rows with these ids, in ``ingested_at`` order, bounded like :meth:`load_since`."""
+        wanted = sorted(outcome_ids)[:limit]
+        rows: list[EdgeOutcomeRow] = []
+        for start in range(0, len(wanted), 1_000):  # a bounded IN list per statement
+            chunk = wanted[start : start + 1_000]
+            rows.extend((await self._session.execute(
+                select(EdgeOutcomeRow).where(EdgeOutcomeRow.outcome_id.in_(chunk))
+            )).scalars().all())
+        return sorted(rows, key=lambda row: (row.ingested_at, row.outcome_id))
 
     async def load_since(
         self, ingested_after: datetime | None, *, limit: int = 20_000
@@ -901,12 +1023,53 @@ class CapitalEventRepository:
         return list((await self._session.execute(query)).scalars().all())
 
 
+#: The kind an incident is stored under when the one it came with cannot be (R24-H1). The
+#: incident is kept, with the original in ``detail["invalid_kind"]``: never cut, never dropped.
+INVALID_INCIDENT_KIND = "incident_kind_invalid"
+_INCIDENT_KIND = re.compile(r"[a-z0-9][a-z0-9_:.\-]*\Z")
+
+
+def incident_kind_problem(kind: object) -> str | None:
+    """Why ``kind`` cannot be stored as ``incidents.kind``, or ``None`` when it can.
+
+    The contract: a non-empty lower-case identifier (``[a-z0-9_:.-]``, starting with a letter
+    or digit) of at most ``INCIDENT_KIND_MAX_LENGTH`` characters. Checked here, the one place
+    that writes the row, so every dialect accepts exactly the same kinds."""
+    if not isinstance(kind, str):
+        return f"not a string ({type(kind).__name__})"
+    if not kind:
+        return "empty"
+    if len(kind) > INCIDENT_KIND_MAX_LENGTH:
+        return f"{len(kind)} characters; the column holds {INCIDENT_KIND_MAX_LENGTH}"
+    if _INCIDENT_KIND.match(kind) is None:
+        return "characters outside [a-z0-9_:.-] or a leading separator"
+    return None
+
+
 class IncidentRepository:
     def __init__(self, session: AsyncSession) -> None:
         self._session = session
 
     async def record(self, values: dict[str, Any]) -> None:
-        self._session.add(IncidentRow(**values))
+        """Add one incident to the session. A kind the column cannot hold is not cut to fit
+        and does not make the incident fail: the row is written under
+        ``INVALID_INCIDENT_KIND`` with the original kind and the reason in ``detail``, and the
+        substitution is logged as an error (R24-H1)."""
+        row = dict(values)
+        problem = incident_kind_problem(row.get("kind"))
+        if problem is not None:
+            original = row.get("kind")
+            detail = row.get("detail")
+            detail = dict(detail) if isinstance(detail, dict) else ({} if detail is None else {"detail": detail})
+            detail["invalid_kind"] = repr(original)[:500]
+            detail["invalid_kind_problem"] = problem
+            row["detail"] = detail
+            row["kind"] = INVALID_INCIDENT_KIND
+            _log.error(
+                "incident_kind_invalid", incident_id=str(row.get("incident_id", ""))[:64],
+                problem=problem, kind=repr(original)[:120],
+            )
+        self._session.add(IncidentRow(**row))
 
     async def recent(self, *, limit: int = 100, kind: str = "") -> list[IncidentRow]:
         query = select(IncidentRow).order_by(desc(IncidentRow.at)).limit(limit)
@@ -1019,6 +1182,7 @@ class MarketMakerRepository:
 
 
 __all__ = [
+    "INVALID_INCIDENT_KIND",
     "ActivationRepository",
     "AssessmentRepository",
     "BacktestRepository",
@@ -1036,6 +1200,7 @@ __all__ = [
     "PortfolioRepository",
     "ReconciliationRepository",
     "RunRepository",
+    "incident_kind_problem",
 ]
 
 
@@ -1153,9 +1318,12 @@ class AccountJournalRepository:
     ) -> Any:
         from tia.portfolio.account_journal import (
             ACCOUNT_EVENT_TYPES,
+            EVENT_FILL,
             AccountEventRecord,
             as_utc,
             check_baseline,
+            check_round_trip_outcomes,
+            check_stop_persistence,
             cross_check,
             fold_account_events,
         )
@@ -1199,9 +1367,31 @@ class AccountJournalRepository:
                 legacy_fill_rows_net_quantity=legacy_net, legacy_fill_rows_fees=legacy_fees,
             )
         net, fees = self._fill_sums(fills)
-        return cross_check(
+        restore = cross_check(
             restore, fill_rows_net_quantity=net, fill_rows_count=len(fills), fill_rows_fees=fees,
         )
+        # A write lost at the tail of a session (a fill AND its journal event, both queued
+        # when the stop's flush ran out) passes the cross-check above; the run's own
+        # persistence record is what tells (R19).
+        records = await RunRepository(self._session).persistence_records(modes=modes)
+        restore = check_stop_persistence(restore, records=records)
+        # A round trip the journal closed must have its outcome on record (R15): the two are
+        # separate commits, and the fills cross-check cannot see the second one missing.
+        closing = [
+            {"outcome_id": str(row.payload["closes_outcome"]), "run_id": str(row.run_id),
+             "fill_id": str(row.payload.get("fill_id", ""))}
+            for row in rows
+            if row.event_type == EVENT_FILL and (row.payload or {}).get("closes_outcome")
+            and (row.payload or {}).get("symbol") == symbol
+        ]
+        recorded: set[str] = set()
+        ids = sorted({c["outcome_id"] for c in closing})
+        for start in range(0, len(ids), 1_000):
+            recorded |= set((await self._session.execute(
+                select(EdgeOutcomeRow.outcome_id).where(EdgeOutcomeRow.outcome_id.in_(ids[start : start + 1_000]))
+            )).scalars().all())
+        acknowledged = {r for r, rec in records.items() if rec.get("status") == "acknowledged"}
+        return check_round_trip_outcomes(restore, closing=closing, recorded=recorded, acknowledged_runs=acknowledged)
 
     async def fill_rows(
         self, *, symbol: str, modes: Sequence[str] = SESSION_MODES, before: datetime | None = None

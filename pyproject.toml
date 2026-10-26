@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "tia"
-version = "0.1.0"
+dynamic = ["version"]
 description = "Trader-IA — autonomous quantitative research, backtesting and paper-trading platform (simulation only)"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -63,6 +63,9 @@ all = [
 
 [project.scripts]
 tia-server = "tia.api.main:run"
+
+[tool.hatch.version]
+path = "packages/tia/src/tia/__init__.py"
 
 [tool.hatch.build.targets.wheel]
 packages = ["packages/tia/src/tia"]

@@ -20,6 +20,16 @@ fingerprint over its own facts. A stale, hand-edited, or truncated record fails 
 it feeds — trusting the file as read was gap C16 in the Part II audit, and this module is
 where it closed.
 
+**On the verification marker (R22).** ``tests_pass``, ``emergency_controls`` and
+``restart_recovery`` read ``data/runtime/verify_passed.json``, written by ``make verify``.
+It used to be believed on ``"passed": true`` alone. It is now examined like the venue
+record and more: :func:`tia.live.verify_evidence.assess` requires schema v2, an intact
+self-digest, provenance, every required suite present and passing with its exit code and
+junit counts, an age within ``live.verify_evidence_max_age_hours``, a clean tree — and an
+artifact identity (commit, tree, file contents, configuration, dependencies) equal to the
+one *this process* computes for the code it would run. A process that cannot compute its
+own identity (no ``.git`` or no ``git``, as in the Docker image) fails these checks.
+
 The expected result of running this today is that the gate refuses. That is the correct
 output for a system whose Binance adapter has never made a request.
 """
@@ -36,6 +46,13 @@ from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 from tia.data.providers.binance_signing import key_fingerprint_from_live_config
 from tia.live.gate import CheckName, GateCheck, failing, passing
+from tia.live.verify_evidence import (
+    EMERGENCY_CONTROL_MODULES,
+    RESTART_RECOVERY_MODULES,
+    Assessment,
+    assess,
+    current_identity,
+)
 
 if TYPE_CHECKING:  # pragma: no cover - typing only
     from tia.api.state import AppState
@@ -47,6 +64,11 @@ if TYPE_CHECKING:  # pragma: no cover - typing only
 #: satisfy by being wrong.
 VERIFY_MARKER = Path("data/runtime/verify_passed.json")
 BINANCE_FACTS = Path("data/runtime/binance_validation.json")
+
+#: Whose identity the verification evidence must match. ``None`` — always, outside tests —
+#: means the git work tree containing the ``tia`` package this process imported, i.e. the
+#: code that would trade. Tests point it at a throwaway repository.
+ARTIFACT_ROOT: Path | None = None
 
 #: The validator version this build understands. A record from another version fails
 #: schema-validation rather than being reinterpreted.
@@ -128,6 +150,31 @@ def load_validation_record(
     return record, ""
 
 
+def load_verify_evidence(
+    state: AppState, *, now: datetime | None = None
+) -> tuple[Assessment | None, str]:
+    """The verification evidence, if it is about exactly the code this process would run.
+
+    The identity is computed here, now, in this process — not taken from the marker, an
+    environment variable or a build argument.
+    """
+    try:
+        raw_text: str | None = VERIFY_MARKER.read_text(encoding="utf-8")
+    except FileNotFoundError:
+        raw_text = None
+    except (OSError, UnicodeDecodeError):
+        raw_text = "\x00unreadable"  # not JSON → refused as unreadable
+    identity, identity_problem = current_identity(state.settings, ARTIFACT_ROOT)
+    return assess(
+        raw_text,
+        current=identity,
+        identity_problem=identity_problem,
+        now=now or datetime.now(UTC),
+        max_age_hours=state.settings.live.verify_evidence_max_age_hours,
+        source=str(VERIFY_MARKER),
+    )
+
+
 def build_probes(
     state: AppState,
     *,
@@ -143,8 +190,9 @@ def build_probes(
     call sites show exactly which facts feed the gate.
     """
     record, record_problem = load_validation_record(state)
+    evidence, evidence_problem = load_verify_evidence(state)
     return {
-        CheckName.TESTS_PASS: _tests(),
+        CheckName.TESTS_PASS: _tests(evidence, evidence_problem),
         CheckName.MIGRATIONS_CURRENT: _migrations(schema_version_ok),
         CheckName.MARKET_DATA_HEALTHY: _market_data(state),
         CheckName.VENUE_CONNECTED: _venue(state, record, record_problem),
@@ -166,33 +214,24 @@ def build_probes(
         CheckName.FEES_VERIFIED_AT_SOURCE: _fees(record),
         CheckName.CAPITAL_POLICY_SET: _capital(state),
         CheckName.KILL_SWITCH_CLEAR: _kill_switch(state),
-        CheckName.EMERGENCY_CONTROLS: _emergency_controls(),
-        CheckName.RESTART_RECOVERY: _restart_recovery(),
+        CheckName.EMERGENCY_CONTROLS: _emergency_controls(evidence, evidence_problem),
+        CheckName.RESTART_RECOVERY: _restart_recovery(evidence, evidence_problem),
         CheckName.CREDENTIALS_SCOPED: _credentials(state, record),
         CheckName.EDGE_EVIDENCE: _edge(state),
         CheckName.PAPER_TRACK_RECORD: _track_record_probe(state, track_record),
     }
 
 
-def _tests() -> GateCheck:
-    marker = _read_json(VERIFY_MARKER)
-    if marker is None:
-        return failing(
-            CheckName.TESTS_PASS,
-            "no record of a passing verification run",
-            f"run `make verify`, which writes {VERIFY_MARKER}",
-        )
-    if not marker.get("passed"):
-        return failing(
-            CheckName.TESTS_PASS,
-            f"the last verification run failed ({marker.get('failed', '?')} areas)",
-            "fix what failed and run `make verify` again",
-        )
-    return passing(
-        CheckName.TESTS_PASS,
-        f"verified at {marker.get('at', 'unknown time')} on commit "
-        f"{str(marker.get('commit', ''))[:8] or 'unknown'}",
-    )
+_VERIFY_REMEDY = (
+    "run `make verify` from a clean checkout of the exact commit, configuration and "
+    f"environment that would trade; it writes {VERIFY_MARKER}"
+)
+
+
+def _tests(evidence: Assessment | None, problem: str) -> GateCheck:
+    if evidence is None:
+        return failing(CheckName.TESTS_PASS, problem, _VERIFY_REMEDY)
+    return passing(CheckName.TESTS_PASS, evidence.summary())
 
 
 def _migrations(schema_version_ok: bool | None) -> GateCheck:
@@ -633,7 +672,7 @@ def _kill_switch(state: AppState) -> GateCheck:
     return passing(CheckName.KILL_SWITCH_CLEAR, "clear")
 
 
-def _emergency_controls() -> GateCheck:
+def _emergency_controls(evidence: Assessment | None, problem: str) -> GateCheck:
     from tia.runtime.live import LiveRuntime
 
     missing = [
@@ -647,21 +686,27 @@ def _emergency_controls() -> GateCheck:
             f"missing controls: {missing}",
             "an emergency control that does not exist cannot be reached in an emergency",
         )
-    marker = _read_json(VERIFY_MARKER)
-    if not (marker and marker.get("passed")):
+    if evidence is None:
         return failing(
             CheckName.EMERGENCY_CONTROLS,
-            "the controls exist but the suite that tests them has not passed here",
-            "run `make verify`",
+            "the controls exist but there is no valid evidence that the suite testing them "
+            f"passed on this artifact: {problem}",
+            _VERIFY_REMEDY,
+        )
+    not_proven = evidence.evidence.modules_problem(EMERGENCY_CONTROL_MODULES)
+    if not_proven:
+        return failing(
+            CheckName.EMERGENCY_CONTROLS,
+            f"the emergency-control tests are not proven by the evidence: {not_proven}",
+            _VERIFY_REMEDY,
         )
     return passing(
         CheckName.EMERGENCY_CONTROLS,
-        "kill switch, flatten and halt exist and their tests passed in the last verify",
+        "kill switch, flatten and halt exist and their tests passed on this exact artifact",
     )
 
 
-def _restart_recovery() -> GateCheck:
-    marker = _read_json(VERIFY_MARKER)
+def _restart_recovery(evidence: Assessment | None, problem: str) -> GateCheck:
     recovery_test = Path("tests/integration/test_restart_recovery.py")
     if not recovery_test.is_file():
         return failing(
@@ -669,13 +714,24 @@ def _restart_recovery() -> GateCheck:
             "no restart-recovery test exists",
             "a crash mid-session must be a tested path, not a hoped-for one",
         )
-    if not (marker and marker.get("passed")):
+    if evidence is None:
         return failing(
             CheckName.RESTART_RECOVERY,
-            "the restart-recovery test exists but the suite has not passed here",
-            "run `make verify`",
+            "the restart-recovery test exists but there is no valid evidence that it passed "
+            f"on this artifact: {problem}",
+            _VERIFY_REMEDY,
         )
-    return passing(CheckName.RESTART_RECOVERY, "tested; state reloads and orders deduplicate")
+    not_proven = evidence.evidence.modules_problem(RESTART_RECOVERY_MODULES)
+    if not_proven:
+        return failing(
+            CheckName.RESTART_RECOVERY,
+            f"the restart-recovery test is not proven by the evidence: {not_proven}",
+            _VERIFY_REMEDY,
+        )
+    return passing(
+        CheckName.RESTART_RECOVERY,
+        "tested on this exact artifact; state reloads and orders deduplicate",
+    )
 
 
 def _credentials(state: AppState, record: BinanceValidationRecord | None) -> GateCheck:
@@ -786,6 +842,7 @@ def validation_facts() -> dict[str, Any] | None:
 
 
 __all__ = [
+    "ARTIFACT_ROOT",
     "BINANCE_FACTS",
     "EXPECTED_VALIDATOR_VERSION",
     "VALIDATION_MAX_AGE_HOURS",
@@ -793,5 +850,6 @@ __all__ = [
     "BinanceValidationRecord",
     "build_probes",
     "load_validation_record",
+    "load_verify_evidence",
     "validation_facts",
 ]

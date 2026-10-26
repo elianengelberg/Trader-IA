@@ -13,7 +13,7 @@ attribution, never twice in either.
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -46,6 +46,13 @@ from tia.runtime.live import (
     funding_period_of,
     funding_period_start,
 )
+
+#: Where the fake feed starts for the test below that must stay inside one funding period
+#: (mission v2). Anchored to the wall clock, the runtime's clock ran about six hours behind it;
+#: when it landed a few bars before 16:00 UTC (wall clock near 21:40 UTC), session B's three
+#: cycles crossed into the next period and charged it, and the test failed only at that hour.
+#: Pinned here, the runtime starts at 08:30 UTC, well inside the 08:00-16:00 period.
+MID_PERIOD_SERIES = datetime(2026, 10, 21, 6, 0, tzinfo=UTC)
 
 RATE_A = 0.0001
 RATE_B = 0.0002
@@ -203,7 +210,7 @@ async def test_a_restart_inside_the_period_already_paid_charges_nothing_again(tm
     db = _db(tmp_path)
     await db.create_schema()
     try:
-        runtime_a, _engine_a, market_a, clock_a = build(persist=persister(db), charge_funding=True)
+        runtime_a, _engine_a, market_a, clock_a = build(persist=persister(db), charge_funding=True, series_start=MID_PERIOD_SERIES)
         runtime_a._funding_rate = lambda: RATE_A
         await register_run(db, runtime_a.run_id)
         await runtime_a.start()
@@ -218,6 +225,8 @@ async def test_a_restart_inside_the_period_already_paid_charges_nothing_again(tm
 
         resume_at = clock_a.now() + timedelta(seconds=1)
         assert funding_period_key(funding_period_of(resume_at)) == period_a, "still the same period"
+        # B's three one-minute cycles below must stay in that period too: that is the case under test.
+        assert funding_period_key(funding_period_of(resume_at + timedelta(minutes=4))) == period_a
         market_b, clock_b = _resumed_market(market_a, clock_a, at=resume_at)
         engine_b = engine_for(clock_b, live_settings(charge_funding=True))
         engine_b.restore_portfolio(restore.portfolio_state())

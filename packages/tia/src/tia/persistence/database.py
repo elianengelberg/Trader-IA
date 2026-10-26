@@ -28,6 +28,7 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
 )
 
+from tia import __version__
 from tia.core.clock import Clock, SystemClock
 from tia.core.errors import ConfigurationError
 from tia.core.logging import get_logger
@@ -110,7 +111,7 @@ class Database:
                 await session.rollback()
                 raise
 
-    async def create_schema(self, *, application_version: str = "0.1.0") -> None:
+    async def create_schema(self, *, application_version: str = __version__) -> None:
         """Create every table. Idempotent — safe on an existing database."""
         async with self._engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
@@ -128,11 +129,15 @@ class Database:
                 )
         _log.info("schema_created", version=SCHEMA_VERSION, dialect=self.dialect)
 
-    async def ensure_schema(self, *, application_version: str = "0.1.0") -> int:
+    async def ensure_schema(self, *, application_version: str = __version__) -> int:
         """Create the schema if absent, and refuse to run against a mismatched one.
 
         A version mismatch raises. Reading a database written by a different schema is how
         a dashboard ends up showing numbers that are wrong in a way nobody notices.
+
+        On a matching schema, the row's ``application_version`` is brought to the build that
+        runs on it: a database created by an earlier release, or by Alembic (whose 0001 stamps
+        ``'alembic-0001'``), otherwise reports a version that is not the application's.
         """
         await self.create_schema(application_version=application_version)
 
@@ -147,6 +152,12 @@ class Database:
                     database_version=info.version,
                     expected=SCHEMA_VERSION,
                 )
+            if info.application_version != application_version:
+                _log.info(
+                    "schema_application_version_updated",
+                    previous=info.application_version, current=application_version,
+                )
+                info.application_version = application_version
             return info.version
 
     async def drop_all(self) -> None:

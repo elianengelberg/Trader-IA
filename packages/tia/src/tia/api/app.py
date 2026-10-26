@@ -30,6 +30,7 @@ from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
+from tia import __version__
 from tia.api.security import (
     SECURITY_HEADERS,
     SESSION_COOKIE,
@@ -172,7 +173,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     app = FastAPI(
         title="Trader-IA",
-        version="0.1.0",
+        version=__version__,
         description=(
             "Simulation-only quantitative research and paper-trading platform. "
             "No real money, no broker connection, no custody. Nothing served by this API "

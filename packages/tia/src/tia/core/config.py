@@ -21,6 +21,7 @@ from typing import Any, Literal
 from pydantic import BaseModel, ConfigDict, Field, SecretStr, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from tia import __version__
 from tia.core.errors import ConfigurationError, RiskLimitImmutableError
 
 
@@ -434,6 +435,14 @@ class LiveConfig(FrozenModel):
 
     #: How long an activation stays valid before the gate must run again.
     activation_ttl_seconds: int = Field(3600, ge=60, le=21_600)
+    #: R22 — the oldest ``make verify`` evidence (``data/runtime/verify_passed.json``) that
+    #: ``tests_pass``, ``emergency_controls`` and ``restart_recovery`` accept, in hours.
+    #: POLICY DECISION PENDING (owner): 24 h is a conservative placeholder matching the
+    #: venue-validation bound, not a measured value. The evidence is separately bound to
+    #: the commit, files, configuration and dependencies, so this bound does not decide
+    #: *what* was tested — only how long ago an unchanged artifact may have been tested.
+    #: Capped at a week so no configuration can turn it into a formality.
+    verify_evidence_max_age_hours: float = Field(24.0, gt=0, le=168)
     #: Paper-trading evidence required before the gate's track-record check can pass.
     min_paper_days: float = Field(7.0, ge=0)
     min_paper_trades: int = Field(30, ge=0)
@@ -584,7 +593,7 @@ class Settings(BaseSettings):
     env: Environment = Environment.DEMO
     mode: TradingMode = TradingMode.PAPER
     app_name: str = "trader-ia"
-    version: str = "0.1.0"
+    version: str = __version__
 
     seed: int = Field(20260812, ge=0, description="root seed for every derived RNG stream")
     initial_capital: float = Field(100_000.0, gt=0)

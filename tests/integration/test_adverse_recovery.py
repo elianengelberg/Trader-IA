@@ -62,6 +62,12 @@ async def test_rejects_and_partials_over_hundreds_of_bars_keep_the_invariants_an
             DEFAULT_UNIVERSE, clock, RngRegistry(11), initial_capital=10_000.0,
         )
         runtime, engine, market, clock = build(persist=persister(db), engine=engine, clock=clock, market=market, max_holding_bars=12)
+        # Driven by hand (mission v2, CI): ``build`` starts the background loop with a zero poll
+        # interval, so while ``settle`` waited the loop spun and scheduled writes faster than the
+        # store committed them; the flush ran up to its 10 s and the test failed now and then
+        # (2 of 2 on c6339e3; 1 of 3 on this tree before this line; up to 9.6 s on the previous
+        # delivery). Production polls every 5 s (default) or 10 s (the API).
+        runtime._poll_interval = 3600.0
         await register_run(db, runtime.run_id)
         await runtime.start()
         _seed_every_bucket(runtime)

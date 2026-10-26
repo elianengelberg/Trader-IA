@@ -59,11 +59,34 @@ def evaluate() -> dict[str, Any]:
         checks[name] = {"status": status, "evidence": evidence}
 
     # ---- validated locally ------------------------------------------------
-    marker = _read(VERIFY_MARKER)
-    if marker and marker.get("passed"):
-        check("tests", "PASS", f"make verify passed at {marker.get('at')} on {str(marker.get('commit'))[:8]}")
-    else:
-        check("tests", "FAIL", "no passing verify record; run `make verify`")
+    # R22: the same examination as the gate's tests_pass — the evidence must be about this
+    # checkout's exact commit, files, configuration and dependencies, not just "passed".
+    try:
+        from tia.core.config import get_settings
+        from tia.live.verify_evidence import assess, current_identity
+
+        verify_settings = get_settings()
+        identity, identity_problem = current_identity(verify_settings)
+        try:
+            raw_marker: str | None = VERIFY_MARKER.read_text(encoding="utf-8")
+        except FileNotFoundError:
+            raw_marker = None
+        except (OSError, UnicodeDecodeError):
+            raw_marker = "\x00unreadable"
+        evidence, problem = assess(
+            raw_marker,
+            current=identity,
+            identity_problem=identity_problem,
+            now=datetime.now(UTC),
+            max_age_hours=verify_settings.live.verify_evidence_max_age_hours,
+            source=str(VERIFY_MARKER),
+        )
+        if evidence is not None:
+            check("tests", "PASS", evidence.summary())
+        else:
+            check("tests", "FAIL", f"{problem}; run `make verify`")
+    except Exception as exc:
+        check("tests", "FAIL", f"could not examine the verify evidence: {exc}"[:300])
 
     try:
         import sqlite3

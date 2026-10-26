@@ -65,7 +65,10 @@ async def test_without_max_hours_the_session_has_no_deadline(tmp_path: Path) -> 
         assert started.json()["session"]["deadline_at"] is None
         assert (await http.post("/api/live/stop")).status_code == 200
     rows = await _run_rows(tmp_path)
-    assert rows[0][1] in ("", None)
+    # R19: the notes document now also carries the stop's persistence record, so "no
+    # deadline" is read as such rather than as "empty notes".
+    assert decode_session_deadline(rows[0][1]) is None
+    assert "session_deadline" not in (rows[0][1] or "")
 
 
 async def test_max_hours_is_validated(tmp_path: Path) -> None:

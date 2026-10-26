@@ -13,7 +13,7 @@ listed with the reason, never charged at today's numbers and never charged as ze
 from __future__ import annotations
 
 import math
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 import pytest
@@ -333,10 +333,17 @@ async def test_a_missing_or_invalid_realised_rate_leaves_the_period_unreconciled
         await runtime.stop()
 
 
+#: Pinned start for the test below (mission v2): its premise is that the feed has no bar near
+#: the next settlement. Anchored to the wall clock, that failed when the position was held a
+#: bar or two before 16:00 UTC (wall clock near 21:42 UTC): the bar before the settlement was
+#: there and priced it. From 06:00 the runtime holds around 08:30, hours before 16:00.
+MID_PERIOD_SERIES = datetime(2026, 10, 21, 6, 0, tzinfo=UTC)
+
+
 async def test_a_missing_mark_at_the_settlement_leaves_the_period_unreconciled() -> None:
     """The feed has no bar near the settlement (plain fake: its bars end hours before):
     the realised rate alone does not price a settlement."""
-    runtime, execution, market = _build()
+    runtime, execution, market = _build(series_start=MID_PERIOD_SERIES)
     await runtime.start()
     try:
         await _held(runtime, execution, market)

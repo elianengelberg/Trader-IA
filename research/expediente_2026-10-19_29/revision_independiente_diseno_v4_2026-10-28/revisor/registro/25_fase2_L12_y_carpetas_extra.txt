@@ -1,0 +1,28 @@
+# fase 2 · L12 INTENTOS actual, carpetas fuera del manifiesto del autor · 2026-10-28T20:04:37Z
+## L12/INTENTOS_E3.jsonl (evento, id_intento recortado, reintento_de)
+{'utc': '2026-10-28T13:53:28.150761+00:00', 'evento': 'INICIADO', 'id_intento': '_registro_borrado_tras_EVALUADO/salida_2', 'reintento_de': None}
+{'utc': '2026-10-28T13:53:28.153265+00:00', 'evento': 'EVALUADO', 'id_intento': '_registro_borrado_tras_EVALUADO/salida_2'}
+## sha de los dos archivos de autorización de prueba de L12 (distintos => intento2 usó otra autorización)
+385fcd2bc2b63e2e
+e5329f82e48456ee
+## carpetas del autor fuera de MANIFEST: arnes_L25_rechazos, arnes_L15, tmp_patch
+--- arnes_L25_rechazos:
+      38  arnes_L25_rechazos/aut_prueba.txt
+      70  arnes_L25_rechazos/p0_sintetico.json
+      50  arnes_L25_rechazos/ventana_sintetica.json
+--- arnes_L15:
+       8  arnes_L15/real/sub/a.json
+--- tmp_patch:
+   52081  tmp_patch/v3_desde_diff_autor.py
+## contenido de los .txt/.json pequeños de arnes_L25_rechazos (si existen)
+--- revision_adversarial_E3H1H2_2026-10-28/arnes_L25_rechazos/aut_prueba.txt
+FRASE DE PRUEBA DEL REVISOR SIN VALOR
+
+--- revision_adversarial_E3H1H2_2026-10-28/arnes_L25_rechazos/p0_sintetico.json
+{"veredicto": "VALIDO", "inicio_H": "2023-05-15", "adenda": "prueba"}
+
+--- revision_adversarial_E3H1H2_2026-10-28/arnes_L25_rechazos/ventana_sintetica.json
+{"veredicto": "VALIDO", "inicio_H": "2023-05-15"}
+
+## ¿están estas carpetas en el MANIFEST del autor?
+0

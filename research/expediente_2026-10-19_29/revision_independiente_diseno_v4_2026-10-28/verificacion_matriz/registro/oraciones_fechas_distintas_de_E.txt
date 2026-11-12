@@ -1,0 +1,39 @@
+===== MCOUSDT E 2020-10-23 | titulo: Notice of Removal of Trading Pairs - 2020/10/23
+    ['2020-10-23', '2020-10-22', '2020-10-23'] >> Exchange Blockchain and crypto asset exchange Academy Blockchain and crypto education Broker Trading terminal solutions Charity Blockchain charity foundation Cloud Enterprise exchange solutions DEX Fast and secure decentralized di
+===== HCUSDT E 2020-11-10 | titulo: Notice of Removal of Trading Pairs - 2020/11/10
+    ['2020-11-10', '2020-11-09', '2020-11-10'] >> Leveraged Tokens Enjoy increased leverage without risk of liquidation Battle New Battle to Win, Long vs Short Derivatives Binance Earn One-stop Investment Solution Binance Pool Mine more rewards by connecting to the pool Binance V
+===== BKRWUSDT E 2021-02-19 | titulo: Notice of Removal of Trading Pairs - 2021-02-19
+    ['2021-02-19', '2021-02-18', '2021-02-19'] >> Leveraged Tokens Enjoy increased leverage without risk of liquidation Battle New Battle to Win, Long vs Short Derivatives Binance Earn One-stop Investment Solution Binance Pool Mine more rewards by connecting to the pool Binance V
+===== HNTUSDT E 2022-10-14 | titulo: Notice of Removal of Trading Pairs - 2022-10-14
+    ['2022-10-14', '2022-10-06', '2022-10-12', '2022-10-14'] >> Search New Cryptocurrency Listing Latest Binance News Latest Activities New Fiat Listings Delisting Wallet Maintenance Updates API Updates Crypto Airdrop Notice of Removal of Trading Pairs - 2022-10-14 2022-10-06 04:00 Fellow Bina
+===== FTTUSDT E 2022-11-15 | titulo: Notice of Removal of Trading Pairs - 2022-11-15
+    ['2022-11-15', '2022-11-14', '2022-11-15'] >> Search New Cryptocurrency Listing Latest Binance News Latest Activities New Fiat Listings Delisting Wallet Maintenance Updates API Updates Crypto Airdrop Notice of Removal of Trading Pairs - 2022-11-15 2022-11-14 04:55 Fellow Bina
+===== AUTOUSDT E 2023-04-18 | titulo: Binance Will Delist QLC, NEBL and AUTO on 2023-04-18
+    ['2023-04-17'] >> Binance Margin will delist AUTO/USDT, AUTO/BUSD and AUTO/BTC trading pairs from Isolated Margin at 2023-04-17 03:00 (UTC).
+    ['2023-04-17'] >> Please note that users will not be able to update their positions during the delisting process, and they are strongly advised to close their positions and/or transfer their assets from Margin Wallets to Spot Wallets prior to the c
+===== DOTDOWNUSDT E 2023-04-27 | titulo: Binance to Delist and Cease Redemption for TRXUP, TRXDOWN, DOTUP, DOTDOWN, LINKUP & LINKDOWN Leveraged Tokens 
+    ['2023-04-27', '2023-05-09', '2023-05-10', '2023-05-11'] >> 2023-04-27 06:45 Fellow Binancians, Binance will delist and cease redemption for the TRXUP, TRXDOWN, DOTUP, DOTDOWN, LINKUP and LINKDOWN leveraged tokens at the following timings: At 2023-05-09 06:00 (UTC) : TRXUP, TRXDOWN At 2023
+===== YFIIUSDT E 2023-08-22 | titulo: Binance Will Delist SNM, SRM and YFII on 2023-08-22
+    ['2023-11-22'] >> Delisted tokens may be converted into stablecoins on behalf of users after 2023-11-22 03:00 (UTC) .
+    ['2023-08-21'] >> Binance Simple Earn will delist the token(s) mentioned above at 2023-08-21 06:00 (UTC) .
+===== ARKUSDT E 2023-09-22 | titulo: Notice of Addition & Removal of Trading Pairs - 2023-09-22
+    ['2023-09-29'] >> At 2023-09-29 03:00 (UTC) , Binance will remove and cease trading on the ARK/BUSD, CREAM/BUSD, FTT/BUSD, GFT/BUSD, IQ/BUSD and BUSD/VAI spot trading pairs.
+    ['2023-09-29'] >> At 2023-09-29 03:00 (UTC) , Binance will terminate Spot Trading Bots services for the spot trading pairs that are to be delisted, where applicable.
+===== BTSUSDT E 2023-12-07 | titulo: Binance Will Delist BTS, PERL, TORN, WTC on 2023-12-07
+    ['2024-03-07'] >> Delisted tokens may be converted into stablecoins on behalf of users after 2024-03-07 03:00 (UTC) .
+    ['2023-12-05'] >> Binance Simple Earn will delist the token(s) mentioned above after 2023-12-05 06:00 (UTC) .
+===== ANTUSDT E 2024-02-20 | titulo: Binance Will Delist ANT, MULTI, VAI, XMR on 2024-02-20
+    ['2024-05-21'] >> Delisted tokens may be converted into stablecoins on behalf of users after 2024-05-21 03:00 (UTC) .
+    ['2024-02-19'] >> Binance Simple Earn will delist the token(s) mentioned above after 2024-02-19 03:00 (UTC) .
+    ['2024-02-14'] >> Binance Auto-Invest will delist the token(s) mentioned above after 2024-02-14 03:00 (UTC) .
+    ['2024-02-16'] >> Binance Margin will delist the ANT, MULTI and XMR cross margin and isolated margin pairs at 2024-02-16 06:00 (UTC) .
+===== BONDUSDT E 2024-07-22 | titulo: Binance Will Delist BOND, DOCK, MDX, POLS on 2024-07-22
+    ['2024-10-23'] >> Delisted tokens MAY be converted into stablecoins on behalf of users after 2024-10-23 03:00 (UTC) .
+    ['2024-07-19'] >> Binance Simple Earn will delist the token(s) mentioned above after 2024-07-19 03:00 (UTC) .
+    ['2024-07-15'] >> Binance Auto-Invest will delist the token(s) mentioned above after 2024-07-15 03:00 (UTC) .
+    ['2024-07-17'] >> Binance Margin will delist the BOND, DOCK, MDX, POLS cross margin and isolated margin pair(s) at 2024-07-17 06:00 (UTC) .
+===== KP3RUSDT E 2024-11-06 | titulo: Binance Will Delist IDRT, KP3R, OOKI, UNFI on 2024-11-06
+    ['2025-02-07'] >> Delisted tokens MAY be converted into stablecoins on behalf of users after 2025-02-07 03:00 (UTC) .
+    ['2024-11-04'] >> Binance Simple Earn will delist the token(s) mentioned above after 2024-11-04 03:00 (UTC) .
+    ['2024-10-31'] >> Binance Margin will delist KP3R, OOKI, UNFI from Cross and Isolated Margin at 2024-10-31 06:00 (UTC) .
+    ['2024-10-31'] >> Please note that users will not be able to update their positions during the delisting process, and they are strongly advised to close their positions and/or transfer their assets from Margin Wallets to Spot Wallets prior to the c

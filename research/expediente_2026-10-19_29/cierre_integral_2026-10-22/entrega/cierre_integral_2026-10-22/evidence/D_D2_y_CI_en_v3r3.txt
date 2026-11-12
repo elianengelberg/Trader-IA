@@ -1,0 +1,26 @@
+== Fase D · D2 y CI en la documentación de v3r3 (extracción limpia; solo lectura): 2026-10-22T22:22:37Z
+-- categorías en FALLAS_INTERMITENTES_HECHOS_E_INFERENCIAS.md:
+   ## Hechos comprobados                1
+   ## Inferencias (no verificadas)      1
+   Qué \*\*no\*\* guarda               1
+   sin nombre registrado                1
+   No se atribuye a R19                 1
+   hechos H1–H10 · inferencias I1–I4
+-- la falla de integración sin nombre sigue como evidencia incompleta (no atribuida):
+entrega_integracion_D1_D3_v3r3_202
+entrega_integracion_D1_D3_v3r3_202
+entrega_integracion_D1_D3_v3r3_202
+-- afirmaciones de atribución directa a R19 que queden (debería no haber):
+-- GitHub Actions no ejecutado:
+CAMBIOS_REVISION_r3.md:19:| C3 (fila local como si fuera la CI) | «Sin restricciones, como la CI de hoy», «Suites completas (comando de l
+COMPARACION_BASE_VS_INTEGRACION.md:4:> **GitHub Actions todavía no se ejecutó** sobre estos parches. Ninguna fila de esta tabla es una cor
+1978 (código 0, 391,7 s) | Sin regresiones |
+EVIDENCIA_EJECUCIONES.md:3:> **Todas las ejecuciones de esta tabla son locales.** Las que dicen «como la CI» reproducen localmente los com
+FALLAS_INTERMITENTES_HECHOS_E_INFERENCIAS.md:6:- **Todas las corridas son locales.** GitHub Actions todavía no se ejecutó sobre estos parc
+1978 en dos entornos locales (GitHub Actions todavía no se ejecutó), y la paridad con E1 da 0 diferencias no explicadas;
+INFORME_DECISION_FINAL.md:65:- **`ci.yml` nunca corrió.** No se afirma que la CI esté en verde.
+LEEME.md:6:> 3. **Corridas locales:** las comparaciones rotuladas «como la CI» son reproducciones locales; GitHub Actions todavía no se e
+-- afirmaciones de CI verde (debería no haber):
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_integral_2026-10-22/extraccion_v3r3/entrega_integracion_D1_D3_v3r3_2026-10-22/PLAN_INTEGRACION_Y_REVERSION.md:83:4. **Protección de la rama base:** exigir PR y CI verde.
+-- categoría «resultados no reproducidos»: v3r3 no la tiene como sección propia; lo único no reproducido entonces era R19, que figura como inferencia (I1–I4) y como «pendiente» en la matriz de riesgos.
+   Desde esta misión hay evidencia nueva y separada (RESULTADOS_R19.md); v3r3 no se modifica retroactivamente.

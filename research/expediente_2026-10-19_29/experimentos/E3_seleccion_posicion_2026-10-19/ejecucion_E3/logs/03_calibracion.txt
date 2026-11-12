@@ -1,0 +1,12 @@
+G1 13 {'rechazo_005': 0.07, 'rechazo_0025': 0.045, 'dentro_banda_005': False, 'dentro_banda_0025': False, 'sobre_rechaza': True, 'potencia_mu30_005': 0.689, 'potencia_mu30_0025': 0.583} 2s
+G2 13 {'rechazo_005': 0.053, 'rechazo_0025': 0.028, 'dentro_banda_005': True, 'dentro_banda_0025': True, 'sobre_rechaza': False, 'potencia_mu30_005': 0.551, 'potencia_mu30_0025': 0.441} 5s
+G3 13 {'rechazo_005': 0.057, 'rechazo_0025': 0.034, 'dentro_banda_005': True, 'dentro_banda_0025': True, 'sobre_rechaza': False, 'potencia_mu30_005': 0.719, 'potencia_mu30_0025': 0.616} 8s
+G4 13 {'rechazo_005': 0.042, 'rechazo_0025': 0.022, 'dentro_banda_005': True, 'dentro_banda_0025': True, 'sobre_rechaza': False, 'potencia_mu30_005': 0.677, 'potencia_mu30_0025': 0.561} 10s
+G5 13 {'rechazo_005': 0.051, 'rechazo_0025': 0.021, 'dentro_banda_005': True, 'dentro_banda_0025': True, 'sobre_rechaza': False, 'potencia_mu30_005': 0.648, 'potencia_mu30_0025': 0.502} 12s
+H1 4 {'rechazo_005': 0.044, 'rechazo_0025': 0.022, 'dentro_banda_005': True, 'dentro_banda_0025': True, 'sobre_rechaza': False}
+G1 26 {'rechazo_005': 0.062, 'rechazo_0025': 0.039, 'sobre_rechaza': True}
+G2 26 {'rechazo_005': 0.051, 'rechazo_0025': 0.022, 'sobre_rechaza': False}
+G3 26 {'rechazo_005': 0.063, 'rechazo_0025': 0.032, 'sobre_rechaza': False}
+G4 26 {'rechazo_005': 0.061, 'rechazo_0025': 0.03, 'sobre_rechaza': False}
+G5 26 {'rechazo_005': 0.061, 'rechazo_0025': 0.03, 'sobre_rechaza': False}
+salida 0

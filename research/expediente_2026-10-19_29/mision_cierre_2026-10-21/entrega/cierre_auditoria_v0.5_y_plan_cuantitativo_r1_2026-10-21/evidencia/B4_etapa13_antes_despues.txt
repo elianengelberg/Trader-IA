@@ -1,0 +1,26 @@
+-- ANTES (etapa 13 de v0.5)
+sin_cambios                          esperado NO_DETECTA obtenido NO_DETECTA coincide
+byte_en_uso_unico                    esperado DETECTA    obtenido DETECTA    coincide
+pyc_nuevo                            esperado DETECTA    obtenido DETECTA    coincide
+archivo_borrado                      esperado DETECTA    obtenido DETECTA    coincide
+archivo_renombrado                   esperado DETECTA    obtenido DETECTA    coincide
+oculto_nuevo                         esperado DETECTA    obtenido DETECTA    coincide
+enlace_simbolico_nuevo               esperado DETECTA    obtenido NO_DETECTA << DIFERENCIA
+directorio_vacio_nuevo               esperado DETECTA    obtenido NO_DETECTA << DIFERENCIA
+archivo_reemplazado_por_enlace       esperado DETECTA    obtenido NO_DETECTA << DIFERENCIA
+permisos_cambiados                   esperado NO_DETECTA obtenido NO_DETECTA coincide
+nuevo_en_evidencia                   esperado NO_DETECTA obtenido NO_DETECTA coincide
+reescritura_coherente_del_manifiesto esperado NO_DETECTA obtenido NO_DETECTA coincide
+-- DESPUÉS (etapa 13 corregida, propuesta v0.5.1)
+sin_cambios                          esperado NO_DETECTA obtenido NO_DETECTA coincide
+byte_en_uso_unico                    esperado DETECTA    obtenido DETECTA    coincide
+pyc_nuevo                            esperado DETECTA    obtenido DETECTA    coincide
+archivo_borrado                      esperado DETECTA    obtenido DETECTA    coincide
+archivo_renombrado                   esperado DETECTA    obtenido DETECTA    coincide
+oculto_nuevo                         esperado DETECTA    obtenido DETECTA    coincide
+enlace_simbolico_nuevo               esperado DETECTA    obtenido DETECTA    coincide
+directorio_vacio_nuevo               esperado DETECTA    obtenido DETECTA    coincide
+archivo_reemplazado_por_enlace       esperado DETECTA    obtenido DETECTA    coincide
+permisos_cambiados                   esperado NO_DETECTA obtenido NO_DETECTA coincide
+nuevo_en_evidencia                   esperado NO_DETECTA obtenido NO_DETECTA coincide
+reescritura_coherente_del_manifiesto esperado NO_DETECTA obtenido NO_DETECTA coincide

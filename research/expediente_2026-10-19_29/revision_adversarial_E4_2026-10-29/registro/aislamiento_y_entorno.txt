@@ -1,0 +1,10 @@
+UTC 2026-10-29T03:05:16Z
+serie 757 npz 6506fb03c211def710abe61a2493799000b80996c63000fcfc98da624cbaba79 experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3/resultados/calidad/series
+serie 757 npz 6506fb03c211def710abe61a2493799000b80996c63000fcfc98da624cbaba79 paquete_revision_independiente_E3H1H2_2026-10-28_DATOS/evidencia/experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3/resultados/calidad/series
+montajes sobre el scratchpad: 0
+PROTEGIDOS.tsv 34a5bf7326dd28bb00c8e2ec831cc1cc4a0c0bd6ed6c79916a7c04ab6031fc9f · ejecutar_aislado.sh cb4b1426484ffedf522247a7aab715107da93c836b1054e7ef6b429ef5c1aa56
+manifiesto ejecutiva: 39/39
+guarda_rutas v1 = v0 probada (9/9): SÍ
+el código v1 no menciona las series ni .npz: 0 archivos (fuera de la guarda)
+venv: 3.11.17 numpy 2.4.6
+git claude/algo-trading-simulation-platform-ngf7xo 72ffae5d2698440c8f1afaff12e07bd8adde66fb porcelain=0

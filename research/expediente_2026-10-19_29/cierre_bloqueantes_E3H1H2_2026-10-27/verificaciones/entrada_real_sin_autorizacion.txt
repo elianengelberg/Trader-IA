@@ -1,0 +1,1 @@
+autorización ausente o incompleta: {'FRASE': False, 'orquestador_v3': False, 'entradas_congeladas': False, 'decision_reapertura_y_adenda_R': False, 'decision_D1_lectura_literal': False}. No se lee ningún precio.

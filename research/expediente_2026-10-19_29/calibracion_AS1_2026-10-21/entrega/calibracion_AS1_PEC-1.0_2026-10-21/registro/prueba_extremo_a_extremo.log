@@ -1,0 +1,6 @@
+1. IDENTICO: orquestador == script congelado secuencial (911beb8f1f94cbd3…)
+2. IDENTICO tras borrar una celda y reanudar (inicio: 23 celdas ya hechas, 1 pendientes, 4 procesos)
+3. se niega a sobrescribir: ABORTADO: /tmp/claude-0/-home-…
+4. verificador sobre la copia de prueba: sin fallas
+5. el verificador detecta un valor p alterado: ['recuento distinto del main() congelado en bootstrap_t_l20 C3 80']
+6. sin __pycache__

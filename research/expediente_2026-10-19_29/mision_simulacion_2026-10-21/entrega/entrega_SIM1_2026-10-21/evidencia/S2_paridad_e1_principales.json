@@ -1,0 +1,72 @@
+{
+ "motor": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/mision_simulacion_2026-10-21/trader-ia/packages/tia/src/tia/backtest/engine.py",
+ "sha256_engine": "85965ec56298519ca107d2bb61f301fe22a02584b5fc98917d147d81e036da88",
+ "registrado": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E1_bot_datos_reales_2026-10-19/resultados/real/operaciones_por_configuracion.json",
+ "sha256_registrado": "cc52fbf8f229e15fabdda1dc47a497ef245f234559644be982df4cfefbfe1c86",
+ "comparaciones": {
+  "P1": {
+   "identico": true,
+   "n_nuevo": 629,
+   "n_registrado": 629,
+   "sha256_nuevo": "132336d3948088585556b6b61289854fef29a633a6106375fe31266a9a18c2dd",
+   "sha256_registrado": "132336d3948088585556b6b61289854fef29a633a6106375fe31266a9a18c2dd",
+   "primer_indice_distinto": null,
+   "higiene": {
+    "entry_remainders_cancelled_on_exit": 4,
+    "stale_entry_remainders_cancelled_flat": 0,
+    "exits_done_with_position_left": 0,
+    "bars_with_leg_and_no_stop": 0
+   },
+   "advertencias": [],
+   "segundos": 508.9
+  },
+  "P2": {
+   "identico": true,
+   "n_nuevo": 139,
+   "n_registrado": 139,
+   "sha256_nuevo": "41dde2dcd23281d1a114ea90eff2c820bbd1cfbbe4e977dbc8b9113c5f227d72",
+   "sha256_registrado": "41dde2dcd23281d1a114ea90eff2c820bbd1cfbbe4e977dbc8b9113c5f227d72",
+   "primer_indice_distinto": null,
+   "higiene": {
+    "entry_remainders_cancelled_on_exit": 0,
+    "stale_entry_remainders_cancelled_flat": 0,
+    "exits_done_with_position_left": 0,
+    "bars_with_leg_and_no_stop": 0
+   },
+   "advertencias": [],
+   "segundos": 501.8
+  },
+  "P3": {
+   "identico": true,
+   "n_nuevo": 185,
+   "n_registrado": 185,
+   "sha256_nuevo": "40538bf460641141ab528a28c3de6a46c45e083b94528c0561c1fb7482d958d4",
+   "sha256_registrado": "40538bf460641141ab528a28c3de6a46c45e083b94528c0561c1fb7482d958d4",
+   "primer_indice_distinto": null,
+   "higiene": {
+    "entry_remainders_cancelled_on_exit": 2,
+    "stale_entry_remainders_cancelled_flat": 0,
+    "exits_done_with_position_left": 0,
+    "bars_with_leg_and_no_stop": 0
+   },
+   "advertencias": [],
+   "segundos": 495.5
+  },
+  "S1": {
+   "identico": true,
+   "n_nuevo": 795,
+   "n_registrado": 795,
+   "sha256_nuevo": "4a4a1db01a63c344231cf9171867deeadf7e3093d23244f41daef1056aa76fa1",
+   "sha256_registrado": "4a4a1db01a63c344231cf9171867deeadf7e3093d23244f41daef1056aa76fa1",
+   "primer_indice_distinto": null,
+   "higiene": {
+    "entry_remainders_cancelled_on_exit": 3,
+    "stale_entry_remainders_cancelled_flat": 0,
+    "exits_done_with_position_left": 0,
+    "bars_with_leg_and_no_stop": 0
+   },
+   "advertencias": [],
+   "segundos": 476.6
+  }
+ }
+}

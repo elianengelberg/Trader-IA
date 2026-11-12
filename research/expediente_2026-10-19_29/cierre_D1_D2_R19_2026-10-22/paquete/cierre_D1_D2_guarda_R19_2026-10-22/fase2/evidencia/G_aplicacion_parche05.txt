@@ -1,0 +1,8 @@
+== Aplicación del parche 05 (9fc829ad012534d86645ad9e715bc77a7abee69791514c8187bc51c7ceb8ba47) sobre clones nuevos: 2026-10-22T19:53:03Z
+05 aplica sobre base: código 0
+05 aplica sobre solo02v3: código 0
+05 aplica sobre obligatoria: código 0
+05 aplica sobre completa: código 0
+aplicado sobre obligatoria: archivo = guarda final
+revertido: la obligatoria vuelve a ser la registrada, byte a byte
+05 no toca ningún archivo existente: 1 archivo, 'new file mode' 1

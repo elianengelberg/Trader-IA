@@ -1,0 +1,26 @@
+{
+ "BNBDOWNUSDT": {
+  "X": "alternativa_delisting",
+  "Y": "lector_L2"
+ },
+ "BNBUPUSDT": {
+  "X": "lector_L2",
+  "Y": "alternativa_delisting"
+ },
+ "BTCDOWNUSDT": {
+  "X": "alternativa_delisting",
+  "Y": "lector_L2"
+ },
+ "BTCUPUSDT": {
+  "X": "lector_L2",
+  "Y": "alternativa_delisting"
+ },
+ "ETHDOWNUSDT": {
+  "X": "lector_L2",
+  "Y": "alternativa_delisting"
+ },
+ "ETHUPUSDT": {
+  "X": "alternativa_delisting",
+  "Y": "lector_L2"
+ }
+}

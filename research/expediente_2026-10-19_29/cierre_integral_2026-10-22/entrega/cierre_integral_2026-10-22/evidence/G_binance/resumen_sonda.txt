@@ -1,0 +1,23 @@
+sonda_binance_stop.py sha256 c3dd8fcfaf6faf97223fdf56e77e0cbe8eb26c36233132270b7788200ea9587e · 2026-10-22T23:09:46Z
+== árbol arboles/base
+ "supports_stop_orders": true,
+  "resultado": "ExecutionError",
+  "mensaje": "[EXECUTION_ERROR] order type stop is not supported by this adapter; it is not in the documented spot order-type set | {'order_type': 'stop'}",
+  "pedidos_al_transporte": 0
+  "pedidos_al_transporte": 1
+  "live.py:3450": "order_type=OrderType.STOP,",
+  "live.py:3457": "order_type=OrderType.STOP,",
+  "live.py:3465": "except Exception as exc:",
+  "live.py:3466": "_log.warning(\"protective_stop_failed\", error=str(exc)[:200])"
+ "DEFECTO_REPRODUCIDO": true
+== árbol final
+ "supports_stop_orders": true,
+  "resultado": "ExecutionError",
+  "mensaje": "[EXECUTION_ERROR] order type stop is not supported by this adapter; it is not in the documented spot order-type set | {'order_type': 'stop'}",
+  "pedidos_al_transporte": 0
+  "pedidos_al_transporte": 1
+  "live.py:3450": "order_type=OrderType.STOP,",
+  "live.py:3457": "order_type=OrderType.STOP,",
+  "live.py:3465": "except Exception as exc:",
+  "live.py:3466": "_log.warning(\"protective_stop_failed\", error=str(exc)[:200])"
+ "DEFECTO_REPRODUCIDO": true

@@ -1,0 +1,8 @@
+.                                                                        [100%]
+==================================== PASSES ====================================
+________ test_partial_fills_and_fees_rebuild_identically_however_often _________
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:27:32 [info     ] schema_created                 component=persistence.database dialect=sqlite version=7
+=========================== short test summary info ============================
+PASSED tests/integration/test_account_restore.py::test_partial_fills_and_fees_rebuild_identically_however_often
+1 passed in 1.75s

@@ -1,0 +1,108 @@
+F...FFFFFFFFFFFFFFFF.F...                                                [100%]
+=================================== FAILURES ===================================
+E   tia.core.errors.ExecutionError: [EXECUTION_ERROR] order type stop is not supported by this adapter; it is not in the documented spot order-type set | {'order_type': 'stop'}
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/antes_fix/packages/tia/src/tia/data/providers/binance_live.py:300: tia.core.errors.ExecutionError: [EXECUTION_ERROR] order type stop is not supported by this adapter; it is not in the documented spot order-type set | {'order_type': 'stop'}
+E   AssertionError: Regex pattern did not match.
+      Expected regex: 'stop price'
+      Actual message: "[EXECUTION_ERROR] order type stop is not supported by this adapter; it is not in the documented spot order-type set | {'order_type': 'stop'}"
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/antes_fix/tests/unit/test_binance_protective_stop.py:101: AssertionError: Regex pattern did not match.
+E   AssertionError: Regex pattern did not match.
+      Expected regex: 'stop price'
+      Actual message: "[EXECUTION_ERROR] order type stop is not supported by this adapter; it is not in the documented spot order-type set | {'order_type': 'stop'}"
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/antes_fix/tests/unit/test_binance_protective_stop.py:101: AssertionError: Regex pattern did not match.
+E   tia.core.errors.ExecutionError: [EXECUTION_ERROR] order type stop is not supported by this adapter; it is not in the documented spot order-type set | {'order_type': 'stop'}
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/antes_fix/packages/tia/src/tia/data/providers/binance_live.py:300: tia.core.errors.ExecutionError: [EXECUTION_ERROR] order type stop is not supported by this adapter; it is not in the documented spot order-type set | {'order_type': 'stop'}
+E   tia.core.errors.ExecutionError: [EXECUTION_ERROR] order type stop is not supported by this adapter; it is not in the documented spot order-type set | {'order_type': 'stop'}
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/antes_fix/packages/tia/src/tia/data/providers/binance_live.py:300: tia.core.errors.ExecutionError: [EXECUTION_ERROR] order type stop is not supported by this adapter; it is not in the documented spot order-type set | {'order_type': 'stop'}
+E   tia.core.errors.ExecutionError: [EXECUTION_ERROR] order type stop is not supported by this adapter; it is not in the documented spot order-type set | {'order_type': 'stop'}
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/antes_fix/packages/tia/src/tia/data/providers/binance_live.py:300: tia.core.errors.ExecutionError: [EXECUTION_ERROR] order type stop is not supported by this adapter; it is not in the documented spot order-type set | {'order_type': 'stop'}
+E   tia.core.errors.ExecutionError: [EXECUTION_ERROR] order type stop is not supported by this adapter; it is not in the documented spot order-type set | {'order_type': 'stop'}
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/antes_fix/packages/tia/src/tia/data/providers/binance_live.py:300: tia.core.errors.ExecutionError: [EXECUTION_ERROR] order type stop is not supported by this adapter; it is not in the documented spot order-type set | {'order_type': 'stop'}
+E   AssertionError: assert (Order(order_id='987654', client_order_id='coid_XC6H7MHP8GGYDY84PDT12MW1', intent_id='', signal_id='', symbol='BTC-USD'...at=datetime.datetime(2026, 8, 13, 12, 0, tzinfo=datetime.timezone.utc), fills=[], correlation_id='', reduce_only=False) is not None and <OrderType.MARKET: 'market'> is <OrderType.STOP: 'stop'>)
+     +  where <OrderType.MARKET: 'market'> = Order(order_id='987654', client_order_id='coid_XC6H7MHP8GGYDY84PDT12MW1', intent_id='', signal_id='', symbol='BTC-USD'...at=datetime.datetime(2026, 8, 13, 12, 0, tzinfo=datetime.timezone.utc), fills=[], correlation_id='', reduce_only=False).order_type
+     +  and   <OrderType.STOP: 'stop'> = OrderType.STOP
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 18:44:46 [info     ] order_resolved_present         client_order_id=coid_XC6H7MHP8GGYDY84PDT12MW1 component=execution.binance detail='the venue holds this order; adopted into the local mirror, never resent' state=acknowledged
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/antes_fix/tests/unit/test_binance_protective_stop.py:140: AssertionError: assert (Order(order_id='987654', client_order_id='coid_XC6H7MHP8GGYDY84PDT12MW1', intent_id='', signal_id='', symbol='BTC-USD'...at=datetime.datetime(2026, 8, 13, 12, 0, tzinfo=datetime.timezone.utc), fills=[], correlation_id='', reduce_only=False) is not None and <OrderType.MARKET: 'market'> is <OrderType.STOP: 'stop'>)
+E   AssertionError: assert not True
+     +  where True = GateCheck(name=<CheckName.VENUE_VALIDATION: 'venue_validation'>, passed=True, detail='schema valid, fingerprint intact, validator v2, BTCUSDT on testnet', remedy='', reported=True).passed
+     +    where GateCheck(name=<CheckName.VENUE_VALIDATION: 'venue_validation'>, passed=True, detail='schema valid, fingerprint intact, validator v2, BTCUSDT on testnet', remedy='', reported=True) = _venue_validation(BinanceValidationRecord(validator_version=2, generated_at=datetime.datetime(2026, 10, 25, 18, 44, 46, 378041, tzinfo=d...='BTCUSDT', git_commit='abc', fingerprint='00000000000000000000000000000000', facts={'duplicate_order_rejected': True}), '')
+     +      where BinanceValidationRecord(validator_version=2, generated_at=datetime.datetime(2026, 10, 25, 18, 44, 46, 378041, tzinfo=d...='BTCUSDT', git_commit='abc', fingerprint='00000000000000000000000000000000', facts={'duplicate_order_rejected': True}) = _record()
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/antes_fix/tests/unit/test_binance_protective_stop.py:155: AssertionError: assert not True
+E   AssertionError: assert [Event(what='...lse, stops=0)] == []
+      
+      Left contains 6 more items, first extra item: Event(what='bar boundary', held=0.008011, protected=False, stops=0)
+      Use -v to get more diff
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 18:44:46 [error    ] safe_mode_entered              component=risk.engine reason='max drawdown 39.92% >= 10.00%'
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/antes_fix/tests/integration/test_live_position_protection.py:222: AssertionError: assert [Event(what='...lse, stops=0)] == []
+E   AssertionError: raise: the stop is back before the next bar
+    assert 0 == 1
+     +  where 0 = len([])
+     +    where [] = working_stops()
+     +      where working_stops = <tests.integration.test_live_position_protection.ProtectionVenue object at 0x7fa2bed4bad0>.working_stops
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 18:44:47 [warning  ] close_position_failed          component=runtime.live error='[EXECUTION_ERROR] close refused by the venue (scripted)' reason='time stop'
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/antes_fix/tests/integration/test_live_position_protection.py:242: AssertionError: raise: the stop is back before the next bar
+E   assert False is True
+     +  where False = protected()
+     +    where protected = <tests.integration.test_live_position_protection.ProtectionVenue object at 0x7fa2beee9d50>.protected
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/antes_fix/tests/integration/test_live_position_protection.py:257: assert False is True
+E   assert 0 == 1
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/antes_fix/tests/integration/test_live_position_protection.py:277: assert 0 == 1
+E   assert 0 == 1
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/antes_fix/tests/integration/test_live_position_protection.py:310: assert 0 == 1
+E   assert 0 == 1
+     +  where 0 = <tests.integration.test_live_position_protection.ProtectionVenue object at 0x7fa2bec50110>.stop_submissions
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/antes_fix/tests/integration/test_live_position_protection.py:327: assert 0 == 1
+E   assert 0 == 1
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/antes_fix/tests/integration/test_live_position_protection.py:346: assert 0 == 1
+E   AssertionError: never two stops because an answer went missing
+    assert 2 == 1
+     +  where 2 = <tests.integration.test_live_position_protection.ProtectionVenue object at 0x7fa2bf6eb510>.stop_submissions
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 18:44:47 [warning  ] protective_stop_failed         component=runtime.live error='[RECONCILIATION_ERROR] stop submission timed out (scripted)'
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/antes_fix/tests/integration/test_live_position_protection.py:364: AssertionError: never two stops because an answer went missing
+E   AssertionError: ["bar 258: -0.095673 held uncovered; sent on bar 257: ['market/close REJECTED']", "bar 415: 0.105538 held uncovered; s...n bar 414: ['market/close REJECTED']", "bar 638: -0.112078 held uncovered; sent on bar 637: ['market/close REJECTED']"]
+    assert not ["bar 258: -0.095673 held uncovered; sent on bar 257: ['market/close REJECTED']", "bar 415: 0.105538 held uncovered; s...n bar 414: ['market/close REJECTED']", "bar 638: -0.112078 held uncovered; sent on bar 637: ['market/close REJECTED']"]
+     +  where ["bar 258: -0.095673 held uncovered; sent on bar 257: ['market/close REJECTED']", "bar 415: 0.105538 held uncovered; s...n bar 414: ['market/close REJECTED']", "bar 638: -0.112078 held uncovered; sent on bar 637: ['market/close REJECTED']"] = uncovered_by_the_engine(Record(sent=[Sent(bar=171, order_type=<OrderType.MARKET: 'market'>, reduce_only=False, rejected=False), Sent(bar=172, ...ar=698, held=0.075971, covered=True), Look(bar=699, held=0.075971, covered=True)], closes_rejected=3, stops_rejected=0))
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 18:44:51 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=100233.73 run_id=bt_H80S9VC6RBQQ04WW0W9CWRQH trades=4
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/antes_fix/tests/unit/test_backtest_protection_window.py:185: AssertionError: ["bar 258: -0.095673 held uncovered; sent on bar 257: ['market/close REJECTED']", "bar 415: 0.105538 held uncovered; s...n bar 414: ['market/close REJECTED']", "bar 638: -0.112078 held uncovered; sent on bar 637: ['market/close REJECTED']"]
+==================================== PASSES ====================================
+___________ test_a_rejected_time_stop_close_leaves_no_bar_uncovered ____________
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 18:44:49 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=99891.51 run_id=bt_90Y0N4NDY53PBN4J4JSTMZ7A trades=13
+________ test_closes_rejected_twice_with_random_rejections_and_partials ________
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 18:44:54 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=99992.04 run_id=bt_XMC69Q4P2GGRT2K7EPFSCANH trades=36
+____________ test_immediate_or_cancel_closes_leave_no_bar_uncovered ____________
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 18:44:56 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=99932.07 run_id=bt_Z0FFVDZT5X94B55CA0X01XZR trades=65
+=========================== short test summary info ============================
+PASSED tests/unit/test_binance_protective_stop.py::test_a_stop_without_a_positive_level_is_not_an_intent[None]
+PASSED tests/unit/test_binance_protective_stop.py::test_a_stop_without_a_positive_level_is_not_an_intent[0.0]
+PASSED tests/unit/test_binance_protective_stop.py::test_a_stop_without_a_positive_level_is_not_an_intent[-1.0]
+PASSED tests/unit/test_backtest_protection_window.py::test_a_rejected_time_stop_close_leaves_no_bar_uncovered
+PASSED tests/unit/test_backtest_protection_window.py::test_closes_rejected_twice_with_random_rejections_and_partials
+PASSED tests/unit/test_backtest_protection_window.py::test_immediate_or_cancel_closes_leave_no_bar_uncovered
+PASSED tests/unit/test_backtest_protection_window.py::test_the_check_catches_an_uncovered_bar_and_excuses_only_a_rejected_stop
+FAILED tests/unit/test_binance_protective_stop.py::test_a_stop_is_sent_as_stop_loss_with_a_stop_price_and_nothing_else
+FAILED tests/unit/test_binance_protective_stop.py::test_a_malformed_stop_is_refused_before_any_request[48000.0-47900.0]
+FAILED tests/unit/test_binance_protective_stop.py::test_a_malformed_stop_is_refused_before_any_request[None-None]
+FAILED tests/unit/test_binance_protective_stop.py::test_a_stop_the_venue_refuses_is_an_error_not_an_order[-1013-Filter failure: PRICE_FILTER]
+FAILED tests/unit/test_binance_protective_stop.py::test_a_stop_the_venue_refuses_is_an_error_not_an_order[-2010-Account has insufficient balance for requested action.]
+FAILED tests/unit/test_binance_protective_stop.py::test_a_stop_the_venue_refuses_is_an_error_not_an_order[-1106-Parameter 'timeInForce' sent when not required.]
+FAILED tests/unit/test_binance_protective_stop.py::test_a_stop_whose_answer_is_lost_is_unknown_not_absent
+FAILED tests/unit/test_binance_protective_stop.py::test_a_stop_adopted_from_the_venue_is_read_as_a_stop
+FAILED tests/unit/test_binance_protective_stop.py::test_live_activation_needs_a_venue_that_accepted_the_protective_stop
+FAILED tests/integration/test_live_position_protection.py::test_every_bar_boundary_finds_the_position_protected_while_closes_are_rejected
+FAILED tests/integration/test_live_position_protection.py::test_a_close_that_raises_or_times_out_puts_the_stop_back_in_the_same_call
+FAILED tests/integration/test_live_position_protection.py::test_an_entry_that_fills_at_once_is_protected_before_the_cycle_ends
+FAILED tests/integration/test_live_position_protection.py::test_a_venue_that_refuses_every_stop_blocks_entries_halts_and_keeps_asking
+FAILED tests/integration/test_live_position_protection.py::test_a_stop_rejected_as_an_order_is_handled_like_a_refused_one
+FAILED tests/integration/test_live_position_protection.py::test_a_stop_whose_answer_was_lost_but_rests_at_the_venue_is_adopted_not_duplicated
+FAILED tests/integration/test_live_position_protection.py::test_a_stop_the_venue_says_never_arrived_is_sent_again_on_the_next_bar
+FAILED tests/integration/test_live_position_protection.py::test_no_second_stop_while_the_venue_cannot_say_whether_the_first_arrived
+FAILED tests/unit/test_backtest_protection_window.py::test_a_rejected_reversal_close_leaves_no_bar_uncovered
+18 failed, 7 passed in 11.81s

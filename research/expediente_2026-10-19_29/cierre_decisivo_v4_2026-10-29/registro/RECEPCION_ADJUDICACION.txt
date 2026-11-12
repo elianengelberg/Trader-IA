@@ -1,0 +1,4 @@
+Adjudicación recibida
+UTC: 2026-10-29T01:02:21.597Z
+c874b5e98cc29738b9b853eb1df814b46175f3076db3ed0cce40ffc0d2415e5a  segunda_lectura/adjudicacion/adjudicacion.json
+351602a1f0a6183f86e9f800a729019f39d6ef23275e46adb145833b642f54a6  segunda_lectura/adjudicacion/archivos_abiertos.txt

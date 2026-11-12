@@ -1,0 +1,146 @@
+"""CI gate: tie a green run to the exact code, tree and environment it ran on.
+
+A green badge says nothing about *what* was green. This gate writes ``provenance.json``
+next to the JUnit report — commit, tree, Python, the resolved packages and the hash of
+every input that decides the run — and fails the job unless the report shows tests that
+actually ran with no failure and no error. When the engine claims ``engine_version``
+1.1.0 or later it also requires the version-contract guard
+(``tests/integration/test_engine_version_contract.py``) to have run and passed: a guard
+that was skipped, deselected or deleted is not a guard. The version is read from the
+checked-out engine source, never imported, so a gate run that cannot import the engine
+fails closed instead of reading "no claim".
+
+Usage: python scripts/ci_gate.py <evidence_dir> <junit.xml>
+"""
+
+from __future__ import annotations
+
+import ast
+import hashlib
+import json
+import os
+import platform
+import shutil
+import subprocess
+import sys
+import xml.etree.ElementTree as ET
+from pathlib import Path
+
+GUARD = "tests.integration.test_engine_version_contract"
+GUARD_TESTS = 7
+CLAIMS_ORDER_HYGIENE = (1, 1, 0)
+INPUTS = (".github/workflows/ci.yml", "constraints/ci-py311.txt", "pyproject.toml")
+ENGINE_SOURCE = Path("packages/tia/src/tia/backtest/engine.py")
+
+
+def _git(*args: str) -> str:
+    git = shutil.which("git")
+    if git is None:
+        raise SystemExit("ci_gate: git is not on PATH, so the run cannot be tied to a commit")
+    return subprocess.run(  # noqa: S603 - fixed argv, resolved executable
+        [git, *args], capture_output=True, text=True, check=True,
+    ).stdout.strip()
+
+
+def _sha256(path: Path) -> str | None:
+    return hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else None
+
+
+def _report(junit: Path) -> dict[str, object]:
+    # The report this job's own pytest just wrote, not input from outside the run.
+    cases = list(ET.parse(junit).getroot().iter("testcase"))  # noqa: S314
+    def outcome(case: ET.Element) -> str:
+        for tag in ("failure", "error", "skipped"):
+            if case.find(tag) is not None:
+                return tag
+        return "passed"
+    outcomes = [(case.get("classname", ""), outcome(case)) for case in cases]
+    guard = [o for name, o in outcomes if name == GUARD]
+    return {
+        "tests": len(outcomes),
+        **{k: sum(1 for _, o in outcomes if o == k) for k in ("passed", "failure", "error", "skipped")},
+        "guard_ran": len(guard),
+        "guard_passed": sum(1 for o in guard if o == "passed"),
+    }
+
+
+def _engine_version() -> str | None:
+    """``ENGINE_VERSION`` as the checked-out engine declares it, read from the source and not
+    imported: an import that fails (another interpreter, a missing package) must not read as
+    an engine that claims nothing, which would switch the guard requirement off. ``None``
+    only when the source declares no version at all (an engine from before provenance)."""
+    if not ENGINE_SOURCE.is_file():
+        raise ValueError(f"{ENGINE_SOURCE} not found: run the gate from the repository root")
+    for node in ast.parse(ENGINE_SOURCE.read_text()).body:
+        if isinstance(node, ast.Assign):
+            names, value = {t.id for t in node.targets if isinstance(t, ast.Name)}, node.value
+        elif isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
+            names, value = {node.target.id}, node.value
+        else:
+            continue
+        if "ENGINE_VERSION" in names:
+            if isinstance(value, ast.Constant) and isinstance(value.value, str):
+                return value.value
+            raise ValueError("ENGINE_VERSION is not a plain string literal: the gate cannot read it")
+    return None
+
+
+def main(evidence: Path, junit: Path) -> int:
+    evidence.mkdir(parents=True, exist_ok=True)
+    freeze = subprocess.run([sys.executable, "-m", "pip", "freeze", "--exclude-editable"],
+                            capture_output=True, text=True, check=True).stdout
+    freeze_sorted = "".join(sorted(freeze.splitlines(keepends=True)))
+    (evidence / "pip-freeze.txt").write_text(freeze_sorted)
+    report = _report(junit)
+    problems = []
+    if not report["tests"]:
+        problems.append("the JUnit report holds no test")
+    if report["failure"] or report["error"]:
+        problems.append(f"{report['failure']} failed and {report['error']} errored")
+    version, unreadable = None, None
+    try:
+        version = _engine_version()
+    except ValueError as exc:
+        unreadable = str(exc)
+    try:
+        parts = tuple(int(p) for p in version.split(".")) if version is not None else None
+        claims = parts is not None and parts + (0,) * (3 - len(parts)) >= CLAIMS_ORDER_HYGIENE
+    except ValueError:
+        claims, unreadable = False, f"engine_version {version!r} is not a dotted number"
+    if unreadable:
+        # Fail closed: a version the gate cannot read is treated as a claim.
+        claims, problems = True, [*problems, unreadable]
+    if claims and (report["guard_ran"] != GUARD_TESTS or report["guard_passed"] != GUARD_TESTS):
+        problems.append(f"engine claims {version} but the version guard ran {report['guard_ran']} and passed "
+                        f"{report['guard_passed']} of {GUARD_TESTS}")
+    provenance = {
+        "commit": _git("rev-parse", "HEAD"),
+        "tree": _git("rev-parse", "HEAD^{tree}"),
+        "github_sha": os.environ.get("GITHUB_SHA"),
+        "github_ref": os.environ.get("GITHUB_REF"),
+        "run": os.environ.get("GITHUB_RUN_ID"),
+        "python": platform.python_version(),
+        "pip_freeze_sha256": hashlib.sha256(freeze_sorted.encode()).hexdigest(),
+        "inputs_sha256": {name: _sha256(Path(name)) for name in INPUTS},
+        "junit_sha256": _sha256(junit),
+        "engine_version": version,
+        "report": report,
+        "verdict": "fail" if problems else "pass",
+        "problems": problems,
+    }
+    (evidence / "provenance.json").write_text(json.dumps(provenance, indent=1) + "\n")
+    lines = [f"commit `{provenance['commit']}` · tree `{provenance['tree']}` · Python {provenance['python']}",
+             f"tests {report['tests']} · passed {report['passed']} · failed {report['failure']} · errors {report['error']} "
+             f"· skipped {report['skipped']} · version guard {report['guard_passed']}/{report['guard_ran']}",
+             f"engine_version {version} · pip freeze `{provenance['pip_freeze_sha256'][:16]}…`",
+             "**gate: " + ("FAIL — " + "; ".join(problems) if problems else "pass") + "**"]
+    summary = os.environ.get("GITHUB_STEP_SUMMARY")
+    if summary:
+        with Path(summary).open("a") as out:
+            out.write("\n\n".join(lines) + "\n")
+    print("\n".join(lines))
+    return 1 if problems else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(Path(sys.argv[1]), Path(sys.argv[2])))

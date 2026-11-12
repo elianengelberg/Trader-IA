@@ -1,0 +1,82 @@
+# comando: <python> -I -B prototipos/p2_senales_hilos.py <variante> <señal>, matriz; se captura el código de salida (−N = muerto por señal N)
+# fecha: 2026-10-28T19:46:09Z
+## /usr/bin/python3 sin_hilo SIGINT
+{"variante": "sin_hilo", "senal": "SIGINT", "pid": 1498, "hilos_del_proceso": 1, "interrumpido_en_seccion_critica": false, "seccion_critica_completada": true, "pendientes_al_final": [2], "diferidas_por_handler": []}
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_independiente_diseno_v4_2026-10-28/revisor/prototipos/p2_senales_hilos.py", line 62, in <module>
+    main(sys.argv[1], sys.argv[2])
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_independiente_diseno_v4_2026-10-28/revisor/prototipos/p2_senales_hilos.py", line 56, in main
+    signal.pthread_sigmask(signal.SIG_UNBLOCK, {sig})  # ahora sí puede llegar (y matar o interrumpir)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/signal.py", line 71, in pthread_sigmask
+    sigs_set = _signal.pthread_sigmask(how, mask)
+KeyboardInterrupt
+exit=130
+## /usr/bin/python3 sin_hilo SIGTERM
+{"variante": "sin_hilo", "senal": "SIGTERM", "pid": 1500, "hilos_del_proceso": 1, "interrumpido_en_seccion_critica": false, "seccion_critica_completada": true, "pendientes_al_final": [15], "diferidas_por_handler": []}
+exit=143
+## /usr/bin/python3 hilo_previo SIGINT
+{"variante": "hilo_previo", "senal": "SIGINT", "pid": 1502, "hilos_del_proceso": 2, "interrumpido_en_seccion_critica": true, "seccion_critica_completada": false, "diferidas_por_handler": []}
+{"despues_de_desbloquear": "sigo vivo"}
+exit=0
+## /usr/bin/python3 hilo_previo SIGTERM
+exit=143
+## /usr/bin/python3 handler SIGINT
+{"variante": "handler", "senal": "SIGINT", "pid": 1508, "hilos_del_proceso": 1, "interrumpido_en_seccion_critica": false, "seccion_critica_completada": true, "pendientes_al_final": [], "diferidas_por_handler": [2]}
+{"despues_de_desbloquear": "sigo vivo"}
+exit=0
+## /usr/bin/python3 handler SIGTERM
+{"variante": "handler", "senal": "SIGTERM", "pid": 1510, "hilos_del_proceso": 1, "interrumpido_en_seccion_critica": false, "seccion_critica_completada": true, "pendientes_al_final": [], "diferidas_por_handler": [15]}
+{"despues_de_desbloquear": "sigo vivo"}
+exit=0
+## ../../integracion_controlada_2026-10-25/venv/bin/python sin_hilo SIGINT
+{"variante": "sin_hilo", "senal": "SIGINT", "pid": 1512, "hilos_del_proceso": 1, "interrumpido_en_seccion_critica": false, "seccion_critica_completada": true, "pendientes_al_final": [2], "diferidas_por_handler": []}
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_independiente_diseno_v4_2026-10-28/revisor/prototipos/p2_senales_hilos.py", line 62, in <module>
+    main(sys.argv[1], sys.argv[2])
+  File "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_independiente_diseno_v4_2026-10-28/revisor/prototipos/p2_senales_hilos.py", line 56, in main
+    signal.pthread_sigmask(signal.SIG_UNBLOCK, {sig})  # ahora sí puede llegar (y matar o interrumpir)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/signal.py", line 71, in pthread_sigmask
+    sigs_set = _signal.pthread_sigmask(how, mask)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+exit=130
+## ../../integracion_controlada_2026-10-25/venv/bin/python sin_hilo SIGTERM
+{"variante": "sin_hilo", "senal": "SIGTERM", "pid": 1514, "hilos_del_proceso": 1, "interrumpido_en_seccion_critica": false, "seccion_critica_completada": true, "pendientes_al_final": [15], "diferidas_por_handler": []}
+exit=143
+## ../../integracion_controlada_2026-10-25/venv/bin/python hilo_previo SIGINT
+{"variante": "hilo_previo", "senal": "SIGINT", "pid": 1516, "hilos_del_proceso": 2, "interrumpido_en_seccion_critica": true, "seccion_critica_completada": false, "diferidas_por_handler": []}
+{"despues_de_desbloquear": "sigo vivo"}
+exit=0
+## ../../integracion_controlada_2026-10-25/venv/bin/python hilo_previo SIGTERM
+exit=143
+## ../../integracion_controlada_2026-10-25/venv/bin/python handler SIGINT
+{"variante": "handler", "senal": "SIGINT", "pid": 1522, "hilos_del_proceso": 1, "interrumpido_en_seccion_critica": false, "seccion_critica_completada": true, "pendientes_al_final": [], "diferidas_por_handler": [2]}
+{"despues_de_desbloquear": "sigo vivo"}
+exit=0
+## ../../integracion_controlada_2026-10-25/venv/bin/python handler SIGTERM
+{"variante": "handler", "senal": "SIGTERM", "pid": 1524, "hilos_del_proceso": 1, "interrumpido_en_seccion_critica": false, "seccion_critica_completada": true, "pendientes_al_final": [], "diferidas_por_handler": [15]}
+{"despues_de_desbloquear": "sigo vivo"}
+exit=0
+## ../../integracion_controlada_2026-10-25/venv/bin/python numpy SIGINT
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_independiente_diseno_v4_2026-10-28/revisor/prototipos/p2_senales_hilos.py", line 62, in <module>
+    main(sys.argv[1], sys.argv[2])
+  File "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_independiente_diseno_v4_2026-10-28/revisor/prototipos/p2_senales_hilos.py", line 53, in main
+    print(json.dumps(res), flush=True)
+          ^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/json/__init__.py", line 231, in dumps
+    return _default_encoder.encode(obj)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/json/encoder.py", line 200, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/json/encoder.py", line 258, in iterencode
+    return _iterencode(o, 0)
+           ^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+exit=130
+## ../../integracion_controlada_2026-10-25/venv/bin/python numpy SIGTERM
+exit=143

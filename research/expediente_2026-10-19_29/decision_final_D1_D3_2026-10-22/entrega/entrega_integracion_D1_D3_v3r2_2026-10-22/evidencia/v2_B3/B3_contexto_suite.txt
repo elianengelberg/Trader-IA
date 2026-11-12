@@ -1,0 +1,5 @@
+== 2026-10-22T13:21:27Z contexto de la prueba de persistencia (base, venv_A)
+aislada              pruebas=1 · la de persistencia: pasa en 24.08 s · ciclos de fondo (toda la sesión)=511275 manuales=500 · escrituras=42794 · reconciliaciones=42647 · espera de vaciado máx=7.385 s
+modulo               pruebas=2 · la de persistencia: falla en 23.84 s · ciclos de fondo (toda la sesión)=597066 manuales=169 · escrituras=49923 · reconciliaciones=49768 · espera de vaciado máx=10.007 s
+integracion_entera   pruebas=396 · la de persistencia: falla en 17.74 s · ciclos de fondo (toda la sesión)=1535778 manuales=6267 · escrituras=128421 · reconciliaciones=128003 · espera de vaciado máx=10.001 s
+tests/e2e + la prueba pruebas=9 · la de persistencia: pasa en 27.66 s · ciclos de fondo (toda la sesión)=571923 manuales=500 · escrituras=47848 · reconciliaciones=47701 · espera de vaciado máx=9.425 s

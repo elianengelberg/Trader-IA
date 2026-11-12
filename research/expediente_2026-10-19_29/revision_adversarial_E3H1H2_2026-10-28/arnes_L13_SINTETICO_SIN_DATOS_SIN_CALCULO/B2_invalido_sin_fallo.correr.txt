@@ -1,0 +1,2 @@
+{"escenario": "B2_invalido_sin_fallo", "termino": "FinTerminal: INVALIDO: validez previa (v3 §10). Ver /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/arnes_L13_SINTETICO_SIN_DATOS_SIN_CALCULO/B2_invalido_sin_fallo/salida_1/RESULTADO_E3.json"}
+rc_correr=0

@@ -1,0 +1,34 @@
+== RA-L estado FINAL del repositorio protegido (solo lectura): 2026-10-25T17:54:15Z
+sha256 .git/index: 37490035d6706739fd7c9add42ad62c4e0c9260089e8e2e77a486f55e3bdcd1b
+HEAD: 72ffae5d2698440c8f1afaff12e07bd8adde66fb · rama: claude/algo-trading-simulation-platform-ngf7xo · árbol 44850cfcbf53c3f8223d38a92031f4402f8ffb32
+refs:
+   refs/heads/claude/algo-trading-simulation-platform-ngf7xo 72ffae5d2698440c8f1afaff12e07bd8adde66fb
+   refs/remotes/origin/claude/algo-trading-simulation-platform-ngf7xo 72ffae5d2698440c8f1afaff12e07bd8adde66fb
+tags: 0 · stash: 0
+índice (ls-files -s) sha256: 07e0c86bb1c04ba22975582d17d1a729c500ceafe51b1615b1149fca4afac7e2
+modificados/no versionados: 0
+ignorados:
+   !! research/entregas_hcarry/hcarry_next_final.zip
+   !! research/entregas_hcarry/hcarry_next_historico_2026-10-16.zip
+   !! research/entregas_hcarry/hcarry_next_snapshot1.zip
+   !! research/entregas_hcarry/hcarry_next_snapshot2.zip
+   !! research/hcarry_next/.venv/
+   !! research/hcarry_next/datos/binance_vision/futures/
+   !! research/hcarry_next/datos/binance_vision/spot/
+   !! research/hcarry_next/datos/otros_simbolos/ETHUSDT/futures/
+   !! research/hcarry_next/datos/otros_simbolos/SOLUSDT/futures/
+   !! research/hcarry_next/experimentos/historico/causal/externos/aave_v3_usdt_ethereum.json
+   !! research/hcarry_next/experimentos/historico/post_test/externos/DTB3.csv
+   !! research/tendencia_btc/datos/BTCUSDT/spot/
+   !! research/tendencia_btc/datos/ETHUSDT/spot/
+   !! research/tendencia_btc/datos_multi/nasdaq/
+   !! research/tendencia_btc/datos_multi/yahoo/
+   !! research/tendencia_btc/datos_papel/BTCUSDT/spot/
+   !! research/tendencia_btc/datos_papel/ETHUSDT/spot/
+   !! research/tendencia_btc/datos_papel/funding_BTCUSDT/futures/
+reflog: 6d55854cfe1e43f71e488c6c841dbfa9fa60b6d1ff00f8b679705367ccb21138 · entradas 13
+.ruff_cache: ausente · archivos más nuevos que el inicio de la revisión (fuera de .git): 0
+-- comparación con el registro inicial A2 de esta revisión:
+IDÉNTICO al inicio (HEAD, rama, árbol, refs, tags, stash, remotos, índice, cambios, ignorados, reflog)
+sha256 .git/index igual al inicial (37490035…): sí
+procesos postgres/pytest residuales: 0 · enlaces /tmp/tia_ra_*: 0

@@ -1,0 +1,13 @@
+== 2026-10-22T00:29:22Z · prueba: tests/integration/test_risk_state_persistence.py::test_five_restored_entries_for_the_symbol_refuse_the_sixth_after_the_restart
+-- venv_1(dateutil 2.9.0.post0) · árbol integracion_parche_D1_D3_2026-10-21/base · dateutil 2.9.0.post0
+E   assert 1 == 0
+FAILED tests/integration/test_risk_state_persistence.py::test_five_restored_entries_for_the_symbol_refuse_the_sixth_after_the_restart
+-- venv_1(dateutil 2.9.0.post0) · árbol trabajo/base · dateutil 2.9.0.post0
+E   assert 1 == 0
+FAILED tests/integration/test_risk_state_persistence.py::test_five_restored_entries_for_the_symbol_refuse_the_sixth_after_the_restart
+-- venv_2(dateutil 3.0.0) · árbol integracion_parche_D1_D3_2026-10-21/base · dateutil 3.0.0
+E   assert 1 == 0
+FAILED tests/integration/test_risk_state_persistence.py::test_five_restored_entries_for_the_symbol_refuse_the_sixth_after_the_restart
+-- venv_2(dateutil 3.0.0) · árbol trabajo/base · dateutil 3.0.0
+E   assert 1 == 0
+FAILED tests/integration/test_risk_state_persistence.py::test_five_restored_entries_for_the_symbol_refuse_the_sixth_after_the_restart

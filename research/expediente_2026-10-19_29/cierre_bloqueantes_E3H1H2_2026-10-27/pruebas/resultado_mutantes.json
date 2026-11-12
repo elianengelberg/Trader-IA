@@ -1,0 +1,122 @@
+{
+ "C7_ventana_no_fijada": {
+  "sobrevive": false,
+  "pruebas_que_lo_detectan": [
+   "test_ventana_B_con_manifiesto_y_hash_ajustados_igual_se_rechaza",
+   "test_ventana_B_se_rechaza_antes_de_crear_la_salida"
+  ],
+  "resumen_pytest": "2 failed, 48 passed, 1 skipped in 28.10s"
+ },
+ "C8_manifiesto_vacio_o_incompleto": {
+  "sobrevive": false,
+  "pruebas_que_lo_detectan": [
+   "test_manifiesto_invalido_se_rechaza_sin_crear_salida[falta_una]",
+   "test_manifiesto_invalido_se_rechaza_sin_crear_salida[vacio]"
+  ],
+  "resumen_pytest": "2 failed, 48 passed, 1 skipped in 16.10s"
+ },
+ "C8_mapeos_desde_el_manifiesto": {
+  "sobrevive": false,
+  "pruebas_que_lo_detectan": [
+   "test_mapeos_solo_desde_la_entrada_verificada"
+  ],
+  "resumen_pytest": "1 failed, 49 passed, 1 skipped in 16.36s"
+ },
+ "C9_relectura_de_disco": {
+  "sobrevive": false,
+  "pruebas_que_lo_detectan": [
+   "test_alterar_insumos_despues_de_verificar_no_llega_al_panel",
+   "test_cada_insumo_se_lee_una_sola_vez"
+  ],
+  "resumen_pytest": "2 failed, 48 passed, 1 skipped in 16.38s"
+ },
+ "C9_acepta_enlaces": {
+  "sobrevive": false,
+  "pruebas_que_lo_detectan": [
+   "test_enlace_simbolico_en_las_series_se_rechaza"
+  ],
+  "resumen_pytest": "1 failed, 49 passed, 1 skipped in 15.33s"
+ },
+ "C10_import_desde_disco": {
+  "sobrevive": false,
+  "pruebas_que_lo_detectan": [
+   "test_pyc_envenenado_no_se_ejecuta"
+  ],
+  "resumen_pytest": "1 failed, 49 passed, 1 skipped in 17.31s"
+ },
+ "C11_sin_estado_ERROR": {
+  "sobrevive": false,
+  "pruebas_que_lo_detectan": [
+   "test_control_el_camino_real_llega_al_panel",
+   "test_excepcion_en_cada_etapa_deja_ERROR_explicito[calculo-ejecutar]",
+   "test_excepcion_en_cada_etapa_deja_ERROR_explicito[panel-panel_real]",
+   "test_excepcion_en_cada_etapa_deja_ERROR_explicito[validez_previa-validez_previa]",
+   "test_fallo_al_escribir_el_resultado_es_ERROR_valido",
+   "test_reintento_tras_ERROR_con_estadisticos_se_rechaza",
+   "test_reintento_tras_ERROR_previo_a_estadisticos",
+   "test_systemexit_e_interrupcion_dentro_del_calculo_tambien_son_ERROR"
+  ],
+  "resumen_pytest": "8 failed, 42 passed, 1 skipped in 14.76s"
+ },
+ "C11_sin_registro_de_intentos": {
+  "sobrevive": false,
+  "pruebas_que_lo_detectan": [
+   "test_EVALUADO_de_punta_a_punta_y_sin_segunda_ejecucion",
+   "test_intento_sin_estado_terminal_bloquea",
+   "test_reintento_tras_ERROR_con_estadisticos_se_rechaza",
+   "test_reintento_tras_ERROR_previo_a_estadisticos"
+  ],
+  "resumen_pytest": "4 failed, 46 passed, 1 skipped in 18.13s"
+ },
+ "C11_sin_bloqueo": {
+  "sobrevive": false,
+  "pruebas_que_lo_detectan": [
+   "test_ejecucion_concurrente_bloqueada"
+  ],
+  "resumen_pytest": "1 failed, 49 passed, 1 skipped in 14.65s"
+ },
+ "C12_acepta_duplicados": {
+  "sobrevive": false,
+  "pruebas_que_lo_detectan": [
+   "test_mapeo_de_regla_2_duplicado_se_rechaza"
+  ],
+  "resumen_pytest": "1 failed, 49 passed, 1 skipped in 14.25s"
+ },
+ "C12_acepta_huecos_largos": {
+  "sobrevive": false,
+  "pruebas_que_lo_detectan": [
+   "test_regla_1_con_hueco_de_30_dias_o_mas_se_rechaza"
+  ],
+  "resumen_pytest": "1 failed, 49 passed, 1 skipped in 14.92s"
+ },
+ "C12_sin_control_de_marcas": {
+  "sobrevive": false,
+  "pruebas_que_lo_detectan": [
+   "test_fusionar_marcas_distintas_se_rechaza",
+   "test_retirar_la_base_de_un_apalancado_se_rechaza"
+  ],
+  "resumen_pytest": "2 failed, 48 passed, 1 skipped in 14.03s"
+ },
+ "C12_1R_sin_dividir": {
+  "sobrevive": false,
+  "pruebas_que_lo_detectan": [
+   "test_regla_1R_divide_la_serie_y_el_tramo_nuevo_es_listado_nuevo"
+  ],
+  "resumen_pytest": "1 failed, 49 passed, 1 skipped in 14.12s"
+ },
+ "C12_mapeos_despues_de_crear_la_salida": {
+  "sobrevive": false,
+  "pruebas_que_lo_detectan": [
+   "test_mapeo_imposible_se_detecta_antes_de_crear_la_salida"
+  ],
+  "resumen_pytest": "1 failed, 49 passed, 1 skipped in 14.17s"
+ },
+ "C13_sin_frases_de_decision": {
+  "sobrevive": false,
+  "pruebas_que_lo_detectan": [
+   "test_autorizacion_incompleta_se_rechaza[3]",
+   "test_autorizacion_incompleta_se_rechaza[4]"
+  ],
+  "resumen_pytest": "2 failed, 48 passed, 1 skipped in 14.13s"
+ }
+}

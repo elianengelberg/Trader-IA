@@ -1,0 +1,16 @@
+{
+ "arbol": "dev",
+ "paso": "leer",
+ "SCHEMA_VERSION_del_codigo": 8,
+ "backtests": [
+  {
+   "run_id": "bt_KG4QXHNMS",
+   "engine_version": "1.2.0",
+   "trades": 9
+  }
+ ],
+ "incidentes": [
+  "halt_new_orders"
+ ],
+ "ensure_schema": 8
+}

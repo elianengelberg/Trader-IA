@@ -1,0 +1,83 @@
+{
+ "aviso": "DATOS SINTÉTICOS generados por este script; no son datos históricos",
+ "U1_rangos": true,
+ "U2_lectura": {
+  "casos": {
+   "1d_ms": true,
+   "1d_us": true,
+   "1d_encabezado": true,
+   "1d_dia_equivocado": true,
+   "1d_dos_filas": true,
+   "1h_hora0": true,
+   "1h_us_encabezado": true,
+   "1h_sin_hora0": true,
+   "1h_25_filas": true
+  },
+  "ok": true
+ },
+ "U3_exclusiones": {
+  "estable_nueva_excluida": true,
+  "envoltorio_excluido": true,
+  "casi_uno_volatil_incluido": true,
+  "n": 32,
+  "ok": true
+ },
+ "U4_fuga": {
+  "limite_t_rechazado": true,
+  "t_mas_2_y_cierre_t_mas_1_no_influyen": true,
+  "entrada_t_mas_1_influye": true,
+  "ok": true
+ },
+ "U5_limites": {
+  "b1": 2.9625880427275924,
+  "b2": 1.9685956406374197,
+  "omitida_b2": 1.9599639845400536,
+  "ok": true
+ },
+ "U6_alfa_y_cobertura": {
+  "nulo_normal_iid": {
+   "EN_CONTRA_SIGNO_OPUESTO": 0.0125,
+   "INSUFICIENTE": 0.55175,
+   "REFUTADA_IC_MINIMO": 0.4105,
+   "RESPALDADA_INFORMACION": 0.02525,
+   "corte_en_mirada_1": 0.04225,
+   "sims": 4000
+  },
+  "nulo_t5_ar01": {
+   "EN_CONTRA_SIGNO_OPUESTO": 0.019,
+   "INSUFICIENTE": 0.584,
+   "REFUTADA_IC_MINIMO": 0.368,
+   "RESPALDADA_INFORMACION": 0.029,
+   "corte_en_mirada_1": 0.04125,
+   "sims": 4000
+  },
+  "ic_igual_sesoi_t5_ar01": {
+   "INSUFICIENTE": 0.58825,
+   "REFUTADA_IC_MINIMO": 0.02875,
+   "RESPALDADA_INFORMACION": 0.383,
+   "corte_en_mirada_1": 0.036,
+   "sims": 4000
+  },
+  "ok": true,
+  "criterio": "tasas ≤ 0,025 + 3·EE de Monte Carlo = 0.0324 (RESPALDADA y EN_CONTRA bajo el nulo; REFUTADA con IC = SESOI)"
+ },
+ "U7_potencia": {
+  "INSUFICIENTE": 0.049,
+  "RESPALDADA_INFORMACION": 0.951,
+  "corte_en_mirada_1": 0.2915,
+  "sims": 2000,
+  "analitica": {
+   "corte_en_mirada_1": 0.29124192545673033,
+   "potencia_total": 0.9466630104171269
+  },
+  "ok": true
+ },
+ "U8_congelacion": {
+  "valida": "ACEPTADA",
+  "hash_alterado": "RECHAZADA: CONGELACION no coincide en codigo/evaluar.py: no s",
+  "py_sin_congelar": "RECHAZADA: CONGELACION incompleta (código sin congelar: ['sec",
+  "prerregistro_alterado": "RECHAZADA: CONGELACION no coincide en PRERREGISTRO.md: no se ",
+  "ok": true
+ },
+ "todas_ok": true
+}

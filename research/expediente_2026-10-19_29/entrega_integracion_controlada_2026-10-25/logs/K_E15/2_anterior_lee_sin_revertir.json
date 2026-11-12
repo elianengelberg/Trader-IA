@@ -1,0 +1,17 @@
+{
+ "arbol": "ABC",
+ "paso": "leer",
+ "SCHEMA_VERSION_del_codigo": 7,
+ "backtests": [
+  {
+   "run_id": "bt_KG4QXHNMS",
+   "engine_version": "1.2.0",
+   "trades": 9
+  }
+ ],
+ "incidentes": [
+  "entries_blocked:position_unverified",
+  "halt_new_orders"
+ ],
+ "ensure_schema": "RECHAZA: ConfigurationError: [CONFIGURATION_ERROR] database schema version does not match this build; there is no automated migration path (see persistence/database.py) | {'database_version"
+}

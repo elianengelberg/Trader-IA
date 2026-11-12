@@ -1,0 +1,15 @@
+== R24 · PostgreSQL desechable, segundo intento (el primero falló por ruta de socket > 107 bytes; queda en trabajo/pg): 2026-10-22T22:59:48Z
+waiting for server to start.... done
+server started
+socket: /tmp/tia_r24_cfc0aa8e -> /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_integral_2026-10-22/trabajo/pg2/sock · URL async: postgresql+asyncpg://postgres@/postgres?host=/tmp/tia_r24_cfc0aa8e
+enlace: /tmp/tia_r24_cfc0aa8e -> /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_integral_2026-10-22/trabajo/pg2/sock
+-- aislamiento:
+   sockets TCP en escucha (postgres): 0
+srwxrwxrwx 1 root root    0 Oct 22 22:59 .s.PGSQL.5432
+-rw------- 1 root root  171 Oct 22 22:59 .s.PGSQL.5432.lock
+PostgreSQL 16.15 (Ubuntu 16.15-0ubuntu0.24.04.1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0, 64-bit
+
+/tmp/tia_r24_cfc0aa8e
+on
+read committed
+-- cluster del sistema (16/main): 16  main    5432 down   postgres /var/lib/postgresql/16/main /var/log/postgresql/postgresql-16-main.log

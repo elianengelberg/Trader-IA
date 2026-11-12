@@ -1,0 +1,293 @@
+FFF.F.                                                                   [100%]
+=================================== FAILURES ===================================
+_ test_an_order_that_may_have_reached_the_venue_is_unknown_not_unsent[ReadError] _
+
+request = <Request('POST', 'https://api.binance.test/api/v3/order?symbol=BTCUSDT&side=BUY&type=MARKET&quantity=0.01&newClientOrd...L&timestamp=1786622400000&recvWindow=5000&signature=ad40c9f9a9da7fa85ced03879317db3de21a67e6f271bee97b62c35fb4147be5')>
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        attempts.append(request.method)
+        if only is None or request.method == only:
+            exc.request = request
+>           raise exc
+E           httpx.ReadError: connection reset by peer
+
+tests/unit/test_binance_ambiguous_transport.py:37: ReadError
+
+The above exception was the direct cause of the following exception:
+
+exc = ReadError('connection reset by peer')
+
+    @pytest.mark.parametrize("exc", AFTER_SENDING, ids=lambda e: type(e).__name__)
+    async def test_an_order_that_may_have_reached_the_venue_is_unknown_not_unsent(exc: httpx.HTTPError) -> None:
+        attempts: list[str] = []
+        with pytest.raises(ReconciliationError, match="UNKNOWN"):
+>           await provider(failing(exc, attempts)).submit_order(intent())
+
+tests/unit/test_binance_ambiguous_transport.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+packages/tia/src/tia/data/providers/binance_live.py:361: in submit_order
+    payload = await self._request("POST", _ORDER_PATH, params)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <tia.data.providers.binance_live.BinanceExecutionProvider object at 0x7f5dd2848c90>
+method = 'POST', path = '/api/v3/order'
+params = {'symbol': 'BTCUSDT', 'side': 'BUY', 'type': 'MARKET', 'quantity': '0.01', ...}
+
+    async def _request(self, method: str, path: str, params: dict[str, Any]) -> Any:
+        """Send a signed request, mapping failures onto the distinction that matters.
+    
+        Two failure classes, treated completely differently:
+    
+        * The venue answered and said no — a rejection. The order did not happen and it is
+          safe to say so.
+        * The venue did not answer — a timeout or a transport error. The order's fate is
+          **unknown**, and the only safe response is to say that too. This is why
+          ``httpx.TimeoutException`` is not folded in with the rest.
+        """
+        await self._budget.acquire(path)
+        signed = self._signer.sign(params)
+        client = await self._http()
+        url = f"{path}?{signed.query_string}"
+    
+        try:
+            response = await client.request(method, url, headers=signed.headers)
+        except httpx.TimeoutException as exc:
+            raise ReconciliationError(
+                f"{method} {path} timed out; the order state at the venue is UNKNOWN. "
+                "Not retrying: a retry after a timeout is how one signal becomes two "
+                "positions. Reconcile against the venue before submitting anything else.",
+                path=path,
+                key=self._signer.key_fingerprint,
+            ) from exc
+        except httpx.HTTPError as exc:
+>           raise ProviderUnavailableError(
+                f"binance transport error on {method} {path}: {exc}",
+                provider=self.name,
+            ) from exc
+E           tia.core.errors.ProviderUnavailableError: [PROVIDER_UNAVAILABLE] binance transport error on POST /api/v3/order: connection reset by peer | {'provider': 'binance-spot'}
+
+packages/tia/src/tia/data/providers/binance_live.py:228: ProviderUnavailableError
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 19:54:38 [info     ] binance_submit                 client_order_id=coid_QETBBD6CRBHEMMH2QTE8GHXR component=execution.binance key=key:d5c821f8 quantity=0.01 side=buy symbol=BTC-USD
+_ test_an_order_that_may_have_reached_the_venue_is_unknown_not_unsent[RemoteProtocolError] _
+
+request = <Request('POST', 'https://api.binance.test/api/v3/order?symbol=BTCUSDT&side=BUY&type=MARKET&quantity=0.01&newClientOrd...L&timestamp=1786622400000&recvWindow=5000&signature=ad40c9f9a9da7fa85ced03879317db3de21a67e6f271bee97b62c35fb4147be5')>
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        attempts.append(request.method)
+        if only is None or request.method == only:
+            exc.request = request
+>           raise exc
+E           httpx.RemoteProtocolError: server disconnected without sending a response
+
+tests/unit/test_binance_ambiguous_transport.py:37: RemoteProtocolError
+
+The above exception was the direct cause of the following exception:
+
+exc = RemoteProtocolError('server disconnected without sending a response')
+
+    @pytest.mark.parametrize("exc", AFTER_SENDING, ids=lambda e: type(e).__name__)
+    async def test_an_order_that_may_have_reached_the_venue_is_unknown_not_unsent(exc: httpx.HTTPError) -> None:
+        attempts: list[str] = []
+        with pytest.raises(ReconciliationError, match="UNKNOWN"):
+>           await provider(failing(exc, attempts)).submit_order(intent())
+
+tests/unit/test_binance_ambiguous_transport.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+packages/tia/src/tia/data/providers/binance_live.py:361: in submit_order
+    payload = await self._request("POST", _ORDER_PATH, params)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <tia.data.providers.binance_live.BinanceExecutionProvider object at 0x7f5dd27ac9d0>
+method = 'POST', path = '/api/v3/order'
+params = {'symbol': 'BTCUSDT', 'side': 'BUY', 'type': 'MARKET', 'quantity': '0.01', ...}
+
+    async def _request(self, method: str, path: str, params: dict[str, Any]) -> Any:
+        """Send a signed request, mapping failures onto the distinction that matters.
+    
+        Two failure classes, treated completely differently:
+    
+        * The venue answered and said no — a rejection. The order did not happen and it is
+          safe to say so.
+        * The venue did not answer — a timeout or a transport error. The order's fate is
+          **unknown**, and the only safe response is to say that too. This is why
+          ``httpx.TimeoutException`` is not folded in with the rest.
+        """
+        await self._budget.acquire(path)
+        signed = self._signer.sign(params)
+        client = await self._http()
+        url = f"{path}?{signed.query_string}"
+    
+        try:
+            response = await client.request(method, url, headers=signed.headers)
+        except httpx.TimeoutException as exc:
+            raise ReconciliationError(
+                f"{method} {path} timed out; the order state at the venue is UNKNOWN. "
+                "Not retrying: a retry after a timeout is how one signal becomes two "
+                "positions. Reconcile against the venue before submitting anything else.",
+                path=path,
+                key=self._signer.key_fingerprint,
+            ) from exc
+        except httpx.HTTPError as exc:
+>           raise ProviderUnavailableError(
+                f"binance transport error on {method} {path}: {exc}",
+                provider=self.name,
+            ) from exc
+E           tia.core.errors.ProviderUnavailableError: [PROVIDER_UNAVAILABLE] binance transport error on POST /api/v3/order: server disconnected without sending a response | {'provider': 'binance-spot'}
+
+packages/tia/src/tia/data/providers/binance_live.py:228: ProviderUnavailableError
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 19:54:38 [info     ] binance_submit                 client_order_id=coid_QETBBD6CRBHEMMH2QTE8GHXR component=execution.binance key=key:d5c821f8 quantity=0.01 side=buy symbol=BTC-USD
+_ test_an_order_that_may_have_reached_the_venue_is_unknown_not_unsent[WriteError] _
+
+request = <Request('POST', 'https://api.binance.test/api/v3/order?symbol=BTCUSDT&side=BUY&type=MARKET&quantity=0.01&newClientOrd...L&timestamp=1786622400000&recvWindow=5000&signature=ad40c9f9a9da7fa85ced03879317db3de21a67e6f271bee97b62c35fb4147be5')>
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        attempts.append(request.method)
+        if only is None or request.method == only:
+            exc.request = request
+>           raise exc
+E           httpx.WriteError: broken pipe
+
+tests/unit/test_binance_ambiguous_transport.py:37: WriteError
+
+The above exception was the direct cause of the following exception:
+
+exc = WriteError('broken pipe')
+
+    @pytest.mark.parametrize("exc", AFTER_SENDING, ids=lambda e: type(e).__name__)
+    async def test_an_order_that_may_have_reached_the_venue_is_unknown_not_unsent(exc: httpx.HTTPError) -> None:
+        attempts: list[str] = []
+        with pytest.raises(ReconciliationError, match="UNKNOWN"):
+>           await provider(failing(exc, attempts)).submit_order(intent())
+
+tests/unit/test_binance_ambiguous_transport.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+packages/tia/src/tia/data/providers/binance_live.py:361: in submit_order
+    payload = await self._request("POST", _ORDER_PATH, params)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <tia.data.providers.binance_live.BinanceExecutionProvider object at 0x7f5dd2721c50>
+method = 'POST', path = '/api/v3/order'
+params = {'symbol': 'BTCUSDT', 'side': 'BUY', 'type': 'MARKET', 'quantity': '0.01', ...}
+
+    async def _request(self, method: str, path: str, params: dict[str, Any]) -> Any:
+        """Send a signed request, mapping failures onto the distinction that matters.
+    
+        Two failure classes, treated completely differently:
+    
+        * The venue answered and said no — a rejection. The order did not happen and it is
+          safe to say so.
+        * The venue did not answer — a timeout or a transport error. The order's fate is
+          **unknown**, and the only safe response is to say that too. This is why
+          ``httpx.TimeoutException`` is not folded in with the rest.
+        """
+        await self._budget.acquire(path)
+        signed = self._signer.sign(params)
+        client = await self._http()
+        url = f"{path}?{signed.query_string}"
+    
+        try:
+            response = await client.request(method, url, headers=signed.headers)
+        except httpx.TimeoutException as exc:
+            raise ReconciliationError(
+                f"{method} {path} timed out; the order state at the venue is UNKNOWN. "
+                "Not retrying: a retry after a timeout is how one signal becomes two "
+                "positions. Reconcile against the venue before submitting anything else.",
+                path=path,
+                key=self._signer.key_fingerprint,
+            ) from exc
+        except httpx.HTTPError as exc:
+>           raise ProviderUnavailableError(
+                f"binance transport error on {method} {path}: {exc}",
+                provider=self.name,
+            ) from exc
+E           tia.core.errors.ProviderUnavailableError: [PROVIDER_UNAVAILABLE] binance transport error on POST /api/v3/order: broken pipe | {'provider': 'binance-spot'}
+
+packages/tia/src/tia/data/providers/binance_live.py:228: ProviderUnavailableError
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 19:54:38 [info     ] binance_submit                 client_order_id=coid_QETBBD6CRBHEMMH2QTE8GHXR component=execution.binance key=key:d5c821f8 quantity=0.01 side=buy symbol=BTC-USD
+___________ test_a_cancel_that_may_have_reached_the_venue_is_unknown ___________
+
+request = <Request('DELETE', 'https://api.binance.test/api/v3/order?symbol=BTCUSDT&orderId=987654&timestamp=1786622400000&recvWindow=5000&signature=7a322740e04e3c1d362734ab263d1c0bb7e93e1e30911ca3481f3f4fe16a7d40')>
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        attempts.append(request.method)
+        if only is None or request.method == only:
+            exc.request = request
+>           raise exc
+E           httpx.ReadError: connection reset by peer
+
+tests/unit/test_binance_ambiguous_transport.py:37: ReadError
+
+The above exception was the direct cause of the following exception:
+
+    async def test_a_cancel_that_may_have_reached_the_venue_is_unknown() -> None:
+        attempts: list[str] = []
+        adapter = provider(failing(httpx.ReadError("connection reset by peer"), attempts, only="DELETE"))
+        order = await adapter.submit_order(intent())
+        with pytest.raises(ReconciliationError, match="UNKNOWN"):
+>           await adapter.cancel_order(order.order_id)
+
+tests/unit/test_binance_ambiguous_transport.py:62: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+packages/tia/src/tia/data/providers/binance_live.py:441: in cancel_order
+    payload = await self._request("DELETE", _ORDER_PATH, self._locator(order))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <tia.data.providers.binance_live.BinanceExecutionProvider object at 0x7f5dd27f34d0>
+method = 'DELETE', path = '/api/v3/order'
+params = {'symbol': 'BTCUSDT', 'orderId': 987654}
+
+    async def _request(self, method: str, path: str, params: dict[str, Any]) -> Any:
+        """Send a signed request, mapping failures onto the distinction that matters.
+    
+        Two failure classes, treated completely differently:
+    
+        * The venue answered and said no — a rejection. The order did not happen and it is
+          safe to say so.
+        * The venue did not answer — a timeout or a transport error. The order's fate is
+          **unknown**, and the only safe response is to say that too. This is why
+          ``httpx.TimeoutException`` is not folded in with the rest.
+        """
+        await self._budget.acquire(path)
+        signed = self._signer.sign(params)
+        client = await self._http()
+        url = f"{path}?{signed.query_string}"
+    
+        try:
+            response = await client.request(method, url, headers=signed.headers)
+        except httpx.TimeoutException as exc:
+            raise ReconciliationError(
+                f"{method} {path} timed out; the order state at the venue is UNKNOWN. "
+                "Not retrying: a retry after a timeout is how one signal becomes two "
+                "positions. Reconcile against the venue before submitting anything else.",
+                path=path,
+                key=self._signer.key_fingerprint,
+            ) from exc
+        except httpx.HTTPError as exc:
+>           raise ProviderUnavailableError(
+                f"binance transport error on {method} {path}: {exc}",
+                provider=self.name,
+            ) from exc
+E           tia.core.errors.ProviderUnavailableError: [PROVIDER_UNAVAILABLE] binance transport error on DELETE /api/v3/order: connection reset by peer | {'provider': 'binance-spot'}
+
+packages/tia/src/tia/data/providers/binance_live.py:228: ProviderUnavailableError
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 19:54:38 [info     ] binance_submit                 client_order_id=coid_QETBBD6CRBHEMMH2QTE8GHXR component=execution.binance key=key:d5c821f8 quantity=0.01 side=buy symbol=BTC-USD
+==================================== PASSES ====================================
+______________ test_a_connection_that_was_never_made_sent_nothing ______________
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 19:54:38 [info     ] binance_submit                 client_order_id=coid_QETBBD6CRBHEMMH2QTE8GHXR component=execution.binance key=key:d5c821f8 quantity=0.01 side=buy symbol=BTC-USD
+=========================== short test summary info ============================
+PASSED tests/unit/test_binance_ambiguous_transport.py::test_a_connection_that_was_never_made_sent_nothing
+PASSED tests/unit/test_binance_ambiguous_transport.py::test_a_failed_read_is_an_outage
+FAILED tests/unit/test_binance_ambiguous_transport.py::test_an_order_that_may_have_reached_the_venue_is_unknown_not_unsent[ReadError]
+FAILED tests/unit/test_binance_ambiguous_transport.py::test_an_order_that_may_have_reached_the_venue_is_unknown_not_unsent[RemoteProtocolError]
+FAILED tests/unit/test_binance_ambiguous_transport.py::test_an_order_that_may_have_reached_the_venue_is_unknown_not_unsent[WriteError]
+FAILED tests/unit/test_binance_ambiguous_transport.py::test_a_cancel_that_may_have_reached_the_venue_is_unknown
+4 failed, 2 passed in 0.34s

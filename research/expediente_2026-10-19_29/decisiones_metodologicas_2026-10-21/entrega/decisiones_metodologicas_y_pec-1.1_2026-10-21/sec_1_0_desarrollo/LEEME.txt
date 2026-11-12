@@ -1,0 +1,2 @@
+DESARROLLO (semilla 20261104, R = 100 por celda H0 y 20 por celda H1): solo para probar el código, medir el costo y comprobar el cortocircuito.
+Sus tasas y su «veredicto» NO son evidencia y no se usaron para decidir nada. Se incluye para presentar todas las corridas.

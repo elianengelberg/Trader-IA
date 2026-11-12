@@ -1,0 +1,3 @@
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_decisivo_v4_2026-10-29/segunda_lectura/adjudicacion/ENCARGO_ADJUDICADOR.md
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_decisivo_v4_2026-10-29/segunda_lectura/adjudicacion/paquete/CASOS.json
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_decisivo_v4_2026-10-29/segunda_lectura/adjudicacion/paquete/paginas/url_https___www.binance.com_en_support_announcement_updates-on-binance-leveraged_2f015a993d37.json

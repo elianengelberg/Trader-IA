@@ -1,0 +1,613 @@
+{
+ "N0_obligatoria_sin_cambios": {
+  "parte_de": "obligatoria",
+  "cambios": [],
+  "esperado": "pasa",
+  "por_que": "control positivo",
+  "veredicto": "OK",
+  "rc": 0,
+  "resultados": {
+   "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "PASSED",
+   "test_the_stop_in_the_book_follows_the_leg": "PASSED",
+   "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "PASSED",
+   "test_a_close_that_ends_with_position_left_is_followed_by_another": "PASSED",
+   "test_rejections_partials_and_limit_entries_together": "PASSED",
+   "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+   "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED"
+  },
+  "motivos": [],
+  "resumen": [
+   "7 passed in 13.66s"
+  ]
+ },
+ "N1_02v3_sin_01": {
+  "parte_de": "solo02v3",
+  "cambios": [],
+  "esperado": "falla",
+  "por_que": "la etiqueta 1.1.0 sin D1-D3",
+  "veredicto": "OK (detectado)",
+  "rc": 1,
+  "resultados": {
+   "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+   "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED",
+   "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "FAILED",
+   "test_the_stop_in_the_book_follows_the_leg": "FAILED",
+   "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "FAILED",
+   "test_a_close_that_ends_with_position_left_is_followed_by_another": "FAILED",
+   "test_rejections_partials_and_limit_entries_together": "FAILED"
+  },
+  "motivos": [
+   "E   AssertionError: ['bar 179: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead', 'bar 180: market ord_6DC5932ADBDEYZK1Q7J0TBJV sent again after it was dead', 'bar 180: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead']",
+   "E   AssertionError: no stop in the book ever moved at the same size: break-even and trailing stayed on paper",
+   "E   AssertionError: ('growth_after_close', ['bar 507: grew from 0.025974000000000004 to 0.026017000000000005 after the close at bar 506'])",
+   "E   AssertionError: ('uncovered_streaks', ['bar 182: -0.00011299999999999863 held, uncovered for 2 bars', 'bar 183: -0.00014199999999999863 held, uncovered for 3 bars', 'bar 184: -0.00015099999999999863 held, uncovered for 4 bars'])",
+   "E   AssertionError: ('dead_orders_sent_again', ['bar 182: stop ord_Z451H12PHTR6RGWZCKN3RNZ5 sent again after it was dead', 'bar 198: stop ...1S3433FCA1 sent again after it was dead', 'bar 199: market ord_S0Y86FKHWARY71CXSWDMXCNN sent again after it was dead'])",
+   "FAILED tests/integration/test_engine_version_contract.py::test_a_rejected_close_is_sent_again_as_a_new_order_and_closes",
+   "FAILED tests/integration/test_engine_version_contract.py::test_the_stop_in_the_book_follows_the_leg",
+   "FAILED tests/integration/test_engine_version_contract.py::test_partial_fills_never_add_to_a_closing_position_or_reopen_one",
+   "FAILED tests/integration/test_engine_version_contract.py::test_a_close_that_ends_with_position_left_is_followed_by_another",
+   "FAILED tests/integration/test_engine_version_contract.py::test_rejections_partials_and_limit_entries_together"
+  ],
+  "resumen": [
+   "5 failed, 2 passed in 14.15s"
+  ]
+ },
+ "M1_D1_salida_id_sin_barra": {
+  "parte_de": "obligatoria",
+  "cambios": [
+   [
+    "packages/tia/src/tia/backtest/engine.py",
+    "signal_id=f\"{exit_key}:{candle.close_time.isoformat()}\",",
+    "signal_id=exit_key,"
+   ]
+  ],
+  "esperado": "falla",
+  "por_que": "D1 cierres",
+  "veredicto": "OK (detectado)",
+  "rc": 1,
+  "resultados": {
+   "test_the_stop_in_the_book_follows_the_leg": "PASSED",
+   "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "PASSED",
+   "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+   "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED",
+   "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "FAILED",
+   "test_a_close_that_ends_with_position_left_is_followed_by_another": "FAILED",
+   "test_rejections_partials_and_limit_entries_together": "FAILED"
+  },
+  "motivos": [
+   "E   AssertionError: ['bar 180: market ord_6DC5932ADBDEYZK1Q7J0TBJV sent again after it was dead', 'bar 181: market ord_6DC5932ADBDEYZK1Q7J0TBJV sent again after it was dead', 'bar 182: market ord_6DC5932ADBDEYZK1Q7J0TBJV sent again after it was dead']",
+   "E   AssertionError: ('uncovered_streaks', ['bar 645: -9.999999999871848e-07 held, uncovered for 2 bars', 'bar 646: -9.999999999871848e-07 held, uncovered for 3 bars', 'bar 647: -9.999999999871848e-07 held, uncovered for 4 bars'])",
+   "E   AssertionError: ('dead_orders_sent_again', ['bar 201: market ord_F3YXSV0XP8B8KJ0ABTRKJNJJ sent again after it was dead', 'bar 202: mar...0ABTRKJNJJ sent again after it was dead', 'bar 203: market ord_F3YXSV0XP8B8KJ0ABTRKJNJJ sent again after it was dead'])",
+   "FAILED tests/integration/test_engine_version_contract.py::test_a_rejected_close_is_sent_again_as_a_new_order_and_closes",
+   "FAILED tests/integration/test_engine_version_contract.py::test_a_close_that_ends_with_position_left_is_followed_by_another",
+   "FAILED tests/integration/test_engine_version_contract.py::test_rejections_partials_and_limit_entries_together"
+  ],
+  "resumen": [
+   "3 failed, 4 passed in 14.18s"
+  ]
+ },
+ "M2_D1_stop_id_sin_colocacion": {
+  "parte_de": "obligatoria",
+  "cambios": [
+   [
+    "packages/tia/src/tia/backtest/engine.py",
+    "signal_id=f\"{leg.signal_id}:protective:{self._stop_placements}\",",
+    "signal_id=f\"{leg.signal_id}:protective\","
+   ]
+  ],
+  "esperado": "falla",
+  "por_que": "D1 stops",
+  "veredicto": "OK (detectado)",
+  "rc": 1,
+  "resultados": {
+   "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+   "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED",
+   "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "FAILED",
+   "test_the_stop_in_the_book_follows_the_leg": "FAILED",
+   "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "FAILED",
+   "test_a_close_that_ends_with_position_left_is_followed_by_another": "FAILED",
+   "test_rejections_partials_and_limit_entries_together": "FAILED"
+  },
+  "motivos": [
+   "E   AssertionError: ['bar 174: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead', 'bar 175: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead', 'bar 176: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead']",
+   "E   AssertionError: no stop in the book ever moved at the same size: break-even and trailing stayed on paper",
+   "E   AssertionError: ('dead_orders_sent_again', ['bar 182: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead', 'bar 202: stop ...5BJ7W1TF2816 sent again after it was dead', 'bar 203: stop ord_0F96FP0R8T805BJ7W1TF2816 sent again after it was dead'])",
+   "E   AssertionError: ('dead_orders_sent_again', ['bar 202: stop ord_DS467MBNEFBGV4MXY9X6K0ZB sent again after it was dead', 'bar 228: stop ...71RVHGQ175R4 sent again after it was dead', 'bar 230: stop ord_M5MV28YT738B71RVHGQ175R4 sent again after it was dead'])",
+   "E   AssertionError: ('dead_orders_sent_again', ['bar 177: stop ord_Z451H12PHTR6RGWZCKN3RNZ5 sent again after it was dead', 'bar 178: stop ...RGWZCKN3RNZ5 sent again after it was dead', 'bar 179: stop ord_Z451H12PHTR6RGWZCKN3RNZ5 sent again after it was dead'])",
+   "FAILED tests/integration/test_engine_version_contract.py::test_a_rejected_close_is_sent_again_as_a_new_order_and_closes",
+   "FAILED tests/integration/test_engine_version_contract.py::test_the_stop_in_the_book_follows_the_leg",
+   "FAILED tests/integration/test_engine_version_contract.py::test_partial_fills_never_add_to_a_closing_position_or_reopen_one",
+   "FAILED tests/integration/test_engine_version_contract.py::test_a_close_that_ends_with_position_left_is_followed_by_another",
+   "FAILED tests/integration/test_engine_version_contract.py::test_rejections_partials_and_limit_entries_together"
+  ],
+  "resumen": [
+   "5 failed, 2 passed in 13.59s"
+  ]
+ },
+ "M3_D2_sin_comparar_nivel": {
+  "parte_de": "obligatoria",
+  "cambios": [
+   [
+    "packages/tia/src/tia/backtest/engine.py",
+    "if same_size and same_level:",
+    "if same_size:"
+   ]
+  ],
+  "esperado": "falla",
+  "por_que": "D2",
+  "veredicto": "OK (detectado)",
+  "rc": 1,
+  "resultados": {
+   "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "PASSED",
+   "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "PASSED",
+   "test_a_close_that_ends_with_position_left_is_followed_by_another": "PASSED",
+   "test_rejections_partials_and_limit_entries_together": "PASSED",
+   "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+   "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED",
+   "test_the_stop_in_the_book_follows_the_leg": "FAILED"
+  },
+  "motivos": [
+   "E   AssertionError: no stop in the book ever moved at the same size: break-even and trailing stayed on paper",
+   "FAILED tests/integration/test_engine_version_contract.py::test_the_stop_in_the_book_follows_the_leg"
+  ],
+  "resumen": [
+   "1 failed, 6 passed in 13.86s"
+  ]
+ },
+ "M4_D3_sin_cancelar_resto_al_salir": {
+  "parte_de": "obligatoria",
+  "cambios": [
+   [
+    "packages/tia/src/tia/backtest/engine.py",
+    "for order in provider.resting_orders(leg.symbol):",
+    "for order in ():"
+   ]
+  ],
+  "esperado": "falla",
+  "por_que": "D3 capa 1",
+  "veredicto": "OK (detectado)",
+  "rc": 1,
+  "resultados": {
+   "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "PASSED",
+   "test_the_stop_in_the_book_follows_the_leg": "PASSED",
+   "test_rejections_partials_and_limit_entries_together": "PASSED",
+   "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+   "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED",
+   "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "FAILED",
+   "test_a_close_that_ends_with_position_left_is_followed_by_another": "FAILED"
+  },
+  "motivos": [
+   "E   AssertionError: ('growth_after_close', ['bar 507: grew from 0.025967999999999998 to 0.026011 after the close at bar 506', 'bar 656: grew from 0.027044999999999996 to 0.027051999999999996 after the close at bar 655'])",
+   "E   AssertionError: ('growth_after_close', ['bar 180: grew from 0.111896 to 0.111964 after the close at bar 179', 'bar 204: grew from 0.11...ter the close at bar 203', 'bar 505: grew from 0.05542500000000001 to 0.05544600000000001 after the close at bar 504'])",
+   "FAILED tests/integration/test_engine_version_contract.py::test_partial_fills_never_add_to_a_closing_position_or_reopen_one",
+   "FAILED tests/integration/test_engine_version_contract.py::test_a_close_that_ends_with_position_left_is_followed_by_another"
+  ],
+  "resumen": [
+   "2 failed, 5 passed in 13.30s"
+  ]
+ },
+ "M5_D3_sin_cancelar_resto_en_plano": {
+  "parte_de": "obligatoria",
+  "cambios": [
+   [
+    "packages/tia/src/tia/backtest/engine.py",
+    "for order in provider.resting_orders(symbol):",
+    "for order in ():"
+   ]
+  ],
+  "esperado": "falla",
+  "por_que": "D3 capa 2",
+  "veredicto": "OK (detectado)",
+  "rc": 1,
+  "resultados": {
+   "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "PASSED",
+   "test_the_stop_in_the_book_follows_the_leg": "PASSED",
+   "test_a_close_that_ends_with_position_left_is_followed_by_another": "PASSED",
+   "test_rejections_partials_and_limit_entries_together": "PASSED",
+   "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+   "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED",
+   "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "FAILED"
+  },
+  "motivos": [
+   "E   AssertionError: ('entries_filling_a_later_position', ['bar 562: entry ord_FH204F9J744C8EB30PGMXMV8 of position 4 filled into position 5'])",
+   "FAILED tests/integration/test_engine_version_contract.py::test_partial_fills_never_add_to_a_closing_position_or_reopen_one"
+  ],
+  "resumen": [
+   "1 failed, 6 passed in 13.85s"
+  ]
+ },
+ "M6_D3_sin_red_de_seguridad": {
+  "parte_de": "obligatoria",
+  "cambios": [
+   [
+    "packages/tia/src/tia/backtest/engine.py",
+    "if exit_order is not None and exit_order.state.is_terminal and leg.quantity > 0:",
+    "if False:"
+   ]
+  ],
+  "esperado": "falla",
+  "por_que": "D3 capa 3",
+  "veredicto": "OK (detectado)",
+  "rc": 1,
+  "resultados": {
+   "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "PASSED",
+   "test_the_stop_in_the_book_follows_the_leg": "PASSED",
+   "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "PASSED",
+   "test_rejections_partials_and_limit_entries_together": "PASSED",
+   "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+   "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED",
+   "test_a_close_that_ends_with_position_left_is_followed_by_another": "FAILED"
+  },
+  "motivos": [
+   "E   AssertionError: ('uncovered_streaks', ['bar 182: -0.06254199999999999 held, uncovered for 2 bars', 'bar 183: -0.06254199999999999 held, uncovered for 3 bars', 'bar 184: -0.06254199999999999 held, uncovered for 4 bars'])",
+   "FAILED tests/integration/test_engine_version_contract.py::test_a_close_that_ends_with_position_left_is_followed_by_another"
+  ],
+  "resumen": [
+   "1 failed, 6 passed in 13.44s"
+  ]
+ },
+ "M7_sin_aviso_de_pierna_sin_stop": {
+  "parte_de": "obligatoria",
+  "cambios": [
+   [
+    "packages/tia/src/tia/backtest/engine.py",
+    "if cfg.use_protective_stops and unprotected:",
+    "if False:"
+   ]
+  ],
+  "esperado": "fuera de alcance",
+  "por_que": "es el aviso del informe, no una regla de la venue",
+  "veredicto": "no detectado",
+  "rc": 0,
+  "resultados": {
+   "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "PASSED",
+   "test_the_stop_in_the_book_follows_the_leg": "PASSED",
+   "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "PASSED",
+   "test_a_close_that_ends_with_position_left_is_followed_by_another": "PASSED",
+   "test_rejections_partials_and_limit_entries_together": "PASSED",
+   "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+   "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED"
+  },
+  "motivos": [],
+  "resumen": [
+   "7 passed in 13.59s"
+  ]
+ },
+ "M8_D3_sin_ninguna_capa": {
+  "parte_de": "obligatoria",
+  "cambios": [
+   [
+    "packages/tia/src/tia/backtest/engine.py",
+    "for order in provider.resting_orders(leg.symbol):",
+    "for order in ():"
+   ],
+   [
+    "packages/tia/src/tia/backtest/engine.py",
+    "for order in provider.resting_orders(symbol):",
+    "for order in ():"
+   ],
+   [
+    "packages/tia/src/tia/backtest/engine.py",
+    "if exit_order is not None and exit_order.state.is_terminal and leg.quantity > 0:",
+    "if False:"
+   ]
+  ],
+  "esperado": "falla",
+  "por_que": "D3 entero",
+  "veredicto": "OK (detectado)",
+  "rc": 1,
+  "resultados": {
+   "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "PASSED",
+   "test_the_stop_in_the_book_follows_the_leg": "PASSED",
+   "test_rejections_partials_and_limit_entries_together": "PASSED",
+   "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+   "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED",
+   "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "FAILED",
+   "test_a_close_that_ends_with_position_left_is_followed_by_another": "FAILED"
+  },
+  "motivos": [
+   "E   AssertionError: ('growth_after_close', ['bar 507: grew from 0.025967999999999998 to 0.026011 after the close at bar 506'])",
+   "E   AssertionError: ('uncovered_streaks', ['bar 182: -0.00011299999999999863 held, uncovered for 2 bars', 'bar 183: -0.00014199999999999863 held, uncovered for 3 bars', 'bar 184: -0.00015099999999999863 held, uncovered for 4 bars'])",
+   "FAILED tests/integration/test_engine_version_contract.py::test_partial_fills_never_add_to_a_closing_position_or_reopen_one",
+   "FAILED tests/integration/test_engine_version_contract.py::test_a_close_that_ends_with_position_left_is_followed_by_another"
+  ],
+  "resumen": [
+   "2 failed, 5 passed in 13.97s"
+  ]
+ },
+ "M9_D2_recoloca_el_stop_en_cada_barra": {
+  "parte_de": "obligatoria",
+  "cambios": [
+   [
+    "packages/tia/src/tia/backtest/engine.py",
+    "if same_size and same_level:",
+    "if False:"
+   ]
+  ],
+  "esperado": "falla",
+  "por_que": "D2 sin recolocaciones de más",
+  "veredicto": "OK (detectado)",
+  "rc": 1,
+  "resultados": {
+   "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "PASSED",
+   "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "PASSED",
+   "test_a_close_that_ends_with_position_left_is_followed_by_another": "PASSED",
+   "test_rejections_partials_and_limit_entries_together": "PASSED",
+   "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+   "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED",
+   "test_the_stop_in_the_book_follows_the_leg": "FAILED"
+  },
+  "motivos": [
+   "E   AssertionError: ['bar 176: a working stop replaced at the same size and level 62567.83067468193', 'bar 178: a working stop replaced at...ame size and level 62488.12001492422', 'bar 180: a working stop replaced at the same size and level 62462.69553130117']",
+   "FAILED tests/integration/test_engine_version_contract.py::test_the_stop_in_the_book_follows_the_leg"
+  ],
+  "resumen": [
+   "1 failed, 6 passed in 14.24s"
+  ]
+ },
+ "M10_cierre_sin_reduce_only": {
+  "parte_de": "obligatoria",
+  "cambios": [
+   [
+    "packages/tia/src/tia/backtest/engine.py",
+    "            created_at=candle.close_time,\n            reduce_only=True,",
+    "            created_at=candle.close_time,\n            reduce_only=False,"
+   ]
+  ],
+  "esperado": "falla",
+  "por_que": "regla previa que 1.1.0 no debilita",
+  "veredicto": "OK (detectado)",
+  "rc": 1,
+  "resultados": {
+   "test_the_stop_in_the_book_follows_the_leg": "PASSED",
+   "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+   "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED",
+   "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "FAILED",
+   "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "FAILED",
+   "test_a_close_that_ends_with_position_left_is_followed_by_another": "FAILED",
+   "test_rejections_partials_and_limit_entries_together": "FAILED"
+  },
+  "motivos": [
+   "E   AssertionError: the scenario must reject closes",
+   "E   AssertionError: ('closes_without_reduce_only', ['bar 183: market buy against -0.112051 without reduce_only', 'bar 233: market buy against -0.0026459999999999995 without reduce_only', 'bar 506: market sell against 0.025967999999999998 without reduce_only'])",
+   "E   AssertionError: ('uncovered_streaks', ['bar 181: -0.06254199999999999 held, uncovered for 2 bars', 'bar 190: -0.018461999999999992 held, uncovered for 2 bars', 'bar 191: -0.006138999999999992 held, uncovered for 3 bars'])",
+   "E   AssertionError: ('closes_without_reduce_only', ['bar 182: market buy against -0.11211 without reduce_only', 'bar 197: market buy against -0.112431 without reduce_only', 'bar 205: market buy against -0.112544 without reduce_only'])",
+   "FAILED tests/integration/test_engine_version_contract.py::test_a_rejected_close_is_sent_again_as_a_new_order_and_closes",
+   "FAILED tests/integration/test_engine_version_contract.py::test_partial_fills_never_add_to_a_closing_position_or_reopen_one",
+   "FAILED tests/integration/test_engine_version_contract.py::test_a_close_that_ends_with_position_left_is_followed_by_another",
+   "FAILED tests/integration/test_engine_version_contract.py::test_rejections_partials_and_limit_entries_together"
+  ],
+  "resumen": [
+   "4 failed, 3 passed in 14.40s"
+  ]
+ },
+ "E1_02v3_sin_01_con_contadores_falsos": {
+  "parte_de": "solo02v3",
+  "cambios": [
+   [
+    "packages/tia/src/tia/backtest/engine.py",
+    "        counts = _MutableCounts()\n",
+    "        counts = _MutableCounts()\n        self.order_hygiene = {'entry_remainders_cancelled_on_exit': 0, 'stale_entry_remainders_cancelled_flat': 0, 'exits_done_with_position_left': 0, 'bars_with_leg_and_no_stop': 0}\n"
+   ]
+  ],
+  "esperado": "falla",
+  "por_que": "evasión: la interfaz de 01 (order_hygiene) sin el comportamiento",
+  "veredicto": "OK (detectado)",
+  "rc": 1,
+  "resultados": {
+   "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+   "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED",
+   "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "FAILED",
+   "test_the_stop_in_the_book_follows_the_leg": "FAILED",
+   "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "FAILED",
+   "test_a_close_that_ends_with_position_left_is_followed_by_another": "FAILED",
+   "test_rejections_partials_and_limit_entries_together": "FAILED"
+  },
+  "motivos": [
+   "E   AssertionError: ['bar 179: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead', 'bar 180: market ord_6DC5932ADBDEYZK1Q7J0TBJV sent again after it was dead', 'bar 180: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead']",
+   "E   AssertionError: no stop in the book ever moved at the same size: break-even and trailing stayed on paper",
+   "E   AssertionError: ('growth_after_close', ['bar 507: grew from 0.025974000000000004 to 0.026017000000000005 after the close at bar 506'])",
+   "E   AssertionError: ('uncovered_streaks', ['bar 182: -0.00011299999999999863 held, uncovered for 2 bars', 'bar 183: -0.00014199999999999863 held, uncovered for 3 bars', 'bar 184: -0.00015099999999999863 held, uncovered for 4 bars'])",
+   "E   AssertionError: ('dead_orders_sent_again', ['bar 182: stop ord_Z451H12PHTR6RGWZCKN3RNZ5 sent again after it was dead', 'bar 198: stop ...1S3433FCA1 sent again after it was dead', 'bar 199: market ord_S0Y86FKHWARY71CXSWDMXCNN sent again after it was dead'])",
+   "FAILED tests/integration/test_engine_version_contract.py::test_a_rejected_close_is_sent_again_as_a_new_order_and_closes",
+   "FAILED tests/integration/test_engine_version_contract.py::test_the_stop_in_the_book_follows_the_leg",
+   "FAILED tests/integration/test_engine_version_contract.py::test_partial_fills_never_add_to_a_closing_position_or_reopen_one",
+   "FAILED tests/integration/test_engine_version_contract.py::test_a_close_that_ends_with_position_left_is_followed_by_another",
+   "FAILED tests/integration/test_engine_version_contract.py::test_rejections_partials_and_limit_entries_together"
+  ],
+  "resumen": [
+   "5 failed, 2 passed in 13.14s"
+  ]
+ },
+ "E2_02v3_sin_01_con_resting_orders": {
+  "parte_de": "solo02v3",
+  "cambios": [
+   [
+    "packages/tia/src/tia/execution/paper.py",
+    "    async def get_positions(self) -> dict[str, Position]:",
+    "    def resting_orders(self, symbol):\n        return [o for o in self._orders.values() if o.symbol == symbol and not o.state.is_terminal]\n\n    async def get_positions(self) -> dict[str, Position]:"
+   ]
+  ],
+  "esperado": "falla",
+  "por_que": "evasión: el método que agrega 01 sin usarlo",
+  "veredicto": "OK (detectado)",
+  "rc": 1,
+  "resultados": {
+   "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+   "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED",
+   "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "FAILED",
+   "test_the_stop_in_the_book_follows_the_leg": "FAILED",
+   "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "FAILED",
+   "test_a_close_that_ends_with_position_left_is_followed_by_another": "FAILED",
+   "test_rejections_partials_and_limit_entries_together": "FAILED"
+  },
+  "motivos": [
+   "E   AssertionError: ['bar 179: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead', 'bar 180: market ord_6DC5932ADBDEYZK1Q7J0TBJV sent again after it was dead', 'bar 180: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead']",
+   "E   AssertionError: no stop in the book ever moved at the same size: break-even and trailing stayed on paper",
+   "E   AssertionError: ('growth_after_close', ['bar 507: grew from 0.025974000000000004 to 0.026017000000000005 after the close at bar 506'])",
+   "E   AssertionError: ('uncovered_streaks', ['bar 182: -0.00011299999999999863 held, uncovered for 2 bars', 'bar 183: -0.00014199999999999863 held, uncovered for 3 bars', 'bar 184: -0.00015099999999999863 held, uncovered for 4 bars'])",
+   "E   AssertionError: ('dead_orders_sent_again', ['bar 182: stop ord_Z451H12PHTR6RGWZCKN3RNZ5 sent again after it was dead', 'bar 198: stop ...1S3433FCA1 sent again after it was dead', 'bar 199: market ord_S0Y86FKHWARY71CXSWDMXCNN sent again after it was dead'])",
+   "FAILED tests/integration/test_engine_version_contract.py::test_a_rejected_close_is_sent_again_as_a_new_order_and_closes",
+   "FAILED tests/integration/test_engine_version_contract.py::test_the_stop_in_the_book_follows_the_leg",
+   "FAILED tests/integration/test_engine_version_contract.py::test_partial_fills_never_add_to_a_closing_position_or_reopen_one",
+   "FAILED tests/integration/test_engine_version_contract.py::test_a_close_that_ends_with_position_left_is_followed_by_another",
+   "FAILED tests/integration/test_engine_version_contract.py::test_rejections_partials_and_limit_entries_together"
+  ],
+  "resumen": [
+   "5 failed, 2 passed in 12.96s"
+  ]
+ },
+ "L1_obligatoria_declara_1_0_9": {
+  "parte_de": "obligatoria",
+  "cambios": [
+   [
+    "packages/tia/src/tia/backtest/engine.py",
+    "ENGINE_VERSION = \"1.1.0\"",
+    "ENGINE_VERSION = \"1.0.9\""
+   ]
+  ],
+  "esperado": "se omite",
+  "por_que": "no promete D1-D3: nada que exigir",
+  "veredicto": "OK",
+  "rc": 0,
+  "resultados": {
+   "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+   "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED",
+   "[5] tests/integration/test_engine_version_contract.py:382: the engine records version (1, 0, 9): it does not claim D1-D3": "SKIPPED"
+  },
+  "motivos": [
+   "SKIPPED [5] tests/integration/test_engine_version_contract.py:382: the engine records version (1, 0, 9): it does not claim D1-D3"
+  ],
+  "resumen": [
+   "2 passed, 5 skipped in 13.49s"
+  ]
+ },
+ "L2_02v3_sin_01_declara_1_0_9": {
+  "parte_de": "solo02v3",
+  "cambios": [
+   [
+    "packages/tia/src/tia/backtest/engine.py",
+    "ENGINE_VERSION = \"1.1.0\"",
+    "ENGINE_VERSION = \"1.0.9\""
+   ]
+  ],
+  "esperado": "se omite",
+  "por_que": "etiqueta veraz: sin D1-D3 y sin prometerlos",
+  "veredicto": "OK",
+  "rc": 0,
+  "resultados": {
+   "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+   "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED",
+   "[5] tests/integration/test_engine_version_contract.py:382: the engine records version (1, 0, 9): it does not claim D1-D3": "SKIPPED"
+  },
+  "motivos": [
+   "SKIPPED [5] tests/integration/test_engine_version_contract.py:382: the engine records version (1, 0, 9): it does not claim D1-D3"
+  ],
+  "resumen": [
+   "2 passed, 5 skipped in 13.47s"
+  ]
+ },
+ "L3_obligatoria_declara_1_2_0": {
+  "parte_de": "obligatoria",
+  "cambios": [
+   [
+    "packages/tia/src/tia/backtest/engine.py",
+    "ENGINE_VERSION = \"1.1.0\"",
+    "ENGINE_VERSION = \"1.2.0\""
+   ]
+  ],
+  "esperado": "pasa",
+  "por_que": "una versión posterior conserva la promesa",
+  "veredicto": "OK",
+  "rc": 0,
+  "resultados": {
+   "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "PASSED",
+   "test_the_stop_in_the_book_follows_the_leg": "PASSED",
+   "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "PASSED",
+   "test_a_close_that_ends_with_position_left_is_followed_by_another": "PASSED",
+   "test_rejections_partials_and_limit_entries_together": "PASSED",
+   "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+   "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED"
+  },
+  "motivos": [],
+  "resumen": [
+   "7 passed in 13.18s"
+  ]
+ },
+ "L4_02v3_sin_01_declara_1_2_0": {
+  "parte_de": "solo02v3",
+  "cambios": [
+   [
+    "packages/tia/src/tia/backtest/engine.py",
+    "ENGINE_VERSION = \"1.1.0\"",
+    "ENGINE_VERSION = \"1.2.0\""
+   ]
+  ],
+  "esperado": "falla",
+  "por_que": "una versión posterior sin D1-D3",
+  "veredicto": "OK (detectado)",
+  "rc": 1,
+  "resultados": {
+   "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+   "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED",
+   "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "FAILED",
+   "test_the_stop_in_the_book_follows_the_leg": "FAILED",
+   "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "FAILED",
+   "test_a_close_that_ends_with_position_left_is_followed_by_another": "FAILED",
+   "test_rejections_partials_and_limit_entries_together": "FAILED"
+  },
+  "motivos": [
+   "E   AssertionError: ['bar 179: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead', 'bar 180: market ord_6DC5932ADBDEYZK1Q7J0TBJV sent again after it was dead', 'bar 180: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead']",
+   "E   AssertionError: no stop in the book ever moved at the same size: break-even and trailing stayed on paper",
+   "E   AssertionError: ('growth_after_close', ['bar 507: grew from 0.025974000000000004 to 0.026017000000000005 after the close at bar 506'])",
+   "E   AssertionError: ('uncovered_streaks', ['bar 182: -0.00011299999999999863 held, uncovered for 2 bars', 'bar 183: -0.00014199999999999863 held, uncovered for 3 bars', 'bar 184: -0.00015099999999999863 held, uncovered for 4 bars'])",
+   "E   AssertionError: ('dead_orders_sent_again', ['bar 182: stop ord_Z451H12PHTR6RGWZCKN3RNZ5 sent again after it was dead', 'bar 198: stop ...1S3433FCA1 sent again after it was dead', 'bar 199: market ord_S0Y86FKHWARY71CXSWDMXCNN sent again after it was dead'])",
+   "FAILED tests/integration/test_engine_version_contract.py::test_a_rejected_close_is_sent_again_as_a_new_order_and_closes",
+   "FAILED tests/integration/test_engine_version_contract.py::test_the_stop_in_the_book_follows_the_leg",
+   "FAILED tests/integration/test_engine_version_contract.py::test_partial_fills_never_add_to_a_closing_position_or_reopen_one",
+   "FAILED tests/integration/test_engine_version_contract.py::test_a_close_that_ends_with_position_left_is_followed_by_another",
+   "FAILED tests/integration/test_engine_version_contract.py::test_rejections_partials_and_limit_entries_together"
+  ],
+  "resumen": [
+   "5 failed, 2 passed in 13.12s"
+  ]
+ },
+ "L5_obligatoria_declara_1_1_0_dev": {
+  "parte_de": "obligatoria",
+  "cambios": [
+   [
+    "packages/tia/src/tia/backtest/engine.py",
+    "ENGINE_VERSION = \"1.1.0\"",
+    "ENGINE_VERSION = \"1.1.0-dev\""
+   ]
+  ],
+  "esperado": "falla",
+  "por_que": "una etiqueta ilegible no se escapa",
+  "veredicto": "OK (detectado)",
+  "rc": 1,
+  "resultados": {
+   "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+   "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED",
+   "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "FAILED",
+   "test_the_stop_in_the_book_follows_the_leg": "FAILED",
+   "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "FAILED",
+   "test_a_close_that_ends_with_position_left_is_followed_by_another": "FAILED",
+   "test_rejections_partials_and_limit_entries_together": "FAILED"
+  },
+  "motivos": [
+   "E   AssertionError: engine_version '1.1.0-dev' is not a dotted number: no promise can be read from it",
+   "E   AssertionError: engine_version '1.1.0-dev' is not a dotted number: no promise can be read from it",
+   "E   AssertionError: engine_version '1.1.0-dev' is not a dotted number: no promise can be read from it",
+   "E   AssertionError: engine_version '1.1.0-dev' is not a dotted number: no promise can be read from it",
+   "E   AssertionError: engine_version '1.1.0-dev' is not a dotted number: no promise can be read from it",
+   "FAILED tests/integration/test_engine_version_contract.py::test_a_rejected_close_is_sent_again_as_a_new_order_and_closes",
+   "FAILED tests/integration/test_engine_version_contract.py::test_the_stop_in_the_book_follows_the_leg",
+   "FAILED tests/integration/test_engine_version_contract.py::test_partial_fills_never_add_to_a_closing_position_or_reopen_one",
+   "FAILED tests/integration/test_engine_version_contract.py::test_a_close_that_ends_with_position_left_is_followed_by_another",
+   "FAILED tests/integration/test_engine_version_contract.py::test_rejections_partials_and_limit_entries_together"
+  ],
+  "resumen": [
+   "5 failed, 2 passed in 13.85s"
+  ]
+ }
+}

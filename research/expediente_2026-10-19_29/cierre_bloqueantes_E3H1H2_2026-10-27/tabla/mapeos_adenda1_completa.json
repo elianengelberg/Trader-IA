@@ -1,0 +1,506 @@
+{
+ "_nota": "Tabla completa de la Adenda 1 (reglas 1, 1R y 2) para el orquestador v3. Generada por construir_tabla.py; GTO→GFT, LUNA→LUNC y UST→USTC NO se mapean (lectura literal de la regla 1; decisión D-1 pendiente).",
+ "mapeos": [
+  {
+   "id": "T001",
+   "regla": 1,
+   "viejo_usdt": "VENUSDT",
+   "nuevo_usdt": "VETUSDT",
+   "r": 100,
+   "E": "2018-07-23",
+   "fuente": "zd_360007439672_d538039394aa.json",
+   "cita": "at a ratio of 1 VEN = 100 VET"
+  },
+  {
+   "id": "T002",
+   "regla": 1,
+   "viejo_usdt": "BCHABCUSDT",
+   "nuevo_usdt": "BCHUSDT",
+   "r": 1,
+   "E": "2019-11-28",
+   "fuente": "zd_360037219511_27e27ad63185.json",
+   "cita": "at a ratio of 1 BCHABC = 1 BCH"
+  },
+  {
+   "id": "T003",
+   "regla": 1,
+   "viejo_usdt": "STORMUSDT",
+   "nuevo_usdt": "STMXUSDT",
+   "r": 1,
+   "E": "2020-06-08",
+   "fuente": "url_https___www.binance.com_en_support_announcement_360043990532_0dedae609be8.json",
+   "cita": "at a ratio of 1 STORM = 1 STMX"
+  },
+  {
+   "id": "T004",
+   "regla": 1,
+   "viejo_usdt": "ERDUSDT",
+   "nuevo_usdt": "EGLDUSDT",
+   "r": 0.001,
+   "E": "2020-08-31",
+   "fuente": "bn_aa864b2d4db24379b606249d0cba87fb_923aec2ca107.json",
+   "cita": "at a ratio of 1000 ERD = 1 EGLD"
+  },
+  {
+   "id": "T005",
+   "regla": 1,
+   "viejo_usdt": "LENDUSDT",
+   "nuevo_usdt": "AAVEUSDT",
+   "r": 0.01,
+   "E": "2020-10-12",
+   "fuente": "bn_17595222999545348c8acdd5dc41c00a_7cbc5104a088.json",
+   "cita": "at a ratio of 100 LEND = 1 AAVE"
+  },
+  {
+   "id": "T006",
+   "regla": 1,
+   "viejo_usdt": "STRATUSDT",
+   "nuevo_usdt": "STRAXUSDT",
+   "r": 1,
+   "E": "2020-11-12",
+   "fuente": "bn_1937b7781c5043efa66c07141be3bdc2_e3f3ac372bca.json",
+   "cita": "at a ratio of 1 STRAT = 1 STRAX"
+  },
+  {
+   "id": "T007",
+   "regla": 2,
+   "viejo_usdt": "COCOSUSDT",
+   "nuevo_usdt": "COCOSUSDT",
+   "r": 0.001,
+   "E": "2021-01-19",
+   "fuente": "bn_f555f8013eff42bc9c91eaa48b9da24b_83402e98fdee.json",
+   "cita": "begin swapping the old COCOS tokens with the new COCOS tokens at a ratio of 1,000:1"
+  },
+  {
+   "id": "T008",
+   "regla": 1,
+   "viejo_usdt": "XZCUSDT",
+   "nuevo_usdt": "FIROUSDT",
+   "r": 1,
+   "E": "2021-01-25",
+   "fuente": "bn_4a06d6ab6abb4f08b12bb93d6fec30ec_1d51d7029751.json",
+   "cita": "at a ratio of 1 XZC = 1 FIRO"
+  },
+  {
+   "id": "T009",
+   "regla": 2,
+   "viejo_usdt": "SXPDOWNUSDT",
+   "nuevo_usdt": "SXPDOWNUSDT",
+   "r": 0.0001,
+   "E": "2021-03-10",
+   "fuente": "bn_a43a407fd48f44d29ecc59bb86772c25_d91c65379177.json",
+   "cita": "10,000-for-1 reverse token split, starting at 2021-03-10"
+  },
+  {
+   "id": "T010",
+   "regla": 2,
+   "viejo_usdt": "BTCSTUSDT",
+   "nuevo_usdt": "BTCSTUSDT",
+   "r": 10,
+   "E": "2021-03-15",
+   "fuente": "bn_2c08ba9e1a1b409fb6a4a2cb2f5ed58b_ca587e4ce636.json",
+   "cita": "swap the old BTCST tokens with the new BTCST tokens at a ratio of 1:10"
+  },
+  {
+   "id": "T011",
+   "regla": 2,
+   "viejo_usdt": "SUSHIDOWNUSDT",
+   "nuevo_usdt": "SUSHIDOWNUSDT",
+   "r": 0.0001,
+   "E": "2021-03-23",
+   "fuente": "bn_a00da142c1c549faaa7c1f78817930b7_58f2001193e3.json",
+   "cita": "10,000-for-1 reverse token split, starting at 2021-03-23"
+  },
+  {
+   "id": "T012",
+   "regla": 2,
+   "viejo_usdt": "DREPUSDT",
+   "nuevo_usdt": "DREPUSDT",
+   "r": 0.01,
+   "E": "2021-03-29",
+   "fuente": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-dre_2a9973d4261d.json",
+   "cita": "We will swap the old DREP tokens with the new DREP tokens at a ratio of 100:1"
+  },
+  {
+   "id": "T013",
+   "regla": 1,
+   "viejo_usdt": "NPXSUSDT",
+   "nuevo_usdt": "PUNDIXUSDT",
+   "r": 0.001,
+   "E": "2021-04-05",
+   "fuente": "bn_8bdcb060635b491d912247fb00603d4d_821867c8b60e.json",
+   "cita": "at a ratio of 1,000 NPXS = 1 PUNDIX"
+  },
+  {
+   "id": "T014",
+   "regla": 2,
+   "viejo_usdt": "AAVEDOWNUSDT",
+   "nuevo_usdt": "AAVEDOWNUSDT",
+   "r": 0.0001,
+   "E": "2021-04-06",
+   "fuente": "bn_c72f436a7847451eb403bfbdaf617984_1d0bcb863df7.json",
+   "cita": "10,000-for-1 reverse token split"
+  },
+  {
+   "id": "T015",
+   "regla": 2,
+   "viejo_usdt": "DOTDOWNUSDT",
+   "nuevo_usdt": "DOTDOWNUSDT",
+   "r": 0.0001,
+   "E": "2021-04-06",
+   "fuente": "bn_c72f436a7847451eb403bfbdaf617984_1d0bcb863df7.json",
+   "cita": "10,000-for-1 reverse token split"
+  },
+  {
+   "id": "T016",
+   "regla": 2,
+   "viejo_usdt": "ADADOWNUSDT",
+   "nuevo_usdt": "ADADOWNUSDT",
+   "r": 0.0001,
+   "E": "2021-04-07",
+   "fuente": "bn_c72f436a7847451eb403bfbdaf617984_1d0bcb863df7.json",
+   "cita": "10,000-for-1 reverse token split"
+  },
+  {
+   "id": "T017",
+   "regla": 2,
+   "viejo_usdt": "LINKDOWNUSDT",
+   "nuevo_usdt": "LINKDOWNUSDT",
+   "r": 0.0001,
+   "E": "2021-04-07",
+   "fuente": "bn_c72f436a7847451eb403bfbdaf617984_1d0bcb863df7.json",
+   "cita": "10,000-for-1 reverse token split"
+  },
+  {
+   "id": "T018",
+   "regla": 2,
+   "viejo_usdt": "XRPDOWNUSDT",
+   "nuevo_usdt": "XRPDOWNUSDT",
+   "r": 0.0001,
+   "E": "2021-04-07",
+   "fuente": "bn_c72f436a7847451eb403bfbdaf617984_1d0bcb863df7.json",
+   "cita": "10,000-for-1 reverse token split"
+  },
+  {
+   "id": "T019",
+   "regla": 2,
+   "viejo_usdt": "BNBDOWNUSDT",
+   "nuevo_usdt": "BNBDOWNUSDT",
+   "r": 1e-05,
+   "E": "2021-04-13",
+   "fuente": "bn_8587ebb4c3c94f92a4fa7ecb23781f20_9b3b1796ccc5.json",
+   "cita": "100,000-for-1 reverse token split"
+  },
+  {
+   "id": "T020",
+   "regla": 2,
+   "viejo_usdt": "SXPDOWNUSDT",
+   "nuevo_usdt": "SXPDOWNUSDT",
+   "r": 1e-05,
+   "E": "2021-04-13",
+   "fuente": "bn_8587ebb4c3c94f92a4fa7ecb23781f20_9b3b1796ccc5.json",
+   "cita": "100,000-for-1 reverse token split"
+  },
+  {
+   "id": "T021",
+   "regla": 2,
+   "viejo_usdt": "YFIDOWNUSDT",
+   "nuevo_usdt": "YFIDOWNUSDT",
+   "r": 1e-05,
+   "E": "2021-05-31",
+   "fuente": "bn_23d1357993cd43749a5f682ab2e8c739_5be41422d523.json",
+   "cita": "100,000-for-1 reverse token split, starting at 2021-05-31"
+  },
+  {
+   "id": "T022",
+   "regla": 2,
+   "viejo_usdt": "SUNUSDT",
+   "nuevo_usdt": "SUNUSDT",
+   "r": 1000,
+   "E": "2021-06-14",
+   "fuente": "bn_f923f2e4056843a9a9b87beb2aaa2f31_e761d45b0dcc.json",
+   "cita": "at a ratio of 1 SUN (Old) = 1,000 SUN (New)"
+  },
+  {
+   "id": "T023",
+   "regla": 2,
+   "viejo_usdt": "ETHDOWNUSDT",
+   "nuevo_usdt": "ETHDOWNUSDT",
+   "r": 1e-05,
+   "E": "2021-07-08",
+   "fuente": "url_https___www.binance.com_en_support_announcement_important-updates-to-ethdown_d00a74849e3f.json",
+   "cita": "100,000-for-1 reverse token split, starting at 2021-07-08"
+  },
+  {
+   "id": "T024",
+   "regla": 2,
+   "viejo_usdt": "LTCDOWNUSDT",
+   "nuevo_usdt": "LTCDOWNUSDT",
+   "r": 1e-05,
+   "E": "2021-08-17",
+   "fuente": "bn_1b9392b259744884b342dc9708aa9b90_d55d5ecd0667.json",
+   "cita": "100,000-for-1 reverse token split"
+  },
+  {
+   "id": "T025",
+   "regla": 2,
+   "viejo_usdt": "UNIDOWNUSDT",
+   "nuevo_usdt": "UNIDOWNUSDT",
+   "r": 1e-05,
+   "E": "2021-08-17",
+   "fuente": "bn_1b9392b259744884b342dc9708aa9b90_d55d5ecd0667.json",
+   "cita": "100,000-for-1 reverse token split"
+  },
+  {
+   "id": "T026",
+   "regla": 2,
+   "viejo_usdt": "XLMDOWNUSDT",
+   "nuevo_usdt": "XLMDOWNUSDT",
+   "r": 1e-05,
+   "E": "2021-08-26",
+   "fuente": "bn_3c970877a4d446b1a7f42b8b731a773f_bf2e5f6cdab3.json",
+   "cita": "100,000-for-1 reverse token split, starting at 2021-08-26"
+  },
+  {
+   "id": "T027",
+   "regla": 1,
+   "viejo_usdt": "PAXUSDT",
+   "nuevo_usdt": "USDPUSDT",
+   "r": 1,
+   "E": "2021-09-06",
+   "fuente": "bn_c313480177e4457bb1e1b848c88bbf78_5cdfdffc3e32.json",
+   "cita": "ratio of 1 PAX = 1 USDP"
+  },
+  {
+   "id": "T028",
+   "regla": 2,
+   "viejo_usdt": "XTZDOWNUSDT",
+   "nuevo_usdt": "XTZDOWNUSDT",
+   "r": 1e-05,
+   "E": "2021-09-08",
+   "fuente": "bn_e48368c945b84bf89cea20339ec345bf_f761bfa56466.json",
+   "cita": "100,000-for-1 reverse token split, starting at 2021-09-08"
+  },
+  {
+   "id": "T029",
+   "regla": 2,
+   "viejo_usdt": "TRXDOWNUSDT",
+   "nuevo_usdt": "TRXDOWNUSDT",
+   "r": 1e-05,
+   "E": "2021-09-13",
+   "fuente": "bn_c057c3e6e3c644d7b087ab1d6e2446b7_3db55726a5fa.json",
+   "cita": "100,000-for-1 reverse token split, starting at 2021-09-13"
+  },
+  {
+   "id": "T030",
+   "regla": 2,
+   "viejo_usdt": "SUSHIDOWNUSDT",
+   "nuevo_usdt": "SUSHIDOWNUSDT",
+   "r": 1e-05,
+   "E": "2021-09-23",
+   "fuente": "bn_2e762fb338374b17adde728059708ff2_4583557ade82.json",
+   "cita": "100,000-for-1 reverse token split, starting at 2021-09-23"
+  },
+  {
+   "id": "T031",
+   "regla": 2,
+   "viejo_usdt": "DOTDOWNUSDT",
+   "nuevo_usdt": "DOTDOWNUSDT",
+   "r": 1e-05,
+   "E": "2021-10-21",
+   "fuente": "bn_e5b1ce92490b490480d3f4cbac923d12_a84a9353fdd3.json",
+   "cita": "100,000-for-1 reverse token split, starting at 2021-10-21"
+  },
+  {
+   "id": "T032",
+   "regla": 1,
+   "viejo_usdt": "BZRXUSDT",
+   "nuevo_usdt": "OOKIUSDT",
+   "r": 10,
+   "E": "2021-12-20",
+   "fuente": "bn_dff27dc6bcbb432c902bcbea5e24ddfa_117538216109.json",
+   "cita": "Binance will support the bZx Protocol Token (BZRX) token swap and redenomination plan to OokiDAO Token (OOKI)"
+  },
+  {
+   "id": "T033",
+   "regla": 1,
+   "viejo_usdt": "BTTUSDT",
+   "nuevo_usdt": "BTTCUSDT",
+   "r": 1000,
+   "E": "2022-01-17",
+   "fuente": "bn_2722e6da4f5141dd9b2fb07b5b1f3f75_372793e0ce0b.json",
+   "cita": "at a ratio of 1 BTT (Old) = 1,000 BTTC"
+  },
+  {
+   "id": "T034",
+   "regla": 1,
+   "viejo_usdt": "NANOUSDT",
+   "nuevo_usdt": "XNOUSDT",
+   "r": 1,
+   "E": "2022-01-24",
+   "fuente": "bn_3dc8f6de281f4781a246a1658a21cb80_e7bc3f27677f.json",
+   "cita": "Binance will update the ticker of NANO to XNO"
+  },
+  {
+   "id": "T035",
+   "regla": 1,
+   "viejo_usdt": "ANYUSDT",
+   "nuevo_usdt": "MULTIUSDT",
+   "r": 1,
+   "E": "2022-03-30",
+   "fuente": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-any_0d963f079737.json",
+   "cita": "at a ratio of 1 ANY = 1 MULTI"
+  },
+  {
+   "id": "T036",
+   "regla": 1,
+   "viejo_usdt": "GXSUSDT",
+   "nuevo_usdt": "REIUSDT",
+   "r": 10,
+   "E": "2022-04-25",
+   "fuente": "bn_bdfb52830f2f4bfcba496f3f92876b5c_ccba14b6e687.json",
+   "cita": "Binance will support the GXChain (GXS) mainnet token swap and redenomination plan to REI Network (REI)"
+  },
+  {
+   "id": "T037",
+   "regla": 1,
+   "viejo_usdt": "EPSUSDT",
+   "nuevo_usdt": "EPXUSDT",
+   "r": 88,
+   "E": "2022-05-09",
+   "fuente": "bn_cf9526489aa041508f4cd57612f34119_c6ec648a669e.json",
+   "cita": "The ticker of EPS will be updated to EPX"
+  },
+  {
+   "id": "T038",
+   "regla": "1R",
+   "viejo_usdt": "LUNAUSDT",
+   "nuevo_usdt": null,
+   "r": null,
+   "E": null,
+   "fuente": "bn_9c8abd90df5d4890822e6988f7dc8f0c_da2dc145761b.json",
+   "cita": "LUNA (old) was renamed as LUNC while LUNA (new) assumes the ticker LUNA",
+   "reutilizacion_desde": "2022-05-31"
+  },
+  {
+   "id": "T039",
+   "regla": 1,
+   "viejo_usdt": "RAMPUSDT",
+   "nuevo_usdt": "LEVERUSDT",
+   "r": 35,
+   "E": "2022-07-04",
+   "fuente": "bn_0a445bbdac634512886df1bdce74f3da_3631af0d9289.json",
+   "cita": "Binance will support the RAMP (RAMP) token swap, redenomination and rebranding plan to LeverFi (LEVER)"
+  },
+  {
+   "id": "T040",
+   "regla": 1,
+   "viejo_usdt": "POLYUSDT",
+   "nuevo_usdt": "POLYXUSDT",
+   "r": 1,
+   "E": "2022-10-10",
+   "fuente": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-pol_070c8129db69.json",
+   "cita": "at a ratio of 1 POLY = 1 POLYX"
+  },
+  {
+   "id": "T041",
+   "regla": 2,
+   "viejo_usdt": "VIDTUSDT",
+   "nuevo_usdt": "VIDTUSDT",
+   "r": 10,
+   "E": "2022-10-31",
+   "fuente": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-vid_5d4ce6e224e4.json",
+   "cita": "at a ratio of 1 old VIDT = 10 new VIDT"
+  },
+  {
+   "id": "T042",
+   "regla": 1,
+   "viejo_usdt": "MFTUSDT",
+   "nuevo_usdt": "HIFIUSDT",
+   "r": 0.01,
+   "E": "2023-01-12",
+   "fuente": "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-ma_934dcf237cdb.json",
+   "cita": "Binance has completed the Mainframe (MFT) token swap, redenomination and rebranding plan to Hifi Finance (HIFI)"
+  },
+  {
+   "id": "T043",
+   "regla": 2,
+   "viejo_usdt": "BNXUSDT",
+   "nuevo_usdt": "BNXUSDT",
+   "r": 100,
+   "E": "2023-02-16",
+   "fuente": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-bin_8c6a897856c8.json",
+   "cita": "at a ratio of 1 old BNX = 100 new BNX"
+  },
+  {
+   "id": "T044",
+   "regla": 1,
+   "viejo_usdt": "COCOSUSDT",
+   "nuevo_usdt": "COMBOUSDT",
+   "r": 1,
+   "E": "2023-06-02",
+   "fuente": "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-co_4886d9ba7798.json",
+   "cita": "The distribution of COMBO (COMBO) was conducted at a ratio of 1 COCOS = 1 COMBO"
+  },
+  {
+   "id": "T045",
+   "regla": 2,
+   "viejo_usdt": "QUICKUSDT",
+   "nuevo_usdt": "QUICKUSDT",
+   "r": 1000,
+   "E": "2023-07-17",
+   "fuente": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-qui_8e8c44b03471.json",
+   "cita": "at a ratio of 1 old QUICK = 1,000 new QUICK"
+  },
+  {
+   "id": "T046",
+   "regla": 1,
+   "viejo_usdt": "MCUSDT",
+   "nuevo_usdt": "BEAMXUSDT",
+   "r": 100,
+   "E": "2023-11-07",
+   "fuente": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-mer_425adfd88510.json",
+   "cita": "All MC tokens will be swapped for BEAMX at a ratio of 1 MC = 100 BEAMX"
+  },
+  {
+   "id": "T047",
+   "regla": 1,
+   "viejo_usdt": "TVKUSDT",
+   "nuevo_usdt": "VANRYUSDT",
+   "r": 1,
+   "E": "2023-12-01",
+   "fuente": "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-vi_317e63335f04.json",
+   "cita": "The distribution was conducted at a ratio of 1 TVK = 1 VANRY"
+  },
+  {
+   "id": "T048",
+   "regla": 1,
+   "viejo_usdt": "PLAUSDT",
+   "nuevo_usdt": "PDAUSDT",
+   "r": 1,
+   "E": "2024-02-26",
+   "fuente": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-pla_dc497a97c163.json",
+   "cita": "PLA tokens will assume the ticker of PDA on Binance"
+  },
+  {
+   "id": "T049",
+   "regla": 2,
+   "viejo_usdt": "STRAXUSDT",
+   "nuevo_usdt": "STRAXUSDT",
+   "r": 10,
+   "E": "2024-03-20",
+   "fuente": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-str_b8603784a245.json",
+   "cita": "at a ratio of 1 old STRAX = 10 new STRAX"
+  },
+  {
+   "id": "T050",
+   "regla": 1,
+   "viejo_usdt": "MATICUSDT",
+   "nuevo_usdt": "POLUSDT",
+   "r": 1,
+   "E": "2024-09-10",
+   "fuente": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-pol_6ce597c88773.json",
+   "cita": "All MATIC tokens will be swapped to POL at a ratio of 1 MATIC = 1 POL"
+  }
+ ]
+}

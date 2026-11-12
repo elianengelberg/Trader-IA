@@ -1,0 +1,240 @@
+{
+ "pruebas": [
+  "tests/failure/test_failure_modes.py",
+  "tests/integration/test_account_baseline_cli.py",
+  "tests/integration/test_account_restore.py",
+  "tests/integration/test_account_restore_scope.py",
+  "tests/integration/test_adverse_recovery.py",
+  "tests/integration/test_backtest_parity.py",
+  "tests/integration/test_deadline_hardening.py",
+  "tests/integration/test_funding_recovery.py",
+  "tests/integration/test_funding_restore.py",
+  "tests/integration/test_funding_runtime_policy.py",
+  "tests/integration/test_funding_settlement.py",
+  "tests/integration/test_live_filters.py",
+  "tests/integration/test_live_path_parity.py",
+  "tests/integration/test_live_position_protection.py",
+  "tests/integration/test_live_runtime.py",
+  "tests/integration/test_mandatory_contracts.py",
+  "tests/integration/test_order_integrity.py",
+  "tests/integration/test_paper_cancellations.py",
+  "tests/integration/test_persistence_completeness.py",
+  "tests/integration/test_phase13_audit_regressions.py",
+  "tests/integration/test_risk_state_persistence.py",
+  "tests/integration/test_runtime_carry_pricing.py",
+  "tests/integration/test_runtime_economics.py",
+  "tests/integration/test_runtime_invariants.py",
+  "tests/integration/test_session_deadline.py",
+  "tests/integration/test_session_start_atomicity.py",
+  "tests/integration/test_spread_gate.py",
+  "tests/unit/mm/test_engine_replay.py",
+  "tests/unit/test_backtest_order_hygiene.py",
+  "tests/unit/test_binance_ambiguous_transport.py",
+  "tests/unit/test_binance_live.py",
+  "tests/unit/test_binance_protective_stop.py",
+  "tests/unit/test_binance_user_stream.py",
+  "tests/unit/test_funding_periods.py",
+  "tests/unit/test_risk_sizing_contract.py",
+  "tests/unit/test_scope_boundary.py"
+ ],
+ "mutantes": [
+  {
+   "id": "M01",
+   "archivo": "packages/tia/src/tia/runtime/live.py",
+   "descripcion": "dos stops si la cancelación no se confirma",
+   "rc": 1,
+   "resultado": "MUERTO",
+   "primera_falla": "FAILED tests/integration/test_account_restore.py::test_partial_fills_and_fees_rebuild_identically_however_often",
+   "segundos": 30.9
+  },
+  {
+   "id": "M02",
+   "archivo": "packages/tia/src/tia/runtime/live.py",
+   "descripcion": "segundo stop cuando el venue no sabe del primero",
+   "rc": 1,
+   "resultado": "MUERTO",
+   "primera_falla": "FAILED tests/integration/test_order_integrity.py::test_a_venue_that_cannot_be_read_keeps_the_stop_tracked_and_places_nothing",
+   "segundos": 111.1
+  },
+  {
+   "id": "M03",
+   "archivo": "packages/tia/src/tia/runtime/live.py",
+   "descripcion": "no esperar al stop de respuesta perdida",
+   "rc": 1,
+   "resultado": "MUERTO",
+   "primera_falla": "FAILED tests/integration/test_live_position_protection.py::test_no_second_stop_while_the_venue_cannot_say_whether_the_first_arrived",
+   "segundos": 99.9
+  },
+  {
+   "id": "M04",
+   "archivo": "packages/tia/src/tia/runtime/live.py",
+   "descripcion": "ignorar el cambio de cantidad (stop más chico que la posición)",
+   "rc": 0,
+   "resultado": "VIVO",
+   "primera_falla": "",
+   "segundos": 173.9
+  },
+  {
+   "id": "M05",
+   "archivo": "packages/tia/src/tia/runtime/live.py",
+   "descripcion": "rechazo del stop en silencio (R25 original)",
+   "rc": 1,
+   "resultado": "MUERTO",
+   "primera_falla": "FAILED tests/integration/test_live_position_protection.py::test_a_venue_that_refuses_every_stop_blocks_entries_halts_and_keeps_asking",
+   "segundos": 92.4
+  },
+  {
+   "id": "M06",
+   "archivo": "packages/tia/src/tia/runtime/live.py",
+   "descripcion": "stop rechazado tomado como protección",
+   "rc": 1,
+   "resultado": "MUERTO",
+   "primera_falla": "FAILED tests/integration/test_live_position_protection.py::test_a_stop_rejected_as_an_order_is_handled_like_a_refused_one",
+   "segundos": 95.7
+  },
+  {
+   "id": "M07",
+   "archivo": "packages/tia/src/tia/runtime/live.py",
+   "descripcion": "stop protector sin reduce_only",
+   "rc": 1,
+   "resultado": "MUERTO",
+   "primera_falla": "FAILED tests/integration/test_runtime_invariants.py::test_a_venue_flat_behind_a_tracked_round_trip_blocks_entries_and_scores_nothing",
+   "segundos": 137.2
+  },
+  {
+   "id": "M08",
+   "archivo": "packages/tia/src/tia/runtime/live.py",
+   "descripcion": "stop del lado equivocado",
+   "rc": 1,
+   "resultado": "MUERTO",
+   "primera_falla": "FAILED tests/integration/test_account_restore.py::test_an_open_position_is_restored_protected_scorable_and_closable_after_a_restart",
+   "segundos": 7.7
+  },
+  {
+   "id": "M09",
+   "archivo": "packages/tia/src/tia/runtime/live.py",
+   "descripcion": "redondeo del nivel hacia el lado que agranda la pérdida",
+   "rc": 0,
+   "resultado": "VIVO",
+   "primera_falla": "",
+   "segundos": 177.9
+  },
+  {
+   "id": "M10",
+   "archivo": "packages/tia/src/tia/runtime/live.py",
+   "descripcion": "re-protección sin mirar si el estado admite órdenes reductoras",
+   "rc": 0,
+   "resultado": "VIVO",
+   "primera_falla": "",
+   "segundos": 172.0
+  },
+  {
+   "id": "M11",
+   "archivo": "packages/tia/src/tia/runtime/live.py",
+   "descripcion": "sin re-protección tras un cierre que no trabaja (R18)",
+   "rc": 1,
+   "resultado": "MUERTO",
+   "primera_falla": "FAILED tests/integration/test_live_position_protection.py::test_every_bar_boundary_finds_the_position_protected_while_closes_are_rejected",
+   "segundos": 93.7
+  },
+  {
+   "id": "M12",
+   "archivo": "packages/tia/src/tia/runtime/live.py",
+   "descripcion": "sin re-protección tras un cierre no enviado (R18)",
+   "rc": 0,
+   "resultado": "VIVO",
+   "primera_falla": "",
+   "segundos": 167.0
+  },
+  {
+   "id": "M13",
+   "archivo": "packages/tia/src/tia/runtime/live.py",
+   "descripcion": "sin re-protección de la posición restaurada al arrancar (N5)",
+   "rc": 1,
+   "resultado": "MUERTO",
+   "primera_falla": "FAILED tests/integration/test_live_position_protection.py::test_a_position_restored_after_a_restart_is_protected_before_its_first_bar",
+   "segundos": 91.9
+  },
+  {
+   "id": "M14",
+   "archivo": "packages/tia/src/tia/runtime/live.py",
+   "descripcion": "más de un stop en reposo al reiniciar sin bloquear",
+   "rc": 0,
+   "resultado": "VIVO",
+   "primera_falla": "",
+   "segundos": 163.0
+  },
+  {
+   "id": "M15",
+   "archivo": "packages/tia/src/tia/runtime/live.py",
+   "descripcion": "flush «completo» con escrituras fallidas (R19)",
+   "rc": 1,
+   "resultado": "MUERTO",
+   "primera_falla": "FAILED tests/integration/test_account_restore.py::test_a_lost_journal_write_makes_the_rebuild_incomplete_and_the_next_session_blocked",
+   "segundos": 19.1
+  },
+  {
+   "id": "M16",
+   "archivo": "packages/tia/src/tia/runtime/live.py",
+   "descripcion": "cierre de emergencia a mercado encima de un stop que puede seguir en reposo",
+   "rc": 1,
+   "resultado": "MUERTO",
+   "primera_falla": "FAILED tests/integration/test_order_integrity.py::test_a_flatten_whose_cancels_fail_keeps_the_stop_tracked_and_sends_no_close",
+   "segundos": 97.5
+  },
+  {
+   "id": "M17",
+   "archivo": "packages/tia/src/tia/runtime/live.py",
+   "descripcion": "cancelar todo olvida órdenes cuya cancelación no se confirmó",
+   "rc": 1,
+   "resultado": "MUERTO",
+   "primera_falla": "FAILED tests/integration/test_order_integrity.py::test_a_flatten_whose_cancels_fail_keeps_the_stop_tracked_and_sends_no_close",
+   "segundos": 110.4
+  },
+  {
+   "id": "M18",
+   "archivo": "packages/tia/src/tia/runtime/live.py",
+   "descripcion": "estado desconocido sin detener las entradas",
+   "rc": 0,
+   "resultado": "VIVO",
+   "primera_falla": "",
+   "segundos": 169.0
+  },
+  {
+   "id": "M19",
+   "archivo": "packages/tia/src/tia/data/providers/binance_live.py",
+   "descripcion": "error de transporte después de enviar tomado como no enviado (N1)",
+   "rc": 1,
+   "resultado": "MUERTO",
+   "primera_falla": "FAILED tests/unit/test_binance_ambiguous_transport.py::test_an_order_that_may_have_reached_the_venue_is_unknown_not_unsent[ReadError]",
+   "segundos": 133.4
+  },
+  {
+   "id": "M20",
+   "archivo": "packages/tia/src/tia/data/providers/binance_live.py",
+   "descripcion": "timeInForce enviado con STOP_LOSS",
+   "rc": 1,
+   "resultado": "MUERTO",
+   "primera_falla": "FAILED tests/unit/test_binance_protective_stop.py::test_a_stop_is_sent_as_stop_loss_with_a_stop_price_and_nothing_else",
+   "segundos": 157.1
+  },
+  {
+   "id": "M21",
+   "archivo": "packages/tia/src/tia/api/gate_probes.py",
+   "descripcion": "la compuerta no exige el stop aceptado en testnet (R25)",
+   "rc": 1,
+   "resultado": "MUERTO",
+   "primera_falla": "FAILED tests/unit/test_binance_protective_stop.py::test_live_activation_needs_a_venue_that_accepted_the_protective_stop",
+   "segundos": 161.2
+  },
+  {
+   "id": "M22",
+   "archivo": "packages/tia/src/tia/runtime/live.py",
+   "descripcion": "posición desprotegida sin detener órdenes nuevas",
+   "rc": 1,
+   "resultado": "MUERTO",
+   "primera_falla": "FAILED tests/integration/test_live_position_protection.py::test_a_venue_that_refuses_every_stop_blocks_entries_halts_and_keeps_asking",
+   "segundos": 93.9
+  }
+ ]
+}

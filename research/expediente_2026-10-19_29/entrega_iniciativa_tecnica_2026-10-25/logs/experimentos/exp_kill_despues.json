@@ -1,0 +1,79 @@
+{
+ "arbol": "dev",
+ "accion": "kill",
+ "nivel_stop": 49963.27,
+ "antes": {
+  "estado": "running",
+  "posicion": 0.080117,
+  "stops_en_reposo": [
+   {
+    "precio": 49963.27,
+    "cantidad": 0.080117
+   }
+  ],
+  "snapshot_protected": true,
+  "unprotected_positions": 0,
+  "bloqueos": [],
+  "incidentes": null
+ },
+ "resultado": {
+  "state": "safe_mode",
+  "cancelled_orders": 0,
+  "kept_reducing_orders": [
+   "coid_MQP6C7NEM8VEWBW44QPE4FXK"
+  ]
+ },
+ "despues": {
+  "estado": "safe_mode",
+  "posicion": 0.080117,
+  "stops_en_reposo": [
+   {
+    "precio": 49963.27,
+    "cantidad": 0.080117
+   }
+  ],
+  "snapshot_protected": true,
+  "unprotected_positions": 0,
+  "bloqueos": [],
+  "incidentes": null
+ },
+ "barras": [
+  {
+   "minimo": 49959.84459376,
+   "cruza_nivel": true,
+   "posicion": 0.080117,
+   "stops": 1,
+   "estado": "safe_mode"
+  },
+  {
+   "minimo": 49980.56460398,
+   "cruza_nivel": false,
+   "posicion": 0.080117,
+   "stops": 1,
+   "estado": "safe_mode"
+  },
+  {
+   "minimo": 49993.70714557,
+   "cruza_nivel": false,
+   "posicion": 0.080117,
+   "stops": 1,
+   "estado": "safe_mode"
+  }
+ ],
+ "primer_cruce": 0,
+ "posicion_tras_el_cruce": 0.080117,
+ "final": {
+  "estado": "safe_mode",
+  "posicion": 0.080117,
+  "stops_en_reposo": [
+   {
+    "precio": 49963.27,
+    "cantidad": 0.080117
+   }
+  ],
+  "snapshot_protected": true,
+  "unprotected_positions": 0,
+  "bloqueos": [],
+  "incidentes": null
+ }
+}

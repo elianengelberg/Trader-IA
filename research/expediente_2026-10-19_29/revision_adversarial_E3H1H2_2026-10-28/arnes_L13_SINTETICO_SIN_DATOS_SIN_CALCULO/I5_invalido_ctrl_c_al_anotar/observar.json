@@ -1,0 +1,39 @@
+{
+ "salida_1": {
+  "REGISTRO_EJECUCION.json": {
+   "sha256": "11c50418a11a44ecbba65a686f8c88498085795c1a17aaba963742756ee716cf",
+   "bytes": 775,
+   "contiene_STUB": false
+  },
+  "RESULTADO_E3.json": {
+   "sha256": "c7973b55d9cbf04f51b02dc49412906b1e64caab1548c520bd0c092145abd5ed",
+   "bytes": 1642,
+   "contiene_STUB": false,
+   "veredicto": "ERROR",
+   "etapa": "validez_previa",
+   "estadisticos_iniciados": false
+  },
+  "VALIDEZ_PREVIA.json": {
+   "sha256": "1f7cd9470e23ddda592af84d0ce04fa1d6c4d5501920f92699884cdc4f4ef370",
+   "bytes": 74,
+   "contiene_STUB": true
+  }
+ },
+ "registro": [
+  "{\"utc\": \"2026-10-28T13:53:27.692312+00:00\", \"evento\": \"INICIADO\", \"id_intento\": \"385fcd2bc2b63e2e:/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/arnes_L13_SINTETICO_SIN_DATOS_SIN_CALCULO/I5_invalido_ctrl_c_al_anotar/salida_1\", \"salida\": \"/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/arnes_L13_SINTETICO_SIN_DATOS_SIN_CALCULO/I5_invalido_ctrl_c_al_anotar/salida_1\", \"sha_autorizacion\": \"385fcd2bc2b63e2e704b3f2df1f382611f944bcb562376abd67b4b46b200f56c\", \"sha_orquestador\": \"22b7ff20d98e4730f755fc14ccffe796a3c7836fd2b2004756583449bcb64353\", \"sha_manifiesto\": \"7dd0f1fd45965f344076156397aaa372e1f747bdff715938d0874a6d548d89ef\", \"reintento_de\": null}",
+  "{\"utc\": \"2026-10-28T13:53:27.696894+00:00\", \"evento\": \"ERROR\", \"id_intento\": \"385fcd2bc2b63e2e:/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/arnes_L13_SINTETICO_SIN_DATOS_SIN_CALCULO/I5_invalido_ctrl_c_al_anotar/salida_1\", \"etapa\": \"validez_previa\", \"tipo\": \"KeyboardInterrupt\", \"estadisticos_iniciados\": false, \"sha_resultado\": \"c7973b55d9cbf04f51b02dc49412906b1e64caab1548c520bd0c092145abd5ed\"}"
+ ],
+ "registro_vs_disco": [
+  {
+   "evento": "ERROR",
+   "sha_resultado": "c7973b55d9cbf04f51b02dc49412906b1e64caab1548c520bd0c092145abd5ed",
+   "coincide_con_disco": true
+  }
+ ],
+ "nuevo_intento": "PERMITIDO: corrió completo",
+ "salida_2": [
+  "REGISTRO_EJECUCION.json",
+  "RESULTADO_E3.json",
+  "VALIDEZ_PREVIA.json"
+ ]
+}

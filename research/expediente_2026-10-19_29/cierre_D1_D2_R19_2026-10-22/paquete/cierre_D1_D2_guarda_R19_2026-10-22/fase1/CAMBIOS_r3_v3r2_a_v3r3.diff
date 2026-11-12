@@ -1,0 +1,485 @@
+diff -ruN a/ACCIONES_QUE_REQUIEREN_AUTORIZACION.md b/ACCIONES_QUE_REQUIEREN_AUTORIZACION.md
+--- a/ACCIONES_QUE_REQUIEREN_AUTORIZACION.md	2026-10-22 16:51:12.000000000 +0000
++++ b/ACCIONES_QUE_REQUIEREN_AUTORIZACION.md	2026-10-22 19:09:21.321505476 +0000
+@@ -5,7 +5,7 @@
+ | # | Acción | Dónde | Efecto | Reversible |
+ |---|---|---|---|---|
+ | 1 | Crear la rama local `fix/backtest-d1-d3-and-engine-provenance` desde `72ffae5` | `/home/user/Trader-IA` | Modifica el repositorio original: refs y árbol de trabajo | Sí (borrar la rama) |
+-| 2 | Aplicar 01 + 02v3 y **un** commit | Ídem | Primer commit de la unidad inseparable | Sí (reset local antes del push) |
++| 2 | Aplicar 01 + 02v3 y **un único** commit | Ídem | Commit único de la unidad 01+02v3. Git no impide separarlos: antes de seguir, comprobar que el commit contiene exactamente los 8 archivos (plan, paso 1.3) | Sí (reset local antes del push) |
+ | 3 | Aplicar 03 y su commit | Ídem | Commit de pruebas | Sí |
+ | 4 | `git push -u origin fix/…` | GitHub `elianengelberg/trader-ia` | Publica la rama; **dispara la CI por primera vez** | La rama se borra, pero el push queda visible en el historial de eventos |
+ | 5 | Abrir el PR en borrador hacia `claude/algo-trading-simulation-platform-ngf7xo` | GitHub | PR visible | Se puede cerrar |
+diff -ruN a/CAMBIOS_REVISION_r3.md b/CAMBIOS_REVISION_r3.md
+--- a/CAMBIOS_REVISION_r3.md	1970-01-01 00:00:00.000000000 +0000
++++ b/CAMBIOS_REVISION_r3.md	2026-10-22 19:10:15.279534582 +0000
+@@ -0,0 +1,33 @@
++# Cambios de la revisión r3 respecto de r2 (solo documentación)
++
++- **Origen:** extracción nueva de `entrega_integracion_D1_D3_v3r2_2026-10-22.zip` (`d912c88a59b878520501ff221fd78d2d2eef870ae0b681d2108441ab8cbd5155`), verificada: suma externa OK y 98 de 98 sumas internas.
++- **r2 no se modificó** y se conserva junto a r3.
++- **Diferencias exactas:** `CAMBIOS_r3_v3r2_a_v3r3.diff` (`diff -ruN` de r2 a r3, sin los `SHA256SUMS`).
++
++## Lo que no cambia, byte a byte
++- `parches/`: los 5 parches, `SHA256_archivos_resultantes_*_v3.txt` y `ARCHIVOS_MODIFICADOS.txt`.
++- `pruebas/`, `entorno/`, `registro/`.
++- Toda la evidencia de r2 en `evidencia/`.
++- Todas las herramientas de r2 en `herramientas/`.
++- **La decisión B** y la recomendación de integrar 01+02v3 más 03.
++
++## Correcciones
++| # | Qué decía r2 | Qué dice r3 | Archivos |
++|---|---|---|---|
++| C1 (discrepancia documental D1 de la revisión de cierre; no confundir con el defecto D1 del motor) | «**02v3 no aplica sin 01:** comparten `engine.py`» y «unidad inseparable» | **01 y 02v3 son técnicamente separables, pero deben integrarse y revertirse juntos mediante un único commit, porque 02v3 sin 01 puede declarar una versión de motor incorrecta.** El plan agrega una comprobación de que el commit único contiene exactamente los 8 archivos. Nuevo riesgo R4c | `PLAN_INTEGRACION_Y_REVERSION.md`, `INFORME_DECISION_FINAL.md`, `LEEME.md`, `ACCIONES_QUE_REQUIEREN_AUTORIZACION.md`, `MATRIZ_RIESGOS.md`, `COMANDOS_DE_VERIFICACION.md` |
++| C2 (discrepancia documental D2) | «0 en la integración (salvo R19…)», «completa: 0, salvo R19 bajo carga», «es R19, preexistente» | Se separan **hechos comprobados** (conteos, nombres registrados, cargas registradas) de **inferencias** (que las fallas sin nombre sean R19, que la causa sea la carga, que el mecanismo sea el bucle de fondo). Una falla futura es «compatible con R19», no «R19», hasta tener evidencia del mecanismo | `FALLAS_INTERMITENTES_HECHOS_E_INFERENCIAS.md` (nuevo), `MATRIZ_REVISION_PARCHES.md`, `EVIDENCIA_EJECUCIONES.md`, `INFORME_DECISION_FINAL.md`, `MATRIZ_RIESGOS.md`, `PLAN_INTEGRACION_Y_REVERSION.md` §4 |
++| C3 (fila local como si fuera la CI) | «Sin restricciones, como la CI de hoy», «Suites completas (comando de la CI; JUnit)» | «**reproducción local**; GitHub Actions todavía no se ejecutó». La misma aclaración en las filas «como la CI» de `EVIDENCIA_EJECUCIONES.md` | `COMPARACION_BASE_VS_INTEGRACION.md`, `EVIDENCIA_EJECUCIONES.md`, `INFORME_DECISION_FINAL.md` §1 |
++
++## Agregados
++| Archivo | Para qué |
++|---|---|
++| `FALLAS_INTERMITENTES_HECHOS_E_INFERENCIAS.md` | C2 |
++| `CAMBIOS_REVISION_r3.md`, `CAMBIOS_r3_v3r2_a_v3r3.diff` | Este registro y sus diferencias exactas |
++| `evidencia/U1_unidad_y_reversion.txt`, `evidencia/U2_02v3_sin_01.txt` | Evidencia de C1, tomada sin cambios de la revisión de cierre (`revision_cierre_D1_D3_2026-10-22.zip`, `8e6979ad…`) |
++| `herramientas/sonda_version.py` | Sonda de solo lectura: versión, huella y si el motor tiene D1–D3. La usa el paso 4b |
++| `reproducir.sh`, paso 4b | Verifica C1 desde una extracción limpia: 02v3 aplica sin 01, declara 1.1.0 sin D1–D3 y sus 14 pruebas pasan igual; git permite revertir cada uno por separado; la lista de 8 archivos del paso 1.3 es exacta |
++
++## Fuera de r3, a propósito
++- **Ninguna guarda técnica** contra la etiqueta falsa: si se propone, va como parche aparte, con su revisión.
++- **Ninguna corrección de R19.**
++- **Ningún resultado nuevo de R19:** r3 solo corrige cómo se describe lo que ya estaba registrado.
+diff -ruN a/COMANDOS_DE_VERIFICACION.md b/COMANDOS_DE_VERIFICACION.md
+--- a/COMANDOS_DE_VERIFICACION.md	2026-10-22 16:56:52.000000000 +0000
++++ b/COMANDOS_DE_VERIFICACION.md	2026-10-22 19:09:21.321774413 +0000
+@@ -1,11 +1,11 @@
+-# Comandos para repetir las comprobaciones (v3)
++# Comandos para repetir las comprobaciones (v3, revisión r3)
+ 
+ Todo corre en directorios nuevos. Ningún comando escribe en el repositorio de origen, hace commits o push, ni despliega.
+ 
+ ## 0. Integridad
+ ```bash
+-sha256sum -c entrega_integracion_D1_D3_v3r2_2026-10-22.zip.sha256           # junto al ZIP
+-mkdir /ruta/nueva && unzip -q <ZIP> -d /ruta/nueva && cd /ruta/nueva/entrega_integracion_D1_D3_v3r2_2026-10-22
++sha256sum -c entrega_integracion_D1_D3_v3r3_2026-10-22.zip.sha256           # junto al ZIP
++mkdir /ruta/nueva && unzip -q <ZIP> -d /ruta/nueva && cd /ruta/nueva/entrega_integracion_D1_D3_v3r3_2026-10-22
+ sha256sum -c SHA256SUMS
+ ```
+ 
+@@ -24,6 +24,9 @@
+ python3.11 -m venv $W/v && $W/v/bin/pip install -c $E/entorno/ci-py311.txt -e ".[api,db,postgres,redis,llm,dev]"
+ # defecto del 02 original frente al 02v3 (sonda; solo SQLite temporal):
+ $W/v/bin/python -I -B $E/herramientas/sonda_misma_procedencia.py $W/a /tmp            # → «segundo guardado: RECHAZADO»
++# separabilidad de 01 y 02v3 (r3): 02v3 aplica SIN 01 y declara 1.1.0 sin D1–D3; por eso van en un único commit
++git clone --no-local /home/user/Trader-IA $W/s && git -C $W/s checkout --detach $B && git -C $W/s apply --check $E/parches/02v3_*.patch; echo "código: $?"   # 0
++git -C $W/s apply $E/parches/02v3_*.patch && $W/v/bin/python -I -B $E/herramientas/sonda_version.py $W/s   # engine_version=1.1.0 · order_hygiene=False
+ # compatibilidad histórica con las API reales (base escribe, integrada escribe, base vuelve a leer):
+ $W/v/bin/python -I -B $E/herramientas/compat_historica.py <árbol 72ffae5> /tmp/c.db 1.json correr
+ $W/v/bin/python -I -B $E/herramientas/compat_historica.py $W/a /tmp/c.db 2.json correr
+diff -ruN a/COMPARACION_BASE_VS_INTEGRACION.md b/COMPARACION_BASE_VS_INTEGRACION.md
+--- a/COMPARACION_BASE_VS_INTEGRACION.md	2026-10-22 16:49:46.000000000 +0000
++++ b/COMPARACION_BASE_VS_INTEGRACION.md	2026-10-22 19:08:43.959506169 +0000
+@@ -1,10 +1,12 @@
+ # Comparación entre la base (`72ffae5`) y la integración propuesta (01 + 02v3 [+ 03])
+ 
+-## Suites completas (comando de la CI; JUnit)
++## Suites completas: reproducciones **locales** con el comando de la CI (JUnit)
++> **GitHub Actions todavía no se ejecutó** sobre estos parches. Ninguna fila de esta tabla es una corrida de la CI real (R7).
++
+ | Entorno | Base | Obligatoria (01+02v3) | Completa (01+02v3+03) | Prueba a prueba |
+ |---|---|---|---|---|
+-| Restricciones (venv_A / venv_B) | 1956/1956 (código 0, 319,9 s) | 1978/1978 (código 0, 376,3 s) | 1978/1978 (código 0, 365,9 s) | Sin regresiones; 22 nuevas pasan; en la completa pasan las 3 sensibles |
+-| Sin restricciones, como la CI de hoy | 1956/1956 (código 0, 346,9 s) | — | 1978/1978 (código 0, 391,7 s) | Sin regresiones |
++| Restricciones (venv_A / venv_B), corrida local | 1956/1956 (código 0, 319,9 s) | 1978/1978 (código 0, 376,3 s) | 1978/1978 (código 0, 365,9 s) | Sin regresiones; 22 nuevas pasan; en la completa pasan las 3 sensibles |
++| Sin restricciones, instalado con el comando que usa `ci.yml` hoy: **reproducción local**; GitHub Actions todavía no se ejecutó | 1956/1956 (código 0, 346,9 s) | — | 1978/1978 (código 0, 391,7 s) | Sin regresiones |
+ 
+ - **22 pruebas nuevas:** 8 de D1–D3 y 14 de trazabilidad.
+ - **Ninguna prueba de la base** falta ni cambia de resultado.
+diff -ruN a/EVIDENCIA_EJECUCIONES.md b/EVIDENCIA_EJECUCIONES.md
+--- a/EVIDENCIA_EJECUCIONES.md	2026-10-22 16:56:52.000000000 +0000
++++ b/EVIDENCIA_EJECUCIONES.md	2026-10-22 19:08:43.959229594 +0000
+@@ -1,5 +1,7 @@
+ # Ejecuciones de esta revisión: comandos, códigos de salida y resultados (2026-10-22, 16:06–17:00 UTC)
+ 
++> **Todas las ejecuciones de esta tabla son locales.** Las que dicen «como la CI» reproducen localmente los comandos de `ci.yml`. **GitHub Actions todavía no se ejecutó** sobre estos parches (R7).
++
+ ## Convenciones
+ - **Árboles:** `fin_base` = `72ffae5`; `fin_obligatoria` = 01 + 02v3; `fin_completa` = 01 + 02v3 + 03. Son clones nuevos con `git clone --no-local` desde el original, que solo se lee.
+ - **Entornos:**
+@@ -26,18 +28,20 @@
+ | 12 | Suite obligatoria (venv_B) | `correr_suite_ci.sh fin_obligatoria venv_B` | 0 | **1978 / 1978**, 376,3 s | `evidencia/S_suite_obligatoria_venvB.*` |
+ | 13 | Suite completa (venv_A) | `correr_suite_ci.sh fin_completa venv_A` | 0 | **1978 / 1978**, 365,9 s | `evidencia/S_suite_completa_venvA.*` |
+ | 14 | Comparación prueba a prueba | `comparar_suites_v2.py base.xml {obligatoria,completa}.xml [--corregidas]` | 0 / 0 | Ninguna falta; 22 nuevas pasan; 0 cambios de resultado; las 3 sensibles pasan en la completa | `evidencia/S_comparacion_*` |
+-| 15 | Instalación como la CI de hoy, sin restricciones | `pip install -e ".[api,db,postgres,redis,llm,dev]"` | 0 | 74 paquetes; **3 distintos** a los fijados | `entorno/freeze_CI_libre.txt`, `deriva_*.diff` |
+-| 16 | Suite base con venv_CI_libre | `correr_suite_ci.sh ci_base venv_CI_libre` | 0 | **1956 / 1956**, 346,9 s | `evidencia/S_suite_base_CI_libre.*` |
+-| 17 | Suite completa con venv_CI_libre | `correr_suite_ci.sh ci_completa venv_CI_libre` | 0 | **1978 / 1978**, 391,7 s; comparación sin regresiones | `evidencia/S_suite_completa_CI_libre.*`, `S_comparacion_CI_libre.txt` |
+-| 18 | Lint como la CI | `ruff check packages tests scripts` (venv_A en los 3 árboles; venv_CI_libre en la completa) | 0 (×4) | Limpio | `evidencia/CI_ruff_alembic.txt` |
+-| 19 | Migraciones como la CI | `TIA_DATABASE_URL=sqlite:///./data/runtime/ci.db python -m alembic upgrade head` (base y final; venv_A y venv_CI_libre) | 0 (×3) | Versión 0007; `backtests.conditions` existe | `evidencia/CI_alembic.txt`, `CI_ruff_alembic.txt` |
+-| 20 | Trabajo `frontend` de la CI | `npm ci --no-fund --no-audit`; `npm run typecheck`; `npm run build` (Node 22.22.0) | 0 / 0 / 0 | Build de 63 módulos. Los parches no tocan `frontend/` | `evidencia/CI_frontend*.txt` |
++| 15 | Instalación sin restricciones, con el comando que usa `ci.yml` hoy (**reproducción local**) | `pip install -e ".[api,db,postgres,redis,llm,dev]"` | 0 | 74 paquetes; **3 distintos** a los fijados | `entorno/freeze_CI_libre.txt`, `deriva_*.diff` |
++| 16 | Suite base con venv_CI_libre (**local**) | `correr_suite_ci.sh ci_base venv_CI_libre` | 0 | **1956 / 1956**, 346,9 s | `evidencia/S_suite_base_CI_libre.*` |
++| 17 | Suite completa con venv_CI_libre (**local**) | `correr_suite_ci.sh ci_completa venv_CI_libre` | 0 | **1978 / 1978**, 391,7 s; comparación sin regresiones | `evidencia/S_suite_completa_CI_libre.*`, `S_comparacion_CI_libre.txt` |
++| 18 | Lint con el comando de la CI (**local**) | `ruff check packages tests scripts` (venv_A en los 3 árboles; venv_CI_libre en la completa) | 0 (×4) | Limpio | `evidencia/CI_ruff_alembic.txt` |
++| 19 | Migraciones con el comando de la CI (**local**) | `TIA_DATABASE_URL=sqlite:///./data/runtime/ci.db python -m alembic upgrade head` (base y final; venv_A y venv_CI_libre) | 0 (×3) | Versión 0007; `backtests.conditions` existe | `evidencia/CI_alembic.txt`, `CI_ruff_alembic.txt` |
++| 20 | Pasos del trabajo `frontend` de la CI (**local**) | `npm ci --no-fund --no-audit`; `npm run typecheck`; `npm run build` (Node 22.22.0) | 0 / 0 / 0 | Build de 63 módulos. Los parches no tocan `frontend/` | `evidencia/CI_frontend*.txt` |
+ | 21 | Parche 04: YAML | `yaml.safe_load(ci.yml)` | 0 | Válido; el paso Install usa `-c constraints/ci-py311.txt` | `evidencia/CI_parche04_yaml.txt` |
+ | 22 | Parche 04: paso Install tal cual | `pip install -c constraints/ci-py311.txt -e ".[…]"` en un venv nuevo | 0 | 74 paquetes = restricciones | `evidencia/CI_parche04_instalacion.txt` |
+ | 23 | Paridad con E1, motor v3 (2 entornos) | `python -I herramientas/paridad_e1_v2.py fin_obligatoria/packages/tia/src <código E1> …` | 0 / 0 | P1 629, P2 139, P3 185, S1 795 round trips; huellas = v2 = E17 | `evidencia/P_paridad_v3_*` |
+ | 24 | Clasificación de la paridad | `comparar_paridad_v2.py …` | 0 | 45 igualdades, 5 diferencias explicadas, 4 imposibles, **0 no explicadas** | `evidencia/P_paridad_v3_clasificada.*` |
+-| 25 | Módulos de B3 con reloj fijado (6 horas) | `con_reloj.py <hora> pytest <3 módulos>` | — | Base: 1–3 fallas por hora; completa: 0, salvo R19 bajo carga | `evidencia/R9_*` |
+-| 26 | Intermitencia bajo carga (4 repeticiones) | ídem, con la paridad y los mutantes corriendo (carga 1,3–5,2) | — | R19 (`test_partial_fills_and_fees_rebuild_identically_however_often`) falla con carga ≈5 en la base 2 de 4 y en la completa 1 de 4 | `evidencia/R10_*` |
++| 25 | Módulos de B3 con reloj fijado (6 horas) | `con_reloj.py <hora> pytest <3 módulos>` | — | **Hecho:** base, 1–3 fallas por hora; completa, 1 falla en 3 de las 6 horas (00:30, 05:30 y 12:00 UTC). El registro solo tiene conteos: sin nombre de prueba, excepción ni carga. **Inferencia (no verificada):** que las fallas de la completa sean R19 | `evidencia/R9_*`; `FALLAS_INTERMITENTES_HECHOS_E_INFERENCIAS.md` |
++| 26 | Intermitencia bajo carga (4 repeticiones) | ídem, con la paridad y los mutantes corriendo (carga 1,3–5,2) | — | **Hecho:** `test_partial_fills_and_fees_rebuild_identically_however_often` falló («persistence writes still in flight») en la base 2 de 4 (cargas 5,15 y 3,48) y en la completa 1 de 4 (carga 5,15); carga = promedio de 1 min al iniciar cada corrida. **Inferencia (no verificada):** causa (carga) y mecanismo (bucle de fondo, R19) | `evidencia/R10_*` |
+ | 27 | Estado del repositorio original y congelados, al cierre | Mismos comandos que `registro/00`; `herramientas/congelados.sh` | 0 | Idéntico al inicial; 8/8 manifiestos | `registro/99_*` |
+ | 27b | Primera reproducción limpia del paquete v3 (revisión r1, `f4d69ad7…`) | `env -i … reproducir.sh … completo` | 1 | Se detuvo en el paso de compatibilidad: `compat_historica.py` hacía `chdir` al árbol y escribía en una ruta relativa (`salidas/compat_1.json`). Era un defecto de la **herramienta**, no de los parches: los pasos 1–4 habían dado OK. Corregido resolviendo las rutas antes del `chdir`. El ZIP r1 se conserva y no se usa | `reproduccion_v3/reproducir_completo.log` (disco de trabajo) |
+ | 28 | Reproducción desde la extracción limpia del ZIP v3 (revisión r2) | `env -i … bash reproducir.sh <repo> <trabajo> completo <código E1>` | Ver registro externo | Ver `VERIFICACION_EXTRACCION_LIMPIA_v3r2.txt`, fuera del ZIP | — |
++| 29 | Separabilidad técnica de 01 y 02v3 (revisión de cierre; incorporada en r3) | `git apply --check` de 02v3 sobre `72ffae5`; `git apply -R` de 01 solo y de 02v3 solo; `sonda_version.py` | 0 | 02v3 aplica sin 01 y declara `engine_version` 1.1.0 sin D1–D3 (5 operaciones frente a 13); sus 14 pruebas de trazabilidad pasan; las 8 de D1–D3 fallan | `evidencia/U1_*`, `U2_*` |
++| 30 | Reproducción desde la extracción limpia del ZIP v3 (revisión r3, documental) | `env -i … bash reproducir.sh <repo> <trabajo> completo <código E1>` (agrega el paso 4b) | Ver registro externo | Ver `VERIFICACION_EXTRACCION_LIMPIA_v3r3.txt`, fuera del ZIP | — |
+diff -ruN a/FALLAS_INTERMITENTES_HECHOS_E_INFERENCIAS.md b/FALLAS_INTERMITENTES_HECHOS_E_INFERENCIAS.md
+--- a/FALLAS_INTERMITENTES_HECHOS_E_INFERENCIAS.md	1970-01-01 00:00:00.000000000 +0000
++++ b/FALLAS_INTERMITENTES_HECHOS_E_INFERENCIAS.md	2026-10-22 19:08:19.696927339 +0000
+@@ -0,0 +1,40 @@
++# Fallas intermitentes: hechos comprobados e inferencias (revisión documental r3)
++
++- **Por qué existe este documento.** La revisión r2 decía «0 fallas en la integración, salvo R19 bajo carga» como si fuera un hecho. Una parte es un hecho y otra es una inferencia. Aquí se separan.
++- **Hecho comprobado:** está en un registro de esta entrega y se puede releer.
++- **Inferencia:** es plausible pero no se midió. Se dice qué falta para comprobarla.
++- **Todas las corridas son locales.** GitHub Actions todavía no se ejecutó sobre estos parches.
++
++## Qué registró cada fuente
++| Fuente | Qué guarda | Qué **no** guarda |
++|---|---|---|
++| `evidencia/R9_modulos_con_reloj_fijado.txt` | Por hora fijada y árbol: cuántas pruebas pasan, fallan y se omiten en los 3 módulos de 03 | El **nombre** de la prueba que falló, la excepción y la carga del sistema |
++| `evidencia/R10_intermitencia_bajo_carga.txt` | 4 repeticiones por árbol; carga = promedio de 1 minuto (`/proc/loadavg`) al iniciar cada corrida; líneas `FAILED` con nombre y las líneas `E` | Ciclos del bucle de fondo, escrituras pendientes y tiempos de vaciado de las corridas que fallaron |
++| v2 `evidencia/v2_B3/*` | Para la prueba de persistencia que corrige 03: ciclos de fondo, escrituras y espera de vaciado máxima | Nada sobre `test_partial_fills_and_fees_rebuild_identically_however_often` |
++
++## Hechos comprobados
++| # | Hecho | Fuente |
++|---|---|---|
++| H1 | Con el reloj fijado a 6 horas, la **base** tuvo 1–3 fallas por hora en los 3 módulos (2, 3, 3, 3, 1, 1) | `R9_*` |
++| H2 | Con el reloj fijado a esas 6 horas, la **completa** (01+02v3+03) tuvo **1 falla en 3 de las 6 horas** (00:30, 05:30 y 12:00 UTC) y 0 en las otras 3 | `R9_*` |
++| H3 | R9 **no** registra cuál prueba falló, con qué excepción ni con qué carga | `R9_*` (solo conteos) |
++| H4 | En R10, la única falla de la completa fue `test_partial_fills_and_fees_rebuild_identically_however_often`, en la repetición 1 (carga 5,15), con `AssertionError: persistence writes still in flight` | `R10_*` |
++| H5 | En R10, esa misma prueba falló en la **base** en las repeticiones 1 y 2 (cargas 5,15 y 3,48): la falla es **preexistente** a los parches | `R10_*` |
++| H6 | En R10, esa prueba pasó en las 5 corridas que empezaron con carga ≤ 2,50 (completa: 2,50, 1,49, 1,32; base: 1,71, 1,41) | `R10_*` |
++| H7 | La carga de R10 no fue controlada: venía de otros trabajos que corrían a la vez (paridad y mutantes) | `EVIDENCIA_EJECUCIONES.md`, fila 26 |
++| H8 | La prueba llama a `start()` y después hace ciclos a mano; hay 34 llamadas con ese patrón en 4 módulos. El parche 03 no modifica esa prueba | Lectura de código; diff de 03 |
++| H9 | Para la prueba de persistencia que **sí** corrige 03, el mecanismo está medido: con el bucle de fondo girando hubo cientos de miles de ciclos de fondo y la espera de vaciado llegó a 10,007 s cuando falló; con 03 tarda 3–4 s y pasa 6 de 6 | v2 `B3_*` |
++| H10 | Las suites completas locales dieron 1978/1978 en la obligatoria (venv_B) y en la completa (venv_A y sin restricciones); son corridas únicas, no repeticiones | `S_suite_*` |
++
++## Inferencias (no verificadas)
++| # | Inferencia | En qué se apoya | Qué falta para comprobarla |
++|---|---|---|---|
++| I1 | Las 3 fallas sin nombre de la completa en R9 (H2) son `test_partial_fills_and_fees_rebuild_identically_however_often` | Es la única falla con nombre de la completa en R10 (H4) | Repetir con `-rA` para que cada falla quede nombrada |
++| I2 | La carga de CPU es la causa de esas fallas | Correlación en las 8 corridas de R10 (H4–H6) | Carga **controlada** como factor, varias repeticiones por nivel; R9 ni siquiera registró la carga (H3) |
++| I3 | El mecanismo es el mismo que el de la prueba que corrige 03: el bucle de fondo con intervalo 0 compite con las escrituras y el vaciado supera 10 s (R19) | El patrón de código (H8) y el mecanismo medido para otra prueba (H9) | Medir, **en las corridas que fallan de esta prueba**, ciclos de fondo, escrituras pendientes, tiempo de vaciado y si las escrituras terminan después; y un control con el bucle de fondo detenido |
++| I4 | No es un problema de sincronización de la persistencia del producto | Que en producción no hay intervalo 0 (vivo 5 s, papel 10 s) | Igual que I3: si alguna escritura no termina nunca o falla con una excepción no inyectada, la inferencia cae |
++
++## Cómo se redacta desde r3
++- **Ya no se dice** «0 fallas en la integración, salvo R19 bajo carga».
++- **Se dice:** «la completa tuvo 1 falla en 3 de las 6 horas, sin nombre registrado (hecho); se atribuye a R19 por inferencia (I1–I3)».
++- **Una falla futura con `persistence writes still in flight`** en una prueba que 03 no modifica es **compatible** con R19. **No se atribuye a R19** sin evidencia del mecanismo (I3).
+diff -ruN a/INFORME_DECISION_FINAL.md b/INFORME_DECISION_FINAL.md
+--- a/INFORME_DECISION_FINAL.md	2026-10-22 16:50:28.000000000 +0000
++++ b/INFORME_DECISION_FINAL.md	2026-10-22 19:09:21.314880401 +0000
+@@ -1,4 +1,6 @@
+-# Decisión final de integración D1–D3 — revisión independiente (v3)
++# Decisión final de integración D1–D3 — revisión independiente (v3, revisión documental r3)
++
++> **r3 cambia solo documentación** (ver `CAMBIOS_REVISION_r3.md`). Parches, pruebas, evidencia previa y la decisión B no cambian.
+ 
+ **Fecha:** 2026-10-22. **Base:** `72ffae5d2698440c8f1afaff12e07bd8adde66fb`.
+ - Es una revisión de ingeniería. **No es una validación de rentabilidad**, no autoriza a operar y no es evidencia de ventaja estadística.
+@@ -11,7 +13,8 @@
+   - riesgos residuales documentados como pendientes: R7, R15, R17, R18, R19, R24;
+   - la primera corrida real de CI, que tiene que ocurrir antes de fusionar.
+ 
+-**Recomendación inequívoca: integrar 01 + 02v3 como unidad inseparable, más 03.**
++**Recomendación inequívoca: integrar 01 + 02v3 como una unidad, en un único commit, más 03.**
++- **01 y 02v3 son técnicamente separables** (git aplica y revierte cada uno por su cuenta), **pero deben integrarse y revertirse juntos mediante un único commit**, porque 02v3 sin 01 declara `engine_version` 1.1.0 en un motor sin D1–D3 (`evidencia/U1_*`, `U2_*`).
+ - **No integrar el 02 original.**
+ - El 04 (CI con versiones fijadas) es opcional y queda a tu criterio, porque cambia la configuración de CI. Lo recomiendo.
+ 
+@@ -20,7 +23,7 @@
+ **Por qué no C:**
+ - no hay problemas de integridad: los hashes, la aplicación de los parches y la reproducción coinciden;
+ - no hay problemas de seguridad;
+-- no hay regresiones: 1956/1956 → 1978/1978 en dos entornos, y la paridad con E1 da 0 diferencias no explicadas;
++- no hay regresiones en las corridas locales: 1956/1956 → 1978/1978 en dos entornos locales (GitHub Actions todavía no se ejecutó), y la paridad con E1 da 0 diferencias no explicadas;
+ - no hay problemas de validez de los experimentos: E1, E3-H1, T-MULTI y T-papel están intactos.
+ 
+ ## 2. Qué se revisó y cómo
+@@ -85,8 +88,8 @@
+ 
+ **Si la primera corrida de CI falla:**
+ - compararla con la base: correr la CI también sobre `72ffae5`, o leer `evidencia/S_*`;
+-- si falla `persistence writes still in flight` en una prueba de `test_account_restore`, `test_funding_*` o `test_adverse_recovery` que **no** está en el parche 03, es R19, preexistente;
+-- no se fusiona con rojo: se re-corre y, si persiste, se aplica el seguimiento de R19.
++- si falla `persistence writes still in flight` en una prueba de `test_account_restore`, `test_funding_*` o `test_adverse_recovery` que **no** está en el parche 03, el síntoma es **compatible** con R19, que es preexistente. **No se atribuye a R19** sin registrar el nombre de la prueba, la excepción y evidencia del mecanismo (`FALLAS_INTERMITENTES_HECHOS_E_INFERENCIAS.md`);
++- no se fusiona con rojo: se compara con la base, se re-corre y, si persiste, se investiga R19 antes de cualquier cambio.
+ 
+ ## 5. Auditoría de las afirmaciones de v2 frente a la evidencia
+ | Afirmación de v2 | Veredicto hoy |
+@@ -99,7 +102,7 @@
+ | Paridad con E1: 45 / 5 / 4 / 0 | **Respaldada** (repetida con el motor v3) |
+ | Sin regresiones | **Respaldada,** también con las versiones sin fijar de hoy |
+ | Causas de B3 (reloj 5 h 55 m; bucle de fondo) | **Respaldada** |
+-| R19: «pasaron hoy, sin holgura medida» | **Incompleta:** hoy falló bajo carga, en la base y en la integración. Sube a severidad media |
++| R19: «pasaron hoy, sin holgura medida» | **Incompleta.** *Hecho:* hoy `test_partial_fills_and_fees_rebuild_identically_however_often` falló en la base y en la integración, en corridas con carga registrada alta (5,15; en la base también 3,48). *Inferencia, no verificada:* que la causa sea la carga y el mecanismo, el bucle de fondo. Sube a severidad media |
+ | Frontend y migraciones no verificados | Cierto entonces; **hoy verificados localmente** |
+ | Comentario «everything that decides the numbers is in the id» | **Sobrestimado.** Corregido en 02v3 |
+ 
+@@ -109,7 +112,7 @@
+ - R15: guardado no atómico;
+ - R17: sin stop durante un cierre parcial;
+ - R18: reversión rechazada sin reintento;
+-- R19: patrón latente en otras pruebas, ahora observado;
++- R19: fallas observadas en una prueba con el patrón de `start()` más ciclos a mano; el mecanismo es una inferencia, no está medido;
+ - R22: huella sobre archivos en disco;
+ - R24: sin prueba contra PostgreSQL;
+ - R3: el vivo sin las capas 2 y 3 de D3;
+diff -ruN a/LEEME.md b/LEEME.md
+--- a/LEEME.md	2026-10-22 16:56:52.000000000 +0000
++++ b/LEEME.md	2026-10-22 19:09:21.321085351 +0000
+@@ -1,19 +1,27 @@
+-# Entrega v3 (revisión r2) — decisión final de integración D1–D3 (2026-10-22)
++# Entrega v3 (revisión r3, documental) — decisión final de integración D1–D3 (2026-10-22)
++
++> **r3 es una revisión solo documental de r2** (`entrega_integracion_D1_D3_v3r2_2026-10-22.zip`, `d912c88a…`, que se conserva). Corrige tres cosas (detalle y diferencias exactas en `CAMBIOS_REVISION_r3.md`):
++> 1. **01 y 02v3:** son técnicamente separables, pero deben integrarse y revertirse juntos en un único commit, porque 02v3 sin 01 puede declarar una versión de motor incorrecta. r2 decía, en falso, que 02v3 no aplicaba sin 01.
++> 2. **Fallas intermitentes:** se separan los hechos comprobados de las inferencias (`FALLAS_INTERMITENTES_HECHOS_E_INFERENCIAS.md`).
++> 3. **Corridas locales:** las comparaciones rotuladas «como la CI» son reproducciones locales; GitHub Actions todavía no se ejecutó.
++>
++> Los parches, las pruebas, los entornos y la evidencia de r2 no cambian, byte a byte. Se agregan dos archivos de evidencia de la revisión de cierre (`U1_*`, `U2_*`), una herramienta de solo lectura (`herramientas/sonda_version.py`) y un paso de reproducción (4b) que verifica la corrección 1.
+ 
+ > La revisión r1 de este paquete (`entrega_integracion_D1_D3_v3_2026-10-22.zip`, `f4d69ad7…`) falló en la reproducción limpia por una ruta relativa en `herramientas/compat_historica.py`. r2 corrige solo esa herramienta (y estas referencias); los parches y las pruebas son los mismos. r1 se conserva y no se usa.
+ 
+ **Decisión: B — LISTO CON CORRECCIONES.**
+-- Recomendación: integrar **01 + 02v3** (unidad inseparable) **+ 03**.
++- Recomendación: integrar **01 + 02v3** en un **único commit** (técnicamente separables, pero se integran y se revierten juntos) **+ 03**.
+ - El 04 (CI con versiones fijadas) es opcional.
+ - No integrar el 02 original.
+ - Nada se integró, publicó ni operó.
+ - Es una revisión de ingeniería: no valida rentabilidad ni autoriza a operar.
+ 
+ ## Orden de lectura
++0. `CAMBIOS_REVISION_r3.md`: qué cambió respecto de r2.
+ 1. `INFORME_DECISION_FINAL.md`: decisión, defecto encontrado, CI y auditoría de afirmaciones.
+ 2. `MATRIZ_REVISION_PARCHES.md`: cada parche frente a cada comprobación pedida.
+ 3. `MATRIZ_RIESGOS.md`: resueltos, pendientes y aceptados.
+-4. `COMPARACION_BASE_VS_INTEGRACION.md` y `EVIDENCIA_EJECUCIONES.md`: comandos, códigos de salida y resultados.
++4. `COMPARACION_BASE_VS_INTEGRACION.md` y `EVIDENCIA_EJECUCIONES.md`: comandos, códigos de salida y resultados (todo local). `FALLAS_INTERMITENTES_HECHOS_E_INFERENCIAS.md`: qué se sabe y qué se infiere de las fallas intermitentes.
+ 5. `MATRIZ_MUTANTES.md`.
+ 6. `PLAN_INTEGRACION_Y_REVERSION.md` y `ACCIONES_QUE_REQUIEREN_AUTORIZACION.md`.
+ 7. `COMANDOS_DE_VERIFICACION.md` y `reproducir.sh`.
+@@ -23,12 +31,12 @@
+ |---|---|
+ | `parches/` | `01_*` (sin cambios desde v2), `02v3_*_CORREGIDO`, `03_*` (sin cambios), `04_*` (nuevo, CI); `originales_v2/02_*` (el 02 de v2, **no integrar**); `SHA256_archivos_resultantes_{obligatoria,completa}_v3.txt`; `ARCHIVOS_MODIFICADOS.txt` |
+ | `pruebas/` | Pruebas definitivas: `test_backtest_order_hygiene.py` (8), `test_backtest_provenance.py` (14), `opcional_03/` |
+-| `evidencia/` | `R*` revisión (defecto, corrección, compatibilidad, cobertura, B3); `S*` suites; `CI_*` pasos de la CI; `M*` mutantes; `P*` paridad con E1 |
++| `evidencia/` | `R*` revisión (defecto, corrección, compatibilidad, cobertura, B3); `S*` suites (locales); `CI_*` pasos de la CI reproducidos localmente; `M*` mutantes; `P*` paridad con E1; `U1_*`, `U2_*` separabilidad de 01 y 02v3 (nuevos en r3) |
+ | `entorno/` | `ci-py311.txt`, freezes de los entornos (incluido el sin restricciones de hoy) y la deriva frente a las restricciones |
+ | `registro/` | `00` estado inicial del repositorio original; `01` verificación de la entrega v2; `99` estado final y archivos congelados |
+ | `herramientas/` | Todo lo usado: sondas (solo miden), mutantes, paridad, comparadores, compatibilidad, cobertura, congelados |
+ 
+ ## Integridad
+ - `SHA256SUMS` cubre cada archivo de esta carpeta.
+-- El hash del ZIP va fuera, en `entrega_integracion_D1_D3_v3r2_2026-10-22.zip.sha256`.
++- El hash del ZIP va fuera, en `entrega_integracion_D1_D3_v3r3_2026-10-22.zip.sha256`.
+ - **Sin firma digital:** los hashes prueban integridad, no autoría.
+diff -ruN a/MATRIZ_REVISION_PARCHES.md b/MATRIZ_REVISION_PARCHES.md
+--- a/MATRIZ_REVISION_PARCHES.md	2026-10-22 16:48:14.000000000 +0000
++++ b/MATRIZ_REVISION_PARCHES.md	2026-10-22 19:08:43.958799004 +0000
+@@ -54,8 +54,8 @@
+ | Modifica **solo pruebas** | Sí: 3 archivos en `tests/integration/`, +45 −13 | `ARCHIVOS_MODIFICADOS.txt` |
+ | No relaja nada | Quita líneas de anclaje, una aserción vacía (`… or True`) y dos `pytest.skip`. Agrega 4 aserciones. No toca ningún tiempo límite | `R8_parche03_lineas_quitadas.txt` |
+ | No oculta errores del producto | En producción no se da ninguna de las dos condiciones: la sesión en vivo usa `SystemClock`, sondea cada 5 s y reconstruye el día con el mismo reloj de pared; el papel en tiempo real sondea cada 10 s. Un intervalo de 0 existe solo en los ayudantes de prueba | `api/state.py` (líneas 2280–2320 y 2477); `live.py:302` |
+-| Mejora la estabilidad | Con el reloj fijado en la franja crítica, los 3 módulos fallan 2–3 pruebas por corrida en la base y 0 en la integración (salvo R19, abajo). La de persistencia baja de 25–31 s a 3–4 s y pasa siempre | `R9_*`, `R10_*`, `B3_*` de v2 |
+-| No arregla todo | Bajo carga de CPU ≈5, otra prueba con el mismo patrón (`test_partial_fills_and_fees_rebuild_identically_however_often`) falló en la base (2 de 4) y en la integración (1 de 4). Es preexistente (R19) y **no** lo cubre 03 | `R10_intermitencia_bajo_carga.txt` |
++| Mejora la estabilidad | **Hechos:** con el reloj fijado en la franja crítica (00:30–05:50 UTC), los 3 módulos fallan 2–3 pruebas por corrida en la base. En la completa, 1 falla en 3 de las 6 horas probadas (00:30, 05:30 y 12:00), **sin nombre registrado**. La de persistencia baja de 25–31 s a 3–4 s y pasa 6 de 6. **Inferencia (no verificada):** que esas fallas de la completa sean R19 (abajo). Detalle: `FALLAS_INTERMITENTES_HECHOS_E_INFERENCIAS.md` | `R9_*`, `R10_*`, `B3_*` de v2 |
++| No arregla todo | **Hechos:** otra prueba con el mismo patrón de código, `test_partial_fills_and_fees_rebuild_identically_however_often`, falló con «persistence writes still in flight» en la base (2 de 4 corridas, cargas 5,15 y 3,48) y en la integración (1 de 4, carga 5,15); pasó en las 5 corridas con carga ≤ 2,50. Falla también en la base, así que es preexistente. 03 no la modifica. **Inferencias (no verificadas):** que la carga sea la causa y que el mecanismo sea el bucle de fondo (R19) | `R10_intermitencia_bajo_carga.txt`; `FALLAS_INTERMITENTES_HECHOS_E_INFERENCIAS.md` |
+ 
+ ## Parche 04 — CI con versiones fijadas (`8d396356…`). Veredicto: **Opcional (decisión del propietario)**
+ | Comprobación | Resultado | Evidencia |
+diff -ruN a/MATRIZ_RIESGOS.md b/MATRIZ_RIESGOS.md
+--- a/MATRIZ_RIESGOS.md	2026-10-22 16:48:56.000000000 +0000
++++ b/MATRIZ_RIESGOS.md	2026-10-22 19:09:21.315247941 +0000
+@@ -1,4 +1,4 @@
+-# Matriz de riesgos: resueltos y pendientes (v3)
++# Matriz de riesgos: resueltos y pendientes (v3, revisión documental r3)
+ 
+ **Estados:**
+ - **Resuelto:** cerrado por un parche de esta entrega, con evidencia. Solo vale si ese parche se integra.
+@@ -11,6 +11,7 @@
+ | R2 | La advertencia «no stop level» vuelve no confiables las corridas con piernas sin stop | Baja | **Aceptado** | Falla segura buscada |
+ | R3 | Las capas 2 y 3 de D3 son propias del backtest; `tia.runtime.live` no las tiene igual | Baja | **Pendiente** (fuera de alcance) | No se afirma equivalencia con el vivo |
+ | R4 | `run_id` sin motor ni datos, con upsert ciego | Media | **Resuelto por 02v3** | Reaparece si se integra 01 sin 02v3 (`C_run_id_*` de v2) |
++| R4c | **Nuevo en r3:** 02v3 sin 01 (integración o reversión parcial) declara `engine_version` 1.1.0 en un motor sin D1–D3. Git no lo impide: 02v3 aplica sin 01, y cada uno se revierte por separado | Media | **Pendiente; mitigado por procedimiento** | `U1_*`, `U2_*`. Mitigación: 01+02v3 en un **único commit**, comprobado antes del push (plan, paso 1.3), y revertido entero. Sus 14 pruebas de trazabilidad pasan igual sin 01: hoy ninguna prueba lo detecta |
+ | R4b | **Nuevo:** misma procedencia registrada y otros números → sobrescritura silenciosa en el **02 original** | Media | **Resuelto por 02v3** | `R1_*` (defecto), `R3_*` (corregido), `R2_*` (la prueba nueva falla con el 02 original), T13 |
+ | R5 | Con cierres IOC adversos cada reintento tarda 2 barras | Baja | **Aceptado** | Correcto pero lento |
+ | R6 | Tolerancia del nivel de stop: relativa en el backtest, absoluta en el vivo | Muy baja | **Aceptado** | Por debajo del tick |
+@@ -25,7 +26,7 @@
+ | R16 | Filas viejas con motor desconocido | — | **Tratado** | Intactas, `engine_version` = null, legibles por la API vieja y la nueva (`R5_*`). No comparables sin procedencia externa |
+ | R17 | Mientras un cierre trabaja por llenados parciales, el resto de la posición no tiene stop | Baja | **Pendiente (no resuelto)** | Es la regla de la sesión (ningún stop sobre un cierre en curso). En el escenario de estrés se observaron más de 7 barras |
+ | R18 | Un cierre por señal invertida que se rechaza no se reintenta si la señal no vuelve | Baja | **Pendiente (no resuelto)** | La pierna queda protegida por su stop (`d1_stop`). Por inspección el vivo sigue el mismo patrón (`live.py:2064`), **sin prueba de equivalencia** |
+-| R19 | Otras pruebas llaman a `start()` y hacen ciclos a mano con el bucle de fondo girando (34 llamadas en 4 módulos) | **Media (subió)** | **Pendiente (no resuelto)** | **Se materializó hoy:** con carga de CPU ≈5, `test_partial_fills_and_fees_rebuild_identically_however_often` falló en la base (2 de 4) y en la integración (1 de 4); con carga ≤2,5 pasó siempre (`R10_*`). Es preexistente, no lo introduce ningún parche. Seguimiento: el mismo `_drive_by_hand` en esas pruebas |
++| R19 | Otras pruebas llaman a `start()` y hacen ciclos a mano con el bucle de fondo girando (34 llamadas en 4 módulos) | **Media (subió)** | **Pendiente (no resuelto)** | **Hechos:** `test_partial_fills_and_fees_rebuild_identically_however_often` falló con «persistence writes still in flight» en la base (2 de 4, cargas 5,15 y 3,48) y en la integración (1 de 4, carga 5,15); pasó en las 5 corridas con carga ≤ 2,50 (`R10_*`). Falla también en la base: es preexistente, no la introduce ningún parche. **Inferencias, no verificadas:** que la causa sea la carga y que el mecanismo sea el bucle de fondo (`FALLAS_INTERMITENTES_HECHOS_E_INFERENCIAS.md`). Seguimiento: investigar el mecanismo antes de cambiar nada; `_drive_by_hand` solo si se confirma |
+ | R20 | Un conflicto de guardado sale como HTTP 400, no 409 | Muy baja | **Aceptado** | Mapeo existente de `ValueError` |
+ | R21 | **Nuevo (efecto de 02v3):** una re-corrida legítima después de un cambio de entorno que cambie números se rechaza hasta borrar o renombrar a mano | Baja | **Aceptado** | Falla ruidosa en lugar de sobrescritura silenciosa |
+ | R22 | **Nuevo:** la huella se calcula sobre los archivos en disco al primer uso; con un despliegue en caliente sin reinicio podría no corresponder al código cargado | Muy baja | **Pendiente (aceptado)** | Mitigado por el control de números de 02v3 |
+diff -ruN a/PLAN_INTEGRACION_Y_REVERSION.md b/PLAN_INTEGRACION_Y_REVERSION.md
+--- a/PLAN_INTEGRACION_Y_REVERSION.md	2026-10-22 16:56:52.000000000 +0000
++++ b/PLAN_INTEGRACION_Y_REVERSION.md	2026-10-22 19:07:46.746516329 +0000
+@@ -1,22 +1,25 @@
+-# Plan de integración y reversión (v3) — propuesta, **no ejecutada**
++# Plan de integración y reversión (v3, revisión documental r3) — propuesta, **no ejecutada**
+ 
+ ## 0. Qué se integra y en qué orden
+ | Orden | Parche | Archivo | SHA-256 | Carácter |
+ |---|---|---|---|---|
+ | 1 | 01 — D1–D3 y pruebas definitivas | `parches/01_obligatorio_D1_D3_motor_y_pruebas_definitivas.patch` | `1944f433334cada2c4fa937080241bf51643c1393f54b4d2530003557b2e60bf` | Obligatorio |
+-| 2 | 02v3 — trazabilidad **corregida** | `parches/02v3_obligatorio_trazabilidad_version_motor_CORREGIDO.patch` | `d5c90091b705647cdbdd9044d0406ccc28f12e39c6070deeb5cd8aef03cf6a62` | Obligatorio, **inseparable de 01** |
++| 2 | 02v3 — trazabilidad **corregida** | `parches/02v3_obligatorio_trazabilidad_version_motor_CORREGIDO.patch` | `d5c90091b705647cdbdd9044d0406ccc28f12e39c6070deeb5cd8aef03cf6a62` | Obligatorio. Técnicamente separable de 01, pero **se integra y se revierte junto con 01, en un único commit** |
+ | 3 | 03 — pruebas sensibles al entorno | `parches/03_opcional_pruebas_reloj_y_persistencia.patch` | `0be65ea6a5e7072ff83c25ed1cccec80877ceb7b1e0609e2468a025b5294e33a` | Recomendado (solo pruebas) |
+ | 4 | 04 — CI con versiones fijadas | `parches/04_opcional_CI_versiones_fijadas.patch` | `8d39635635c81a4bf91071a42fb3a348ebf50b819efd92227915be3953306dd5` | Opcional, tu decisión (configuración de CI) |
+ 
+ - **No integrar** `parches/originales_v2/02_obligatorio_trazabilidad_version_motor.patch` (`32a42a5d…`), por el defecto R4b.
+ - **01 sin 02v3 reabre R4:** el mismo `run_id` para resultados de motores distintos, más el upsert ciego.
+-- **02v3 no aplica sin 01:** comparten `engine.py`.
+-- **Recomendación:** un **solo commit** con 01 + 02v3, para que no puedan separarse ni al integrar ni al revertir. 03 en un commit aparte. 04 en un commit o PR aparte, porque es configuración de CI.
++- **01 y 02v3 son técnicamente separables, pero deben integrarse y revertirse juntos mediante un único commit, porque 02v3 sin 01 puede declarar una versión de motor incorrecta.**
++  - *Verificado* (`evidencia/U1_unidad_y_reversion.txt`, `evidencia/U2_02v3_sin_01.txt`; `reproducir.sh`, paso 4b): 02v3 aplica sobre `72ffae5` sin 01 (código 0), porque sus fragmentos de `engine.py` no se solapan con los de 01. Desde 01+02v3+03, git permite revertir solo 01 o solo 02v3 (código 0 en ambos casos).
++  - *Qué produce 02v3 sin 01:* un motor que registra `engine_version = 1.1.0`, la versión que significa «con D1–D3», pero **sin D1–D3**. Sus 14 pruebas de trazabilidad pasan igual; solo fallan las 8 de D1–D3, que viajan con 01. La huella del motor sí difiere, así que esos resultados no se mezclan en el almacén con los del 1.1.0 genuino; pero la etiqueta de versión es falsa.
++  - *Por qué la unidad no la garantiza git:* la impone solo el procedimiento. Por eso el paso 1.3 aplica los dos parches y hace **un único commit**, y comprueba antes de seguir que ese commit contiene exactamente los 8 archivos de la unidad.
++- **Recomendación:** 01 + 02v3 en un **único commit** (integración y reversión siempre juntas). 03 en un commit aparte. 04 en un commit o PR aparte, porque es configuración de CI.
+ 
+ ## 1. Pasos exactos (después de tu autorización; cada bloque es una autorización distinta)
+ ```bash
+ cd /home/user/Trader-IA
+-E=<extracción de entrega_integracion_D1_D3_v3r2_2026-10-22>
++E=<extracción de entrega_integracion_D1_D3_v3r3_2026-10-22>
+ # 1.1 Precondiciones
+ test -z "$(git status --porcelain)" && test "$(git rev-parse HEAD)" = 72ffae5d2698440c8f1afaff12e07bd8adde66fb
+ git fetch origin claude/algo-trading-simulation-platform-ngf7xo
+@@ -29,6 +32,8 @@
+ git apply --check $E/parches/02v3_*.patch && git apply $E/parches/02v3_*.patch
+ sha256sum -c $E/parches/SHA256_archivos_resultantes_obligatoria_v3.txt
+ git add -A packages tests docs && git commit -m "Backtest: order hygiene D1-D3 and engine provenance (one unit)"
++# la unidad no la impone git: el commit debe contener exactamente los 8 archivos de 01+02v3, ni uno más ni uno menos
++diff <(git show --name-only --format= HEAD | LC_ALL=C sort) <(printf "%s\n" docs/ARCHITECTURE.md packages/tia/src/tia/api/state.py packages/tia/src/tia/backtest/engine.py packages/tia/src/tia/backtest/result.py packages/tia/src/tia/execution/paper.py packages/tia/src/tia/persistence/repositories.py tests/integration/test_backtest_provenance.py tests/unit/test_backtest_order_hygiene.py | LC_ALL=C sort)
+ # 1.4 Parche 03                                                           [AUTORIZACIÓN 3]
+ git apply --check $E/parches/03_*.patch && git apply $E/parches/03_*.patch
+ sha256sum -c $E/parches/SHA256_archivos_resultantes_completa_v3.txt
+@@ -60,7 +65,7 @@
+ - **Antes de fusionar:** cerrar el PR y borrar la rama. La rama base no cambia.
+ - **Después de fusionar, con PR de reversión y sin reescribir la historia:**
+   1. `git revert <commit 03>`, si se integró: devuelve las 3 pruebas a `72ffae5`.
+-  2. `git revert <commit 01+02v3>`: revierte la unidad entera. **Nunca revertir solo una parte.**
++  2. `git revert <commit 01+02v3>`: revierte la unidad entera. **Nunca revertir solo una parte.** Git lo permitiría (verificado, `U1_*`): revertir solo 01 deja un motor que declara 1.1.0 sin D1–D3; revertir solo 02v3 reabre R4. Como la unidad es un único commit, `git revert` de ese commit la revierte completa.
+   3. Comprobar con `git diff 72ffae5 -- packages/` sin salida.
+ - **Datos:**
+   - **No hace falta tocar la base de datos.** Las filas guardadas con procedencia son JSON extra en `conditions`: **la API de 72ffae5 las lee sin problemas**, verificado (`evidencia/R5_compat_5_base_lee_despues.json`).
+@@ -72,7 +77,7 @@
+   - una diferencia en la API o el panel fuera de lo descrito en `COMPARACION_BASE_VS_INTEGRACION.md`.
+ 
+ ## 4. Seguimientos (fuera de esta integración)
+-1. **R19:** aplicar `_drive_by_hand` después de `start()` en las pruebas que conducen los ciclos a mano (34 llamadas en 4 módulos). Es solo de pruebas y necesita su propia revisión.
++1. **R19:** investigar primero con un experimento que distinga las hipótesis (bucle de fondo de la prueba frente a un problema de sincronización de la persistencia). Hoy el mecanismo es una **inferencia**, no un hecho (`FALLAS_INTERMITENTES_HECHOS_E_INFERENCIAS.md`). Solo si la evidencia confirma el bucle de fondo: `_drive_by_hand` después de `start()` en las pruebas que conducen los ciclos a mano (34 llamadas en 4 módulos), como parche de pruebas aparte y con su propia revisión.
+ 2. **R24:** correr las pruebas de trazabilidad contra PostgreSQL.
+ 3. **R15:** guardado atómico (transacción con bloqueo), si alguna vez hay escritores concurrentes.
+ 4. **Protección de la rama base:** exigir PR y CI verde.
+diff -ruN a/evidencia/U1_unidad_y_reversion.txt b/evidencia/U1_unidad_y_reversion.txt
+--- a/evidencia/U1_unidad_y_reversion.txt	1970-01-01 00:00:00.000000000 +0000
++++ b/evidencia/U1_unidad_y_reversion.txt	2026-10-22 19:07:29.187839241 +0000
+@@ -0,0 +1,21 @@
++== 2026-10-22T18:29:15Z · ¿01+02v3 inseparables? ¿03 reversible por separado? (git apply / git apply -R sobre clones nuevos; sin commits)
++-- A. 02v3 sin 01 sobre la base
++   código: 0
++-- B. 01 sin 02v3 sobre la base
++   aplica (código 0): técnicamente posible
++-- C. integración completa (01+02v3+03) y reversión parcial
++   completa = registrada
++   C1. revertir SOLO 01 dejando 02v3:
++   código: 0
++   C2. revertir SOLO 02v3 dejando 01:
++   código: 0
++   C3. revertir SOLO 03:
++   código 0
++   resultado = obligatoria v3 registrada (01+02v3), byte a byte; cambios: 8
++   C4. revertir la unidad 01+02v3 en orden inverso (02v3, luego 01) dejando 03:
++   código 0 · cambios restantes: 3 (solo los 3 archivos de 03)
++       M tests/integration/test_account_restore.py
++       M tests/integration/test_adverse_recovery.py
++       M tests/integration/test_risk_state_persistence.py
++-- D. 03 sin 01 ni 02v3 sobre la base
++   aplica (código 0): 03 no depende de 01 ni de 02v3
+diff -ruN a/evidencia/U2_02v3_sin_01.txt b/evidencia/U2_02v3_sin_01.txt
+--- a/evidencia/U2_02v3_sin_01.txt	1970-01-01 00:00:00.000000000 +0000
++++ b/evidencia/U2_02v3_sin_01.txt	2026-10-22 19:07:29.187895262 +0000
+@@ -0,0 +1,7 @@
++== 2026-10-22T18:30:28Z · qué produce 02v3 aplicado SIN 01 (árbol a) frente a 01+02v3 (árbol d)
++-- a: engine_version=1.1.0 · huella=ceb7a8fbcdadf43e · run_id=bt_40RYMW7JD9Y6FHHDGQEK7014 · operaciones=5 · retorno=-0.000303 · tiene D1-D3 (order_hygiene)=False
++-- d: engine_version=1.1.0 · huella=003d380d7abb1f99 · run_id=bt_6YK4EKAC7VC78CS704QTQHJS · operaciones=13 · retorno=-0.053728 · tiene D1-D3 (order_hygiene)=True
++-- pruebas de trazabilidad (14) en a:
++14 passed in 25.17s
++-- pruebas D1–D3 definitivas (8, del paquete) en a:
++8 failed in 26.44s
+diff -ruN a/herramientas/sonda_version.py b/herramientas/sonda_version.py
+--- a/herramientas/sonda_version.py	1970-01-01 00:00:00.000000000 +0000
++++ b/herramientas/sonda_version.py	2026-10-22 19:07:23.717504745 +0000
+@@ -0,0 +1,16 @@
++"""Sonda (solo mide): qué versión y huella registra el motor del árbol dado y qué produce sobre los fixtures con rechazos
++y parciales. Uso: python -I sonda_version.py <raiz_arbol>"""
++import asyncio, sys
++from pathlib import Path
++raiz = Path(sys.argv[1]); sys.path.insert(0, str(raiz / "packages/tia/src"))
++from tia.backtest import BacktestConfig, BacktestEngine
++from tia.core.config import ExecutionSimConfig
++from tia.data.providers.csv_replay import CsvReplayProvider
++from tia.domain.instruments import DEFAULT_UNIVERSE
++s = asyncio.run(CsvReplayProvider(raiz / "data/fixtures").get_candles("BTC-USD", "1h", limit=400))
++e = BacktestEngine(BacktestConfig(dataset="fixtures:BTC-USD:1h", timeframe="1h", warmup_bars=120,
++                   execution=ExecutionSimConfig(reject_probability=0.3, partial_fill_probability=0.5)), DEFAULT_UNIVERSE)
++r = e.run(s); c = r.conditions
++print(f"engine_version={getattr(c, 'engine_version', '(no existe)')} · huella={getattr(c, 'engine_fingerprint', '(no existe)')[:16]} · "
++      f"run_id={c.run_id} · operaciones={len(r.trades)} · retorno={r.metrics.total_return_pct:.6f} · "
++      f"tiene D1-D3 (order_hygiene)={hasattr(e, 'order_hygiene')}")
+diff -ruN a/reproducir.sh b/reproducir.sh
+--- a/reproducir.sh	2026-10-22 16:22:48.000000000 +0000
++++ b/reproducir.sh	2026-10-22 19:09:43.402394385 +0000
+@@ -1,5 +1,5 @@
+ #!/usr/bin/env bash
+-# Reproduce las verificaciones de la entrega v3 (decisión final: D1–D3 + trazabilidad CORREGIDA + pruebas sensibles al
++# Reproduce las verificaciones de la entrega v3, revisión documental r3 (decisión final: D1–D3 + trazabilidad CORREGIDA + pruebas sensibles al
+ # entorno + propuesta opcional de CI) desde una extracción limpia. NO toca el repositorio de origen: lo clona con --no-local en un directorio nuevo.
+ # NO hace commits, push, despliegues ni operaciones. No escribe fuera de <dir_de_trabajo_nuevo>.
+ #
+@@ -8,7 +8,8 @@
+ #            entorno con restricciones e igual al de referencia; pruebas D1–D3 contra el motor ORIGINAL (8/8 fallan por
+ #            aserción) y contra el integrado (8/8); trazabilidad (14/14); la sonda de «misma procedencia, otros números»
+ #            (el 02 corregido la RECHAZA); compatibilidad con registros históricos usando la API REAL de 72ffae5 y la
+-#            integrada sobre la misma base; mutantes D1–D3 (10, 0 vivos) y de trazabilidad (14, 0 vivos, 1 equivalente);
++#            integrada sobre la misma base; separabilidad técnica de 01 y 02v3 (paso 4b, agregado en r3: 02v3 aplica sin 01 y
++#            declara 1.1.0 sin D1–D3, por eso se integran en un único commit); mutantes D1–D3 (10, 0 vivos) y de trazabilidad (14, 0 vivos, 1 equivalente);
+ #            ruff como la CI; las 3 pruebas del parche 03 a 5 horas de reloj fijadas y la de persistencia 3 veces;
+ #            parche 04 (opcional, CI): aplica y su archivo de restricciones es el de entorno/.
+ #   completo (≈ 55 min): además, la suite completa como la CI en la base, la obligatoria (01+02v3) y la completa
+@@ -77,6 +78,19 @@
+ sys.exit(0 if ok else 1)
+ PYX
+ 
++echo "== 4b. Separabilidad técnica de 01 y 02v3 (r3): la unidad no la impone git, la impone el commit único"
++git clone -q --no-local base solo02v3 && git -C solo02v3 checkout -q --detach "$BASE"
++git -C solo02v3 apply --check "$P2" && git -C solo02v3 apply "$P2" && ok "02v3 aplica sobre la base sin 01" || mal "02v3 no aplica sin 01: la corrección de r3 no se sostiene"
++"$PY" -I -B "$PKG/herramientas/sonda_version.py" "$W/solo02v3" > salidas/sonda_version_solo02v3.txt 2>&1
++"$PY" -I -B "$PKG/herramientas/sonda_version.py" "$W/obligatoria" > salidas/sonda_version_obligatoria.txt 2>&1
++grep -q "engine_version=1.1.0 .*order_hygiene)=False" salidas/sonda_version_solo02v3.txt && grep -q "engine_version=1.1.0 .*order_hygiene)=True" salidas/sonda_version_obligatoria.txt \
++  && ok "02v3 sin 01 declara engine_version 1.1.0 en un motor sin D1–D3 (01+02v3: 1.1.0 con D1–D3)" || mal "sonda de versión"
++correr solo02v3 tests/integration/test_backtest_provenance.py > salidas/trazabilidad_solo02v3.txt 2>&1 && grep -q "14 passed" salidas/trazabilidad_solo02v3.txt \
++  && ok "sin 01, las 14 pruebas de trazabilidad pasan igual: ninguna prueba de esta entrega detecta la etiqueta falsa" || mal "trazabilidad sin 01"
++git -C obligatoria apply -R --check "$P1" && git -C obligatoria apply -R --check "$P2" && ok "git permite revertir solo 01 o solo 02v3 (comprobado con --check, sin cambiar el árbol)" || mal "reversión parcial"
++diff <(git -C obligatoria status --porcelain | awk '{print $2}' | LC_ALL=C sort) <(printf "%s\n" docs/ARCHITECTURE.md packages/tia/src/tia/api/state.py packages/tia/src/tia/backtest/engine.py packages/tia/src/tia/backtest/result.py packages/tia/src/tia/execution/paper.py packages/tia/src/tia/persistence/repositories.py tests/integration/test_backtest_provenance.py tests/unit/test_backtest_order_hygiene.py | LC_ALL=C sort) > /dev/null \
++  && ok "la lista de 8 archivos del plan (paso 1.3) es exactamente lo que cambia 01+02v3" || mal "lista de archivos de la unidad"
++
+ echo "== 5. Mutantes (cada uno debe hacer fallar al menos una prueba)"
+ "$PY" -I "$PKG/herramientas/mutantes_v2.py" "$W/obligatoria" "$W/mutantes_d1d3" tests/unit/test_backtest_order_hygiene.py "$PY" salidas/mutantes_d1d3.json > salidas/mutantes_d1d3.txt
+ "$PY" -I - salidas/mutantes_d1d3.json <<'PYX'

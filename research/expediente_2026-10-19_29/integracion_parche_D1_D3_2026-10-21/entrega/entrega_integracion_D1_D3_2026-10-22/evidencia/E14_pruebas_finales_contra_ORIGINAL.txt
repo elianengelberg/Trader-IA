@@ -1,0 +1,14 @@
+== Pruebas finales (f10baa1041a031ff) contra el motor ORIGINAL (547109460bb5734a) y paper original (f5e0cb87a98d951a)
+E   AssertionError: ['bar 537: 9 bars without a stop', 'bar 538: 10 bars without a stop', 'bar 539: 11 bars without a stop']
+E   AssertionError: no rejected time stop was ever sent again: the retry was suppressed as a duplicate
+E   AssertionError: ['bar 175: leg stop 62584.94100498582, order in the book 62608.515972277375', 'bar 176: leg stop 62567.83067468193, order in the book 62608.515972277375', 'bar 177: leg stop 62567.83067468193, order i
+E   AssertionError: ('d3_stuck', ['bar 508: 4.300000000000484e-05 still held, waiting on a close that is filled', 'bar 509: 4.600000000000...d, waiting on a close that is filled', 'bar 510: 4.800000000000484e-05 still he
+E   AssertionError: ('d3_stuck', ['bar 181: 6.799999999999862e-05 still held, waiting on a close that is filled', 'bar 182: 0.000112999999..., waiting on a close that is filled', 'bar 183: 0.00014199999999999863 still he
+E   AssertionError: ("an open position was force-closed at the final bar's close; that exit was chosen by the sample boundary, not by the ...t any confidence worth quoting', 'the sample covers 29 days, which is unlikely 
+FAILED tests/unit/test_backtest_order_hygiene.py::test_stops_and_exits_survive_rejections
+FAILED tests/unit/test_backtest_order_hygiene.py::test_a_rejected_close_is_sent_again_and_closes
+FAILED tests/unit/test_backtest_order_hygiene.py::test_the_stop_in_the_book_follows_the_leg
+FAILED tests/unit/test_backtest_order_hygiene.py::test_partial_fills_leave_no_untracked_or_stuck_position
+FAILED tests/unit/test_backtest_order_hygiene.py::test_a_close_that_leaves_position_is_released_and_retried
+FAILED tests/unit/test_backtest_order_hygiene.py::test_a_leg_without_a_stop_level_is_reported
+6 failed in 25.11s

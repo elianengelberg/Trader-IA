@@ -1,0 +1,28 @@
+diff --git a/docker-compose.prod.yml b/docker-compose.prod.yml
+index 44a9613..e006bee 100644
+--- a/docker-compose.prod.yml
++++ b/docker-compose.prod.yml
+@@ -52,6 +52,10 @@ services:
+         GIT_COMMIT: ${GIT_COMMIT:-unknown}
+     image: trader-ia:prod
+     restart: unless-stopped
++    # A stop must let the session wind down: the live session flushes its persistence
++    # writes for up to 10 s, then the lease is released and the database closed. Docker's
++    # default grace is 10 s, after which it sends SIGKILL; 40 s leaves that whole path room.
++    stop_grace_period: 40s
+     # Migrations first, serve second. If the upgrade fails the container exits and
+     # restarts into the same failure — visibly, in `docker compose logs backend`.
+     # Exec-array form on purpose: a folded YAML scalar keeps the newline on
+@@ -60,7 +64,11 @@ services:
+     command:
+       - sh
+       - -c
+-      - python -m alembic upgrade head && python -m tia.api.main
++      # `exec`: the server replaces the shell, so `docker stop`'s SIGTERM reaches it. Without
++      # it the shell (dash) is PID 1, does not forward the signal, and the server is killed
++      # at the end of the grace period without its graceful shutdown (no flush, no lease
++      # release) — reproduced with dash outside Docker.
++      - python -m alembic upgrade head && exec python -m tia.api.main
+     environment:
+       TIA_ENV: paper
+       TIA_DATABASE_URL: postgresql+asyncpg://tia:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}@postgres:5432/tia

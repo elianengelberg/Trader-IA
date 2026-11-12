@@ -1,0 +1,2 @@
+2026-10-22 23:10:03 [info     ] backtest_complete              bars=400 component=backtest.engine final_equity=99946.27 run_id=bt_6YK4EKAC7VC78CS704QTQHJS trades=13
+engine_version=1.1.0 · huella=003d380d7abb1f99 · run_id=bt_6YK4EKAC7VC78CS704QTQHJS · operaciones=13 · retorno=-0.053728 · tiene D1-D3 (order_hygiene)=True

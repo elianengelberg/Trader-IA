@@ -1,0 +1,79 @@
+== sha256 (16) de las fuentes
+279a865f6471afe5  PROTOCOLO_E3_v3_PROPUESTO.md
+503a2e09f5325680  CIERRE_E3.md
+21c37596a487de5f  NOTAS_IMPLEMENTACION_v3.md
+187111a00a245162  ADENDA_1_reutilizacion_de_tickers.md
+47c171453d2250d3  ADENDA_3_reglas_conciliacion.md
+87f60413725a8f03  ADENDA_R_auditoria_de_supervivencia_interna.md
+86c8fd0b0a3b2fe2  CORRECCION_R1prima_alcance_por_clase.md
+== v3
+v3        32:**Si hay conflicto, prevalece este documento sobre cualquier otro de E3.** Los documentos anteriores se conservan sin cambios, como registro.
+v3        135:**Si Vision no alcanza:** no hay otra fuente oficial de Binance. Las alternativas no oficiales (Tardis.dev, con todos los pares solo desde 2021-03
+v3        233:- **Lista fija:**
+v3        236:  - BIDR, IDRT, BVND.
+v3        238:- **Tokens apalancados:** X + {UP, DOWN, BULL, BEAR}, con X la base de otro par USDT. La lista se congela en F3.
+v3        107:- todas las exclusiones o remociones que afectan un **par spot contra USDT**, con fecha efectiva entre 2018-01-01 y 2026-05-31;
+v3        97:3. **Listado vigente:**
+v3        100:   - si vuelve a cotizar, es un listado nuevo.
+v3        101:4. **Renombres:** solo con un anuncio oficial (símbolo viejo, símbolo nuevo, fecha y relación de canje). El nuevo hereda la edad y las posicion
+v3        102:5. **Par USDT removido con el token vigente en otros pares:** cuenta como salida.
+v3        175:  - 1 ejecución confirmatoria (H1 y H2);
+v3        180:- **Cualquier otra ejecución es exploratoria:**
+v3        182:  - no cambia ninguna clasificación;
+v3        119:| E | Ambiguo | Se resuelve con la mejor lectura documentada y se clasifica en A–D. Si no tiene datos, es D |
+v3        283:### 4.11 Semanas evaluables e inicio de H
+v3        287:- **Inicio de H:** el **más tardío** de:
+v3        292:- **INVÁLIDO** si más del 20 % de las semanas de H no son evaluables, o si H tiene < 156 semanas evaluables.
+v3        460:### 7.1 Supuestos [Hip, ninguno medido]
+v3        467:### 7.2 Cifras
+v3        481:**Cota conjunta:** con una ventaja real del 10 %/año (y un IC de ≈ 0,02), P(RESPALDADA) ≤ la menor de las potencias de H1 y H2, es decir **�
+v3        73:| **H: histórica** (una sola ejecución) | Desde el inicio fijado en §4.11 hasta el **lunes 2026-05-18** | «Evidencia histórica con contaminaci
+BKRW en v3: 0
+== CIERRE
+CIERRE    15:- No se relajó la regla (iv) ni se recortó la ventana histórica.
+CIERRE    19:- **E3 no continúa.** Reabrirlo o derivar experimentos nuevos de él requiere una autorización expresa.
+CIERRE    30:Haría falta una lista completa y verificable de las exclusiones y renombres de pares USDT de Binance entre 2020-05 y 2026-05. Las opciones posible
+CIERRE    10:  - Con la única fuente pública y permitida que estaba disponible, Common Crawl, esa proporción es del 38–100 % según el año, y del 100 % en
+== NOTAS
+NOTAS     3:**Qué son:** concreciones técnicas de puntos que la v3 deja sin fijar. **No cambian** ningún umbral, ventana, universo, horizonte, costo ni crite
+NOTAS     16:- **N5.** **Fecha efectiva E** de un anuncio = el día UTC en que cesa la negociación spot del par, según el texto. Si el texto da solo la fecha 
+== ADENDA_3
+A3        8:**Qué no cambia:** la v3 (`279a865f…`), la Adenda 1 y la Enmienda 2. Esta adenda **no cambia** categorías, umbrales, ventanas ni criterios. Solo
+A3        18:5. **Fecha efectiva E** (N5):
+A3        19:   - la primera fecha del título;
+A3        50:- (a) **E corregida** según el texto, con cita, y el caso se reclasifica;
+A3        60:  - los desaciertos se leen a mano; si el texto muestra que la fecha o el par extraídos estaban mal, se usa la lectura corregida y se informa;
+A3        62:- **V-S3** (semilla 20261026, k = 10): se sortea entre los eventos del universo y se comparan a mano el par, E y la categoría con el texto archiva
+A3        89:1. **Primera pasada:** `conciliacion.py` sin resoluciones manuales. Produce las listas de revisión: casos E, todos los C, los D del punto 3 de A3.
+A3        90:2. **Lectura manual:** cada caso de cada lista se resuelve con una cita del texto archivado, en `resoluciones_manuales.json`. **Se revisan todos lo
+A3        91:3. **Segunda pasada:** con ese archivo. Su resultado es el definitivo.
+A3        1:# Adenda 3: reglas fijas de la conciliación de supervivencia (v3 §2.3 y §4.11; notas N5–N7; Enmienda 2, E2.1)
+== ADENDA_1
+A1        8:1. **Renombre con cambio de símbolo** (X → Y): el listado vigente de X **termina** en la fecha efectiva. Y lo continúa con la relación de canje
+A1        10:3. **Si no hay anuncio**, rigen las reglas de la v3 §2.2.3 tal cual (30 días). En F3 se hace un control de calidad, solo con datos de actividad: 
+== ADENDA_R
+AR        13:- La regla §4.11 (iv) («salidas sin anuncio ≤ 10 % por año») falló porque **el archivo web no tiene anuncios**: en Common Crawl no hay ningu
+AR        15:  - el bucket conserva pares retirados (228 dejan de tener archivos antes de 2026-05);
+AR        16:  - de las exclusiones anunciadas y archivadas, **ninguna** quedó en la categoría D (par ausente en Vision);
+AR        17:  - las 4 en la categoría T son tokens apalancados (DOTUP, DOTDOWN, TRXDOWN) y BKRW. Por las listas fijas de §4.5, ninguno puede entrar en un uni
+AR        22:**R1 · Alcance de la contabilidad.**
+AR        26:- **Fundamento:** esos pares nunca son elegibles (§4.5) y no entran en ningún cálculo.
+AR        36:- (ii′) la semana siguiente a la fecha efectiva de la última falla **en alcance** de §2.3 (T, D o C no explicada);
+AR        37:- (iv′) el 1 de enero del primer año Y tal que, para **todos** los años de Y a 2026, las salidas en alcance SIN_EVIDENCIA son ≤ 10 % de las s
+AR        38:- (iii) **no se aplica**: medía la cobertura del archivo, que esta adenda deja de exigir.
+AR        68:- **Al escribir esta adenda conozco:**
+AR        70:  - que existen filas inválidas en el borde de los listados (242 de 279, sin desglose por salida).
+AR        61:- **VÁLIDO:** se recomienda autorizar **una** ejecución confirmatoria de la v3 con esta adenda (H1 y H2 con Holm, H3 subordinada). Antes de ejecu
+== CORRECCION_R1prima
+CR        3:**Estado:** PROPUESTA OPCIONAL, congelada **después** de calcular P0 con la regla R1 literal y **antes** de calcular cualquier retorno. Solo rige s
+CR        22:- **Por qué la presento:** la ventana más larga casi duplica la información de H1 sobre el tamaño de efecto que importa económicamente (IC ≈
+CR        23:- **El riesgo que tiene elegirla:** sienta el precedente de corregir una regla después de ver qué hace con la ventana. Por eso queda escrita, con
+CR        10:- El defecto es mío: no verifiqué la semántica de las listas antes de congelar.
+== INFORME_REPARACION
+IR        31:- Se releyeron los **55 eventos** de la primera pasada, no solo los de las listas de revisión. El motivo: el desacierto de V-S3 en DOTUP mostró q
+IR        40:| Eventos omitidos por la extracción | 2 | **TRXUP (T, E 2023-05-09) y LINKDOWN (T, E 2023-05-11)**, del mismo anuncio. El código congelado no ti
+IR        64:| Eventos que mueven el inicio o el final de A | Ninguno pendiente en el archivo | Se revisaron todas las páginas de exclusión con fecha ≥ 2023
+IR        84:| **Margen** | — | **2 semanas.** El último inicio que todavía deja 156 es el 2023-05-29 | Una falla en alcance con E ≥ 2023-05-29 invalida A
+IR        94:| Con una salida más sin evidencia en 2023 (2 de 19 = 10,5 %) | (iv′) = 2024 | < 156 | INVÁLIDO |
+IR        135:**R2 queda abandonada** [J]. Contradice la regla 3 de la Adenda 1 («no se corrigen con reglas inventadas»), y los cortes que importaban dentro d
+IR        31:- Se releyeron los **55 eventos** de la primera pasada, no solo los de las listas de revisión. El motivo: el desacierto de V-S3 en DOTUP mostró q

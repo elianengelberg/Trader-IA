@@ -1,0 +1,391 @@
+{
+ "T_protegidos": {
+  "PRERREGISTRO_FUERA_DE_MUESTRA_T.md": {
+   "actual": "94a165560ba2a1807bf604b079dbf2c8eea7e7e4401fcc5ccb5db275464db58f",
+   "igual": true,
+   "registrado_v05": "94a165560ba2a1807bf604b079dbf2c8eea7e7e4401fcc5ccb5db275464db58f"
+  },
+  "experimentos/calidad_datos.json": {
+   "actual": "88644d85d82af3c91b851b33864a5caefb4e1c73fa12c6c4fee0febef7640f83",
+   "igual": true,
+   "registrado_v05": "88644d85d82af3c91b851b33864a5caefb4e1c73fa12c6c4fee0febef7640f83"
+  },
+  "experimentos/fuera_de_muestra_T.json": {
+   "actual": "4f8fafde372931aab29b94612eb658f5fac9259e51cdf7dace7a1b30fc633c45",
+   "igual": true,
+   "registrado_v05": "4f8fafde372931aab29b94612eb658f5fac9259e51cdf7dace7a1b30fc633c45"
+  },
+  "experimentos/fuera_de_muestra_T.py": {
+   "actual": "941b6e11f6566319b93614ee671b184d60c7b5fbc64a3931a6ff2c8da17fe0fa",
+   "igual": true,
+   "registrado_v05": "941b6e11f6566319b93614ee671b184d60c7b5fbc64a3931a6ff2c8da17fe0fa"
+  }
+ },
+ "T_sin_seguimiento": {
+  "papel/VERIFICACION_OPERATIVA_2026-10-17.md": {
+   "actual": "514fc34ea3e39b820800f32504a98cef09d141563f072fcbfa763ad28d5b0670",
+   "igual": true,
+   "registrado": "514fc34ea3e39b820800f32504a98cef09d141563f072fcbfa763ad28d5b0670"
+  },
+  "papel/corte.py": {
+   "actual": "b5bc9a59263ac42f1615219c7ed02776a2f1775a7b5091be2300a7b5d1ab05a0",
+   "igual": true,
+   "registrado": "b5bc9a59263ac42f1615219c7ed02776a2f1775a7b5091be2300a7b5d1ab05a0"
+  },
+  "tests/test_papel_corte.py": {
+   "actual": "d88aa557c1603ae4d7d9406480dcb1b345be27cf46f38991210544c4157954f2",
+   "igual": true,
+   "registrado": "d88aa557c1603ae4d7d9406480dcb1b345be27cf46f38991210544c4157954f2"
+  }
+ },
+ "entregas_zip": {
+  "AUDITORIA_PARALELA_P1_P2_P4_2026-10-20.zip": {
+   "directorio_central": "75211a3eac85b128a716eacee49d505a6c337060b18e580c26b4658f7170d7b5",
+   "existe": true,
+   "igual_al_registrado": true,
+   "registrado": "5f6cd46e8c17e73b236169a4e8a07b114e803ece1fc62fcdfb99f192a5bd07ae",
+   "sha256": "5f6cd46e8c17e73b236169a4e8a07b114e803ece1fc62fcdfb99f192a5bd07ae",
+   "tamano": 1299979
+  },
+  "CIERRE_FINAL_P1_P2_P4_2026-10-20.zip": {
+   "directorio_central": "eb5169dacb7baaddf5acaff935b3f0a7fb35d63b504e3121699517e6a32037a2",
+   "existe": true,
+   "igual_al_registrado": true,
+   "registrado": "0f86baaa2b2fa8dd154d52305126940668c38f8396fdb3e6e64188016d71a467",
+   "sha256": "0f86baaa2b2fa8dd154d52305126940668c38f8396fdb3e6e64188016d71a467",
+   "tamano": 2089824
+  },
+  "SOLUCION_FINAL_TRADER_IA_v0.5_2026-10-20.zip": {
+   "directorio_central": "568dd2f47c0ff5a34d55d5ad525cf0f0b81f6687d6deaed66ed9ba35bccb50fc",
+   "existe": true,
+   "igual_al_registrado": true,
+   "registrado": "5bf9bc5d004b51188fdd407ae71eaae2ccefec7251af7001f8d89b264b4f5308",
+   "sha256": "5bf9bc5d004b51188fdd407ae71eaae2ccefec7251af7001f8d89b264b4f5308",
+   "tamano": 5586897
+  },
+  "SOLUCION_VERIFICADA_P1_P2_P4_2026-10-20.zip": {
+   "directorio_central": "0c2ba7491418d18ad43023991c440cf37e5f84501b75250bb0353fefb7d0362a",
+   "existe": true,
+   "igual_al_registrado": true,
+   "registrado": "3b147d8c45fbb2770ecad9e1ff5774d986f512cfcf820fd503e371b50c2b5b6c",
+   "sha256": "3b147d8c45fbb2770ecad9e1ff5774d986f512cfcf820fd503e371b50c2b5b6c",
+   "tamano": 2621639
+  },
+  "fx4_zip_A/SOLUCION_FINAL_TRADER_IA_v0.5_2026-10-20.zip": {
+   "directorio_central": "e0cb2eb8f3e2609252bdc52e52c7e68b11ad4859681e20d3bbb3b601b3351d09",
+   "existe": true,
+   "igual_al_registrado": true,
+   "registrado": "d63bfa4f792136d6e4e99babcc38b024b84c8fc56ef31856f0a2ac3bcb5019bb",
+   "sha256": "d63bfa4f792136d6e4e99babcc38b024b84c8fc56ef31856f0a2ac3bcb5019bb",
+   "tamano": 5572204
+  },
+  "fx4_zip_B/SOLUCION_FINAL_TRADER_IA_v0.5_2026-10-20.zip": {
+   "directorio_central": "68883263be816ed6d561c43d2d1c48d217799b13f7d4177040edf3b4e3cb0af4",
+   "existe": true,
+   "igual_al_registrado": true,
+   "registrado": "6bf96048492f409b8c15d4cdc294227651409a9b6287f0e8548d25609c37f4f9",
+   "sha256": "6bf96048492f409b8c15d4cdc294227651409a9b6287f0e8548d25609c37f4f9",
+   "tamano": 5583398
+  },
+  "hcarry_next_final.zip": {
+   "directorio_central": "66649426bfba719dc53b45e7989235d920079f01d340cee5e80712e8f7610def",
+   "existe": true,
+   "igual_al_registrado": true,
+   "registrado": "41e357bd5b5f1aa72718a30cc2363ef01b9dfbe2d0ad60100f986c3a31c02e04",
+   "sha256": "41e357bd5b5f1aa72718a30cc2363ef01b9dfbe2d0ad60100f986c3a31c02e04",
+   "tamano": 3876056
+  },
+  "hcarry_next_historico_2026-10-16.zip": {
+   "directorio_central": "95c6322a11345c31fbe4173f11a872c50727b024eb6bd009c0ed82e943663c29",
+   "existe": true,
+   "registrado": "63354870d7bbec45e4fdeb277f842d891539f93c7df1473ba87e275585411062",
+   "sha256": "NO CALCULADO (contiene datos de mercado)",
+   "tamano": 14994084
+  },
+  "hcarry_next_snapshot1.zip": {
+   "directorio_central": "4eb945d9aa459f5b7459b0a245d9590df62d2f904456d8dd40ed7b963d0a56d5",
+   "existe": true,
+   "igual_al_registrado": true,
+   "registrado": "c8d8f8af9d6124c7facc932515670efb2ec8f1bf0cba7a0ec338103c9c131053",
+   "sha256": "c8d8f8af9d6124c7facc932515670efb2ec8f1bf0cba7a0ec338103c9c131053",
+   "tamano": 134482
+  },
+  "hcarry_next_snapshot2.zip": {
+   "directorio_central": "3116f02c2d3e780c0dffd7dd57405a57dd5899062178eba0d436ac54f04ad5a0",
+   "existe": true,
+   "igual_al_registrado": true,
+   "registrado": "129a81388cea7eb0268f51aa8668aadb716deab588e9c1582df1927083323bfe",
+   "sha256": "129a81388cea7eb0268f51aa8668aadb716deab588e9c1582df1927083323bfe",
+   "tamano": 1229073
+  },
+  "hcarry_next_validacion_historica.zip": {
+   "directorio_central": "1fe3ecfdf282c03809f102183773aa8619d9be43fc96528d3b6459643dddd4f1",
+   "existe": true,
+   "igual_al_registrado": true,
+   "registrado": "dc38cb3df00d66b48172c96a69d3a9ee6296589caf85eec6fd1c4670241c763a",
+   "sha256": "dc38cb3df00d66b48172c96a69d3a9ee6296589caf85eec6fd1c4670241c763a",
+   "tamano": 4876382
+  },
+  "hcarry_test_historico_2026-10-16.zip": {
+   "directorio_central": "e43dd63a87515dec463b179c6b57ebc799fcb711e0112dc612c5b8551c66e814",
+   "existe": true,
+   "registrado": "729fe86b0e6bcf604ceb3aee3352a5b2e3d9a1d8da6fd2d2b824434ed0f1a629",
+   "sha256": "NO CALCULADO (contiene datos de mercado)",
+   "tamano": 93974
+  },
+  "recuperacion/recuperacion_parcial_hcarry_rev5.zip": {
+   "directorio_central": "c3a10c2c8939d8adb6f8087d0fd617bef15ed31f9c9512eba27b545b9446f287",
+   "existe": true,
+   "igual_al_registrado": null,
+   "registrado": null,
+   "sha256": "5783517c7f2355de414d4c8b6ee0b8b9b73abc140fb5e260e1bb6341952da93d",
+   "tamano": 29712
+  },
+  "repo:research/entregas_hcarry/hcarry_next_final.zip": {
+   "directorio_central": "66649426bfba719dc53b45e7989235d920079f01d340cee5e80712e8f7610def",
+   "existe": true,
+   "igual_al_registrado": true,
+   "registrado": "41e357bd5b5f1aa72718a30cc2363ef01b9dfbe2d0ad60100f986c3a31c02e04",
+   "sha256": "41e357bd5b5f1aa72718a30cc2363ef01b9dfbe2d0ad60100f986c3a31c02e04",
+   "tamano": 3876056
+  },
+  "repo:research/entregas_hcarry/hcarry_next_historico_2026-10-16.zip": {
+   "directorio_central": "95c6322a11345c31fbe4173f11a872c50727b024eb6bd009c0ed82e943663c29",
+   "directorio_central_igual_a_la_copia_del_scratchpad": true,
+   "existe": true,
+   "registrado": "63354870d7bbec45e4fdeb277f842d891539f93c7df1473ba87e275585411062",
+   "sha256": "NO CALCULADO (contiene datos de mercado)",
+   "tamano": 14994084
+  },
+  "repo:research/entregas_hcarry/hcarry_next_snapshot1.zip": {
+   "directorio_central": "4eb945d9aa459f5b7459b0a245d9590df62d2f904456d8dd40ed7b963d0a56d5",
+   "existe": true,
+   "igual_al_registrado": true,
+   "registrado": "c8d8f8af9d6124c7facc932515670efb2ec8f1bf0cba7a0ec338103c9c131053",
+   "sha256": "c8d8f8af9d6124c7facc932515670efb2ec8f1bf0cba7a0ec338103c9c131053",
+   "tamano": 134482
+  },
+  "repo:research/entregas_hcarry/hcarry_next_snapshot2.zip": {
+   "directorio_central": "3116f02c2d3e780c0dffd7dd57405a57dd5899062178eba0d436ac54f04ad5a0",
+   "existe": true,
+   "igual_al_registrado": true,
+   "registrado": "129a81388cea7eb0268f51aa8668aadb716deab588e9c1582df1927083323bfe",
+   "sha256": "129a81388cea7eb0268f51aa8668aadb716deab588e9c1582df1927083323bfe",
+   "tamano": 1229073
+  },
+  "repo:research/entregas_hcarry/hcarry_next_validacion_historica.zip": {
+   "directorio_central": "1fe3ecfdf282c03809f102183773aa8619d9be43fc96528d3b6459643dddd4f1",
+   "existe": true,
+   "igual_al_registrado": true,
+   "registrado": "dc38cb3df00d66b48172c96a69d3a9ee6296589caf85eec6fd1c4670241c763a",
+   "sha256": "dc38cb3df00d66b48172c96a69d3a9ee6296589caf85eec6fd1c4670241c763a",
+   "tamano": 4876382
+  },
+  "repo:research/entregas_hcarry/hcarry_test_historico_2026-10-16.zip": {
+   "directorio_central": "e43dd63a87515dec463b179c6b57ebc799fcb711e0112dc612c5b8551c66e814",
+   "directorio_central_igual_a_la_copia_del_scratchpad": true,
+   "existe": true,
+   "registrado": "729fe86b0e6bcf604ceb3aee3352a5b2e3d9a1d8da6fd2d2b824434ed0f1a629",
+   "sha256": "NO CALCULADO (contiene datos de mercado)",
+   "tamano": 93974
+  },
+  "trader_ia_research_2026-10-17.zip": {
+   "directorio_central": "1004386b2fab7294e6b3391caa7b1c4efae5065af05f4c0a55a289251fd90440",
+   "existe": true,
+   "registrado": null,
+   "sha256": "NO CALCULADO (contiene datos de mercado)",
+   "tamano": 15719497
+  },
+  "v0.5:00_preservado/AUDITORIA_PARALELA_P1_P2_P4_2026-10-20.zip": {
+   "existe": true,
+   "igual_al_registrado": true,
+   "registrado": "5f6cd46e8c17e73b236169a4e8a07b114e803ece1fc62fcdfb99f192a5bd07ae",
+   "sha256": "5f6cd46e8c17e73b236169a4e8a07b114e803ece1fc62fcdfb99f192a5bd07ae"
+  },
+  "v0.5:00_preservado/CIERRE_FINAL_P1_P2_P4_2026-10-20.zip": {
+   "existe": true,
+   "igual_al_registrado": true,
+   "registrado": "0f86baaa2b2fa8dd154d52305126940668c38f8396fdb3e6e64188016d71a467",
+   "sha256": "0f86baaa2b2fa8dd154d52305126940668c38f8396fdb3e6e64188016d71a467"
+  },
+  "v0.5:00_preservado/ENTREGA_ORIGINAL_P1_P2_P4_2026-10-20.zip": {
+   "existe": true,
+   "igual_al_registrado": true,
+   "registrado": "974d1ce292b18fe3eb503f22f8ab34512cc6a248e980e2ae4e56cf7ae5d22737",
+   "sha256": "974d1ce292b18fe3eb503f22f8ab34512cc6a248e980e2ae4e56cf7ae5d22737"
+  },
+  "v0.5:00_preservado/EXPEDIENTE_METODOLOGICO_2026-10-20.zip": {
+   "existe": true,
+   "igual_al_registrado": true,
+   "registrado": "33ba77c1c982fa1b334f6ee9beb6196d9c1972f68c07b75987ef3e70efd8f852",
+   "sha256": "33ba77c1c982fa1b334f6ee9beb6196d9c1972f68c07b75987ef3e70efd8f852"
+  },
+  "v0.5:00_preservado/SOLUCION_VERIFICADA_P1_P2_P4_2026-10-20.zip": {
+   "existe": true,
+   "igual_al_registrado": true,
+   "registrado": "3b147d8c45fbb2770ecad9e1ff5774d986f512cfcf820fd503e371b50c2b5b6c",
+   "sha256": "3b147d8c45fbb2770ecad9e1ff5774d986f512cfcf820fd503e371b50c2b5b6c"
+  }
+ },
+ "manifiestos": [
+  {
+   "existe": true,
+   "fallan": [],
+   "faltan": [],
+   "manifiesto": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/auditoria_T_REV_EMA9/SHA256SUMS",
+   "ok": 12,
+   "omitidas_datos": 0
+  },
+  {
+   "existe": true,
+   "fallan": [],
+   "faltan": [],
+   "manifiesto": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/auditoria_paralela_P1_P2_P4_2026-10-20/SHA256SUMS.txt",
+   "ok": 229,
+   "omitidas_datos": 0
+  },
+  {
+   "existe": true,
+   "fallan": [],
+   "faltan": [],
+   "manifiesto": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/auditoria_paralela_P1_P2_P4_2026-10-20/00_entrega_original/SHA256SUMS",
+   "ok": 122,
+   "omitidas_datos": 0
+  },
+  {
+   "existe": true,
+   "fallan": [],
+   "faltan": [],
+   "manifiesto": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_final_P1_P2_P4_2026-10-20/SHA256SUMS.txt",
+   "ok": 68,
+   "omitidas_datos": 0
+  },
+  {
+   "existe": true,
+   "fallan": [],
+   "faltan": [],
+   "manifiesto": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/entregables_P1_P2_P4_2026-10-20/SHA256SUMS",
+   "ok": 122,
+   "omitidas_datos": 0
+  },
+  {
+   "existe": true,
+   "fallan": [],
+   "faltan": [],
+   "manifiesto": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/expediente_metodologico_2026-10-20/SHA256SUMS",
+   "ok": 13,
+   "omitidas_datos": 0
+  },
+  {
+   "existe": true,
+   "fallan": [],
+   "faltan": [],
+   "manifiesto": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E2_descubrimiento_2026-10-19/SHA256SUMS",
+   "ok": 3,
+   "omitidas_datos": 0
+  },
+  {
+   "existe": true,
+   "fallan": [],
+   "faltan": [],
+   "manifiesto": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/SHA256SUMS",
+   "ok": 8,
+   "omitidas_datos": 0
+  },
+  {
+   "existe": true,
+   "fallan": [],
+   "faltan": [],
+   "manifiesto": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/fase_documental_2026-10-20/SHA256SUMS",
+   "ok": 18,
+   "omitidas_datos": 0
+  },
+  {
+   "existe": true,
+   "fallan": [],
+   "faltan": [],
+   "manifiesto": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/preservacion/contenido/SHA256SUMS",
+   "ok": 6,
+   "omitidas_datos": 36
+  },
+  {
+   "existe": true,
+   "fallan": [],
+   "faltan": [],
+   "manifiesto": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/auditoria_preservacion/fase3_pendientes/SHA256SUMS_arbol",
+   "ok": 10,
+   "omitidas_datos": 2304
+  },
+  {
+   "existe": true,
+   "fallan": [],
+   "faltan": [],
+   "manifiesto": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/solucion_verificada_P1_P2_P4_2026-10-20/SHA256SUMS.txt",
+   "ok": 148,
+   "omitidas_datos": 0
+  },
+  {
+   "existe": true,
+   "fallan": [],
+   "faltan": [],
+   "manifiesto": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/solucion_final_trader_ia_v0.5_2026-10-20/SHA256SUMS.txt",
+   "ok": 205,
+   "omitidas_datos": 0
+  },
+  {
+   "existe": true,
+   "fallan": [],
+   "faltan": [],
+   "manifiesto": "/home/user/Trader-IA/research/entregas_hcarry/SHA256SUMS",
+   "ok": 1,
+   "omitidas_datos": 0
+  },
+  {
+   "existe": true,
+   "fallan": [],
+   "faltan": [],
+   "manifiesto": "/home/user/Trader-IA/research/entregas_hcarry/SHA256SUMS_2026-10-17",
+   "ok": 3,
+   "omitidas_datos": 2
+  },
+  {
+   "existe": true,
+   "fallan": [],
+   "faltan": [],
+   "manifiesto": "/home/user/Trader-IA/research/hcarry_next/recuperado/SHA256SUMS",
+   "ok": 9,
+   "omitidas_datos": 0
+  },
+  {
+   "existe": true,
+   "fallan": [],
+   "faltan": [],
+   "manifiesto": "/home/user/Trader-IA/research/hcarry_next/ARTEFACTOS_SHA256_2026-10-17.txt",
+   "ok": 16,
+   "omitidas_datos": 0
+  },
+  {
+   "existe": true,
+   "fallan": [],
+   "faltan": [],
+   "manifiesto": "/home/user/Trader-IA/research/tendencia_btc/ARTEFACTOS_SHA256.txt",
+   "ok": 36,
+   "omitidas_datos": 0
+  }
+ ],
+ "problemas": [],
+ "repositorio": {
+  "HEAD": "692f2b2d7af3189027b62e60367d104d855b0f3f",
+  "huella_porcelain": "87b9585d31924f8193a6d3eb6d0712a3d3880978681c75d0dd77e00d08f34a8e",
+  "lineas_porcelain": 24,
+  "origin": "c6339e3fcd6041cb6c4ad7f5545f0ff306a4fd2f",
+  "rama": "claude/algo-trading-simulation-platform-ngf7xo"
+ },
+ "tendencia_btc_frente_a_HEAD": {
+  "distintos": [
+   "research/tendencia_btc/ARTEFACTOS_SHA256.txt",
+   "research/tendencia_btc/papel/PRERREGISTRO_PAPEL.md"
+  ],
+  "iguales": 50
+ }
+}

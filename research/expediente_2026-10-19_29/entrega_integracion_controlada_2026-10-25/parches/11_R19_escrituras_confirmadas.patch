@@ -1,0 +1,462 @@
+diff --git a/packages/tia/src/tia/runtime/live.py b/packages/tia/src/tia/runtime/live.py
+index e53dc23..decea93 100644
+--- a/packages/tia/src/tia/runtime/live.py
++++ b/packages/tia/src/tia/runtime/live.py
+@@ -659,6 +659,14 @@ class LiveRuntime:
+         #: restart cannot rebuild (F3/F4).
+         self._persist_lock = asyncio.Lock()
+         self._persist_tasks: set[asyncio.Task[Any]] = set()
++        #: R19: what became of every write the session scheduled. A flush is complete only
++        #: when none is in flight *and* none failed — before, "nothing left to wait for"
++        #: was reported as "everything stored" even when the store had refused writes.
++        self._persist_counts = {"scheduled": 0, "confirmed": 0, "failed": 0}
++        self._persist_in_flight: dict[asyncio.Task[Any], dict[str, Any]] = {}
++        #: The writes the store refused, with what they carried, so they can be written
++        #: again from here or from the log; bounded, the count is not.
++        self._persist_lost: list[dict[str, Any]] = []
+         self._exploration_used = 0
+         self._exploration_day = ""
+         #: What the persisted execution record said about today's entries when this
+@@ -1301,15 +1309,22 @@ class LiveRuntime:
+         )
+         if not self.persistence_flushed:
+             # Said, not swallowed: a fill or a stop stamp still in flight when the process
+-            # goes away is a record the next restart rebuilds from short (Phase 1.3, G12).
+-            pending = sum(1 for t in self._persist_tasks if not t.done())
+-            self.last_error = (
+-                f"{pending} persistence write(s) still in flight after "
+-                f"{self._flush_timeout_seconds:.0f}s at stop; the record may be incomplete"
+-            )
++            # goes away, or one the store refused, is a record the next restart rebuilds
++            # from short (Phase 1.3, G12; R19).
++            report = self.persistence_report()
++            said = []
++            if report["in_flight"]:
++                said.append(
++                    f"{report['in_flight']} persistence write(s) still in flight after "
++                    f"{self._flush_timeout_seconds:.0f}s at stop"
++                )
++            if report["failed"]:
++                said.append(f"{report['failed']} persistence write(s) failed during the session")
++            self.last_error = "; ".join(said) + "; the record is incomplete"
+             _log.error(
+-                "persistence_flush_incomplete", run_id=self.run_id, pending=pending,
+-                timeout_seconds=self._flush_timeout_seconds,
++                "persistence_flush_incomplete", run_id=self.run_id, pending=report["in_flight"],
++                failed=report["failed"], timeout_seconds=self._flush_timeout_seconds,
++                lost=report["lost"][:20],
+             )
+ 
+     async def _finalize_stop(self) -> None:
+@@ -4388,15 +4403,70 @@ class LiveRuntime:
+     def _save(self, kind: str, payload: dict[str, Any]) -> None:
+         if self._persist is None:
+             return
++        self._persist_counts["scheduled"] += 1
++        record = {"kind": kind, "scheduled_at": self._clock.now(), "payload": payload}
+         try:
+             result = self._persist(kind, payload)
+-            if asyncio.iscoroutine(result):
+-                task = asyncio.ensure_future(self._sequenced(result))
+-                self._persist_tasks.add(task)
+-                task.add_done_callback(self._persist_tasks.discard)
+-                task.add_done_callback(_swallow)
+         except Exception as exc:  # persistence must never stop the loop
+-            _log.warning("live_persist_failed", kind=kind, error=str(exc)[:200])
++            self._persist_failed(record, exc)
++            return
++        if not asyncio.iscoroutine(result):
++            self._persist_counts["confirmed"] += 1  # written synchronously
++            return
++        task = asyncio.ensure_future(self._sequenced(result))
++        self._persist_tasks.add(task)
++        self._persist_in_flight[task] = record
++        task.add_done_callback(self._persist_tasks.discard)
++        task.add_done_callback(self._persist_settled)
++
++    def _persist_settled(self, task: asyncio.Task[Any]) -> None:
++        """A scheduled write ended: confirmed when it returned, lost when it raised or was
++        cancelled. Never swallowed — a lost write is counted, kept and said."""
++        record = self._persist_in_flight.pop(task, None)
++        if record is None:
++            return  # already accounted for (settled by a flush before its callback ran)
++        if task.cancelled():
++            self._persist_failed(record, asyncio.CancelledError("write cancelled before it landed"))
++        elif task.exception() is not None:
++            self._persist_failed(record, task.exception())
++        else:
++            self._persist_counts["confirmed"] += 1
++
++    def _persist_failed(self, record: dict[str, Any], exc: BaseException | None) -> None:
++        self._persist_counts["failed"] += 1
++        if len(self._persist_lost) < PERSIST_LOST_KEPT:
++            self._persist_lost.append({**record, "error": f"{type(exc).__name__}: {str(exc)[:300]}"})
++        _log.error(
++            "live_persist_write_lost", kind=record["kind"], run_id=self.run_id,
++            ids=_payload_ids(record.get("payload")), error=str(exc)[:200],
++        )
++
++    def _settle_finished_writes(self) -> None:
++        """Account for every write that has ended, now. Its done-callback may not have run
++        yet — a write that failed a moment ago must not read as "not failed"."""
++        for task in [t for t in self._persist_in_flight if t.done()]:
++            self._persist_settled(task)
++
++    def persistence_report(self) -> dict[str, Any]:
++        """Every write scheduled this session, by outcome; ``complete`` only when none is
++        in flight and none was lost. The lost ones carry what they would have written."""
++        self._settle_finished_writes()
++        in_flight = len(self._persist_in_flight)
++        return {
++            **self._persist_counts,
++            "in_flight": in_flight,
++            "complete": in_flight == 0 and self._persist_counts["failed"] == 0,
++            "lost": [
++                {"kind": r["kind"], "scheduled_at": r["scheduled_at"], "ids": _payload_ids(r.get("payload")),
++                 "error": r["error"]}
++                for r in self._persist_lost
++            ],
++        }
++
++    def lost_writes(self) -> list[dict[str, Any]]:
++        """The writes the store refused this session, whole, oldest first: what a recovery
++        writes again. Copies; the session's own record is not handed out."""
++        return [dict(r) for r in self._persist_lost]
+ 
+     async def _sequenced(self, write: Any) -> None:
+         """Run persistence writes one at a time, in the order they were scheduled.
+@@ -4413,11 +4483,13 @@ class LiveRuntime:
+     async def flush_persistence(self, *, timeout_seconds: float = 10.0) -> bool:
+         """Wait for the persistence writes scheduled so far to finish.
+ 
+-        Returns ``True`` when every write landed (or failed, which is logged) within
+-        ``timeout_seconds``; ``False`` when some were still in flight. A session that
+-        stops waits here so the fills, the account events and the stop stamp are on
+-        disk before the process that wrote them goes away. Writes scheduled while
+-        waiting (a stop stamp after the last fill) are waited for too.
++        Returns ``True`` only when every write the session scheduled was confirmed: none
++        still in flight after ``timeout_seconds`` and none lost (R19). Before, a write the
++        store refused counted as finished, and ``True`` meant only "nothing left to wait
++        for". A session that stops waits here so the fills, the account events and the
++        stop stamp are on disk before the process that wrote them goes away. Writes
++        scheduled while waiting (a stop stamp after the last fill) are waited for too.
++        :meth:`persistence_report` says which writes were lost and why.
+         """
+         deadline = time.monotonic() + max(0.0, timeout_seconds)
+         while self._persist_tasks:
+@@ -4426,9 +4498,11 @@ class LiveRuntime:
+                 break
+             remaining = deadline - time.monotonic()
+             if remaining <= 0:
++                self._settle_finished_writes()
+                 return False
+             await asyncio.wait(pending, timeout=remaining)
+-        return True
++        self._settle_finished_writes()
++        return not self._persist_in_flight and self._persist_counts["failed"] == 0
+ 
+     def _emit(self, event_type: str, payload: dict[str, Any]) -> None:
+         """Push one event to the API's broadcast. ``data`` is the key the SSE endpoint
+@@ -4843,12 +4917,29 @@ class LiveRuntime:
+                 ),
+             },
+             "last_error": self.last_error,
++            # R19: the record's own state, so a short record is visible while the session
++            # runs, not only in the log of the stop that found it.
++            "persistence": {k: v for k, v in self.persistence_report().items() if k != "lost"},
+         }
+ 
+ 
+-def _swallow(task: asyncio.Task[Any]) -> None:
+-    if not task.cancelled() and task.exception() is not None:
+-        _log.warning("live_persist_task_failed", error=str(task.exception())[:200])
++#: Lost writes kept whole for recovery; past this only their count grows (and the log).
++PERSIST_LOST_KEPT = 10_000
++
++
++def _payload_ids(payload: Any) -> dict[str, str]:
++    """The identifiers a lost write carried, for the log and the report: enough to find
++    what is missing without dumping the payload."""
++    if not isinstance(payload, dict):
++        return {}
++    ids = {k: str(v) for k, v in payload.items() if k.endswith("_id") and isinstance(v, str | int)}
++    order = payload.get("order")
++    if order is not None and getattr(order, "client_order_id", None):
++        ids["client_order_id"] = str(order.client_order_id)
++    fill = payload.get("fill")
++    if fill is not None and getattr(fill, "fill_id", None):
++        ids["fill_id"] = str(fill.fill_id)
++    return ids
+ 
+ 
+ __all__ = ["MAX_CLOCK_SKEW_MS", "ClockSkewMonitor", "LatencyTracker", "LiveRuntime"]
+diff --git a/tests/integration/test_account_restore.py b/tests/integration/test_account_restore.py
+index df56066..6264c2e 100644
+--- a/tests/integration/test_account_restore.py
++++ b/tests/integration/test_account_restore.py
+@@ -113,6 +113,17 @@ async def settle(runtime: LiveRuntime | None = None) -> None:
+     await asyncio.sleep(0.05)
+ 
+ 
++async def settle_lossy(runtime: LiveRuntime) -> dict[str, Any]:
++    """Let the writes land where the store is made to lose some: nothing may be left in
++    flight, the flush must NOT say the record is complete (R19), and the lost writes are
++    in the session's report. Returns the report."""
++    assert await runtime.flush_persistence(timeout_seconds=10.0) is False, "a lost write reported as stored"
++    report = runtime.persistence_report()
++    assert report["in_flight"] == 0, "persistence writes still in flight"
++    assert report["failed"] >= 1 and report["lost"] and not report["complete"]
++    return report
++
++
+ def engine_for(clock: SimulatedClock, settings) -> PaperExecutionProvider:  # type: ignore[no-untyped-def]
+     return PaperExecutionProvider(
+         settings.execution.model_copy(update={"reject_probability": 0.0, "partial_fill_probability": 0.0}),
+@@ -541,9 +552,10 @@ async def test_a_lost_journal_write_makes_the_rebuild_incomplete_and_the_next_se
+         await register_run(db, runtime.run_id)
+         await runtime.start()
+         await open_position(runtime, market)
+-        await settle(runtime)
++        await settle_lossy(runtime)
+         await runtime.stop()
+-        await settle(runtime)
++        await settle_lossy(runtime)
++        assert runtime.persistence_flushed is False and "failed" in runtime.last_error
+         restore = await rebuild(db)
+         assert restore.complete is False and "inconsistent" in restore.error
+         assert restore.checks["fills_in_table"] == restore.checks["fills_in_journal"] + 1
+@@ -573,9 +585,11 @@ async def test_a_database_outage_during_a_write_does_not_pretend_the_state_was_s
+         await runtime.start()
+         await open_position(runtime, market)
+         held = (await engine.get_positions())[SYMBOL].quantity
+-        await settle(runtime)
++        report = await settle_lossy(runtime)
++        assert {"fill", "account_event"} <= {lost["kind"] for lost in report["lost"]}
+         await runtime.stop()
+-        await settle(runtime)
++        await settle_lossy(runtime)
++        assert runtime.persistence_flushed is False and "failed" in runtime.last_error
+         restore = await rebuild(db)
+         assert restore.complete and not restore.has_position, "the store never saw the fill"
+         # Reconciliation against the engine that still holds the position refuses it.
+diff --git a/tests/integration/test_adverse_recovery.py b/tests/integration/test_adverse_recovery.py
+index a83cc09..76d52c7 100644
+--- a/tests/integration/test_adverse_recovery.py
++++ b/tests/integration/test_adverse_recovery.py
+@@ -25,6 +25,7 @@ from tests.integration.test_account_restore import (
+     rebuild,
+     register_run,
+     settle,
++    settle_lossy,
+ )
+ from tests.integration.test_live_runtime import FakeMarketData, _seed_every_bucket, live_settings
+ from tia.core.clock import SimulatedClock
+@@ -130,10 +131,10 @@ async def test_a_store_that_loses_the_fills_table_makes_the_rebuild_incomplete_a
+         market_a.advance()
+         await runtime_a._cycle_once()
+         held = (await engine_a.get_positions())[SYMBOL]
+-        await settle(runtime_a)
++        assert any(lost["kind"] == "fill" for lost in (await settle_lossy(runtime_a))["lost"])
+         runtime_a._stop_requested = True
+         await runtime_a._finalize_stop()  # the process dies
+-        await settle(runtime_a)
++        await settle_lossy(runtime_a)
+ 
+         restore = await rebuild(db)
+         assert restore.complete is False
+diff --git a/tests/integration/test_funding_recovery.py b/tests/integration/test_funding_recovery.py
+index 0d4ca51..ed5dfdf 100644
+--- a/tests/integration/test_funding_recovery.py
++++ b/tests/integration/test_funding_recovery.py
+@@ -32,6 +32,7 @@ from tests.integration.test_account_restore import (
+     rebuild,
+     register_run,
+     settle,
++    settle_lossy,
+ )
+ from tests.integration.test_funding_restore import _funding_rows, _resumed_market
+ from tests.integration.test_funding_settlement import _ArchiveMarket
+@@ -113,10 +114,13 @@ async def _session_a(db, *, mode: str):  # type: ignore[no-untyped-def]
+     assert runtime.funding["payments"] == 1, "A watched the settlement and booked it"
+     paid = runtime.funding["paid_usd"]
+     period = funding_period_key(funding_period_of(boundary))
+-    await settle(runtime)  # the write is queued; let it reach the (faulting) store
++    # The write is queued; let it reach the (faulting) store. A batch the store refuses is a
++    # lost write, and the flush says so (R19); the other modes land what they are given.
++    lands = settle_lossy if mode == "drop_batch" else settle
++    await lands(runtime)
+     assert persist.seen["batches"] == 1, "one batched write carried the settlement"  # type: ignore[attr-defined]
+     await runtime.stop()
+-    await settle(runtime)
++    await lands(runtime)
+     return {
+         "runtime": runtime, "engine": engine, "market": market, "clock": clock, "held": held,
+         "paid": paid, "period": period, "boundary": boundary,
+diff --git a/tests/integration/test_persistence_completeness.py b/tests/integration/test_persistence_completeness.py
+new file mode 100644
+index 0000000..75335e5
+--- /dev/null
++++ b/tests/integration/test_persistence_completeness.py
+@@ -0,0 +1,162 @@
++"""R19: "flushed" means every scheduled write was confirmed — not that nothing is left to wait for.
++
++Definition used here and in :meth:`LiveRuntime.flush_persistence`: a write is *scheduled*
++when the session hands it to the store, *in flight* until the store's coroutine ends,
++*confirmed* when it returned, *lost* when it raised or was cancelled. The record is
++*complete* when nothing is in flight and nothing was lost. Before, a write the store
++refused was logged at warning level and counted as finished, so a stop reported a clean
++record over a store that had dropped fills.
++
++Expected, fixed before running: a lost write (async, sync, cancelled) makes the flush
++False, the stop unclean and the report name it with its ids; a slow write is in flight
++until it lands, then complete; a clean session is complete; the lost writes carry what a
++recovery needs to write them again, and writing them again completes the store.
++"""
++
++from __future__ import annotations
++
++import asyncio
++from datetime import UTC, datetime
++from pathlib import Path
++from typing import Any
++
++from tia.persistence import Database, IncidentRepository
++
++from .test_live_runtime import build_runtime_paper
++
++
++def _incident(i: int) -> dict[str, Any]:
++    return {"incident_id": f"inc-{i}", "at": datetime.now(UTC), "kind": "halt_new_orders",
++            "actor": "system", "reason": f"r19 test {i}", "run_id": "run", "detail": {}}
++
++
++async def test_a_write_the_store_refuses_makes_the_flush_and_the_stop_say_so() -> None:
++    runtime, _, _ = build_runtime_paper()
++
++    async def store(kind: str, payload: dict[str, Any]) -> None:
++        if payload.get("incident_id") == "inc-2":
++            raise RuntimeError("store refused the row")
++
++    runtime._persist = store
++    for i in range(4):
++        runtime._save("incident", _incident(i))
++    assert await runtime.flush_persistence(timeout_seconds=5.0) is False
++    report = runtime.persistence_report()
++    assert (report["scheduled"], report["confirmed"], report["failed"], report["in_flight"]) == (4, 3, 1, 0)
++    assert report["lost"][0]["ids"] == {"incident_id": "inc-2", "run_id": "run"}
++    assert "store refused the row" in report["lost"][0]["error"]
++    await runtime.start()
++    await runtime.stop()
++    assert runtime.persistence_flushed is False
++    assert "failed" in runtime.last_error and "incomplete" in runtime.last_error
++    assert runtime.snapshot()["persistence"]["complete"] is False
++
++
++async def test_a_synchronous_store_failure_is_a_lost_write_too() -> None:
++    runtime, _, _ = build_runtime_paper()
++
++    def store(kind: str, payload: dict[str, Any]) -> None:
++        raise RuntimeError("store down (sync)")
++
++    runtime._persist = store
++    runtime._save("incident", _incident(1))
++    assert await runtime.flush_persistence(timeout_seconds=1.0) is False
++    assert runtime.persistence_report()["failed"] == 1
++
++
++async def test_a_slow_write_is_in_flight_until_it_lands() -> None:
++    runtime, _, _ = build_runtime_paper()
++    release = asyncio.Event()
++
++    async def store(kind: str, payload: dict[str, Any]) -> None:
++        await release.wait()
++
++    runtime._persist = store
++    runtime._save("incident", _incident(1))
++    assert await runtime.flush_persistence(timeout_seconds=0.1) is False
++    assert runtime.persistence_report()["in_flight"] == 1
++    release.set()
++    assert await runtime.flush_persistence(timeout_seconds=5.0) is True
++    assert runtime.persistence_report()["complete"] is True
++
++
++async def test_a_write_cancelled_before_it_landed_is_lost() -> None:
++    runtime, _, _ = build_runtime_paper()
++
++    async def store(kind: str, payload: dict[str, Any]) -> None:
++        await asyncio.sleep(10)
++
++    runtime._persist = store
++    runtime._save("incident", _incident(1))
++    await asyncio.sleep(0)  # the write has started: it is cancelled mid-flight, as at a shutdown
++    for task in list(runtime._persist_tasks):
++        task.cancel()
++    await asyncio.sleep(0)
++    await asyncio.sleep(0)
++    assert await runtime.flush_persistence(timeout_seconds=1.0) is False
++    report = runtime.persistence_report()
++    assert report["failed"] == 1 and "Cancelled" in report["lost"][0]["error"]
++
++
++async def test_a_clean_session_is_complete() -> None:
++    runtime, _, market = build_runtime_paper()
++    written: list[str] = []
++
++    async def store(kind: str, payload: dict[str, Any]) -> None:
++        written.append(kind)
++
++    runtime._persist = store
++    await runtime.start()
++    market.advance()
++    await runtime._cycle_once()  # at least the heartbeat is written
++    await runtime.stop()
++    assert runtime.persistence_flushed is True and runtime.last_error == ""
++    report = runtime.persistence_report()
++    assert report["complete"] and report["scheduled"] == report["confirmed"] == len(written) > 0
++
++
++async def test_the_lost_writes_can_be_written_again_and_complete_the_store(tmp_path: Path) -> None:
++    """Recovery: what the session kept of its lost writes is enough to write them again,
++    and writing them again is idempotent with what did land (the store's own keys)."""
++    db = Database(f"sqlite+aiosqlite:///{tmp_path / 'r19.db'}")
++    await db.create_schema()
++    outage = {"on": True}
++
++    async def store(kind: str, payload: dict[str, Any]) -> None:
++        if outage["on"] and int(payload["incident_id"].split("-")[1]) % 3 == 0:
++            raise RuntimeError("store outage")
++        async with db.session() as session:
++            await IncidentRepository(session).record(payload)
++
++    try:
++        runtime, _, _ = build_runtime_paper()
++        runtime._persist = store
++        for i in range(10):
++            runtime._save("incident", _incident(i))
++        assert await runtime.flush_persistence(timeout_seconds=5.0) is False
++        lost = runtime.lost_writes()
++        assert sorted(r["payload"]["incident_id"] for r in lost) == ["inc-0", "inc-3", "inc-6", "inc-9"]
++        outage["on"] = False
++        for record in lost:
++            await store(record["kind"], record["payload"])
++        async with db.session() as session:
++            stored = {r.incident_id for r in await IncidentRepository(session).recent(limit=100)}
++        assert stored == {f"inc-{i}" for i in range(10)}
++    finally:
++        await db.close()
++
++
++async def test_a_write_that_failed_a_moment_ago_is_counted_before_its_callback_runs() -> None:
++    """The write fails on the loop's last turn; its done-callback has not run yet. The
++    report and the flush still see it lost — they do not wait for the callback's turn."""
++    runtime, _, _ = build_runtime_paper()
++
++    async def store(kind: str, payload: dict[str, Any]) -> None:
++        raise RuntimeError("store refused the row")
++
++    runtime._persist = store
++    runtime._save("incident", _incident(1))
++    await asyncio.sleep(0)  # the write runs and fails; its callbacks are queued behind us
++    report = runtime.persistence_report()
++    assert report["failed"] == 1 and report["complete"] is False
++    assert await runtime.flush_persistence(timeout_seconds=1.0) is False

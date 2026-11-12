@@ -1,0 +1,315 @@
+{
+ "resumen": {
+  "intentos": 50,
+  "una_rechazada": 18,
+  "dos_aceptadas_carrera": 32,
+  "otros": [],
+  "quedo": {
+   "base": 21,
+   "otra": 29,
+   "ninguna": 0
+  }
+ },
+ "intentos": [
+  {
+   "a": "aceptado",
+   "b": "rechazado",
+   "quedo": "base",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "rechazado",
+   "quedo": "base",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "aceptado",
+   "quedo": "otra",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "rechazado",
+   "quedo": "base",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "aceptado",
+   "quedo": "otra",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "rechazado",
+   "quedo": "base",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "aceptado",
+   "quedo": "otra",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "rechazado",
+   "quedo": "base",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "rechazado",
+   "quedo": "base",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "rechazado",
+   "quedo": "base",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "aceptado",
+   "quedo": "otra",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "rechazado",
+   "quedo": "base",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "aceptado",
+   "quedo": "otra",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "rechazado",
+   "quedo": "base",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "rechazado",
+   "quedo": "base",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "aceptado",
+   "quedo": "otra",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "aceptado",
+   "quedo": "otra",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "rechazado",
+   "quedo": "base",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "aceptado",
+   "quedo": "otra",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "aceptado",
+   "quedo": "otra",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "aceptado",
+   "quedo": "otra",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "aceptado",
+   "quedo": "otra",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "aceptado",
+   "quedo": "otra",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "aceptado",
+   "quedo": "otra",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "aceptado",
+   "quedo": "base",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "aceptado",
+   "quedo": "base",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "aceptado",
+   "quedo": "otra",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "aceptado",
+   "quedo": "otra",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "aceptado",
+   "quedo": "otra",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "rechazado",
+   "quedo": "base",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "aceptado",
+   "quedo": "otra",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "aceptado",
+   "quedo": "otra",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "rechazado",
+   "quedo": "base",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "aceptado",
+   "quedo": "otra",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "aceptado",
+   "quedo": "otra",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "rechazado",
+   "quedo": "base",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "aceptado",
+   "quedo": "otra",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "aceptado",
+   "quedo": "otra",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "rechazado",
+   "quedo": "base",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "aceptado",
+   "quedo": "otra",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "aceptado",
+   "quedo": "otra",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "aceptado",
+   "quedo": "otra",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "rechazado",
+   "quedo": "base",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "aceptado",
+   "quedo": "base",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "rechazado",
+   "quedo": "base",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "aceptado",
+   "quedo": "otra",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "aceptado",
+   "quedo": "otra",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "aceptado",
+   "quedo": "otra",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "rechazado",
+   "quedo": "base",
+   "filas": 1
+  },
+  {
+   "a": "aceptado",
+   "b": "aceptado",
+   "quedo": "otra",
+   "filas": 1
+  }
+ ]
+}

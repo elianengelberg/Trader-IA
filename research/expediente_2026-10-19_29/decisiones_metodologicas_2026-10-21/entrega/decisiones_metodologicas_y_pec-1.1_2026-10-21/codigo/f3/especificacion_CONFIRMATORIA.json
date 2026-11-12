@@ -1,0 +1,20 @@
+{
+ "uso": "CONFIRMATORIA (SEC-1.0): una sola ejecución con esta especificación y estas semillas; su veredicto es vinculante para PEC-1.1. Datos SINTÉTICOS.",
+ "codigo_r1_sha256": {
+  "protocolo_cuantitativo/pec/inferencia.py": "99d0d3e6eb4b2faaf2ad17320887dac181a3f412ee544d979cf2753302811469",
+  "protocolo_cuantitativo/pec/sintetico.py": "7b15c67722ce8c95bbe14b4290bb06baf4ec8dc8f45c0101940cb9661eee7f51",
+  "protocolo_cuantitativo/pec/secuencial.py": "90f3a4c2392bf8bfb247e0a5b153c3e9a1e40e5d74b394aab3db2c5cacf3cbc9"
+ },
+ "regla_decisiva": "p_k = máx(p_ℓ20, p_ℓ40, p_NW con L = 20) de pec.inferencia (regla de respaldo validada por A-S1), con la MISMA semilla de bootstrap en las 5 miradas",
+ "miradas": "n_k = round(k·n_max/5), k = 1…5, sobre prefijos anidados de UNA serie",
+ "fronteras": "c_k = pec.secuencial.fronteras_obf(t_k = n_k/n_max, α = 0,025); se confirma en la primera k con p_k ≤ 1 − Φ(c_k)",
+ "futilidad": "omitida: es no vinculante y solo detiene sin confirmar, así que omitirla da una cota superior del error global",
+ "mirada_degenerada": "p = 1 (no decide)",
+ "B": 9999, "K": 5, "alfa": 0.025, "sd": 0.01,
+ "H0": {"procesos": ["C1", "C2", "C3", "C4", "C5", "C6"], "n_max": [1096, 1461, 1826], "replicas": 36000, "semilla_base": 20261105},
+ "H1": {"procesos": ["C1", "C2", "C5"], "n_max_ir": {"1096": [1.64], "1826": [1.27]}, "replicas": 500, "semilla_base": 20261106},
+ "semillas_por_replica": "semilla_base·10⁶ + r (datos: cadena «proceso-n_max-semilla»; bootstrap: random.Random(semilla))",
+ "criterio": {"umbral_alfa_global": 0.03, "confianza_conjunta_complemento": 0.05, "semilla_verificacion": 20261108,
+              "regla": "APTO si, en cada una de las 18 celdas H0, la cota superior exacta de Clopper–Pearson unilateral con confianza 1 − 0,05/18 de α_global es ≤ 0,030"},
+ "desarrollo": {"semilla_base": 20261104, "n_max": 1096, "B": 999, "replicas_equivalencia": 10}
+}

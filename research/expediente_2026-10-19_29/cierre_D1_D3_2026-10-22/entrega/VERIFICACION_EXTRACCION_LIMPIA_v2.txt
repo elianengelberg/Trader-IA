@@ -1,0 +1,104 @@
+== 2026-10-22T13:30:06Z · verificación de la entrega v2 desde una extracción limpia
+-- suma externa del ZIP
+entrega_integracion_D1_D3_v2_2026-10-22.zip: OK
+-- extracción en un directorio vacío: /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_D1_D3_2026-10-22/reproduccion_v2/extraido (0 entradas antes)
+entradas extraídas: 83
+-- sumas internas
+SHA256SUMS: 82 de 82 verifican
+-- variables con que corre reproducir.sh (entorno mínimo, solo red): no_proxy PIP_CONFIG_FILE https_proxy NO_PROXY HTTPS_PROXY SSL_CERT_FILE PIP_CERT REQUESTS_CA_BUNDLE 
+
+-- reproducir.sh completo, ejecutado DESDE LA EXTRACCIÓN (/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_D1_D3_2026-10-22/reproduccion_v2/extraido/entrega_integracion_D1_D3_v2_2026-10-22), trabajo en /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_D1_D3_2026-10-22/reproduccion_v2/trabajo, con env -i (PATH, HOME nuevo, LANG y solo las variables de red)
+== 1. Base y parches
+OK  base en 72ffae5d2698440c8f1afaff12e07bd8adde66fb
+OK  engine.py original identificado
+OK  los parches aplican limpio en cadena (01, 02; 03 en «completa»)
+OK  obligatoria: archivos idénticos a los registrados
+OK  completa: archivos idénticos a los registrados
+OK  cambian 8 archivos (obligatoria) y 11 (completa)
+== 2. Entorno: restricciones fijas (entorno/ci-py311.txt) e instalación documentada de la CI
+OK  entorno idéntico al de referencia (74 paquetes)
+== 3. Pruebas D1–D3 definitivas contra el motor ORIGINAL (deben fallar las 8, por aserción)
+OK  original: 8/8 fallan por aserción
+== 4. Pruebas D1–D3 y de trazabilidad en el árbol integrado (deben pasar todas)
+OK  D1–D3: 8/8 pasan
+OK  trazabilidad: 12/12 pasan
+== 5. Mutantes (cada uno debe hacer fallar al menos una prueba)
+mutantes D1–D3: 10 · vivos: ninguno
+OK  mutantes de trazabilidad: 0 vivos (12 mutantes, 1 equivalente justificado)
+== 6. Lint como la CI
+OK  ruff limpio en obligatoria
+OK  ruff limpio en completa
+== 7. Pruebas sensibles al entorno con el reloj de pared fijado (time-machine en un entorno aparte)
+00:30 UTC  base: 0/2 pasan
+00:30 UTC  completa: 2/2 pasan
+05:30 UTC  base: 0/2 pasan
+05:30 UTC  completa: 2/2 pasan
+05:56 UTC  base: 2/2 pasan
+05:56 UTC  completa: 2/2 pasan
+12:00 UTC  base: 2/2 pasan
+12:00 UTC  completa: 2/2 pasan
+23:59 UTC  base: 2/2 pasan
+23:59 UTC  completa: 2/2 pasan
+OK  con el parche 03 las pruebas de reloj pasan a las 5 horas
+1 passed in 3.92s
+1 passed in 4.02s
+1 passed in 3.24s
+OK  persistencia: 3/3 con el parche 03
+== 8. Suite completa como la CI: base, obligatoria y completa
+rc=0 · fin 2026-10-22T13:46:59Z
+JUnit: 1956 pruebas · 1956 pasan · 0 fallan · 0 errores · 0 omitidas · 387.251 s
+rc=0 · fin 2026-10-22T13:54:33Z
+JUnit: 1976 pruebas · 1976 pasan · 0 fallan · 0 errores · 0 omitidas · 452.514 s
+rc=0 · fin 2026-10-22T14:01:45Z
+JUnit: 1976 pruebas · 1976 pasan · 0 fallan · 0 errores · 0 omitidas · 429.133 s
+base: 1956 pruebas · 1956 pasan · 0 fallan · 0 errores · 0 omitidas
+integrado: 1976 pruebas · 1976 pasan · 0 fallan · 0 errores · 0 omitidas
+pruebas de la base que faltan en el integrado: ninguna
+pruebas nuevas: 20 · todas pasan: True
+pruebas de la base con otro resultado en el integrado: ninguna
+pruebas de la base que no pasan en el árbol base: ninguna
+pruebas de la base que no pasan en el árbol integrado: ninguna
+SIN REGRESIONES FRENTE A LA BASE
+base: 1956 pruebas · 1956 pasan · 0 fallan · 0 errores · 0 omitidas
+integrado: 1976 pruebas · 1976 pasan · 0 fallan · 0 errores · 0 omitidas
+pruebas de la base que faltan en el integrado: ninguna
+pruebas nuevas: 20 · todas pasan: True
+pruebas de la base con otro resultado en el integrado: ninguna
+pruebas de la base que no pasan en el árbol base: ninguna
+pruebas de la base que no pasan en el árbol integrado: ninguna
+sensibles al entorno en el integrado (deben pasar con el parche 03): [('test_a_day_that_hit_the_loss_limit_still_refuses_entries_after_a_restart', 'pasa'), ('test_five_restored_entries_for_the_symbol_refuse_the_sixth_after_the_restart', 'pasa'), ('test_rejects_and_partials_over_hundreds_of_bars_keep_the_invariants_and_the_record_whole', 'pasa')]
+SIN REGRESIONES FRENTE A LA BASE
+== 9. Paridad con E1 (solo comparación con lo registrado; no es un experimento)
+paridad corrida: compará salidas/paridad.json con evidencia/E_paridad_final_venvA.json (mismas huellas esperadas)
+REPRODUCCIÓN (completo) TERMINADA SIN DIFERENCIAS
+
+-- paridad de la reproducción frente a la evidencia empaquetada (mismas huellas)
+P1: IGUAL · 629 round trips · equity 0ebbe7234446… · run_id bt_FNDXB81VZW9RZMZ8V2JADP53
+P2: IGUAL · 139 round trips · equity d03f117df87a… · run_id bt_W24727MED5R5KF6JV4Z3KBKN
+P3: IGUAL · 185 round trips · equity 46c01be279da… · run_id bt_5110YVCMFZJZSV1W1GZDVDWV
+S1: IGUAL · 795 round trips · equity ad1013dcc713… · run_id bt_VFA2FGSHPCVPQKNNVFJHRYJJ
+paridad reproducida: idéntica a la evidencia
+
+-- la suma externa del ZIP sigue igual después de la reproducción
+entrega_integracion_D1_D3_v2_2026-10-22.zip: OK
+
+-- repositorio original después de la reproducción (mismos comandos que registro/00)
+HEAD: 72ffae5d2698440c8f1afaff12e07bd8adde66fb
+cambios (porcelain -uall): 0
+stash: 0
+índice (ls-files -s) sha256: 07e0c86bb1c04ba22975582d17d1a729c500ceafe51b1615b1149fca4afac7e2
+reflog (sha256 completo): 6d55854cfe1e43f71e488c6c841dbfa9fa60b6d1ff00f8b679705367ccb21138 · entradas: 13
+refs: refs/heads/claude/algo-trading-simulation-platform-ngf7xo 72ffae5d2698440c8f1afaff12e07bd8adde66fb;refs/remotes/origin/claude/algo-trading-simulation-platform-ngf7xo 72ffae5d2698440c8f1afaff12e07bd8adde66fb;
+
+-- archivos congelados
+OK   36 entradas  /home/user/Trader-IA/research/tendencia_btc/ARTEFACTOS_SHA256.txt
+OK   16 entradas  /home/user/Trader-IA/research/hcarry_next/ARTEFACTOS_SHA256_2026-10-17.txt
+OK   9 entradas  /home/user/Trader-IA/research/hcarry_next/recuperado/SHA256SUMS
+OK   1 entradas  /home/user/Trader-IA/research/entregas_hcarry/SHA256SUMS
+OK   5 entradas  /home/user/Trader-IA/research/entregas_hcarry/SHA256SUMS_2026-10-17
+OK   6 entradas  <scratchpad>/experimentos/E1_bot_datos_reales_2026-10-19/resultados/real/SHA256SUMS
+OK   3 entradas  <scratchpad>/experimentos/E2_descubrimiento_2026-10-19/SHA256SUMS
+OK   8 entradas  <scratchpad>/experimentos/E3_seleccion_posicion_2026-10-19/SHA256SUMS
+T-MULTI y T-papel versionados: 0 cambios en research/tendencia_btc (git)
+
+== fin 2026-10-22T14:06:55Z. Nota: este registro no tiene firma digital; su integridad depende de que recibas los hashes por un canal confiable.

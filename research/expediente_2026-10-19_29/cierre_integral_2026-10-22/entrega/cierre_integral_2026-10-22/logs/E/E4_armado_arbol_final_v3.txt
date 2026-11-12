@@ -1,0 +1,11 @@
+== 2026-10-25T16:53:25Z · árbol final v3: base + 01 + 02v3 + 05v2 + 03 + 04 + 06v3 (sin commits, push deshabilitado)
+aplica: 01_obligatorio_D1_D3_motor_y_pruebas_definitivas.patch 1944f433334cada2
+aplica: 02v3_obligatorio_trazabilidad_version_motor_CORREGIDO.patch d5c90091b705647c
+aplica: 05v2_guarda_version_motor.patch 911a8d9df70e0b73
+aplica: 03_opcional_pruebas_reloj_y_persistencia.patch 0be65ea6a5e7072f
+aplica: 04_opcional_CI_versiones_fijadas.patch 8d39635635c81a4b
+aplica: 06v3_opcional_gate_ci_procedencia.patch f697d48222a46270
+cambios: 16
+árbol del contenido (write-tree, sin commit): 0477c6a20c5e3831c2da3bf723948b7baafaa518
+diferencias de contenido con el árbol final v2: Files reproduction/E2_final_v3/final/scripts/ci_gate.py and reproduction/E2_final_v2/final/scripts/ci_gate.py differ 
+07 aplica encima (--check): sí

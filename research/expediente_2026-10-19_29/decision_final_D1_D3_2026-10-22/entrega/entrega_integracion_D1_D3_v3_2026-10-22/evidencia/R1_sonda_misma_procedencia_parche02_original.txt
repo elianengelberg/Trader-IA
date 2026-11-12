@@ -1,0 +1,5 @@
+run_id A: bt_ES9PQRZ1FZ07GNSKPGNHCWF7 · operaciones 9 · retorno -0.116093
+run_id B: bt_ES9PQRZ1FZ07GNSKPGNHCWF7 · operaciones 8 · retorno -0.088758
+misma procedencia registrada: {'engine_version': True, 'engine_fingerprint': True, 'data_fingerprint': True, 'universe_digest': True}
+segundo guardado: ACEPTADO
+filas: [('bt_ES9PQRZ1FZ07GNSKPGNHCWF7', 8, -0.088758)]

@@ -1,0 +1,19 @@
+== Verificación del paquete cierre_D1_D2_guarda_R19_2026-10-22 desde una extracción limpia: 2026-10-22T20:00:43Z
+cierre_D1_D2_guarda_R19_2026-10-22.zip: OK
+entradas antes de extraer: 0
+SHA256SUMS: 67 de 67 verifican
+sin archivos de más ni de menos
+bytecode: 0
+entrega_integracion_D1_D3_v3r3_2026-10-22.zip: OK
+parche 05: 9fc829ad012534d86645ad9e715bc77a7abee69791514c8187bc51c7ceb8ba47
+guarda:    ff1ad5402b41ccf8d6ee3da6d71c9404c98295972b75a3e203b307364d21bfa8
+-- herramientas de R19 = las congeladas en registro/03:
+  OK herramientas/sonda_r19_v2.py
+  OK herramientas/r19_experimento.py
+  OK herramientas/r19_analisis.py
+  OK herramientas/equivalencia_prueba_r19.py
+  OK plan_r19_enmienda1.json
+  OK PLAN_R19_ENMIENDA_1.md
+-- la guarda desde el paquete, sobre clones nuevos (parches tomados del v3r3 de este paquete):
+  obl: 7 passed in 14.53s
+  solo: 5 failed, 2 passed in 14.23s

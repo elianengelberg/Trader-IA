@@ -1,0 +1,18 @@
+== suite completa del árbol final v2 (A + 05v2 + 03 + 04 + 06v2) como la CI parcheada: 2026-10-25T16:43:27Z
+python: Python 3.11.17 · freeze: a1a96cac94471aac · carga al inicio: 0.59 0.33 0.13 2/105 491
+== ruff como la CI parcheada (packages tests scripts) — el paso de lint va ANTES de las pruebas en ci.yml
+All checks passed!
+ruff rc=0
+comando: PYTHONPATH=packages/tia/src python -B -m pytest tests -q -p no:cacheprovider --junitxml=ci-evidence/junit.xml
+pytest rc=0 · duración 404 s · carga al final: 0.88 0.80 0.44 1/108 1079
+JUnit: 1985 pruebas · 1985 pasan · 0 fallan · 0 errores · 0 omitidas · 395.108 s
+== gate (scripts/ci_gate.py v2), como el paso de la CI
+commit `72ffae5d2698440c8f1afaff12e07bd8adde66fb` · tree `44850cfcbf53c3f8223d38a92031f4402f8ffb32` · Python 3.11.17
+tests 1985 · passed 1985 · failed 0 · errors 0 · skipped 0 · version guard 7/7
+engine_version 1.1.0 · pip freeze `a1a96cac94471aac…`
+**gate: pass**
+gate rc=0
+== alembic upgrade head desde cero (copia aparte, como la CI)
+alembic rc=0
+estado del árbol tras la suite: 16 entradas (esperado 16; ci-evidence/ está en .gitignore)
+fin 2026-10-25T16:50:21Z

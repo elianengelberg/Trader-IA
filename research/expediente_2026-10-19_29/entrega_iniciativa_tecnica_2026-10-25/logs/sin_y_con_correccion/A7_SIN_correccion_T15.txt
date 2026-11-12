@@ -1,0 +1,5 @@
+E           AssertionError: the feed never stopped: no stale-data halt, no incident
+E           assert (['market data...s (TTL 300s)'] == []
+E             
+E             Left contains one more item: 'market data stale: no new bar for 660s (TTL 300s)'
+E             Use -v to get more diff)

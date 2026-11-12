@@ -1,0 +1,32 @@
+{
+ "sin_rechazos_400": {
+  "run_id": "bt_DJZPATCEBZ0B0DP393XP3W1D",
+  "run_id_formula_72ffae5": "bt_DJZPATCEBZ0B0DP393XP3W1D",
+  "engine_version": "(campo inexistente)",
+  "bars": 400,
+  "trades": 8,
+  "total_return_pct": -0.1348648511970807,
+  "final_equity": 99865.13514880292,
+  "warnings": 2
+ },
+ "sin_rechazos_350": {
+  "run_id": "bt_DJZPATCEBZ0B0DP393XP3W1D",
+  "run_id_formula_72ffae5": "bt_DJZPATCEBZ0B0DP393XP3W1D",
+  "engine_version": "(campo inexistente)",
+  "bars": 350,
+  "trades": 4,
+  "total_return_pct": -0.11638041589993042,
+  "final_equity": 99883.61958410007,
+  "warnings": 3
+ },
+ "rechazos_0.3_parciales_0.5": {
+  "run_id": "bt_MGCSKP98J9DG826VTSCX1KSM",
+  "run_id_formula_72ffae5": "bt_MGCSKP98J9DG826VTSCX1KSM",
+  "engine_version": "(campo inexistente)",
+  "bars": 400,
+  "trades": 5,
+  "total_return_pct": -0.0003034751614450215,
+  "final_equity": 99999.69652483855,
+  "warnings": 3
+ }
+}

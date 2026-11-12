@@ -1,0 +1,30 @@
+VERIFICACIÓN DESDE UNA EXTRACCIÓN LIMPIA — 2026-10-21T22:42:31Z
+
+ZIP verificado: entrega_SIM1_2026-10-21.zip
+sha256 73cdb790f1741116f5642c4911da12bab471da9caa543ed7f778bb63ebe37c8d  (1313955 bytes, 61 archivos + SHA256SUMS)
+
+1. Extracción en un directorio nuevo: sha256sum -c SHA256SUMS → 61/61 OK.
+2. reproduccion/REPRODUCIR.sh <clon de Trader-IA> <dir nuevo> rapido (desde la extracción):
+   - clon nuevo en 72ffae5 + parche: engine.py 85965ec5…, paper.py 05569d16… (iguales a los usados);
+   - entorno nuevo con los hashes de E1 (pip --require-hashes);
+   - 228/228 ZIP re-descargados de data.binance.vision y verificados dos veces (.CHECKSUM oficial y hash registrado);
+   - pruebas de regresión D1–D3: 4 pasan;
+   - calidad de datos idéntica a la registrada;
+   - verificación sintética del motor: V1, V2, V3, V6 y DET bien.
+   Salida completa: be695761a01c4478… (verif_limpia/reproduccion_rapida.txt)
+3. Reproducción puntual con el código extraído y SOLO los datos re-descargados (ruta local de E1 anulada):
+   DEV-ETH P3 n 165 165 IDÉNTICO b0a47bd261894f17 b0a47bd261894f17 337.7 s
+   OOS-ETH P3 n 120 120 IDÉNTICO a2326e52975ef7e7 a2326e52975ef7e7 209.0 s
+   TODO IDÉNTICO
+   Recomputa cifras ya publicadas; no es una nueva lectura con decisión. El candado de OOS no se tocó.
+
+INTENTO PREVIO FALLIDO (conservado en verif_limpia_intento1_FALLO_conftest/):
+   - REPRODUCIR.sh no instalaba httpx ni websockets, que tests/conftest.py importa. Las 4 pruebas dieron error de import.
+   - Los pasos 1 a 3 (parche, entorno, 228 descargas) ya habían pasado.
+   - Se corrigió el script (pytest httpx websockets), se rehízo el ZIP (el anterior era 47ebfbec…) y se repitió todo desde cero.
+   - Esta verificación corresponde al ZIP nuevo.
+
+No se verificó desde la extracción (por tiempo; queda disponible con REPRODUCIR.sh sin «rapido», ≈ 3 h):
+   - el DEV completo (34 + 4 corridas);
+   - el OOS completo (20 corridas).
+   Sí se verificaron dentro de la ejecución: el determinismo entre procesos (P3 en DEV-ETH) y la paridad con E1.

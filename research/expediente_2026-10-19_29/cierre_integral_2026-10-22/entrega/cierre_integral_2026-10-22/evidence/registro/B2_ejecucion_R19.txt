@@ -1,0 +1,4 @@
+inicio de la corrida principal: 2026-10-22T22:13:44Z · carga 0.41 0.64 0.35 3/108 905
+rc=0 · fin 2026-10-22T22:46:29Z
+inicio suplementaria: 2026-10-22T22:47:00Z
+fin suplementaria: 2026-10-22T22:50:02Z

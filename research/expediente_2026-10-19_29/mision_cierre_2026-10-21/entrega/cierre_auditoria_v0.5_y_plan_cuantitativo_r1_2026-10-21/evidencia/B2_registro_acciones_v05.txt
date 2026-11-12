@@ -1,0 +1,4 @@
+28 entradas (21 con evidencia, 7 NO ejecutadas); cadena y hashes: OK
+cabeza de la cadena: bdc5c630a30279b888bc80c85990371e42d49aa576237449712c8ea3e0b1e71e
+fechas (mtime de la evidencia): de 2026-10-20T21:53:32Z a 2026-10-21T01:45:27Z; en orden cronológico: False
+LÍMITE (D-4): el registro se genera DESPUÉS, a partir del mtime de cada archivo. Prueba coherencia interna, no cuándo ocurrió cada acción, y quien controle el equipo puede regenerarlo entero.

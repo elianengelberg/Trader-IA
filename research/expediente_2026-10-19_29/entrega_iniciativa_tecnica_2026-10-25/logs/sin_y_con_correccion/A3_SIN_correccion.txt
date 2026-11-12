@@ -1,0 +1,9 @@
+     +  where False = GateCheck(name=<CheckName.EDGE_EVIDENCE: 'edge_evidence'>, passed=False, detail='no run is active', remedy='run paper trading first', reported=True).passed
+     +  and   'no run is active' = GateCheck(name=<CheckName.EDGE_EVIDENCE: 'edge_evidence'>, passed=False, detail='no run is active', remedy='run paper trading first', reported=True).detail
+tests/integration/test_edge_evidence_gate.py:56: AssertionError: assert (not False and 'synthetic' in 'no run is active')
+     +  where False = GateCheck(name=<CheckName.EDGE_EVIDENCE: 'edge_evidence'>, passed=False, detail='no run is active', remedy='run paper trading first', reported=True).passed
+     +  and   'no run is active' = GateCheck(name=<CheckName.EDGE_EVIDENCE: 'edge_evidence'>, passed=False, detail='no run is active', remedy='run paper trading first', reported=True).detail
+tests/integration/test_edge_evidence_gate.py:63: AssertionError: assert (not False and 'paper-live session' in 'no run is active')
+     +  where False = GateCheck(name=<CheckName.EDGE_EVIDENCE: 'edge_evidence'>, passed=False, detail='no run is active', remedy='run paper trading first', reported=True).passed
+     +    where GateCheck(name=<CheckName.EDGE_EVIDENCE: 'edge_evidence'>, passed=False, detail='no run is active', remedy='run paper trading first', reported=True) = _edge(namespace(settings=namespace(live=namespace(ev_evidence_policy='real_only')), live_runtime=<tia.runtime.live.LiveRuntime object at 0x7fcb6da55f50>, runtime=None))
+tests/integration/test_edge_evidence_gate.py:73: AssertionError: assert False

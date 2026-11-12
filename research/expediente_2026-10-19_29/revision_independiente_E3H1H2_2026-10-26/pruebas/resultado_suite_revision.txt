@@ -1,0 +1,13 @@
+..xxxxxxx...x.x.x                                                        [100%]
+=========================== short test summary info ============================
+XFAIL test_revision_adicional.py::test_fallo_durante_el_calculo_deja_estado_explicito - defecto o brecha del v2 documentado en la revisión
+XFAIL test_revision_adicional.py::test_insumo_alterado_entre_verificacion_y_lectura_se_detecta - defecto o brecha del v2 documentado en la revisión
+XFAIL test_revision_adicional.py::test_archivo_de_mapeos_debe_estar_verificado - defecto o brecha del v2 documentado en la revisión
+XFAIL test_revision_adicional.py::test_solo_la_ventana_A_es_aceptada_por_el_codigo - defecto o brecha del v2 documentado en la revisión
+XFAIL test_revision_adicional.py::test_manifiesto_sin_entradas_no_pasa_la_guarda - defecto o brecha del v2 documentado en la revisión
+XFAIL test_revision_adicional.py::test_apalancado_conserva_su_marca_si_su_base_se_renombra - defecto o brecha del v2 documentado en la revisión
+XFAIL test_revision_adicional.py::test_mapeo_con_hueco_de_30_dias_o_mas_conserva_la_edad - defecto o brecha del v2 documentado en la revisión
+XFAIL test_revision_adicional.py::test_r4_excluye_la_moneda_de_mayor_aporte_bruto[v1] - v1 usa el EW neto
+XFAIL test_revision_adicional.py::test_importar_congelados_ejecuta_el_codigo_con_hash - defecto o brecha del v2 documentado en la revisión
+XFAIL test_revision_adicional.py::test_mapeo_de_regla_2_duplicado_se_rechaza - defecto o brecha del v2 documentado en la revisión
+7 passed, 10 xfailed in 6.98s

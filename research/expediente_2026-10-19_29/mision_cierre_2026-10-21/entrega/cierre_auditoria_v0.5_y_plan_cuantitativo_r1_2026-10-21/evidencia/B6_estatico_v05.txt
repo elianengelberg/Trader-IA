@@ -1,0 +1,6 @@
+confianza.py: red=ninguna; procesos=ninguno; llamadas=ninguna
+ejecutor_aislado.py: red=ninguna; procesos=ninguno; llamadas=ninguna
+politica_avance_T.py: red=ninguna; procesos=ninguno; llamadas=ninguna
+uso_unico.py: red=ninguna; procesos=['subprocess']; llamadas=['subprocess.Popen']
+verificar_reproduccion_T.py: red=ninguna; procesos=ninguno; llamadas=ninguna
+ejecutor_aislado.py: ACCION = ['NINGUNA']; literales asignados a 'accion_ejecutada': solo vía ACCION

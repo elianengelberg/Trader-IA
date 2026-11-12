@@ -1,0 +1,13 @@
+## sin_hilo SIGTERM
+{"variante": "sin_hilo", "senal": "SIGTERM", "pid": 3229, "hilos_del_proceso": 1, "interrumpido_en_seccion_critica": false, "seccion_critica_completada": true, "pendientes_al_final": [15], "diferidas_por_handler": []}
+exit=143
+## numpy SIGTERM
+exit=143
+## numpy SIGINT
+           ^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+exit=130
+## handler SIGTERM
+{"variante": "handler", "senal": "SIGTERM", "pid": 3247, "hilos_del_proceso": 1, "interrumpido_en_seccion_critica": false, "seccion_critica_completada": true, "pendientes_al_final": [], "diferidas_por_handler": [15]}
+{"despues_de_desbloquear": "sigo vivo"}
+exit=0

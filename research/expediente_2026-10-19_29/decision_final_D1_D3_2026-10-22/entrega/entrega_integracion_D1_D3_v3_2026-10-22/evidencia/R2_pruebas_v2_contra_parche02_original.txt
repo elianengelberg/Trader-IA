@@ -1,0 +1,3 @@
+E   Failed: DID NOT RAISE ValueError
+FAILED tests/integration/test_backtest_provenance.py::test_other_numbers_under_the_same_provenance_are_refused_not_kept_as_the_last_run
+1 failed, 13 passed in 24.90s

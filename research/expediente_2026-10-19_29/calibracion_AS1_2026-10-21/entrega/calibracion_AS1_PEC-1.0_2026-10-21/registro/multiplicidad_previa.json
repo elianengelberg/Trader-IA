@@ -1,0 +1,11 @@
+{
+ "replicas": 2000,
+ "celdas_por_regla": 24,
+ "conteo_max_que_cumple_2.5": 64,
+ "conteo_max_que_cumple_5": 119,
+ "p_incumple_celda_solo_2.5": 0.022168461551535845,
+ "p_incumple_celda_solo_5": 0.025083630041096927,
+ "p_incumple_celda_alguno": 0.03938628982501513,
+ "p_regla_incumple_con_tamano_exacto": 0.618784335784899,
+ "p_ambas_reglas_incumplen_si_independientes": 0.3828940542127586
+}

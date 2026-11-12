@@ -1,0 +1,22 @@
+== pruebas SIM1 (685cf4ec9d5f5a36) contra el motor ORIGINAL 72ffae5
+E   AssertionError: ['bar 537: 9 bars without a stop', 'bar 538: 10 bars without a stop', 'bar 539: 11 bars without a stop']
+E   AssertionError: ['bar 175: leg stop 62584.94100498582, order in the book 62608.515972277375', 'bar 176: leg stop 62567.83067468193, order in the book 62608.515972277375', 'bar 177: leg stop 62567.83067468193, order in the book 62608.515972277375']
+E   AssertionError: ['bar 508: 4.300000000000484e-05 still held, waiting on a close that is filled', 'bar 509: 4.600000000000484e-05 still held, waiting on a close that is filled', 'bar 510: 4.800000000000484e-05 still held, waiting on a close that is filled']
+E   AttributeError: '_Instrumented' object has no attribute 'order_hygiene'
+FAILED tests/unit/test_backtest_order_hygiene.py::test_stops_and_exits_survive_rejections
+FAILED tests/unit/test_backtest_order_hygiene.py::test_the_stop_in_the_book_follows_the_leg
+FAILED tests/unit/test_backtest_order_hygiene.py::test_partial_fills_leave_no_untracked_or_stuck_position
+FAILED tests/unit/test_backtest_order_hygiene.py::test_a_leg_without_a_stop_level_is_reported
+== pruebas v2 (53bf5c18ef3488b9) contra el motor ORIGINAL 72ffae5
+E   AssertionError: ['bar 537: 9 bars without a stop', 'bar 538: 10 bars without a stop', 'bar 539: 11 bars without a stop']
+E   AssertionError: the scenario must close positions on the time stop after a rejected first attempt
+E   AssertionError: ['bar 175: leg stop 62584.94100498582, order in the book 62608.515972277375', 'bar 176: leg stop 62567.83067468193, order in the book 62608.515972277375', 'bar 177: leg stop 62567.83067468193, order in the book 62608.515972277375']
+E   AssertionError: ('d3_stuck', ['bar 508: 4.300000000000484e-05 still held, waiting on a close that is filled', 'bar 509: 4.600000000000...d, waiting on a close that is filled', 'bar 510: 4.800000000000484e-05 still held, waiting on a close that is filled'])
+E   AssertionError: ('d3_stuck', ['bar 181: 6.799999999999862e-05 still held, waiting on a close that is filled', 'bar 182: 0.000112999999..., waiting on a close that is filled', 'bar 183: 0.00014199999999999863 still held, waiting on a close that is filled'])
+E   AssertionError: ("an open position was force-closed at the final bar's close; that exit was chosen by the sample boundary, not by the ...t any confidence worth quoting', 'the sample covers 29 days, which is unlikely to contain more than one market regime')
+FAILED tests/unit/test_backtest_order_hygiene.py::test_stops_and_exits_survive_rejections
+FAILED tests/unit/test_backtest_order_hygiene.py::test_a_rejected_close_is_sent_again_and_closes
+FAILED tests/unit/test_backtest_order_hygiene.py::test_the_stop_in_the_book_follows_the_leg
+FAILED tests/unit/test_backtest_order_hygiene.py::test_partial_fills_leave_no_untracked_or_stuck_position
+FAILED tests/unit/test_backtest_order_hygiene.py::test_a_close_that_leaves_position_is_released_and_retried
+FAILED tests/unit/test_backtest_order_hygiene.py::test_a_leg_without_a_stop_level_is_reported

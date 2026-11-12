@@ -1,0 +1,57 @@
+== Estado inicial del repositorio protegido (misión integral de cierre): 2026-10-22T22:06:51Z
+ruta: /home/user/Trader-IA
+HEAD: 72ffae5d2698440c8f1afaff12e07bd8adde66fb
+rama: claude/algo-trading-simulation-platform-ngf7xo
+refs: refs/heads/claude/algo-trading-simulation-platform-ngf7xo 72ffae5d2698440c8f1afaff12e07bd8adde66fb;refs/remotes/origin/claude/algo-trading-simulation-platform-ngf7xo 72ffae5d2698440c8f1afaff12e07bd8adde66fb;
+cambios (porcelain -uall): 0
+stash: 0
+índice (ls-files -s) sha256: 07e0c86bb1c04ba22975582d17d1a729c500ceafe51b1615b1149fca4afac7e2
+árbol de HEAD: 44850cfcbf53c3f8223d38a92031f4402f8ffb32
+reflog (sha256 completo): 6d55854cfe1e43f71e488c6c841dbfa9fa60b6d1ff00f8b679705367ccb21138 · entradas: 13
+remotos: origin	https://github.com/elianengelberg/Trader-IA (fetch);origin	https://github.com/elianengelberg/Trader-IA (push);
+engine.py disco: 547109460bb5734ab7b108dc9387fca802e69b29cc8e74c262b80bdc55533ea4
+paper.py disco:  f5e0cb87a98d951ada347dc183968c59cc914cd52ac5cdaddf574f7264b7ff00
+archivos no rastreados ignorados (conteo, solo informativo): 18
+-- comparación con el registro 99 de la misión anterior (líneas 2–14):
+IDÉNTICO al cierre de la misión anterior
+-- congelados:
+OK   36 entradas  /home/user/Trader-IA/research/tendencia_btc/ARTEFACTOS_SHA256.txt
+OK   16 entradas  /home/user/Trader-IA/research/hcarry_next/ARTEFACTOS_SHA256_2026-10-17.txt
+OK   9 entradas  /home/user/Trader-IA/research/hcarry_next/recuperado/SHA256SUMS
+OK   1 entradas  /home/user/Trader-IA/research/entregas_hcarry/SHA256SUMS
+OK   5 entradas  /home/user/Trader-IA/research/entregas_hcarry/SHA256SUMS_2026-10-17
+OK   6 entradas  /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E1_bot_datos_reales_2026-10-19/resultados/real/SHA256SUMS
+OK   3 entradas  /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E2_descubrimiento_2026-10-19/SHA256SUMS
+OK   8 entradas  /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/SHA256SUMS
+T-MULTI y T-papel versionados: 0 cambios en research/tendencia_btc (git)
+-- entregas previas:
+f4d69ad7fc33284b6f5874dc33de9f3efe8cb98f531f58d847cb221b679c5596  entrega_integracion_D1_D3_v3_2026-10-22.zip
+d912c88a59b878520501ff221fd78d2d2eef870ae0b681d2108441ab8cbd5155  entrega_integracion_D1_D3_v3r2_2026-10-22.zip
+1394a8cd97f0bc9c065a295dcfe8b508496f1e51a8826a54244d6c6671418d49  entrega_integracion_D1_D3_v3_2026-10-22.zip.sha256
+e62a711b7b4c6aad00eea9033074d433a76639b032b00a12da49a9cdf6eb7b67  entrega_integracion_D1_D3_v3r2_2026-10-22.zip.sha256
+fd9ce645a26e0c9ed3a2ff602c2cabd8525442fd697cab3d61a79e657ca30f8e  VERIFICACION_EXTRACCION_LIMPIA_v3r2.txt
+8e6979ad141c3d4dc0001a058b06a94c27247bb91df2383431fe8dde8b590f58  /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_revision_D1_D3_2026-10-22/paquete/revision_cierre_D1_D3_2026-10-22.zip
+410ae629de17957fc6fb60701f94aee9c73631bc3e9238c67a4c75983efba3c5  /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_D1_D2_R19_2026-10-22/paquete/cierre_D1_D2_guarda_R19_2026-10-22.zip
+068f8eb697c1f0753f9a136bd2b1e8fef661192dde684cc0e83e86c4172931ee  /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_D1_D2_R19_2026-10-22/fase1/entrega/VERIFICACION_EXTRACCION_LIMPIA_v3r3.txt
+25902649d6d0789598870769670f2e7a5c707f1856e1e1538bd4f74d37877c4a  /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_D1_D2_R19_2026-10-22/fase1/entrega/entrega_integracion_D1_D3_v3r3_2026-10-22.zip
+3f2fd3dc191d5ebe0c34837f4d68db1ecbc69726797828ee8caa324563c50528  /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_D1_D2_R19_2026-10-22/fase1/entrega/entrega_integracion_D1_D3_v3r3_2026-10-22.zip.sha256
+entregas v3r1/v3r2 y paquete de revisión: IDÉNTICOS al registro
+-- modificaciones preexistentes en el repositorio protegido: 0 (rastreados o no rastreados); ignorados (informativo): 18
+!! research/entregas_hcarry/hcarry_next_final.zip
+!! research/entregas_hcarry/hcarry_next_historico_2026-10-16.zip
+!! research/entregas_hcarry/hcarry_next_snapshot1.zip
+!! research/entregas_hcarry/hcarry_next_snapshot2.zip
+!! research/hcarry_next/.venv/
+!! research/hcarry_next/datos/binance_vision/futures/
+!! research/hcarry_next/datos/binance_vision/spot/
+!! research/hcarry_next/datos/otros_simbolos/ETHUSDT/futures/
+!! research/hcarry_next/datos/otros_simbolos/SOLUSDT/futures/
+!! research/hcarry_next/experimentos/historico/causal/externos/aave_v3_usdt_ethereum.json
+!! research/hcarry_next/experimentos/historico/post_test/externos/DTB3.csv
+!! research/tendencia_btc/datos/BTCUSDT/spot/
+!! research/tendencia_btc/datos/ETHUSDT/spot/
+!! research/tendencia_btc/datos_multi/nasdaq/
+!! research/tendencia_btc/datos_multi/yahoo/
+!! research/tendencia_btc/datos_papel/BTCUSDT/spot/
+!! research/tendencia_btc/datos_papel/ETHUSDT/spot/
+!! research/tendencia_btc/datos_papel/funding_BTCUSDT/futures/

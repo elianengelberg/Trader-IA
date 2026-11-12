@@ -1,0 +1,76 @@
+{
+ "version_sonda": 2,
+ "park": false,
+ "cpus": 4,
+ "carga_inicio": [
+  6.10009765625,
+  5.5869140625,
+  4.70263671875
+ ],
+ "fondo": 131076,
+ "manual": 22,
+ "flushes": [
+  {
+   "prueba": "tests/integration/test_account_restore.py::test_partial_fills_and_fees_rebuild_identically_however_often",
+   "llamador": "settle",
+   "plazo_s": 10.0,
+   "pendientes": 31,
+   "pendientes_por_tipo": {
+    "sin_empezar": 31
+   },
+   "bucle_vivo": true,
+   "carga1": 6.1,
+   "seg": 6.046,
+   "ok": true,
+   "ciclos_fondo_durante": 131076
+  },
+  {
+   "prueba": "tests/integration/test_account_restore.py::test_partial_fills_and_fees_rebuild_identically_however_often",
+   "llamador": "stop",
+   "plazo_s": 10.0,
+   "pendientes": 0,
+   "pendientes_por_tipo": {},
+   "bucle_vivo": false,
+   "carga1": 5.69,
+   "seg": 0.0,
+   "ok": true,
+   "ciclos_fondo_durante": 0
+  },
+  {
+   "prueba": "tests/integration/test_account_restore.py::test_partial_fills_and_fees_rebuild_identically_however_often",
+   "llamador": "settle",
+   "plazo_s": 10.0,
+   "pendientes": 0,
+   "pendientes_por_tipo": {},
+   "bucle_vivo": false,
+   "carga1": 5.69,
+   "seg": 0.0,
+   "ok": true,
+   "ciclos_fondo_durante": 0
+  }
+ ],
+ "errores_escritura": [],
+ "pruebas": {
+  "tests/integration/test_account_restore.py::test_partial_fills_and_fees_rebuild_identically_however_often": {
+   "resultado": "passed",
+   "fases": {
+    "setup": "passed",
+    "call": "passed",
+    "teardown": "passed"
+   },
+   "seg": 6.25
+  }
+ },
+ "por_prueba": {
+  "tests/integration/test_account_restore.py::test_partial_fills_and_fees_rebuild_identically_however_often": {
+   "fondo": 131076,
+   "manual": 22
+  }
+ },
+ "carga_fin": [
+  5.69140625,
+  5.5107421875,
+  4.6826171875
+ ],
+ "exit": 0
+}

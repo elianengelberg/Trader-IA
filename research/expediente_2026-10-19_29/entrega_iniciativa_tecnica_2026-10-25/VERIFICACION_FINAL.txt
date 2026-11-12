@@ -1,0 +1,55 @@
+VERIFICACIÓN FINAL · ciclo de iniciativa técnica · Trader-IA
+Estado de autorización: NO AUTORIZADO PARA OPERAR CON DINERO REAL.
+
+== Repositorio protegido (/home/user/Trader-IA) · 2026-10-25T22:36:32Z
+HEAD                 72ffae5d2698440c8f1afaff12e07bd8adde66fb            (línea base 72ffae5d2698440c8f1afaff12e07bd8adde66fb)
+sha256 de .git/index 37490035d6706739fd7c9add42ad62c4e0c9260089e8e2e77a486f55e3bdcd1b   (línea base 37490035d6706739fd7c9add42ad62c4e0c9260089e8e2e77a486f55e3bdcd1b)
+cambios              0   (línea base 0)
+ignorados            18   (línea base 18)
+reflog               13   (línea base 13)
+tags                 0 · stash 0 · ramas 2
+validada_para_operar 0 archivos (incluidos los ignorados)
+sha256 de .git/index después de estas lecturas: 37490035d6706739fd7c9add42ad62c4e0c9260089e8e2e77a486f55e3bdcd1b
+
+== Procesos y enlaces residuales
+pytest: 0
+postgres: 0
+exp_mutacion: 0
+simulacion_integral: 0
+ci_local: 0
+enlaces /tmp/tia_ic_*: 0
+
+== Paquete (/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/entrega_iniciativa_tecnica_2026-10-25)
+archivos             163
+enlaces simbólicos   0
+sockets / fifos      0
+bases de datos       0
+cachés de Python     0
+posibles secretos    5
+  revisados uno por uno; ninguno es un secreto:
+    logs/ci_local/J_main_T21/junit.xml, session.json y los mismos en J_pg_T21: el NOMBRE de la prueba
+      tests/integration/test_mandatory_contracts.py::test_api_secret_never_frontend
+    parches/base_01_15/06__08_R25_R18_proteccion_de_posiciones.patch (sin cambios respecto de la entrega anterior):
+      api_secret = os.environ.get("TIA_LIVE__BINANCE_API_SECRET", "") ... — lee el NOMBRE de la variable, sin valor
+direcciones de correo 0
+
+== Reproducción desde este paquete (reproducir_TI.sh, clon nuevo; logs/arbol_candidato/reproduccion_desde_paquete.txt)
+árbol final: 87af7a4504aa821b1d627be4cee178ec7be42497 · esperado 87af7a4504aa821b1d627be4cee178ec7be42497
+índice del origen: antes 37490035d6706739fd7c9add42ad62c4e0c9260089e8e2e77a486f55e3bdcd1b · después 37490035d6706739fd7c9add42ad62c4e0c9260089e8e2e77a486f55e3bdcd1b · SIN CAMBIOS
+RESULTADO: REPRODUCIDO
+
+== CI local en T21 (último árbol con código; 22 solo cambia docs/ que ninguna prueba lee)
+== ci_local main_T21 () · árbol bcfa40082d74f7ad0d1bd1581cd913df64e143f8 · nonce local-main_T21-c2a2cc65a375a0a4 · inicio 2026-10-25T21:31:57Z · carga 1.65
+pytest rc=0 · 350 s · -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+tests 2063 · passed 2053 · failed 0 · errors 0 · skipped 10 · guard {'defined': 7, 'ran': 7, 'passed': 7}
+**gate: pass**
+== ci_local pg_T21 (pg) · árbol bcfa40082d74f7ad0d1bd1581cd913df64e143f8 · nonce local-pg_T21-13623f87d9a2b0e3 · inicio 2026-10-25T21:31:57Z · carga 1.65 1
+pytest rc=0 · 354 s · -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+tests 2063 · passed 2063 · failed 0 · errors 0 · skipped 0 · guard {'defined': 7, 'ran': 7, 'passed': 7}
+**gate: pass**
+
+== Simulación integral en T21
+sim_T21_7_veredictos.txt: 15 CUMPLE · 0 NO CUMPLE
+sim_T21_8_veredictos.txt: 15 CUMPLE · 0 NO CUMPLE
+
+== No se hizo: commits, push, PR, merge, deploy, conexión a exchanges, uso de credenciales, cambios en validada_para_operar, cambios en experimentos congelados ni en entregas anteriores.

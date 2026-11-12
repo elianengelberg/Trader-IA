@@ -1,0 +1,374 @@
+[
+ {
+  "simbolo": "AUDUSDT",
+  "ultimo_activo": "2020-11-12",
+  "reanuda": "2020-11-14",
+  "dias": 1,
+  "salto_x10_F3": false,
+  "dentro_de_A": false,
+  "tratamiento": "Adenda 1, regla 3: sin anuncio archivado de canje; mismo listado (corte < 30 días); se informa como limitación"
+ },
+ {
+  "simbolo": "COCOSUSDT",
+  "ultimo_activo": "2021-01-18",
+  "reanuda": "2021-01-23",
+  "dias": 4,
+  "salto_x10_F3": true,
+  "dentro_de_A": false,
+  "tratamiento": "Adenda 1, regla 2: posiciones × r y serie continua a través de r",
+  "r": 0.001,
+  "cita": "begin swapping the old COCOS tokens with the new COCOS tokens at a ratio of 1,000:1",
+  "certeza": "alta"
+ },
+ {
+  "simbolo": "SXPDOWNUSDT",
+  "ultimo_activo": "2021-03-09",
+  "reanuda": "2021-03-11",
+  "dias": 1,
+  "salto_x10_F3": true,
+  "dentro_de_A": false,
+  "tratamiento": "token apalancado: excluido de todo universo (§4.5); sin efecto",
+  "anuncio_reverse_split": [
+   "Binance Leveraged Token SXPDOWN Reverse Token Split Complete (2021-03-11)"
+  ]
+ },
+ {
+  "simbolo": "BTCSTUSDT",
+  "ultimo_activo": "2021-03-14",
+  "reanuda": "2021-03-19",
+  "dias": 4,
+  "salto_x10_F3": false,
+  "dentro_de_A": false,
+  "tratamiento": "Adenda 1, regla 2: posiciones × r y serie continua a través de r",
+  "r": 10,
+  "cita": "swap the old BTCST tokens with the new BTCST tokens at a ratio of 1:10",
+  "certeza": "media"
+ },
+ {
+  "simbolo": "SUSHIDOWNUSDT",
+  "ultimo_activo": "2021-03-22",
+  "reanuda": "2021-03-24",
+  "dias": 1,
+  "salto_x10_F3": true,
+  "dentro_de_A": false,
+  "tratamiento": "token apalancado: excluido de todo universo (§4.5); sin efecto",
+  "anuncio_reverse_split": null
+ },
+ {
+  "simbolo": "DREPUSDT",
+  "ultimo_activo": "2021-03-28",
+  "reanuda": "2021-04-02",
+  "dias": 4,
+  "salto_x10_F3": true,
+  "dentro_de_A": false,
+  "tratamiento": "Adenda 1, regla 2: posiciones × r y serie continua a través de r",
+  "r": 0.01,
+  "cita": "We will swap the old DREP tokens with the new DREP tokens at a ratio of 100:1",
+  "certeza": "alta"
+ },
+ {
+  "simbolo": "AAVEDOWNUSDT",
+  "ultimo_activo": "2021-04-05",
+  "reanuda": "2021-04-07",
+  "dias": 1,
+  "salto_x10_F3": true,
+  "dentro_de_A": false,
+  "tratamiento": "token apalancado: excluido de todo universo (§4.5); sin efecto",
+  "anuncio_reverse_split": [
+   "Binance Completes Reverse Token Split for Leveraged Tokens AAVEDOWN and DOTDOWN"
+  ]
+ },
+ {
+  "simbolo": "DOTDOWNUSDT",
+  "ultimo_activo": "2021-04-05",
+  "reanuda": "2021-04-07",
+  "dias": 1,
+  "salto_x10_F3": true,
+  "dentro_de_A": false,
+  "tratamiento": "token apalancado: excluido de todo universo (§4.5); sin efecto",
+  "anuncio_reverse_split": [
+   "Binance Completes Reverse Token Split for Leveraged Tokens AAVEDOWN and DOTDOWN"
+  ]
+ },
+ {
+  "simbolo": "ADADOWNUSDT",
+  "ultimo_activo": "2021-04-06",
+  "reanuda": "2021-04-08",
+  "dias": 1,
+  "salto_x10_F3": true,
+  "dentro_de_A": false,
+  "tratamiento": "token apalancado: excluido de todo universo (§4.5); sin efecto",
+  "anuncio_reverse_split": [
+   "Binance Completes Reverse Token Split for Leveraged Tokens ADADOWN, XRPDOWN, and LINKDOWN (2021-04-08)"
+  ]
+ },
+ {
+  "simbolo": "LINKDOWNUSDT",
+  "ultimo_activo": "2021-04-06",
+  "reanuda": "2021-04-08",
+  "dias": 1,
+  "salto_x10_F3": true,
+  "dentro_de_A": false,
+  "tratamiento": "token apalancado: excluido de todo universo (§4.5); sin efecto",
+  "anuncio_reverse_split": [
+   "Binance Completes Reverse Token Split for Leveraged Tokens ADADOWN, XRPDOWN, and LINKDOWN (2021-04-08)"
+  ]
+ },
+ {
+  "simbolo": "XRPDOWNUSDT",
+  "ultimo_activo": "2021-04-06",
+  "reanuda": "2021-04-08",
+  "dias": 1,
+  "salto_x10_F3": true,
+  "dentro_de_A": false,
+  "tratamiento": "token apalancado: excluido de todo universo (§4.5); sin efecto",
+  "anuncio_reverse_split": [
+   "Binance Completes Reverse Token Split for Leveraged Tokens ADADOWN, XRPDOWN, and LINKDOWN (2021-04-08)"
+  ]
+ },
+ {
+  "simbolo": "BNBDOWNUSDT",
+  "ultimo_activo": "2021-04-12",
+  "reanuda": "2021-04-14",
+  "dias": 1,
+  "salto_x10_F3": true,
+  "dentro_de_A": false,
+  "tratamiento": "token apalancado: excluido de todo universo (§4.5); sin efecto",
+  "anuncio_reverse_split": [
+   "Binance Completes Reverse Token Split for Leveraged Tokens BNBDOWN and SXPDOWN (2021-04-13)"
+  ]
+ },
+ {
+  "simbolo": "SXPDOWNUSDT",
+  "ultimo_activo": "2021-04-12",
+  "reanuda": "2021-04-14",
+  "dias": 1,
+  "salto_x10_F3": true,
+  "dentro_de_A": false,
+  "tratamiento": "token apalancado: excluido de todo universo (§4.5); sin efecto",
+  "anuncio_reverse_split": [
+   "Binance Completes Reverse Token Split for Leveraged Tokens BNBDOWN and SXPDOWN (2021-04-13)"
+  ]
+ },
+ {
+  "simbolo": "YFIDOWNUSDT",
+  "ultimo_activo": "2021-05-30",
+  "reanuda": "2021-06-01",
+  "dias": 1,
+  "salto_x10_F3": true,
+  "dentro_de_A": false,
+  "tratamiento": "token apalancado: excluido de todo universo (§4.5); sin efecto",
+  "anuncio_reverse_split": null
+ },
+ {
+  "simbolo": "SUNUSDT",
+  "ultimo_activo": "2021-06-13",
+  "reanuda": "2021-06-18",
+  "dias": 4,
+  "salto_x10_F3": true,
+  "dentro_de_A": false,
+  "tratamiento": "Adenda 1, regla 2: posiciones × r y serie continua a través de r",
+  "r": 1000,
+  "cita": "at a ratio of 1 SUN (Old) = 1,000 SUN (New)",
+  "certeza": "alta"
+ },
+ {
+  "simbolo": "ETHDOWNUSDT",
+  "ultimo_activo": "2021-07-07",
+  "reanuda": "2021-07-09",
+  "dias": 1,
+  "salto_x10_F3": true,
+  "dentro_de_A": false,
+  "tratamiento": "token apalancado: excluido de todo universo (§4.5); sin efecto",
+  "anuncio_reverse_split": [
+   "Binance Completes Reverse Token Split for ETHDOWN Leveraged Token (2021-07-08)"
+  ]
+ },
+ {
+  "simbolo": "LTCDOWNUSDT",
+  "ultimo_activo": "2021-08-16",
+  "reanuda": "2021-08-18",
+  "dias": 1,
+  "salto_x10_F3": true,
+  "dentro_de_A": false,
+  "tratamiento": "token apalancado: excluido de todo universo (§4.5); sin efecto",
+  "anuncio_reverse_split": [
+   "Binance Completes Reverse Token Split for UNIDOWN, LTCDOWN Leveraged Token (2021-08-17)"
+  ]
+ },
+ {
+  "simbolo": "UNIDOWNUSDT",
+  "ultimo_activo": "2021-08-16",
+  "reanuda": "2021-08-18",
+  "dias": 1,
+  "salto_x10_F3": true,
+  "dentro_de_A": false,
+  "tratamiento": "token apalancado: excluido de todo universo (§4.5); sin efecto",
+  "anuncio_reverse_split": [
+   "Binance Completes Reverse Token Split for UNIDOWN, LTCDOWN Leveraged Token (2021-08-17)"
+  ]
+ },
+ {
+  "simbolo": "XLMDOWNUSDT",
+  "ultimo_activo": "2021-08-25",
+  "reanuda": "2021-08-27",
+  "dias": 1,
+  "salto_x10_F3": true,
+  "dentro_de_A": false,
+  "tratamiento": "token apalancado: excluido de todo universo (§4.5); sin efecto",
+  "anuncio_reverse_split": null
+ },
+ {
+  "simbolo": "XTZDOWNUSDT",
+  "ultimo_activo": "2021-09-07",
+  "reanuda": "2021-09-09",
+  "dias": 1,
+  "salto_x10_F3": true,
+  "dentro_de_A": false,
+  "tratamiento": "token apalancado: excluido de todo universo (§4.5); sin efecto",
+  "anuncio_reverse_split": [
+   "Binance Completes Reverse Token Split for XTZDOWN Leveraged Token (2021-09-08)"
+  ]
+ },
+ {
+  "simbolo": "TRXDOWNUSDT",
+  "ultimo_activo": "2021-09-12",
+  "reanuda": "2021-09-14",
+  "dias": 1,
+  "salto_x10_F3": true,
+  "dentro_de_A": false,
+  "tratamiento": "token apalancado: excluido de todo universo (§4.5); sin efecto",
+  "anuncio_reverse_split": [
+   "Binance Completes Reverse Token Split for TRXDOWN Leveraged Token (2021-09-13)"
+  ]
+ },
+ {
+  "simbolo": "SUSHIDOWNUSDT",
+  "ultimo_activo": "2021-09-22",
+  "reanuda": "2021-09-24",
+  "dias": 1,
+  "salto_x10_F3": true,
+  "dentro_de_A": false,
+  "tratamiento": "token apalancado: excluido de todo universo (§4.5); sin efecto",
+  "anuncio_reverse_split": [
+   "Binance Completes Reverse Token Split for SUSHIDOWN Leveraged Token (2021-09-23)"
+  ]
+ },
+ {
+  "simbolo": "DOTDOWNUSDT",
+  "ultimo_activo": "2021-10-20",
+  "reanuda": "2021-10-22",
+  "dias": 1,
+  "salto_x10_F3": true,
+  "dentro_de_A": false,
+  "tratamiento": "token apalancado: excluido de todo universo (§4.5); sin efecto",
+  "anuncio_reverse_split": [
+   "Binance Completes Reverse Token Split for DOTDOWN Leveraged Token (2021-10-21)"
+  ]
+ },
+ {
+  "simbolo": "LUNAUSDT",
+  "ultimo_activo": "2022-05-12",
+  "reanuda": "2022-05-31",
+  "dias": 18,
+  "salto_x10_F3": true,
+  "dentro_de_A": false,
+  "tratamiento": "Adenda 1, regla 3: sin anuncio archivado de canje; mismo listado (corte < 30 días); se informa como limitación"
+ },
+ {
+  "simbolo": "NBTUSDT",
+  "ultimo_activo": "2022-09-11",
+  "reanuda": "2022-10-01",
+  "dias": 19,
+  "salto_x10_F3": false,
+  "dentro_de_A": false,
+  "tratamiento": "Adenda 1, regla 3: sin anuncio archivado de canje; mismo listado (corte < 30 días); se informa como limitación"
+ },
+ {
+  "simbolo": "VIDTUSDT",
+  "ultimo_activo": "2022-10-30",
+  "reanuda": "2022-11-09",
+  "dias": 9,
+  "salto_x10_F3": true,
+  "dentro_de_A": false,
+  "tratamiento": "Adenda 1, regla 3: sin anuncio archivado de canje; mismo listado (corte < 30 días); se informa como limitación"
+ },
+ {
+  "simbolo": "KEYUSDT",
+  "ultimo_activo": "2023-02-09",
+  "reanuda": "2023-03-10",
+  "dias": 28,
+  "salto_x10_F3": false,
+  "dentro_de_A": false,
+  "tratamiento": "Adenda 1, regla 3: sin anuncio archivado de canje; mismo listado (corte < 30 días); se informa como limitación"
+ },
+ {
+  "simbolo": "BNXUSDT",
+  "ultimo_activo": "2023-02-15",
+  "reanuda": "2023-02-22",
+  "dias": 6,
+  "salto_x10_F3": true,
+  "dentro_de_A": false,
+  "tratamiento": "Adenda 1, regla 3: sin anuncio archivado de canje; mismo listado (corte < 30 días); se informa como limitación"
+ },
+ {
+  "simbolo": "QUICKUSDT",
+  "ultimo_activo": "2023-07-16",
+  "reanuda": "2023-07-21",
+  "dias": 4,
+  "salto_x10_F3": true,
+  "dentro_de_A": true,
+  "tratamiento": "Adenda 1, regla 2: posiciones × r y serie continua a través de r",
+  "r": 1000,
+  "cita": "at a ratio of 1 old QUICK = 1,000 new QUICK",
+  "certeza": "alta"
+ },
+ {
+  "simbolo": "AEURUSDT",
+  "ultimo_activo": "2023-12-04",
+  "reanuda": "2023-12-08",
+  "dias": 3,
+  "salto_x10_F3": false,
+  "dentro_de_A": true,
+  "tratamiento": "Adenda 1, regla 3: sin anuncio archivado de canje; mismo listado (corte < 30 días); se informa como limitación"
+ },
+ {
+  "simbolo": "STRAXUSDT",
+  "ultimo_activo": "2024-03-19",
+  "reanuda": "2024-03-28",
+  "dias": 8,
+  "salto_x10_F3": true,
+  "dentro_de_A": true,
+  "tratamiento": "Adenda 1, regla 2: posiciones × r y serie continua a través de r",
+  "r": 10,
+  "cita": "at a ratio of 1 old STRAX = 10 new STRAX",
+  "certeza": "alta"
+ },
+ {
+  "simbolo": "SCRUSDT",
+  "ultimo_activo": "2024-10-20",
+  "reanuda": "2024-10-22",
+  "dias": 1,
+  "salto_x10_F3": false,
+  "dentro_de_A": true,
+  "tratamiento": "Adenda 1, regla 3: sin anuncio archivado de canje; mismo listado (corte < 30 días); se informa como limitación"
+ },
+ {
+  "simbolo": "USUALUSDT",
+  "ultimo_activo": "2024-12-16",
+  "reanuda": "2024-12-18",
+  "dias": 1,
+  "salto_x10_F3": false,
+  "dentro_de_A": true,
+  "tratamiento": "Adenda 1, regla 3: sin anuncio archivado de canje; mismo listado (corte < 30 días); se informa como limitación"
+ },
+ {
+  "simbolo": "AXSUSDT",
+  "ultimo_activo": "2026-02-09",
+  "reanuda": "2026-02-11",
+  "dias": 1,
+  "salto_x10_F3": false,
+  "dentro_de_A": true,
+  "tratamiento": "Adenda 1, regla 3: sin anuncio archivado de canje; mismo listado (corte < 30 días); se informa como limitación"
+ }
+]

@@ -1,0 +1,1841 @@
+[
+{
+"par": "BCNUSDT",
+"E": "2018-10-12",
+"urls": [
+"https://support.binance.com/hc/en-us/articles/360017720731?refer=coinsosik",
+"https://www.binance.com/en/support/announcement/360017720731"
+],
+"titulos": [
+"Binance Will Delist BCN, CHAT, ICN, TRIG"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": false,
+"tokens": [
+"BCN",
+"CHAT",
+"ICN",
+"TRIG"
+],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2018-43/segments/1539583511216.45/warc/CC-MAIN-20181017195553-20181017221053-00523.warc.gz bytes=808716246-808725717",
+"sin_fecha": false,
+"clave": "BCNUSDT|2018-10-12",
+"categoria_auto": "D",
+"L": null,
+"nota": {
+"A3.3": 2,
+"otros_pares_en_bucket": [
+"BCNBNB",
+"BCNBTC",
+"BCNETH"
+]
+},
+"categoria": "fuera_sin_par_usdt_documentado"
+},
+{
+"par": "CHATUSDT",
+"E": "2018-10-12",
+"urls": [
+"https://support.binance.com/hc/en-us/articles/360017720731?refer=coinsosik",
+"https://www.binance.com/en/support/announcement/360017720731"
+],
+"titulos": [
+"Binance Will Delist BCN, CHAT, ICN, TRIG"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": false,
+"tokens": [
+"BCN",
+"CHAT",
+"ICN",
+"TRIG"
+],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2018-43/segments/1539583511216.45/warc/CC-MAIN-20181017195553-20181017221053-00523.warc.gz bytes=808716246-808725717",
+"sin_fecha": false,
+"clave": "CHATUSDT|2018-10-12",
+"categoria_auto": "D",
+"L": null,
+"nota": {
+"A3.3": 2,
+"otros_pares_en_bucket": [
+"CHATBTC",
+"CHATETH"
+]
+},
+"categoria": "fuera_sin_par_usdt_documentado"
+},
+{
+"par": "ICNUSDT",
+"E": "2018-10-12",
+"urls": [
+"https://support.binance.com/hc/en-us/articles/360017720731?refer=coinsosik",
+"https://www.binance.com/en/support/announcement/360017720731"
+],
+"titulos": [
+"Binance Will Delist BCN, CHAT, ICN, TRIG"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": false,
+"tokens": [
+"BCN",
+"CHAT",
+"ICN",
+"TRIG"
+],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2018-43/segments/1539583511216.45/warc/CC-MAIN-20181017195553-20181017221053-00523.warc.gz bytes=808716246-808725717",
+"sin_fecha": false,
+"clave": "ICNUSDT|2018-10-12",
+"categoria_auto": "D",
+"L": null,
+"nota": {
+"A3.3": 2,
+"otros_pares_en_bucket": [
+"ICNBTC",
+"ICNETH"
+]
+},
+"categoria": "fuera_sin_par_usdt_documentado"
+},
+{
+"par": "TRIGUSDT",
+"E": "2018-10-12",
+"urls": [
+"https://support.binance.com/hc/en-us/articles/360017720731?refer=coinsosik",
+"https://www.binance.com/en/support/announcement/360017720731"
+],
+"titulos": [
+"Binance Will Delist BCN, CHAT, ICN, TRIG"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": false,
+"tokens": [
+"BCN",
+"CHAT",
+"ICN",
+"TRIG"
+],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2018-43/segments/1539583511216.45/warc/CC-MAIN-20181017195553-20181017221053-00523.warc.gz bytes=808716246-808725717",
+"sin_fecha": false,
+"clave": "TRIGUSDT|2018-10-12",
+"categoria_auto": "D",
+"L": null,
+"nota": {
+"A3.3": 2,
+"otros_pares_en_bucket": [
+"TRIGBNB",
+"TRIGBTC",
+"TRIGETH"
+]
+},
+"categoria": "fuera_sin_par_usdt_documentado"
+},
+{
+"par": "CLOAKUSDT",
+"E": "2019-02-22",
+"urls": [
+"https://support.binance.com/hc/en-us/articles/360023570292-Binance-Will-Delist-CLOAK-MOD-SALT-SUB-and-WINGS",
+"https://www.binance.com/en/support/announcement/360023570292"
+],
+"titulos": [
+"Binance Will Delist CLOAK, MOD, SALT, SUB and WINGS"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": false,
+"tokens": [
+"CLOAK",
+"MOD",
+"SALT",
+"SUB",
+"WINGS"
+],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2019-13/segments/1552912203093.63/warc/CC-MAIN-20190323221914-20190324003914-00246.warc.gz bytes=632567782-632578098",
+"sin_fecha": false,
+"clave": "CLOAKUSDT|2019-02-22",
+"categoria_auto": "D",
+"L": null,
+"nota": {
+"A3.3": 2,
+"otros_pares_en_bucket": [
+"CLOAKBTC",
+"CLOAKETH"
+]
+},
+"manual": {
+"accion": "confirmar",
+"cita": "we have decided to delist and cease trading on all trading pairs for the following coins and tokens on 2019/02/22 at 10:00 AM UTC: CloakCoin (CLOAK) Modum (MOD) SALT (SALT) Substratum (SUB) Wings (WINGS)",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_360023570292_e0d8ca186f81.json",
+"zd_360023570292_80190cd7d137.json"
+],
+"categoria_pasada1": "fuera_sin_par_usdt_documentado",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "fuera_sin_par_usdt_documentado"
+},
+{
+"par": "MODUSDT",
+"E": "2019-02-22",
+"urls": [
+"https://support.binance.com/hc/en-us/articles/360023570292-Binance-Will-Delist-CLOAK-MOD-SALT-SUB-and-WINGS",
+"https://www.binance.com/en/support/announcement/360023570292"
+],
+"titulos": [
+"Binance Will Delist CLOAK, MOD, SALT, SUB and WINGS"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": false,
+"tokens": [
+"CLOAK",
+"MOD",
+"SALT",
+"SUB",
+"WINGS"
+],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2019-13/segments/1552912203093.63/warc/CC-MAIN-20190323221914-20190324003914-00246.warc.gz bytes=632567782-632578098",
+"sin_fecha": false,
+"clave": "MODUSDT|2019-02-22",
+"categoria_auto": "D",
+"L": null,
+"nota": {
+"A3.3": 2,
+"otros_pares_en_bucket": [
+"MODBTC",
+"MODETH"
+]
+},
+"manual": {
+"accion": "confirmar",
+"cita": "we have decided to delist and cease trading on all trading pairs for the following coins and tokens on 2019/02/22 at 10:00 AM UTC: CloakCoin (CLOAK) Modum (MOD) SALT (SALT) Substratum (SUB) Wings (WINGS)",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_360023570292_e0d8ca186f81.json",
+"zd_360023570292_80190cd7d137.json"
+],
+"categoria_pasada1": "fuera_sin_par_usdt_documentado",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "fuera_sin_par_usdt_documentado"
+},
+{
+"par": "SALTUSDT",
+"E": "2019-02-22",
+"urls": [
+"https://support.binance.com/hc/en-us/articles/360023570292-Binance-Will-Delist-CLOAK-MOD-SALT-SUB-and-WINGS",
+"https://www.binance.com/en/support/announcement/360023570292"
+],
+"titulos": [
+"Binance Will Delist CLOAK, MOD, SALT, SUB and WINGS"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": false,
+"tokens": [
+"CLOAK",
+"MOD",
+"SALT",
+"SUB",
+"WINGS"
+],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2019-13/segments/1552912203093.63/warc/CC-MAIN-20190323221914-20190324003914-00246.warc.gz bytes=632567782-632578098",
+"sin_fecha": false,
+"clave": "SALTUSDT|2019-02-22",
+"categoria_auto": "D",
+"L": null,
+"nota": {
+"A3.3": 2,
+"otros_pares_en_bucket": [
+"SALTBTC",
+"SALTETH"
+]
+},
+"manual": {
+"accion": "confirmar",
+"cita": "we have decided to delist and cease trading on all trading pairs for the following coins and tokens on 2019/02/22 at 10:00 AM UTC: CloakCoin (CLOAK) Modum (MOD) SALT (SALT) Substratum (SUB) Wings (WINGS)",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_360023570292_e0d8ca186f81.json",
+"zd_360023570292_80190cd7d137.json"
+],
+"categoria_pasada1": "fuera_sin_par_usdt_documentado",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "fuera_sin_par_usdt_documentado"
+},
+{
+"par": "SUBUSDT",
+"E": "2019-02-22",
+"urls": [
+"https://support.binance.com/hc/en-us/articles/360023570292-Binance-Will-Delist-CLOAK-MOD-SALT-SUB-and-WINGS",
+"https://www.binance.com/en/support/announcement/360023570292"
+],
+"titulos": [
+"Binance Will Delist CLOAK, MOD, SALT, SUB and WINGS"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": false,
+"tokens": [
+"CLOAK",
+"MOD",
+"SALT",
+"SUB",
+"WINGS"
+],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2019-13/segments/1552912203093.63/warc/CC-MAIN-20190323221914-20190324003914-00246.warc.gz bytes=632567782-632578098",
+"sin_fecha": false,
+"clave": "SUBUSDT|2019-02-22",
+"categoria_auto": "D",
+"L": null,
+"nota": {
+"A3.3": 2,
+"otros_pares_en_bucket": [
+"SUBBTC",
+"SUBETH"
+]
+},
+"manual": {
+"accion": "confirmar",
+"cita": "we have decided to delist and cease trading on all trading pairs for the following coins and tokens on 2019/02/22 at 10:00 AM UTC: CloakCoin (CLOAK) Modum (MOD) SALT (SALT) Substratum (SUB) Wings (WINGS)",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_360023570292_e0d8ca186f81.json",
+"zd_360023570292_80190cd7d137.json"
+],
+"categoria_pasada1": "fuera_sin_par_usdt_documentado",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "fuera_sin_par_usdt_documentado"
+},
+{
+"par": "WINGSUSDT",
+"E": "2019-02-22",
+"urls": [
+"https://support.binance.com/hc/en-us/articles/360023570292-Binance-Will-Delist-CLOAK-MOD-SALT-SUB-and-WINGS",
+"https://www.binance.com/en/support/announcement/360023570292"
+],
+"titulos": [
+"Binance Will Delist CLOAK, MOD, SALT, SUB and WINGS"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": false,
+"tokens": [
+"CLOAK",
+"MOD",
+"SALT",
+"SUB",
+"WINGS"
+],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2019-13/segments/1552912203093.63/warc/CC-MAIN-20190323221914-20190324003914-00246.warc.gz bytes=632567782-632578098",
+"sin_fecha": false,
+"clave": "WINGSUSDT|2019-02-22",
+"categoria_auto": "D",
+"L": null,
+"nota": {
+"A3.3": 2,
+"otros_pares_en_bucket": [
+"WINGSBTC",
+"WINGSETH"
+]
+},
+"manual": {
+"accion": "confirmar",
+"cita": "we have decided to delist and cease trading on all trading pairs for the following coins and tokens on 2019/02/22 at 10:00 AM UTC: CloakCoin (CLOAK) Modum (MOD) SALT (SALT) Substratum (SUB) Wings (WINGS)",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_360023570292_e0d8ca186f81.json",
+"zd_360023570292_80190cd7d137.json"
+],
+"categoria_pasada1": "fuera_sin_par_usdt_documentado",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "fuera_sin_par_usdt_documentado"
+},
+{
+"par": "BCHSVUSDT",
+"E": "2019-04-22",
+"urls": [
+"https://support.binance.com/hc/en-us/articles/360026666152?fbclid=IwAR3ysVzVLT5um_x3Wgq4X3UEPhdi7UdIN4PrzzQO5jduUQoeQ6z_FSpHUf4"
+],
+"titulos": [
+"Binance Will Delist BCHSV"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": false,
+"tokens": [
+"BCHSV"
+],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2019-18/segments/1555578517682.16/warc/CC-MAIN-20190418141430-20190418163430-00428.warc.gz bytes=556702301-556712131",
+"sin_fecha": false,
+"clave": "BCHSVUSDT|2019-04-22",
+"categoria_auto": "A",
+"L": "2019-04-21",
+"nota": null,
+"manual": {
+"accion": "confirmar",
+"cita": "we have decided to delist and cease trading on all trading pairs for the following coin on 2019/04/22 at 10:00 AM UTC: Bitcoin SV (BCHSV)",
+"fuente_paginas": [
+"zd_360026666152_70a328bf3f4b.json"
+],
+"categoria_pasada1": "A",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "A"
+},
+{
+"par": "BEARUSDT",
+"E": "2020-03-31",
+"urls": [
+"https://binance.zendesk.com/hc/en-us/articles/360041613471-Binance-Will-Delist-All-FTX-Leveraged-Tokens",
+"https://www.binance.com/en/support/announcement/360041613471"
+],
+"titulos": [
+"Binance Will Delist All FTX Leveraged Tokens"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": true,
+"tokens": [],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-24/segments/1590348502097.77/warc/CC-MAIN-20200605143036-20200605173036-00319.warc.gz bytes=249808591-249820109",
+"sin_fecha": false,
+"clave": "BEARUSDT|2020-03-31",
+"categoria_auto": "A",
+"L": "2020-03-30",
+"nota": null,
+"manual": {
+"accion": "confirmar",
+"cita": "Binance has decided to delist all existing FTX leveraged tokens and corresponding trading pairs, and will stop trading at 2020/03/31 10:00 AM (UTC).",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_360041613471_a86973496254.json",
+"zd_360041613471_7f63c6ebd36b.json"
+],
+"categoria_pasada1": "A",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "A"
+},
+{
+"par": "BNBBEARUSDT",
+"E": "2020-03-31",
+"urls": [
+"https://binance.zendesk.com/hc/en-us/articles/360041613471-Binance-Will-Delist-All-FTX-Leveraged-Tokens",
+"https://www.binance.com/en/support/announcement/360041613471"
+],
+"titulos": [
+"Binance Will Delist All FTX Leveraged Tokens"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": true,
+"tokens": [],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-24/segments/1590348502097.77/warc/CC-MAIN-20200605143036-20200605173036-00319.warc.gz bytes=249808591-249820109",
+"sin_fecha": false,
+"clave": "BNBBEARUSDT|2020-03-31",
+"categoria_auto": "A",
+"L": "2020-03-30",
+"nota": null,
+"manual": {
+"accion": "confirmar",
+"cita": "Binance has decided to delist all existing FTX leveraged tokens and corresponding trading pairs, and will stop trading at 2020/03/31 10:00 AM (UTC).",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_360041613471_a86973496254.json",
+"zd_360041613471_7f63c6ebd36b.json"
+],
+"categoria_pasada1": "A",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "A"
+},
+{
+"par": "BNBBULLUSDT",
+"E": "2020-03-31",
+"urls": [
+"https://binance.zendesk.com/hc/en-us/articles/360041613471-Binance-Will-Delist-All-FTX-Leveraged-Tokens",
+"https://www.binance.com/en/support/announcement/360041613471"
+],
+"titulos": [
+"Binance Will Delist All FTX Leveraged Tokens"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": true,
+"tokens": [],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-24/segments/1590348502097.77/warc/CC-MAIN-20200605143036-20200605173036-00319.warc.gz bytes=249808591-249820109",
+"sin_fecha": false,
+"clave": "BNBBULLUSDT|2020-03-31",
+"categoria_auto": "A",
+"L": "2020-03-30",
+"nota": null,
+"manual": {
+"accion": "confirmar",
+"cita": "Binance has decided to delist all existing FTX leveraged tokens and corresponding trading pairs, and will stop trading at 2020/03/31 10:00 AM (UTC).",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_360041613471_a86973496254.json",
+"zd_360041613471_7f63c6ebd36b.json"
+],
+"categoria_pasada1": "A",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "A"
+},
+{
+"par": "BULLUSDT",
+"E": "2020-03-31",
+"urls": [
+"https://binance.zendesk.com/hc/en-us/articles/360041613471-Binance-Will-Delist-All-FTX-Leveraged-Tokens",
+"https://www.binance.com/en/support/announcement/360041613471"
+],
+"titulos": [
+"Binance Will Delist All FTX Leveraged Tokens"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": true,
+"tokens": [],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-24/segments/1590348502097.77/warc/CC-MAIN-20200605143036-20200605173036-00319.warc.gz bytes=249808591-249820109",
+"sin_fecha": false,
+"clave": "BULLUSDT|2020-03-31",
+"categoria_auto": "A",
+"L": "2020-03-30",
+"nota": null,
+"manual": {
+"accion": "confirmar",
+"cita": "Binance has decided to delist all existing FTX leveraged tokens and corresponding trading pairs, and will stop trading at 2020/03/31 10:00 AM (UTC).",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_360041613471_a86973496254.json",
+"zd_360041613471_7f63c6ebd36b.json"
+],
+"categoria_pasada1": "A",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "A"
+},
+{
+"par": "EOSBEARUSDT",
+"E": "2020-03-31",
+"urls": [
+"https://binance.zendesk.com/hc/en-us/articles/360041613471-Binance-Will-Delist-All-FTX-Leveraged-Tokens",
+"https://www.binance.com/en/support/announcement/360041613471"
+],
+"titulos": [
+"Binance Will Delist All FTX Leveraged Tokens"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": true,
+"tokens": [],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-24/segments/1590348502097.77/warc/CC-MAIN-20200605143036-20200605173036-00319.warc.gz bytes=249808591-249820109",
+"sin_fecha": false,
+"clave": "EOSBEARUSDT|2020-03-31",
+"categoria_auto": "A",
+"L": "2020-03-30",
+"nota": null,
+"manual": {
+"accion": "confirmar",
+"cita": "Binance has decided to delist all existing FTX leveraged tokens and corresponding trading pairs, and will stop trading at 2020/03/31 10:00 AM (UTC).",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_360041613471_a86973496254.json",
+"zd_360041613471_7f63c6ebd36b.json"
+],
+"categoria_pasada1": "A",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "A"
+},
+{
+"par": "EOSBULLUSDT",
+"E": "2020-03-31",
+"urls": [
+"https://binance.zendesk.com/hc/en-us/articles/360041613471-Binance-Will-Delist-All-FTX-Leveraged-Tokens",
+"https://www.binance.com/en/support/announcement/360041613471"
+],
+"titulos": [
+"Binance Will Delist All FTX Leveraged Tokens"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": true,
+"tokens": [],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-24/segments/1590348502097.77/warc/CC-MAIN-20200605143036-20200605173036-00319.warc.gz bytes=249808591-249820109",
+"sin_fecha": false,
+"clave": "EOSBULLUSDT|2020-03-31",
+"categoria_auto": "A",
+"L": "2020-03-30",
+"nota": null,
+"manual": {
+"accion": "confirmar",
+"cita": "Binance has decided to delist all existing FTX leveraged tokens and corresponding trading pairs, and will stop trading at 2020/03/31 10:00 AM (UTC).",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_360041613471_a86973496254.json",
+"zd_360041613471_7f63c6ebd36b.json"
+],
+"categoria_pasada1": "A",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "A"
+},
+{
+"par": "ETHBEARUSDT",
+"E": "2020-03-31",
+"urls": [
+"https://binance.zendesk.com/hc/en-us/articles/360041613471-Binance-Will-Delist-All-FTX-Leveraged-Tokens",
+"https://www.binance.com/en/support/announcement/360041613471"
+],
+"titulos": [
+"Binance Will Delist All FTX Leveraged Tokens"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": true,
+"tokens": [],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-24/segments/1590348502097.77/warc/CC-MAIN-20200605143036-20200605173036-00319.warc.gz bytes=249808591-249820109",
+"sin_fecha": false,
+"clave": "ETHBEARUSDT|2020-03-31",
+"categoria_auto": "A",
+"L": "2020-03-30",
+"nota": null,
+"manual": {
+"accion": "confirmar",
+"cita": "Binance has decided to delist all existing FTX leveraged tokens and corresponding trading pairs, and will stop trading at 2020/03/31 10:00 AM (UTC).",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_360041613471_a86973496254.json",
+"zd_360041613471_7f63c6ebd36b.json"
+],
+"categoria_pasada1": "A",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "A"
+},
+{
+"par": "ETHBULLUSDT",
+"E": "2020-03-31",
+"urls": [
+"https://binance.zendesk.com/hc/en-us/articles/360041613471-Binance-Will-Delist-All-FTX-Leveraged-Tokens",
+"https://www.binance.com/en/support/announcement/360041613471"
+],
+"titulos": [
+"Binance Will Delist All FTX Leveraged Tokens"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": true,
+"tokens": [],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-24/segments/1590348502097.77/warc/CC-MAIN-20200605143036-20200605173036-00319.warc.gz bytes=249808591-249820109",
+"sin_fecha": false,
+"clave": "ETHBULLUSDT|2020-03-31",
+"categoria_auto": "A",
+"L": "2020-03-30",
+"nota": null,
+"manual": {
+"accion": "confirmar",
+"cita": "Binance has decided to delist all existing FTX leveraged tokens and corresponding trading pairs, and will stop trading at 2020/03/31 10:00 AM (UTC).",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_360041613471_a86973496254.json",
+"zd_360041613471_7f63c6ebd36b.json"
+],
+"categoria_pasada1": "A",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "A"
+},
+{
+"par": "XRPBEARUSDT",
+"E": "2020-03-31",
+"urls": [
+"https://binance.zendesk.com/hc/en-us/articles/360041613471-Binance-Will-Delist-All-FTX-Leveraged-Tokens",
+"https://www.binance.com/en/support/announcement/360041613471"
+],
+"titulos": [
+"Binance Will Delist All FTX Leveraged Tokens"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": true,
+"tokens": [],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-24/segments/1590348502097.77/warc/CC-MAIN-20200605143036-20200605173036-00319.warc.gz bytes=249808591-249820109",
+"sin_fecha": false,
+"clave": "XRPBEARUSDT|2020-03-31",
+"categoria_auto": "A",
+"L": "2020-03-30",
+"nota": null,
+"manual": {
+"accion": "confirmar",
+"cita": "Binance has decided to delist all existing FTX leveraged tokens and corresponding trading pairs, and will stop trading at 2020/03/31 10:00 AM (UTC).",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_360041613471_a86973496254.json",
+"zd_360041613471_7f63c6ebd36b.json"
+],
+"categoria_pasada1": "A",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "A"
+},
+{
+"par": "XRPBULLUSDT",
+"E": "2020-03-31",
+"urls": [
+"https://binance.zendesk.com/hc/en-us/articles/360041613471-Binance-Will-Delist-All-FTX-Leveraged-Tokens",
+"https://www.binance.com/en/support/announcement/360041613471"
+],
+"titulos": [
+"Binance Will Delist All FTX Leveraged Tokens"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": true,
+"tokens": [],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-24/segments/1590348502097.77/warc/CC-MAIN-20200605143036-20200605173036-00319.warc.gz bytes=249808591-249820109",
+"sin_fecha": false,
+"clave": "XRPBULLUSDT|2020-03-31",
+"categoria_auto": "A",
+"L": "2020-03-30",
+"nota": null,
+"manual": {
+"accion": "confirmar",
+"cita": "Binance has decided to delist all existing FTX leveraged tokens and corresponding trading pairs, and will stop trading at 2020/03/31 10:00 AM (UTC).",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_360041613471_a86973496254.json",
+"zd_360041613471_7f63c6ebd36b.json"
+],
+"categoria_pasada1": "A",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "A"
+},
+{
+"par": "MCOUSDT",
+"E": "2020-10-23",
+"urls": [
+"https://www.binance.com/en/support/announcement/1841b3af92f34349a918f80cb8fcc9de"
+],
+"titulos": [
+"Notice of Removal of Trading Pairs - 2020/10/23"
+],
+"subtipos": [
+"remocion_pares"
+],
+"par_en_texto": true,
+"tokens": [],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-50/segments/1606141171077.4/warc/CC-MAIN-20201124025131-20201124055131-00481.warc.gz bytes=616382252-616407170",
+"sin_fecha": false,
+"clave": "MCOUSDT|2020-10-23",
+"categoria_auto": "A",
+"L": "2020-10-22",
+"nota": null,
+"manual": {
+"accion": "confirmar",
+"cita": "Binance will remove and cease trading on the following trading pairs at 2020/10/23 12:00 PM (UTC): BTS/BUSD, MCO/BTC, MCO/USDT, NEBL/BNB, REP/BUSD",
+"fuente_paginas": [
+"bn_1841b3af92f34349a918f80cb8fcc9de_8ff1bf4780bd.json"
+],
+"categoria_pasada1": "A",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "A"
+},
+{
+"par": "HCUSDT",
+"E": "2020-11-10",
+"urls": [
+"https://www.binance.com/en/support/announcement/dcb2722913ee4dec9a8be29da9e3aeb0"
+],
+"titulos": [
+"Notice of Removal of Trading Pairs - 2020/11/10"
+],
+"subtipos": [
+"remocion_pares"
+],
+"par_en_texto": true,
+"tokens": [],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-10/segments/1614178359082.48/warc/CC-MAIN-20210227174711-20210227204711-00402.warc.gz bytes=689885778-689913560",
+"sin_fecha": false,
+"clave": "HCUSDT|2020-11-10",
+"categoria_auto": "A",
+"L": "2020-11-09",
+"nota": null,
+"manual": {
+"accion": "confirmar",
+"cita": "Binance will remove and cease trading on the following trading pairs at 2020/11/10 12:00 PM (UTC): AION/BUSD, DCR/BUSD, EVX/ETH, HC/USDT, ONE/USDC, PAXG/BUSD, VTHO/BUSD.",
+"fuente_paginas": [
+"bn_dcb2722913ee4dec9a8be29da9e3aeb0_b1f63e7c797e.json"
+],
+"categoria_pasada1": "A",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "A"
+},
+{
+"par": "BKRWUSDT",
+"E": "2021-02-19",
+"urls": [
+"https://www.binance.com/en/support/announcement/89c3426b722341269effb0c073b30cdf?ref=JLI1VBLA&utm_source=BinanceTwitter&utm_medium=GlobalSocial&utm_campaign=GlobalSocial"
+],
+"titulos": [
+"Notice of Removal of Trading Pairs - 2021-02-19"
+],
+"subtipos": [
+"remocion_pares"
+],
+"par_en_texto": true,
+"tokens": [],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-10/segments/1614178365454.63/warc/CC-MAIN-20210303042832-20210303072832-00243.warc.gz bytes=679439014-679467525",
+"sin_fecha": false,
+"clave": "BKRWUSDT|2021-02-19",
+"categoria_auto": "T",
+"L": "2020-08-06",
+"nota": null,
+"manual": {
+"accion": "descartar",
+"cita": "Note: This announcement has been updated on 2021-02-20 to correct the BKRW/USDT trading pair to the USDT/BKRW trading pair, and to clarify the solution Binance will take toward users’ BKRW holdings after the removal of the USDT/BKRW trading pair.",
+"fuente_paginas": [
+"bn_89c3426b722341269effb0c073b30cdf_4b94fd16208f.json"
+],
+"categoria_pasada1": "T",
+"lector": "segunda lectura SL-v1",
+"certeza": "media"
+},
+"categoria": "descartado"
+},
+{
+"par": "HNTUSDT",
+"E": "2022-10-14",
+"urls": [
+"https://www.binance.com/en/support/announcement/notice-of-removal-of-trading-pairs-2022-10-14-64b9451dc9394f058802dd9ee4b52913"
+],
+"titulos": [
+"Notice of Removal of Trading Pairs - 2022-10-14"
+],
+"subtipos": [
+"remocion_pares"
+],
+"par_en_texto": true,
+"tokens": [],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2022-49/segments/1669446710533.96/warc/CC-MAIN-20221128135348-20221128165348-00267.warc.gz bytes=704483278-704550643",
+"sin_fecha": false,
+"clave": "HNTUSDT|2022-10-14",
+"categoria_auto": "A",
+"L": "2022-10-13",
+"nota": null,
+"manual": {
+"accion": "confirmar",
+"cita": "Binance will remove and cease trading on the following trading pairs at 2022-10-14 03:00 (UTC) : Spot Pairs : HNT/BTC, HNT/USDT, OOKI/BNB",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_notice-of-removal-of-trading_e6861e874e5f.json"
+],
+"categoria_pasada1": "A",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "A"
+},
+{
+"par": "FTTUSDT",
+"E": "2022-11-15",
+"urls": [
+"https://www.binance.com/en/support/announcement/notice-of-removal-of-trading-pairs-2022-11-15-47642955ae7f4a3688133df8067ac3c2"
+],
+"titulos": [
+"Notice of Removal of Trading Pairs - 2022-11-15"
+],
+"subtipos": [
+"remocion_pares"
+],
+"par_en_texto": true,
+"tokens": [],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2022-49/segments/1669446711286.17/warc/CC-MAIN-20221208082315-20221208112315-00341.warc.gz bytes=708521050-708588388",
+"sin_fecha": false,
+"clave": "FTTUSDT|2022-11-15",
+"categoria_auto": "A",
+"L": "2022-11-14",
+"nota": null,
+"manual": {
+"accion": "confirmar",
+"cita": "Binance will remove and cease trading on the following trading pairs at 2022-11-15 04:30 (UTC) : Spot Pairs : FTT/BNB, FTT/BTC, FTT/ETH and FTT/USDT",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_notice-of-removal-of-trading_3e662b1baa19.json"
+],
+"categoria_pasada1": "A",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "A"
+},
+{
+"par": "AUTOUSDT",
+"E": "2023-04-18",
+"urls": [
+"https://www.binance.com/en/support/announcement/binance-will-delist-qlc-nebl-and-auto-on-2023-04-18-27933fc8f6c8451fbb18c0189681441a"
+],
+"titulos": [
+"Binance Will Delist QLC, NEBL and AUTO on 2023-04-18"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": true,
+"tokens": [
+"AUTO",
+"NEBL",
+"QLC"
+],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2023-40/segments/1695233510284.49/warc/CC-MAIN-20230927071345-20230927101345-00258.warc.gz bytes=727107255-727185206",
+"sin_fecha": false,
+"clave": "AUTOUSDT|2023-04-18",
+"categoria_auto": "A",
+"L": "2023-04-17",
+"nota": null,
+"manual": {
+"accion": "confirmar",
+"cita": "we have decided to delist and cease trading on all trading pairs for the following tokens at 2023-04-18 03:00 (UTC) : Kepple (QLC) Neblio (NEBL) Auto (AUTO)",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_binance-will-delist-qlc-nebl_0a0c8d0291fd.json"
+],
+"categoria_pasada1": "A",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "A"
+},
+{
+"par": "NEBLUSDT",
+"E": "2023-04-18",
+"urls": [
+"https://www.binance.com/en/support/announcement/binance-will-delist-qlc-nebl-and-auto-on-2023-04-18-27933fc8f6c8451fbb18c0189681441a"
+],
+"titulos": [
+"Binance Will Delist QLC, NEBL and AUTO on 2023-04-18"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": true,
+"tokens": [
+"AUTO",
+"NEBL",
+"QLC"
+],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2023-40/segments/1695233510284.49/warc/CC-MAIN-20230927071345-20230927101345-00258.warc.gz bytes=727107255-727185206",
+"sin_fecha": false,
+"clave": "NEBLUSDT|2023-04-18",
+"categoria_auto": "A",
+"L": "2023-04-17",
+"nota": null,
+"manual": {
+"accion": "confirmar",
+"cita": "we have decided to delist and cease trading on all trading pairs for the following tokens at 2023-04-18 03:00 (UTC) : Kepple (QLC) Neblio (NEBL) Auto (AUTO)",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_binance-will-delist-qlc-nebl_0a0c8d0291fd.json"
+],
+"categoria_pasada1": "A",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "A"
+},
+{
+"par": "TRXDOWNUSDT",
+"E": "2023-05-09",
+"urls": [
+"https://www.binance.com/en/support/announcement/binance-to-delist-and-cease-redemption-for-trxup-trxdown-dotup-dotdown-linkup-linkdown-leveraged-tokens-2023-04-27-f9ed8900260141bbb2af4bb71741839a"
+],
+"titulos": [
+"Binance to Delist and Cease Redemption for TRXUP, TRXDOWN, DOTUP, DOTDOWN, LINKUP & LINKDOWN Leveraged Tokens (2023-04-27)"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": false,
+"tokens": [
+"DOTDOWN",
+"DOTUP",
+"LINKUP",
+"TRXDOWN"
+],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-33/segments/1722640822309.61/warc/CC-MAIN-20240810190707-20240810220707-00558.warc.gz bytes=533876796-533951524",
+"sin_fecha": false,
+"clave": "TRXDOWNUSDT|2023-04-27",
+"categoria_auto": "T",
+"L": "2022-11-28",
+"nota": null,
+"manual": {
+"accion": "fecha_corregida",
+"E": "2023-05-09",
+"cita": "Binance will delist and cease redemption for the TRXUP, TRXDOWN, DOTUP, DOTDOWN, LINKUP and LINKDOWN leveraged tokens at the following timings: At 2023-05-09 06:00 (UTC) : TRXUP, TRXDOWN At 2023-05-10 06:00 (UTC) : DOTUP, DOTDOWN At 2023-05-11 06:00 (UTC) : LINKUP, LINKDOWN",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_binance-to-delist-and-cease-_6079c69de2a3.json"
+],
+"categoria_pasada1": "T",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"E_original": "2023-04-27",
+"categoria": "T"
+},
+{
+"par": "DOTDOWNUSDT",
+"E": "2023-05-10",
+"urls": [
+"https://www.binance.com/en/support/announcement/binance-to-delist-and-cease-redemption-for-trxup-trxdown-dotup-dotdown-linkup-linkdown-leveraged-tokens-2023-04-27-f9ed8900260141bbb2af4bb71741839a"
+],
+"titulos": [
+"Binance to Delist and Cease Redemption for TRXUP, TRXDOWN, DOTUP, DOTDOWN, LINKUP & LINKDOWN Leveraged Tokens (2023-04-27)"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": false,
+"tokens": [
+"DOTDOWN",
+"DOTUP",
+"LINKUP",
+"TRXDOWN"
+],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-33/segments/1722640822309.61/warc/CC-MAIN-20240810190707-20240810220707-00558.warc.gz bytes=533876796-533951524",
+"sin_fecha": false,
+"clave": "DOTDOWNUSDT|2023-04-27",
+"categoria_auto": "T",
+"L": "2022-11-28",
+"nota": null,
+"manual": {
+"accion": "fecha_corregida",
+"E": "2023-05-10",
+"cita": "Binance will delist and cease redemption for the TRXUP, TRXDOWN, DOTUP, DOTDOWN, LINKUP and LINKDOWN leveraged tokens at the following timings: At 2023-05-09 06:00 (UTC) : TRXUP, TRXDOWN At 2023-05-10 06:00 (UTC) : DOTUP, DOTDOWN At 2023-05-11 06:00 (UTC) : LINKUP, LINKDOWN",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_binance-to-delist-and-cease-_6079c69de2a3.json"
+],
+"categoria_pasada1": "T",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"E_original": "2023-04-27",
+"categoria": "T"
+},
+{
+"par": "DOTUPUSDT",
+"E": "2023-05-10",
+"urls": [
+"https://www.binance.com/en/support/announcement/binance-to-delist-and-cease-redemption-for-trxup-trxdown-dotup-dotdown-linkup-linkdown-leveraged-tokens-2023-04-27-f9ed8900260141bbb2af4bb71741839a"
+],
+"titulos": [
+"Binance to Delist and Cease Redemption for TRXUP, TRXDOWN, DOTUP, DOTDOWN, LINKUP & LINKDOWN Leveraged Tokens (2023-04-27)"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": false,
+"tokens": [
+"DOTDOWN",
+"DOTUP",
+"LINKUP",
+"TRXDOWN"
+],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-33/segments/1722640822309.61/warc/CC-MAIN-20240810190707-20240810220707-00558.warc.gz bytes=533876796-533951524",
+"sin_fecha": false,
+"clave": "DOTUPUSDT|2023-04-27",
+"categoria_auto": "T",
+"L": "2022-11-28",
+"nota": null,
+"manual": {
+"accion": "fecha_corregida",
+"E": "2023-05-10",
+"cita": "Binance will delist and cease redemption for the TRXUP, TRXDOWN, DOTUP, DOTDOWN, LINKUP and LINKDOWN leveraged tokens at the following timings: At 2023-05-09 06:00 (UTC) : TRXUP, TRXDOWN At 2023-05-10 06:00 (UTC) : DOTUP, DOTDOWN At 2023-05-11 06:00 (UTC) : LINKUP, LINKDOWN",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_binance-to-delist-and-cease-_6079c69de2a3.json"
+],
+"categoria_pasada1": "T",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"E_original": "2023-04-27",
+"categoria": "T"
+},
+{
+"par": "LINKUPUSDT",
+"E": "2023-05-11",
+"urls": [
+"https://www.binance.com/en/support/announcement/binance-to-delist-and-cease-redemption-for-trxup-trxdown-dotup-dotdown-linkup-linkdown-leveraged-tokens-2023-04-27-f9ed8900260141bbb2af4bb71741839a"
+],
+"titulos": [
+"Binance to Delist and Cease Redemption for TRXUP, TRXDOWN, DOTUP, DOTDOWN, LINKUP & LINKDOWN Leveraged Tokens (2023-04-27)"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": false,
+"tokens": [
+"DOTDOWN",
+"DOTUP",
+"LINKUP",
+"TRXDOWN"
+],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-33/segments/1722640822309.61/warc/CC-MAIN-20240810190707-20240810220707-00558.warc.gz bytes=533876796-533951524",
+"sin_fecha": false,
+"clave": "LINKUPUSDT|2023-04-27",
+"categoria_auto": "B",
+"L": "2023-04-05",
+"nota": null,
+"manual": {
+"accion": "fecha_corregida",
+"E": "2023-05-11",
+"cita": "Binance will delist and cease redemption for the TRXUP, TRXDOWN, DOTUP, DOTDOWN, LINKUP and LINKDOWN leveraged tokens at the following timings: At 2023-05-09 06:00 (UTC) : TRXUP, TRXDOWN At 2023-05-10 06:00 (UTC) : DOTUP, DOTDOWN At 2023-05-11 06:00 (UTC) : LINKUP, LINKDOWN",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_binance-to-delist-and-cease-_6079c69de2a3.json"
+],
+"categoria_pasada1": "B",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"E_original": "2023-04-27",
+"categoria": "T"
+},
+{
+"par": "AUDUSDT",
+"E": "2023-06-01",
+"urls": [
+"https://www.binance.com/en/support/announcement/notice-of-removal-of-trading-pairs-2023-06-01-bd9a8eb9e0c940278d888cb95b76ba41"
+],
+"titulos": [
+"Notice of Removal of Trading Pairs - 2023-06-01"
+],
+"subtipos": [
+"remocion_pares"
+],
+"par_en_texto": true,
+"tokens": [],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2023-40/segments/1695233505362.29/warc/CC-MAIN-20230921073711-20230921103711-00556.warc.gz bytes=741396699-741474229",
+"sin_fecha": false,
+"clave": "AUDUSDT|2023-06-01",
+"categoria_auto": "A",
+"L": "2023-05-31",
+"nota": null,
+"manual": {
+"accion": "confirmar",
+"cita": "Binance will remove and cease trading on the following spot trading pairs at 2023-06-01 06:00 (UTC): Spot Pairs: ADA/AUD, AUD/BUSD, AUD/USDT, BNB/AUD, BTC/AUD, DOGE/AUD, ETH/AUD, GALA/AUD, MATIC/AUD, SOL/AUD, XRP/AUD",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_notice-of-removal-of-trading_5b877cc8b91f.json"
+],
+"categoria_pasada1": "A",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "A"
+},
+{
+"par": "YFIIUSDT",
+"E": "2023-08-22",
+"urls": [
+"https://www.binance.com/en/support/announcement/binance-will-delist-snm-srm-and-yfii-on-2023-08-22-f43511a4c1d347a8a2dd1efbdd2fe716?ref=blog.nami.exchange"
+],
+"titulos": [
+"Binance Will Delist SNM, SRM and YFII on 2023-08-22"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": true,
+"tokens": [
+"SNM",
+"SRM",
+"YFII"
+],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-46/segments/1730477027710.33/warc/CC-MAIN-20241102102832-20241102132832-00210.warc.gz bytes=654721166-654805305",
+"sin_fecha": false,
+"clave": "YFIIUSDT|2023-08-22",
+"categoria_auto": "A",
+"L": "2023-08-21",
+"nota": null,
+"manual": {
+"accion": "confirmar",
+"cita": "we have decided to delist and cease trading on all trading pairs for the following tokens at 2023-08-22 03:00 (UTC) : Sonm (SNM) Serum (SRM) DFI.Money (YFII)",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_binance-will-delist-snm-srm-_013faf0901ef.json"
+],
+"categoria_pasada1": "A",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "A"
+},
+{
+"par": "ARKUSDT",
+"E": "2023-09-22",
+"urls": [
+"https://www.binance.com/en/support/announcement/notice-of-addition-removal-of-trading-pairs-2023-09-22-fe93095a80944d31b42fa7eb2afdb12c?ref=AZTKZ9XS&utm_source=BinanceTwitter&utm_medium=GlobalSocial&utm_campaign=GlobalSocial"
+],
+"titulos": [
+"Notice of Addition & Removal of Trading Pairs - 2023-09-22"
+],
+"subtipos": [
+"remocion_pares"
+],
+"par_en_texto": true,
+"tokens": [],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2023-50/segments/1700679100531.77/warc/CC-MAIN-20231204151108-20231204181108-00646.warc.gz bytes=754296238-754378911",
+"sin_fecha": false,
+"clave": "ARKUSDT|2023-09-22",
+"categoria_auto": "C",
+"L": null,
+"nota": null,
+"manual": {
+"accion": "C_explicada",
+"cita": "At 2023-09-22 08:00 (UTC) , Binance will open trading for the ARK/USDT, CREAM/USDT, FTT/USDT, GFT/USDT, IQ/USDT and USDT/VAI spot trading pairs.",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_notice-of-addition-removal-o_de27e21c5438.json"
+],
+"categoria_pasada1": "C_no_explicada",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "C_explicada"
+},
+{
+"par": "CREAMUSDT",
+"E": "2023-09-22",
+"urls": [
+"https://www.binance.com/en/support/announcement/notice-of-addition-removal-of-trading-pairs-2023-09-22-fe93095a80944d31b42fa7eb2afdb12c?ref=AZTKZ9XS&utm_source=BinanceTwitter&utm_medium=GlobalSocial&utm_campaign=GlobalSocial"
+],
+"titulos": [
+"Notice of Addition & Removal of Trading Pairs - 2023-09-22"
+],
+"subtipos": [
+"remocion_pares"
+],
+"par_en_texto": true,
+"tokens": [],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2023-50/segments/1700679100531.77/warc/CC-MAIN-20231204151108-20231204181108-00646.warc.gz bytes=754296238-754378911",
+"sin_fecha": false,
+"clave": "CREAMUSDT|2023-09-22",
+"categoria_auto": "C",
+"L": null,
+"nota": null,
+"manual": {
+"accion": "C_explicada",
+"cita": "At 2023-09-22 08:00 (UTC) , Binance will open trading for the ARK/USDT, CREAM/USDT, FTT/USDT, GFT/USDT, IQ/USDT and USDT/VAI spot trading pairs.",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_notice-of-addition-removal-o_de27e21c5438.json"
+],
+"categoria_pasada1": "C_no_explicada",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "C_explicada"
+},
+{
+"par": "FTTUSDT",
+"E": "2023-09-22",
+"urls": [
+"https://www.binance.com/en/support/announcement/notice-of-addition-removal-of-trading-pairs-2023-09-22-fe93095a80944d31b42fa7eb2afdb12c?ref=AZTKZ9XS&utm_source=BinanceTwitter&utm_medium=GlobalSocial&utm_campaign=GlobalSocial"
+],
+"titulos": [
+"Notice of Addition & Removal of Trading Pairs - 2023-09-22"
+],
+"subtipos": [
+"remocion_pares"
+],
+"par_en_texto": true,
+"tokens": [],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2023-50/segments/1700679100531.77/warc/CC-MAIN-20231204151108-20231204181108-00646.warc.gz bytes=754296238-754378911",
+"sin_fecha": false,
+"clave": "FTTUSDT|2023-09-22",
+"categoria_auto": "C",
+"L": null,
+"nota": null,
+"manual": {
+"accion": "C_explicada",
+"cita": "At 2023-09-22 08:00 (UTC) , Binance will open trading for the ARK/USDT, CREAM/USDT, FTT/USDT, GFT/USDT, IQ/USDT and USDT/VAI spot trading pairs.",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_notice-of-addition-removal-o_de27e21c5438.json"
+],
+"categoria_pasada1": "C_no_explicada",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "C_explicada"
+},
+{
+"par": "GFTUSDT",
+"E": "2023-09-22",
+"urls": [
+"https://www.binance.com/en/support/announcement/notice-of-addition-removal-of-trading-pairs-2023-09-22-fe93095a80944d31b42fa7eb2afdb12c?ref=AZTKZ9XS&utm_source=BinanceTwitter&utm_medium=GlobalSocial&utm_campaign=GlobalSocial"
+],
+"titulos": [
+"Notice of Addition & Removal of Trading Pairs - 2023-09-22"
+],
+"subtipos": [
+"remocion_pares"
+],
+"par_en_texto": true,
+"tokens": [],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2023-50/segments/1700679100531.77/warc/CC-MAIN-20231204151108-20231204181108-00646.warc.gz bytes=754296238-754378911",
+"sin_fecha": false,
+"clave": "GFTUSDT|2023-09-22",
+"categoria_auto": "C",
+"L": null,
+"nota": null,
+"manual": {
+"accion": "C_explicada",
+"cita": "At 2023-09-22 08:00 (UTC) , Binance will open trading for the ARK/USDT, CREAM/USDT, FTT/USDT, GFT/USDT, IQ/USDT and USDT/VAI spot trading pairs.",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_notice-of-addition-removal-o_de27e21c5438.json"
+],
+"categoria_pasada1": "C_no_explicada",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "C_explicada"
+},
+{
+"par": "IQUSDT",
+"E": "2023-09-22",
+"urls": [
+"https://www.binance.com/en/support/announcement/notice-of-addition-removal-of-trading-pairs-2023-09-22-fe93095a80944d31b42fa7eb2afdb12c?ref=AZTKZ9XS&utm_source=BinanceTwitter&utm_medium=GlobalSocial&utm_campaign=GlobalSocial"
+],
+"titulos": [
+"Notice of Addition & Removal of Trading Pairs - 2023-09-22"
+],
+"subtipos": [
+"remocion_pares"
+],
+"par_en_texto": true,
+"tokens": [],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2023-50/segments/1700679100531.77/warc/CC-MAIN-20231204151108-20231204181108-00646.warc.gz bytes=754296238-754378911",
+"sin_fecha": false,
+"clave": "IQUSDT|2023-09-22",
+"categoria_auto": "C",
+"L": null,
+"nota": null,
+"manual": {
+"accion": "C_explicada",
+"cita": "At 2023-09-22 08:00 (UTC) , Binance will open trading for the ARK/USDT, CREAM/USDT, FTT/USDT, GFT/USDT, IQ/USDT and USDT/VAI spot trading pairs.",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_notice-of-addition-removal-o_de27e21c5438.json"
+],
+"categoria_pasada1": "C_no_explicada",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "C_explicada"
+},
+{
+"par": "BTSUSDT",
+"E": "2023-12-07",
+"urls": [
+"https://www.binance.com/en/support/announcement/binance-will-delist-bts-perl-torn-wtc-on-2023-12-07-d24dd4a035c443b1ad8cf49f60b9d194"
+],
+"titulos": [
+"Binance Will Delist BTS, PERL, TORN, WTC on 2023-12-07"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": true,
+"tokens": [
+"BTS",
+"PERL",
+"TORN",
+"WTC"
+],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-10/segments/1707947474659.73/warc/CC-MAIN-20240226094435-20240226124435-00198.warc.gz bytes=703161015-703248733",
+"sin_fecha": false,
+"clave": "BTSUSDT|2023-12-07",
+"categoria_auto": "A",
+"L": "2023-12-06",
+"nota": null,
+"manual": {
+"accion": "confirmar",
+"cita": "we have decided to delist and cease trading on all trading pairs for the following token(s) at 2023-12-07 03:00 (UTC) : BitShares (BTS) PERL.eco (PERL) Tornado Cash (TORN) Waltonchain (WTC)",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_binance-will-delist-bts-perl_f8e94ac0bfb3.json"
+],
+"categoria_pasada1": "A",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "A"
+},
+{
+"par": "PERLUSDT",
+"E": "2023-12-07",
+"urls": [
+"https://www.binance.com/en/support/announcement/binance-will-delist-bts-perl-torn-wtc-on-2023-12-07-d24dd4a035c443b1ad8cf49f60b9d194"
+],
+"titulos": [
+"Binance Will Delist BTS, PERL, TORN, WTC on 2023-12-07"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": true,
+"tokens": [
+"BTS",
+"PERL",
+"TORN",
+"WTC"
+],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-10/segments/1707947474659.73/warc/CC-MAIN-20240226094435-20240226124435-00198.warc.gz bytes=703161015-703248733",
+"sin_fecha": false,
+"clave": "PERLUSDT|2023-12-07",
+"categoria_auto": "A",
+"L": "2023-12-06",
+"nota": null,
+"manual": {
+"accion": "confirmar",
+"cita": "we have decided to delist and cease trading on all trading pairs for the following token(s) at 2023-12-07 03:00 (UTC) : BitShares (BTS) PERL.eco (PERL) Tornado Cash (TORN) Waltonchain (WTC)",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_binance-will-delist-bts-perl_f8e94ac0bfb3.json"
+],
+"categoria_pasada1": "A",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "A"
+},
+{
+"par": "WTCUSDT",
+"E": "2023-12-07",
+"urls": [
+"https://www.binance.com/en/support/announcement/binance-will-delist-bts-perl-torn-wtc-on-2023-12-07-d24dd4a035c443b1ad8cf49f60b9d194"
+],
+"titulos": [
+"Binance Will Delist BTS, PERL, TORN, WTC on 2023-12-07"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": true,
+"tokens": [
+"BTS",
+"PERL",
+"TORN",
+"WTC"
+],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-10/segments/1707947474659.73/warc/CC-MAIN-20240226094435-20240226124435-00198.warc.gz bytes=703161015-703248733",
+"sin_fecha": false,
+"clave": "WTCUSDT|2023-12-07",
+"categoria_auto": "A",
+"L": "2023-12-06",
+"nota": null,
+"manual": {
+"accion": "confirmar",
+"cita": "we have decided to delist and cease trading on all trading pairs for the following token(s) at 2023-12-07 03:00 (UTC) : BitShares (BTS) PERL.eco (PERL) Tornado Cash (TORN) Waltonchain (WTC)",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_binance-will-delist-bts-perl_f8e94ac0bfb3.json"
+],
+"categoria_pasada1": "A",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "A"
+},
+{
+"par": "ANTUSDT",
+"E": "2024-02-20",
+"urls": [
+"https://www.binance.com/en/support/announcement/binance-will-delist-ant-multi-vai-xmr-on-2024-02-20-f73b083ba6834771b07dbe5319917ae5"
+],
+"titulos": [
+"Binance Will Delist ANT, MULTI, VAI, XMR on 2024-02-20"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": true,
+"tokens": [
+"ANT",
+"MULTI",
+"VAI",
+"XMR"
+],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-10/segments/1707947473598.4/warc/CC-MAIN-20240221234056-20240222024056-00331.warc.gz bytes=681578330-681672187",
+"sin_fecha": false,
+"clave": "ANTUSDT|2024-02-20",
+"categoria_auto": "A",
+"L": "2024-02-19",
+"nota": null,
+"manual": {
+"accion": "confirmar",
+"cita": "we have decided to delist and cease trading on all trading pairs for the following token(s) at 2024-02-20 03:00 (UTC) : Aragon (ANT) Multichain (MULTI) Vai (VAI) Monero (XMR)",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_binance-will-delist-ant-mult_f317e3f215f3.json"
+],
+"categoria_pasada1": "A",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "A"
+},
+{
+"par": "MULTIUSDT",
+"E": "2024-02-20",
+"urls": [
+"https://www.binance.com/en/support/announcement/binance-will-delist-ant-multi-vai-xmr-on-2024-02-20-f73b083ba6834771b07dbe5319917ae5"
+],
+"titulos": [
+"Binance Will Delist ANT, MULTI, VAI, XMR on 2024-02-20"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": true,
+"tokens": [
+"ANT",
+"MULTI",
+"VAI",
+"XMR"
+],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-10/segments/1707947473598.4/warc/CC-MAIN-20240221234056-20240222024056-00331.warc.gz bytes=681578330-681672187",
+"sin_fecha": false,
+"clave": "MULTIUSDT|2024-02-20",
+"categoria_auto": "A",
+"L": "2024-02-19",
+"nota": null,
+"manual": {
+"accion": "confirmar",
+"cita": "we have decided to delist and cease trading on all trading pairs for the following token(s) at 2024-02-20 03:00 (UTC) : Aragon (ANT) Multichain (MULTI) Vai (VAI) Monero (XMR)",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_binance-will-delist-ant-mult_f317e3f215f3.json"
+],
+"categoria_pasada1": "A",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "A"
+},
+{
+"par": "XMRUSDT",
+"E": "2024-02-20",
+"urls": [
+"https://www.binance.com/en/support/announcement/binance-will-delist-ant-multi-vai-xmr-on-2024-02-20-f73b083ba6834771b07dbe5319917ae5"
+],
+"titulos": [
+"Binance Will Delist ANT, MULTI, VAI, XMR on 2024-02-20"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": true,
+"tokens": [
+"ANT",
+"MULTI",
+"VAI",
+"XMR"
+],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-10/segments/1707947473598.4/warc/CC-MAIN-20240221234056-20240222024056-00331.warc.gz bytes=681578330-681672187",
+"sin_fecha": false,
+"clave": "XMRUSDT|2024-02-20",
+"categoria_auto": "A",
+"L": "2024-02-19",
+"nota": null,
+"manual": {
+"accion": "confirmar",
+"cita": "we have decided to delist and cease trading on all trading pairs for the following token(s) at 2024-02-20 03:00 (UTC) : Aragon (ANT) Multichain (MULTI) Vai (VAI) Monero (XMR)",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_binance-will-delist-ant-mult_f317e3f215f3.json"
+],
+"categoria_pasada1": "A",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "A"
+},
+{
+"par": "BONDUSDT",
+"E": "2024-07-22",
+"urls": [
+"https://www.binance.com/en/support/announcement/binance-will-delist-bond-dock-mdx-pols-on-2024-07-22-4ffb7170f2f84ce3a06cc0cf1a788c23"
+],
+"titulos": [
+"Binance Will Delist BOND, DOCK, MDX, POLS on 2024-07-22"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": true,
+"tokens": [
+"BOND",
+"DOCK",
+"MDX",
+"POLS"
+],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-33/segments/1722640759711.49/warc/CC-MAIN-20240809044241-20240809074241-00105.warc.gz bytes=529660114-529748932",
+"sin_fecha": false,
+"clave": "BONDUSDT|2024-07-22",
+"categoria_auto": "A",
+"L": "2024-07-21",
+"nota": null,
+"manual": {
+"accion": "confirmar",
+"cita": "we have decided to delist and cease trading on all spot trading pairs for the following token(s) at 2024-07-22 03:00 (UTC) : BarnBridge (BOND) Dock (DOCK) Mdex (MDX) Polkastarter (POLS)",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_binance-will-delist-bond-doc_fb422c08c50b.json"
+],
+"categoria_pasada1": "A",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "A"
+},
+{
+"par": "DOCKUSDT",
+"E": "2024-07-22",
+"urls": [
+"https://www.binance.com/en/support/announcement/binance-will-delist-bond-dock-mdx-pols-on-2024-07-22-4ffb7170f2f84ce3a06cc0cf1a788c23"
+],
+"titulos": [
+"Binance Will Delist BOND, DOCK, MDX, POLS on 2024-07-22"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": true,
+"tokens": [
+"BOND",
+"DOCK",
+"MDX",
+"POLS"
+],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-33/segments/1722640759711.49/warc/CC-MAIN-20240809044241-20240809074241-00105.warc.gz bytes=529660114-529748932",
+"sin_fecha": false,
+"clave": "DOCKUSDT|2024-07-22",
+"categoria_auto": "A",
+"L": "2024-07-21",
+"nota": null,
+"manual": {
+"accion": "confirmar",
+"cita": "we have decided to delist and cease trading on all spot trading pairs for the following token(s) at 2024-07-22 03:00 (UTC) : BarnBridge (BOND) Dock (DOCK) Mdex (MDX) Polkastarter (POLS)",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_binance-will-delist-bond-doc_fb422c08c50b.json"
+],
+"categoria_pasada1": "A",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "A"
+},
+{
+"par": "MDXUSDT",
+"E": "2024-07-22",
+"urls": [
+"https://www.binance.com/en/support/announcement/binance-will-delist-bond-dock-mdx-pols-on-2024-07-22-4ffb7170f2f84ce3a06cc0cf1a788c23"
+],
+"titulos": [
+"Binance Will Delist BOND, DOCK, MDX, POLS on 2024-07-22"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": true,
+"tokens": [
+"BOND",
+"DOCK",
+"MDX",
+"POLS"
+],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-33/segments/1722640759711.49/warc/CC-MAIN-20240809044241-20240809074241-00105.warc.gz bytes=529660114-529748932",
+"sin_fecha": false,
+"clave": "MDXUSDT|2024-07-22",
+"categoria_auto": "A",
+"L": "2024-07-21",
+"nota": null,
+"manual": {
+"accion": "confirmar",
+"cita": "we have decided to delist and cease trading on all spot trading pairs for the following token(s) at 2024-07-22 03:00 (UTC) : BarnBridge (BOND) Dock (DOCK) Mdex (MDX) Polkastarter (POLS)",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_binance-will-delist-bond-doc_fb422c08c50b.json"
+],
+"categoria_pasada1": "A",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "A"
+},
+{
+"par": "POLSUSDT",
+"E": "2024-07-22",
+"urls": [
+"https://www.binance.com/en/support/announcement/binance-will-delist-bond-dock-mdx-pols-on-2024-07-22-4ffb7170f2f84ce3a06cc0cf1a788c23"
+],
+"titulos": [
+"Binance Will Delist BOND, DOCK, MDX, POLS on 2024-07-22"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": true,
+"tokens": [
+"BOND",
+"DOCK",
+"MDX",
+"POLS"
+],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-33/segments/1722640759711.49/warc/CC-MAIN-20240809044241-20240809074241-00105.warc.gz bytes=529660114-529748932",
+"sin_fecha": false,
+"clave": "POLSUSDT|2024-07-22",
+"categoria_auto": "A",
+"L": "2024-07-21",
+"nota": null,
+"manual": {
+"accion": "confirmar",
+"cita": "we have decided to delist and cease trading on all spot trading pairs for the following token(s) at 2024-07-22 03:00 (UTC) : BarnBridge (BOND) Dock (DOCK) Mdex (MDX) Polkastarter (POLS)",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_binance-will-delist-bond-doc_fb422c08c50b.json"
+],
+"categoria_pasada1": "A",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "A"
+},
+{
+"par": "KP3RUSDT",
+"E": "2024-11-06",
+"urls": [
+"https://www.binance.com/en/support/announcement/binance-will-delist-idrt-kp3r-ooki-unfi-on-2024-11-06-043c8407bb904652a428573a50d07e07?utm_source=CoinGabbar&utm_medium=Website"
+],
+"titulos": [
+"Binance Will Delist IDRT, KP3R, OOKI, UNFI on 2024-11-06"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": true,
+"tokens": [
+"IDRT",
+"KP3R",
+"OOKI",
+"UNFI"
+],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-51/segments/1733066433271.86/warc/CC-MAIN-20241207224914-20241208014914-00417.warc.gz bytes=611005252-611075961",
+"sin_fecha": false,
+"clave": "KP3RUSDT|2024-11-06",
+"categoria_auto": "A",
+"L": "2024-11-05",
+"nota": null,
+"manual": {
+"accion": "confirmar",
+"cita": "we have decided to delist and cease trading on all spot trading pairs for the following token(s) at 2024-11-06 03:00 (UTC) : Rupiah Token (IDRT) Keep3rV1 (KP3R) Ooki Protocol (OOKI) Unifi Protocol DAO (UNFI)",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_binance-will-delist-idrt-kp3_1ffb11650aa9.json"
+],
+"categoria_pasada1": "A",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "A"
+},
+{
+"par": "OOKIUSDT",
+"E": "2024-11-06",
+"urls": [
+"https://www.binance.com/en/support/announcement/binance-will-delist-idrt-kp3r-ooki-unfi-on-2024-11-06-043c8407bb904652a428573a50d07e07?utm_source=CoinGabbar&utm_medium=Website"
+],
+"titulos": [
+"Binance Will Delist IDRT, KP3R, OOKI, UNFI on 2024-11-06"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": true,
+"tokens": [
+"IDRT",
+"KP3R",
+"OOKI",
+"UNFI"
+],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-51/segments/1733066433271.86/warc/CC-MAIN-20241207224914-20241208014914-00417.warc.gz bytes=611005252-611075961",
+"sin_fecha": false,
+"clave": "OOKIUSDT|2024-11-06",
+"categoria_auto": "A",
+"L": "2024-11-05",
+"nota": null,
+"manual": {
+"accion": "confirmar",
+"cita": "we have decided to delist and cease trading on all spot trading pairs for the following token(s) at 2024-11-06 03:00 (UTC) : Rupiah Token (IDRT) Keep3rV1 (KP3R) Ooki Protocol (OOKI) Unifi Protocol DAO (UNFI)",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_binance-will-delist-idrt-kp3_1ffb11650aa9.json"
+],
+"categoria_pasada1": "A",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "A"
+},
+{
+"par": "UNFIUSDT",
+"E": "2024-11-06",
+"urls": [
+"https://www.binance.com/en/support/announcement/binance-will-delist-idrt-kp3r-ooki-unfi-on-2024-11-06-043c8407bb904652a428573a50d07e07?utm_source=CoinGabbar&utm_medium=Website"
+],
+"titulos": [
+"Binance Will Delist IDRT, KP3R, OOKI, UNFI on 2024-11-06"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": true,
+"tokens": [
+"IDRT",
+"KP3R",
+"OOKI",
+"UNFI"
+],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-51/segments/1733066433271.86/warc/CC-MAIN-20241207224914-20241208014914-00417.warc.gz bytes=611005252-611075961",
+"sin_fecha": false,
+"clave": "UNFIUSDT|2024-11-06",
+"categoria_auto": "A",
+"L": "2024-11-05",
+"nota": null,
+"manual": {
+"accion": "confirmar",
+"cita": "we have decided to delist and cease trading on all spot trading pairs for the following token(s) at 2024-11-06 03:00 (UTC) : Rupiah Token (IDRT) Keep3rV1 (KP3R) Ooki Protocol (OOKI) Unifi Protocol DAO (UNFI)",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_binance-will-delist-idrt-kp3_1ffb11650aa9.json"
+],
+"categoria_pasada1": "A",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "A"
+}
+]

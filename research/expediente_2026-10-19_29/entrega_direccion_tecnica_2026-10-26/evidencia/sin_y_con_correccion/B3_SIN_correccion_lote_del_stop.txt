@@ -1,0 +1,25 @@
+_ test_the_stop_after_an_entry_is_on_the_lot_grid_and_the_position_stays_protected _
+
+    async def test_the_stop_after_an_entry_is_on_the_lot_grid_and_the_position_stays_protected() -> None:
+        venue = BaseAssetCommissionVenue()
+        runtime, _, market = build_runtime(execution=venue)
+        await runtime.start()
+        try:
+            await _open_a_long(runtime, venue, market)
+            market.advance()
+            await runtime._cycle_once()
+            held = venue.positions[SYMBOL].quantity
+            assert not _on_grid(held), "precondition: the commission left the holding off the lot grid"
+            stops = [o for o in venue.orders.values() if o.order_type is OrderType.STOP and not o.state.is_terminal]
+>           assert len(stops) == 1, f"one working stop expected; refused off the grid: {venue.refused_off_grid}"
+E           AssertionError: one working stop expected; refused off the grid: 1
+E           assert 0 == 1
+E            +  where 0 = len([])
+
+tests/integration/test_stop_quantity_on_the_lot_grid.py:99: AssertionError
+----------------------------- Captured stdout call -----------------------------
+2026-10-26 20:10:58 [warning  ] protective_stop_rejected       component=runtime.live reason='Filter failure: LOT_SIZE'
+2026-10-26 20:10:58 [warning  ] entries_blocked                cause=position_unprotected component=runtime.live reason='protective stop rejected: Filter failure: LOT_SIZE'
+2026-10-26 20:10:58 [warning  ] entries_blocked                cause=position_unverified component=runtime.live reason='the venue holds 0.007921071 BTC-USD but the tracked round trip says 0.007929'
+=========================== short test summary info ============================
+FAILED tests/integration/test_stop_quantity_on_the_lot_grid.py::test_the_stop_after_an_entry_is_on_the_lot_grid_and_the_position_stays_protected

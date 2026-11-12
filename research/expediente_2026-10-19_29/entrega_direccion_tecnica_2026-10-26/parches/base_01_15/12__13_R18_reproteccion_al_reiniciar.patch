@@ -1,0 +1,143 @@
+diff --git a/packages/tia/src/tia/runtime/live.py b/packages/tia/src/tia/runtime/live.py
+index decea93..ab4377c 100644
+--- a/packages/tia/src/tia/runtime/live.py
++++ b/packages/tia/src/tia/runtime/live.py
+@@ -1282,10 +1282,53 @@ class LiveRuntime:
+         if self._session_deadline is None and self._session_max_hours:
+             self._session_deadline = self._clock.now() + timedelta(hours=self._session_max_hours)
+         self._stop_requested = False
+-        self._task = asyncio.create_task(self._loop())
+         self.machine.transition(LiveState.RUNNING, reason="startup validation passed")
++        if self._open_trade is not None and self._open_trade.get("restored"):
++            # A position carried over a restart is protected now, before the first bar is
++            # matched (R18). Left to the first cycle's position management — which runs
++            # after that bar's matching — the venue matched a whole bar against a position
++            # with no stop the session knew of.
++            await self._protect_restored_position()
++        self._task = asyncio.create_task(self._loop())
+         self._emit("live.state", self.machine.as_dict())
+ 
++    async def _protect_restored_position(self) -> None:
++        """Put a restored position under its stop: the previous session's stop when it still
++        rests at the venue (adopted, never doubled), a new one otherwise. More than one
++        resting stop against the position is a state nobody planned: entries wait and the
++        session halts for new orders until a person reconciles."""
++        try:
++            portfolio = await self._execution.get_portfolio()
++            working = await self._execution.get_orders(open_only=True)
++        except Exception as exc:
++            self._protection_lost(f"restored position; the venue cannot be read to protect it: {str(exc)[:200]}")
++            return
++        position = portfolio.positions.get(self._symbol)
++        if position is None or position.is_flat:
++            return
++        against = Side.SELL if position.quantity > 0 else Side.BUY
++        resting = [
++            order for order in working
++            if order.symbol == self._symbol and order.order_type is OrderType.STOP
++            and order.side is against and not order.state.is_terminal
++        ]
++        if len(resting) > 1:
++            self._block_entries(
++                "orders_unverified",
++                f"{len(resting)} stops rest at the venue against the restored position",
++            )
++            self.halt_new_orders(reason="more than one resting stop against a restored position")
++            return
++        if resting:
++            stop = resting[0]
++            self._protective = {
++                "order_id": stop.order_id,
++                "client_order_id": stop.client_order_id,
++                "quantity": stop.quantity - stop.filled_quantity,
++                "stop_price": stop.stop_price,
++            }
++        await self._sync_protective_stop(position.quantity)
++
+     async def stop(self, *, reason: str = "operator stop") -> None:
+         """Stop the session. Idempotent: a stopped session stays stopped, quietly.
+ 
+diff --git a/tests/integration/test_live_position_protection.py b/tests/integration/test_live_position_protection.py
+index 82513b6..c350377 100644
+--- a/tests/integration/test_live_position_protection.py
++++ b/tests/integration/test_live_position_protection.py
+@@ -26,6 +26,7 @@ from __future__ import annotations
+ 
+ from dataclasses import dataclass
+ from datetime import UTC, datetime, timedelta
++from pathlib import Path
+ from typing import Any
+ 
+ from tia.core.clock import SimulatedClock
+@@ -371,3 +372,71 @@ async def test_no_second_stop_while_the_venue_cannot_say_whether_the_first_arriv
+         assert "position_unprotected" not in runtime.entry_blocks
+     finally:
+         await runtime.stop()
++
++
++# ------------------------------------------------------------------- after a restart
++
++
++async def test_a_position_restored_after_a_restart_is_protected_before_its_first_bar(tmp_path: Path) -> None:
++    """Expected: the new session protects the restored position at start, so the first bar
++    it matches finds a stop; when the previous session's stop still rests at the venue it
++    is adopted — one stop, tracked, nothing for the reconciliation to call nobody's."""
++    from .test_account_restore import (
++        _db,
++        engine_for,
++        open_position,
++        persister,
++        rebuild,
++        register_run,
++        settle,
++    )
++    from .test_account_restore import (
++        build as build_restored,
++    )
++
++    db = _db(tmp_path)
++    await db.create_schema()
++    try:
++        runtime_a, engine_a, market_a, clock_a = build_restored(persist=persister(db))
++        await register_run(db, runtime_a.run_id)
++        await runtime_a.start()
++        await open_position(runtime_a, market_a)
++        market_a.advance()
++        await runtime_a._cycle_once()
++        await settle(runtime_a)
++        await runtime_a.stop()
++        await settle(runtime_a)
++        restore = await rebuild(db)
++        assert restore.complete and restore.has_position
++
++        # A fresh venue (the paper engine rebuilt from the journal holds no orders).
++        clock_b = SimulatedClock(clock_a.now())
++        market_b = FakeMarketData(market_a._candles, clock_b)
++        market_b.cursor = market_a.cursor
++        engine_b = engine_for(clock_b, live_settings())
++        engine_b.restore_portfolio(restore.portfolio_state())
++        runtime_b, _, _, _ = build_restored(account=restore, engine=engine_b, clock=clock_b, market=market_b)
++        await runtime_b.start()
++        try:
++            stops = [o for o in await engine_b.get_orders(open_only=True) if o.order_type is OrderType.STOP]
++            assert len(stops) == 1, "protected at start, before the first bar is matched"
++            market_b.advance()
++            await runtime_b._cycle_once()
++            assert len([o for o in await engine_b.get_orders(open_only=True) if o.order_type is OrderType.STOP]) == 1
++        finally:
++            await runtime_b.stop()
++
++        # The same venue as session A: its stop still rests there and is adopted.
++        resting = [o for o in await engine_a.get_orders(open_only=True) if o.order_type is OrderType.STOP]
++        assert len(resting) == 1, "the previous session left its stop at the venue"
++        runtime_c, _, _, _ = build_restored(account=restore, engine=engine_a, clock=clock_a, market=market_a)
++        await runtime_c.start()
++        try:
++            stops = [o for o in await engine_a.get_orders(open_only=True) if o.order_type is OrderType.STOP]
++            assert [o.order_id for o in stops] == [resting[0].order_id], "adopted, not doubled"
++            await runtime_c._reconcile()
++            assert runtime_c.machine.state is LiveState.RUNNING, "the adopted stop is tracked"
++        finally:
++            await runtime_c.stop()
++    finally:
++        await db.close()

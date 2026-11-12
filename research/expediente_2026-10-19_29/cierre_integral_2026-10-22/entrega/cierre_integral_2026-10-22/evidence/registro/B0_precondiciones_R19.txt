@@ -1,0 +1,28 @@
+== Fase B · precondiciones verificadas antes de correr: 2026-10-22T22:12:09Z
+-- 1. Plan, enmienda y herramientas (extracción limpia del paquete) frente a los hashes congelados del registro 03:
+   OK 1537394e5a9bf89b827d5eaad78b6c511ca55d90288b63a0d0ac66cdfa183e34  PLAN_R19_ENMIENDA_1.md
+   OK a717249d5f092f876ec538fd494bfabd33ec8e22635bda9bf460366f1d1ebaad  plan_r19_enmienda1.json
+   OK 2b68b873ffc7d7bcdbd3cee5e537e29ca3f364faf2387266f0c45e30e15bc8e5  herramientas/sonda_r19_v2.py
+   OK 69253f71fb9077b3206eba87613db650a4dfa64d7ead36b20170f47196125675  herramientas/r19_experimento.py
+   OK afa61795f78bc726ce2ceca6713ef5b5c2ddb4626a1ca23198581ae1ea9fbfc9  herramientas/r19_analisis.py
+   OK 4c70dfbdb654cc5fdf40d1903a26cfa4ce0a00c35ecd9df8fdf66a988fe7cfb2  herramientas/equivalencia_prueba_r19.py
+-- 2. Árboles del plan (rutas absolutas del plan congelado):
+   {"r19_cand": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_D1_D2_R19_2026-10-22/fase3/arboles/r19_cand", "r19_base": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_D1_D2_R19_2026-10-22/fase3/arboles/r19_base"}
+   python: /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_D1_D3_2026-10-22/entorno/venv_A/bin/python
+   r19_base: HEAD 72ffae5d2698440c8f1afaff12e07bd8adde66fb · cambios 0
+     OK live.py = registro 03
+     OK test_account_restore.py = registro 03
+     OK código tia = registro 03
+     archivos fuera del control de git (pyc, cachés): 0
+   r19_cand: HEAD 72ffae5d2698440c8f1afaff12e07bd8adde66fb · cambios 11
+     OK live.py = registro 03
+     OK test_account_restore.py = registro 03
+     OK código tia = registro 03
+     archivos fuera del control de git (pyc, cachés): 0
+   r19_cand = completa registrada (01+02v3+03) según v3r3
+-- 3. Entorno: Python 3.11.17 · freeze sha256 a1a96cac94471aac46ac7e5374846d0e3ffe93f046df198b71c95fec6869766e
+   OK = registro 03
+-- 4. Red dentro de unshare -n:
+   bloqueada: OSError [Errno 101] Network is unreachable
+-- 5. Máquina: 4 núcleos · carga 0.67 0.71 0.34 1/108 797 · disco libre 6.9G
+   procesos pesados ajenos: 1

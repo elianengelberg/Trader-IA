@@ -1,0 +1,354 @@
+{
+ "pares_actividad_con_cuerpo_comun": [
+  {
+   "viejo": "GTOUSDT",
+   "fin_viejo": "2022-11-27",
+   "nuevo": "GFTUSDT",
+   "inicio_nuevo": "2023-09-22",
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-gi_680cabd50dfb.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-gif_a146802a7fbd.json"
+   ]
+  }
+ ],
+ "cortes": [
+  {
+   "simbolo": "AAVEDOWNUSDT",
+   "corte": [
+    "2021-04-05",
+    "2021-04-07",
+    1
+   ],
+   "archivos_con_redenominacion": []
+  },
+  {
+   "simbolo": "ADADOWNUSDT",
+   "corte": [
+    "2021-04-06",
+    "2021-04-08",
+    1
+   ],
+   "archivos_con_redenominacion": []
+  },
+  {
+   "simbolo": "AEURUSDT",
+   "corte": [
+    "2023-12-04",
+    "2023-12-08",
+    3
+   ],
+   "archivos_con_redenominacion": []
+  },
+  {
+   "simbolo": "AUDUSDT",
+   "corte": [
+    "2020-11-12",
+    "2020-11-14",
+    1
+   ],
+   "archivos_con_redenominacion": []
+  },
+  {
+   "simbolo": "AXSUSDT",
+   "corte": [
+    "2026-02-09",
+    "2026-02-11",
+    1
+   ],
+   "archivos_con_redenominacion": []
+  },
+  {
+   "simbolo": "BNBDOWNUSDT",
+   "corte": [
+    "2021-04-12",
+    "2021-04-14",
+    1
+   ],
+   "archivos_con_redenominacion": []
+  },
+  {
+   "simbolo": "BNXUSDT",
+   "corte": [
+    "2023-02-15",
+    "2023-02-22",
+    6
+   ],
+   "archivos_con_redenominacion": [
+    "url_https___www.binance.com_en_support_announcement_binance-futures-to-relaunch-_cc4725f9b24e.json",
+    "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-bi_cb114013aaba.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-bin_8c6a897856c8.json",
+    "url_https___www.binance.com_en_support_announcement_updates-to-listing-time-for-_c4e094937856.json"
+   ]
+  },
+  {
+   "simbolo": "BTCSTUSDT",
+   "corte": [
+    "2021-03-14",
+    "2021-03-19",
+    4
+   ],
+   "archivos_con_redenominacion": [
+    "bn_2c08ba9e1a1b409fb6a4a2cb2f5ed58b_ca587e4ce636.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-btc_9c2ce947de56.json"
+   ]
+  },
+  {
+   "simbolo": "COCOSUSDT",
+   "corte": [
+    "2021-01-18",
+    "2021-01-23",
+    4
+   ],
+   "archivos_con_redenominacion": [
+    "bn_f555f8013eff42bc9c91eaa48b9da24b_83402e98fdee.json",
+    "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-co_4886d9ba7798.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-coc_c092d35716e9.json"
+   ]
+  },
+  {
+   "simbolo": "DOTDOWNUSDT",
+   "corte": [
+    "2021-04-05",
+    "2021-04-07",
+    1
+   ],
+   "archivos_con_redenominacion": []
+  },
+  {
+   "simbolo": "DOTDOWNUSDT",
+   "corte": [
+    "2021-10-20",
+    "2021-10-22",
+    1
+   ],
+   "archivos_con_redenominacion": []
+  },
+  {
+   "simbolo": "DREPUSDT",
+   "corte": [
+    "2021-03-28",
+    "2021-04-02",
+    4
+   ],
+   "archivos_con_redenominacion": [
+    "bn_01c27af4303d4d668c8ab2bbc7c79319_8614df099461.json",
+    "bn_51eb4f0351194fab957bb23cc6ee52dd_ec9f2470dc3e.json",
+    "bn_a2c87d5944cd4856af5aabd2cb8f68b4_2898f044d032.json",
+    "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-dr_7e95680a7561.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-dre_2a9973d4261d.json"
+   ]
+  },
+  {
+   "simbolo": "ETHDOWNUSDT",
+   "corte": [
+    "2021-07-07",
+    "2021-07-09",
+    1
+   ],
+   "archivos_con_redenominacion": []
+  },
+  {
+   "simbolo": "KEYUSDT",
+   "corte": [
+    "2023-02-09",
+    "2023-03-10",
+    28
+   ],
+   "archivos_con_redenominacion": []
+  },
+  {
+   "simbolo": "LINKDOWNUSDT",
+   "corte": [
+    "2021-04-06",
+    "2021-04-08",
+    1
+   ],
+   "archivos_con_redenominacion": []
+  },
+  {
+   "simbolo": "LTCDOWNUSDT",
+   "corte": [
+    "2021-08-16",
+    "2021-08-18",
+    1
+   ],
+   "archivos_con_redenominacion": []
+  },
+  {
+   "simbolo": "LUNAUSDT",
+   "corte": [
+    "2022-05-12",
+    "2022-05-31",
+    18
+   ],
+   "archivos_con_redenominacion": [
+    "bn_9c8abd90df5d4890822e6988f7dc8f0c_da2dc145761b.json",
+    "bn_d044a6742e484b77a170111460b0eed3_a6996a0ba9ba.json",
+    "url_https___www.binance.com_en_support_announcement_binance-staking-completes-fi_8414ccd949d3.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-list-terra-2-0-_fbd6b2e339f9.json"
+   ]
+  },
+  {
+   "simbolo": "NBTUSDT",
+   "corte": [
+    "2022-09-11",
+    "2022-10-01",
+    19
+   ],
+   "archivos_con_redenominacion": []
+  },
+  {
+   "simbolo": "QUICKUSDT",
+   "corte": [
+    "2023-07-16",
+    "2023-07-21",
+    4
+   ],
+   "archivos_con_redenominacion": [
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-qui_8e8c44b03471.json"
+   ]
+  },
+  {
+   "simbolo": "SCRUSDT",
+   "corte": [
+    "2024-10-20",
+    "2024-10-22",
+    1
+   ],
+   "archivos_con_redenominacion": []
+  },
+  {
+   "simbolo": "STRAXUSDT",
+   "corte": [
+    "2024-03-19",
+    "2024-03-28",
+    8
+   ],
+   "archivos_con_redenominacion": [
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-str_b8603784a245.json"
+   ]
+  },
+  {
+   "simbolo": "SUNUSDT",
+   "corte": [
+    "2021-06-13",
+    "2021-06-18",
+    4
+   ],
+   "archivos_con_redenominacion": [
+    "bn_bf95a72b803247ea86904ac16e13087d_5eef93ddbdab.json",
+    "bn_f923f2e4056843a9a9b87beb2aaa2f31_e761d45b0dcc.json"
+   ]
+  },
+  {
+   "simbolo": "SUSHIDOWNUSDT",
+   "corte": [
+    "2021-03-22",
+    "2021-03-24",
+    1
+   ],
+   "archivos_con_redenominacion": []
+  },
+  {
+   "simbolo": "SUSHIDOWNUSDT",
+   "corte": [
+    "2021-09-22",
+    "2021-09-24",
+    1
+   ],
+   "archivos_con_redenominacion": []
+  },
+  {
+   "simbolo": "SXPDOWNUSDT",
+   "corte": [
+    "2021-03-09",
+    "2021-03-11",
+    1
+   ],
+   "archivos_con_redenominacion": []
+  },
+  {
+   "simbolo": "SXPDOWNUSDT",
+   "corte": [
+    "2021-04-12",
+    "2021-04-14",
+    1
+   ],
+   "archivos_con_redenominacion": []
+  },
+  {
+   "simbolo": "TRXDOWNUSDT",
+   "corte": [
+    "2021-09-12",
+    "2021-09-14",
+    1
+   ],
+   "archivos_con_redenominacion": []
+  },
+  {
+   "simbolo": "UNIDOWNUSDT",
+   "corte": [
+    "2021-08-16",
+    "2021-08-18",
+    1
+   ],
+   "archivos_con_redenominacion": []
+  },
+  {
+   "simbolo": "USUALUSDT",
+   "corte": [
+    "2024-12-16",
+    "2024-12-18",
+    1
+   ],
+   "archivos_con_redenominacion": []
+  },
+  {
+   "simbolo": "VIDTUSDT",
+   "corte": [
+    "2022-10-30",
+    "2022-11-09",
+    9
+   ],
+   "archivos_con_redenominacion": [
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-vid_5d4ce6e224e4.json"
+   ]
+  },
+  {
+   "simbolo": "XLMDOWNUSDT",
+   "corte": [
+    "2021-08-25",
+    "2021-08-27",
+    1
+   ],
+   "archivos_con_redenominacion": []
+  },
+  {
+   "simbolo": "XRPDOWNUSDT",
+   "corte": [
+    "2021-04-06",
+    "2021-04-08",
+    1
+   ],
+   "archivos_con_redenominacion": []
+  },
+  {
+   "simbolo": "XTZDOWNUSDT",
+   "corte": [
+    "2021-09-07",
+    "2021-09-09",
+    1
+   ],
+   "archivos_con_redenominacion": []
+  },
+  {
+   "simbolo": "YFIDOWNUSDT",
+   "corte": [
+    "2021-05-30",
+    "2021-06-01",
+    1
+   ],
+   "archivos_con_redenominacion": []
+  }
+ ]
+}

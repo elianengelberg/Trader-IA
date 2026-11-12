@@ -1,0 +1,7 @@
+== 2026-10-20T15:03:54Z evidencia_t_multi.py verificar (solo lectura; -B)
+secciones distintas: ninguna; datos crudos faltantes o distintos: ninguno (36 archivos)
+salida: 0
+== E3: manifiesto de cierre
+E3: 176 entradas OK; sha256(CIERRE_E3.md)=503a2e09f5325680c5a1b9c47724993a3e3cd0184fc6f1b5b094c9de4499c9c1
+E3 SHA256SUMS (8 documentos de protocolo) OK
+repositorio sin cambios (status con ignorados idéntico)

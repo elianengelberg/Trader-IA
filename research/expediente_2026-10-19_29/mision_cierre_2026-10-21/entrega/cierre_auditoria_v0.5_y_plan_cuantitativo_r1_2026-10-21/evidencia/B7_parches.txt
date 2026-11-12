@@ -1,0 +1,8 @@
+== B7. Parches 0001–0007 en la reproducción de esta misión (copia de evidencia/60_* y 61_*; las rutas son temporales)
+rutas de los parches que ya existen en la copia de trabajo: ninguna (60 rutas; comprobado con os.path.exists, sin leer bytes)
+HEAD (692f2b2d7af3): git apply --check y git apply de los 7 parches en orden: OK
+HEAD: suite en la copia parcheada (código de salida 0): ['254 passed, 8 skipped in 276.14s (0:04:36)']
+origin (c6339e3fcd60): git apply --check y git apply de los 7 parches en orden: OK
+origin: suite en la copia parcheada (código de salida 0): ['246 passed, 16 skipped in 278.22s (0:04:38)']
+-- 61_parche_aplicado_en_HEAD_pytest.txt: 254 passed, 8 skipped in 276.14s (0:04:36)
+-- 61_parche_aplicado_en_origin_pytest.txt: 246 passed, 16 skipped in 278.22s (0:04:38)

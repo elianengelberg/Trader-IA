@@ -1,0 +1,7 @@
+== Decisión de calibración (v3 §5.3), 2026-10-20T01:51:50Z — solo con datos SINTÉTICOS; ningún dato real usado en pruebas
+H1: Newey–West L=4 dentro de banda (rechazo 4,4 % al 5 %; 2,2 % al 2,5 %) → se usa L=4.
+H2/H3: con ℓ=13, G1 (t3 i.i.d.) sobre-rechaza (7,0 % al 5 %; 4,5 % al 2,5 %; bandas [3,6; 6,4] y [1,5; 3,5]).
+       Repetición con ℓ=26: G1 sigue sobre-rechazando al 2,5 % (3,9 %).
+       → Regla prerregistrada: p₂ (y p₃) = máx(p_boot(ℓ=13), p_boot(ℓ=26), p_NW(Bartlett, 13 rezagos)).
+       Los IC90 de H2 se informan con el método de mayor amplitud entre los tres (conservador para «en contra» y para la confirmación).
+Archivos: calibracion.json 9232876018ba2a5761c0cf60fc60389933f713400d9c0e17f51c521a741bcf5c

@@ -1,0 +1,2 @@
+tests/integration/test_protective_stop_contract.py:117: AssertionError: protected again before any bar is matched
+FAILED tests/integration/test_protective_stop_contract.py::test_a_close_that_is_not_sent_puts_the_stop_back_in_the_same_call

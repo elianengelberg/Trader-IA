@@ -1,0 +1,42 @@
+--- v0.5/pruebas/sondas_v0_4/ejecutar_sondas.sh
++++ v0.5.1-propuesta/pruebas/sondas_v0_4/ejecutar_sondas.sh
+@@ -5,6 +5,9 @@
+ set -u
+ PAQ=${PAQ:?}; PY=${PY:?}; EVID=${EVID:?}
+ D="$PAQ/pruebas/sondas_v0_4"; SAL="$EVID/71_sondas_v0_4_y_v0_5.txt"; : > "$SAL"
++# v0.5.1 (D-2): los temporales de las sondas (mktemp -d y tempfile.mkdtemp) van a un TMPDIR propio que se borra
++# al salir; antes quedaban en el TMPDIR de la ejecución.
++TMPS=$(mktemp -d); trap 'rm -rf "$TMPS"' EXIT; export TMPDIR="$TMPS"
+ PYC=${PY_CRYPTOGRAPHY:-$(command -v python3.12 || true)}
+ for v in v0_4 v0_5; do
+   dir=$([ $v = v0_4 ] && echo "$PAQ/referencia/v0_4" || echo "$PAQ/codigo/verificacion")
+--- v0.5/pruebas/comun/adaptador.py
++++ v0.5.1-propuesta/pruebas/comun/adaptador.py
+@@ -12,9 +12,11 @@
+ Las pruebas que dependen de la SALIDA real de la línea de órdenes (código de salida y JSON) no usan este adaptador."""
+ from __future__ import annotations
+ 
++import atexit
+ import hashlib
+ import inspect
+ import json
++import shutil
+ import tempfile
+ from dataclasses import dataclass, field
+ from pathlib import Path
+@@ -78,9 +80,14 @@
+     return Veredicto("INCONCLUSO", ["INTEGRIDAD_INCOMPLETA"], inf)
+ 
+ 
++_TEMPORALES: list[str] = []  # v0.5.1 (D-2): se borran al salir del intérprete; antes quedaban en TMPDIR
++atexit.register(lambda: [shutil.rmtree(d, ignore_errors=True) for d in _TEMPORALES])
++
++
+ def _archivo_de_reproduccion(ruta, reproduccion, autenticar: bool) -> tuple[Path, list]:  # type: ignore[no-untyped-def]
+     import fabricas_t as F
+-    destino = Path(tempfile.mkdtemp(prefix="reproduccion_")) / "reproduccion.json"
++    _TEMPORALES.append(tempfile.mkdtemp(prefix="reproduccion_"))
++    destino = Path(_TEMPORALES[-1]) / "reproduccion.json"
+     destino.write_text(json.dumps(reproduccion), encoding="utf-8")
+     extra = []
+     if autenticar and Path(ruta).is_file():

@@ -1,0 +1,3 @@
+símbolos con meses a reparar: 9; meses: 107
+reparaciones: 0 archivos diarios
+salida 0

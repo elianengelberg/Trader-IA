@@ -1,0 +1,20 @@
+{
+ "arbol": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_integral_2026-10-22/trabajo/final",
+ "supports_stop_orders": true,
+ "stop_protector": {
+  "resultado": "ExecutionError",
+  "mensaje": "[EXECUTION_ERROR] order type stop is not supported by this adapter; it is not in the documented spot order-type set | {'order_type': 'stop'}",
+  "pedidos_al_transporte": 0
+ },
+ "control_market": {
+  "estado": "filled",
+  "pedidos_al_transporte": 1
+ },
+ "inspeccion_live": {
+  "live.py:3450": "order_type=OrderType.STOP,",
+  "live.py:3457": "order_type=OrderType.STOP,",
+  "live.py:3465": "except Exception as exc:",
+  "live.py:3466": "_log.warning(\"protective_stop_failed\", error=str(exc)[:200])"
+ },
+ "DEFECTO_REPRODUCIDO": true
+}

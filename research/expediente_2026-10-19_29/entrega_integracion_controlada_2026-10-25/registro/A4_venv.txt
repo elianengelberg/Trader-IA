@@ -1,0 +1,10 @@
+== IC-A.4 venv NUEVO para esta misión: 2026-10-25T18:18:41Z
+intérprete base: /usr/bin/python3.11 Python 3.11.17
+restricciones: /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversaria_2026-10-25/extraccion/cierre_integral_2026-10-22/config/ci-py311.txt sha256 0f42875fa7eb1894be30c0b12734c7d95a16a95debb7e2d54c38fd3b88edd71a
+rc pip=0
+paquetes: 74 · sha256 freeze: a99f40da2d1c65bd6095f55768bbe971d977a828a92e8de28f130592f861472a
+¿igual al freeze de la revisión (a1a96cac…)? NO
+¿igual a config/pip_freeze_entorno_local.txt del paquete? sí
+venv de la revisión: contiene una instalación editable de tia hacia un clon ya borrado (trabajo/inst) → NO se reutiliza
+fin 2026-10-25T18:19:16Z
+aclaración: mismo contenido (74 líneas) que el freeze de la revisión; solo cambia el ORDEN en que pip lista (mayúsculas). sha256 canónico (LC_ALL=C sort): esta misión a1a96cac94471aac46ac7e5374846d0e3ffe93f046df198b71c95fec6869766e · revisión a1a96cac94471aac46ac7e5374846d0e3ffe93f046df198b71c95fec6869766e · IGUALES

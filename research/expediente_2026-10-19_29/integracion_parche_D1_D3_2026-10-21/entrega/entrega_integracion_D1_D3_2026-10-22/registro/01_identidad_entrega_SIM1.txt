@@ -1,0 +1,9 @@
+== Identidad de la entrega SIM1: 2026-10-21T23:19:58Z
+ZIP: /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/mision_simulacion_2026-10-21/entrega/entrega_SIM1_2026-10-21.zip
+sha256 ZIP: 73cdb790f1741116f5642c4911da12bab471da9caa543ed7f778bb63ebe37c8d (informado en SIM1: 73cdb790f1741116f5642c4911da12bab471da9caa543ed7f778bb63ebe37c8d)
+unzip -t: No errors detected in compressed data of /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/mision_simulacion_2026-10-21/entrega/entrega_SIM1_2026-10-21.zip.
+archivos en el ZIP: 62
+sha256sum -c SHA256SUMS:
+     61 OK
+archivos extraídos no listados en SHA256SUMS: 0
+VERIFICACION_EXTRACCION_LIMPIA.txt cita el ZIP: 73cdb790f1741116f5642c4911da12bab471da9caa543ed7f778bb63ebe37c8d

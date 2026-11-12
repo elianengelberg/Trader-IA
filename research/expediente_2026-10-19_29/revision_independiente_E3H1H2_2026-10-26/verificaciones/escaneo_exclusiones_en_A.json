@@ -1,0 +1,550 @@
+[
+ {
+  "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-delist-ant-mult_f317e3f215f3.json",
+  "titulo": "Binance Will Delist ANT, MULTI, VAI, XMR on 2024-02-20",
+  "captura": "20240222002333",
+  "fechas": [
+   "2024-02-20"
+  ],
+  "no_spot": false,
+  "pares_usdt": [
+   "ANT",
+   "MULTI",
+   "XMR"
+  ],
+  "tokens": [
+   "ANT",
+   "MULTI",
+   "VAI",
+   "XMR"
+  ],
+  "frase": "Here are some that drive whether we decide to delist a digital asset: Commitment of team to project Level and quality of development activity Trading volume and liquidity Stability and safety of network from attacks Network / smart contract stability Level of public communication Responsiveness to our periodic due diligence requests Evidence of unethical/fraudulent conduct or negligence New regulatory requirements Contribution to a healthy and sustainable crypto ecosystem Based on our most recen",
+  "en_bucket": [
+   "ANTUSDT",
+   "MULTIUSDT",
+   "XMRUSDT"
+  ],
+  "sin_evento_pasada2": []
+ },
+ {
+  "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-delist-bond-doc_fb422c08c50b.json",
+  "titulo": "Binance Will Delist BOND, DOCK, MDX, POLS on 2024-07-22",
+  "captura": "20240809061308",
+  "fechas": [
+   "2024-07-22"
+  ],
+  "no_spot": false,
+  "pares_usdt": [
+   "BOND",
+   "DOCK",
+   "MDX",
+   "POLS"
+  ],
+  "tokens": [
+   "BOND",
+   "DOCK",
+   "MDX",
+   "POLS"
+  ],
+  "frase": "Here are some that drive whether we decide to delist a digital asset: Commitment of team to project Level and quality of development activity Trading volume and liquidity Stability and safety of network from attacks Network / smart contract stability Level of public communication Responsiveness to our periodic due diligence requests Evidence of unethical/fraudulent conduct or negligence New regulatory requirements Contribution to a healthy and sustainable crypto ecosystem Based on our most recen",
+  "en_bucket": [
+   "BONDUSDT",
+   "DOCKUSDT",
+   "MDXUSDT",
+   "POLSUSDT"
+  ],
+  "sin_evento_pasada2": []
+ },
+ {
+  "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-delist-bts-perl_f8e94ac0bfb3.json",
+  "titulo": "Binance Will Delist BTS, PERL, TORN, WTC on 2023-12-07",
+  "captura": "20240226113614",
+  "fechas": [
+   "2023-12-07"
+  ],
+  "no_spot": false,
+  "pares_usdt": [
+   "BTS",
+   "PERL",
+   "WTC"
+  ],
+  "tokens": [
+   "BTS",
+   "PERL",
+   "TORN",
+   "WTC"
+  ],
+  "frase": "Here are some that drive whether we decide to delist a digital asset: Commitment of team to project Level and quality of development activity Trading volume and liquidity Stability and safety of network from attacks Network / smart contract stability Level of public communication Responsiveness to our periodic due diligence requests Evidence of unethical/fraudulent conduct or negligence Contribution to a healthy and sustainable crypto ecosystem Based on our most recent reviews, we have decided t",
+  "en_bucket": [
+   "BTSUSDT",
+   "PERLUSDT",
+   "TORNUSDT",
+   "WTCUSDT"
+  ],
+  "sin_evento_pasada2": [
+   "TORNUSDT"
+  ]
+ },
+ {
+  "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-delist-idrt-kp3_1ffb11650aa9.json",
+  "titulo": "Binance Will Delist IDRT, KP3R, OOKI, UNFI on 2024-11-06",
+  "captura": "20241207230630",
+  "fechas": [
+   "2024-11-06"
+  ],
+  "no_spot": false,
+  "pares_usdt": [
+   "KP3R",
+   "OOKI",
+   "UNFI"
+  ],
+  "tokens": [
+   "IDRT",
+   "KP3R",
+   "OOKI",
+   "UNFI"
+  ],
+  "frase": "Here are some that drive whether we decide to delist a digital asset: Commitment of team to project Level and quality of development activity Trading volume and liquidity Stability and safety of network from attacks Network / smart contract stability Level of public communication Responsiveness to our periodic due diligence requests Evidence of unethical/fraudulent conduct or negligence New regulatory requirements Contribution to a healthy and sustainable crypto ecosystem Based on our most recen",
+  "en_bucket": [
+   "KP3RUSDT",
+   "OOKIUSDT",
+   "UNFIUSDT"
+  ],
+  "sin_evento_pasada2": []
+ },
+ {
+  "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-delist-snm-srm-_013faf0901ef.json",
+  "titulo": "Binance Will Delist SNM, SRM and YFII on 2023-08-22",
+  "captura": "20241102104255",
+  "fechas": [
+   "2023-08-22"
+  ],
+  "no_spot": false,
+  "pares_usdt": [
+   "YFII"
+  ],
+  "tokens": [
+   "SNM",
+   "SRM",
+   "YFII"
+  ],
+  "frase": "Here are some that drive whether we decide to delist a digital asset: Commitment of team to project Level and quality of development activity Trading volume and liquidity Stability and safety of network from attacks Network / smart contract stability Level of public communication Responsiveness to our periodic due diligence requests Evidence of unethical/fraudulent conduct or negligence Contribution to a healthy and sustainable crypto ecosystem Based on our most recent reviews, we have decided t",
+  "en_bucket": [
+   "SRMUSDT",
+   "YFIIUSDT"
+  ],
+  "sin_evento_pasada2": [
+   "SRMUSDT"
+  ]
+ },
+ {
+  "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-mer_425adfd88510.json",
+  "titulo": "Binance Will Support the Merit Circle (MC) Token Swap, Redenomination and Rebranding to Beam (BEAMX)",
+  "captura": "20241104073422",
+  "fechas": [
+   "2023-11-07"
+  ],
+  "no_spot": false,
+  "pares_usdt": [
+   "MC"
+  ],
+  "tokens": [],
+  "frase": "Spot At 2023-11-07 03:00 (UTC) , Binance will delist all existing MC spot trading pairs (i.e., MC/BTC and MC/USDT) and cancel all pending MC spot trade orders.",
+  "en_bucket": [
+   "MCUSDT"
+  ],
+  "sin_evento_pasada2": [
+   "MCUSDT"
+  ]
+ },
+ {
+  "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-pla_dc497a97c163.json",
+  "titulo": "Binance Will Support the PlayDapp (PLA) Token Swap to PlayDapp (PDA)",
+  "captura": "20240528192632",
+  "fechas": [
+   "2024-02-26"
+  ],
+  "no_spot": false,
+  "pares_usdt": [
+   "PLA"
+  ],
+  "tokens": [],
+  "frase": "Spot At 2024-02-26 03:00 (UTC) , Binance will delist all existing PLA spot trading pairs (i.e., PLA/BTC and PLA/USDT) and cancel all pending PLA spot trade orders.",
+  "en_bucket": [
+   "PLAUSDT"
+  ],
+  "sin_evento_pasada2": [
+   "PLAUSDT"
+  ]
+ },
+ {
+  "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-pol_6ce597c88773.json",
+  "titulo": "Binance Will Support the Polygon (MATIC) Token Swap to Polygon (POL)",
+  "captura": "20241009121816",
+  "fechas": [
+   "2024-09-10"
+  ],
+  "no_spot": false,
+  "pares_usdt": [
+   "MATIC"
+  ],
+  "tokens": [],
+  "frase": "At 2024-09-10 03:00 (UTC) , Binance will delist all existing MATIC spot trading pairs (i.e., MATIC/BNB, MATIC/BRL, MATIC/BTC, MATIC/ETH, MATIC/EUR, MATIC/FDUSD, MATIC/JPY, MATIC/TRY, MATIC/USDC, and MATIC/USDT) and cancel all pending MATIC spot trading orders.",
+  "en_bucket": [
+   "MATICUSDT"
+  ],
+  "sin_evento_pasada2": [
+   "MATICUSDT"
+  ]
+ },
+ {
+  "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-pol_6ce597c88773.json",
+  "titulo": "Binance Will Support the Polygon (MATIC) Token Swap to Polygon (POL)",
+  "captura": "20241009121816",
+  "fechas": [
+   "2024-09-10"
+  ],
+  "no_spot": false,
+  "pares_usdt": [],
+  "tokens": [],
+  "frase": "Spot At 2024-09-10 03:00 (UTC) , Binance will delist and cease trading on all spot trading pairs for MATIC.",
+  "en_bucket": [],
+  "sin_evento_pasada2": []
+ },
+ {
+  "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-qui_8e8c44b03471.json",
+  "titulo": "Binance Will Support the QuickSwap (QUICK) Token Swap and Redenomination Plan",
+  "captura": "20240222171222",
+  "fechas": [
+   "2023-07-17"
+  ],
+  "no_spot": false,
+  "pares_usdt": [
+   "QUICK"
+  ],
+  "tokens": [],
+  "frase": "At 2023-07-17 03:00 (UTC) , Binance will suspend and delist all existing QUICK spot trading pairs (i.e., QUICK/BTC, QUICK/BUSD and QUICK/USDT) and cancel all pending QUICK spot trade orders.",
+  "en_bucket": [
+   "QUICKUSDT"
+  ],
+  "sin_evento_pasada2": [
+   "QUICKUSDT"
+  ]
+ },
+ {
+  "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-str_b8603784a245.json",
+  "titulo": "Binance Will Support the Stratis (STRAX) Token Swap and Redenomination Plan",
+  "captura": "20241011023231",
+  "fechas": [
+   "2024-03-20"
+  ],
+  "no_spot": false,
+  "pares_usdt": [
+   "STRAX"
+  ],
+  "tokens": [],
+  "frase": "Spot At 2024-03-20 03:00 (UTC) , Binance will delist all existing STRAX spot trading pairs (i.e., STRAX/BTC, STRAX/USDT and STRAX/TRY) and cancel all pending STRAX spot trade orders.",
+  "en_bucket": [
+   "STRAXUSDT"
+  ],
+  "sin_evento_pasada2": [
+   "STRAXUSDT"
+  ]
+ },
+ {
+  "archivo": "url_https___www.binance.com_en_support_announcement_notice-of-addition-removal-o_de27e21c5438.json",
+  "titulo": "Notice of Addition & Removal of Trading Pairs - 2023-09-22",
+  "captura": "20231204155528",
+  "fechas": [
+   "2023-09-29"
+  ],
+  "no_spot": false,
+  "pares_usdt": [],
+  "tokens": [],
+  "frase": "At 2023-09-29 03:00 (UTC) , Binance will remove and cease trading on the ARK/BUSD, CREAM/BUSD, FTT/BUSD, GFT/BUSD, IQ/BUSD and BUSD/VAI spot trading pairs.",
+  "en_bucket": [],
+  "sin_evento_pasada2": []
+ },
+ {
+  "archivo": "url_https___www.binance.com_en_support_announcement_notice-of-removal-of-margin-_45e56a9e4374.json",
+  "titulo": "Notice of Removal of Margin Trading Pairs - 2024-03-15",
+  "captura": "20240528173502",
+  "fechas": [
+   "2024-03-15",
+   "2024-03-08"
+  ],
+  "no_spot": true,
+  "pares_usdt": [],
+  "tokens": [],
+  "frase": "Fellow Binancians, Binance Margin will delist the following margin trading pairs at 2024-03-15 06:00 (UTC) : Cross Margin : ALICE/BTC, BAL/BTC, BOND/BTC, GNS/BTC, OAX/BTC, SXP/BNB Isolated Margin : ALICE/BTC, BAL/BTC, BOND/BTC, CHESS/BTC, DEGO/BTC, GNS/BTC, HARD/BTC, OAX/BTC, ORN/BTC, WING/BTC Please note: At 2024-03-08 06:00 (UTC) , Binance Margin will suspend isolated margin borrowing on the aforementioned isolated margin pair(s).",
+  "en_bucket": [],
+  "sin_evento_pasada2": []
+ },
+ {
+  "archivo": "url_https___www.binance.com_en_support_announcement_notice-of-removal-of-margin-_a694f606e050.json",
+  "titulo": "Notice of Removal of Margin Trading Pairs - 2024-08-22",
+  "captura": "20240916054838",
+  "fechas": [
+   "2024-08-22"
+  ],
+  "no_spot": true,
+  "pares_usdt": [],
+  "tokens": [],
+  "frase": "Fellow Binancians, Binance Margin will delist the following margin trading pairs at 2024-08-22 06:00 (UTC) .",
+  "en_bucket": [],
+  "sin_evento_pasada2": []
+ },
+ {
+  "archivo": "url_https___www.binance.com_en_support_announcement_notice-of-removal-of-spot-tr_013e653c8e7c.json",
+  "titulo": "Notice of Removal of Spot Trading Pairs - 2024-09-27",
+  "captura": "20241107124608",
+  "fechas": [
+   "2024-09-27"
+  ],
+  "no_spot": false,
+  "pares_usdt": [],
+  "tokens": [],
+  "frase": "Based on our most recent reviews, Binance will remove and cease trading on the following spot trading pairs: At 2024-09-27 03:00 (UTC) : HOOK/BTC, PDA/BTC Please note: The delisting of a spot trading pair does not affect the availability of the tokens on Binance Spot.",
+  "en_bucket": [],
+  "sin_evento_pasada2": []
+ },
+ {
+  "archivo": "url_https___www.binance.com_en_support_announcement_notice-of-removal-of-spot-tr_38d9be2eb7cd.json",
+  "titulo": "Notice of Removal of Spot Trading Pairs - 2023-10-27",
+  "captura": "20240811081823",
+  "fechas": [
+   "2023-10-27",
+   "2023-10-27"
+  ],
+  "no_spot": false,
+  "pares_usdt": [],
+  "tokens": [],
+  "frase": "Based on our most recent reviews, Binance will remove and cease trading on the following spot trading pairs: At 2023-10-27 07:00 (UTC) : ACH/BUSD, ARPA/BUSD, BETA/BUSD, CELO/BUSD, CHR/BUSD, DREP/BUSD, EDU/EUR, ENJ/BUSD, GTC/BUSD, HOOK/BUSD, ID/EUR, IDEX/BUSD, IMX/BUSD, IOTX/BUSD, JASMY/BUSD At 2023-10-27 08:00 (UTC) : KAVA/BUSD, LPT/BUSD, MTL/BUSD, NEO/BNB, PHA/BUSD, POND/BUSD, REEF/BUSD, RPL/BUSD, SAND/BUSD, SUSHI/BNB, THETA/EUR, TOMO/BUSD, UNFI/BUSD, WING/BUSD, WRX/BUSD Please note: The delist",
+  "en_bucket": [],
+  "sin_evento_pasada2": []
+ },
+ {
+  "archivo": "url_https___www.binance.com_en_support_announcement_notice-of-removal-of-spot-tr_4263168e1716.json",
+  "titulo": "Notice of Removal of Spot Trading Pairs - 2024-07-12",
+  "captura": "20240812193701",
+  "fechas": [
+   "2024-07-12"
+  ],
+  "no_spot": false,
+  "pares_usdt": [],
+  "tokens": [],
+  "frase": "Based on our most recent reviews, Binance will remove and cease trading on the following spot trading pairs: At 2024-07-12 03:00 (UTC) : ALGO/ETH, DYM/FDUSD, SXP/BNB Please note: The delisting of a spot trading pair does not affect the availability of the tokens on Binance Spot.",
+  "en_bucket": [],
+  "sin_evento_pasada2": []
+ },
+ {
+  "archivo": "url_https___www.binance.com_en_support_announcement_notice-of-removal-of-spot-tr_71812c96d8ed.json",
+  "titulo": "Notice of Removal of Spot Trading Pairs - 2024-06-14",
+  "captura": "20240810195222",
+  "fechas": [
+   "2024-06-14"
+  ],
+  "no_spot": false,
+  "pares_usdt": [],
+  "tokens": [],
+  "frase": "Based on our most recent reviews, Binance will remove and cease trading on the following spot trading pairs: At 2024-06-14 03:00 (UTC) : ALPACA/BTC, MDX/BTC, NFP/TUSD, QUICK/BTC, XAI/BNB Please note: The delisting of a spot trading pair does not affect the availability of the tokens on Binance Spot.",
+  "en_bucket": [],
+  "sin_evento_pasada2": []
+ },
+ {
+  "archivo": "url_https___www.binance.com_en_support_announcement_notice-of-removal-of-spot-tr_83b5637e80f3.json",
+  "titulo": "Notice of Removal of Spot Trading Pairs - 2024-06-21",
+  "captura": "20240713170650",
+  "fechas": [
+   "2024-06-21"
+  ],
+  "no_spot": false,
+  "pares_usdt": [],
+  "tokens": [],
+  "frase": "Based on our most recent reviews, Binance will remove and cease trading on the following spot trading pairs: At 2024-06-21 03:00 (UTC) : BETA/BTC, SEI/TUSD, TIA/TUSD Please note: The delisting of a spot trading pair does not affect the availability of the tokens on Binance Spot.",
+  "en_bucket": [],
+  "sin_evento_pasada2": []
+ },
+ {
+  "archivo": "url_https___www.binance.com_en_support_announcement_notice-of-removal-of-spot-tr_905251912707.json",
+  "titulo": "Notice of Removal of Spot Trading Pairs - 2023-11-20",
+  "captura": "20241205154741",
+  "fechas": [
+   "2023-11-20"
+  ],
+  "no_spot": false,
+  "pares_usdt": [],
+  "tokens": [],
+  "frase": "Based on our most recent reviews, Binance will remove and cease trading on the following spot trading pairs: At 2023-11-20 03:00 (UTC) : ADA/RUB, ALGO/RUB, ARB/RUB, ARKM/RUB, ARPA/RUB, BNB/RUB, BUSD/RUB, DOT/RUB, ETH/RUB, LTC/RUB, MATIC/RUB, NEAR/RUB, SOL/RUB, WLD/RUB, XRP/RUB Please note: The delisting of a spot trading pair does not affect the availability of the tokens on Binance Spot.",
+  "en_bucket": [],
+  "sin_evento_pasada2": []
+ },
+ {
+  "archivo": "url_https___www.binance.com_en_support_announcement_notice-of-removal-of-spot-tr_bedf24cb5c07.json",
+  "titulo": "Notice of Removal of Spot Trading Pairs - 2024-10-11",
+  "captura": "20241106102611",
+  "fechas": [
+   "2024-10-11"
+  ],
+  "no_spot": false,
+  "pares_usdt": [],
+  "tokens": [],
+  "frase": "Based on our most recent reviews, Binance will remove and cease trading on the following spot trading pairs: At 2024-10-11 03:00 (UTC) : APE/ETH, ATOM/BNB, BAL/BTC, BNB/DAI Please note: The delisting of a spot trading pair does not affect the availability of the tokens on Binance Spot.",
+  "en_bucket": [],
+  "sin_evento_pasada2": []
+ },
+ {
+  "archivo": "url_https___www.binance.com_en_support_announcement_notice-of-removal-of-spot-tr_e1e097a4c03a.json",
+  "titulo": "Notice of Removal of Spot Trading Pairs - 2024-03-01",
+  "captura": "20240413183707",
+  "fechas": [
+   "2024-03-01"
+  ],
+  "no_spot": false,
+  "pares_usdt": [],
+  "tokens": [],
+  "frase": "Based on our most recent reviews, Binance will remove and cease trading on the following spot trading pairs: At 2024-03-01 03:00 (UTC) : ALPINE/EUR, GMT/BNB, LAZIO/EUR, POLS/BNB, PORTO/EUR Please note: The delisting of a spot trading pair does not affect the availability of the tokens on Binance Spot.",
+  "en_bucket": [],
+  "sin_evento_pasada2": []
+ },
+ {
+  "archivo": "url_https___www.binance.com_en_support_announcement_notice-of-removal-of-spot-tr_ec23a8c404dc.json",
+  "titulo": "Notice of Removal of Spot Trading Pairs - 2024-06-28",
+  "captura": "20240910101509",
+  "fechas": [
+   "2024-06-28"
+  ],
+  "no_spot": false,
+  "pares_usdt": [],
+  "tokens": [],
+  "frase": "Based on our most recent reviews, Binance will remove and cease trading on the following spot trading pairs: At 2024-06-28 03:00 (UTC) : BLUR/FDUSD, LINK/TUSD, MEME/ETH, METIS/FDUSD, NFP/BNB, OSMO/BTC, SHIB/TUSD Please note: The delisting of a spot trading pair does not affect the availability of the tokens on Binance Spot.",
+  "en_bucket": [],
+  "sin_evento_pasada2": []
+ },
+ {
+  "archivo": "url_https___www.binance.com_en_support_announcement_notice-of-removal-of-spot-tr_fdded13eb374.json",
+  "titulo": "Notice of Removal of Spot Trading Pairs - 2024-03-15",
+  "captura": "20240521064359",
+  "fechas": [
+   "2024-03-15"
+  ],
+  "no_spot": false,
+  "pares_usdt": [],
+  "tokens": [],
+  "frase": "Based on our most recent reviews, Binance will remove and cease trading on the following spot trading pairs: At 2024-03-15 03:00 (UTC) : ARPA/BNB, COMP/TUSD, EDU/BNB, EDU/TUSD, PENDLE/TUSD Please note: The delisting of a spot trading pair does not affect the availability of the tokens on Binance Spot.",
+  "en_bucket": [],
+  "sin_evento_pasada2": []
+ },
+ {
+  "archivo": "url_https___www.binance.com_en_support_announcement_notice-of-removal-of-trading_05a2f75d6d22.json",
+  "titulo": "Notice of Removal of Trading Pairs - 2023-09-15",
+  "captura": "20231130130639",
+  "fechas": [
+   "2023-09-15",
+   "2023-09-15",
+   "2023-09-15"
+  ],
+  "no_spot": false,
+  "pares_usdt": [],
+  "tokens": [],
+  "frase": "Based on our most recent reviews, Binance will remove and cease trading on the following spot trading pairs: At 2023-09-15 03:00 (UTC ): AMB/BUSD, ASTR/BUSD, BAT/ETH, DASH/BUSD, GMX/BUSD, HOT/BUSD At 2023-09-15 05:00 (UTC ): IMX/BNB, KNC/BNB, MC/BUSD, MDT/BUSD, NULS/BUSD, RAD/BUSD, RAY/BUSD, REQ/BUSD At 2023-09-15 07:00 (UTC) : SSV/BUSD, STMX/BUSD, TROY/BUSD, WOO/BUSD Please note: The delisting of a spot trading pair does not affect the availability of the tokens on Binance Spot.",
+  "en_bucket": [],
+  "sin_evento_pasada2": []
+ },
+ {
+  "archivo": "url_https___www.binance.com_en_support_announcement_notice-of-removal-of-trading_3bd8355dbc5d.json",
+  "titulo": "Notice of Removal of Trading Pairs - 2023-10-06",
+  "captura": "20231209123615",
+  "fechas": [
+   "2023-10-06",
+   "2023-10-06"
+  ],
+  "no_spot": false,
+  "pares_usdt": [],
+  "tokens": [],
+  "frase": "Based on our most recent reviews, Binance will remove and cease trading on the following spot trading pairs: At 2023-10-06 05:00 (UTC) : 1INCH/BUSD, AERGO/BUSD, ANKR/BUSD, DATA/BUSD, DIA/BUSD, ERN/BUSD, IOST/BUSD, KP3R/BUSD, LOKA/BUSD, LRC/BUSD At 2023-10-06 07:00 (UTC) : LTO/BUSD, MDX/BUSD, OM/BUSD, POLYX/BUSD, RARE/BUSD, SLP/BUSD, SUSHI/BUSD, THETA/BUSD, YFI/BUSD Please note: The delisting of a spot trading pair does not affect the availability of the tokens on Binance Spot.",
+  "en_bucket": [],
+  "sin_evento_pasada2": []
+ },
+ {
+  "archivo": "url_https___www.binance.com_en_support_announcement_notice-of-removal-of-trading_5b877cc8b91f.json",
+  "titulo": "Notice of Removal of Trading Pairs - 2023-06-01",
+  "captura": "20230921100939",
+  "fechas": [
+   "2023-06-01"
+  ],
+  "no_spot": false,
+  "pares_usdt": [
+   "AUD"
+  ],
+  "tokens": [],
+  "frase": "Fellow Binancians , Binance will remove and cease trading on the following spot trading pairs at 2023-06-01 06:00 (UTC): Spot Pairs: ADA/AUD, AUD/BUSD, AUD/USDT, BNB/AUD, BTC/AUD, DOGE/AUD, ETH/AUD, GALA/AUD, MATIC/AUD, SOL/AUD, XRP/AUD Please note: Users can still trade the above assets on other trading pairs that are available on Binance.",
+  "en_bucket": [
+   "AUDUSDT"
+  ],
+  "sin_evento_pasada2": []
+ },
+ {
+  "archivo": "url_https___www.binance.com_en_support_announcement_notice-of-removal-of-trading_d7b5fa6b4c50.json",
+  "titulo": "Notice of Removal of Trading Pairs - 2023-09-22",
+  "captura": "20231208113359",
+  "fechas": [
+   "2023-09-22",
+   "2023-09-22",
+   "2023-09-22"
+  ],
+  "no_spot": false,
+  "pares_usdt": [],
+  "tokens": [],
+  "frase": "Based on our most recent reviews, Binance will remove and cease trading on the following spot trading pairs: At 2023-09-22 03:00 (UTC) : ACA/BUSD, ALPHA/BUSD, ALPINE/BUSD, ANT/BUSD, ASR/BUSD At 2023-09-22 05:00 (UTC) : ATM/BUSD, BAL/BUSD, DGB/BUSD, FIRO/BUSD, GAL/BUSD At 2023-09-22 07:00 (UTC) : OOKI/BUSD, PORTO/BUSD, PSG/BUSD, RVN/BUSD, TWT/BUSD Please note: The delisting of a spot trading pair does not affect the availability of the tokens on Binance Spot.",
+  "en_bucket": [],
+  "sin_evento_pasada2": []
+ },
+ {
+  "archivo": "url_https___www.binance.com_en_support_announcement_notice-of-removal-of-trading_e141e8970fdc.json",
+  "titulo": "Notice of Removal of Trading Pairs - 2023-06-14",
+  "captura": "20231207161111",
+  "fechas": [
+   "2023-06-14",
+   "2023-06-14",
+   "2023-06-14"
+  ],
+  "no_spot": false,
+  "pares_usdt": [],
+  "tokens": [],
+  "frase": "Fellow Binancians , Binance will remove and cease trading on the following spot trading pairs: At 2023-06-14 03:00 (UTC): BIFI/BUSD, DASH/BNB, FIO/BUSD, GAL/BNB, ILV/BNB, KLAY/BNB At 2023-06-14 06:00 (UTC): LIT/ETH, MC/BNB, MINA/BNB, MLN/BUSD, ONE/ETH, OXT/BUSD At 2023-06-14 08:00 (UTC) : PEOPLE/BNB, PEOPLE/ETH, QNT/BNB, WAXP/BNB, XTZ/ETH, ZEC/BNB, ZRX/ETH Please note: Users can still trade the above assets on other trading pairs that are available on Binance.",
+  "en_bucket": [],
+  "sin_evento_pasada2": []
+ },
+ {
+  "archivo": "url_https___www.binance.com_en_support_announcement_notice-of-removal-of-trading_e4037434f426.json",
+  "titulo": "Notice of Removal of Trading Pairs - 2023-05-11",
+  "captura": "20231004074050",
+  "fechas": [
+   "2023-05-11",
+   "2023-05-11"
+  ],
+  "no_spot": false,
+  "pares_usdt": [],
+  "tokens": [],
+  "frase": "Fellow Binancians , Binance will remove and cease trading on the following spot trading pairs: At 2023-05-11 03:00 (UTC): AR/BNB, BURGER/BNB, JASMY/BNB, JASMY/ETH, OMG/BTC At 2023-05-11 06:00 (UTC): PROS/ETH, UNFI/ETH, VIB/ETH, VITE/BUSD, WAVES/BNB, WRX/BNB Please note: Users can still trade the above assets on other trading pairs that are available on Binance.",
+  "en_bucket": [],
+  "sin_evento_pasada2": []
+ },
+ {
+  "archivo": "url_https___www.binance.com_en_support_announcement_notice-of-removal-of-trading_f4e7ef8a9613.json",
+  "titulo": "Announcement",
+  "captura": "20230608162111",
+  "fechas": [
+   "2023-05-26",
+   "2023-05-26",
+   "2023-05-26"
+  ],
+  "no_spot": false,
+  "pares_usdt": [],
+  "tokens": [],
+  "frase": "Fellow Binancians , Binance will remove and cease trading on the following spot trading pairs: At 2023-05-26 03:00 (UTC) : APT/BRL, AMP/BTC, BEL/ETH, FIS/BRL, GAL/ETH, GMT/BRL At 2023-05-26 05:00 (UTC): APE/AUD, AVAX/AUD, AXS/AUD, DOT/AUD, FTM/AUD, LINK/AUD, SAND/AUD, SHIB/AUD At 2023-05-26 06:00 (UTC) : GMT/GBP, JASMY/BTC, KP3R/BNB, REI/BNB, SANTOS/BRL, STMX/BTC, XTZ/BNB Please note: Users can still trade the above assets on other trading pairs that are available on Binance.",
+  "en_bucket": [],
+  "sin_evento_pasada2": []
+ }
+]

@@ -1,0 +1,36 @@
+diff --git a/docs/DEPLOYMENT.md b/docs/DEPLOYMENT.md
+index 40e9ae3..2154326 100644
+--- a/docs/DEPLOYMENT.md
++++ b/docs/DEPLOYMENT.md
+@@ -255,7 +255,7 @@ of these endpoints.
+ 
+ | Situation | Action |
+ |---|---|
+-| Stop new entries, keep managing exits | `POST /api/live/kill-switch` (goes to SAFE_MODE, cancels resting orders) |
++| Stop new entries, keep the position's stop, manage nothing else | `POST /api/live/kill-switch` (goes to SAFE_MODE; cancels resting orders that could add exposure, keeps the protective stop and a working exit) |
+ | Close everything now | `POST /api/live/flatten` — cancel, close, verify, record |
+ | Stop the session | `POST /api/live/stop` — stamped; stays stopped across restarts |
+ | Kill the machine's role entirely | `docker compose -f docker-compose.prod.yml down` — nothing trades from this box until you bring it back |
+diff --git a/docs/LIVE_RUNBOOK.md b/docs/LIVE_RUNBOOK.md
+index 1b187ca..7c5fd53 100644
+--- a/docs/LIVE_RUNBOOK.md
++++ b/docs/LIVE_RUNBOOK.md
+@@ -123,9 +123,15 @@ configuration fingerprint: that is the PAUSE + CONFIRM + REVALIDATE path.
+ POST /api/live/kill-switch   {"reason": "..."}     # operator only
+ ```
+ 
+-Stops entries, cancels resting orders, reconciles, lands in **SAFE_MODE** — which has no
+-automatic exit and no path back to RUNNING. It does **not** close positions. No model can
+-reach this endpoint or override it; the runtime method requires a named human actor.
++Stops entries, cancels every resting order that could add exposure, reconciles, lands in
++**SAFE_MODE** — which has no automatic exit and no path back to RUNNING. It does **not**
++close positions, and it keeps what bounds their loss: the orders that only reduce the open
++position (its protective stop, a working exit) stay at the venue. SAFE_MODE does not manage
++the position — no trailing, no break-even, no time stop: the resting stop is its only exit.
++A position left with nothing at the venue is reported unprotected (incident, the
++`unprotected_positions` counter, `last_error`). To get out of the market — or when the stop
++itself is what is wrong — use the flatten below. No model can reach this endpoint or
++override it; the runtime method requires a named human actor.
+ 
+ ## 13. Emergency procedures
+ 

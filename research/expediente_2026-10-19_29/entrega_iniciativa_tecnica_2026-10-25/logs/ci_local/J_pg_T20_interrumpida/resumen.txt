@@ -1,0 +1,2 @@
+== ci_local pg_T20 (pg) · árbol 361b2ea6db34501ff15cb749156a73c16123bb7c · nonce local-pg_T20-cbef00e3b1b0e107 · inicio 2026-10-25T21:19:59Z · carga 1.37 1.24 1.13
+ruff rc=0 · All checks passed!

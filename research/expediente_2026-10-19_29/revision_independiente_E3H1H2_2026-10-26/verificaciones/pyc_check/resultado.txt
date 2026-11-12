@@ -1,0 +1,3 @@
+universo sha_py 2af45115238d pyc_mismo_codigo_que_fuente: True bytes_identicos: False
+motor sha_py cadb805d2d88 pyc_mismo_codigo_que_fuente: True bytes_identicos: False
+inferencia sha_py 7b28038621c1 pyc_mismo_codigo_que_fuente: True bytes_identicos: False

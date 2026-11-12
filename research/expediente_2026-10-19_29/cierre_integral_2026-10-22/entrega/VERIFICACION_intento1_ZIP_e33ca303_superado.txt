@@ -1,0 +1,37 @@
+== 2026-10-25T17:05:55Z · verificación de cierre_integral_2026-10-22 desde una extracción limpia
+cierre_integral_2026-10-22.zip: OK
+OK   SHA-256 del ZIP: e33ca30381c5c3700cc4d7025a9daff989abf84df19ca51c26b2216804bba7b8
+entradas en el directorio de extracción antes: 0
+OK   MANIFEST.sha256: 825 de 825 verifican
+OK   sin archivos de más ni de menos
+OK   0 enlaces y 0 bytecode
+OK   estructura pedida presente
+== copias de v3r3 byte a byte
+   = v3r3: 01_obligatorio_D1_D3_motor_y_pruebas_definitivas.patch
+   = v3r3: 02v3_obligatorio_trazabilidad_version_motor_CORREGIDO.patch
+   = v3r3: 03_opcional_pruebas_reloj_y_persistencia.patch
+   = v3r3: 04_opcional_CI_versiones_fijadas.patch
+   = v3r3: SHA256_archivos_resultantes_completa_v3.txt
+   = v3r3: SHA256_archivos_resultantes_obligatoria_v3.txt
+== árboles esperados reconstruidos SOLO con los parches extraídos
+OK   A = 5d6a0954…
+OK   archivos de A = los registrados en v3r3
+OK   A+B = 4ef14d31…
+OK   A+B+03 = 84f9e349…
+OK   A+B+03+04+06v3 = 0477c6a2… (el árbol de la suite final)
+OK   clon con push deshabilitado
+== tests/ = el contenido que dejan los parches
+OK   tests/test_engine_version_contract.py = 05v2
+OK   tests/ci_gate.py = 06v3
+OK   tests/test_backtest_store_postgresql.py = 07 (y 07 aplica sobre el árbol final)
+OK   config/ci.yml y config/ci-py311.txt = los del árbol final
+== ejecución desde lo extraído
+OK   ruff (packages tests scripts) limpio en el árbol final
+OK   guarda 05v2: 7 passed in 13.21s
+OK   pruebas del gate 06v3 con el JUnit de logs/: RESULTADO: 11/11 casos con el veredicto y el motivo esperados
+OK   simulación de integración desde lo extraído: 0 problemas
+== referencias de los documentos a rutas del paquete
+rutas citadas que no existen:
+   evidence/registro/B1
+MAL  rutas citadas inexistentes
+RESULTADO: 1 problemas · fin 2026-10-25T17:08:09Z

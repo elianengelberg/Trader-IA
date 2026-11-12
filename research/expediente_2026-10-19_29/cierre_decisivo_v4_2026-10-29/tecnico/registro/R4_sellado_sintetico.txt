@@ -1,0 +1,10 @@
+{
+ "antes_resuelve": 25,
+ "antes_estructuras": 1,
+ "despues_resuelve_ruta_por_defecto": 0,
+ "despues_resuelve_pasando_cualquier_carpeta": 0,
+ "despues_estructuras": 0,
+ "manifiesto_verifica": true,
+ "restauracion_byte_a_byte": true,
+ "archivos": 26
+}

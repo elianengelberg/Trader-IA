@@ -1,0 +1,563 @@
+#123 2018-03-12 Binance Will Support EOS MainNet Token Swap | usdt=[]
+# 55 (= #123) 2018-03-12 Binance Will Support EOS MainNet Token Swap
+# 56 2018-05-28 Binance Adds EOS/BNB, EOS/USDT Trading Pairs and EOS Mainnet Swap Update | usdt=['EOSUSDT']
+      · Fellow Binancians, Binance will open trading for EOS/BNB and EOS/USDT trading pairs at 2018/05/28 05:00 AM (UTC).
+      · Further information regarding the EOS Mainnet Swap is below: EOS deposits and withdrawals will be suspended starting from 2018/05/31 0:00 AM (UTC).
+      · Important Note: To prevent any loss of funds, please ensure that you leave sufficient time for your EOS deposits to be processed prior to 2018/05/31 0:00 AM (UTC).
+#124 (= #56) 2018-05-28 Binance Adds EOS/BNB, EOS/USDT Trading Pairs and EOS Mainnet Swap Update
+# 57 2018-06-01 EOS Mainnet Swap Update | usdt=[]
+      · Fellow Binancians, After communicating directly with the EOS Team, Binance has confirmed that the EOS ERC20 Token Network will be frozen at 2018/06/02 9:59:59 PM UTC.
+      · As such, Binance will reopen EOS deposits until 2018/06/02 4:00 PM UTC, at which point we will suspend deposits again and process the EOS Mainnet Swap as previously announced.
+      · Important Note: To prevent any loss of funds, please ensure that you leave sufficient time for your EOS deposits to be processed prior to the suspension of deposits at 2018/06/02 4:00 PM UTC.
+      · For further information, please refer to Point 19 of the EOS FAQ : EOS Tokens will become fixed (non-transferable) on the Ethereum blockchain within 23 hours after the end of the final EOS Token distribution period which will occur on June 1, 2018 at 22:59:59 UTC.
+#125 (= #57) 2018-06-01 EOS Mainnet Swap Update
+# 59 2018-06-08 Binance Supports ONT Mainnet Swap and Adds ONT/USDT Trading Pair | usdt=['ONTUSDT']
+      · Official Announcement from ONT: MainNet ONT Token Swap Notice Binance will also open trading for ONT/USDT trading pair at 2018/06/08 7:00 AM (UTC).
+#127 (= #59) 2018-06-08 Binance Supports ONT Mainnet Swap and Adds ONT/USDT Trading Pair
+# 58 2018-06-11 Binance Supports TRX Mainnet Swap and Adds TRX/USDT Trading Pair | usdt=['TRXUSDT']
+      · Fellow Binancians, Binance will support the Tron (TRX) Mainnet Token Swap and will suspend withdrawals for Tron (TRX) starting from 2018/06/24 0:00 AM (UTC).
+      · Official Announcement from Tron: TRX Migration Notice Binance will also open trading for TRX/USDT trading pair at 2018/06/11 11:30 AM (UTC).
+#126 (= #58) 2018-06-11 Binance Supports TRX Mainnet Swap and Adds TRX/USDT Trading Pair
+# 60 2018-06-13 Binance Supports ICX Mainnet Swap and Adds ICX/USDT Trading Pair | usdt=['ICXUSDT']
+      · Fellow Binancians, Binance will support the ICON (ICX) Mainnet Token Swap and will suspend deposits and withdrawals for ICON (ICX) starting from 2018/06/20 0:00 AM (UTC).
+      · Binance will also open trading for the ICX/USDT trading pair at 2018/06/13 8:00 AM (UTC).
+#128 (= #60) 2018-06-13 Binance Supports ICX Mainnet Swap and Adds ICX/USDT Trading Pair
+# 61 2018-06-22 Binance Supports VEN Mainnet Swap and Adds VEN/USDT Trading Pair | usdt=['VENUSDT']
+      · Binance will also open trading for the VEN/USDT trading pair at 2018/06/22 8:00 AM (UTC).
+#129 (= #61) 2018-06-22 Binance Supports VEN Mainnet Swap and Adds VEN/USDT Trading Pair
+# 99 (= #61) 2018-06-22 Binance Supports VEN Mainnet Swap and Adds VEN/USDT Trading Pair
+# 62 2018-07-10 Binance Completes TRX and ICX Mainnet Swaps | usdt=[]
+#130 (= #62) 2018-07-10 Binance Completes TRX and ICX Mainnet Swaps
+#131 2018-07-19 Information Regarding the Upcoming VEN/VET Mainnet Swap | usdt=['VETUSDT']
+      · Fellow Binancians, To accommodate VEN's rebrand and ticker change to VET, we will carry out the mainnet swap in the following steps: Deposits and withdrawals of VEN will be suspended starting from 2018/07/22 0:00 AM (UTC), at which point we will begin the mainnet swap.
+      · Trading will be halted in all VEN trading pairs at 2018/07/23 4:00 AM (UTC).
+      · We will take an immediate snapshot of all VEN balances at the exact same time (2018/07/23 4:00 AM UTC), and begin the distribution of VET to all eligible users at a ratio of 1 VEN = 100 VET.
+      · Trading will open for the new VET/BTC, VET/ETH, VET/BNB and VET/USDT trading pairs at 2018/07/25 4:00 AM (UTC).
+      · Please note: Once trading opens in the new VET trading pairs, all prior VEN trading pairs will be delisted from the exchange.
+# 63 (= #131) 2018-07-19 Information Regarding the Upcoming VEN/VET Mainnet Swap
+#120 (= #131) 2018-07-19 Information Regarding the Upcoming VEN/VET Mainnet Swap
+# 64 2018-07-23 Binance Supports NULS Mainnet Swap and Adds NULS/USDT Trading Pair | usdt=['NULSUSDT']
+      · Binance will also open trading for the NULS/USDT trading pair at 2018/07/23 4:00 AM (UTC).
+#132 (= #64) 2018-07-23 Binance Supports NULS Mainnet Swap and Adds NULS/USDT Trading Pair
+# 65 2018-07-24 Binance Completes VEN Mainnet Swap to VET | usdt=['VETUSDT']
+      · VET balances were allocated to users based on a snapshot of all VEN balances at 2018/07/23 4:00 AM (UTC), based on a ratio of 1 VEN = 100 VET.
+      · Binance will open trading for the new VET/BTC, VET/ETH, VET/BNB and VET/USDT trading pairs at 2018/07/25 4:00 AM (UTC).
+      · All prior VEN balances have been removed and all VEN trading pairs have been delisted from the exchange.
+      · Based on the VEN/VET distribution ratio, the opening price for VET will be one hundredth of the last traded VEN price.
+#133 (= #65) 2018-07-24 Binance Completes VEN Mainnet Swap to VET
+# 66 2018-07-27 Binance Completes ONT Mainnet Swap | usdt=[]
+#134 (= #66) 2018-07-27 Binance Completes ONT Mainnet Swap
+# 68 2018-08-06 Binance Supports Hcash (HSR) Mainnet Swap to HyperCash (HC) | usdt=[]
+      · We will carry out the mainnet swap in the following steps: Deposits and withdrawals of HSR will be suspended starting from 2018/08/06 8:00 AM (UTC), at which point we will begin the mainnet swap.
+      · Trading will be halted in all HSR trading pairs at 2018/08/08 4:00 AM (UTC).
+      · We will take an immediate snapshot of all HSR balances at the exact same time (2018/08/08 4:00 AM UTC), and begin the distribution of HC to all eligible users at a ratio of 1 HSR = 1 HC.
+      · Please note: Once trading opens in the new HC trading pairs, all prior HSR trading pairs will be delisted from the exchange.
+#136 (= #68) 2018-08-06 Binance Supports Hcash (HSR) Mainnet Swap to HyperCash (HC)
+# 69 2018-08-06 Binance Supports Red Pulse (RPX) Token Swap to PHOENIX (PHX) | usdt=[]
+      · We will carry out the token swap in the following steps: Deposits and withdrawals of RPX will be suspended starting from 2018/08/11 4:00 AM (UTC), at which point we will begin the token swap.
+      · Trading will be halted in all RPX trading pairs at 2018/08/14 4:00 AM (UTC).
+      · We will take an immediate snapshot of all RPX balances at the exact same time (2018/08/14 4:00 AM UTC), and begin the distribution of PHX to all eligible users at a ratio of 1 RPX = 1 PHX.
+      · Trading will open for the new PHX/BTC, PHX/ETH and PHX/BNB trading pairs at 2018/08/17 4:00 AM (UTC).
+      · Please note: Once trading opens in the new PHX trading pairs, all prior RPX trading pairs will be delisted from the exchange.
+#137 (= #69) 2018-08-06 Binance Supports Red Pulse (RPX) Token Swap to PHOENIX (PHX)
+# 98 (= #69) 2018-08-06 Binance Supports Red Pulse (RPX) Token Swap to PHOENIX (PHX)
+#135 2018-08-07 Binance Will Support YOYOW (YOYO) MainNet Token Swap | usdt=[]
+      · Deposits and withdrawals of YOYO will be suspended starting from 2018/08/08 4:00 AM (UTC), at which point we will begin the mainnet swap process.
+# 67 (= #135) 2018-08-07 Binance Will Support YOYOW (YOYO) MainNet Token Swap
+#138 2018-08-10 Binance Completes YOYO Mainnet Swap | usdt=[]
+# 70 (= #138) 2018-08-10 Binance Completes YOYO Mainnet Swap
+# 71 2018-08-21 Binance Completes HSR to HC Mainnet Swap and Opens Trading | usdt=[]
+      · We will open trading for HC/BTC and HC/ETH trading pairs at 2018/08/21 10:00 AM (UTC).
+#139 (= #71) 2018-08-21 Binance Completes HSR to HC Mainnet Swap and Opens Trading
+# 72 2018-08-22 Binance Will Support Nuls (NULS) Mainnet Token Swap | usdt=[]
+      · Deposits and withdrawals of NULS will be suspended starting from 2018/08/22 10:00 AM (UTC), at which point we will begin the mainnet swap process.
+      · We will open deposits and withdrawals for NULS (native coin) at 2018/08/23 10:00 AM (UTC), after the mainnet swap is complete.
+#140 (= #72) 2018-08-22 Binance Will Support Nuls (NULS) Mainnet Token Swap
+#141 2018-09-30 Binance Will Support CyberMiles (CMT) Mainnet Token Swap | usdt=[]
+      · Deposits and withdrawals of CMT will be suspended starting from 2018/10/08 4:00 AM (UTC), at which point we will begin the mainnet swap process.
+      · As planned by the CMT Team, all ERC20 CMT tokens will be permanently frozen and become obsolete from 23:59 (UTC+0) on Oct.
+#142 2018-10-13 Binance Will Support AION (AION) Mainnet Token Swap | usdt=[]
+      · Deposits and withdrawals of AION will be suspended starting from 2018/10/15 10:00 AM (UTC), at which point we will begin the mainnet swap process.
+# 73 2018-10-23 Binance Completes AION Mainnet Swap | usdt=[]
+#143 (= #73) 2018-10-23 Binance Completes AION Mainnet Swap
+# 74 2018-10-24 Binance Completes CMT Mainnet Swap | usdt=[]
+#144 (= #74) 2018-10-24 Binance Completes CMT Mainnet Swap
+# 75 2019-03-06 Binance Will Support The Theta Network (THETA) Mainnet Token Swap and Distribution of TFUEL | usdt=[]
+      · Deposits and withdrawals of THETA will be suspended starting from 2019/03/12 0:00 AM (UTC), at which point we will begin the mainnet swap process.
+      · We will take a snapshot of all THETA balances at a block height of 7,356,258 on the Ethereum blockchain (estimated to occur at 2019/03/12 7:00 PM (UTC)) and distribute TFUEL to eligible users after the mainnet swap is complete, at a ratio of 1 THETA = 5 TFUEL.
+#145 (= #75) 2019-03-06 Binance Will Support The Theta Network (THETA) Mainnet Token Swap and Distribution of TFUEL
+# 76 2019-03-07 Binance Will Support The IOST Mainnet Token Swap | usdt=[]
+      · Fellow Binancians, Binance would like to confirm support for the IOST mainnet token swap and will suspend withdrawals for IOST starting from 2019/03/08 0:00 AM (UTC).
+#146 (= #76) 2019-03-07 Binance Will Support The IOST Mainnet Token Swap
+# 77 2019-03-26 Binance Completes THETA Mainnet Swap and Opens Deposits / Withdrawals | usdt=[]
+#147 (= #77) 2019-03-26 Binance Completes THETA Mainnet Swap and Opens Deposits / Withdrawals
+# 78 2019-04-18 Binance Will Support the ZIL Mainnet Token Swap | usdt=[]
+      · Fellow Binancians, Binance would like to confirm support for the ZIL mainnet token swap and will suspend deposits and withdrawals of ZIL starting from 2019/04/22 0:00 AM (UTC).
+#148 (= #78) 2019-04-18 Binance Will Support the ZIL Mainnet Token Swap
+#149 2019-04-23 Binance Completes BNB Mainnet Swap and Opens Deposits / Withdrawals | usdt=[]
+      · We will automatically convert these ERC20 BNB tokens to Binance Chain mainnet BNB tokens for you.
+# 79 (= #149) 2019-04-23 Binance Completes BNB Mainnet Swap and Opens Deposits / Withdrawals
+#150 2019-04-24 Binance Will Support the Mithril (MITH) Token Migration to Binance Chain | usdt=[]
+      · Fellow Binancians, Binance would like to confirm support for the upcoming Mithril (MITH) token migration of ERC20 MITH tokens to BEP2 MITH tokens on Binance Chain.
+      · We will suspend deposits and withdrawals of MITH starting from 2019/04/25 04:00 AM (UTC).
+      · We will automatically convert these ERC20 MITH tokens to BEP2 MITH tokens for you.
+# 80 (= #150) 2019-04-24 Binance Will Support the Mithril (MITH) Token Migration to Binance Chain
+#151 2019-04-25 Binance Has Completed the MITH Token Migration and Has Opened Deposits / Withdrawals | usdt=[]
+      · Fellow Binancians, Binance has completed the Mithril (MITH) token migration to Binance Chain and has opened deposits and withdrawals.
+      · We will automatically convert these ERC20 MITH tokens to Binance Chain mainnet MITH tokens for you.
+      · For further information, please refer to: Binance Will Support the Mithril (MITH) Token Migration to Binance Chain .
+# 81 (= #151) 2019-04-25 Binance Has Completed the MITH Token Migration and Has Opened Deposits / Withdrawals
+# 82 2019-05-13 Binance Will Support the AE Mainnet Token Swap | usdt=[]
+#152 (= #82) 2019-05-13 Binance Will Support the AE Mainnet Token Swap
+#153 2019-05-20 Binance Will Support the Red Pulse Phoenix (PHX) Token Migration to Binance Chain | usdt=[]
+      · Fellow Binancians, Binance would like to confirm support for the upcoming Red Pulse Phoenix (PHX) token migration of NEP5 PHX tokens to BEP2 PHB tokens on Binance Chain.
+      · We will suspend trading, deposits and withdrawals of PHX starting from 2019/05/22 04:00 AM (UTC).
+      · Due to the rebrand of Red Pulse Phoenix (PHX), we have updated the original PHX ticker to PHB, with its new token name as Red Pulse Phoenix Binance.
+      · We will swap these tokens during the migration at a ratio of 1 PHX = 1 PHB.
+      · Additionally, Binance will open trading for PHB/BNB, PHB/BTC, PHB/USDC, PHB/TUSD and PHB/PAX trading pairs at 2019/05/24 04:00 (UTC).
+      · Once trading opens, the previous PHX/BNB, PHX/BTC and PHX/ETH trading pairs will be removed and delisted.
+      · We will automatically convert these NEP5 PHX tokens to BEP2 PHB tokens for you.
+      · After the token migration is complete, users will only be able to withdraw BEP2 PHB tokens, not NEP5 PHX tokens.
+# 83 (= #153) 2019-05-20 Binance Will Support the Red Pulse Phoenix (PHX) Token Migration to Binance Chain
+# 84 2019-05-30 Binance Will Support the BCPT, GTO and ARN Token Migration to Binance Chain | usdt=[]
+      · Fellow Binancians, Binance would like to confirm support for the upcoming Blockmason (BCPT), Gifto (GTO) and Aeron (ARN) token migration of ERC20 BCPT, GTO and ARN tokens to BEP2 BCPT, GTO and ARN tokens on Binance Chain.
+      · We will suspend deposits and withdrawals of BCPT, GTO and ARN starting from 2019/05/31 0:00 AM (UTC).
+      · Note: Original ERC20 BCPT, GTO and ARN tokens can still be deposited to your ETH deposit address on Binance after the migration.
+      · We will automatically convert these ERC20 BCPT, GTO and ARN tokens to BEP2 BCPT, GTO and ARN tokens for you.
+      · After the token migration is complete, users will only be able to withdraw BEP2 BCPT, GTO and ARN tokens, not ERC20 BCPT, GTO and ARN tokens.
+#154 (= #84) 2019-05-30 Binance Will Support the BCPT, GTO and ARN Token Migration to Binance Chain
+#155 2020-01-14 Binance Will Support the IOTX Mainnet Token Swap | usdt=[]
+      · Fellow Binancians, Binance would like to confirm support for the IOTX mainnet token swap and will suspend withdrawals for IOTX starting from 2020/01/15 0:00 AM (UTC).
+#156 2020-01-19 Binance Will Support the WTC Mainnet Token Swap | usdt=[]
+      · Fellow Binancians, Binance would like to confirm support for the WTC mainnet token swap and will suspend withdrawals for WTC starting from 2020/01/20 0:00 AM (UTC).
+#159 2020-01-20 Notice Regarding Zilliqa Mainnet Token Swap Deadline | usdt=[]
+      · As such, Binance will stop accepting ERC20 ZIL deposits starting from 2020/02/15 12:00 PM (UTC) and will conduct the final swap of ERC20 ZIL tokens to Mainnet ZIL tokens at this time.
+      · Please note: ERC20 ZIL tokens will not be able to be deposited after 2020/02/15 12:00 PM (UTC).
+# 85 2020-01-21 Binance Completes Mainnet Swaps and Opens Deposits & Withdrawals for IOTX & WTC | usdt=[]
+      · After the mainnet swap, Binance will continue to support the deposits of ERC20 IOTX and ERC20 WTC tokens, and will automatically convert these to their respective mainnet tokens.
+#157 (= #85) 2020-01-21 Binance Completes Mainnet Swaps and Opens Deposits & Withdrawals for IOTX & WTC
+#158 2020-01-23 Binance Will Support the Harmony (ONE) Mainnet Token Swap | usdt=[]
+      · Fellow Binancians, Binance would like to confirm support for the Harmony (ONE) mainnet token swap and will suspend withdrawals for ONE starting from 2020/02/03 02:00 AM (UTC).
+# 86 (= #158) 2020-01-23 Binance Will Support the Harmony (ONE) Mainnet Token Swap
+# 87 2020-02-19 Binance Completes Harmony (ONE) Mainnet Swap and Opens Deposits & Withdrawals for ONE | usdt=[]
+      · After the mainnet swap, Binance will continue to support the deposits of BEP2 ONE tokens, and will automatically convert these to mainnet tokens.
+#160 (= #87) 2020-02-19 Binance Completes Harmony (ONE) Mainnet Swap and Opens Deposits & Withdrawals for ONE
+#161 2020-03-20 Binance Will Support the COCOS Mainnet Token Swap | usdt=[]
+      · Fellow Binancians, Binance would like to confirm support for the COCOS mainnet token swap and will suspend withdrawals for COCOS starting from 2020/03/23 2:00 AM (UTC).
+#162 2020-04-02 Binance Completes Cocos-BCX (COCOS) Mainnet Swap and Opens Deposits & Withdrawals | usdt=[]
+      · After the mainnet swap, Binance will continue to support the deposits of ERC20 COCOS tokens, and will automatically convert these to mainnet tokens.
+# 88 2020-06-03 Storm (STORM) Token Swap to STMX Will Be Supported on Binance | usdt=['STMXUSDT']
+      · Fellow Binancians, Binance will support the Storm (STORM) smart contract and token swap to StormX (STMX), with the following timeline: Deposits and withdrawals of STORM will be suspended starting from 2020/06/07 4:00 AM (UTC), at which point we will begin the token swap.
+      · Trading will be halted in all STORM trading pairs at 2020/06/08 3:00 AM (UTC) and the trading pairs will also subsequently be delisted from the exchange.
+      · We will take an immediate snapshot of all STORM balances at the same time ( 2020/06/08 3:00 AM UTC ), and begin the distribution of STMX to all eligible users at a ratio of 1 STORM = 1 STMX.
+      · Trading will open for the new STMX/BNB, STMX/BTC, STMX/ETH and STMX/USDT trading pairs at 2020/06/11 3:00 AM (UTC).
+#163 (= #88) 2020-06-03 Storm (STORM) Token Swap to STMX Will Be Supported on Binance
+# 32 2020-07-28 Augur (REP) Token Swap to Augur (REPV2) Will Be Supported on Binance | usdt=['REPV2USDT']
+      · Fellow Binancians, Binance will support the Augur (REP) smart contract and token swap to Augur (REPV2), with the following timeline: Deposits and withdrawals of REP will be suspended starting from 2020/07/29 4:00 AM (UTC), at which point we will begin the token swap.
+      · Trading will be halted in all REP trading pairs at 2020/07/30 3:00 AM (UTC) and the trading pairs will also subsequently be delisted from the exchange.
+      · We will take an immediate snapshot of all REP balances at the same time (2020/07/30 3:00 AM (UTC)), and begin the distribution of REPV2 to all eligible users at a ratio of 1 REP = 1 REPV2.
+      · Trading will open for the new REPV2/BTC, REPV2/ETH, REPV2/USDT and REPV2/BUSD trading pairs at 2020/08/03 3:00 AM (UTC).
+      · Important: Please ensure that you leave sufficient time for your REP deposits to be fully processed prior to the above cut-off time of 2020/07/29 4:00 AM (UTC).
+      · For further information, please refer to Countdown: Augur v2 Launch & REP Migration 
+# 35 2020-07-29 Updates to the Augur (REP) Token Swap on Binance | usdt=[]
+      · Fellow Binancians, Due to unforeseen system limitations, the Augur (REP) smart contract and token swap will follow a new timeline below: Deposits and withdrawals of REP will remain suspended from 2020/07/29 4:00 AM (UTC), at which point we will begin the token swap.
+      · The original Augur (REP) token will be swapped to Augur v2 (REP), representing the new token.
+      · The ticker will remain as REP and will not be updated to REPV2.
+      · Once the token swap is completed, deposits of Augur v2 (REP) will open at 2020/07/30 12:00 PM (UTC) and withdrawals of Augur v2 (REP) will open at 2020/08/03 4:00 AM (UTC).
+#  2 2020-08-18 Binance Will List Polkadot (DOT) & Support 1:100 Redenomination Plan | usdt=['DOTUSDT']
+      · Fellow Binancians, Binance will list Polkadot (DOT) and open trading for DOT/BTC, DOT/BNB and DOT/BUSD and DOT/USDT trading pairs at 2020/08/18 11:00 PM (UTC).
+      · Users will be able to start depositing DOT after Polkadot block #1,205,128 (approximately 2020/08/18 4:40 PM (UTC)) in preparation for trading.
+      · Important notes DOT transfers on the Polkadot network will be enabled at block #1,205,128, currently estimated to occur approximately 2020/08/18 4:40 PM (UTC).
+      · Based on Polkadot’s first stakeholder vote , all DOT tokens will be redenominated by a factor of 100 at block #1,248,328, estimated to occur at 2020/08/21 4:40 PM (UTC).
+      · To support the redenomination plan, all DOT deposits made to Binance after block #1,205,128 will be multiplied by a coefficient of 100 .
+      · Given the above, the DOT tokens traded on Binance will only be the post-redenominated DOT tokens.
+      · DOT withdrawals will open after the redenomination occurs at block #1,248,328, when we determine the redenominated network to be stable.
+      · What price is DOT expected to be on Binance given the redenomination?
+      · With the current market price of pre-redenominated DOT at approximately $370 USD, the market price of post-redenominated DOT on Binance may be around $3.70 USD, assuming the price does not change.
+#101 (= #2) 2020-08-18 Binance Will List Polkadot (DOT) & Support 1:100 Redenomination Plan
+#  1 2020-08-24 Binance Will Support the Enigma (ENG) Mainnet Swap | usdt=[]
+# 33 2020-08-28 Elrond (ERD) Mainnet & Token Swap to Elrond Gold (EGLD) Will Be Supported on Binance | usdt=['EGLDUSDT']
+      · Fellow Binancians, Binance will support the Elrond (ERD) mainnet and token swap to Elrond Gold (EGLD), with the following timeline: Deposits and withdrawals of ERD will be suspended starting from 2020/08/30 4:00 AM (UTC), at which point we will begin the token swap.
+      · Trading will be halted in all ERD trading pairs at 2020/08/31 3:00 AM (UTC) and the trading pairs will also subsequently be delisted from the exchange.
+      · We will take an immediate snapshot of all Elrond balances at the same time (2020/08/31 3:00 AM UTC), and begin the distribution of EGLD to all eligible users at a ratio of 1000 ERD = 1 EGLD.
+      · Trading will open for the new EGLD/BNB, EGLD/BTC, EGLD/BUSD and EGLD/USDT trading pairs at 2020/09/03 3:00 AM (UTC).
+      · For further information, please refer to New Economics: eGLD Reasoning & Operational Process .
+# 54 2020-08-31 Binance Will Support the Ambrosus (AMB) Mainnet Swap | usdt=[]
+#  8 2020-09-01 Binance Completes Elrond (ERD) Mainnet & Token Swap to Elrond Gold (EGLD) | usdt=['EGLDUSDT']
+      · All EGLD has been distributed at a rate of 1,000 ERD = 1 EGLD.
+      · Please note: Trading will open for the new EGLD/BNB, EGLD/BTC, EGLD/BUSD and EGLD/USDT trading pairs on 2020/09/03 3:00 AM (UTC).
+# 41 2020-10-01 Binance Completes the Enigma (ENG) to Secret Network (SCRT) Token Swap and Opens Deposits & Withdrawals | usdt=[]
+      · Users will be able to use the convert function to swap their ENG for SCRT tokens.
+#  5 2020-10-03 Aave (LEND) Token Swap to AAVE Will Be Supported on Binance With Various Service Updates & Settlements | usdt=['AAVEUSDT', 'LENDUSDT']
+      · Fellow Binancians, Binance will support the Aave (LEND) token swap to AAVE, with the following timeline: At 2020/10/04 3:00 AM (UTC), Binance will suspend LEND isolated margin trading (including restricting transfers, borrowing, buying long etc), LEND Savings and LEND Loan services.
+      · At 2020/10/10 0:00 AM (UTC), Binance will conduct an automatic settlement on both LENDBTC and LENDUSDT isolated margin trading pairs, as well as settling all LEND/USDT perpetual contract positions.
+      · We will then proceed to delist these pairs and contracts.
+      · Please refer to the Delisting Process of A Futures Contract for more details.
+      · At 2020/10/10 4:00 AM (UTC), Binance will perform an automatic redemption of all LEND tokens in flexible savings products and move these tokens to user spot wallets.
+      · At 2020/10/11 4:00 AM (UTC), we will suspend LEND deposits and withdrawals and begin the token swap.
+      · At 2020/10/12 3:00 AM (UTC), we will halt trading in all LEND trading pairs, and the trading pairs will also subsequently be delisted from the exchange.
+      · We will then take an immediate snapshot of all LEND balances and begin the distribution of AAVE to all eligible users at a ratio of 100 LEND = 1 AAVE.
+      · At 2020/10/15 3:00 AM (UTC), we will open trading for the new AAVE/BNB, AAVE/BTC, AAVE/BUSD, AAVE/ETH, AAVE/USDT and AAVE/BKRW.
+# 89 (= #5) 2020-10-03 Aave (LEND) Token Swap to AAVE Will Be Supported on Binance With Various Service Updates & Settlements
+# 28 2020-10-13 Fetch.ai (FET) Smart Contract Swap Supported on Binance | usdt=[]
+      · Deposits and withdrawals of FET will be suspended starting from 2020/10/14 10:00 AM (UTC), at which point we will begin the smart contract swap.
+# 24 2020-10-14 Binance has Completed the Ocean Protocol (OCEAN) & Chromia (CHR) Token Swaps | usdt=[]
+      · New OCEAN smart contract address: 0x967da4048cD07aB37855c090aAF366e4ce1b9F48 New CHR smart contract address: 0x8a2279d4a90b6fe1c4b30fa660cc9f926797baa2 For further information from the OCEAN and CHR teams on the token swaps, please refer to: The hard fork of the Ocean Token contract is now complete 
+# 47 2020-10-27 Binance Will Support the Aragon (ANT) Smart Contract Swap & Upgrade | usdt=[]
+      · Deposits and withdrawals of ANT will be suspended starting from 2020/10/28 00:00 AM (UTC), at which point we will begin the smart contract swap/upgrade.
+      · Following which, users will be able to use the convert function to swap their Old ANT (ANTOLD) for New ANT tokens (ANT).
+#  6 2020-11-10 Stratis (STRAT) Token Swap to STRAX Will Be Supported on Binance | usdt=['STRAXUSDT']
+      · Fellow Binancians, Binance will support the Stratis (STRAT) token swap to STRAX, with the following timeline: At 2020/11/11 04:00 AM (UTC), all STRAT in Binance Savings accounts will be redeemed and automatically deposited into user spot accounts.
+      · At 2020/11/11 04:00 AM (UTC), all STRAT staked in Binance Staking accounts will be unstaked and automatically deposited into user spot accounts.
+      · At the same time, STRAT staking rewards will be calculated and rewarded based on the amount and time that the STRAT was staked up until 2020/11/11 04:00 AM (UTC).
+      · Deposits and withdrawals of STRAT will be suspended starting from 2020/11/12 4:00 AM (UTC), at which point we will begin the token swap.
+      · Trading will be halted in all STRAT trading pairs at 2020/11/12 8:00 AM (UTC) and the trading pairs will also subsequently be delisted from the exchange.
+      · We will take an immediate snapshot of all STRAT balances at the same time (2020/11/12 8:00 AM UTC), and begin the distribution of STRAX to all eligible users at a ratio of 1 STRAT = 1 STRAX.
+      · Trading will then open for the new STRAX/BTC, STRAX/ETH, STRAX/USDT and STRAX/BUSD trading pairs at 2020/11/18 3:00 AM (UTC).
+# 17 2020-11-13 Binance Completes Ambrosus (AMB) Mainnet Swap | usdt=[]
+      · After the mainnet swap, Binance will continue to support the deposits of ERC20 AMB tokens, and will automatically convert these to mainnet tokens when deposited to user accounts.
+# 31 2020-12-04 Binance Will Support Golem (GNT) Token Swap to GLM | usdt=[]
+      · Fellow Binancians, Binance will support the Golem (GNT) token swap to GLM, with the following timeline: Deposits and withdrawals of GNT will be suspended starting at 2020/12/07 00:00 AM (UTC), at which point we will begin the token swap.
+      · Trading will be halted in all GNT trading pairs at 2020/12/07 04:00 AM (UTC) and the trading pairs will also subsequently be delisted from the exchange.
+      · We will take an immediate snapshot of all GNT balances at the same time (2020/12/07 04:00 AM UTC), and begin the distribution of GLM to all eligible users at a ratio of 1 GNT = 1 GLM.
+      · Trading will then open for the new GLM/BTC and GLM/ETH trading pairs at 2020/12/10 04:00 AM (UTC).
+      · Deposits and withdrawals for GLM will be opened starting from 2020/12/10 06:00 AM (UTC).
+      · After the opening of GLM deposits and withdrawals, users will be able to use the convert function to swap their GNT for GLM tokens.
+      · New GLM smart contract address: 0x7dd9c5cba05e151c895fde1cf355c9a1d5da6429 For further information, please refer to the following: GNT to GLM Migration , GNT to ERC20 migration FAQs .
+# 48 2020-12-31 Binance Completes Stratis (STRAX) Token Swap | usdt=[]
+# 26 2021-01-04 Binance Will Support the Dock (DOCK) Mainnet Swap | usdt=[]
+      · More details will be released in a future announcement once the tech integration is complete.
+#104 (= #26) 2021-01-04 Binance Will Support the Dock (DOCK) Mainnet Swap
+# 51 2021-01-18 Binance Will Support the Cocos-BCX (COCOS) 1,000:1 Redenomination Plan | usdt=['COCOSUSDT']
+      · Fellow Binancians, Binance will support the Cocos-BCX (COCOS) 1,000:1 Redenomination Plan, with the following timeline: Deposits and withdrawals of COCOS will be suspended at 2021/01/18 10:00 PM (UTC).
+      · Trading will be halted in all existing COCOS trading pairs (COCOS/BNB and COCOS/USDT) at 2021/01/19 02:00 AM (UTC) and the trading pairs will also subsequently be delisted from the exchange.
+      · We will take an immediate snapshot of all COCOS balances at the same time (2021/01/19 02:00 AM UTC) and begin swapping the old COCOS tokens with the new COCOS tokens at a ratio of 1,000:1.
+      · New COCOS tokens will assume the COCOS ticker.
+      · Trading will then open for the new COCOS/BNB and COCOS/USDT trading pairs at 2021/01/23 02:00 AM (UTC).
+#103 (= #51) 2021-01-18 Binance Will Support the Cocos-BCX (COCOS) 1,000:1 Redenomination Plan
+# 18 2021-02-08 Binance Will Support the Bounce (BOT) Token Migration & Redenomination Plan | usdt=[]
+      · Fellow Binancians, Binance will support the Bounce (BOT) token migration & redenomination plan, during which BOT tokens will be exchanged for new AUCTION tokens.
+      · All BOT tokens held in users’ accounts will be swapped into AUCTION tokens at a swap ratio of 1:100.
+      · For more information, please refer to the following: Bounce Token Migration has started!
+#  4 2021-02-20 Binance Will Initiate the Bounce (BOT) Token Migration & Redenomination Plan | usdt=[]
+      · Fellow Binancians, Binance will initiate the Bounce (BOT) to Auction (AUCTION) token migration & redenomination plan.
+      · Further details about this change are shown on the timeline below: At 2021-02-21 03:00 AM (UTC), we will suspend BOT deposits and withdrawals.
+      · At 2021-02-21 06:00 AM (UTC), we will halt trading for all BOT trading pairs, and the trading pairs will also subsequently be delisted from the exchange.
+      · We will recover all BOT balances and begin the distribution of AUCTION to all eligible users at a ratio of 1 BOT = 100 AUCTION.
+      · Deposits for AUCTION will be opened starting at 2021-02-25 4:00 AM (UTC).
+      · At 2021-02-25 06:00 AM (UTC), we will open trading for the AUCTION/BTC and AUCTION/BUSD pairs.
+      · Withdrawals for AUCTION will be opened starting at 2021-02-25 7:00 AM (UTC).
+      · Thereafter, users will be able to use the convert function to swap their BOT for AUCTION tokens.
+      · AUCTION contract address: 0xa9b1eb5908cfc3cdf91f9b8b3a74108598009096 For further information on the ticker change, please refer to Bounce Token Migration Has Started (Important Notice) , Binance Will Support the Bounce (BOT) Token Migration & Redenomination Plan Risk warning : Cryptocurrency trading
+# 10 2021-03-11 Binance Will Support the BTC Standard Hashrate Token (BTCST) 1:10 Redenomination Plan | usdt=['BTCSTUSDT']
+      · Fellow Binancians, Binance will support the BTC Standard Hashrate Token (BTCST) 1:10 Redenomination Plan, with the following timeline: Deposits and withdrawals of BTCST will be suspended at 2021-03-15 02:00 AM (UTC).
+      · At 2021-03-12 02:00 AM (UTC), we will conduct an automatic settlement and cancel all pending orders, and then delist BTCST/BTC, BTCST/BUSD, and BTCST/USDT isolated margin trading pairs.
+      · Binance Futures will conduct an automatic settlement and cancel all pending orders on BTCST/ USDT contract, and then delist this contract at 2021-03-12 02:00 AM (UTC).
+      · Please refer to the Delisting Process of A Futures Contract for more details.
+      · Trading will be halted in all existing BTCST trading pairs (BTCST/BTC, BTCST/BUSD and BTCST/USDT) at 2021-03-15 07:00 AM (UTC) and pending trade orders will be cancelled.
+      · We will then swap the old BTCST tokens with the new BTCST tokens at a ratio of 1:10.
+      · New BTCST tokens will assume the BTCST ticker.
+      · Deposits and withdrawals of BTCST will be resumed at 2021-03-19 06:00 AM (UTC).
+      · Trading will then open for the new BTCST/BTC, BTCST/BUSD and BTCST/USDT spot trading pairs at 2021-03-19 07:00 AM (UTC).
+# 44 2021-03-13 Binance Will Support the Loom Network (LOOM) Contract Swap/Upgrade | usdt=[]
+      · Deposits and withdrawals of LOOM will be suspended starting from 2021-03-14 02:00 PM (UTC), at which point we will begin the smart contract swap/upgrade.
+      · Following this, users will be able to use the convert function to swap their Old LOOM (LOOMOLD) for New LOOM tokens (LOOM).
+# 46 2021-03-16 Binance Has Completed the Tellor Tributes (TRB) Contract Swap | usdt=[]
+      · Please note: New TRB smart contract address: 0x88dF592F8eb5D7Bd38bFeF7dEb0fBc02cf3778a0 For further information from the TRB team on the contract swap, please refer to: TRB Migration Risk warning : Cryptocurrency trading is subject to high market risk.
+# 96 (= #46) 2021-03-16 Binance Has Completed the Tellor Tributes (TRB) Contract Swap
+#105 2021-03-19 Binance Will Support the DREP (DREP) 100:1 Redenomination Plan | usdt=['DREPUSDT']
+      ·  2021-03-19 08:08 Fellow Binancians, Binance will support the DREP (DREP) token swap & redenomination plan, with the following timeline: Please note: Deposits and withdrawals of DREP will be suspended at 2021-03-22 00:00 (UTC).
+      · Trading will be halted in all existing DREP trading pairs (DREP/BTC and DREP/USDT) at 2021-03-22 04:00 (UTC) and pending orders will be cancelled.
+      · We will swap the old DREP tokens with the new DREP tokens at a ratio of 100:1.
+      · New DREP tokens will assume the DREP ticker.
+      · Trading will then open for the new DREP/BTC and DREP/USDT trading pairs at 2021-03-26 04:00 (UTC).
+      · Following which, users will be able to use the convert function to swap their old DREP (DREPOLD) for new DREP tokens (DREP).
+# 19 2021-03-19 Binance Will Support the DREP (DREP) 100:1 Redenomination Plan | | usdt=['DREPUSDT']
+      ·  Exchange Blockchain and crypto asset exchange Academy Blockchain and crypto education Broker Trading terminal solutions Charity Charity Cloud Enterprise exchange solutions DEX Fast and secure decentralized digital asset exchange Labs Incubator for top blockchain projects Launchpad Token Launch Plat
+      · Leveraged Tokens Enjoy increased leverage without risk of liquidation Battle New Battle to Win, Long vs Short Derivatives Binance Earn One-stop Investment Solution Binance Pool Mine more rewards by connecting to the pool Binance Visa Card New Convert and pay with crypto worldwide Crypto Loans Get an
+      · Trading will be halted in all existing DREP trading pairs (DREP/BTC and DREP/USDT) at 2021-03-22 04:00 (UTC) and pending orders will be cancelled.
+      · We will swap the old DREP tokens with the new DREP tokens at a ratio of 100:1.
+      · New DREP tokens will assume the DREP ticker.
+      · Trading will then open for the new DREP/BTC and DREP/USDT trading pairs at 2021-03-26 04:00 (UTC).
+      · Following which, users will be able to use the convert function to swap their old DREP (DREPOLD) for new DREP tokens (DREP).
+# 30 2021-03-22 Updates to the DREP (DREP) 100:1 Redenomination Plan | | usdt=['DREPUSDT']
+      ·  Exchange Blockchain and crypto asset exchange Academy Blockchain and crypto education Broker Trading terminal solutions Charity Charity Cloud Enterprise exchange solutions DEX Fast and secure decentralized digital asset exchange Labs Incubator for top blockchain projects Launchpad Token Launch Plat
+      · Leveraged Tokens Enjoy increased leverage without risk of liquidation Battle New Battle to Win, Long vs Short Derivatives Binance Earn One-stop Investment Solution Binance Pool Mine more rewards by connecting to the pool Binance Visa Card New Convert and pay with crypto worldwide Crypto Loans Get an
+      · Deposits and withdrawals of DREP will be suspended at 2021-03-29 00:00 (UTC).
+      · Trading will be halted in all existing DREP trading pairs (DREP/BTC and DREP/USDT) at 2021-03-29 04:00 (UTC) and pending orders will be cancelled.
+      · Trading will then open for the new DREP/BTC and DREP/USDT trading pairs at 2021-04-02 04:00 (UTC).
+      · For more information, please refer to the following: Binance Will Support the DREP (DREP) 100:1 Redenomination Plan Risk warning : Cryptocurrency trading is subject to high market risk.
+# 37 2021-03-26 Binance To Initiate Dock (DOCK) Mainnet Token Swap | usdt=[]
+      · Binance will handle all technical requirements involved for all users holding DOCK in their Binance accounts, with the following timeline: Deposits and withdrawals of DOCK will be suspended starting from 2021-03-28 01:00 AM (UTC), which we will then begin the mainnet swap.
+      · For further information please refer to: Dock Token Migration: Part 1 Dock Token Migration: Part 2 - Incentives Dock Token Migration: Part 3 - Timing, exchanges and wallets Token Migration Update Binance Will Support the Dock (DOCK) Mainnet Swap Risk warning : Cryptocurrency trading is subject to hi
+#100 (= #37) 2021-03-26 Binance To Initiate Dock (DOCK) Mainnet Token Swap
+# 27 2021-03-31 Binance Will Support the Pundi X (NPXS) Token Migration & Redenomination Plan | | usdt=['NPXSUSDT', 'PUNDIXUSDT']
+      ·  Exchange Blockchain and crypto asset exchange Academy Blockchain and crypto education Broker Trading terminal solutions Charity Charity Cloud Enterprise exchange solutions DEX Fast and secure decentralized digital asset exchange Labs Incubator for top blockchain projects Launchpad Token Launch Plat
+      · Leveraged Tokens Enjoy increased leverage without risk of liquidation Battle New Battle to Win, Long vs Short Derivatives Binance Earn One-stop Investment Solution Binance Pool Mine more rewards by connecting to the pool Binance Visa Card New Convert and pay with crypto worldwide Crypto Loans Get an
+      · Further details about this change are shown on the timeline below: At 2021-04-01 02:00 (UTC), Binance will suspend NPXS/USDT isolated margin borrowing.
+      · At 2021-04-03 02:00 (UTC), we will conduct an automatic settlement and cancel all pending orders, and then delist NPXS/USDT isolated margin trading pair.
+      · Deposits and withdrawals of NPXS will be suspended at 2021-04-05 00:00 (UTC).
+      · Binance will delist all existing NPXS trading pairs (NPXS/ETH and NPXS/USDT) at 2021-04-05 04:00 (UTC) and pending trade orders will be cancelled.
+      · We will recover all NPXS balances and begin the distribution of PUNDIX to all eligible users at a ratio of 1,000 NPXS = 1 PUNDIX.
+      · Trading will then open for PUNDIX/ETH and PUNDIX/USDT spot trading pairs at 2021-04-09 04:00 (UTC).
+      · Thereafter, users will be able to use the convert function to swap their NPXS for PUNDIX tokens.
+#  0 2021-04-02 Binance Has Completed the DREP (DREP) 100:1 Redenomination Plan | usdt=[]
+      · Fellow Binancians, Binance has completed the DREP (DREP) 100:1 redenomination plan and has also opened deposits and withdrawals for DREP.
+      · For more information, please refer to the following: Binance Will Support the DREP (DREP) 100:1 Redenomination Plan Updates to the DREP (DREP) 100:1 Redenomination Plan Risk warning : Cryptocurrency trading is subject to high market risk.
+# 92 (= #0) 2021-04-02 Binance Has Completed the DREP (DREP) 100:1 Redenomination Plan
+# 36 2021-04-07 Binance Has Completed the Dock (DOCK) Mainnet Swap | usdt=[]
+# 12 2021-04-09 Binance Has Completed Pundi X (NPXS) Token Migration & Redenomination Plan | | usdt=[]
+      ·  Exchange Blockchain and crypto asset exchange Academy Blockchain and crypto education Broker Trading terminal solutions Charity Charity Cloud Enterprise exchange solutions DEX Fast and secure decentralized digital asset exchange Labs Incubator for top blockchain projects Launchpad Token Launch Plat
+      · Leveraged Tokens Enjoy increased leverage without risk of liquidation Battle New Battle to Win, Long vs Short Derivatives Binance Earn One-stop Investment Solution Binance Pool Mine more rewards by connecting to the pool Binance Visa Card New Convert and pay with crypto worldwide Crypto Loans Get an
+      · Please note: Users will be able to use the convert function to swap their NPXS for PUNDIX tokens.
+      · For more information, please refer to the following: Binance Will Support the Pundi X (NPXS) Token Migration & Redenomination Plan Risk warning : Cryptocurrency trading is subject to high market risk.
+# 45 2021-04-21 Binance Will Support the SONM (SNM) 10:1 Redenomination Plan | | usdt=[]
+      ·  Exchange Blockchain and crypto asset exchange Academy Blockchain and crypto education Broker Trading terminal solutions Charity Charity Cloud Enterprise exchange solutions DEX Fast and secure decentralized digital asset exchange Labs Incubator for top blockchain projects Launchpad Token Launch Plat
+      · Leveraged Tokens Enjoy increased leverage without risk of liquidation Battle New Battle to Win, Long vs Short Derivatives Binance Earn One-stop Investment Solution Binance Pool Mine more rewards by connecting to the pool Binance Visa Card New Convert and pay with crypto worldwide Crypto Loans Get an
+      · Please note: Deposits and withdrawals of SNM will be suspended at 2021-04-26 00:00 (UTC).
+      · Trading in the existing SNM trading pair (SNM/BTC) will be halted, the trading pair will be delisted, and pending orders will be cancelled at 2021-04-26 04:00 (UTC).
+      · We will swap the old SNM tokens with the new SNM tokens at a ratio of 10:1.
+      · New SNM tokens will assume the SNM ticker.
+      · Trading will then open for the new SNM/BTC trading pair at 2021-04-30 04:00 (UTC).
+      · New ERC20 and BEP20 SNM smart contracts: ERC20: 0x46d0DAc0926fa16707042CAdC23F1EB4141fe86B BEP20: 0x46d0DAc0926fa16707042CAdC23F1EB4141fe86B After 2021-04-26 0:00 AM (UTC), Binance will not support the deposit of SONM (SNM) using the old contract and any old SONM (SNM) tokens deposited after this ti
+      · For more information, please refer to the following: SONM (SNM) Token Upgrade and Redenomination Plan Risk warning : Cryptocurrency trading is subject to high market risk.
+#  7 2021-04-26 Binance Will Support the IOTA (IOTA) Token Migration to the Chrysalis Network | | usdt=[]
+      ·  Exchange Blockchain and crypto asset exchange Academy Blockchain and crypto education Broker Trading terminal solutions Charity Charity Cloud Enterprise exchange solutions DEX Fast and secure decentralized digital asset exchange Labs Incubator for top blockchain projects Launchpad Token Launch Plat
+      · Leveraged Tokens Enjoy increased leverage without risk of liquidation Battle New Battle to Win, Long vs Short Derivatives Binance Earn One-stop Investment Solution Binance Pool Mine more rewards by connecting to the pool Binance Visa Card New Convert and pay with crypto worldwide Crypto Loans Get an
+      · After 2021-04-26 01:00 PM (UTC), Binance will not support any IOTA deposits or withdrawals on the Legacy Network.
+      · A further announcement will be posted once IOTA migration is completed to notify users of the opening time for IOTA deposits & withdrawals.
+      · For further information, please refer to the original announcements: The Chrysalis Token Migration Starts Now!
+      · Firefly Token Migration Risk warning : Cryptocurrency trading is subject to high market risk.
+# 11 2021-04-26 Notice Regarding the Upcoming EASY Hard Fork and Token Swap to EZ | usdt=[]
+      · Binance will follow EASY’s hard fork & token swap plan with a timeline as shown below: At 2021-04-27 00:00 (UTC), Binance Staking will delist EASY tokens, and users will be refunded their staked EASY tokens to the spot wallets.
+      · At 2021-04-27 04:00 (UTC), Binance will halt trading for and subsequently delist all EASY trading pairs (EASY/BTC, EASY/ETH), and pending orders will be cancelled .
+      · At 2021-04-27 04:10 (UTC), Binance will take a snapshot of user holdings and distribute new EZ tokens to all eligible EASY token holders at the ratio of 1 EASY = 1 EZ.
+      · According to the EASY team’s announcement, Binance will only credit tokens deposited before Ethereum block height 12,276,665 (2021-04-20 11:09:55 (UTC)) and BSC block height 6,729,137 (2021-04-20 11:09:59 UTC) until the token swap has been completed.
+      · The deposited EASY tokens will be swapped for the new EZ tokens at a ratio of 1 EASY = 1 EZ.
+      · At 2021-04-30 06:00 (UTC), Binance will open trading for EZ/BTC and EZ/ETH trading pairs Please note: A separate announcement will be posted after the token distribution is complete; the opening time for EZ deposits and withdrawals, as well as EASY withdrawals will be announced at the same time.
+#121 (= #11) 2021-04-26 Notice Regarding the Upcoming EASY Hard Fork and Token Swap to EZ
+# 50 2021-04-30 Binance Has Completed SONM (SNM) Token Migration & Redenomination Plan | usdt=[]
+      · Fellow Binancians, Binance has completed the SONM (SNM) 10:1 redenomination plan .
+      · Please note: Binance had ceased support ofSONM (SNM) deposit using the old contract at 2021-04-26 0:00 AM (UTC) and any old SONM (SNM) tokens deposited after this time will not be credited to your account or converted to new SONM (SNM).
+      · For more information, please refer to the following: Binance Will Support the SONM (SNM) 10:1 Redenomination Planination Plan Risk warning : Cryptocurrency trading is subject to high market risk.
+# 15 2021-04-30 Updates to the EASY Hard Fork and Token Migration Plan | usdt=[]
+      · In view of this change, Binance will postpone the opening of EZ/BTC and EZ/ETH markets till 2021-04-30 08:00 (UTC).
+# 16 2021-05-12 Binance Will Support the Kyber Network (KNC) Contract Swap | usdt=[]
+      · Fellow Binancians, Binance will support the Kyber Network (KNC) contract swap plan, with the following timeline: Deposits and withdrawals of KNC will be suspended at 2021-05-17 02:00 AM (UTC).
+      · Following which, users will be able to use the convert function to swap their old KNC (KNCL) for new KNC tokens (KNC).
+      · New KNC smart contract address: 0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202 For further information, please refer to the following: KNC Token Migration Guide Risk warning : Cryptocurrency trading is subject to high market risk.
+# 40 2021-05-19 Binance Will Support the Axie Infinity (AXS) & Smooth Love Potion (SLP) Contract Swap | usdt=[]
+      · Fellow Binancians, Binance will support the Axie Infinity (AXS) & Smooth Love Potion (SLP) contract swap plans, with the following timeline: Deposits and withdrawals of AXS & SLP will be suspended at 2021-05-24 02:00 AM (UTC).
+      · Following which, users will be able to use the convert function to swap their old AXS & SLP for new AXS & SLP tokens.
+      · New AXS smart contract address: 0xbb0e17ef65f82ab018d8edd776e8dd940327b28b New SLP smart contract address: 0xCC8Fa225D80b9c7D42F96e9570156c65D6cAAa25 For further information, please refer to the following: The Great Migration- Ronin Phase 2 is live!
+# 20 2021-05-26 Binance Will Support the SingularityNET (AGI) Hard Fork and Token Migration Plan | usdt=[]
+      · Fellow Binancians, Binance will support the SingularityNET (AGI) hard fork and token migration plan.
+      · Please note: Deposits and withdrawals of AGI will be suspended at 2021-05-28 05:00 (UTC).
+      · Trading in the existing AGI trading pair (AGI/BTC) will be halted, the trading pair will be delisted, and pending orders will be cancelled at 2021-05-28 07:00 (UTC).
+      · A snapshot of user holdings will be taken at 2021-05-28 08:00 (UTC).
+      · Binance will tabulate all AGI balances and begin the distribution of AGIX to all eligible users at a ratio of 1 AGI = 1 AGIX.
+      · Trading will then open for the new AGIX/BTC trading pair at 2021-06-02 08:00 (UTC).
+      · Binance will make a separate announcement after the hard fork and token migration is complete to notify users when deposits and withdrawals of AGIX will open.
+      · ( Vote results here ) After the token migration is executed, existing token holdings could potentially be diluted by up to 50% if no action is taken.
+# 43 2021-05-31 Binance Has Completed the Axie Infinity (AXS) & Smooth Love Potion (SLP) Contract Swap | usdt=[]
+      · Please note: Users will be able to use the convert function to swap their old AXS (AXSOLD) and old SLP (SLPOLD) for new AXS and SLP tokens.
+# 52 2021-06-08 Binance Will Support the SUN (SUN) Token Migration & Redenomination Plan | usdt=['SUNUSDT']
+      · Fellow Binancians, Binance will support the SUN (SUN) token migration & 1:1,000 redenomination plan.
+      · Further details about this change are shown on the timeline below: At 2021-06-09 02:00 (UTC), Binance will suspend SUN/BTC, SUN/USDT isolated margin borrowing.
+      · At 2021-06-11 02:00 (UTC), Binance will conduct an automatic settlement and cancel all pending orders, and then delist SUN/BTC, SUN/USDT isolated margin trading pairs.
+      · Withdrawal of SUN (BEP20) will be suspended at 2021-06-11 00:00 (UTC).
+      · Deposits of SUN, and withdrawals of SUN on other networks will be suspended at 2021-06-14 00:00 (UTC).
+      · Binance will delist all existing SUN spot trading pairs (SUN/BTC and SUN/USDT) at 2021-06-14 04:00 (UTC) and pending trade orders will be cancelled.
+      · Binance will recover all SUN balances and begin the distribution of new SUN to all eligible users at a ratio of 1 SUN (Old) = 1,000 SUN (New).
+      · After the token migration, the old SUN tokens will be renamed as SUNOLD, and the new SUN tokens will assume the SUN ticker with a new logo.
+      · Trading will then open for SUN/USDT spot trading pair at 2021-06-18 04:00 (UTC).
+# 49 2021-06-08 The SingularityNET (AGI) Hard Fork and Token Migration Is Now Complete | usdt=[]
+      · Fellow Binancians, The SingularityNET (AGI) hard fork and token migration is now complete.
+      · Deposits and withdrawals for AGIX (new ticker after migration) are now open.
+      · Please note: Trading in the AGI trading pair (AGI/BTC) has been halted, and the trading pair has been delisted and replaced with AGIX/BTC.
+      · AGIX smart contract address: ERC20: 0x5B7533812759B45C2B44C19e320ba2cD2681b542 For further information, please refer to the following: Binance Will Support the SingularityNET (AGI) Hard Fork and Token Migration Plan AGI Hard Fork took place May 28!
+# 22 2021-06-18 Binance Will Support the Spartan Protocol (SPARTA) Contract Swap | usdt=[]
+      · Fellow Binancians, Binance will support the Spartan Protocol (SPARTA) contract swap plan, with the following timeline: On 2021-06-22 (UTC) , Binance will convert all SPARTA v1 holdings to SPARTA v2 tokens for all eligible SPARTA v1 token holders at the ratio of 1:1.
+# 14 2021-07-16 Ceasing Support for Stock Tokens on Binance.com and Migration to CM-Equity AG for EEA Users | usdt=[]
+      · Effective immediately, stock tokens are unavailable for purchase on Binance.com, and Binance.com will no longer support any stock tokens after 2021-10-14 19:55 (UTC).
+      · Users will no longer be able to manually sell or close their positions after 2021-10-14 19:55 (UTC).
+      · Thereafter all stock token positions on Binance.com will be closed at 2021-10-15 13:30 (UTC).
+      · Please note that the closing prices will be based on actual executed prices after the market opens for trading at 2021-10-15 13:30 (UTC), and may differ from the market prices from the previous day.
+#119 (= #14) 2021-07-16 Ceasing Support for Stock Tokens on Binance.com and Migration to CM-Equity AG for EEA Users
+# 21 2021-07-30 Binance Will Initiate the Bitcoin Cash ABC (BCHA) Rebrand to eCash (XEC) & Redenomination Plan | usdt=[]
+      · Fellow Binancians, Binance will initiate the Bitcoin Cash ABC (BCHA) rebranding & redenomination plan.
+      · Further details are shown below: At 2021-08-02 04:00 (UTC), we will halt trading for the BCHA trading pair (BCHA/BUSD), and the trading pair will also subsequently be delisted from the exchange.
+      · We will recover all BCHA balances and begin the distribution of eCash (XEC) to all eligible users at a ratio of 1 BCHA = 1,000,000 XEC.
+      · At 2021-08-06 04:00 (UTC), we will open trading for the XEC/BUSD spot trading pair.
+      · For further information, please refer to the following: Binance Will Support the Bitcoin Cash ABC (BCHA) Rebrand to eCash (XEC) & Redenomination Plan Risk warning : Cryptocurrency trading is subject to high market risk.
+#  9 2021-08-10 Binance Will Support the Voyager Token (BQX) Token Swap to Voyager Token (VGX) | usdt=[]
+      · Further details about this change are shown on the timeline below: At 2021-08-11 04:00 (UTC), Binance will suspend BQX/BTC isolated margin borrowing.
+      · At 2021-08-13 04:00 (UTC), we will conduct an automatic settlement and cancel all pending orders, and then delist the BQX/BTC isolated margin trading pair.
+      · Deposits and Withdrawals of Voyager Token (BQX) will be suspended at 2021-08-16 02:00 (UTC).
+      · Binance will delist all existing BQX spot trading pairs (BQX/BTC and BQX/ETH) at 2021-08-16 04:00 (UTC) and pending trade orders will be canceled.
+      · We will recover all BQX balances, and begin the distribution of VGX to all eligible users at a ratio of 1 BQX = 1 VGX before VGX listing.
+      · Trading will then open for VGX/BTC and VGX/ETH spot trading pairs at 2021-08-20 04:00 (UTC).
+      · Deposits and withdrawals for VGX will be opened at 2021-08-20 08:00 (UTC).
+#  3 2021-08-17 Binance Has Completed the Bitcoin Cash ABC (BCHA) Rebrand to eCash (XEC) & Redenomination Plan | usdt=[]
+      · Fellow Binancians, Binance has completed the Bitcoin Cash ABC (BCHA) rebrand to eCash (XEC) and redenomination, and has also opened deposits and withdrawals for XEC.
+      · For further information, please refer to the following: Binance Will Initiate the Bitcoin Cash ABC (BCHA) Rebrand to eCash (XEC) & Redenomination Plan Risk warning: Cryptocurrency trading is subject to high market risk.
+# 90 (= #3) 2021-08-17 Binance Has Completed the Bitcoin Cash ABC (BCHA) Rebrand to eCash (XEC) & Redenomination Plan
+# 53 2021-08-27 Binance Will Support the Streamr (DATA) Token Migration Plan | usdt=[]
+      · Fellow Binancians, Binance will support the Streamr (DATA) token migration plan.
+      · Further details are shown as below: The trading of DATA will not be affected during the migration.
+      · Deposits and withdrawals of DATA will be suspended at 2021-08-30 02:00 (UTC).
+      · After the token migration, the old DATA tokens deposited will be renamed as XDATA, and the new DATA tokens will assume the DATA ticker with a new logo.
+      · All eligible user balances will be converted to the new DATA at a ratio of 1 XDATA = 1 DATA once the migration is completed.
+      · Thereafter, users will be able to use the convert function to swap their newly deposited XDATA for DATA tokens.
+      · Token Migration Risk warning : Cryptocurrency trading is subject to high market risk.
+# 38 2021-08-30 Binance Will Support the Paxos Standard (PAX) Rebrand to Pax Dollar (USDP) | usdt=['PAXUSDT', 'USDPUSDT']
+      · Fellow Binancians, Binance will support the Paxos Standard (PAX) rebrand to Pax Dollar (USDP).
+      · Further details about this change are shown below: Please note: At 2021-09-06 02:00 (UTC), we will suspend PAX deposits and withdrawals.
+      · At 2021-09-06 04:00 (UTC), we will halt trading for all PAX trading pairs (BTC/PAX, ETH/PAX, BNB/PAX, PAX/USDT, PAX/BUSD), and the trading pairs will also subsequently be delisted from the exchange.
+      · We will then take a snapshot of all PAX balances and begin the distribution of USDP to all eligible users a t a ratio of 1 PAX = 1 USDP.
+      · At 2021-09-10 04:00 (UTC), we will open trading for the new BTC/USDP, ETH/USDP, BNB/USDP, USDP/USDT, and USDP/BUSD .
+# 39 2021-09-06 Binance Has Completed the Streamr (DATA) Token Migration | usdt=[]
+      · Fellow Binancians, Binance has completed the token migration for Streamr (DATA) and has also opened deposits and withdrawals for DATA.
+      · Please note: The old DATA tokens deposited will be renamed as XDATA, and the new DATA tokens will assume the DATA ticker with a new logo.
+      · Users will be able to use the convert function to swap their newly deposited XDATA for DATA tokens.
+      · New DATA contract address: 0x8f693ca8d21b157107184d29d398a8d082b38b76 For further information, please refer to Binance Will Support the Streamr (DATA) Token Migration Plan .
+# 25 2021-09-13 Binance Has Completed the Paxos Standard (PAX) Rebrand to Pax Dollar (USDP) | usdt=[]
+      · Fellow Binancians, Binance has completed the Paxo Standard (PAX) rebrand to Pax Dollar (USDP), and has also opened deposits and withdrawals of Pax Dollar (USDP) for Ethereum network (ERC20).
+      · For further information, please refer to the following: Binance Will Support the Paxos Standard (PAX) Rebrand to Pax Dollar (USDP) Risk warning: Cryptocurrency trading is subject to high market risk.
+# 13 2021-09-14 Binance Has Completed the IOTA (IOTA) Token Migration to the Chrysalis Network | usdt=[]
+      · Fellow Binancians, Binance has completed the IOTA (IOTA) token migration to the Chrysalis Network, and has also opened deposits and withdrawals for IOTA.
+      · For further information, please refer to the following: Binance Will Support the IOTA (IOTA) Token Migration to the Chrysalis Network Risk warning: Cryptocurrency trading is subject to high market risk.
+# 29 2021-10-14 Binance Will Support the Blox (CDT) Rebrand to ssv.network (SSV) & Redenomination Plan | usdt=[]
+      · Fellow Binancians, Binance will support the Blox (CDT) rebrand to ssv.network (SSV) & 100:1 redenomination plan.
+      · Further details about this change are shown on the timeline below: Deposit and withdrawal of CDT (ERC20) will be suspended at 2021-10-18 02:00 (UTC).
+      · Binance will delist all existing CDT spot trading pairs (CDT/BTC and CDT/ETH) at 2021-10-18 04:00 (UTC) and pending trade orders will be cancelled.
+      · Binance will recover all CDT balances and begin the distribution of SSV to all eligible users at a ratio of 100 CDT = 1 SSV.
+      · After the token migration, the CDT tokens will be renamed as SSV, and the SSV tokens will come with a new logo.
+      · Trading will then open for SSV/BTC and SSV/ETH spot trading pairs at 2021-10-22 04:00 (UTC).
+      · Thereafter, users will be able to use the convert function to swap their CDT (ERC20) for SSV (ERC20) tokens.
+# 23 2021-10-22 The Blox (CDT) Rebrand to ssv.network (SSV) & Redenomination Is Now Complete | usdt=[]
+      · Fellow Binancians, The Blox (CDT) rebrand to ssv.network (SSV) and 100:1 redenomination is now complete.
+      · Please note: Users will be able to use the convert function to swap their newly deposited CDT (ERC20) for SSV (ERC20) tokens.
+      · SSV (ERC20) contract address: 0x9D65fF81a3c488d585bBfb0Bfe3c7707c7917f54 For more information, please refer to the following: Binance Will Support the Blox (CDT) Rebrand to ssv.network (SSV) & Redenomination Plan Risk warning : Cryptocurrency trading is subject to high market risk.
+#122 (= #23) 2021-10-22 The Blox (CDT) Rebrand to ssv.network (SSV) & Redenomination Is Now Complete
+# 93 2021-12-17 Binance Has Completed the LTO Network (LTO) Contract Swap | usdt=[]
+      ·  2021-12-17 03:19 Fellow Binancians, Binance has completed the LTO Network (LTO) contract swap plan in the Ethereum network (ERC20).
+      · Users can use the convert function to swap their old LTO (LTOOLD) deposits for new LTO tokens (LTO).
+#113 2022-01-24 Binance Will Support the Reserve Rights (RSR) Contract Swap | usdt=['RSRUSDT']
+      ·  2022-01-24 06:57 Fellow Binancians, Binance will support the Reserve Rights (RSR) contract swap with the timeline below: Binance had suspended RSR/BUSD, RSR/USDT and RSR/BTC isolated margin borrowing at 2022-01-12 02:00 (UTC).
+      · Deposits and withdrawals of RSR were suspended at 2022-01-13 23:00 (UTC).
+#102 2022-03-24 Binance Will Support the Anyswap (ANY) Token Migration and Renaming Plan | usdt=['ANYUSDT', 'MULTIUSDT']
+      ·  2022-03-24 10:00 Fellow Binancians, Binance will support the Anyswap (ANY) token migration and renaming plan.
+      · The Anyswap (ANY) token will be renamed to Multichain (MULTI).
+      · Further details about this change are shown on the timeline below: At 2022-03-25 08:00 (UTC), Binance will suspend ANY/USDT, ANY/BUSD and ANY/BTC isolated margin borrowing.
+      · At 2022-03-29 08:00 (UTC), Binance will close all ANY margin positions, conduct an automatic settlement and cancel all pending ANY margin orders, and then delist ANY/USDT, ANY/BUSD and ANY/BTC isolated margin trading pairs.
+      · Binance will delist all existing ANY spot trading pairs (ANY/BTC, ANY/BUSD, and ANY/USDT) at 2022-03-30 04:00 (UTC) and all pending spot trade orders will be cancelled.
+      · Deposits and withdrawals of ANY will be suspended at 2022-03-30 04:30 (UTC).
+      · Deposits of ANY that come in after 2022-03-30 04:30 (UTC) will only be reflected after the migration is complete.
+      · Binance will recover all ANY balances and begin the distribution of MULTI to all eligible users at a ratio of 1 ANY = 1 MULTI.
+      · After the token migration, the old ANY tokens’ ticker will remain as ANY, and the new tokens’ ticker will be MULTI.
+# 42 2022-04-07 Binance Has Completed the Anyswap (ANY) Token Migration and Renaming Plan | usdt=[]
+      ·  2022-04-07 06:05 Fellow Binancians, Binance has completed the Anyswap (ANY) token migration and renaming to Multichain (MULTI).
+      · The distribution of MULTI was conducted at a ratio of 1 ANY = 1 MULTI.
+      · Please note: The Convert function will not be available for users to swap their ANY tokens to MULTI tokens.
+      · MULTI (BEP20) contract address: 0x9fb9a33956351cf4fa040f65a13b835a3c8764e3 For more information, please refer to the following: Binance Will Support the Anyswap (ANY) Token Migration and Renaming Plan Risk warning : Cryptocurrency trading is subject to high market risk.
+# 94 2022-04-20 Binance Has Completed the Mainnet Swap of ERC20 Injective Protocol (INJ) | usdt=[]
+      ·  2022-04-20 06:10 Fellow Binancians, Binance has completed the mainnet swap of ERC20 Injective Protocol (INJ).
+      · The distribution of mainnet Injective Protocol (INJ) tokens was conducted at a ratio of 1:1.
+      · Please note: The Convert function will not be available for users to swap their ERC20 INJ tokens to mainnet INJ tokens.
+#116 2022-04-29 Binance Will Support the TerraUSD (UST) Contract Swap | usdt=[]
+      ·  2022-04-29 09:12 Fellow Binancians, Binance has been supporting the deposits and withdrawals of UST (Shuttle) via BNB Smart Chain (BEP20), Ethereum network (ERC20) and Polygon network.
+      · We will execute a contract swap of UST (Shuttle) for UST (Wormhole) with the following timeline: Deposits and withdrawals of UST (Shuttle) via BNB Smart Chain (BEP20), Ethereum network (ERC20) and Polygon network will be suspended on 2022-05-09 at 02:00 (UTC).
+      · Spot and Margin trading for UST, as well as the Convert function and relevant services on Binance Earn for UST, will not be affected during the contract swap.
+      · After the contract swap, UST (Shuttle) will be renamed as WUST , and UST (Wormhole) will assume the UST ticker with the same logo.
+# 34 2022-06-02 Binance Will Support the Mainnet Swap of BEP2 THORChain (RUNE) | usdt=[]
+      ·  2022-06-02 09:09 Fellow Binancians, Binance will support the THORChain (RUNE) token swap from BEP2 network to its mainnet.
+      · The conversion to mainnet THORChain (RUNE) tokens will be conducted at a ratio of 1:1.
+      · Deposits and Withdrawals: At 2022-06-06 04:00 (UTC), deposits and withdrawals of BEP2 RUNE tokens will be suspended.
+#107 (= #34) 2022-06-02 Binance Will Support the Mainnet Swap of BEP2 THORChain (RUNE)
+# 95 2022-06-15 Binance Has Completed the Mainnet Swap of BEP2 THORChain (RUNE) | usdt=[]
+      ·  2022-06-15 03:35 Fellow Binancians, Binance has completed the mainnet swap of BEP2 THORChain (RUNE).
+      · The conversion to mainnet THORChain (RUNE) tokens was conducted at a ratio of 1:1.
+#110 2022-09-26 Binance Will Support the Polymath (POLY) Mainnet Swap and Rebranding Plan to Polymesh (POLYX) | usdt=['POLYUSDT', 'POLYXUSDT']
+      ·  2022-09-26 09:00 Fellow Binancians, Binance will support the Polymath (POLY) mainnet swap and rebranding plan to Polymesh (POLYX).
+      · Timeline: At 2022-09-28 03:00 (UTC), Binance will suspend POLY/USDT, POLY/BUSD, and POLY/BTC isolated margin borrowing.
+      · At 2022-10-05 03:00 (UTC), we will close all POLY margin positions, conduct an automatic settlement and cancel all pending POLY margin orders.
+      · We will then delist the POLY/USDT, POLY/BUSD, and POLY/BTC isolated margin trading pairs.
+      · At 2022-10-10 03:00 (UTC), Binance will delist all existing POLY spot trading pairs (POLY/USDT, POLY/BUSD, and POLY/BTC) and cancel all pending POLY spot trade orders.
+      · POLY balances in Simple Earn Flexible Products will be automatically redeemed and credited to users’ spot wallets before 2022-10-10 03:00 (UTC).
+      · At 2022-10-10 03:30 (UTC), deposits and withdrawals of POLY will be suspended.
+      · At 2022-10-10 08:00 (UTC), Binance will no longer support the creation of POLY Gift Cards.
+      · While users may proceed to redeem any unredeemed POLY Gift Cards for POLY before 2022-10-10 08:00 (UTC), please note that the redeemed tokens will be subject to automatic conversion to POLYX before 2022-10-17 08:00 (UTC).
+#114 2023-03-01 Binance Will Support the Stargate Finance (STG) Contract Swap | usdt=[]
+      ·  2023-03-01 04:00 Fellow Binancians, Binance will support the Stargate Finance (STG) contract swap on the AVAX C-Chain, Arbitrum One, BNB Smart Chain (BEP20), Ethereum (ERC20), Fantom and Polygon networks, with the following timeline: At 2023-03-06 04:00 (UTC), deposits and withdrawals of STG on AVA
+      · For More Information: STG Reissue STG Migration User FAQ 
+#106 2023-05-10 Binance Will Support the Gala (GALA) Contract Swap | usdt=[]
+      ·  2023-05-10 04:30 Fellow Binancians, Binance will support the Gala (GALA) contract swap on the Ethereum (ERC20) network, with the following timeline: At 2023-05-15 15:00 (UTC), deposits and withdrawals of GALA on the Ethereum (ERC20) network will be suspended.
+# 91 2023-06-02 Binance Has Completed the Cocos-BCX (COCOS) Token Swap & Rebranding Plan to COMBO (COMBO) | usdt=[]
+      ·  2023-06-02 08:10 Fellow Binancians, Binance has completed the Cocos-BCX (COCOS) token swap and rebranding plan to COMBO (COMBO) .
+      · Please note: The distribution of COMBO (COMBO) was conducted at a ratio of 1 COCOS = 1 COMBO .
+      · For more information, please refer to the following: Binance Will Support the Cocos-BCX (COCOS) Token Swap & Rebranding Plan to COMBO (COMBO) 
+#117 2023-06-08 Binance Will Support the TrueUSD (TUSD) Contract Swap | usdt=[]
+      ·  2023-06-08 08:20 Fellow Binancians, Binance will support the TrueUSD (TUSD) contract swap on BNB Smart Chain, with the following timeline: At 2023-06-12 08:00 (UTC), deposits and withdrawals of TUSD on BNB Smart Chain (BEP20) will be suspended.
+      · After the contract swap, old TUSD (BEP20) tokens will assume TUSDOLD as the ticker.
+      · Users who deposit TUSDOLD via the old TUSD (BEP20) smart contract will be able to swap these tokens for new TUSD (BEP20) tokens using the convert function .
+      · Please note that deposits and withdrawals of old TUSD (BEP20) tokens will be supported until the end of the Maverick Protocol (MAV) Launchpool (i.e., 2023-07-08 23:59 UTC).
+#112 2023-07-10 Binance Will Support the QuickSwap (QUICK) Token Swap and Redenomination Plan | usdt=['QUICKUSDT']
+      ·  2023-07-10 13:40 Fellow Binancians, Binance will support the QuickSwap (QUICK) token swap and redenomination plan.
+      · Timeline: At 2023-07-11 06:00 (UTC) , Binance Simple Earn will cease support for QUICK Flexible Products, and subscriptions will no longer be available.
+      · For existing subscriptions, QUICK balances in Simple Earn Flexible Products will be automatically redeemed and credited to users’ spot wallets before 2023-07-14 06:00 (UTC) .
+      · Users may also choose to redeem their assets from QUICK Flexible Products anytime before 2023-07-14 06:00 (UTC) .
+      · At 2023-07-11 06:00 (UTC) , Binance will suspend QUICK/USDT cross margin borrowing, as well as QUICK/BTC, QUICK/BUSD and QUICK/USDT isolated margin borrowing.
+      · At 2023-07-13 06:00 (UTC) , Binance will close users’ positions, conduct an automatic settlement and cancel all pending orders on the QUICK/BTC, QUICK/BUSD and QUICK/USDT cross and isolated margin pairs.
+      · We will then delist these pairs from cross margin and isolated margin.
+      · Classic Portfolio Margin users are advised to transfer QUICK out of their Margin Wallet to their Spot Wallet and to top up their margin balance, if required before 2023-07-13 06:00 (UTC) .
+      · Users should monitor the Unified Maintenance Margin Ratio (Uni-MMR) closely to avoid any potential liquidation that may result from the removal of QUICK from the Margin Wallet.
+#108 2023-10-25 Binance Will Support the Merit Circle (MC) Token Swap, Redenomination and Rebranding to Beam (BEAMX) | usdt=['BEAMXUSDT', 'MCUSDT']
+      ·  2023-10-25 05:05 Fellow Binancians, Binance will support the Merit Circle (MC) token swap, redenomination and rebranding to Beam (BEAMX).
+      · General Deposit and Withdrawal At 2023-11-07 03:30 (UTC) , deposits and withdrawals of MC (ERC20 and BEP20) will be suspended.
+      · Rebranding New MC token will assume the ticker of BEAMX on Binance.
+      · Token Swap and Redenomination All MC tokens will be swapped for BEAMX at a ratio of 1 MC = 100 BEAMX .
+      · Spot At 2023-11-07 03:00 (UTC) , Binance will delist all existing MC spot trading pairs (i.e., MC/BTC and MC/USDT) and cancel all pending MC spot trade orders.
+      · Binance will terminate Trading Bots services for the aforementioned spot trading pairs at 2023-11-07 03:00 (UTC) , where applicable.
+      · At 2023-11-14 08:00 (UTC) , trading will open for the BEAMX/USDT spot trading pair.
+      · Margin At 2023-10-26 06:00 (UTC) , Binance will suspend MC/USDT cross margin borrowing, as well as MC/BTC and MC/USDT isolated margin borrowing.
+      · At 2023-11-02 06:00 (UTC) , Binance will close users’ positions, conduct an automatic settlement and cancel all pending orders on the MC/BTC and MC/USDT cross and isolated margin pairs.
+# 97 2023-12-01 Binance Has Completed the Virtua (TVK) Token Swap and Rebranding to Vanar (VANRY) | usdt=[]
+      ·  2023-12-01 09:10 Fellow Binancians, Binance has completed the Virtua (TVK) token swap and rebranding to Vanar (VANRY).
+      · Please note: The distribution was conducted at a ratio of 1 TVK = 1 VANRY.
+      · For more information, please refer to the following: Binance Will Support the Virtua (TVK) Token Swap and Rebranding to Vanar (VANRY) 
+#109 2024-02-22 Binance Will Support the PlayDapp (PLA) Token Swap to PlayDapp (PDA) | usdt=['PDAUSDT', 'PLAUSDT']
+      ·  2024-02-22 05:40 Fellow Binancians, Binance will support the PlayDapp (PLA) token swap to PlayDapp (PDA).
+      · Token Swap PLA tokens will assume the ticker of PDA on Binance ( i.e.
+      · , 1 PLA = 1 PDA ).
+      · Spot At 2024-02-26 03:00 (UTC) , Binance will delist all existing PLA spot trading pairs (i.e., PLA/BTC and PLA/USDT) and cancel all pending PLA spot trade orders.
+      · Binance will terminate Trading Bots services for the aforementioned spot trading pairs at 2024-02-26 03:00 (UTC) , where applicable.
+      · At 2024-03-01 08:00 (UTC) , trading will open for the PDA/BTC and PDA/USDT spot trading pairs.
+      · Earn At 2024-02-23 02:00 (UTC) , Binance Simple Earn will cease support for PLA Simple Earn Flexible Products, and subscriptions will no longer be available.
+      · For existing subscriptions, PLA balances in Simple Earn will be automatically redeemed and credited to users’ Spot Wallets after 2024-02-23 05:00 (UTC) .
+      · Users may also choose to redeem their assets from PLA Flexible Products anytime before 2024-02-23 05:00 (UTC) .
+#115 2024-03-08 Binance Will Support the Stratis (STRAX) Token Swap and Redenomination Plan | usdt=['STRAXUSDT']
+      ·  2024-03-08 08:30 Fellow Binancians, Binance will support the Stratis (STRAX) token swap and redenomination plan.
+      · General Deposits and Withdrawals At 2024-03-20 03:30 (UTC) , deposits and withdrawals of old STRAX tokens will be suspended.
+      · Token Swap and Redenomination All old STRAX tokens will be swapped to new STRAX tokens at a ratio of 1 old STRAX = 10 new STRAX .
+      · Futures Binance Futures will adjust the leverage and margin tiers of the USDⓈ-M STRAXUSDT Perpetual Contract at 2024-03-08 10:30 (UTC) , as per the table below.
+      · Previous Leverage and Margin Tiers New Leverage and Margin Tiers Leverage Before Change Position Before Change (Notional Value in USDT) Maintenance Margin Rate Before Change Leverage After Change Position After Change (Notional Value in USDT) Maintenance Margin Rate After Change 11 - 20x 0 < Positio
+      · At 2024-03-15 09:00 (UTC) , Binance Futures will close all positions, conduct an automatic settlement and cancel all pending orders on the USDⓈ-M STRAXUSDT Perpetual Contract, and delist this contract after the settlement is complete.
+      · Users are advised to close any open positions prior to 2024-03-15 09:00 (UTC) to avoid automatic settlement.
+      · Please refer to the delisting process of futures contracts for more details.
+#118 2024-03-22 BNB Beacon Chain (BEP2) Network Sunset Plan: BEP2 Projects to Bind Their Tokens to BEP20 Network and Complete On-Chain Asset Migration! | usdt=[]
+      ·  2024-03-22 05:53 Fellow Binancians, The BNB Chain team will be completing its sunset of BNB Beacon Chain (BEP2) by June 2024 .
+      · All BEP2 projects are advised to complete the binding process with BNB Smart Chain (BEP20) network and on-chain asset migration from BEP2 network to BEP20 network at their earliest convenience to protect their users.
+      · Over the past few months, the Binance team has been proactively reaching out to all listed projects that have tokens deployed on the BEP2 network to start the binding and on-chain asset migration process.
+      · Please note that the binding and asset migration process will become unavailable once the BEP2 network sunset is complete in June 2024.
+      · Users may refer to this tracker for the latest updates on all relevant projects’ binding and on-chain asset migration status.
+#111 2024-08-28 Binance Will Support the Polygon (MATIC) Token Swap to Polygon (POL) | usdt=['MATICUSDT', 'POLUSDT']
+      ·  2024-08-28 09:00 This is a general announcement.
+      · At 2024-09-10 03:00 (UTC) , Binance will delist all existing MATIC spot trading pairs (i.e., MATIC/BNB, MATIC/BRL, MATIC/BTC, MATIC/ETH, MATIC/EUR, MATIC/FDUSD, MATIC/JPY, MATIC/TRY, MATIC/USDC, and MATIC/USDT) and cancel all pending MATIC spot trading orders.
+      · At 2024-09-13 10:00 (UTC) , Binance will open trading for the POL/BNB, POL/BRL, POL/BTC, POL/ETH, POL/EUR, POL/FDUSD, POL/JPY, POL/TRY, POL/USDC, and POL/USDT trading pairs.
+      · General Deposits and Withdrawals At 2024-09-10 03:30 (UTC) , deposits and withdrawals of MATIC tokens will be suspended.
+      · From 2024-09-04 12:00 (UTC) to 2024-09-10 03:30 (UTC), deposits and withdrawals of Polygon PoS native tokens (POL) will retain the MATIC ticker within Binance.
+      · Token Swap MATIC tokens will assume the ticker of POL tokens on Binance.
+      · All MATIC tokens will be swapped to POL at a ratio of 1 MATIC = 1 POL.
+      · Spot At 2024-09-10 03:00 (UTC) , Binance will delist and cease trading on all spot trading pairs for MATIC.
+      · Binance will terminate Trading Bots services for the aforementioned spot trading pairs at 2024-09-10 03:00 (UTC) , where applicable.

@@ -1,0 +1,30 @@
+# comando: python3 -I -B prototipos/correr_p2b.py <venv python> verificacion_autor/tmp_p2b
+# fecha: 2026-10-28T20:15:25Z · intérprete probado: /usr/bin/python3.11 · nota: el primer intento con un bucle de bash se cortó tras el caso 1 (bash aborta cuando un hijo muere por SIGINT); se reemplazó por este driver
+## handler_numpy SIGINT interna
+{"variante": "handler_numpy", "senal": "SIGINT", "origen": "interna", "numpy": "2.4.6", "hilos_del_proceso": 4, "interrumpido_en_seccion_critica": false, "seccion_critica_completada": true, "escrituras_con_fsync": 20, "diferidas_por_handler": [2]}
+stderr (última línea): KeyboardInterrupt
+returncode=-2
+## handler_numpy SIGINT externa
+{"variante": "handler_numpy", "senal": "SIGINT", "origen": "externa", "numpy": "2.4.6", "hilos_del_proceso": 4, "interrumpido_en_seccion_critica": false, "seccion_critica_completada": true, "escrituras_con_fsync": 20, "diferidas_por_handler": [2]}
+stderr (última línea): KeyboardInterrupt
+returncode=-2
+## handler_numpy SIGTERM interna
+{"variante": "handler_numpy", "senal": "SIGTERM", "origen": "interna", "numpy": "2.4.6", "hilos_del_proceso": 4, "interrumpido_en_seccion_critica": false, "seccion_critica_completada": true, "escrituras_con_fsync": 20, "diferidas_por_handler": [15]}
+returncode=-15
+## handler_numpy SIGTERM externa
+{"variante": "handler_numpy", "senal": "SIGTERM", "origen": "externa", "numpy": "2.4.6", "hilos_del_proceso": 4, "interrumpido_en_seccion_critica": false, "seccion_critica_completada": true, "escrituras_con_fsync": 20, "diferidas_por_handler": [15]}
+returncode=-15
+## handler_hilo_previo SIGINT interna
+{"variante": "handler_hilo_previo", "senal": "SIGINT", "origen": "interna", "hilos_del_proceso": 2, "interrumpido_en_seccion_critica": false, "seccion_critica_completada": true, "escrituras_con_fsync": 20, "diferidas_por_handler": [2]}
+stderr (última línea): KeyboardInterrupt
+returncode=-2
+## handler_hilo_previo SIGINT externa
+{"variante": "handler_hilo_previo", "senal": "SIGINT", "origen": "externa", "hilos_del_proceso": 2, "interrumpido_en_seccion_critica": false, "seccion_critica_completada": true, "escrituras_con_fsync": 20, "diferidas_por_handler": [2]}
+stderr (última línea): KeyboardInterrupt
+returncode=-2
+## handler_hilo_previo SIGTERM interna
+{"variante": "handler_hilo_previo", "senal": "SIGTERM", "origen": "interna", "hilos_del_proceso": 2, "interrumpido_en_seccion_critica": false, "seccion_critica_completada": true, "escrituras_con_fsync": 20, "diferidas_por_handler": [15]}
+returncode=-15
+## handler_hilo_previo SIGTERM externa
+{"variante": "handler_hilo_previo", "senal": "SIGTERM", "origen": "externa", "hilos_del_proceso": 2, "interrumpido_en_seccion_critica": false, "seccion_critica_completada": true, "escrituras_con_fsync": 20, "diferidas_por_handler": [15]}
+returncode=-15

@@ -1,0 +1,42 @@
+{
+ "salida_1": {
+  "REGISTRO_EJECUCION.json": {
+   "sha256": "3951b702f9627fb2767e73f59969ec84846a9df1ae7e208ea66eaa2e1309a825",
+   "bytes": 779,
+   "contiene_STUB": false
+  },
+  "RESULTADO_E3.json": {
+   "sha256": "5cc4495348ef6a518741ec47a4760f7b4f774a85a5d3d42a07f536febc05a06f",
+   "bytes": 1313,
+   "contiene_STUB": false,
+   "veredicto": "ERROR",
+   "etapa": "escritura",
+   "estadisticos_iniciados": true
+  },
+  "VALIDEZ_PREVIA.json": {
+   "sha256": "40c4efd5ac8c0d44b7e53268b6f17c45110534f9c751cd4abb3d82fa40928272",
+   "bytes": 73,
+   "contiene_STUB": true
+  }
+ },
+ "registro": [
+  "{\"utc\": \"2026-10-28T13:52:29.661091+00:00\", \"evento\": \"INICIADO\", \"id_intento\": \"385fcd2bc2b63e2e:/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/arnes_L13_SINTETICO_SIN_DATOS_SIN_CALCULO/E2_evaluado_anotar_falla_despues/salida_1\", \"salida\": \"/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/arnes_L13_SINTETICO_SIN_DATOS_SIN_CALCULO/E2_evaluado_anotar_falla_despues/salida_1\", \"sha_autorizacion\": \"385fcd2bc2b63e2e704b3f2df1f382611f944bcb562376abd67b4b46b200f56c\", \"sha_orquestador\": \"22b7ff20d98e4730f755fc14ccffe796a3c7836fd2b2004756583449bcb64353\", \"sha_manifiesto\": \"7dd0f1fd45965f344076156397aaa372e1f747bdff715938d0874a6d548d89ef\", \"reintento_de\": null}",
+  "{\"utc\": \"2026-10-28T13:52:29.663283+00:00\", \"evento\": \"EVALUADO\", \"id_intento\": \"385fcd2bc2b63e2e:/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/arnes_L13_SINTETICO_SIN_DATOS_SIN_CALCULO/E2_evaluado_anotar_falla_despues/salida_1\", \"sha_resultado\": \"95738d8c3589a033ee0c8f91516e2850a0657e5dea52b8f5fc0f547161568e6d\"}",
+  "{\"utc\": \"2026-10-28T13:52:29.665412+00:00\", \"evento\": \"ERROR\", \"id_intento\": \"385fcd2bc2b63e2e:/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/arnes_L13_SINTETICO_SIN_DATOS_SIN_CALCULO/E2_evaluado_anotar_falla_despues/salida_1\", \"etapa\": \"escritura\", \"tipo\": \"OSError\", \"estadisticos_iniciados\": true, \"sha_resultado\": \"5cc4495348ef6a518741ec47a4760f7b4f774a85a5d3d42a07f536febc05a06f\"}"
+ ],
+ "registro_vs_disco": [
+  {
+   "evento": "EVALUADO",
+   "sha_resultado": "95738d8c3589a033ee0c8f91516e2850a0657e5dea52b8f5fc0f547161568e6d",
+   "coincide_con_disco": false
+  },
+  {
+   "evento": "ERROR",
+   "sha_resultado": "5cc4495348ef6a518741ec47a4760f7b4f774a85a5d3d42a07f536febc05a06f",
+   "coincide_con_disco": true
+  }
+ ],
+ "nuevo_intento": "RECHAZADO: E3 ya tiene un resultado terminal (EVALUADO, 2026-10-28T13:52:29.663283+00:00): no hay otra ejecución",
+ "salida_2": "NO EXISTE"
+}
+rc_observar=0

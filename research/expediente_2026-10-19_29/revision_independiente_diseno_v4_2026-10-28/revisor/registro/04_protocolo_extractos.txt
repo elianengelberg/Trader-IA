@@ -1,0 +1,65 @@
+# extractos verificados de experimentos/E3_seleccion_posicion_2026-10-19/PROTOCOLO_E3_v3_PROPUESTO.md (279a865f…), con número de línea · 2026-10-28T19:49:33Z
+## §3.3 Registro de ejecuciones (172-185)
+   172	### 3.3 Registro de ejecuciones
+   173	- `REGISTRO_EJECUCIONES.jsonl` solo admite añadidos. Cada entrada lleva fecha, hashes del código, la configuración y los datos, y su propósito.
+   174	- **Lo planificado:**
+   175	  - 1 ejecución confirmatoria (H1 y H2);
+   176	  - 4 re-simulaciones de robustez (R1, R2, R4, R6);
+   177	  - 1 lote del nulo aleatorio (R5, 2000 réplicas, y el diagnóstico de §5.4);
+   178	  - 1 grilla de sensibilidad (15 configuraciones);
+   179	  - 1 de H3 (solo si se habilita).
+   180	- **Cualquier otra ejecución es exploratoria:**
+   181	  - se cuenta;
+   182	  - no cambia ninguna clasificación;
+   183	  - solo puede motivar una hipótesis nueva prospectiva.
+   184	- **Sharpe deflactado:** número de intentos = configuraciones evaluadas, 20 (21 con H3). Las réplicas del nulo no cuentan.
+   185	
+## §9 Datos y autorización (529-554)
+   529	## 9. Datos y autorización
+   530	| Elemento | Detalle | Estimación [Hip] |
+   531	|---|---|---|
+   532	| Listado de símbolos | Bucket `data/spot/monthly/klines/` (es el listado S3 de la propia web, **por verificar**) | 1–5 solicitudes |
+   533	| Listado por símbolo | `data/spot/monthly/klines/{S}/1d/` | 600–1000 solicitudes; 15–35 MB |
+   534	| Klines 1d mensuales y `.CHECKSUM` | 2017-08 → **2026-05**, todos los S terminados en USDT | 21 000–50 000 pares de archivos; ≈ 50–115 MB |
+   535	| Reparaciones | Diarios de `data/spot/daily/klines/…`, solo si falta un mensual o falla su checksum | Pocas |
+   536	| exchangeInfo | `GET https://api.binance.com/api/v3/exchangeInfo` | 1 |
+   537	| BTCUSDT y ETHUSDT | Se reutilizan los archivos locales verificados | 0 |
+   538	
+   539	- **Total:** ≈ 65–150 MB y 43 000–101 000 solicitudes. A ≤ 5 solicitudes por segundo, con espera ante errores: ≈ 2,5–6 h.
+   540	- Gratis, sin dependencias nuevas. **Nada ≥ 2026-06-01.**
+   541	- **Anuncios:** categorías 161, 48 y 49 de binance.com. Antes de leerlas de forma automática se revisan las condiciones de uso; si no lo permiten, la compilación es manual. Todo se fija con hash antes de calcular retornos.
+   542	
+   543	**Autorizaciones, por separado:**
+   544	
+   545	| | Decisión | Cuándo |
+   546	|---|---|---|
+   547	| A1 | Aprobar y congelar **este** documento | Antes de todo |
+   548	| A2 | Descarga del cuadro de arriba | Después de A1 |
+   549	| A3 | Compilación de anuncios | Con A2 |
+   550	| A4 | Ventana C | Solo si H da RESPALDADA |
+   551	| A5 | Evaluación P | Solo si H da RESPALDADA (o, si lo decidís, VENTAJA NO ROBUSTA o INFORMACIÓN SIN VENTAJA, como seguimiento informativo) |
+   552	
+   553	---
+   554	
+## §10 Validez (555-566)
+   555	## 10. Validez (antes de interpretar; si falla, se detiene)
+   556	1. **Checksums:** 100 % verificados.
+   557	2. **Supervivencia:** §2.3 y la regla de §4.11.
+   558	3. **Listas congeladas en F3**, con hash, antes de cualquier retorno: apalancados, duplicados, renombres y conciliación.
+   559	4. **Separación de etapas:** la etapa de calidad no importa funciones de rendimiento; se demuestra con una prueba.
+   560	5. **Sin mirada al futuro:**
+   561	   - comprobaciones automáticas;
+   562	   - invariancia al truncar en 5 cortes al azar (semilla 20261022): universos, señales, T_t y pesos.
+   563	6. **Calibración** de §5.3, aplicada y documentada.
+   564	7. **Semanas no evaluables** ≤ 20 % y ≥ 156 semanas evaluables en H.
+   565	8. **Bloqueo de fechas:** ninguna lectura ≥ 2026-06-01 sin A4; se demuestra con una prueba.
+   566	
+## §12 Restricciones (577-584)
+   577	## 12. Restricciones
+   578	- E1, E2, T, T-MULTI y sus artefactos, intactos.
+   579	- Repositorio sin cambios; sin commits ni pushes.
+   580	- Sin dinero real.
+   581	- No se congela ni se ejecuta sin tu decisión explícita.
+   582	
+   583	---
+   584	

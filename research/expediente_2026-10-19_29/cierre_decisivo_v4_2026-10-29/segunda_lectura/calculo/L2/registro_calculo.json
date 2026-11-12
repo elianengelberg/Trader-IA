@@ -1,0 +1,65 @@
+{
+ "protocolo": "SL-v1 §8",
+ "interprete": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/venv/bin/python",
+ "copias_congeladas": {
+  "conciliacion.py": "6f764845598b4ecf6c3cffbc6c7b584f21e493403c7bcd14339f5f582c9273ad",
+  "p0_pasada2.py": "d05c8dd53787fe0608cac66e837bd59c12bc7e9c9372e040a0d66bd58b2874a8"
+ },
+ "entradas": {
+  "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_decisivo_v4_2026-10-29/segunda_lectura/calculo/L2_resoluciones/resoluciones_L2.json": "6781524289434b936436a229d97cb1ab9c6adddbdebbb8e590728d96983f1a5c",
+  "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_decisivo_v4_2026-10-29/segunda_lectura/copias_congeladas/resoluciones_C_vacio.json": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+  "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_decisivo_v4_2026-10-29/segunda_lectura/calculo/omitidos/principal/fallas_extra_L2.json": "ed392e955fb9e52b7d3e31830ff130519b206794c29dd36cebf0a705473d9bb3"
+ },
+ "pasos": [
+  {
+   "comando": [
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/venv/bin/python",
+    "-I",
+    "-B",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_decisivo_v4_2026-10-29/segunda_lectura/copias_congeladas/conciliacion.py",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3/resultados/calidad",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3/datos_anuncios/commoncrawl",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3/datos_vision/listados",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3/resultados/estructural/estructural.json",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_decisivo_v4_2026-10-29/segunda_lectura/calculo/L2/conciliacion",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_decisivo_v4_2026-10-29/segunda_lectura/calculo/L2_resoluciones/resoluciones_L2.json"
+   ],
+   "inicio_utc": "2026-10-29T00:59:08.589355+00:00",
+   "fin_utc": "2026-10-29T00:59:11.392621+00:00",
+   "returncode": 0,
+   "stdout": "{\n \"eventos_total\": 51,\n \"eventos_en_universo\": 41,\n \"fuera_por_texto_sin_usdt\": 79,\n \"fuera_sin_par_usdt_documentado\": 9,\n \"descartados\": 1,\n \"por_anio\": {\n  \"2018\": {\n   \"total\": 0,\n   \"A\": 0,\n   \"B\": 0,\n   \"T\": 0,\n   \"C_explicada\": 0,\n   \"C_no_explicada\": 0,\n   \"D\": 0,\n   \"E_sin_fecha\": 0,\n   \"cobertura_conservadora_AB\": null,\n   \"fallas\": 0\n  },\n  \"2019\": {\n   \"total\": 1,\n   \"A\": 1,\n   \"B\": 0,\n   \"T\": 0,\n   \"C_explicada\": 0,\n   \"C_no_explicada\": 0,\n   \"D\": 0,\n   \"E_sin_fecha\": 0,\n   \"cobertura_conservadora_AB\": 1.0,\n   \"fallas\": 0\n  },\n  \"2020\": {\n   \"total\": 12,\n   \"A\": 12,\n   \"B\": 0,\n   \"T\": 0,\n   \"C_explicada\": 0,\n   \"C_no_explicada\": 0,\n   \"D\": 0,\n   \"E_sin_fecha\": 0,\n   \"cobertura_conservadora_AB\": 1.0,\n   \"fallas\": 0\n  },\n  \"2021\": {\n   \"total\": 0,\n   \"A\": 0,\n   \"B\": 0,\n   \"T\": 0,\n   \"C_explicada\": 0,\n   \"C_no_explicada\": 0,\n   \"D\": 0,\n   \"E_sin_fecha\": 0,\n   \"cobertura_conservadora_AB\": null,\n   \"fallas\": 0\n  },\n  \"2022\": {\n   \"total\": 2,\n   \"A\": 2,\n   \"B\": 0,\n   \"T\": 0,\n   \"C_explicada\": 0,\n   \"C_no_explicada\": 0,\n   \"D\": 0,\n   \"E_sin_fecha\": 0,\n   \"cobertura_conservadora_AB\": 1.0,\n   \"fallas\": 0\n  },\n  \"2023\": {\n   \"total\": 16,\n   \"A\": 7,\n   \"B\": 0,\n   \"T\": 4,\n   \"C_explicada\": 5,\n   \"C_no_explicada\": 0,\n   \"D\": 0,\n   \"E_sin_fecha\": 0,\n   \"cobertura_conservadora_AB\": 0.4375,\n   \"fallas\": 4\n  },\n  \"2024\": {\n   \"total\": 10,\n   \"A\": 10,\n   \"B\": 0,\n   \"T\": 0,\n   \"C_explicada\": 0,\n   \"C_no_explicada\": 0,\n   \"D\": 0,\n   \"E_sin_fecha\": 0,\n   \"cobertura_conservadora_AB\": 1.0,\n   \"fallas\": 0\n  },\n  \"2025\": {\n   \"total\": 0,\n   \"A\": 0,\n   \"B\": 0,\n   \"T\": 0,\n   \"C_explicada\": 0,\n   \"C_no_explicada\": 0,\n   \"D\": 0,\n   \"E_sin_fecha\": 0,\n   \"cobertura_conservadora_AB\": null,\n   \"fallas\": 0\n  },\n  \"2026\": {\n   \"total\": 0,\n   \"A\": 0,\n   \"B\": 0,\n   \"T\": 0,\n   \"C_explicada\": 0,\n   \"C_no_explicada\": 0,\n   \"D\": 0,\n   \"E_sin_fecha\": 0,\n   \"cobertura_conservadora_AB\": null,\n   \"fallas\": 0\n  }\n },\n \"salidas_por_anio\": {\n  \"2017\": {\n   \"observadas\": 0,\n   \"con_anuncio\": 0,\n   \"sin_anuncio\": 0,\n   \"frac_sin_anuncio\": null\n  },\n  \"2018\": {\n   \"observadas\": 1,\n   \"con_anuncio\": 0,\n   \"sin_anuncio\": 1,\n   \"frac_sin_anuncio\": 1.0\n  },\n  \"2019\": {\n   \"observadas\": 2,\n   \"con_anuncio\": 1,\n   \"sin_anuncio\": 1,\n   \"frac_sin_anuncio\": 0.5\n  },\n  \"2020\": {\n   \"observadas\": 17,\n   \"con_anuncio\": 13,\n   \"sin_anuncio\": 4,\n   \"frac_sin_anuncio\": 0.23529411764705882\n  },\n  \"2021\": {\n   \"observadas\": 17,\n   \"con_anuncio\": 0,\n   \"sin_anuncio\": 17,\n   \"frac_sin_anuncio\": 1.0\n  },\n  \"2022\": {\n   \"observadas\": 41,\n   \"con_anuncio\": 7,\n   \"sin_anuncio\": 34,\n   \"frac_sin_anuncio\": 0.8292682926829268\n  },\n  \"2023\": {\n   \"observadas\": 21,\n   \"con_anuncio\": 8,\n   \"sin_anuncio\": 13,\n   \"frac_sin_anuncio\": 0.6190476190476191\n  },\n  \"2024\": {\n   \"observadas\": 44,\n   \"con_anuncio\": 10,\n   \"sin_anuncio\": 34,\n   \"frac_sin_anuncio\": 0.7727272727272727\n  },\n  \"2025\": {\n   \"observadas\": 51,\n   \"con_anuncio\": 0,\n   \"sin_anuncio\": 51,\n   \"frac_sin_anuncio\": 1.0\n  },\n  \"2026\": {\n   \"observadas\": 26,\n   \"con_anuncio\": 0,\n   \"sin_anuncio\": 26,\n   \"frac_sin_anuncio\": 1.0\n  }\n },\n \"salidas_renombre_mapeado\": 16,\n \"primer_evento\": \"2019-04-22\",\n \"ultima_falla\": {\n  \"par\": \"LINKUPUSDT\",\n  \"E\": \"2023-05-11\",\n  \"urls\": [\n   \"https://www.binance.com/en/support/announcement/binance-to-delist-and-cease-redemption-for-trxup-trxdown-dotup-dotdown-linkup-linkdown-leveraged-tokens-2023-04-27-f9ed8900260141bbb2af4bb71741839a\"\n  ],\n  \"titulos\": [\n   \"Binance to Delist and Cease Redemption for TRXUP, TRXDOWN, DOTUP, DOTDOWN, LINKUP & LINKDOWN Leveraged Tokens (2023-04-27)\"\n  ],\n  \"subtipos\": [\n   \"exclusion_token\"\n  ],\n  \"par_en_texto\": false,\n  \"tokens\": [\n   \"DOTDOWN\",\n   \"DOTUP\",\n   \"LINKUP\",\n   \"TRXDOWN\"\n  ],\n  \"url_archivada\": \"https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-33/segments/1722640822309.61/warc/CC-MAIN-20240810190707-20240810220707-00558.warc.gz bytes=533876796-533951524\",\n  \"sin_fecha\": false,\n  \"clave\": \"LINKUPUSDT|2023-04-27\",\n  \"categoria_auto\": \"B\",\n  \"L\": \"2023-04-05\",\n  \"nota\": null,\n  \"manual\": {\n   \"accion\": \"fecha_corregida\",\n   \"E\": \"2023-05-11\",\n   \"cita\": \"Binance will delist and cease redemption for the TRXUP, TRXDOWN, DOTUP, DOTDOWN, LINKUP and LINKDOWN leveraged tokens at the following timings: At 2023-05-09 06:00 (UTC) : TRXUP, TRXDOWN At 2023-05-10 06:00 (UTC) : DOTUP, DOTDOWN At 2023-05-11 06:00 (UTC) : LINKUP, LINKDOWN\",\n   \"fuente_paginas\": [\n    \"url_https___www.binance.com_en_support_announcement_binance-to-delist-and-cease-_6079c69de2a3.json\"\n   ],\n   \"categoria_pasada1\": \"B\",\n   \"lector\": \"segunda lectura SL-v1\",\n   \"certeza\": \"alta\"\n  },\n  \"E_original\": \"2023-04-27\",\n  \"categoria\": \"T\"\n },\n \"componentes_inicio\": {\n  \"i\": \"2020-05-11\",\n  \"ii\": \"2023-05-12\",\n  \"iii\": \"2019-01-01\",\n  \"iv\": null\n },\n \"inicio_H\": null,\n \"semanas_H\": 0,\n \"evaluables_H\": 0,\n \"pct_no_evaluables_H\": null,\n \"INVALIDO\": true,\n \"V_S2\": {\n  \"n\": 50,\n  \"aciertos\": 49,\n  \"tasa\": 0.98,\n  \"cumple\": true\n },\n \"V_S3_revisados\": 10,\n \"V_S4\": \"NO EJECUTADO (HTTP 451; Adenda 3, A3.9)\",\n \"V_S5_dias_activos_con_0_operaciones\": 0,\n \"pendiente_revision_manual\": {\n  \"C\": 0,\n  \"D_sin_evidencia_ni_otro_par\": 0,\n  \"sin_fecha\": 0,\n  \"sin_par\": 12\n },\n \"resoluciones_manuales_usadas\": true\n}\n",
+   "stderr": ""
+  },
+  {
+   "comando": [
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/venv/bin/python",
+    "-I",
+    "-B",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_decisivo_v4_2026-10-29/segunda_lectura/copias_congeladas/p0_pasada2.py",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_decisivo_v4_2026-10-29/segunda_lectura/calculo/L2/conciliacion",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_decisivo_v4_2026-10-29/segunda_lectura/copias_congeladas/resoluciones_C_vacio.json",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_decisivo_v4_2026-10-29/segunda_lectura/calculo/omitidos/principal/fallas_extra_L2.json",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_decisivo_v4_2026-10-29/segunda_lectura/calculo/L2/ventana.json"
+   ],
+   "inicio_utc": "2026-10-29T00:59:11.392649+00:00",
+   "fin_utc": "2026-10-29T00:59:11.649678+00:00",
+   "returncode": 0,
+   "stdout": "{\n \"componentes\": {\n  \"i\": \"2020-05-11\",\n  \"ii_prima\": \"2023-05-15\",\n  \"ultima_falla_en_alcance\": \"2023-05-11\",\n  \"iv_prima_anio\": 2018,\n  \"iv_prima_anio_sin_excluir_renombres_mapeados\": 2018,\n  \"ii_v3_pura_lunes\": \"2023-05-15\"\n },\n \"inicio_H\": \"2023-05-15\",\n \"semanas_H\": 158,\n \"evaluables_H\": 158,\n \"no_evaluables_pct\": 0.0,\n \"min_elegibles_en_H\": 120,\n \"ultimo_inicio_con_156_evaluables\": \"2023-05-29\",\n \"margen_semanas\": 2,\n \"veredicto\": \"VALIDO\",\n \"insumos_sin_cambios\": true\n}\n",
+   "stderr": ""
+  }
+ ],
+ "salidas": {
+  "conciliacion/conciliacion.json": "f6a1d3e96f1f095e340960715da42c104b3bc3fd8fd03ffd258849406a222b9b",
+  "conciliacion/eventos.json": "e30d225d34e0fb15dc2b282512677e1114a24df7b1e3a57a9a36aac6fc8f7128",
+  "conciliacion/fuera_del_universo.json": "4ea11d7174424dd72caf73e8b932d43d2ebc5e3bc5c40cd32c2b34d7a93c3140",
+  "conciliacion/revision_manual.json": "2fcf0d645aa333114d8215d19e2a15e9a11cacfbb829ac979884523e86b6e8c7",
+  "conciliacion/salidas.json": "9c6fd418b3fee0236e63865c126228201654d46dff19a438007eea6354a0ec2e",
+  "ventana.json": "312f80fbd90c0ea04db65af93f6f90d540375eef612fd033f07ac64f86431091"
+ },
+ "entradas_sin_cambios_despues": {
+  "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_decisivo_v4_2026-10-29/segunda_lectura/calculo/L2_resoluciones/resoluciones_L2.json": true,
+  "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_decisivo_v4_2026-10-29/segunda_lectura/copias_congeladas/resoluciones_C_vacio.json": true,
+  "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_decisivo_v4_2026-10-29/segunda_lectura/calculo/omitidos/principal/fallas_extra_L2.json": true
+ }
+}

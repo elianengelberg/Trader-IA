@@ -1,0 +1,59 @@
+== Repositorio protegido (/home/user/Trader-IA) · 2026-10-26T20:34:44Z
+HEAD                 72ffae5d2698440c8f1afaff12e07bd8adde66fb            (línea base 72ffae5d2698440c8f1afaff12e07bd8adde66fb)
+sha256 de .git/index 37490035d6706739fd7c9add42ad62c4e0c9260089e8e2e77a486f55e3bdcd1b   (línea base 37490035d6706739fd7c9add42ad62c4e0c9260089e8e2e77a486f55e3bdcd1b)
+cambios              0   (línea base 0)
+ignorados            18   (línea base 18)
+reflog               13   (línea base 13)
+tags                 0 · stash 0 · ramas 2
+validada_para_operar 0 archivos (incluidos los ignorados)
+sha256 de .git/index después de estas lecturas: 37490035d6706739fd7c9add42ad62c4e0c9260089e8e2e77a486f55e3bdcd1b
+
+== Procesos y enlaces residuales
+pytest: 0
+postgres: 0
+exp_mutacion: 0
+simulacion_integral: 0
+ci_local: 0
+enlaces /tmp/tia_ic_*: 0
+
+== Paquete (/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/extraccion_zip_DT/entrega_direccion_tecnica_2026-10-26)
+archivos             104
+enlaces simbólicos   0
+sockets / fifos      0
+bases de datos       0
+cachés de Python     0
+posibles secretos    5
+  (falsos positivos revisados uno por uno: 4 son el nombre de la prueba test_api_secret_never_frontend en junit.xml y session.json
+   de los dos jobs; 1 es código que lee una variable de entorno, api_secret = os.environ.get(...), en el parche 06. Ningún valor.)
+direcciones de correo 0
+
+== E3 congelado (/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19)
+huella del árbol     4909ef95f7186d4affb98ebe3ea998568e00a0c0aea9229f60622eaf83f477df   (antes de esta misión: 4909ef95f7186d4affb98ebe3ea998568e00a0c0aea9229f60622eaf83f477df)
+CIERRE_E3_MANIFIESTO verifica
+salidas de E3R real  0   (0 = la ejecución confirmatoria no se corrió)
+orquestador          3b64a04dcb6b39d20cb218ff5f5ef0bd03c1dd45cd75e475b0640fb1ecfd8dce   (congelado 3b64a04dcb6b39d20cb218ff5f5ef0bd03c1dd45cd75e475b0640fb1ecfd8dce)
+
+== CI local sobre T25 (clon nuevo; ver evidencia/ci_local/)
+== ci_local T25_python () · árbol 11f9ccca0da1a98e104132b7f7b8d249d89d463b · nonce local-T25_python-ae82260d6da50f0b · inicio 2026-10-26T20:14:10Z · carga 0.85 0.87 0.60
+pytest rc=0 · 536 s · -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+tests 2070 · passed 2060 · failed 0 · errors 0 · skipped 10 · guard {'defined': 7, 'ran': 7, 'passed': 7}
+**gate: pass**
+alembic sqlite upgrade head rc=0
+== ci_local T25_pg (pg) · árbol c00a8318290c70e5cf0fc3ee995124468ca8b579 · nonce local-T25_pg-18013ebae3a2cce0 · inicio 2026-10-26T20:23:30Z · carga 0.68 0.89 0.78
+pytest rc=0 · 551 s · -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+tests 2070 · passed 2070 · failed 0 · errors 0 · skipped 0 · guard {'defined': 7, 'ran': 7, 'passed': 7}
+**gate: pass**
+alembic sqlite upgrade head rc=0
+alembic pg upgrade head rc=0
+alembic pg downgrade base rc=0
+alembic pg upgrade head rc=0
+Nota: el encabezado del job PG cuenta ci-evidence/ (dejado por el job python en el mismo clon); la compuerta registra working tree 11f9ccca… = T25.
+
+== Reproducción desde el ZIP extraído (reproducir_DT.sh con pruebas de cada parche)
+árbol final: 11f9ccca0da1a98e104132b7f7b8d249d89d463b · esperado 11f9ccca0da1a98e104132b7f7b8d249d89d463b
+índice del origen: antes 37490035d6706739fd7c9add42ad62c4e0c9260089e8e2e77a486f55e3bdcd1b · después 37490035d6706739fd7c9add42ad62c4e0c9260089e8e2e77a486f55e3bdcd1b · SIN CAMBIOS
+RESULTADO: REPRODUCIDO
+
+== ZIP sin este archivo: sha256 d6590a32115cd5e1f83e4f7db2e9539de24f010fc66a5bcc07ad11bdac011c68; MANIFEST.sha256 verifica en la extracción (excluye MANIFEST.sha256 y este archivo)
+
+== No se hizo: commits, push, PR, merge, deploy, conexión a exchanges o Testnet, uso de credenciales, cambios en validada_para_operar, ejecución confirmatoria de E3, cambios en experimentos congelados ni en entregas anteriores.

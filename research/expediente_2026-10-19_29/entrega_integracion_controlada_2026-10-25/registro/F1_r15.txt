@@ -1,0 +1,21 @@
+== F1 R15 contra PostgreSQL 16.15 (una base, TRUNCATE por intento; criterio fijado antes): éxitos dados a un escritor descartado
+F1_r15_base_11.json    semilla 11 intentos 440 · éxitos descartados 143 · celdas de contenido distinto con ambos aceptados 105 · 26.4 s
+     rollback_del_primero: ['error', 'aceptado'] guardada=['1.1.0', 10, 0.88390665]
+     timeout_de_bloqueo_del_segundo: ['aceptado', 'error'] guardada=['1.1.0', 9, -0.11609335]
+     desconexion_antes_del_commit: ['error', 'aceptado'] guardada=['1.1.0', 10, 0.88390665]
+     reintento_tras_ambiguo_commit_hecho: ['aceptado', 'aceptado'] guardada=['1.1.0', 9, -0.11609335]
+F1_r15_base_12.json    semilla 12 intentos 440 · éxitos descartados 123 · celdas de contenido distinto con ambos aceptados 95 · 26.9 s
+     rollback_del_primero: ['error', 'aceptado'] guardada=['1.1.0', 10, 0.88390665]
+     timeout_de_bloqueo_del_segundo: ['aceptado', 'error'] guardada=['1.1.0', 9, -0.11609335]
+     desconexion_antes_del_commit: ['error', 'aceptado'] guardada=['1.1.0', 10, 0.88390665]
+     reintento_tras_ambiguo_commit_hecho: ['aceptado', 'aceptado'] guardada=['1.1.0', 9, -0.11609335]
+F1_r15_cand_11.json    semilla 11 intentos 440 · éxitos descartados 0 · celdas de contenido distinto con ambos aceptados 0 · 27.3 s
+     rollback_del_primero: ['error', 'aceptado'] guardada=['1.2.0', 10, 0.88390665]
+     timeout_de_bloqueo_del_segundo: ['aceptado', 'error'] guardada=['1.2.0', 9, -0.11609335]
+     desconexion_antes_del_commit: ['error', 'aceptado'] guardada=['1.2.0', 10, 0.88390665]
+     reintento_tras_ambiguo_commit_hecho: ['aceptado', 'aceptado'] guardada=['1.2.0', 9, -0.11609335]
+F1_r15_cand_12.json    semilla 12 intentos 440 · éxitos descartados 0 · celdas de contenido distinto con ambos aceptados 0 · 27.4 s
+     rollback_del_primero: ['error', 'aceptado'] guardada=['1.2.0', 10, 0.88390665]
+     timeout_de_bloqueo_del_segundo: ['aceptado', 'error'] guardada=['1.2.0', 9, -0.11609335]
+     desconexion_antes_del_commit: ['error', 'aceptado'] guardada=['1.2.0', 10, 0.88390665]
+     reintento_tras_ambiguo_commit_hecho: ['aceptado', 'aceptado'] guardada=['1.2.0', 9, -0.11609335]

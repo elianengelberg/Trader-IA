@@ -1,0 +1,27 @@
+== 2026-10-22T23:07:44Z · árbol final nuevo: base + 01 + 02v3 + 05v2 + 03 + 04 + 06 (sin commits, push deshabilitado)
+aplica: 01_obligatorio_D1_D3_motor_y_pruebas_definitivas.patch 1944f433334cada2
+aplica: 02v3_obligatorio_trazabilidad_version_motor_CORREGIDO.patch d5c90091b705647c
+aplica: 05v2_guarda_version_motor.patch 911a8d9df70e0b73
+aplica: 03_opcional_pruebas_reloj_y_persistencia.patch 0be65ea6a5e7072f
+aplica: 04_opcional_CI_versiones_fijadas.patch 8d39635635c81a4b
+aplica: 06_opcional_gate_ci_procedencia.patch 931ff4f8790786f2
+cambios: 16
+ M .github/workflows/ci.yml
+ M .gitignore
+ M docs/ARCHITECTURE.md
+ M packages/tia/src/tia/api/state.py
+ M packages/tia/src/tia/backtest/engine.py
+ M packages/tia/src/tia/backtest/result.py
+ M packages/tia/src/tia/execution/paper.py
+ M packages/tia/src/tia/persistence/repositories.py
+ M tests/integration/test_account_restore.py
+ M tests/integration/test_adverse_recovery.py
+ M tests/integration/test_risk_state_persistence.py
+?? constraints/ci-py311.txt
+?? scripts/ci_gate.py
+?? tests/integration/test_backtest_provenance.py
+?? tests/integration/test_engine_version_contract.py
+?? tests/unit/test_backtest_order_hygiene.py
+push url: no-push://deshabilitado-repositorio-protegido
+árbol del contenido (write-tree, sin commit): b1ff3fe3413631ceef3bc670ea2776df7f619874
+comparado con trabajo/final: 0 diferencias

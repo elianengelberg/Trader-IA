@@ -1,0 +1,8 @@
+== 2026-10-22T16:29:44Z · ruff y alembic con venv_CI_libre (instalación sin restricciones, como ci.yml hoy)
+ruff ruff 0.17.1
+All checks passed!
+ruff rc=0
+alembic rc=0
+ruff (venv_A) fin_base: rc=0
+ruff (venv_A) fin_obligatoria: rc=0
+ruff (venv_A) fin_completa: rc=0

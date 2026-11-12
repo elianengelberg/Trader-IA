@@ -1,0 +1,6 @@
+exchangeInfo (v3 §9, A2; usado en V-S4 y para separar base/cotización).
+2026-10-20T02:11:26Z  GET https://api.binance.com/api/v3/exchangeInfo  ->  HTTP 451 (224 bytes)
+Respuesta: "Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms".
+sha256 de la respuesta: 79c1db471a4cdc1c8565b5dfc52e0ed2d29962738ee4d28597696fcd0920e348 (exchangeInfo_api.json)
+Decisión: es un control de acceso por ubicación. NO se prueban endpoints alternativos (data-api.binance.vision, espejos,
+proxies): hacerlo eludiría ese control. V-S4 queda NO EJECUTADO. La base de cada símbolo se toma como símbolo − "USDT".

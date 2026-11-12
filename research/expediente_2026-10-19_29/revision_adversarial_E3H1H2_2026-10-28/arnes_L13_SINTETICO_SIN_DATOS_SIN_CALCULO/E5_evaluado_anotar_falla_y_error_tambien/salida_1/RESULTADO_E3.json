@@ -1,0 +1,12 @@
+{
+ "veredicto": "ERROR",
+ "etapa": "escritura",
+ "tipo": "OSError",
+ "mensaje": "[Errno 28] fallo inyectado al anotar EVALUADO (antes de escribir)",
+ "traceback": "Traceback (most recent call last):\n  File \"/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/copia_A/paquete_revision_independiente_E3H1H2_2026-10-28/evidencia/cierre_bloqueantes_E3H1H2_2026-10-27/orquestador_v3/ejecutar_E3_v3.py\", line 886, in modo_real\n    intentos.anotar(evento=\"EVALUADO\", id_intento=id_intento, sha_resultado=h)\n  File \"/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/arnes/arnes_L13.py\", line 92, in anotar\n    raise OSError(28, f\"fallo inyectado al anotar {e} (antes de escribir)\")\nOSError: [Errno 28] fallo inyectado al anotar EVALUADO (antes de escribir)\n",
+ "sha_traceback": "c73a2f20113f49636502dfb87191d8134c0765513ec2517db53838ec8976c8f5",
+ "estadisticos_iniciados": true,
+ "H1": null,
+ "H2": null,
+ "nota": "E3-H1/H2 SIN RESULTADO por un fallo técnico: no es EVALUADO ni INVALIDO. Reintentar exige una autorización nueva que cite el sha256 de este archivo; con estadísticos iniciados, es una decisión metodológica."
+}

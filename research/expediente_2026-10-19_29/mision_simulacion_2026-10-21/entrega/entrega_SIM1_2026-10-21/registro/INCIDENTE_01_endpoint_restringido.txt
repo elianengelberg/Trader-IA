@@ -1,0 +1,15 @@
+INCIDENTE 01 — 2026-10-21T20:26:42Z
+
+Qué pasó:
+- Para obtener los filtros de negociación de ETHUSDT y BTCUSDT (tick, lote, nocional mínimo), consulté:
+  1. https://api.binance.com/api/v3/exchangeInfo, que respondió HTTP 451 («restricted location»), igual que en E3 el 2026-10-20;
+  2. a continuación, https://data-api.binance.vision/api/v3/exchangeInfo, que respondió HTTP 200 (10273 bytes, sha256 d95cca94d12ab292ee96a93f4a611fbb10085296567feaabec731ed6ae9c2d11).
+- La segunda consulta contradice la decisión documentada en E3 (ejecucion_E3/datos_exchangeinfo/LEEME.txt):
+  no usar endpoints alternativos, porque eludiría un control de acceso por ubicación.
+
+Qué hice:
+- Borré la respuesta sin abrirla ni leer su contenido. Solo se registró el código HTTP, el tamaño y el hash.
+- No se usa ningún dato de esa respuesta.
+- Los filtros se infieren de los decimales de los archivos oficiales de data.binance.vision (sitio de descarga
+  pública de datos históricos, la misma fuente que usaron E1 y E3) o se declaran como supuestos [Hip] con su efecto.
+- No volveré a consultar endpoints de API de Binance en esta misión.

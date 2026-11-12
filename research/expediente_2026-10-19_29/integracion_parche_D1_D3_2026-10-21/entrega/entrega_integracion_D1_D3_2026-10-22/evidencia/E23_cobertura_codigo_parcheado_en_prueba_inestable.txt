@@ -1,0 +1,3 @@
+Prueba test_adverse_recovery::test_rejects_and_partials_over_hundreds_of_bars… en el árbol INTEGRADO, con cobertura (pytest-cov, --cov=tia)
+packages/tia/src/tia/backtest/engine.py: archivo importado: True · líneas totales ejecutadas: 0 · líneas del parche: 67 · del parche ejecutadas: 0 []
+packages/tia/src/tia/execution/paper.py: archivo importado: True · líneas totales ejecutadas: 193 · líneas del parche: 9 · del parche ejecutadas: 1 [119]

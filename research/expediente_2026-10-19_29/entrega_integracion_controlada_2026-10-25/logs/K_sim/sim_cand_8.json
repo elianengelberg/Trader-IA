@@ -1,0 +1,735 @@
+{
+ "arbol": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev",
+ "semilla": 8,
+ "escenarios": [
+  {
+   "escenario": "E01_arranque_en_papel",
+   "semilla": 8,
+   "observado": {
+    "inicial": {
+     "estado": "armed",
+     "bloqueos": [],
+     "last_error": "",
+     "posicion": 0.0,
+     "ordenes_abiertas": [],
+     "contadores": {
+      "orders": 0,
+      "round_trips": 0,
+      "stops_placed": 0,
+      "unprotected_positions": 0,
+      "protective_stop_failures": 0,
+      "exits_rejected": 0,
+      "exits_stop": 0,
+      "exits_reversal": 0,
+      "exits_time": 0,
+      "unknown_order_states": 0,
+      "cancel_failures": 0,
+      "orders_lost": 0
+     }
+    },
+    "corriendo": "running",
+    "final": {
+     "estado": "stopped",
+     "bloqueos": [],
+     "last_error": "",
+     "posicion": 0.0,
+     "ordenes_abiertas": [],
+     "contadores": {
+      "orders": 0,
+      "round_trips": 0,
+      "stops_placed": 0,
+      "unprotected_positions": 0,
+      "protective_stop_failures": 0,
+      "exits_rejected": 0,
+      "exits_stop": 0,
+      "exits_reversal": 0,
+      "exits_time": 0,
+      "unknown_order_states": 0,
+      "cancel_failures": 0,
+      "orders_lost": 0
+     }
+    },
+    "transiciones": [
+     "disarmed->arming: constructing live runtime",
+     "arming->armed: paper-realtime: simulated execution, no token required",
+     "armed->starting: startup validation",
+     "starting->running: startup validation passed",
+     "running->stopping: operator stop",
+     "stopping->stopped: loop stopped"
+    ],
+    "escrituras": {
+     "scheduled": 1,
+     "confirmed": 1,
+     "failed": 0,
+     "in_flight": 0,
+     "complete": true,
+     "lost": 0
+    },
+    "persistence_flushed": true,
+    "filas": {
+     "orders": 0,
+     "fills": 0,
+     "incidents": 0,
+     "account_events": null,
+     "runs": 1,
+     "backtests": 0,
+     "tipos_de_incidente": []
+    }
+   },
+   "esperado": [
+    "arranca en RUNNING",
+    "cierra en STOPPED",
+    "registro completo al cerrar"
+   ],
+   "incumplidos": [],
+   "error": null,
+   "veredicto": "CUMPLE"
+  },
+  {
+   "escenario": "E02_mercado_y_senales",
+   "semilla": 8,
+   "observado": {
+    "senales": 60,
+    "final": {
+     "estado": "running",
+     "bloqueos": [],
+     "last_error": "",
+     "posicion": 0.0,
+     "ordenes_abiertas": [],
+     "contadores": {
+      "orders": 1,
+      "round_trips": 1,
+      "stops_placed": 4,
+      "unprotected_positions": 0,
+      "protective_stop_failures": 0,
+      "exits_rejected": 0,
+      "exits_stop": 1,
+      "exits_reversal": 0,
+      "exits_time": 0,
+      "unknown_order_states": 0,
+      "cancel_failures": 0,
+      "orders_lost": 0
+     }
+    }
+   },
+   "esperado": [
+    "evalúa señales",
+    "sin error"
+   ],
+   "incumplidos": [],
+   "error": null,
+   "veredicto": "CUMPLE"
+  },
+  {
+   "escenario": "E03_apertura",
+   "semilla": 8,
+   "observado": {
+    "final": {
+     "estado": "running",
+     "bloqueos": [],
+     "last_error": "",
+     "posicion": 0.080117,
+     "ordenes_abiertas": [
+      "stop/ro"
+     ],
+     "contadores": {
+      "orders": 1,
+      "round_trips": 0,
+      "stops_placed": 1,
+      "unprotected_positions": 0,
+      "protective_stop_failures": 0,
+      "exits_rejected": 0,
+      "exits_stop": 0,
+      "exits_reversal": 0,
+      "exits_time": 0,
+      "unknown_order_states": 0,
+      "cancel_failures": 0,
+      "orders_lost": 0
+     }
+    },
+    "filas": {
+     "orders": 2,
+     "fills": 1,
+     "incidents": 0,
+     "account_events": null,
+     "runs": 1,
+     "backtests": 0,
+     "tipos_de_incidente": []
+    },
+    "proteccion": {
+     "barras_con_posicion": 0,
+     "barras_sin_proteccion": 0,
+     "max_stops_simultaneos": 1,
+     "racha_max_llamadas_sin_proteccion": 0
+    }
+   },
+   "esperado": [
+    "posición abierta",
+    "orden y fill guardados"
+   ],
+   "incumplidos": [],
+   "error": null,
+   "veredicto": "CUMPLE"
+  },
+  {
+   "escenario": "E04_proteccion_colocada_y_confirmada",
+   "semilla": 8,
+   "observado": {
+    "final": {
+     "estado": "running",
+     "bloqueos": [],
+     "last_error": "",
+     "posicion": 0.080117,
+     "ordenes_abiertas": [
+      "stop/ro"
+     ],
+     "contadores": {
+      "orders": 1,
+      "round_trips": 0,
+      "stops_placed": 2,
+      "unprotected_positions": 0,
+      "protective_stop_failures": 0,
+      "exits_rejected": 0,
+      "exits_stop": 0,
+      "exits_reversal": 0,
+      "exits_time": 0,
+      "unknown_order_states": 0,
+      "cancel_failures": 0,
+      "orders_lost": 0
+     }
+    },
+    "filas": {
+     "orders": 3,
+     "fills": 1,
+     "incidents": 0,
+     "account_events": null,
+     "runs": 1,
+     "backtests": 0,
+     "tipos_de_incidente": []
+    },
+    "proteccion": {
+     "barras_con_posicion": 3,
+     "barras_sin_proteccion": 0,
+     "max_stops_simultaneos": 1,
+     "racha_max_llamadas_sin_proteccion": 1
+    },
+    "snapshot_protected": true,
+    "transiciones": [
+     "disarmed->arming: constructing live runtime",
+     "arming->armed: paper-realtime: simulated execution, no token required",
+     "armed->starting: startup validation",
+     "starting->running: startup validation passed",
+     "running->stopping: fin del escenario",
+     "stopping->stopped: loop stopped"
+    ]
+   },
+   "esperado": [
+    "un stop trabajando",
+    "ninguna barra sin protección",
+    "snapshot dice protegida"
+   ],
+   "incumplidos": [],
+   "error": null,
+   "veredicto": "CUMPLE"
+  },
+  {
+   "escenario": "E04b_venue_que_rechaza_stops_R25",
+   "semilla": 8,
+   "observado": {
+    "final": {
+     "estado": "halt_new_orders",
+     "bloqueos": [
+      "position_unprotected"
+     ],
+     "last_error": "position unprotected: protective stop refused: [EXECUTION_ERROR] order type stop is not supported by this adapter (inyectado, como Binance antes de R25)",
+     "posicion": 0.080117,
+     "ordenes_abiertas": [],
+     "contadores": {
+      "orders": 1,
+      "round_trips": 0,
+      "stops_placed": 0,
+      "unprotected_positions": 1,
+      "protective_stop_failures": 4,
+      "exits_rejected": 0,
+      "exits_stop": 0,
+      "exits_reversal": 0,
+      "exits_time": 0,
+      "unknown_order_states": 0,
+      "cancel_failures": 0,
+      "orders_lost": 0
+     }
+    },
+    "filas": {
+     "orders": 1,
+     "fills": 1,
+     "incidents": 6,
+     "account_events": null,
+     "runs": 1,
+     "backtests": 0,
+     "tipos_de_incidente": [
+      "entries_blocked:position_unprotected",
+      "halt_new_orders",
+      "protective_stop_failed"
+     ]
+    },
+    "proteccion": {
+     "barras_con_posicion": 3,
+     "barras_sin_proteccion": 3,
+     "max_stops_simultaneos": 0,
+     "racha_max_llamadas_sin_proteccion": 0
+    },
+    "snapshot_protected": false,
+    "transiciones": [
+     "disarmed->arming: constructing live runtime",
+     "arming->armed: paper-realtime: simulated execution, no token required",
+     "armed->starting: startup validation",
+     "starting->running: startup validation passed",
+     "running->halt_new_orders: open position without a confirmed protective stop",
+     "halt_new_orders->stopping: fin del escenario",
+     "stopping->stopped: loop stopped"
+    ]
+   },
+   "esperado": [
+    "posición contada como desprotegida",
+    "entradas bloqueadas",
+    "sesión en alto de órdenes nuevas",
+    "incidente guardado",
+    "snapshot no dice protegida"
+   ],
+   "incumplidos": [],
+   "error": null,
+   "veredicto": "CUMPLE"
+  },
+  {
+   "escenario": "E05_gestion_normal",
+   "semilla": 8,
+   "observado": {
+    "final": {
+     "estado": "running",
+     "bloqueos": [],
+     "last_error": "",
+     "posicion": 0.0,
+     "ordenes_abiertas": [],
+     "contadores": {
+      "orders": 1,
+      "round_trips": 1,
+      "stops_placed": 4,
+      "unprotected_positions": 0,
+      "protective_stop_failures": 0,
+      "exits_rejected": 0,
+      "exits_stop": 1,
+      "exits_reversal": 0,
+      "exits_time": 0,
+      "unknown_order_states": 0,
+      "cancel_failures": 0,
+      "orders_lost": 0
+     }
+    },
+    "proteccion": {
+     "barras_con_posicion": 9,
+     "barras_sin_proteccion": 0,
+     "max_stops_simultaneos": 1,
+     "racha_max_llamadas_sin_proteccion": 1
+    }
+   },
+   "esperado": [
+    "nunca dos stops",
+    "ninguna barra sin protección"
+   ],
+   "incumplidos": [],
+   "error": null,
+   "veredicto": "CUMPLE"
+  },
+  {
+   "escenario": "E06_cierre_por_stop",
+   "semilla": 8,
+   "observado": {
+    "final": {
+     "estado": "running",
+     "bloqueos": [],
+     "last_error": "",
+     "posicion": 0.0,
+     "ordenes_abiertas": [],
+     "contadores": {
+      "orders": 1,
+      "round_trips": 1,
+      "stops_placed": 3,
+      "unprotected_positions": 0,
+      "protective_stop_failures": 0,
+      "exits_rejected": 0,
+      "exits_stop": 1,
+      "exits_reversal": 0,
+      "exits_time": 0,
+      "unknown_order_states": 0,
+      "cancel_failures": 0,
+      "orders_lost": 0
+     }
+    },
+    "proteccion": {
+     "barras_con_posicion": 3,
+     "barras_sin_proteccion": 0,
+     "max_stops_simultaneos": 1,
+     "racha_max_llamadas_sin_proteccion": 1
+    }
+   },
+   "esperado": [
+    "cerrada por stop",
+    "plana",
+    "ida y vuelta puntuada",
+    "sin órdenes colgadas"
+   ],
+   "incumplidos": [],
+   "error": null,
+   "veredicto": "CUMPLE"
+  },
+  {
+   "escenario": "E07_cierre_por_reversion",
+   "semilla": 8,
+   "observado": {
+    "enviado": true,
+    "final": {
+     "estado": "running",
+     "bloqueos": [],
+     "last_error": "",
+     "posicion": 0.0,
+     "ordenes_abiertas": [],
+     "contadores": {
+      "orders": 2,
+      "round_trips": 1,
+      "stops_placed": 2,
+      "unprotected_positions": 0,
+      "protective_stop_failures": 0,
+      "exits_rejected": 0,
+      "exits_stop": 0,
+      "exits_reversal": 1,
+      "exits_time": 0,
+      "unknown_order_states": 0,
+      "cancel_failures": 0,
+      "orders_lost": 0
+     }
+    },
+    "proteccion": {
+     "barras_con_posicion": 2,
+     "barras_sin_proteccion": 0,
+     "max_stops_simultaneos": 1,
+     "racha_max_llamadas_sin_proteccion": 1
+    }
+   },
+   "esperado": [
+    "cierre enviado",
+    "plana",
+    "ninguna barra sin protección"
+   ],
+   "incumplidos": [],
+   "error": null,
+   "veredicto": "CUMPLE"
+  },
+  {
+   "escenario": "E08_cierre_rechazado_y_reintento",
+   "semilla": 8,
+   "observado": {
+    "tras_el_rechazo": {
+     "held": 0.080117,
+     "protegida": true,
+     "stops": 1
+    },
+    "final": {
+     "estado": "running",
+     "bloqueos": [],
+     "last_error": "",
+     "posicion": 0.0,
+     "ordenes_abiertas": [],
+     "contadores": {
+      "orders": 3,
+      "round_trips": 1,
+      "stops_placed": 3,
+      "unprotected_positions": 0,
+      "protective_stop_failures": 0,
+      "exits_rejected": 1,
+      "exits_stop": 0,
+      "exits_reversal": 0,
+      "exits_time": 2,
+      "unknown_order_states": 0,
+      "cancel_failures": 0,
+      "orders_lost": 0
+     }
+    },
+    "proteccion": {
+     "barras_con_posicion": 3,
+     "barras_sin_proteccion": 0,
+     "max_stops_simultaneos": 1,
+     "racha_max_llamadas_sin_proteccion": 2
+    },
+    "filas": {
+     "orders": 6,
+     "fills": 2,
+     "incidents": 1,
+     "account_events": null,
+     "runs": 1,
+     "backtests": 0,
+     "tipos_de_incidente": [
+      "exit_rejected"
+     ]
+    }
+   },
+   "esperado": [
+    "rechazo registrado",
+    "protegida en la misma llamada",
+    "ninguna barra sin protección",
+    "reintento cierra"
+   ],
+   "incumplidos": [],
+   "error": null,
+   "veredicto": "CUMPLE"
+  },
+  {
+   "escenario": "E09_parcial_y_timeout",
+   "semilla": 8,
+   "observado": {
+    "final": {
+     "estado": "running",
+     "bloqueos": [],
+     "last_error": "",
+     "posicion": 0.0,
+     "ordenes_abiertas": [],
+     "contadores": {
+      "orders": 2,
+      "round_trips": 1,
+      "stops_placed": 2,
+      "unprotected_positions": 0,
+      "protective_stop_failures": 0,
+      "exits_rejected": 0,
+      "exits_stop": 0,
+      "exits_reversal": 0,
+      "exits_time": 1,
+      "unknown_order_states": 1,
+      "cancel_failures": 0,
+      "orders_lost": 0
+     }
+    },
+    "cierres_enviados": 1,
+    "proteccion": {
+     "barras_con_posicion": 4,
+     "barras_sin_proteccion": 0,
+     "max_stops_simultaneos": 1,
+     "racha_max_llamadas_sin_proteccion": 1
+    }
+   },
+   "esperado": [
+    "estado desconocido resuelto",
+    "sin cierre duplicado por el timeout",
+    "plana al final",
+    "ninguna barra sin protección"
+   ],
+   "incumplidos": [],
+   "error": null,
+   "veredicto": "CUMPLE"
+  },
+  {
+   "escenario": "E10_perdida_de_conexion",
+   "semilla": 8,
+   "observado": {
+    "final": {
+     "estado": "running",
+     "bloqueos": [],
+     "last_error": "",
+     "posicion": 0.0,
+     "ordenes_abiertas": [],
+     "contadores": {
+      "orders": 1,
+      "round_trips": 1,
+      "stops_placed": 4,
+      "unprotected_positions": 0,
+      "protective_stop_failures": 0,
+      "exits_rejected": 0,
+      "exits_stop": 1,
+      "exits_reversal": 0,
+      "exits_time": 0,
+      "unknown_order_states": 0,
+      "cancel_failures": 0,
+      "orders_lost": 0
+     }
+    },
+    "excepciones_al_bucle": 3,
+    "proteccion": {
+     "barras_con_posicion": 6,
+     "barras_sin_proteccion": 0,
+     "max_stops_simultaneos": 1,
+     "racha_max_llamadas_sin_proteccion": 1
+    },
+    "transiciones": [
+     "disarmed->arming: constructing live runtime",
+     "arming->armed: paper-realtime: simulated execution, no token required",
+     "armed->starting: startup validation",
+     "starting->running: startup validation passed",
+     "running->stopping: fin del escenario",
+     "stopping->stopped: loop stopped"
+    ]
+   },
+   "esperado": [
+    "posición sigue protegida en el venue",
+    "ninguna barra sin protección"
+   ],
+   "incumplidos": [],
+   "error": null,
+   "veredicto": "CUMPLE"
+  },
+  {
+   "escenario": "E11_escrituras_concurrentes",
+   "semilla": 8,
+   "observado": {
+    "intentos": 20,
+    "ambos_aceptados": 0,
+    "exito_descartado": 0,
+    "nota": "SQLite serializa escritores; la carrera real está medida en PostgreSQL (F1)"
+   },
+   "esperado": [
+    "ningún escritor descartado recibe éxito"
+   ],
+   "incumplidos": [],
+   "error": null,
+   "veredicto": "CUMPLE"
+  },
+  {
+   "escenario": "E12_persistencia_incompleta",
+   "semilla": 8,
+   "observado": {
+    "flush_dijo": false,
+    "escrituras": {
+     "scheduled": 3164,
+     "confirmed": 3163,
+     "failed": 1,
+     "in_flight": 0,
+     "complete": false,
+     "lost": 1
+    },
+    "persistence_flushed": false,
+    "last_error": "1 persistence write(s) failed during the session; the record is incomplete",
+    "reconstruccion_completa": false,
+    "siguiente_sesion_bloqueada": true
+   },
+   "esperado": [
+    "flush NO dice completo",
+    "cierre no limpio",
+    "la siguiente sesión no opera sobre un registro corto"
+   ],
+   "incumplidos": [],
+   "error": null,
+   "veredicto": "CUMPLE"
+  },
+  {
+   "escenario": "E13_apagado_y_recuperacion",
+   "semilla": 8,
+   "observado": {
+    "posicion_al_apagar": 0.080117,
+    "reconstruccion": {
+     "completa": true,
+     "posicion": 0.080117
+    },
+    "al_arrancar": {
+     "held": 0.080117,
+     "protegida": true,
+     "stops": 1
+    },
+    "reprotegida": true,
+    "final": {
+     "estado": "running",
+     "bloqueos": [],
+     "last_error": "",
+     "posicion": 0.0,
+     "ordenes_abiertas": [],
+     "contadores": {
+      "orders": 1,
+      "round_trips": 1,
+      "stops_placed": 1,
+      "unprotected_positions": 0,
+      "protective_stop_failures": 0,
+      "exits_rejected": 0,
+      "exits_stop": 0,
+      "exits_reversal": 0,
+      "exits_time": 1,
+      "unknown_order_states": 0,
+      "cancel_failures": 0,
+      "orders_lost": 0
+     }
+    },
+    "final_reconstruido": {
+     "completo": true,
+     "posicion": false
+    },
+    "proteccion_sesion_b": {
+     "barras_con_posicion": 2,
+     "barras_sin_proteccion": 0,
+     "max_stops_simultaneos": 1,
+     "racha_max_llamadas_sin_proteccion": 1
+    }
+   },
+   "esperado": [
+    "la reconstrucción ve la posición",
+    "la sesión nueva la protege",
+    "protegida antes de su primera barra",
+    "se cierra y el registro queda completo y plano"
+   ],
+   "incumplidos": [],
+   "error": null,
+   "veredicto": "CUMPLE"
+  },
+  {
+   "escenario": "E14_reconciliacion",
+   "semilla": 8,
+   "observado": {
+    "estado_tras_conciliar": "safe_mode",
+    "final": {
+     "estado": "safe_mode",
+     "bloqueos": [],
+     "last_error": "",
+     "posicion": 0.080117,
+     "ordenes_abiertas": [
+      "limit",
+      "stop/ro"
+     ],
+     "contadores": {
+      "orders": 1,
+      "round_trips": 0,
+      "stops_placed": 2,
+      "unprotected_positions": 0,
+      "protective_stop_failures": 0,
+      "exits_rejected": 0,
+      "exits_stop": 0,
+      "exits_reversal": 0,
+      "exits_time": 0,
+      "unknown_order_states": 0,
+      "cancel_failures": 0,
+      "orders_lost": 0
+     }
+    },
+    "filas": {
+     "orders": 3,
+     "fills": 1,
+     "incidents": 1,
+     "account_events": null,
+     "runs": 1,
+     "backtests": 0,
+     "tipos_de_incidente": [
+      "safe_mode"
+     ]
+    },
+    "transiciones": [
+     "disarmed->arming: constructing live runtime",
+     "arming->armed: paper-realtime: simulated execution, no token required",
+     "armed->starting: startup validation",
+     "starting->running: startup validation passed",
+     "running->safe_mode: order-state divergence against the venue",
+     "safe_mode->stopping: fin del escenario",
+     "stopping->stopped: loop stopped"
+    ]
+   },
+   "esperado": [
+    "la orden ajena detiene la operatoria"
+   ],
+   "incumplidos": [],
+   "error": null,
+   "veredicto": "CUMPLE"
+  }
+ ]
+}

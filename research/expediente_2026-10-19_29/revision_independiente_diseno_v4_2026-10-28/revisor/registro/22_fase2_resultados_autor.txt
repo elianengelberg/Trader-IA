@@ -1,0 +1,148 @@
+# fase 2 · resultados del autor, resumidos campo a campo · 2026-10-28T20:01:59Z
+## tamaños
+12302 revision_adversarial_E3H1H2_2026-10-28/registro/L13_resultados.json
+ 1476 revision_adversarial_E3H1H2_2026-10-28/registro/L17_resultados.json
+ 3513 revision_adversarial_E3H1H2_2026-10-28/registro/L25_documentos_como_autorizacion.json
+ 1061 revision_adversarial_E3H1H2_2026-10-28/registro/mutantes_revisor.txt
+ 3693 revision_adversarial_E3H1H2_2026-10-28/registro/suite_v3_con_guarda.txt
+22045 total
+## directorios de escenarios presentes
+B1_evaluado_sin_fallo
+B2_invalido_sin_fallo
+B3_error_en_panel
+C1_concurrencia
+E1_evaluado_anotar_falla_antes
+E2_evaluado_anotar_falla_despues
+E3_evaluado_proceso_muere
+E4_evaluado_escritura_resultado_falla
+E5_evaluado_anotar_falla_y_error_tambien
+E6_evaluado_linea_parcial_y_muere
+E7_evaluado_ctrl_c_al_anotar
+I1_invalido_anotar_falla_antes
+I2_invalido_anotar_falla_despues
+I3_invalido_proceso_muere
+I4_invalido_anotar_falla_y_error_tambien
+I5_invalido_ctrl_c_al_anotar
+K1_muere_antes_de_INICIADO
+K2_INICIADO_falla_antes
+L12_registro_borrado_tras_EVALUADO
+L17_autorizaciones
+## L13_resultados.json (resumen por escenario)
+tipo raíz: dict | claves: ['B1_evaluado_sin_fallo', 'B2_invalido_sin_fallo', 'B3_error_en_panel', 'E1_evaluado_anotar_falla_antes', 'E2_evaluado_anotar_falla_despues', 'E3_evaluado_proceso_muere', 'E4_evaluado_escritura_resultado_falla', 'E5_evaluado_anotar_falla_y_error_tambien', 'E6_evaluado_linea_parcial_y_muere', 'E7_evaluado_ctrl_c_al_anotar', 'I1_invalido_anotar_falla_antes', 'I2_invalido_anotar_falla_despues', 'I3_invalido_proceso_muere', 'I4_invalido_anotar_falla_y_error_tambien', 'I5_invalido_ctrl_c_al_anotar', 'K1_muere_antes_de_INICIADO', 'K2_INICIADO_falla_antes', 'L12_registro_borrado_tras_EVALUADO']
+- B1_evaluado_sin_fallo: termino='None'
+    RESULTADO: veredicto=None etapa=None est_inic=None | registro=None | vs_disco=None
+    nuevo_intento='None' salida_2=None
+- B2_invalido_sin_fallo: termino='None'
+    RESULTADO: veredicto=None etapa=None est_inic=None | registro=None | vs_disco=None
+    nuevo_intento='None' salida_2=None
+- B3_error_en_panel: termino='None'
+    RESULTADO: veredicto=None etapa=None est_inic=None | registro=None | vs_disco=None
+    nuevo_intento='None' salida_2=None
+- E1_evaluado_anotar_falla_antes: termino='None'
+    RESULTADO: veredicto=None etapa=None est_inic=None | registro=None | vs_disco=None
+    nuevo_intento='None' salida_2=None
+- E2_evaluado_anotar_falla_despues: termino='None'
+    RESULTADO: veredicto=None etapa=None est_inic=None | registro=None | vs_disco=None
+    nuevo_intento='None' salida_2=None
+- E3_evaluado_proceso_muere: termino='None'
+    RESULTADO: veredicto=None etapa=None est_inic=None | registro=None | vs_disco=None
+    nuevo_intento='None' salida_2=None
+- E4_evaluado_escritura_resultado_falla: termino='None'
+    RESULTADO: veredicto=None etapa=None est_inic=None | registro=None | vs_disco=None
+    nuevo_intento='None' salida_2=None
+- E5_evaluado_anotar_falla_y_error_tambien: termino='None'
+    RESULTADO: veredicto=None etapa=None est_inic=None | registro=None | vs_disco=None
+    nuevo_intento='None' salida_2=None
+- E6_evaluado_linea_parcial_y_muere: termino='None'
+    RESULTADO: veredicto=None etapa=None est_inic=None | registro=None | vs_disco=None
+    nuevo_intento='None' salida_2=None
+- E7_evaluado_ctrl_c_al_anotar: termino='None'
+    RESULTADO: veredicto=None etapa=None est_inic=None | registro=None | vs_disco=None
+    nuevo_intento='None' salida_2=None
+- I1_invalido_anotar_falla_antes: termino='None'
+    RESULTADO: veredicto=None etapa=None est_inic=None | registro=None | vs_disco=None
+    nuevo_intento='None' salida_2=None
+- I2_invalido_anotar_falla_despues: termino='None'
+    RESULTADO: veredicto=None etapa=None est_inic=None | registro=None | vs_disco=None
+    nuevo_intento='None' salida_2=None
+- I3_invalido_proceso_muere: termino='None'
+    RESULTADO: veredicto=None etapa=None est_inic=None | registro=None | vs_disco=None
+    nuevo_intento='None' salida_2=None
+- I4_invalido_anotar_falla_y_error_tambien: termino='None'
+    RESULTADO: veredicto=None etapa=None est_inic=None | registro=None | vs_disco=None
+    nuevo_intento='None' salida_2=None
+- I5_invalido_ctrl_c_al_anotar: termino='None'
+    RESULTADO: veredicto=None etapa=None est_inic=None | registro=None | vs_disco=None
+    nuevo_intento='None' salida_2=None
+- K1_muere_antes_de_INICIADO: termino='None'
+    RESULTADO: veredicto=None etapa=None est_inic=None | registro=None | vs_disco=None
+    nuevo_intento='None' salida_2=None
+- K2_INICIADO_falla_antes: termino='None'
+    RESULTADO: veredicto=None etapa=None est_inic=None | registro=None | vs_disco=None
+    nuevo_intento='None' salida_2=None
+- L12_registro_borrado_tras_EVALUADO: termino='None'
+    RESULTADO: veredicto=None etapa=None est_inic=None | registro=None | vs_disco=None
+    nuevo_intento='None' salida_2=None
+## L17_resultados.json
+{
+ "control_completa": "AUTORIZACION ACEPTADA (detenido antes de leer insumos)",
+ "control_completa__salida_creada": false,
+ "control_sin_D1": "Rechazo: autorización ausente o incompleta: {'FRASE': True, 'orquestador_v3': True, 'entradas_congeladas': True, 'decision_reapertura_y_adenda_R': True, 'decision_D1_lec",
+ "control_sin_D1__salida_creada": false,
+ "negacion_de_la_frase": "AUTORIZACION ACEPTADA (detenido antes de leer insumos)",
+ "negacion_de_la_frase__salida_creada": false,
+ "negacion_de_las_decisiones": "AUTORIZACION ACEPTADA (detenido antes de leer insumos)",
+ "negacion_de_las_decisiones__salida_creada": false,
+ "frases_citadas_para_rechazarlas": "AUTORIZACION ACEPTADA (detenido antes de leer insumos)",
+ "frases_citadas_para_rechazarlas__salida_creada": false,
+ "contradice_D3_elige_160_semanas": "AUTORIZACION ACEPTADA (detenido antes de leer insumos)",
+ "contradice_D3_elige_160_semanas__salida_creada": false,
+ "contradice_D4_sin_reintentos": "AUTORIZACION ACEPTADA (detenido antes de leer insumos)",
+ "contradice_D4_sin_reintentos__salida_creada": false,
+ "rechaza_riesgos_D5": "AUTORIZACION ACEPTADA (detenido antes de leer insumos)",
+ "rechaza_riesgos_D5__salida_creada": false,
+ "sin_mencion_de_D3_D4_D5": "AUTORIZACION ACEPTADA (detenido antes de leer insumos)",
+ "sin_mencion_de_D3_D4_D5__salida_creada": false,
+ "otra_ventana_declarada": "AUTORIZACION ACEPTADA (detenido antes de leer insumos)",
+ "otra_ventana_declarada__salida_creada": false
+}
+## L25_documentos_como_autorizacion.json (solo nombres de archivo y conteos; sin hashes)
+aceptados tal cual: [('evidencia/reparacion_E3H1H2_2026-10-26/INFORME_REPARACION_E3H1H2.md', 'v2', 3, 3), ('evidencia/revision_independiente_E3H1H2_2026-10-26/copia_aislada/reparacion_E3H1H2_2026-10-26/INFORME_REPARACION_E3H1H2.md', 'v2', 3, 3)]
+a un elemento: [('mentos/E3R_desbloqueo_2026-10-26/PLAN_EJECUCION_UNICA_E3R.md', 'v1 con P0_resultado.json', 5, 5, ['una_sola_opcion']), ('mentos/E3R_desbloqueo_2026-10-26/PLAN_EJECUCION_UNICA_E3R.md', 'v1 con P0_resultado_R1prima.json', 6, 6, ['una_sola_opcion']), ('ia/reparacion_E3H1H2_2026-10-26/INFORME_REPARACION_E3H1H2.md', 'v2', 3, 3, []), ('evidencia/reparacion_E3H1H2_2026-10-26/MANIFEST.sha256', 'v2', 2, 3, ['FRASE']), ('da/reparacion_E3H1H2_2026-10-26/INFORME_REPARACION_E3H1H2.md', 'v2', 3, 3, []), ('6/copia_aislada/reparacion_E3H1H2_2026-10-26/MANIFEST.sha256', 'v2', 2, 3, ['FRASE']), ('MANIFEST_PAQUETE.sha256', 'v1 con P0_resultado.json', 4, 5, ['FRASE', 'una_sola_opcion']), ('MANIFEST_PAQUETE.sha256', 'v1 con P0_resultado_R1prima.json', 5, 6, ['FRASE', 'una_sola_opcion']), ('MANIFEST_PAQUETE.sha256', 'v2', 2, 3, ['FRASE']), ('registro/INVENTARIO_ORIGEN_A.tsv', 'v1 con P0_resultado.json', 4, 5, ['FRASE', 'una_sola_opcion']), ('registro/INVENTARIO_ORIGEN_A.tsv', 'v1 con P0_resultado_R1prima.json', 5, 6, ['FRASE', 'una_sola_opcion']), ('registro/INVENTARIO_ORIGEN_A.tsv', 'v2', 2, 3, ['FRASE'])]
+## mutantes_revisor.txt
+R1_validez_previa_cuenta_como_con_estadisticos       detectado · 5 failed, 45 passed, 1 skipped in 1.21s · ['test_excepcion_en_cada_etapa_deja_ERROR_explicito[validez_previa-validez_previa]']
+R2_acepta_autorizacion_repetida_tras_ERROR           SOBREVIVE · 4 failed, 46 passed, 1 skipped in 1.21s · []
+R3_resultado_no_atomico                              SOBREVIVE · 4 failed, 46 passed, 1 skipped in 1.22s · []
+R4_registro_EVALUADO_antes_de_escribir_el_resultado  SOBREVIVE · 4 failed, 46 passed, 1 skipped in 1.28s · []
+R5_ERROR_sobrescribe_aunque_ya_haya_resultado        SOBREVIVE · 4 failed, 46 passed, 1 skipped in 1.45s · []
+R6_ignora_sha_del_manifiesto_en_la_autorizacion      detectado · 5 failed, 45 passed, 1 skipped in 1.38s · ['test_autorizacion_incompleta_se_rechaza[2]']
+R7_sin_comprobar_salida_existente                    detectado · 5 failed, 45 passed, 1 skipped in 1.47s · ['test_salida_existente_no_se_reescribe']
+R8_reintento_sin_citar_el_ERROR                      SOBREVIVE · 4 failed, 46 passed, 1 skipped in 1.17s · []
+
+## suite_v3_con_guarda.txt (últimas 15 líneas)
+    assert 'terminal: ER...LTADO_E3.json' == 'termino'
+      
+      - termino
+      + terminal: ERROR en la etapa «validez_previa»: CalculoBloqueado: CÁLCULO BLOQUEADO POR EL REVISOR. Ver /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/tmp_pytest_v3/bt/test_EVALUADO_de_punta_a_punta0/salida/RESULTADO_E3.json
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/copia_A/paquete_revision_independiente_E3H1H2_2026-10-28/evidencia/cierre_bloqueantes_E3H1H2_2026-10-27/pruebas/test_orquestador_v3.py:391: AssertionError: terminal: ERROR en la etapa «validez_previa»: CalculoBloqueado: CÁLCULO BLOQUEADO POR EL REVISOR. Ver /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/tmp_pytest_v3/bt/test_EVALUADO_de_punta_a_punta0/salida/RESULTADO_E3.json
+E   guarda_revisor.CalculoBloqueado: CÁLCULO BLOQUEADO POR EL REVISOR
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/arnes/guarda_revisor.py:13: guarda_revisor.CalculoBloqueado: CÁLCULO BLOQUEADO POR EL REVISOR
+E   guarda_revisor.CalculoBloqueado: CÁLCULO BLOQUEADO POR EL REVISOR
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/arnes/guarda_revisor.py:13: guarda_revisor.CalculoBloqueado: CÁLCULO BLOQUEADO POR EL REVISOR
+=========================== short test summary info ============================
+FAILED ../copia_A/paquete_revision_independiente_E3H1H2_2026-10-28/evidencia/cierre_bloqueantes_E3H1H2_2026-10-27/pruebas/test_orquestador_v3.py::test_INVALIDO_explicito_y_no_reescrito_como_ERROR
+FAILED ../copia_A/paquete_revision_independiente_E3H1H2_2026-10-28/evidencia/cierre_bloqueantes_E3H1H2_2026-10-27/pruebas/test_orquestador_v3.py::test_EVALUADO_de_punta_a_punta_y_sin_segunda_ejecucion
+FAILED ../copia_A/paquete_revision_independiente_E3H1H2_2026-10-28/evidencia/cierre_bloqueantes_E3H1H2_2026-10-27/pruebas/test_orquestador_v3.py::test_ejecutar_del_v3_identico_al_del_v2[20261026-0.02]
+FAILED ../copia_A/paquete_revision_independiente_E3H1H2_2026-10-28/evidencia/cierre_bloqueantes_E3H1H2_2026-10-27/pruebas/test_orquestador_v3.py::test_ejecutar_del_v3_identico_al_del_v2[37-0.0]
+4 failed, 47 passed in 1.25s
+## C1_concurrencia/correr.json
+{
+ "escenario": "B1_evaluado_sin_fallo",
+ "termino": "Rechazo: otra ejecución de E3 está en curso: el registro de intentos está bloqueado"
+}
+## ¿hay escenario L12 en el arnés o en los directorios?
+revision_adversarial_E3H1H2_2026-10-28/arnes_L13_SINTETICO_SIN_DATOS_SIN_CALCULO/L12_registro_borrado_tras_EVALUADO
+revision_adversarial_E3H1H2_2026-10-28/arnes_L13_SINTETICO_SIN_DATOS_SIN_CALCULO/L12_registro_borrado_tras_EVALUADO.correr.txt
+revision_adversarial_E3H1H2_2026-10-28/arnes_L13_SINTETICO_SIN_DATOS_SIN_CALCULO/L12_registro_borrado_tras_EVALUADO.observar.txt
+188:| **L-12** | La unicidad depende del registro | Escenario L12: con el registro borrado, una nueva instancia hace otra ejecución completa | — | **Confirmado (R)** | **Alta** | Registro fuera del árbol, anclado o firmado |
+395:| **L12** registro borrado después de EVALUADO | EVALUADO | (borrado) | **PERMITIDA** |

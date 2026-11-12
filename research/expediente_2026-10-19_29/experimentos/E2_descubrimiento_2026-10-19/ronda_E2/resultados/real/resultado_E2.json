@@ -1,0 +1,334 @@
+{
+ "E2-A": {
+  "pruebas": {
+   "VOL30|h7": {
+    "n_pronosticos": 3940,
+    "n_fechas": 1970,
+    "t_cw": -0.3613050367109938,
+    "p_unilateral": 0.6410642855374313,
+    "delta_R2_oos": -0.00337131700971538,
+    "activos": [
+     "BTC",
+     "ETH"
+    ],
+    "periodo_pronostico": [
+     "2021-01-01",
+     "2026-05-24"
+    ],
+    "holm_interno": {
+     "umbral": 0.0125,
+     "pasa": false
+    }
+   },
+   "VOLUMEN_Z30|h7": {
+    "n_pronosticos": 3940,
+    "n_fechas": 1970,
+    "t_cw": -0.639391752366349,
+    "p_unilateral": 0.7387159434776704,
+    "delta_R2_oos": -0.0031555937464264883,
+    "activos": [
+     "BTC",
+     "ETH"
+    ],
+    "periodo_pronostico": [
+     "2021-01-01",
+     "2026-05-24"
+    ],
+    "holm_interno": {
+     "umbral": 0.016666666666666666,
+     "pasa": false
+    }
+   },
+   "FUNDING7|h7": {
+    "n_pronosticos": 3940,
+    "n_fechas": 1970,
+    "t_cw": -0.34201148560447037,
+    "p_unilateral": 0.6338288756706005,
+    "delta_R2_oos": -0.006264754763219305,
+    "activos": [
+     "BTC",
+     "ETH"
+    ],
+    "periodo_pronostico": [
+     "2021-01-01",
+     "2026-05-24"
+    ],
+    "holm_interno": {
+     "umbral": 0.01,
+     "pasa": false
+    }
+   },
+   "PRIMA7|h7": {
+    "n_pronosticos": 1939,
+    "n_fechas": 1939,
+    "t_cw": 0.5412186302789048,
+    "p_unilateral": 0.2941784488924045,
+    "delta_R2_oos": -0.024370124214503797,
+    "activos": [
+     "BTC"
+    ],
+    "periodo_pronostico": [
+     "2021-01-01",
+     "2026-05-24"
+    ],
+    "holm_interno": {
+     "umbral": 0.005555555555555556,
+     "pasa": false
+    }
+   },
+   "DD90|h7": {
+    "n_pronosticos": 3940,
+    "n_fechas": 1970,
+    "t_cw": 1.0816013042619763,
+    "p_unilateral": 0.13971486236500863,
+    "delta_R2_oos": 0.0008954776068195169,
+    "activos": [
+     "BTC",
+     "ETH"
+    ],
+    "periodo_pronostico": [
+     "2021-01-01",
+     "2026-05-24"
+    ],
+    "holm_interno": {
+     "umbral": 0.005,
+     "pasa": false
+    }
+   },
+   "VOL30|h28": {
+    "n_pronosticos": 3898,
+    "n_fechas": 1949,
+    "t_cw": 0.05995690737409558,
+    "p_unilateral": 0.4760949779217062,
+    "delta_R2_oos": -0.009437249084636834,
+    "activos": [
+     "BTC",
+     "ETH"
+    ],
+    "periodo_pronostico": [
+     "2021-01-01",
+     "2026-05-03"
+    ],
+    "holm_interno": {
+     "umbral": 0.0071428571428571435,
+     "pasa": false
+    }
+   },
+   "VOLUMEN_Z30|h28": {
+    "n_pronosticos": 3898,
+    "n_fechas": 1949,
+    "t_cw": -1.0796574284060254,
+    "p_unilateral": 0.8598526210370451,
+    "delta_R2_oos": -0.004651814399329712,
+    "activos": [
+     "BTC",
+     "ETH"
+    ],
+    "periodo_pronostico": [
+     "2021-01-01",
+     "2026-05-03"
+    ],
+    "holm_interno": {
+     "umbral": 0.025,
+     "pasa": false
+    }
+   },
+   "FUNDING7|h28": {
+    "n_pronosticos": 3898,
+    "n_fechas": 1949,
+    "t_cw": -1.4468194908714744,
+    "p_unilateral": 0.9260262568163155,
+    "delta_R2_oos": -0.14594850867885878,
+    "activos": [
+     "BTC",
+     "ETH"
+    ],
+    "periodo_pronostico": [
+     "2021-01-01",
+     "2026-05-03"
+    ],
+    "holm_interno": {
+     "umbral": 0.05,
+     "pasa": false
+    }
+   },
+   "PRIMA7|h28": {
+    "n_pronosticos": 1918,
+    "n_fechas": 1918,
+    "t_cw": -0.20104414233871487,
+    "p_unilateral": 0.5796679709681423,
+    "delta_R2_oos": -0.12025867933522938,
+    "activos": [
+     "BTC"
+    ],
+    "periodo_pronostico": [
+     "2021-01-01",
+     "2026-05-03"
+    ],
+    "holm_interno": {
+     "umbral": 0.008333333333333333,
+     "pasa": false
+    }
+   },
+   "DD90|h28": {
+    "n_pronosticos": 3898,
+    "n_fechas": 1949,
+    "t_cw": 0.15467603541363353,
+    "p_unilateral": 0.43853836178171035,
+    "delta_R2_oos": -0.012234912501973172,
+    "activos": [
+     "BTC",
+     "ETH"
+    ],
+    "periodo_pronostico": [
+     "2021-01-01",
+     "2026-05-03"
+    ],
+    "holm_interno": {
+     "umbral": 0.00625,
+     "pasa": false
+    }
+   }
+  },
+  "p_familia_bonferroni": 1.0,
+  "n_pruebas": 10
+ },
+ "E2-B": {
+  "por_activo": {
+   "BTC": {
+    "exceso_anual": 0.017474034670719833,
+    "P": 0.6421,
+    "ic90": [
+     -0.06649730860561645,
+     0.09931075882720011
+    ],
+    "exceso_anual_costes_x2": 0.008723545064095025,
+    "exposicion_media": 0.5517872408170801,
+    "dias_por_estado": {
+     "0.0": 87,
+     "0.5": 1852,
+     "1.0": 217
+    },
+    "episodios": {
+     "cola_baja_largo": 25,
+     "cola_alta_efectivo": 9
+    },
+    "regla": {
+     "cagr": 0.2919542096262311,
+     "vol_anual": 0.31401527008167235,
+     "sharpe": 0.9723034684224119,
+     "caida_maxima": 0.5386661736553529,
+     "operaciones": 69,
+     "costes_pp_anual": 2.376787834142352,
+     "rotacion_anual": 5.214259115033968
+    },
+    "estatica": {
+     "cagr": 0.26741082440732544,
+     "vol_anual": 0.3190387240313921,
+     "sharpe": 0.902223084176352,
+     "caida_maxima": 0.5250080916836408
+    },
+    "buy_and_hold": {
+     "cagr": 0.42560899294398613,
+     "vol_anual": 0.5784077409892335,
+     "sharpe": 0.9019996970797074,
+     "caida_maxima": 0.7664469556690576
+    }
+   },
+   "ETH": {
+    "exceso_anual": -0.01940891407109376,
+    "P": 0.4405,
+    "ic90": [
+     -0.1675876485914786,
+     0.11088073758713743
+    ],
+    "exceso_anual_costes_x2": -0.030648758424796783,
+    "exposicion_media": 0.5906119374886607,
+    "dias_por_estado": {
+     "0.0": 79,
+     "0.5": 1709,
+     "1.0": 368
+    },
+    "episodios": {
+     "cola_baja_largo": 34,
+     "cola_alta_efectivo": 10
+    },
+    "regla": {
+     "cagr": 0.2913934740571511,
+     "vol_anual": 0.4991177038942338,
+     "sharpe": 0.7605108091317623,
+     "caida_maxima": 0.6022037935923514,
+     "operaciones": 89,
+     "costes_pp_anual": 4.421421591118563,
+     "rotacion_anual": 7.12798681800552
+    },
+    "estatica": {
+     "cagr": 0.33904676960556857,
+     "vol_anual": 0.4630341927495056,
+     "sharpe": 0.8616930005588902,
+     "caida_maxima": 0.5839526781777679
+    },
+    "buy_and_hold": {
+     "cagr": 0.44562123193953007,
+     "vol_anual": 0.7841499921712042,
+     "sharpe": 0.8616527006972672,
+     "caida_maxima": 0.7930816448271822
+    }
+   }
+  },
+  "conjunto": {
+   "dias": 2156,
+   "exceso_anual": -0.000967439700186963,
+   "P": 0.5211,
+   "ic90": [
+    -0.10395437286928103,
+    0.09195093831590596
+   ],
+   "exceso_anual_costes_x2": -0.010962606680350878
+  },
+  "p_B": 0.4789
+ },
+ "E2-C": {
+  "n_pronosticos": 2989,
+  "n_fechas": 2989,
+  "t_cw": -1.3907734292122569,
+  "p_unilateral": 0.9178529285868837,
+  "delta_R2_oos": -0.052215985425207556,
+  "inicio_entrenamiento": "2017-09-14",
+  "periodo_pronostico": [
+   "2018-03-19",
+   "2026-05-24"
+  ],
+  "dias_de_pronostico_posibles": 2989,
+  "dias_sin_variable_por_huecos": 0,
+  "fraccion_sin_variable": 0.0,
+  "p_C": 0.9178529285868837,
+  "inconcluso_por_huecos": false
+ },
+ "holm_entre_experimentos": {
+  "E2-B": {
+   "p": 0.4789,
+   "umbral": 0.016666666666666666,
+   "rechaza": false
+  },
+  "E2-C": {
+   "p": 0.9178529285868837,
+   "umbral": 0.025,
+   "rechaza": false
+  },
+  "E2-A": {
+   "p": 1.0,
+   "umbral": 0.05,
+   "rechaza": false
+  }
+ },
+ "clasificacion": {
+  "E2-A": "INSUFICIENTE",
+  "E2-B": "INSUFICIENTE (estimación puntual negativa)",
+  "E2-C": "EN CONTRA (sin información incremental detectable)"
+ },
+ "meta": {
+  "ejecutado_utc": "2026-10-19T23:25:13.947984+00:00",
+  "semilla": 20261019
+ }
+}

@@ -1,0 +1,16 @@
+{
+ "descripcion": "PLAN_R19 + enmienda 1 (propuesta; NO ejecutada). Matriz: 2 árboles x K{0,4,8} x bucle {activo, aparcado}; 20 corridas de la prueba sola y 1 del módulo por celda; orden aleatorio intercalado con semilla fija.",
+ "arboles": {"r19_cand": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_D1_D2_R19_2026-10-22/fase3/arboles/r19_cand", "r19_base": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_D1_D2_R19_2026-10-22/fase3/arboles/r19_base"},
+ "python": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_D1_D3_2026-10-22/entorno/venv_A/bin/python",
+ "K": [0, 4, 8],
+ "park": [0, 1],
+ "N": 20,
+ "N_modulo": 1,
+ "prueba": "tests/integration/test_account_restore.py::test_partial_fills_and_fees_rebuild_identically_however_often",
+ "modulo": "tests/integration/test_account_restore.py",
+ "semilla_orden": 20261022,
+ "calentamiento_s": 3,
+ "extra_s": 120,
+ "extra2_s": 60,
+ "limite_corrida_s": 1200
+}

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.586" timestamp="2026-10-26T12:00:00.001090+00:00" hostname="vm"><testcase classname="tests.integration.test_risk_state_persistence" name="test_five_restored_entries_for_the_symbol_refuse_the_sixth_after_the_restart" time="0.122"><failure message="assert 2 == 0&#10; +  where 2 = &lt;tests.integration.test_live_runtime.FakeExecution object at 0x7fda65d17750&gt;.submissions">async def test_five_restored_entries_for_the_symbol_refuse_the_sixth_after_the_restart() -&gt; None:
+        # The restored day is the session's, read from its clock. Taken from the wall, it was
+        # the session's tomorrow before ≈05:55 UTC (the series sat ≈6 h behind the wall) and
+        # the cap never spoke. Anchored, the drive below stays inside that day at any hour.
+        now = build_runtime_paper_with(start=SESSION_DAY_START)[0]._clock.now()
+        runtime, execution, market = build_runtime_paper_with(
+            prior_risk_state=RiskRestore(
+                complete=True, day=now.date().isoformat(), entries_today=5,
+                entries_today_by_symbol={"BTC-USD": 5},
+                last_entry_at={"BTC-USD": now - timedelta(hours=2)},
+                entry_orders_today=5,
+            ),
+            start=SESSION_DAY_START,
+        )
+        await runtime.start()
+        try:
+            _seed_every_bucket(runtime)
+            # The engine's checks run in a fixed order and market conditions may refuse a
+            # bar before the frequency check is reached; drive until the cap itself speaks.
+            for _ in range(300):
+                market.advance()
+                await runtime._cycle_once()
+&gt;               assert execution.submissions == 0
+E               assert 2 == 0
+E                +  where 2 = &lt;tests.integration.test_live_runtime.FakeExecution object at 0x7fda65d17750&gt;.submissions
+
+tests/integration/test_risk_state_persistence.py:303: AssertionError</failure></testcase></testsuite></testsuites>

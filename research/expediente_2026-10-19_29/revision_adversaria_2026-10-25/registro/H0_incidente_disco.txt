@@ -1,0 +1,6 @@
+== incidente de disco en la revisión: 2026-10-25T17:39:30Z
+causa: la sonda de intercalados de R15 creó una base nueva por intento (300 previstas) además de las 50 de la sonda del paquete; cada CREATE DATABASE copia la plantilla (~7,5 MB) y el volumen llegó a 0 B libres; PostgreSQL desechable se detuvo por no poder escribir WAL (log: 'No space left on device').
+procesos postgres: 0
+se borra SOLO el directorio de datos de la instancia desechable de esta revisión (2.1G); se conserva su log.
+disponible después: 2.1G
+corrección del procedimiento: la sonda de intercalados se vuelve a correr con DROP DATABASE después de cada intento.

@@ -1,0 +1,144 @@
+diff --git a/packages/tia/src/tia/api/state.py b/packages/tia/src/tia/api/state.py
+index 4c6086e..f5e113a 100644
+--- a/packages/tia/src/tia/api/state.py
++++ b/packages/tia/src/tia/api/state.py
+@@ -3129,8 +3129,60 @@ class AppState:
+             if name in capital:
+                 lines.append(f"# TYPE tia_portfolio_{name} gauge")
+                 lines.append(f"tia_portfolio_{name} {capital[name]}")
++        lines.extend(self._live_session_metrics())
+         return "\n".join(lines) + "\n"
+ 
++    def _live_session_metrics(self) -> list[str]:
++        """The 24/7 session — the one that holds positions — in the exposition. The lines
++        above describe the scenario engine only; without these, a scrape could not tell a
++        session holding an unprotected position, or losing writes, from one that is fine."""
++        live = self.live_runtime
++        lines = [
++            "# HELP tia_live_session 1 when a 24/7 session (paper-realtime or live) exists",
++            "# TYPE tia_live_session gauge",
++            f"tia_live_session {0 if live is None else 1}",
++        ]
++        if live is None:
++            return lines
++        try:
++            snap = live.snapshot()
++        except Exception as exc:  # the exposition must still say something is wrong
++            _log.warning("live_metrics_unavailable", error=str(exc)[:200])
++            return [*lines, "# TYPE tia_live_snapshot_error gauge", "tia_live_snapshot_error 1"]
++        position = snap.get("position") or {}
++        persistence = snap.get("persistence") or {}
++        held = bool(position.get("open"))
++        lines += [
++            "# HELP tia_live_state The session's state (1 on the current one)",
++            "# TYPE tia_live_state gauge",
++            f'tia_live_state{{state="{snap.get("state")}"}} 1',
++            "# HELP tia_live_position_open 1 when the session holds a position",
++            "# TYPE tia_live_position_open gauge",
++            f"tia_live_position_open {int(held)}",
++            "# HELP tia_live_position_unprotected 1 when it holds a position no stop the venue confirmed covers",
++            "# TYPE tia_live_position_unprotected gauge",
++            f"tia_live_position_unprotected {int(held and not position.get('protected'))}",
++            "# HELP tia_live_entry_blocks Reasons new entries are currently refused",
++            "# TYPE tia_live_entry_blocks gauge",
++            f"tia_live_entry_blocks {len(snap.get('entry_blocks') or {})}",
++            "# TYPE tia_live_heartbeat_age_seconds gauge",
++            f"tia_live_heartbeat_age_seconds {snap.get('heartbeat_age_seconds', 0)}",
++            "# TYPE tia_live_market_data_age_seconds gauge",
++            f"tia_live_market_data_age_seconds {snap.get('market_data_age_seconds', 0)}",
++        ]
++        for name in ("scheduled", "confirmed", "failed", "in_flight"):
++            if name in persistence:
++                kind = "gauge" if name == "in_flight" else "counter"
++                lines += [f"# TYPE tia_live_persistence_{name} {kind}", f"tia_live_persistence_{name} {persistence[name]}"]
++        if "complete" in persistence:
++            lines += ["# HELP tia_live_persistence_complete 0 once a write was lost or is still in flight",
++                      "# TYPE tia_live_persistence_complete gauge",
++                      f"tia_live_persistence_complete {int(bool(persistence['complete']))}"]
++        for name, value in (snap.get("counters") or {}).items():
++            if isinstance(value, int | float) and not isinstance(value, bool):
++                lines += [f"# TYPE tia_live_{name} counter", f"tia_live_{name} {value}"]
++        return lines
++
+     # ------------------------------------------------------------------ backtests
+ 
+     async def event_trace(self, correlation_id: str) -> list[dict[str, Any]]:
+diff --git a/tests/integration/test_live_metrics.py b/tests/integration/test_live_metrics.py
+new file mode 100644
+index 0000000..83eecdd
+--- /dev/null
++++ b/tests/integration/test_live_metrics.py
+@@ -0,0 +1,73 @@
++"""The metrics exposition describes the 24/7 session, not only the scenario engine.
++
++``/api/metrics`` used to read the scenario engine alone: with only the paper-realtime (or
++live) session running — the one holding positions — a scrape saw ``tia_up 1`` and empty
++counters, so an alert on an unprotected position or a lost write had nothing to fire on.
++
++Expected outcomes, fixed before running: with no session, ``tia_live_session 0`` and no
++session series; with one, its state, whether it holds a position, whether that position is
++unprotected, its entry blocks, its persistence completeness and its counters.
++"""
++
++from __future__ import annotations
++
++from pathlib import Path
++
++import pytest
++
++from tests.integration.test_live_api import _FakePublicFeed, _settings
++from tia.api.state import AppState
++from tia.core.config import LiveConfig
++
++from .test_account_restore import build, open_position
++
++
++@pytest.fixture(autouse=True)
++def _feed(monkeypatch: pytest.MonkeyPatch) -> None:
++    import tia.data.providers.binance_public as binance_public
++
++    monkeypatch.setattr(binance_public, "BinancePublicProvider", _FakePublicFeed)
++
++
++def _value(text: str, series: str) -> str | None:
++    for line in text.splitlines():
++        if line.startswith(series + " "):
++            return line.split(" ", 1)[1]
++    return None
++
++
++async def test_the_exposition_carries_the_session_that_holds_positions(tmp_path: Path) -> None:
++    state = AppState(_settings(tmp_path, live=LiveConfig(market_stream=False)))
++    await state.database.ensure_schema()
++    runtime, engine, market, _ = build()
++    started = False
++    try:
++        assert _value(state.prometheus_metrics(), "tia_live_session") == "0"
++        assert "tia_live_state" not in state.prometheus_metrics()
++
++        await runtime.start()
++        started = True
++        await open_position(runtime, market)
++        market.advance()
++        await runtime._cycle_once()
++        state.live_runtime = runtime
++        text = state.prometheus_metrics()
++        assert _value(text, "tia_live_session") == "1"
++        assert _value(text, f'tia_live_state{{state="{runtime.state.value}"}}') == "1"
++        assert _value(text, "tia_live_position_open") == "1"
++        assert _value(text, "tia_live_position_unprotected") == "0"
++        assert _value(text, "tia_live_persistence_complete") == "1"
++        assert _value(text, "tia_live_orders") == str(runtime.counters["orders"])
++
++        stop = runtime._protective
++        await engine.cancel_order(stop["order_id"])  # the stop is gone
++        runtime._protective = None
++        runtime._block_entries("position_unprotected", "drill")
++        text = state.prometheus_metrics()
++        assert _value(text, "tia_live_position_unprotected") == "1"
++        assert _value(text, "tia_live_entry_blocks") == "1"
++    finally:
++        if started:
++            await runtime.stop(reason="end")
++        state.live_runtime = None
++        await state.shutdown()

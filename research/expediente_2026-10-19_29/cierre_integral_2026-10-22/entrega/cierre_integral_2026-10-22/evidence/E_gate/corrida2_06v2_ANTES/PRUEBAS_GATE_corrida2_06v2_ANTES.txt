@@ -1,0 +1,14 @@
+== corrida 2: arnés corregido contra el gate 06v2 (ANTES de 06v3): 2026-10-25T16:52:58Z · arnés a54842c5726b511a · gate d8749a9bf7ebc7c0
+OK  real_final                   esperado=pass veredicto=pass rc=0 problemas=[]
+OK  guarda_omitida               esperado=fail veredicto=fail rc=1 problemas=['engine claims 1.1.0 but the version guard ran 7 and passed 0 of 7']
+OK  guarda_quitada               esperado=fail veredicto=fail rc=1 problemas=['engine claims 1.1.0 but the version guard ran 0 and passed 0 of 7']
+OK  guarda_6_de_7                esperado=fail veredicto=fail rc=1 problemas=['engine claims 1.1.0 but the version guard ran 6 and passed 6 of 7']
+OK  falla_ajena                  esperado=fail veredicto=fail rc=1 problemas=['1 failed and 0 errored']
+OK  falla_en_guarda              esperado=fail veredicto=fail rc=1 problemas=['1 failed and 0 errored', 'engine claims 1.1.0 but the version guard ran 7 and passed 6 of 7']
+OK  error                        esperado=fail veredicto=fail rc=1 problemas=['0 failed and 1 errored']
+OK  junit_vacio                  esperado=fail veredicto=fail rc=1 problemas=['the JUnit report holds no test', 'engine claims 1.1.0 but the version guard ran 0 and passed 0 of 7']
+OK  base_sin_version_sin_guarda  esperado=pass veredicto=pass rc=0 problemas=[]
+OK  otro_interprete_real         esperado=pass veredicto=pass rc=0 problemas=[]
+MAL otro_interprete_guarda_omitida esperado=fail veredicto=pass rc=0 problemas=[]
+RESULTADO: 10/11 casos con el veredicto y el motivo esperados
+rc=1

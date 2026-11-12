@@ -1,0 +1,19 @@
+FF..                                                                     [100%]
+=================================== FAILURES ===================================
+E   AssertionError: persistence writes still in flight
+    assert False
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_integral_2026-10-22/trabajo/validacion_sonda/tests/integration/test_validacion_sonda_r19.py:8: AssertionError: persistence writes still in flight
+E   AssertionError: persistence writes still in flight
+    assert False
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_integral_2026-10-22/trabajo/validacion_sonda/tests/integration/test_validacion_sonda_r19.py:8: AssertionError: persistence writes still in flight
+==================================== PASSES ====================================
+____________________ test_errores_inyectado_y_no_inyectado _____________________
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:13:07 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during fill'
+2026-10-22 22:13:07 [warning  ] live_persist_task_failed       component=runtime.live error=boom
+=========================== short test summary info ============================
+PASSED tests/integration/test_validacion_sonda_r19.py::test_errores_inyectado_y_no_inyectado
+PASSED tests/integration/test_validacion_sonda_r19.py::test_vaciado_que_no_pide_settle
+FAILED tests/integration/test_validacion_sonda_r19.py::test_lenta_con_productor
+FAILED tests/integration/test_validacion_sonda_r19.py::test_trabada - Asserti...
+2 failed, 2 passed in 9.18s

@@ -1,0 +1,149 @@
+--- /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_integral_2026-10-22/trabajo/guarda_v2/test_engine_version_contract_v1.py	2026-10-22 22:16:35.776483105 +0000
++++ /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_integral_2026-10-22/trabajo/guarda_v2/test_engine_version_contract.py	2026-10-22 22:17:57.243066801 +0000
+@@ -24,9 +24,14 @@
+ fingerprint, the D1-D3 tests and any trade count. The checks see only orders, fills and
+ positions at the venue. An engine that carries the label and even the interface of 1.1.0
+ without the behaviour fails here, and nothing ties the checks to how this engine implements
+-the rules. What they do assume is the venue contract of today: closes are reduce-only
+-market orders and stops are stop orders. A version below 1.1.0, or none, claims nothing
+-and is not held to it; a version that is not a dotted number fails rather than escape.
++the rules. What they do assume is the venue contract: a close is a reduce-only order that
++is not a stop (a market order today; a limit one would do), and a stop is a stop order.
++
++What the label promises: 1.1.0 or later, D1-D3, checked as above; an explicit version below
++1.1.0, nothing, and the checks are skipped. No version at all fails: this guard comes after
++the change that records the version (01 + 02v3), so a missing one means that change is
++missing or was reverted alone. A version that is not a dotted number fails rather than
++escape.
+ """
+ 
+ from __future__ import annotations
+@@ -138,6 +143,11 @@
+     closes_expired_with_position: int = 0
+ 
+ 
++def _is_close(order: object) -> bool:
++    """A close, by the venue contract: reduce-only and not a stop, whatever its type."""
++    return bool(getattr(order, "reduce_only", False)) and getattr(order, "order_type", None) is not OrderType.STOP
++
++
+ def _held(provider: PaperExecutionProvider, symbol: str) -> float:
+     position = provider.portfolio.positions.get(symbol)
+     return 0.0 if position is None or position.is_flat else float(position.quantity)
+@@ -190,7 +200,7 @@
+         return self.seq
+ 
+     def _should_reject(self, order):  # type: ignore[no-untyped-def]
+-        if (self.reject_first_close and order.reduce_only and order.order_type is OrderType.MARKET
++        if (self.reject_first_close and _is_close(order)
+                 and not self._close_rejected_this_episode):
+             self._close_rejected_this_episode = True
+             self.record.closes_rejected += 1
+@@ -209,7 +219,7 @@
+                 bar=self.bar, order_id=order.order_id, order_type=order.order_type,
+                 reduce_only=bool(order.reduce_only), before=before, after=after, episode=self.episode,
+             ))
+-        if (self.closes_are_ioc and order.reduce_only and order.order_type is OrderType.MARKET
++        if (self.closes_are_ioc and _is_close(order)
+                 and not order.state.is_terminal):
+             transition(order, OrderState.EXPIRED, at=candle.close_time, reason="immediate-or-cancel: the rest expired")
+             if after != 0.0:
+@@ -279,7 +289,7 @@
+     stop cancelled to make way for a close and put back when the close was rejected is
+     not churn: the close is what moved it."""
+     moved, wrong = 0, []
+-    closes_at = {s.bar for s in record.sent if s.reduce_only and s.order_type is OrderType.MARKET}
++    closes_at = {s.bar for s in record.sent if _is_close(s)}
+     last: dict[int, Sent] = {}
+     for sent in record.sent:
+         if sent.order_type is not OrderType.STOP or not sent.new or sent.held == 0.0 or sent.stop_price is None:
+@@ -313,7 +323,7 @@
+     size = None
+     for _bar, kind, event in events:
+         if kind == 1:
+-            if event.reduce_only and event.order_type is OrderType.MARKET and event.held != 0.0 and size is None:
++            if _is_close(event) and event.held != 0.0 and size is None:
+                 size = abs(event.held)
+                 asked_at = event.bar
+         else:
+@@ -339,11 +349,11 @@
+ 
+ 
+ def closes_without_reduce_only(record: Record) -> list[str]:
+-    """Kept from before 1.1.0 and not weakened by it: a market order against the position
+-    is a close, and a close is reduce-only."""
+-    return [f"bar {s.bar}: market {s.side.value} against {s.held} without reduce_only"
++    """Kept from before 1.1.0 and not weakened by it: an order against the position that is
++    not a stop is a close, of whatever type, and a close is reduce-only."""
++    return [f"bar {s.bar}: {s.order_type.value} {s.side.value} against {s.held} without reduce_only"
+             for s in record.sent
+-            if s.order_type is OrderType.MARKET and s.held != 0.0
++            if s.order_type is not OrderType.STOP and s.held != 0.0
+             and (s.side is Side.SELL) == (s.held > 0) and not s.reduce_only]
+ 
+ 
+@@ -354,9 +364,22 @@
+     if raw is None:
+         return None
+     try:
+-        return tuple(int(part) for part in str(raw).split("."))
++        parts = tuple(int(part) for part in str(raw).split("."))
+     except ValueError:
+         raise AssertionError(f"engine_version {raw!r} is not a dotted number: no promise can be read from it") from None
++    return parts + (0,) * (3 - len(parts))  # "1.1" is 1.1.0, not something below it
++
++
++def _promises_order_hygiene(raw: object) -> bool:
++    """Whether the recorded label promises D1-D3. No label is not "no promise": the guard
++    depends on the change that records it, and runs without it only by mistake."""
++    version = _declared(raw)
++    if version is None:
++        raise AssertionError(
++            "the engine records no engine_version: this guard depends on the provenance change "
++            "(01 + 02v3) and runs without it only if that change is missing or was reverted alone"
++        )
++    return version >= ORDER_HYGIENE_SINCE
+ 
+ 
+ def _run(monkeypatch: pytest.MonkeyPatch, *, reject_first_close: bool = False, closes_are_ioc: bool = False,
+@@ -379,9 +402,9 @@
+     # below would see nothing and pass for nothing.
+     assert venue is not None and venue.record.looks, "the engine did not run on the recording venue"
+     assert len(venue.record.looks) == len(SERIES)
+-    version = _declared(getattr(result.conditions, "engine_version", None))
+-    if version is None or version < ORDER_HYGIENE_SINCE:
+-        pytest.skip(f"the engine records version {version}: it does not claim D1-D3")
++    recorded = getattr(result.conditions, "engine_version", None)
++    if not _promises_order_hygiene(recorded):
++        pytest.skip(f"the engine records version {recorded}: it does not claim D1-D3")
+     return venue.record
+ 
+ 
+@@ -493,12 +516,20 @@
+     assert entries_filling_a_later_position(Record(sent=[], looks=[], fills=[
+         Filled(1, "e", OrderType.LIMIT, False, 0.0, 0.5, 1), Filled(9, "e", OrderType.LIMIT, False, 0.0, 0.5, 2)]))
+     assert closes_without_reduce_only(Record(sent=[_sent(3, OrderType.MARKET, stop=None)], looks=[], fills=[]))
++    assert closes_without_reduce_only(Record(sent=[_sent(3, OrderType.LIMIT, stop=None)], looks=[], fills=[]))
++    # a close of another type is still a close: growth after a reduce-only limit close is caught too
++    assert growth_after_close(Record(
++        sent=[_sent(3, OrderType.LIMIT, stop=None, reduce_only=True)], looks=[],
++        fills=[Filled(4, "e", OrderType.LIMIT, False, 1.0, 1.5, 1)]))
+ 
+ 
+-def test_a_version_that_is_not_a_number_cannot_escape_the_guard() -> None:
+-    assert _declared(None) is None
+-    assert _declared("1.1.0") == (1, 1, 0) >= ORDER_HYGIENE_SINCE
+-    assert _declared("1.2.0") >= ORDER_HYGIENE_SINCE  # a later version keeps the promise
+-    assert _declared("1.0.9") < ORDER_HYGIENE_SINCE
+-    with pytest.raises(AssertionError):
+-        _declared("1.1.0-rc1")
++def test_the_label_decides_the_promise_and_cannot_escape_the_guard() -> None:
++    assert _declared("1.1.0") == (1, 1, 0)
++    assert _promises_order_hygiene("1.1.0")
++    assert _promises_order_hygiene("1.2.0")  # a later version keeps the promise
++    assert _promises_order_hygiene("1.1") and _promises_order_hygiene("2")  # short forms are not lower versions
++    assert not _promises_order_hygiene("1.0.9")  # an explicit earlier version claims nothing
++    with pytest.raises(AssertionError, match="no engine_version"):
++        _promises_order_hygiene(None)  # the provenance change is missing: B without A
++    with pytest.raises(AssertionError, match="not a dotted number"):
++        _promises_order_hygiene("1.1.0-rc1")

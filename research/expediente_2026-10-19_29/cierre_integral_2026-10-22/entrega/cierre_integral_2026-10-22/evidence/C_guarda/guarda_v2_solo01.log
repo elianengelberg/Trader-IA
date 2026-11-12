@@ -1,0 +1,175 @@
+FFFFF..                                                                  [100%]
+=================================== FAILURES ===================================
+________ test_a_rejected_close_is_sent_again_as_a_new_order_and_closes _________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f9d73c67710>
+
+    def test_a_rejected_close_is_sent_again_as_a_new_order_and_closes(monkeypatch: pytest.MonkeyPatch) -> None:
+        """D1, exits: the venue rejects the first close of every position."""
+>       record = _run(monkeypatch, reject_first_close=True, max_holding_bars=TIME_STOP_BARS)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_engine_version_contract.py:413: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_engine_version_contract.py:406: in _run
+    if not _promises_order_hygiene(recorded):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+raw = None
+
+    def _promises_order_hygiene(raw: object) -> bool:
+        """Whether the recorded label promises D1-D3. No label is not "no promise": the guard
+        depends on the change that records it, and runs without it only by mistake."""
+        version = _declared(raw)
+        if version is None:
+>           raise AssertionError(
+                "the engine records no engine_version: this guard depends on the provenance change "
+                "(01 + 02v3) and runs without it only if that change is missing or was reverted alone"
+            )
+E           AssertionError: the engine records no engine_version: this guard depends on the provenance change (01 + 02v3) and runs without it only if that change is missing or was reverted alone
+
+tests/integration/test_engine_version_contract.py:378: AssertionError
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:54:08 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=99891.51 run_id=bt_BQF3HPF8CER0RBD2A0VW3MMY trades=13
+__________________ test_the_stop_in_the_book_follows_the_leg ___________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f9d73c67510>
+
+    def test_the_stop_in_the_book_follows_the_leg(monkeypatch: pytest.MonkeyPatch) -> None:
+        """D2: break-even and trailing move the stop in the book, only ever tighter, and a
+        working stop is not replaced by an identical one."""
+>       record = _run(monkeypatch)
+                 ^^^^^^^^^^^^^^^^^
+
+tests/integration/test_engine_version_contract.py:424: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_engine_version_contract.py:406: in _run
+    if not _promises_order_hygiene(recorded):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+raw = None
+
+    def _promises_order_hygiene(raw: object) -> bool:
+        """Whether the recorded label promises D1-D3. No label is not "no promise": the guard
+        depends on the change that records it, and runs without it only by mistake."""
+        version = _declared(raw)
+        if version is None:
+>           raise AssertionError(
+                "the engine records no engine_version: this guard depends on the provenance change "
+                "(01 + 02v3) and runs without it only if that change is missing or was reverted alone"
+            )
+E           AssertionError: the engine records no engine_version: this guard depends on the provenance change (01 + 02v3) and runs without it only if that change is missing or was reverted alone
+
+tests/integration/test_engine_version_contract.py:378: AssertionError
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:54:10 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=99901.95 run_id=bt_7H5F9YX42K2VV8WVD3BRGQGF trades=12
+_______ test_partial_fills_never_add_to_a_closing_position_or_reopen_one _______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f9d735816d0>
+
+    def test_partial_fills_never_add_to_a_closing_position_or_reopen_one(monkeypatch: pytest.MonkeyPatch) -> None:
+        """D3, on the close and when flat: most fills partial, entries resting in part."""
+>       record = _run(monkeypatch, partial=0.9)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_engine_version_contract.py:434: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_engine_version_contract.py:406: in _run
+    if not _promises_order_hygiene(recorded):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+raw = None
+
+    def _promises_order_hygiene(raw: object) -> bool:
+        """Whether the recorded label promises D1-D3. No label is not "no promise": the guard
+        depends on the change that records it, and runs without it only by mistake."""
+        version = _declared(raw)
+        if version is None:
+>           raise AssertionError(
+                "the engine records no engine_version: this guard depends on the provenance change "
+                "(01 + 02v3) and runs without it only if that change is missing or was reverted alone"
+            )
+E           AssertionError: the engine records no engine_version: this guard depends on the provenance change (01 + 02v3) and runs without it only if that change is missing or was reverted alone
+
+tests/integration/test_engine_version_contract.py:378: AssertionError
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:54:13 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=99938.94 run_id=bt_QTXM4VZCEVQ2YFGW2JA6C2TW trades=72
+_______ test_a_close_that_ends_with_position_left_is_followed_by_another _______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f9d736d6490>
+
+    def test_a_close_that_ends_with_position_left_is_followed_by_another(monkeypatch: pytest.MonkeyPatch) -> None:
+        """D3 safety net: closes are immediate-or-cancel, so most end with position left. The
+        position is never left with neither a stop nor a close working."""
+>       record = _run(monkeypatch, closes_are_ioc=True, partial=0.9, max_holding_bars=TIME_STOP_BARS)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_engine_version_contract.py:444: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_engine_version_contract.py:406: in _run
+    if not _promises_order_hygiene(recorded):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+raw = None
+
+    def _promises_order_hygiene(raw: object) -> bool:
+        """Whether the recorded label promises D1-D3. No label is not "no promise": the guard
+        depends on the change that records it, and runs without it only by mistake."""
+        version = _declared(raw)
+        if version is None:
+>           raise AssertionError(
+                "the engine records no engine_version: this guard depends on the provenance change "
+                "(01 + 02v3) and runs without it only if that change is missing or was reverted alone"
+            )
+E           AssertionError: the engine records no engine_version: this guard depends on the provenance change (01 + 02v3) and runs without it only if that change is missing or was reverted alone
+
+tests/integration/test_engine_version_contract.py:378: AssertionError
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:54:15 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=99932.07 run_id=bt_HE094J84GD4A7JV9Q11MM1DX trades=65
+_____________ test_rejections_partials_and_limit_entries_together ______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f9d736e8a90>
+
+    def test_rejections_partials_and_limit_entries_together(monkeypatch: pytest.MonkeyPatch) -> None:
+        """D1-D3 at once, as a venue has them: a third of all orders rejected, most fills
+        partial, limit entries that expire, the first close of every position rejected."""
+>       record = _run(monkeypatch, reject_first_close=True, reject=0.3, partial=0.6, entry_order_type="limit",
+                      max_holding_bars=TIME_STOP_BARS)
+
+tests/integration/test_engine_version_contract.py:453: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_engine_version_contract.py:406: in _run
+    if not _promises_order_hygiene(recorded):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+raw = None
+
+    def _promises_order_hygiene(raw: object) -> bool:
+        """Whether the recorded label promises D1-D3. No label is not "no promise": the guard
+        depends on the change that records it, and runs without it only by mistake."""
+        version = _declared(raw)
+        if version is None:
+>           raise AssertionError(
+                "the engine records no engine_version: this guard depends on the provenance change "
+                "(01 + 02v3) and runs without it only if that change is missing or was reverted alone"
+            )
+E           AssertionError: the engine records no engine_version: this guard depends on the provenance change (01 + 02v3) and runs without it only if that change is missing or was reverted alone
+
+tests/integration/test_engine_version_contract.py:378: AssertionError
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:54:18 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=100000.61 run_id=bt_78KP178Y873XRVY4070GN1WT trades=36
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED tests/integration/test_engine_version_contract.py::test_the_checks_pass_a_clean_record_and_catch_each_defect
+PASSED tests/integration/test_engine_version_contract.py::test_the_label_decides_the_promise_and_cannot_escape_the_guard
+FAILED tests/integration/test_engine_version_contract.py::test_a_rejected_close_is_sent_again_as_a_new_order_and_closes
+FAILED tests/integration/test_engine_version_contract.py::test_the_stop_in_the_book_follows_the_leg
+FAILED tests/integration/test_engine_version_contract.py::test_partial_fills_never_add_to_a_closing_position_or_reopen_one
+FAILED tests/integration/test_engine_version_contract.py::test_a_close_that_ends_with_position_left_is_followed_by_another
+FAILED tests/integration/test_engine_version_contract.py::test_rejections_partials_and_limit_entries_together
+5 failed, 2 passed in 13.49s

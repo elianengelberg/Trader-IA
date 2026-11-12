@@ -1,0 +1,695 @@
+[
+ {
+  "caso": "K0_control_sin_guarda",
+  "tipo": "18",
+  "esperado": "fail",
+  "razon_esperada": "disagree",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "the JUnit report and the session disagree (missing ['tests.integration.test_engine_version_contract::test_a_close_that_ends_with_position_left_is_followed_by_another', 'tests.integration.test_engine_version_contract::test_a_rejected_close_is_sent_again_as_a_new_order_and_closes', 'tests.integration.test_engine_version_contract::test_partial_fills_never_add_to_a_closing_position_or_reopen_one'], extra [], different [])",
+   "engine claims 1.2.0 but the guard defines 7 tests, the report has 0, the session 7, 7 passed"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "K1_asignacion_duplicada_primera_1_0_0",
+  "tipo": "18",
+  "esperado": "fail",
+  "razon_esperada": "binds ENGINE_VERSION 2 times",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "the JUnit report and the session disagree (missing ['tests.integration.test_engine_version_contract::test_a_close_that_ends_with_position_left_is_followed_by_another', 'tests.integration.test_engine_version_contract::test_a_rejected_close_is_sent_again_as_a_new_order_and_closes', 'tests.integration.test_engine_version_contract::test_partial_fills_never_add_to_a_closing_position_or_reopen_one'], extra [], different [])",
+   "the engine binds ENGINE_VERSION 2 times (lines [107, 108]); exactly one is allowed",
+   "the engine file the tests imported is not the one in the checkout now",
+   "engine claims None but the guard defines 7 tests, the report has 0, the session 7, 7 passed",
+   "the working tree changed after the tests started (c7688384d8005be4f95b378f8699b38a5b81dfe7 then, eed2a272ad4313c42b39bbaba9f3df4223d964d1 now)"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "K2_dentro_de_if",
+  "tipo": "18",
+  "esperado": "fail",
+  "razon_esperada": "not a top-level string literal",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "the JUnit report and the session disagree (missing ['tests.integration.test_engine_version_contract::test_a_close_that_ends_with_position_left_is_followed_by_another', 'tests.integration.test_engine_version_contract::test_a_rejected_close_is_sent_again_as_a_new_order_and_closes', 'tests.integration.test_engine_version_contract::test_partial_fills_never_add_to_a_closing_position_or_reopen_one'], extra [], different [])",
+   "ENGINE_VERSION (line 108) is not a top-level string literal",
+   "the engine file the tests imported is not the one in the checkout now",
+   "engine claims None but the guard defines 7 tests, the report has 0, the session 7, 7 passed",
+   "the working tree changed after the tests started (c7688384d8005be4f95b378f8699b38a5b81dfe7 then, 573c25610be3fc81d1cfd4719451436163ca4b5f now)"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "K3_dentro_de_try",
+  "tipo": "18",
+  "esperado": "fail",
+  "razon_esperada": "not a top-level string literal",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "the JUnit report and the session disagree (missing ['tests.integration.test_engine_version_contract::test_a_close_that_ends_with_position_left_is_followed_by_another', 'tests.integration.test_engine_version_contract::test_a_rejected_close_is_sent_again_as_a_new_order_and_closes', 'tests.integration.test_engine_version_contract::test_partial_fills_never_add_to_a_closing_position_or_reopen_one'], extra [], different [])",
+   "ENGINE_VERSION (line 108) is not a top-level string literal",
+   "the engine file the tests imported is not the one in the checkout now",
+   "engine claims None but the guard defines 7 tests, the report has 0, the session 7, 7 passed",
+   "the working tree changed after the tests started (c7688384d8005be4f95b378f8699b38a5b81dfe7 then, 612e7f707e61b279eda382972a81c5206752ee9c now)"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "K4_desempaquetado_de_tupla",
+  "tipo": "18",
+  "esperado": "fail",
+  "razon_esperada": "not a top-level string literal",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "the JUnit report and the session disagree (missing ['tests.integration.test_engine_version_contract::test_a_close_that_ends_with_position_left_is_followed_by_another', 'tests.integration.test_engine_version_contract::test_a_rejected_close_is_sent_again_as_a_new_order_and_closes', 'tests.integration.test_engine_version_contract::test_partial_fills_never_add_to_a_closing_position_or_reopen_one'], extra [], different [])",
+   "ENGINE_VERSION (line 107) is not a top-level string literal",
+   "the engine file the tests imported is not the one in the checkout now",
+   "engine claims None but the guard defines 7 tests, the report has 0, the session 7, 7 passed",
+   "the working tree changed after the tests started (c7688384d8005be4f95b378f8699b38a5b81dfe7 then, 01512e885bad26c3a2d65f7b3831d30f20583d21 now)"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "K5_importada_de_otro_modulo",
+  "tipo": "18",
+  "esperado": "fail",
+  "razon_esperada": "bound or patched outside the engine module",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "the JUnit report and the session disagree (missing ['tests.integration.test_engine_version_contract::test_a_close_that_ends_with_position_left_is_followed_by_another', 'tests.integration.test_engine_version_contract::test_a_rejected_close_is_sent_again_as_a_new_order_and_closes', 'tests.integration.test_engine_version_contract::test_partial_fills_never_add_to_a_closing_position_or_reopen_one'], extra [], different [])",
+   "ENGINE_VERSION (line 107) is not a top-level string literal",
+   "ENGINE_VERSION is bound or patched outside the engine module: ['packages/tia/src/tia/core/version_adversaria.py:1']",
+   "the engine file the tests imported is not the one in the checkout now",
+   "engine claims None but the guard defines 7 tests, the report has 0, the session 7, 7 passed",
+   "the working tree changed after the tests started (c7688384d8005be4f95b378f8699b38a5b81dfe7 then, 2af0f338089cc302984041cb420f660598e722f7 now)"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "K6_comentario_y_docstring_enganosos",
+  "tipo": "18",
+  "esperado": "fail",
+  "razon_esperada": "disagree",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "the JUnit report and the session disagree (missing ['tests.integration.test_engine_version_contract::test_a_close_that_ends_with_position_left_is_followed_by_another', 'tests.integration.test_engine_version_contract::test_a_rejected_close_is_sent_again_as_a_new_order_and_closes', 'tests.integration.test_engine_version_contract::test_partial_fills_never_add_to_a_closing_position_or_reopen_one'], extra [], different [])",
+   "the engine file the tests imported is not the one in the checkout now",
+   "engine claims 1.2.0 but the guard defines 7 tests, the report has 0, the session 7, 7 passed",
+   "the working tree changed after the tests started (c7688384d8005be4f95b378f8699b38a5b81dfe7 then, 1caed61a65fc37ce24a2c60e2bd9b65343950deb now)"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "K7_sintaxis_rota",
+  "tipo": "18",
+  "esperado": "fail",
+  "razon_esperada": "cannot be read as Python",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "the JUnit report and the session disagree (missing ['tests.integration.test_engine_version_contract::test_a_close_that_ends_with_position_left_is_followed_by_another', 'tests.integration.test_engine_version_contract::test_a_rejected_close_is_sent_again_as_a_new_order_and_closes', 'tests.integration.test_engine_version_contract::test_partial_fills_never_add_to_a_closing_position_or_reopen_one'], extra [], different [])",
+   "the engine source cannot be read as Python (SyntaxError: invalid syntax (engine.py, line 108))",
+   "the engine file the tests imported is not the one in the checkout now",
+   "engine claims None but the guard defines 7 tests, the report has 0, the session 7, 7 passed",
+   "the working tree changed after the tests started (c7688384d8005be4f95b378f8699b38a5b81dfe7 then, e0497c9cc25e616504f6fab50f00994718890eae now)"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "K8_bytes_no_utf8",
+  "tipo": "18",
+  "esperado": "fail",
+  "razon_esperada": "cannot be read as Python",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "the JUnit report and the session disagree (missing ['tests.integration.test_engine_version_contract::test_a_close_that_ends_with_position_left_is_followed_by_another', 'tests.integration.test_engine_version_contract::test_a_rejected_close_is_sent_again_as_a_new_order_and_closes', 'tests.integration.test_engine_version_contract::test_partial_fills_never_add_to_a_closing_position_or_reopen_one'], extra [], different [])",
+   "the engine source cannot be read as Python (UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 5583: invalid start byte)",
+   "the engine file the tests imported is not the one in the checkout now",
+   "engine claims None but the guard defines 7 tests, the report has 0, the session 7, 7 passed",
+   "the working tree changed after the tests started (c7688384d8005be4f95b378f8699b38a5b81dfe7 then, a26c06e70a8025c1e38133bc63ba0c14da63aa59 now)"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "K9_expresion",
+  "tipo": "18",
+  "esperado": "fail",
+  "razon_esperada": "not a top-level string literal",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "the JUnit report and the session disagree (missing ['tests.integration.test_engine_version_contract::test_a_close_that_ends_with_position_left_is_followed_by_another', 'tests.integration.test_engine_version_contract::test_a_rejected_close_is_sent_again_as_a_new_order_and_closes', 'tests.integration.test_engine_version_contract::test_partial_fills_never_add_to_a_closing_position_or_reopen_one'], extra [], different [])",
+   "ENGINE_VERSION (line 107) is not a top-level string literal",
+   "the engine file the tests imported is not the one in the checkout now",
+   "engine claims None but the guard defines 7 tests, the report has 0, the session 7, 7 passed",
+   "the working tree changed after the tests started (c7688384d8005be4f95b378f8699b38a5b81dfe7 then, 89fb83750a66c2e1e1f582aeb76a39118fd7e53a now)"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "K10_anotada",
+  "tipo": "18",
+  "esperado": "fail",
+  "razon_esperada": "disagree",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "the JUnit report and the session disagree (missing ['tests.integration.test_engine_version_contract::test_a_close_that_ends_with_position_left_is_followed_by_another', 'tests.integration.test_engine_version_contract::test_a_rejected_close_is_sent_again_as_a_new_order_and_closes', 'tests.integration.test_engine_version_contract::test_partial_fills_never_add_to_a_closing_position_or_reopen_one'], extra [], different [])",
+   "the engine file the tests imported is not the one in the checkout now",
+   "engine claims 1.2.0 but the guard defines 7 tests, the report has 0, the session 7, 7 passed",
+   "the working tree changed after the tests started (c7688384d8005be4f95b378f8699b38a5b81dfe7 then, 8f25aeeb35b00e6893668f0729952c6ef51850cc now)"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "J1_casi_todo_omitido",
+  "tipo": "18",
+  "esperado": "fail",
+  "razon_esperada": "disagree",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "the JUnit report and the session disagree (missing [], extra [], different ['tests.adversarial.test_mm_fill_paths_synthetic::test_a_cancel_asked_for_twice_and_a_cancel_all_on_top_reach_the_venue_once', 'tests.adversarial.test_mm_fill_paths_synthetic::test_a_fill_during_a_stream_outage_is_booked_from_the_history_and_its_late_report_after_reconnect_is_a_duplicate', 'tests.adversarial.test_mm_fill_paths_synthetic::test_a_fill_reported_before_any_acknowledgement_is_applied_and_the_late_rest_answer_cannot_undo_it'])"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "J2_subconjunto_de_4_pruebas",
+  "tipo": "18",
+  "esperado": "fail",
+  "razon_esperada": "disagree",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "the JUnit report and the session disagree (missing ['tests.adversarial.test_mm_fill_paths_synthetic::test_a_cancel_asked_for_twice_and_a_cancel_all_on_top_reach_the_venue_once', 'tests.adversarial.test_mm_fill_paths_synthetic::test_a_fill_during_a_stream_outage_is_booked_from_the_history_and_its_late_report_after_reconnect_is_a_duplicate', 'tests.adversarial.test_mm_fill_paths_synthetic::test_a_replayed_new_report_never_reopens_a_cancelled_order'], extra [], different [])"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "J3_guarda_xfail",
+  "tipo": "18",
+  "esperado": "fail",
+  "razon_esperada": "disagree",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "the JUnit report and the session disagree (missing [], extra [], different ['tests.integration.test_engine_version_contract::test_a_close_that_ends_with_position_left_is_followed_by_another', 'tests.integration.test_engine_version_contract::test_a_rejected_close_is_sent_again_as_a_new_order_and_closes', 'tests.integration.test_engine_version_contract::test_partial_fills_never_add_to_a_closing_position_or_reopen_one'])"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "J4_guarda_duplicada",
+  "tipo": "18",
+  "esperado": "fail",
+  "razon_esperada": "twice",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "the JUnit report lists tests.integration.test_engine_version_contract::test_a_rejected_close_is_sent_again_as_a_new_order_and_closes twice",
+   "the JUnit report lists tests.integration.test_engine_version_contract::test_the_stop_in_the_book_follows_the_leg twice",
+   "the JUnit report lists tests.integration.test_engine_version_contract::test_partial_fills_never_add_to_a_closing_position_or_reopen_one twice",
+   "the JUnit report lists tests.integration.test_engine_version_contract::test_a_close_that_ends_with_position_left_is_followed_by_another twice",
+   "the JUnit report lists tests.integration.test_engine_version_contract::test_rejections_partials_and_limit_entries_together twice",
+   "the JUnit report lists tests.integration.test_engine_version_contract::test_the_checks_pass_a_clean_record_and_catch_each_defect twice",
+   "the JUnit report lists tests.integration.test_engine_version_contract::test_the_label_decides_the_promise_and_cannot_escape_the_guard twice"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "J5_guarda_reemplazada_por_7_triviales",
+  "tipo": "18",
+  "esperado": "fail",
+  "razon_esperada": "disagree",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "the JUnit report and the session disagree (missing ['tests.integration.test_engine_version_contract::test_a_close_that_ends_with_position_left_is_followed_by_another', 'tests.integration.test_engine_version_contract::test_a_rejected_close_is_sent_again_as_a_new_order_and_closes', 'tests.integration.test_engine_version_contract::test_partial_fills_never_add_to_a_closing_position_or_reopen_one'], extra ['tests.integration.test_engine_version_contract::test_trivial_0', 'tests.integration.test_engine_version_contract::test_trivial_1', 'tests.integration.test_engine_version_contract::test_trivial_2'], different [])",
+   "engine claims 1.2.0 but the guard defines 7 tests, the report has 7, the session 7, 7 passed"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "J6_junit_inexistente",
+  "tipo": "18",
+  "esperado": "fail",
+  "razon_esperada": "missing or empty",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "the JUnit report ci-evidence/junit.xml is missing or empty",
+   "the JUnit report is from another run (nonce None)",
+   "engine claims 1.2.0 but the guard defines 7 tests, the report has 0, the session 7, 7 passed"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "J7_junit_real_con_otro_interprete_del_gate",
+  "tipo": "18",
+  "esperado": "pass",
+  "razon_esperada": "",
+  "rc": 0,
+  "veredicto": "pass",
+  "provenance_json": true,
+  "problemas": [],
+  "OK": true
+ },
+ {
+  "caso": "N01_declaracion_duplicada_mismo_valor",
+  "tipo": "nuevo",
+  "esperado": "fail",
+  "razon_esperada": "binds ENGINE_VERSION 2 times",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "the engine binds ENGINE_VERSION 2 times (lines [107, 108]); exactly one is allowed",
+   "the engine file the tests imported is not the one in the checkout now",
+   "the working tree changed after the tests started (c7688384d8005be4f95b378f8699b38a5b81dfe7 then, 8451a1fb009445bf1954c57619620703b57a49db now)"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "N02_declaracion_condicional_if_else",
+  "tipo": "nuevo",
+  "esperado": "fail",
+  "razon_esperada": "binds ENGINE_VERSION 2 times",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "the engine binds ENGINE_VERSION 2 times (lines [108, 110]); exactly one is allowed",
+   "the engine file the tests imported is not the one in the checkout now",
+   "the working tree changed after the tests started (c7688384d8005be4f95b378f8699b38a5b81dfe7 then, d89d3abae01676de2a40c57bf64c5e3aa9f98502 now)"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "N03_parcheada_desde_otro_modulo",
+  "tipo": "nuevo",
+  "esperado": "fail",
+  "razon_esperada": "bound or patched outside the engine module",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "ENGINE_VERSION is bound or patched outside the engine module: ['packages/tia/src/tia/core/parche_adversario.py:2 (attribute)', 'packages/tia/src/tia/core/parche_adversario.py:3 (Name setattr)']",
+   "the working tree changed after the tests started (c7688384d8005be4f95b378f8699b38a5b81dfe7 then, 6d8b9e3d7b31dcc840a99a3b66d3106bd9b6a365 now)"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "N04_modulo_sustituido_en_el_path_REAL",
+  "tipo": "nuevo",
+  "esperado": "fail",
+  "razon_esperada": "not this checkout's",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "the suite ran ['tests/integration/test_engine_version_contract.py'], not ['tests']",
+   "7 tests ran; the policy requires at least 2031"
+  ],
+  "OK": false
+ },
+ {
+  "caso": "N05_sintaxis_rota_con_junit_completo",
+  "tipo": "nuevo",
+  "esperado": "fail",
+  "razon_esperada": "cannot be read as Python",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "the engine source cannot be read as Python (SyntaxError: invalid syntax (engine.py, line 108))",
+   "the engine file the tests imported is not the one in the checkout now",
+   "the working tree changed after the tests started (c7688384d8005be4f95b378f8699b38a5b81dfe7 then, e0497c9cc25e616504f6fab50f00994718890eae now)"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "N06_junit_truncado",
+  "tipo": "nuevo",
+  "esperado": "fail",
+  "razon_esperada": "does not parse",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "the JUnit report does not parse (unclosed token: line 1, column 4328)",
+   "the JUnit report is from another run (nonce None)",
+   "engine claims 1.2.0 but the guard defines 7 tests, the report has 0, the session 7, 7 passed"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "N07_junit_vacio",
+  "tipo": "nuevo",
+  "esperado": "fail",
+  "razon_esperada": "missing or empty",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "the JUnit report ci-evidence/junit.xml is missing or empty",
+   "the JUnit report is from another run (nonce None)",
+   "engine claims 1.2.0 but the guard defines 7 tests, the report has 0, the session 7, 7 passed"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "N08_junit_dice_pasada_la_que_fallo",
+  "tipo": "nuevo",
+  "esperado": "fail",
+  "razon_esperada": "disagree",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "the JUnit report and the session disagree (missing [], extra [], different ['tests.integration.test_backtest_store_concurrency::test_racing_writers_with_different_results_store_one_and_refuse_the_other[other_numbers]'])",
+   "1 failed, 0 errored, 0 passed unexpectedly"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "N09a_junit_de_otra_corrida",
+  "tipo": "nuevo",
+  "esperado": "fail",
+  "razon_esperada": "JUnit report is from another run",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "the JUnit report is from another run (nonce 'otra-corrida')"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "N09b_sesion_de_otra_corrida",
+  "tipo": "nuevo",
+  "esperado": "fail",
+  "razon_esperada": "session record is from another run",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "the session record is from another run (nonce 'otra')"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "N09c_sin_nonce_en_el_entorno",
+  "tipo": "nuevo",
+  "esperado": "fail",
+  "razon_esperada": "CI_RUN_NONCE is not set",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "CI_RUN_NONCE is not set: this run cannot be told apart from another"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "N10_suite_reducida_con_k_REAL",
+  "tipo": "nuevo",
+  "esperado": "fail",
+  "razon_esperada": "narrowed (keyword",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "the suite was narrowed (keyword='engine_version_contract')",
+   "2025 tests were deselected",
+   "7 tests ran; the policy requires at least 2031"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "N11_deselect_REAL",
+  "tipo": "nuevo",
+  "esperado": "fail",
+  "razon_esperada": "narrowed (deselect",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "the suite ran ['tests/integration/test_engine_version_contract.py'], not ['tests']",
+   "the suite was narrowed (deselect=['tests/integration/test_engine_version_contract.py::test_the_stop_in_the_book_follows_the_leg'])",
+   "1 tests were deselected",
+   "6 tests ran; the policy requires at least 2031",
+   "engine claims 1.2.0 but the guard defines 7 tests, the report has 6, the session 6, 6 passed"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "N12_guarda_con_nombres_correctos_y_contenido_trivial",
+  "tipo": "nuevo",
+  "esperado": "fail",
+  "razon_esperada": "is not the policy's",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "the guard tests/integration/test_engine_version_contract.py is not the policy's (sha256 0aff92e11b936d975df886eff4afb42151ad69197deb5a6cf241d098d578f168)",
+   "the working tree changed after the tests started (c7688384d8005be4f95b378f8699b38a5b81dfe7 then, 363ff5afd19ffbb9f4268fda74d6029f13f13f3a now)"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "N13_resultado_de_la_guarda_no_coincide",
+  "tipo": "nuevo",
+  "esperado": "fail",
+  "razon_esperada": "disagree",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "the JUnit report and the session disagree (missing [], extra [], different ['tests.integration.test_engine_version_contract::test_a_close_that_ends_with_position_left_is_followed_by_another'])",
+   "1 failed, 0 errored, 0 passed unexpectedly",
+   "engine claims 1.2.0 but the guard defines 7 tests, the report has 7, the session 7, 6 passed"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "N14_dependencias_distintas_de_las_fijadas_SIMULADO",
+  "tipo": "nuevo",
+  "esperado": "fail",
+  "razon_esperada": "differ from the pins",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "installed versions differ from the pins: ['httpx 0.27.2 (pinned 0.28.1)']"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "N15_otro_python_SIMULADO",
+  "tipo": "nuevo",
+  "esperado": "fail",
+  "razon_esperada": "requires 3.11",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "the tests ran on Python '3.12.7'; the policy requires 3.11"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "N16a_artefactos_viejos_de_otra_corrida",
+  "tipo": "nuevo",
+  "esperado": "fail",
+  "razon_esperada": "from another run",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "the session record is from another run (nonce 'local-pg-79d30150e0133522')",
+   "the JUnit report is from another run (nonce 'local-pg-79d30150e0133522')"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "N16b_archivo_alterado_despues_de_la_corrida",
+  "tipo": "nuevo",
+  "esperado": "fail",
+  "razon_esperada": "working tree changed",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "the working tree changed after the tests started (c7688384d8005be4f95b378f8699b38a5b81dfe7 then, 382afb55a34a982ed806b3c86be6471a720c479c now)"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "N17a_sesion_ilegible",
+  "tipo": "nuevo",
+  "esperado": "fail",
+  "razon_esperada": "missing or unreadable",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "the session record ci-evidence/session.json is missing or unreadable (Expecting property name enclosed in double quotes: line 1 column 2 (char 1))",
+   "the session record is from another run (nonce None)",
+   "the JUnit report was written at 2026-10-25T19:34:50.605873+00:00, outside the session it claims to report",
+   "the JUnit report and the session disagree (missing [], extra ['tests.adversarial.test_mm_fill_paths_synthetic::test_a_cancel_asked_for_twice_and_a_cancel_all_on_top_reach_the_venue_once', 'tests.adversarial.test_mm_fill_paths_synthetic::test_a_fill_during_a_stream_outage_is_booked_from_the_history_and_its_late_report_after_reconnect_is_a_duplicate', 'tests.adversarial.test_mm_fill_paths_synthetic::test_a_fill_reported_before_any_acknowledgement_is_applied_and_the_late_rest_answer_cannot_undo_it'], different [])",
+   "the suite ran None, not ['tests']",
+   "0 tests ran; the policy requires at least 2031",
+   "pytest exited with status None",
+   "the tests ran engine_version None; the source declares '1.2.0'",
+   "the tests imported the engine from None, not this checkout's packages/tia/src/tia/backtest/engine.py",
+   "the engine file the tests imported is not the one in the checkout now",
+   "engine claims 1.2.0 but the guard defines 7 tests, the report has 7, the session 0, 0 passed",
+   "the working tree changed after the tests started (None then, c7688384d8005be4f95b378f8699b38a5b81dfe7 now)",
+   "the tests ran on Python ''; the policy requires 3.11",
+   "the session recorded no installed distributions"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "N17b_politica_ausente_error_interno",
+  "tipo": "nuevo",
+  "esperado": "fail",
+  "razon_esperada": "internal error in the gate",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "internal error in the gate: FileNotFoundError: [Errno 2] No such file or directory: 'scripts/ci_gate_policy.json'"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "N17c_atributos_junit_inconsistentes",
+  "tipo": "nuevo",
+  "esperado": "fail",
+  "razon_esperada": "says tests=abc",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "the JUnit testsuite says tests=abc but holds 2032"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "N18_omision_no_permitida",
+  "tipo": "nuevo",
+  "esperado": "fail",
+  "razon_esperada": "outside the allow-list",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "1 tests skipped or xfailed outside the allow-list: ['tests.unit.test_walkforward::test_a_plan_passes_its_own_leakage_check[anchored]']"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "N19_xpass",
+  "tipo": "nuevo",
+  "esperado": "fail",
+  "razon_esperada": "passed unexpectedly",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "0 failed, 0 errored, 1 passed unexpectedly"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "N20_control_corrida_honesta",
+  "tipo": "nuevo",
+  "esperado": "pass",
+  "razon_esperada": "",
+  "rc": 0,
+  "veredicto": "pass",
+  "provenance_json": true,
+  "problemas": [],
+  "OK": true
+ },
+ {
+  "caso": "N21_job_pg_con_pruebas_pg_omitidas",
+  "tipo": "nuevo",
+  "esperado": "fail",
+  "razon_esperada": "PostgreSQL job passed 0",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "10 tests skipped or xfailed outside the allow-list: ['tests.integration.test_backtest_store_concurrency::test_a_writer_that_times_out_waiting_is_not_told_it_stored', 'tests.integration.test_backtest_store_concurrency::test_a_writer_whose_transaction_fails_is_not_the_one_stored', 'tests.integration.test_backtest_store_concurrency::test_racing_identical_writers_are_all_accepted']",
+   "the PostgreSQL job passed 0 of 10 PostgreSQL tests (at least 10 required, none skipped)"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "N25_versionado_ignorado_alterado_despues",
+  "tipo": "nuevo",
+  "esperado": "fail",
+  "razon_esperada": "working tree changed",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "the working tree changed after the tests started (c7688384d8005be4f95b378f8699b38a5b81dfe7 then, e63959bfdf2b17083507ebdfe825af4f7a358d77 now)"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "N26_archivo_nuevo_plantado_despues",
+  "tipo": "nuevo",
+  "esperado": "fail",
+  "razon_esperada": "working tree changed",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "the working tree changed after the tests started (c7688384d8005be4f95b378f8699b38a5b81dfe7 then, 16c231cb793c8b8027d8a2c566b4c6429e7582d1 now)"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "N24_politica_debilitada_despues_de_la_corrida",
+  "tipo": "nuevo",
+  "esperado": "fail",
+  "razon_esperada": "working tree changed",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "the working tree changed after the tests started (c7688384d8005be4f95b378f8699b38a5b81dfe7 then, 83b77c7b27b0abb769e1768d56bb0adf450d96af now)"
+  ],
+  "OK": true
+ }
+]

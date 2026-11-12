@@ -1,0 +1,2 @@
+tests/integration/test_protective_stop_contract.py:84: AssertionError: nothing was sent
+FAILED tests/integration/test_protective_stop_contract.py::test_a_session_that_may_not_send_orders_does_not_reprotect_but_says_so

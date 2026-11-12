@@ -1,0 +1,3 @@
+lectura_L2.json recibida (ronda 1), antes de compararla
+UTC: 2026-10-29T00:40:24.163Z
+761d65ee204a390f7622cdbb174e532472c9d495abc5e9f5de034c8c997431f2  lector/lectura_L2.json

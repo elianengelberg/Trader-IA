@@ -1,0 +1,21 @@
+== 2026-10-20T15:54:15Z inventario de hashes para el plan de auditoría (solo lectura)
+bd496e41d63f009bcbf78c529373a78af7bf19a1045614ba21bb2123a2718480  EVIDENCIA_T_MULTI.json
+7781e7258916d819abcbc204b0bc0d6ae7e252e5ff349b8c5c1a199c87cee324  PRERREGISTRO_T_MULTI.md
+17d6b947fcf4897c120883e8f64803f206c7286ba4a71752e4b79344648bccde  experimentos/t_multi.py
+9bb4a55c412c5454aff0abac694b56374c23feedba2039226374967e9d079956  experimentos/t_multi.json
+ba64e9a4859c28e0ba2ad04ee186b462a7ba8b44925a068a57e123f10e599537  experimentos/evidencia_t_multi.py
+242eb5213d493d240905f6eec2699737c8990a584968151f4d9da292aa17ba5e  ESTADO_FINAL_2026-10-18.md
+be3d6fa9e19763d5b495a13dc6682ed8c729245f6ee4d38acec5b375d0cb5611  ARTEFACTOS_SHA256.txt
+ce6b1ac15f351661e0341a60548f30eaa6e1a662fdaa1fcbb1175201dba25388  papel/prerregistro_papel.json
+b5bc9a59263ac42f1615219c7ed02776a2f1775a7b5091be2300a7b5d1ab05a0  papel/corte.py
+6592dfe3e623de8e02ee2c66d0bc22d541df415899a62c61fcf24052675a8b55  ../hcarry_next/src/hcarry/lab/estadistica.py
+7b28038621c1d366655d726bb885ca0105f1a25cfcdb9615e86a7fe39e85f3e1  /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3/codigo/inferencia.py
+503a2e09f5325680c5a1b9c47724993a3e3cd0184fc6f1b5b094c9de4499c9c1  /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/CIERRE_E3.md
+bbc90970f4661cdc24cafbf84c59e6a2daa71184b25bf09f02cd1bd26d4c6aba  /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/CIERRE_E3_MANIFIESTO.sha256
+0e59229558c044c2928a033f3f31135cceb281159ea9ae7de09cbb5b646c56c0  /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/REGISTRO_HIPOTESIS_tras_cierre_E3.md
+f8bc562603533baad9d8371480d52d0632877b6e4b8f484a58483fcd1f02e94f  /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/fase_documental_2026-10-20/SHA256SUMS
+14fe72440763014b074ad7982bc09f4acc59f0cd2accdb0200743fab5af10f68  /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/auditoria_T_REV_EMA9/SHA256SUMS
+7af2ef4e3e4c2e8d9c29183ad6adfc647a80e54e10824bd543a98146d6c4e38e  /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E1_bot_datos_reales_2026-10-19/prerregistro/PRERREGISTRO_E1.md
+python hcarry venv: Python 3.11.17
+python E1 venv: Python 3.11.17
+python sistema: Python 3.11.17

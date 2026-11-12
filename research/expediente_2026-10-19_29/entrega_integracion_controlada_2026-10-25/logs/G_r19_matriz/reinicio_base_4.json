@@ -1,0 +1,17 @@
+{
+ "arbol": "AB",
+ "condicion": "reinicio",
+ "semilla": 1004,
+ "programadas": 200,
+ "flush_dijo": false,
+ "flush_interrumpido": false,
+ "flush_segundos": 1.001,
+ "cierre_persistence_flushed": false,
+ "last_error": "136 persistence write(s) still in flight after 1s at stop; the record may be incomplete",
+ "filas_en_base": 64,
+ "faltan": 136,
+ "reporte": null,
+ "perdidas_identificadas": null,
+ "FALSO_COMPLETO": false,
+ "CIERRE_LIMPIO_CON_PENDIENTES": false
+}

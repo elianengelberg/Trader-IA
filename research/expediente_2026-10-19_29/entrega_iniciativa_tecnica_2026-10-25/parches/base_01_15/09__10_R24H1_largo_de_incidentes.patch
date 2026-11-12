@@ -1,0 +1,321 @@
+diff --git a/infra/migrations/versions/0008_incident_kind_length.py b/infra/migrations/versions/0008_incident_kind_length.py
+new file mode 100644
+index 0000000..e781699
+--- /dev/null
++++ b/infra/migrations/versions/0008_incident_kind_length.py
+@@ -0,0 +1,58 @@
++"""Schema v7 → v8: an incident's kind fits every kind the runtime writes (R24-H1).
++
++``incidents.kind`` was VARCHAR(32). The live runtime records ``entries_blocked:<cause>``
++whenever it refuses entries, and three of those causes make a kind longer than 32
++characters (``entries_blocked:position_unverified`` is 35). SQLite does not enforce a
++VARCHAR length, so every test passed; PostgreSQL refuses the row, the write fails in the
++background, and the incident — the record of *why* entries stopped — was lost, said only
++in a log line.
++
++Widened to 64; no row is rewritten and the index on the column stays. The downgrade
++narrows it back only when every stored kind fits in 32: otherwise it refuses and says how
++many rows would be cut, instead of truncating the history it exists to keep.
++"""
++
++from __future__ import annotations
++
++import sqlalchemy as sa
++from alembic import op
++
++revision = "0008"
++down_revision = "0007"
++branch_labels = None
++depends_on = None
++
++OLD_LENGTH = 32
++NEW_LENGTH = 64
++
++
++def upgrade() -> None:
++    with op.batch_alter_table("incidents") as batch:
++        batch.alter_column(
++            "kind",
++            existing_type=sa.String(OLD_LENGTH),
++            type_=sa.String(NEW_LENGTH),
++            existing_nullable=False,
++        )
++    op.get_bind().execute(sa.text("UPDATE schema_info SET version = 8 WHERE id = 1"))
++
++
++def downgrade() -> None:
++    bind = op.get_bind()
++    longer = bind.execute(
++        sa.text("SELECT count(*) FROM incidents WHERE length(kind) > :limit"),
++        {"limit": OLD_LENGTH},
++    ).scalar()
++    if longer:
++        raise RuntimeError(
++            f"{longer} incident(s) have a kind longer than {OLD_LENGTH} characters; narrowing "
++            "incidents.kind would cut them. Export or re-file them before downgrading."
++        )
++    with op.batch_alter_table("incidents") as batch:
++        batch.alter_column(
++            "kind",
++            existing_type=sa.String(NEW_LENGTH),
++            type_=sa.String(OLD_LENGTH),
++            existing_nullable=False,
++        )
++    bind.execute(sa.text("UPDATE schema_info SET version = 7 WHERE id = 1"))
+diff --git a/packages/tia/src/tia/persistence/models.py b/packages/tia/src/tia/persistence/models.py
+index abf3d34..e932caf 100644
+--- a/packages/tia/src/tia/persistence/models.py
++++ b/packages/tia/src/tia/persistence/models.py
+@@ -44,7 +44,10 @@ from sqlalchemy.types import JSON
+ 
+ #: Bumped on any schema change. `ensure_schema()` refuses to run against a database
+ #: written by a newer version rather than silently misreading it.
+-SCHEMA_VERSION = 7
++SCHEMA_VERSION = 8
++
++#: The longest incident kind the store keeps whole (``incidents.kind``).
++INCIDENT_KIND_LENGTH = 64
+ #: v1 -> v2: edge_outcomes, activation_attempts, reconciliations, capital_events,
+ #: incidents, latency_samples. The Alembic migration `0002` performs the upgrade;
+ #: `ensure_schema` still refuses a *newer* database rather than misreading it.
+@@ -531,8 +534,10 @@ class IncidentRow(Base):
+     incident_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+     at: Mapped[datetime] = _utc_column(nullable=False)
+     #: kill_switch | kill_switch_released | halt_new_orders | cancel_only |
+-    #: emergency_flatten | safe_mode | capital_halt | risk_profile_change | ...
+-    kind: Mapped[str] = mapped_column(String(32), nullable=False, index=True)
++    #: emergency_flatten | safe_mode | capital_halt | risk_profile_change |
++    #: entries_blocked:<cause> | ... — 64 since schema v8: at 32 PostgreSQL refused the
++    #: longer ``entries_blocked:*`` kinds and those incidents were lost (R24-H1).
++    kind: Mapped[str] = mapped_column(String(INCIDENT_KIND_LENGTH), nullable=False, index=True)
+     actor: Mapped[str] = mapped_column(String(120), default="")
+     reason: Mapped[str] = mapped_column(Text, default="")
+     run_id: Mapped[str] = mapped_column(String(64), default="")
+diff --git a/packages/tia/src/tia/persistence/repositories.py b/packages/tia/src/tia/persistence/repositories.py
+index 8c169d3..0ecfdce 100644
+--- a/packages/tia/src/tia/persistence/repositories.py
++++ b/packages/tia/src/tia/persistence/repositories.py
+@@ -28,6 +28,7 @@ from tia.domain.orders import Fill, Order
+ from tia.domain.portfolio import PortfolioState
+ from tia.events.envelope import EventEnvelope
+ from tia.persistence.models import (
++    INCIDENT_KIND_LENGTH,
+     ActivationAttemptRow,
+     AssessmentRow,
+     BacktestRow,
+@@ -1030,6 +1031,16 @@ class IncidentRepository:
+         self._session = session
+ 
+     async def record(self, values: dict[str, Any]) -> None:
++        kind = str(values.get("kind", ""))
++        if len(kind) > INCIDENT_KIND_LENGTH:
++            # A kind the column cannot hold whole is still recorded: under its prefix,
++            # with the full kind in the detail. Refused by the database it would be lost,
++            # and an incident is the record of why something stopped (R24-H1).
++            values = {
++                **values,
++                "kind": kind[:INCIDENT_KIND_LENGTH],
++                "detail": {**(values.get("detail") or {}), "kind": kind},
++            }
+         self._session.add(IncidentRow(**values))
+ 
+     async def recent(self, *, limit: int = 100, kind: str = "") -> list[IncidentRow]:
+diff --git a/tests/integration/test_incident_kind_length.py b/tests/integration/test_incident_kind_length.py
+new file mode 100644
+index 0000000..bf09976
+--- /dev/null
++++ b/tests/integration/test_incident_kind_length.py
+@@ -0,0 +1,180 @@
++"""R24-H1: every incident the runtime records fits ``incidents.kind`` and survives a restart.
++
++The column was VARCHAR(32); ``entries_blocked:position_unverified`` is 35 characters.
++SQLite ignores VARCHAR lengths, so nothing failed in the tests; PostgreSQL refused the row
++and the incident — why entries stopped — was lost behind a log line. Schema v8 widens the
++column (migration 0008, reversible: the downgrade refuses to cut a stored kind).
++
++Expected, fixed before running: every kind the code can write fits the column; a kind
++that would not is stored under its prefix with the whole kind in its detail; on SQLite and
++on PostgreSQL the migration widens without losing rows, the downgrade refuses while a
++longer kind is stored and narrows once none is; a stored long kind reads back from a new
++connection.
++"""
++
++from __future__ import annotations
++
++import ast
++import os
++import subprocess
++import sys
++import uuid
++from datetime import UTC, datetime
++from pathlib import Path
++
++import pytest
++
++from tia.persistence import Database, IncidentRepository
++from tia.persistence.models import INCIDENT_KIND_LENGTH, SCHEMA_VERSION
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++SOURCE = REPO_ROOT / "packages" / "tia" / "src" / "tia"
++LONG = "entries_blocked:position_unverified"  # 35: what PostgreSQL refused at VARCHAR(32)
++
++
++def _kinds_in_the_code() -> dict[str, str]:
++    """Every incident kind written as a literal, and every ``entries_blocked:<cause>`` the
++    entry blocks produce, with where it comes from."""
++    found: dict[str, str] = {}
++    blocks: dict[str, str] = {}
++    for path in SOURCE.rglob("*.py"):
++        for node in ast.walk(ast.parse(path.read_text(encoding="utf-8"))):
++            if not (isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute) and node.args):
++                continue
++            first = node.args[0]
++            where = f"{path.relative_to(SOURCE)}:{node.lineno}"
++            if node.func.attr == "_incident" and isinstance(first, ast.Constant):
++                found[str(first.value)] = where
++            if node.func.attr == "_block_entries" and isinstance(first, ast.Constant):
++                blocks[str(first.value)] = where
++    for cause, where in blocks.items():
++        found[f"entries_blocked:{cause}"] = where
++    return found
++
++
++def test_every_kind_the_code_writes_fits_the_column() -> None:
++    kinds = _kinds_in_the_code()
++    assert LONG in kinds, "the enumeration must see the entry blocks"
++    too_long = {k: w for k, w in kinds.items() if len(k) > INCIDENT_KIND_LENGTH}
++    assert not too_long, too_long
++
++
++async def test_a_kind_longer_than_the_column_is_kept_whole_in_the_detail(tmp_path: Path) -> None:
++    db = Database(f"sqlite+aiosqlite:///{tmp_path / 'incidents.db'}")
++    await db.create_schema()
++    kind = "entries_blocked:" + "x" * 100
++    try:
++        async with db.session() as session:
++            await IncidentRepository(session).record({
++                "incident_id": "inc-1", "at": datetime.now(UTC), "kind": kind, "actor": "system",
++                "reason": "test", "run_id": "r", "detail": {"cause": "x"},
++            })
++        async with db.session() as session:
++            (row,) = await IncidentRepository(session).recent()
++        assert row.kind == kind[:INCIDENT_KIND_LENGTH]
++        assert row.detail == {"cause": "x", "kind": kind}
++    finally:
++        await db.close()
++
++
++def _alembic(url: str, *args: str) -> subprocess.CompletedProcess[str]:
++    return subprocess.run(  # noqa: S603 - fixed argv, test-owned inputs
++        [sys.executable, "-m", "alembic", *args],
++        capture_output=True, text=True, cwd=REPO_ROOT, env=dict(os.environ, TIA_DATABASE_URL=url),
++        timeout=120, check=False,
++    )
++
++
++def test_the_migration_widens_and_its_downgrade_refuses_to_cut_history(tmp_path: Path) -> None:
++    import sqlite3
++
++    url = f"sqlite:///{tmp_path / 'm.db'}"
++    assert _alembic(url, "upgrade", "head").returncode == 0
++    conn = sqlite3.connect(tmp_path / "m.db")
++    conn.execute(
++        "INSERT INTO incidents (incident_id, at, kind, actor, reason, run_id, detail) "
++        "VALUES ('i1', CURRENT_TIMESTAMP, ?, 'system', 'r', 'run', '{}'), "
++        "('i2', CURRENT_TIMESTAMP, 'halt_new_orders', 'system', 'r', 'run', '{}')",
++        (LONG,),
++    )
++    conn.commit()
++    refused = _alembic(url, "downgrade", "-1")
++    assert refused.returncode != 0 and "would cut" in refused.stderr
++    assert conn.execute("SELECT count(*) FROM incidents").fetchone()[0] == 2
++    assert conn.execute("SELECT version FROM schema_info").fetchone()[0] == SCHEMA_VERSION
++    conn.execute("DELETE FROM incidents WHERE length(kind) > 32")
++    conn.commit()
++    conn.close()
++    assert _alembic(url, "downgrade", "-1").returncode == 0
++    conn = sqlite3.connect(tmp_path / "m.db")
++    assert conn.execute("SELECT version FROM schema_info").fetchone()[0] == SCHEMA_VERSION - 1
++    assert conn.execute("SELECT kind FROM incidents").fetchall() == [("halt_new_orders",)]
++    conn.close()
++    assert _alembic(url, "upgrade", "head").returncode == 0
++
++
++SERVER = os.environ.get("TIA_TEST_POSTGRESQL_URL")
++
++
++@pytest.mark.skipif(not SERVER, reason="TIA_TEST_POSTGRESQL_URL names no disposable PostgreSQL server")
++def test_on_postgresql_the_long_kind_is_refused_before_and_kept_after() -> None:
++    import psycopg2
++    from sqlalchemy.engine import make_url
++
++    server = make_url(SERVER or "")
++    host = server.query.get("host") or server.host
++    name = "tia_kind_" + uuid.uuid4().hex[:12]
++    admin = psycopg2.connect(host=host, user=server.username or "postgres", dbname=server.database or "postgres")
++    admin.autocommit = True
++    admin.cursor().execute(f'CREATE DATABASE "{name}"')
++    url = server.set(drivername="postgresql", database=name).render_as_string(hide_password=False)
++
++    def connect():  # type: ignore[no-untyped-def]
++        conn = psycopg2.connect(host=host, user=server.username or "postgres", dbname=name)
++        conn.autocommit = True
++        return conn
++
++    def width(conn) -> int:  # type: ignore[no-untyped-def]
++        cur = conn.cursor()
++        cur.execute("SELECT character_maximum_length FROM information_schema.columns "
++                    "WHERE table_name = 'incidents' AND column_name = 'kind'")
++        return int(cur.fetchone()[0])
++
++    insert = ("INSERT INTO incidents (incident_id, at, kind, actor, reason, run_id, detail) "
++              "VALUES (%s, now(), %s, 'system', 'r', 'run', '{}')")
++    try:
++        assert _alembic(url, "upgrade", "0007").returncode == 0
++        conn = connect()
++        # 0002 builds the table from today's model; a database deployed before v8 has 32.
++        conn.cursor().execute("ALTER TABLE incidents ALTER COLUMN kind TYPE varchar(32)")
++        conn.cursor().execute(insert, ("short", "halt_new_orders"))
++        with pytest.raises(psycopg2.errors.StringDataRightTruncation):
++            conn.cursor().execute(insert, ("lost", LONG))
++        conn.close()
++
++        assert _alembic(url, "upgrade", "head").returncode == 0
++        conn = connect()
++        assert width(conn) == INCIDENT_KIND_LENGTH
++        conn.cursor().execute(insert, ("kept", LONG))
++        conn.close()
++        conn = connect()  # a new connection: what a restarted session reads
++        cur = conn.cursor()
++        cur.execute("SELECT incident_id, kind FROM incidents ORDER BY incident_id")
++        assert cur.fetchall() == [("kept", LONG), ("short", "halt_new_orders")]
++        cur.execute("SELECT count(*) FROM pg_indexes WHERE tablename = 'incidents' AND indexdef LIKE '%(kind)%'")
++        assert cur.fetchone()[0] == 1, "the index on kind survives the change of type"
++        conn.close()
++
++        refused = _alembic(url, "downgrade", "-1")
++        assert refused.returncode != 0 and "would cut" in refused.stderr
++        conn = connect()
++        assert width(conn) == INCIDENT_KIND_LENGTH
++        conn.cursor().execute("DELETE FROM incidents WHERE length(kind) > 32")
++        conn.close()
++        assert _alembic(url, "downgrade", "-1").returncode == 0
++        conn = connect()
++        assert width(conn) == 32
++        conn.close()
++    finally:
++        admin.cursor().execute(f'DROP DATABASE IF EXISTS "{name}" WITH (FORCE)')
++        admin.close()
+diff --git a/tests/integration/test_restart_recovery.py b/tests/integration/test_restart_recovery.py
+index 9aeb4fd..07e042e 100644
+--- a/tests/integration/test_restart_recovery.py
++++ b/tests/integration/test_restart_recovery.py
+@@ -352,7 +352,7 @@ def test_v7_backfills_provenance_from_what_the_rows_already_say(tmp_path: Path)
+     assert result.returncode == 0, result.stderr
+ 
+     conn = sqlite3.connect(db)
+-    assert conn.execute("SELECT version FROM schema_info").fetchone()[0] == SCHEMA_VERSION == 7
++    assert conn.execute("SELECT version FROM schema_info").fetchone()[0] == SCHEMA_VERSION
+     got = {
+         r[0]: r[1:]
+         for r in conn.execute(

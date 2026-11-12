@@ -1,0 +1,7 @@
+== Guarda de reproducir.sh (destino dentro del origen), 2026-10-25T20:12:28Z
+defecto: con un directorio padre inexistente, la comprobación usaba 'cd' dentro de la palabra del case (falla sin cortar el script) y no protegía; se resolvió con realpath -m ANTES de crear nada
+prueba contra un clon DESECHABLE como origen (trabajo/ABC), nunca contra el repositorio protegido:
+  destino ABC/sub_inexistente/clon → rc=3 «el destino no puede estar dentro del origen»; ABC/sub_inexistente no se creó
+  destino ABC → rc=3 (rechazado)
+  destino ABC/../ABC/x → rc=3 (rechazado; realpath normaliza)
+  índice del clon de prueba: igual antes y después (aee4a1351e98dceb…)

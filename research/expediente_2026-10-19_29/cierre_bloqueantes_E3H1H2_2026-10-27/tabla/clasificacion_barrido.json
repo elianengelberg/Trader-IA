@@ -1,0 +1,704 @@
+[
+ {
+  "viejo": "ADXOLD",
+  "nuevo": "ADX",
+  "clase": "canje_mismo_simbolo_r1: el viejo renombrado sin par USDT; el par USDT del nuevo símbolo sigue (r = 1)",
+  "frase": "1 ADXOLD = 1 ADX"
+ },
+ {
+  "viejo": "AGI",
+  "nuevo": "AGIX",
+  "clase": "sin_par_usdt_del_viejo: el nuevo es un listado nuevo; no hay listado de X que continuar",
+  "frase": "1 AGI = 1 AGIX"
+ },
+ {
+  "viejo": "ANTOLD",
+  "nuevo": "ANT",
+  "clase": "canje_mismo_simbolo_r1: el viejo renombrado sin par USDT; el par USDT del nuevo símbolo sigue (r = 1)",
+  "frase": "1 ANTOLD : 1 ANT"
+ },
+ {
+  "viejo": "ANY",
+  "nuevo": "MULTI",
+  "clase": "regla_1",
+  "frase": "(ANY) token migration and renaming to Multichain (MULTI)"
+ },
+ {
+  "viejo": "AXSOLD",
+  "nuevo": "AXS",
+  "clase": "canje_mismo_simbolo_r1: el viejo renombrado sin par USDT; el par USDT del nuevo símbolo sigue (r = 1)",
+  "frase": "1 AXSOLD : 1 AXS"
+ },
+ {
+  "viejo": "BCC",
+  "nuevo": "BCHABC",
+  "clase": "bifurcacion_un_X_dos_Y",
+  "frase": "1 BCC = 1 BCHABC"
+ },
+ {
+  "viejo": "BCC",
+  "nuevo": "BCHSV",
+  "clase": "airdrop_o_bifurcacion: el viejo sigue cotizando; no es renombre",
+  "frase": "1 BCC = 1 BCHSV"
+ },
+ {
+  "viejo": "BCH",
+  "nuevo": "BCHA",
+  "clase": "airdrop_o_bifurcacion: el viejo sigue cotizando; no es renombre",
+  "frase": "1 BCH = 1 BCHA"
+ },
+ {
+  "viejo": "BCHA",
+  "nuevo": "XEC",
+  "clase": "sin_par_usdt_del_viejo: el nuevo es un listado nuevo; no hay listado de X que continuar",
+  "frase": "(BCHA) rebrand to eCash (XEC)"
+ },
+ {
+  "viejo": "BCHABC",
+  "nuevo": "BCH",
+  "clase": "regla_1",
+  "frase": "ticker of BCHABC to BCH"
+ },
+ {
+  "viejo": "BEAR",
+  "nuevo": "BUSD",
+  "clase": "conversion_al_retirar: salida del viejo; no es renombre",
+  "frase": "1 BEAR = 11.16 BUSD"
+ },
+ {
+  "viejo": "BNB",
+  "nuevo": "USDT",
+  "clase": "sin_par_usdt_del_nuevo: no hay Y en el panel (renombre del viejo para su retiro, o airdrop)",
+  "frase": "1 BNB = 272.1225 USDT"
+ },
+ {
+  "viejo": "BNBBEAR",
+  "nuevo": "BUSD",
+  "clase": "conversion_al_retirar: salida del viejo; no es renombre",
+  "frase": "1 BNBBEAR = 58.61 BUSD"
+ },
+ {
+  "viejo": "BNBBULL",
+  "nuevo": "BUSD",
+  "clase": "conversion_al_retirar: salida del viejo; no es renombre",
+  "frase": "1 BNBBULL = 57.21 BUSD"
+ },
+ {
+  "viejo": "BNX",
+  "nuevo": "BNX",
+  "clase": "regla_2",
+  "frase": "1 old BNX = 100 new BNX"
+ },
+ {
+  "viejo": "BNX",
+  "nuevo": "BNXOLD",
+  "clase": "parte_de: BNXUSDT regla_2",
+  "frase": "old BNX token has assumed BNXOLD"
+ },
+ {
+  "viejo": "BNXOLD",
+  "nuevo": "BNX",
+  "clase": "parte_de: BNXUSDT regla_2",
+  "frase": "1 BNXOLD = 100 BNX"
+ },
+ {
+  "viejo": "BOT",
+  "nuevo": "AUCTION",
+  "clase": "sin_par_usdt_del_viejo: el nuevo es un listado nuevo; no hay listado de X que continuar",
+  "frase": "1 BOT = 100 AUCTION"
+ },
+ {
+  "viejo": "BQX",
+  "nuevo": "VGX",
+  "clase": "sin_par_usdt_del_viejo: el nuevo es un listado nuevo; no hay listado de X que continuar",
+  "frase": "(BQX) token swap to Voyager Token (VGX)"
+ },
+ {
+  "viejo": "BTC",
+  "nuevo": "BCD",
+  "clase": "airdrop_o_bifurcacion: el viejo sigue cotizando; no es renombre",
+  "frase": "1 BTC:10 BCD"
+ },
+ {
+  "viejo": "BTC",
+  "nuevo": "BCX",
+  "clase": "airdrop_o_bifurcacion: el viejo sigue cotizando; no es renombre",
+  "frase": "1 BTC: 10,000 BCX"
+ },
+ {
+  "viejo": "BTC",
+  "nuevo": "SBTC",
+  "clase": "airdrop_o_bifurcacion: el viejo sigue cotizando; no es renombre",
+  "frase": "1 BTC: 1 SBTC"
+ },
+ {
+  "viejo": "BTCB",
+  "nuevo": "BTC",
+  "clase": "canje_mismo_simbolo_r1: el viejo renombrado sin par USDT; el par USDT del nuevo símbolo sigue (r = 1)",
+  "frase": "1 BTCB = 1 BTC"
+ },
+ {
+  "viejo": "BTS",
+  "nuevo": "NBS",
+  "clase": "airdrop_o_bifurcacion: el viejo sigue cotizando; no es renombre",
+  "frase": "1 BTS = 1 NBS"
+ },
+ {
+  "viejo": "BTT",
+  "nuevo": "BTTC",
+  "clase": "regla_1",
+  "frase": "1 BTT (Old) = 1,000 BTTC"
+ },
+ {
+  "viejo": "BTT",
+  "nuevo": "BTTOLD",
+  "clase": "parte_de: BTT→BTTC",
+  "frase": "old BTT tokens will be renamed as BTTOLD"
+ },
+ {
+  "viejo": "BULL",
+  "nuevo": "BUSD",
+  "clase": "conversion_al_retirar: salida del viejo; no es renombre",
+  "frase": "1 BULL = 1370.28 BUSD"
+ },
+ {
+  "viejo": "BZRX",
+  "nuevo": "OOKI",
+  "clase": "regla_1",
+  "frase": "1 BZRX : 10 OOKI"
+ },
+ {
+  "viejo": "CBK",
+  "nuevo": "MBL",
+  "clase": "sin_par_usdt_del_viejo: el nuevo es un listado nuevo; no hay listado de X que continuar",
+  "frase": "1 CBK = 35,000 MBL"
+ },
+ {
+  "viejo": "CDT",
+  "nuevo": "SSV",
+  "clase": "sin_par_usdt_del_viejo: el nuevo es un listado nuevo; no hay listado de X que continuar",
+  "frase": "100 CDT : 1 SSV"
+ },
+ {
+  "viejo": "CHZ",
+  "nuevo": "CHZ",
+  "clase": "canje_mismo_simbolo_r1: sin mapeo (regla 2 exige r ≠ 1)",
+  "frase": "ratio of 1:1 [Please note: All BEP2 standard Chiliz (CHZ) tokens will be swapped to the CAP20 standard at a ratio of 1:1 .]"
+ },
+ {
+  "viejo": "COCOS",
+  "nuevo": "COMBO",
+  "clase": "regla_1",
+  "frase": "(COCOS) token swap and rebranding plan to COMBO (COMBO)"
+ },
+ {
+  "viejo": "DATA",
+  "nuevo": "XDATA",
+  "clase": "sin_par_usdt_del_nuevo: no hay Y en el panel (renombre del viejo para su retiro, o airdrop)",
+  "frase": "old DATA tokens deposited will be renamed as XDATA"
+ },
+ {
+  "viejo": "DGD",
+  "nuevo": "ETH",
+  "clase": "conversion_al_retirar: salida del viejo; no es renombre",
+  "frase": "1 DGD = 0.193054178 ETH"
+ },
+ {
+  "viejo": "EDO",
+  "nuevo": "PNT",
+  "clase": "sin_par_usdt_del_viejo: el nuevo es un listado nuevo; no hay listado de X que continuar",
+  "frase": "1 EDO = 1 PNT"
+ },
+ {
+  "viejo": "ENG",
+  "nuevo": "SCRT",
+  "clase": "sin_par_usdt_del_viejo: el nuevo es un listado nuevo; no hay listado de X que continuar",
+  "frase": "(ENG) mainnet swap to Secret Network (SCRT)"
+ },
+ {
+  "viejo": "EOS",
+  "nuevo": "ADD",
+  "clase": "airdrop_o_bifurcacion: el viejo sigue cotizando; no es renombre",
+  "frase": "2 EOS : 1 ADD"
+ },
+ {
+  "viejo": "EOS",
+  "nuevo": "ATD",
+  "clase": "airdrop_o_bifurcacion: el viejo sigue cotizando; no es renombre",
+  "frase": "1 EOS : 1 ATD"
+ },
+ {
+  "viejo": "EOS",
+  "nuevo": "EON",
+  "clase": "airdrop_o_bifurcacion: el viejo sigue cotizando; no es renombre",
+  "frase": "1 EOS:1 EON"
+ },
+ {
+  "viejo": "EOS",
+  "nuevo": "EOP",
+  "clase": "airdrop_o_bifurcacion: el viejo sigue cotizando; no es renombre",
+  "frase": "1 EOS : 1 EOP"
+ },
+ {
+  "viejo": "EOS",
+  "nuevo": "IQ",
+  "clase": "airdrop_o_bifurcacion: el viejo sigue cotizando; no es renombre",
+  "frase": "1 EOS : 5.1 IQ"
+ },
+ {
+  "viejo": "EOSBEAR",
+  "nuevo": "BUSD",
+  "clase": "conversion_al_retirar: salida del viejo; no es renombre",
+  "frase": "1 EOSBEAR = 30.21 BUSD"
+ },
+ {
+  "viejo": "EOSBULL",
+  "nuevo": "BUSD",
+  "clase": "conversion_al_retirar: salida del viejo; no es renombre",
+  "frase": "1 EOSBULL = 3.85 BUSD"
+ },
+ {
+  "viejo": "EPS",
+  "nuevo": "EPX",
+  "clase": "regla_1",
+  "frase": "1 EPS = 88 EPX"
+ },
+ {
+  "viejo": "ERD",
+  "nuevo": "EGLD",
+  "clase": "regla_1",
+  "frase": "1000 ERD = 1 EGLD"
+ },
+ {
+  "viejo": "ETHBEAR",
+  "nuevo": "BUSD",
+  "clase": "conversion_al_retirar: salida del viejo; no es renombre",
+  "frase": "1 ETHBEAR = 12.20 BUSD"
+ },
+ {
+  "viejo": "ETHBULL",
+  "nuevo": "BUSD",
+  "clase": "conversion_al_retirar: salida del viejo; no es renombre",
+  "frase": "1 ETHBULL = 79.18 BUSD"
+ },
+ {
+  "viejo": "GNT",
+  "nuevo": "GLM",
+  "clase": "sin_par_usdt_del_viejo: el nuevo es un listado nuevo; no hay listado de X que continuar",
+  "frase": "1 GNT : 1 GLM"
+ },
+ {
+  "viejo": "GTO",
+  "nuevo": "GFT",
+  "clase": "D1_sin_continuidad_lectura_literal",
+  "frase": "(GTO) token swap to Gifto (GFT)"
+ },
+ {
+  "viejo": "GXS",
+  "nuevo": "REI",
+  "clase": "regla_1",
+  "frase": "(GXS) mainnet swap and redenomination plan to REI Network (REI)"
+ },
+ {
+  "viejo": "HSR",
+  "nuevo": "HC",
+  "clase": "sin_par_usdt_del_viejo: el nuevo es un listado nuevo; no hay listado de X que continuar",
+  "frase": "(HSR) mainnet swap to HyperCash (HC)"
+ },
+ {
+  "viejo": "INJ",
+  "nuevo": "INJ",
+  "clase": "canje_mismo_simbolo_r1: sin mapeo (regla 2 exige r ≠ 1)",
+  "frase": "ratio of 1:1 [The distribution of mainnet Injective Protocol (INJ) tokens was conducted at a ratio of 1:1.]"
+ },
+ {
+  "viejo": "KNCL",
+  "nuevo": "KNC",
+  "clase": "canje_mismo_simbolo_r1: el viejo renombrado sin par USDT; el par USDT del nuevo símbolo sigue (r = 1)",
+  "frase": "1 KNCL : 1 KNC"
+ },
+ {
+  "viejo": "LEND",
+  "nuevo": "AAVE",
+  "clase": "regla_1",
+  "frase": "100 LEND = 1 AAVE"
+ },
+ {
+  "viejo": "LOOMOLD",
+  "nuevo": "LOOM",
+  "clase": "canje_mismo_simbolo_r1: el viejo renombrado sin par USDT; el par USDT del nuevo símbolo sigue (r = 1)",
+  "frase": "1 LOOMOLD : 1 LOOM"
+ },
+ {
+  "viejo": "LTOOLD",
+  "nuevo": "LTO",
+  "clase": "canje_mismo_simbolo_r1: el viejo renombrado sin par USDT; el par USDT del nuevo símbolo sigue (r = 1)",
+  "frase": "1 LTOOLD : 1 LTO"
+ },
+ {
+  "viejo": "LUNA",
+  "nuevo": "LUNA",
+  "clase": "airdrop_o_bifurcacion: el viejo sigue cotizando; no es renombre",
+  "frase": "1 LUNA (old) = 1.034735071 LUNA"
+ },
+ {
+  "viejo": "LUNA",
+  "nuevo": "LUNC",
+  "clase": "D1_sin_continuidad_lectura_literal",
+  "frase": "LUNA (old) was renamed as LUNC"
+ },
+ {
+  "viejo": "LUNC",
+  "nuevo": "LUNA",
+  "clase": "airdrop_o_bifurcacion: el viejo sigue cotizando; no es renombre",
+  "frase": "1 LUNC = 1.034735071 LUNA"
+ },
+ {
+  "viejo": "MATIC",
+  "nuevo": "POL",
+  "clase": "regla_1",
+  "frase": "(MATIC) token swap to Polygon (POL)"
+ },
+ {
+  "viejo": "MC",
+  "nuevo": "BEAMX",
+  "clase": "regla_1",
+  "frase": "(MC) token swap, redenomination and rebranding to Beam (BEAMX)"
+ },
+ {
+  "viejo": "MFT",
+  "nuevo": "HIFI",
+  "clase": "regla_1",
+  "frase": "(MFT) token swap, redenomination and rebranding plan to Hifi Finance (HIFI)"
+ },
+ {
+  "viejo": "MTL",
+  "nuevo": "XPR",
+  "clase": "airdrop_o_bifurcacion: el viejo sigue cotizando; no es renombre",
+  "frase": "1 MTL = 1 XPR"
+ },
+ {
+  "viejo": "NANO",
+  "nuevo": "XNO",
+  "clase": "regla_1",
+  "frase": "ticker of NANO to XNO"
+ },
+ {
+  "viejo": "NEO",
+  "nuevo": "ONT",
+  "clase": "airdrop_o_bifurcacion: el viejo sigue cotizando; no es renombre",
+  "frase": "1 NEO:0.1 ONT"
+ },
+ {
+  "viejo": "NPXS",
+  "nuevo": "PUNDIX",
+  "clase": "regla_1",
+  "frase": "1,000 NPXS = 1 PUNDIX"
+ },
+ {
+  "viejo": "NULS",
+  "nuevo": "NVT",
+  "clase": "airdrop_o_bifurcacion: el viejo sigue cotizando; no es renombre",
+  "frase": "1 NULS = 0.1 NVT"
+ },
+ {
+  "viejo": "OGN",
+  "nuevo": "OGV",
+  "clase": "airdrop_o_bifurcacion: el viejo sigue cotizando; no es renombre",
+  "frase": "1 OGN = 1 OGV"
+ },
+ {
+  "viejo": "OMG",
+  "nuevo": "BOBA",
+  "clase": "airdrop_o_bifurcacion: el viejo sigue cotizando; no es renombre",
+  "frase": "1 OMG = 1 BOBA"
+ },
+ {
+  "viejo": "OMOLD",
+  "nuevo": "OM",
+  "clase": "canje_mismo_simbolo_r1: el viejo renombrado sin par USDT; el par USDT del nuevo símbolo sigue (r = 1)",
+  "frase": "1 OMOLD : 1 OM"
+ },
+ {
+  "viejo": "ONX",
+  "nuevo": "ANKR",
+  "clase": "sin_par_usdt_del_viejo: el nuevo es un listado nuevo; no hay listado de X que continuar",
+  "frase": "1 ONX = 10,000 ANKR"
+ },
+ {
+  "viejo": "PAX",
+  "nuevo": "USDP",
+  "clase": "regla_1",
+  "frase": "(PAX) rebrand to Pax Dollar (USDP)"
+ },
+ {
+  "viejo": "PERLOLD",
+  "nuevo": "PERL",
+  "clase": "canje_mismo_simbolo_r1: el viejo renombrado sin par USDT; el par USDT del nuevo símbolo sigue (r = 1)",
+  "frase": "1 PERLOLD = 1 PERL"
+ },
+ {
+  "viejo": "PHB",
+  "nuevo": "PHB",
+  "clase": "parte_de: redenominación 100:1 de 2022 anterior al primer día de PHBUSDT (2022-11-18): no hay serie USDT que ajustar",
+  "frase": "100 PHB (Old) = 1 PHB"
+ },
+ {
+  "viejo": "PHBV1",
+  "nuevo": "PHB",
+  "clase": "canje_mismo_simbolo_r1: el viejo renombrado sin par USDT; el par USDT del nuevo símbolo sigue (r = 1)",
+  "frase": "100 PHBV1 : 1 PHB"
+ },
+ {
+  "viejo": "PHX",
+  "nuevo": "PHB",
+  "clase": "sin_par_usdt_del_viejo: el nuevo es un listado nuevo; no hay listado de X que continuar",
+  "frase": "1 PHX = 1 PHB"
+ },
+ {
+  "viejo": "PLA",
+  "nuevo": "PDA",
+  "clase": "regla_1",
+  "frase": "(PLA) token swap to PlayDapp (PDA)"
+ },
+ {
+  "viejo": "POLY",
+  "nuevo": "POLYX",
+  "clase": "regla_1",
+  "frase": "(POLY) mainnet swap and rebranding plan to Polymesh (POLYX)"
+ },
+ {
+  "viejo": "PUNDIX",
+  "nuevo": "PURSE",
+  "clase": "airdrop_o_bifurcacion: el viejo sigue cotizando; no es renombre",
+  "frase": "1 PUNDIX = 8.93061 PURSE"
+ },
+ {
+  "viejo": "PYR",
+  "nuevo": "PYR",
+  "clase": "canje_mismo_simbolo_r1: sin mapeo (regla 2 exige r ≠ 1)",
+  "frase": "1 PYR (Old) = 1 PYR"
+ },
+ {
+  "viejo": "QTUM",
+  "nuevo": "QI",
+  "clase": "airdrop_o_bifurcacion: el viejo sigue cotizando; no es renombre",
+  "frase": "1 QTUM = 0.5 QI"
+ },
+ {
+  "viejo": "QUICK",
+  "nuevo": "QUICK",
+  "clase": "regla_2",
+  "frase": "1 old QUICK = 1,000 new QUICK"
+ },
+ {
+  "viejo": "RAMP",
+  "nuevo": "LEVER",
+  "clase": "regla_1",
+  "frase": "(RAMP) token swap, redenomination and rebranding plan to LeverFi (LEVER)"
+ },
+ {
+  "viejo": "REP",
+  "nuevo": "REPV2",
+  "clase": "sin_par_usdt_del_nuevo: no hay Y en el panel (renombre del viejo para su retiro, o airdrop)",
+  "frase": "(REP) smart contract and token swap to Augur (REPV2)"
+ },
+ {
+  "viejo": "REPV1",
+  "nuevo": "REP",
+  "clase": "canje_mismo_simbolo_r1: el viejo renombrado sin par USDT; el par USDT del nuevo símbolo sigue (r = 1)",
+  "frase": "1 REPV1 = 1 REP"
+ },
+ {
+  "viejo": "RGT",
+  "nuevo": "TRIBE",
+  "clase": "fusion_en_par_existente",
+  "frase": "1 RGT : 26.7 TRIBE"
+ },
+ {
+  "viejo": "RUNE",
+  "nuevo": "RUNE",
+  "clase": "canje_mismo_simbolo_r1: sin mapeo (regla 2 exige r ≠ 1)",
+  "frase": "ratio of 1:1 [The conversion to mainnet THORChain (RUNE) tokens will be conducted at a ratio of 1:1.]"
+ },
+ {
+  "viejo": "SLPOLD",
+  "nuevo": "SLP",
+  "clase": "canje_mismo_simbolo_r1: el viejo renombrado sin par USDT; el par USDT del nuevo símbolo sigue (r = 1)",
+  "frase": "1 SLPOLD : 1 SLP"
+ },
+ {
+  "viejo": "STEEM",
+  "nuevo": "HIVE",
+  "clase": "airdrop_o_bifurcacion: el viejo sigue cotizando; no es renombre",
+  "frase": "1 STEEM = 1 HIVE"
+ },
+ {
+  "viejo": "STORM",
+  "nuevo": "STMX",
+  "clase": "regla_1",
+  "frase": "1 STORM : 1 STMX"
+ },
+ {
+  "viejo": "STRAT",
+  "nuevo": "STRAX",
+  "clase": "regla_1",
+  "frase": "1 STRAT = 1 STRAX"
+ },
+ {
+  "viejo": "STRAX",
+  "nuevo": "STRAX",
+  "clase": "regla_2",
+  "frase": "1 old STRAX = 10 new STRAX"
+ },
+ {
+  "viejo": "SUN",
+  "nuevo": "SUN",
+  "clase": "regla_2",
+  "frase": "1 SUN (Old) = 1,000 SUN"
+ },
+ {
+  "viejo": "SUN",
+  "nuevo": "SUNOLD",
+  "clase": "parte_de: SUNUSDT regla_2",
+  "frase": "old SUN tokens will be renamed as SUNOLD"
+ },
+ {
+  "viejo": "SUNOLD",
+  "nuevo": "SUN",
+  "clase": "parte_de: SUNUSDT regla_2",
+  "frase": "1 SUNOLD : 1,000 SUN"
+ },
+ {
+  "viejo": "THETA",
+  "nuevo": "TFUEL",
+  "clase": "airdrop_o_bifurcacion: el viejo sigue cotizando; no es renombre",
+  "frase": "1 THETA = 5 TFUEL"
+ },
+ {
+  "viejo": "TRX",
+  "nuevo": "BTT",
+  "clase": "airdrop_o_bifurcacion: el viejo sigue cotizando; no es renombre",
+  "frase": "1 TRX = 0.11 BTT"
+ },
+ {
+  "viejo": "TRX",
+  "nuevo": "TRXOLD",
+  "clase": "sin_par_usdt_del_nuevo: no hay Y en el panel (renombre del viejo para su retiro, o airdrop)",
+  "frase": "old TRX token has assumed TRXOLD"
+ },
+ {
+  "viejo": "TUSDB",
+  "nuevo": "TUSD",
+  "clase": "canje_mismo_simbolo_r1: el viejo renombrado sin par USDT; el par USDT del nuevo símbolo sigue (r = 1)",
+  "frase": "1 TUSDB = 1 TUSD"
+ },
+ {
+  "viejo": "TVK",
+  "nuevo": "VANRY",
+  "clase": "regla_1",
+  "frase": "(TVK) token swap and rebranding to Vanar (VANRY)"
+ },
+ {
+  "viejo": "USDS",
+  "nuevo": "BUSD",
+  "clase": "conversion_al_retirar: salida del viejo; no es renombre",
+  "frase": "1 USDS = 1 BUSD"
+ },
+ {
+  "viejo": "USDSB",
+  "nuevo": "USDS",
+  "clase": "conversion_con_solapamiento",
+  "frase": "1 USDSB = 1 USDS"
+ },
+ {
+  "viejo": "UST",
+  "nuevo": "LUNA",
+  "clase": "airdrop_o_bifurcacion: el viejo sigue cotizando; no es renombre",
+  "frase": "1 UST (old) = 0.01468985 LUNA"
+ },
+ {
+  "viejo": "UST",
+  "nuevo": "USTC",
+  "clase": "D1_sin_continuidad_lectura_literal",
+  "frase": "UST (old) was renamed as USTC"
+ },
+ {
+  "viejo": "UST",
+  "nuevo": "WUST",
+  "clase": "parte_de: UST→USTC",
+  "frase": "UST (Shuttle) will be renamed as WUST"
+ },
+ {
+  "viejo": "USTC",
+  "nuevo": "LUNA",
+  "clase": "airdrop_o_bifurcacion: el viejo sigue cotizando; no es renombre",
+  "frase": "1 USTC = 0.02354800084 LUNA"
+ },
+ {
+  "viejo": "VEN",
+  "nuevo": "VET",
+  "clase": "regla_1",
+  "frase": "1 VEN = 100 VET"
+ },
+ {
+  "viejo": "VIDT",
+  "nuevo": "VIDT",
+  "clase": "regla_2",
+  "frase": "1 old VIDT = 10 new VIDT"
+ },
+ {
+  "viejo": "WBETH",
+  "nuevo": "BETH",
+  "clase": "parte_de: BETH→WBETH",
+  "frase": "1 WBETH = 1 BETH"
+ },
+ {
+  "viejo": "WIN",
+  "nuevo": "TRX",
+  "clase": "airdrop_o_bifurcacion: el viejo sigue cotizando; no es renombre",
+  "frase": "1 WIN = 0.010045191 TRX"
+ },
+ {
+  "viejo": "XDATA",
+  "nuevo": "DATA",
+  "clase": "canje_mismo_simbolo_r1: el viejo renombrado sin par USDT; el par USDT del nuevo símbolo sigue (r = 1)",
+  "frase": "1 XDATA : 1 DATA"
+ },
+ {
+  "viejo": "XEM",
+  "nuevo": "XYM",
+  "clase": "airdrop_o_bifurcacion: el viejo sigue cotizando; no es renombre",
+  "frase": "1 XEM = 1 XYM"
+ },
+ {
+  "viejo": "XRP",
+  "nuevo": "FLR",
+  "clase": "airdrop_o_bifurcacion: el viejo sigue cotizando; no es renombre",
+  "frase": "1 XRP = 0.1511 FLR"
+ },
+ {
+  "viejo": "XRPBEAR",
+  "nuevo": "BUSD",
+  "clase": "conversion_al_retirar: salida del viejo; no es renombre",
+  "frase": "1 XRPBEAR = 548.55 BUSD"
+ },
+ {
+  "viejo": "XRPBULL",
+  "nuevo": "BUSD",
+  "clase": "conversion_al_retirar: salida del viejo; no es renombre",
+  "frase": "1 XRPBULL = 8.74 BUSD"
+ },
+ {
+  "viejo": "XVS",
+  "nuevo": "VRT",
+  "clase": "airdrop_o_bifurcacion: el viejo sigue cotizando; no es renombre",
+  "frase": "1 XVS = 1,000 VRT"
+ },
+ {
+  "viejo": "XZC",
+  "nuevo": "FIRO",
+  "clase": "regla_1",
+  "frase": "ticker of XZC to FIRO"
+ }
+]

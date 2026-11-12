@@ -1,0 +1,13 @@
+{
+ "uso": "DESARROLLO: solo para probar el código, medir el costo y comprobar la equivalencia. Sus tasas NO son evidencia y no se usan para decidir nada.",
+ "codigo_r1_sha256": {
+  "protocolo_cuantitativo/pec/inferencia.py": "99d0d3e6eb4b2faaf2ad17320887dac181a3f412ee544d979cf2753302811469",
+  "protocolo_cuantitativo/pec/sintetico.py": "7b15c67722ce8c95bbe14b4290bb06baf4ec8dc8f45c0101940cb9661eee7f51",
+  "protocolo_cuantitativo/pec/secuencial.py": "90f3a4c2392bf8bfb247e0a5b153c3e9a1e40e5d74b394aab3db2c5cacf3cbc9"
+ },
+ "B": 9999, "K": 5, "alfa": 0.025, "sd": 0.01,
+ "H0": {"procesos": ["C1", "C2", "C3", "C4", "C5", "C6"], "n_max": [1096, 1826], "replicas": 100, "semilla_base": 20261104},
+ "H1": {"procesos": ["C1", "C2", "C5"], "n_max_ir": {"1826": [1.27]}, "replicas": 20, "semilla_base": 20261104},
+ "criterio": {"umbral_alfa_global": 0.03, "confianza_conjunta_complemento": 0.05, "semilla_verificacion": 20261104},
+ "desarrollo": {"semilla_base": 20261104, "n_max": 1096, "B": 999, "replicas_equivalencia": 10}
+}

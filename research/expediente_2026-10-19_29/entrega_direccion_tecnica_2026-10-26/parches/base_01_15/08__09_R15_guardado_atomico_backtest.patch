@@ -1,0 +1,387 @@
+diff --git a/packages/tia/src/tia/persistence/__init__.py b/packages/tia/src/tia/persistence/__init__.py
+index f46832c..e3ae5ee 100644
+--- a/packages/tia/src/tia/persistence/__init__.py
++++ b/packages/tia/src/tia/persistence/__init__.py
+@@ -9,7 +9,10 @@ from tia.persistence.repositories import (
+     AccountJournalRepository,
+     ActivationRepository,
+     AssessmentRepository,
++    BacktestConflictError,
++    BacktestProvenanceConflictError,
+     BacktestRepository,
++    BacktestResultConflictError,
+     CapitalEventRepository,
+     DecisionRepository,
+     EdgeStateRepository,
+@@ -25,6 +28,7 @@ from tia.persistence.repositories import (
+     ReconciliationRepository,
+     RiskStateRepository,
+     RunRepository,
++    SaveOutcome,
+ )
+ 
+ __all__ = [
+@@ -32,7 +36,10 @@ __all__ = [
+     "AccountJournalRepository",
+     "ActivationRepository",
+     "AssessmentRepository",
++    "BacktestConflictError",
++    "BacktestProvenanceConflictError",
+     "BacktestRepository",
++    "BacktestResultConflictError",
+     "Base",
+     "CapitalEventRepository",
+     "Database",
+@@ -50,4 +57,5 @@ __all__ = [
+     "ReconciliationRepository",
+     "RiskStateRepository",
+     "RunRepository",
++    "SaveOutcome",
+ ]
+diff --git a/packages/tia/src/tia/persistence/repositories.py b/packages/tia/src/tia/persistence/repositories.py
+index e54a549..8c169d3 100644
+--- a/packages/tia/src/tia/persistence/repositories.py
++++ b/packages/tia/src/tia/persistence/repositories.py
+@@ -15,9 +15,10 @@ from __future__ import annotations
+ import math
+ from collections.abc import Sequence
+ from datetime import datetime, timedelta
++from enum import StrEnum
+ from typing import Any
+ 
+-from sqlalchemy import case, delete, desc, func, select
++from sqlalchemy import case, delete, desc, func, select, update
+ from sqlalchemy.dialects.postgresql import insert as pg_insert
+ from sqlalchemy.dialects.sqlite import insert as sqlite_insert
+ from sqlalchemy.ext.asyncio import AsyncSession
+@@ -52,6 +53,19 @@ from tia.persistence.models import (
+ _log = get_logger("persistence.repositories")
+ 
+ 
++def _insert_if_absent(session: AsyncSession, table: Any, values: dict[str, Any], key: str):
++    """Insert the row unless its key exists, returning the key only when it inserted.
++    The unique index is the arbiter: a concurrent insert of the same key waits for the
++    other transaction and then does nothing, so exactly one writer claims the row."""
++    dialect = session.bind.dialect.name if session.bind is not None else "sqlite"
++    statement = pg_insert(table) if dialect == "postgresql" else sqlite_insert(table)
++    return (
++        statement.values(**values)
++        .on_conflict_do_nothing(index_elements=[key])
++        .returning(getattr(table, key))
++    )
++
++
+ def _upsert(session: AsyncSession, table: Any, values: dict[str, Any], index_elements: list[str]):
+     """Dialect-appropriate upsert.
+ 
+@@ -494,39 +508,94 @@ def _comparable(value: Any) -> Any:
+     return value
+ 
+ 
++class BacktestConflictError(ValueError):
++    """A result is already stored under this ``run_id`` and this one is not the same run.
++    A ``ValueError``, as the refusals always were; the two kinds below say which."""
++
++
++class BacktestProvenanceConflictError(BacktestConflictError):
++    """Stored under another engine version, engine, bars or universe (or none recorded)."""
++
++
++class BacktestResultConflictError(BacktestConflictError):
++    """Same provenance, other numbers: something the provenance does not record changed."""
++
++
++class SaveOutcome(StrEnum):
++    #: This writer's row is the one stored.
++    CREATED = "created"
++    #: The same run again — same provenance, same numbers. Its descriptive fields (when it
++    #: ran, the verdict's wording) refresh the stored row; provenance and numbers cannot
++    #: change, so nothing anyone read from the row is contradicted.
++    REPEATED = "repeated"
++
++
+ class BacktestRepository:
+     def __init__(self, session: AsyncSession) -> None:
+         self._session = session
+ 
+-    async def save(self, values: dict[str, Any]) -> None:
+-        """Store a result. A row with the same ``run_id`` is replaced only by a result of
+-        the same provenance and the same numbers — a re-run of the same engine over the
+-        same bars. A row from another engine, from before the engine was recorded, or with
+-        other numbers under the same provenance is never overwritten."""
+-        existing = await self.get(values["run_id"])
+-        stored = _provenance(existing.conditions) if existing is not None else None
+-        if stored is not None and stored != _provenance(values.get("conditions")):
++    async def save(self, values: dict[str, Any]) -> SaveOutcome:
++        """Store a result under its ``run_id``, atomically (R15).
++
++        The row is claimed by an insert that does nothing if the id exists — the database's
++        unique index decides between concurrent writers, not a read made before the write.
++        When it exists, it is read *locked* (``FOR UPDATE`` on PostgreSQL; SQLite serialises
++        writers) and compared: another provenance raises
++        :class:`BacktestProvenanceConflictError`, other numbers under the same provenance
++        raise :class:`BacktestResultConflictError`, and the same run again is
++        :attr:`SaveOutcome.REPEATED`. Two writers that race with different results: one
++        creates, the other is refused — never both told they stored.
++
++        The outcome holds once the caller's transaction commits; a commit that fails is the
++        caller's failure, and saving the same values again is safe (it is a repeat if the
++        first commit went through, a creation if it did not).
++        """
++        claimed = await self._session.execute(
++            _insert_if_absent(self._session, BacktestRow, values, "run_id")
++        )
++        if claimed.first() is not None:
++            return SaveOutcome.CREATED
++        existing = (
++            await self._session.execute(
++                select(BacktestRow)
++                .where(BacktestRow.run_id == values["run_id"])
++                .with_for_update()
++                .execution_options(populate_existing=True)
++            )
++        ).scalars().first()
++        if existing is None:
++            # The row that refused the insert is gone (deleted by someone else since): the
++            # store cannot say what this save collided with, so it does not claim success.
++            raise BacktestConflictError(
++                f"backtest {values['run_id']} collided with a row that no longer exists; save it again"
++            )
++        stored = _provenance(existing.conditions)
++        if stored != _provenance(values.get("conditions")):
+             said = ", ".join(
+                 f"{key}={value or 'unknown'}"
+                 for key, value in zip(_BACKTEST_PROVENANCE, stored, strict=True)
+             )
+-            raise ValueError(
++            raise BacktestProvenanceConflictError(
+                 f"backtest {values['run_id']} is already stored with another provenance "
+                 f"({said}); refusing to replace it"
+             )
+-        if existing is not None:
+-            differ = [
+-                key for key in _BACKTEST_NUMBERS
+-                if key in values and _comparable(getattr(existing, key)) != _comparable(values[key])
+-            ]
+-            if differ:
+-                raise ValueError(
+-                    f"backtest {values['run_id']} is already stored with the same provenance and "
+-                    f"other results ({', '.join(differ)}): something the provenance does not record "
+-                    "changed (the environment, or a substituted part of the engine); refusing to "
+-                    "replace it"
+-                )
+-        await self._session.execute(_upsert(self._session, BacktestRow, values, ["run_id"]))
++        differ = [
++            key for key in _BACKTEST_NUMBERS
++            if key in values and _comparable(getattr(existing, key)) != _comparable(values[key])
++        ]
++        if differ:
++            raise BacktestResultConflictError(
++                f"backtest {values['run_id']} is already stored with the same provenance and "
++                f"other results ({', '.join(differ)}): something the provenance does not record "
++                "changed (the environment, or a substituted part of the engine); refusing to "
++                "replace it"
++            )
++        await self._session.execute(
++            update(BacktestRow)
++            .where(BacktestRow.run_id == values["run_id"])
++            .values(**{k: v for k, v in values.items() if k != "run_id"})
++        )
++        return SaveOutcome.REPEATED
+ 
+     async def list_recent(self, limit: int = 25) -> list[BacktestRow]:
+         result = await self._session.execute(
+diff --git a/tests/integration/test_backtest_store_concurrency.py b/tests/integration/test_backtest_store_concurrency.py
+new file mode 100644
+index 0000000..f8ee486
+--- /dev/null
++++ b/tests/integration/test_backtest_store_concurrency.py
+@@ -0,0 +1,188 @@
++"""R15: one ``run_id``, several writers — exactly one result is stored and nobody else is told
++it was.
++
++``save()`` used to read the row and then upsert it. Two writers with different results
++both read "nothing there" and both upserted: each was told it stored, and the row held
++whichever committed last. Against PostgreSQL 16 that happened in every attempt of the
++review harness. The store now claims the row with an insert the unique index arbitrates,
++and compares under a row lock when it lost the claim.
++
++The SQLite tests pin the outcomes; the PostgreSQL ones (only with ``TIA_TEST_POSTGRESQL_URL``
++naming a disposable server, as the store's other PostgreSQL tests) race real connections.
++Expected, fixed before running: no writer whose content is not the stored row is told it
++stored; identical writers are all accepted; a writer whose transaction fails is not.
++"""
++
++from __future__ import annotations
++
++import asyncio
++import os
++import uuid
++from pathlib import Path
++from typing import Any
++
++import pytest
++from sqlalchemy import text
++from sqlalchemy.engine import make_url
++
++from tests.integration.test_backtest_provenance import _row, _run
++from tia.persistence import (
++    BacktestProvenanceConflictError,
++    BacktestRepository,
++    BacktestResultConflictError,
++    Database,
++    SaveOutcome,
++)
++
++ROW = _row(_run())
++OTHER_NUMBERS = {**ROW, "trades": ROW["trades"] + 1, "total_return_pct": ROW["total_return_pct"] + 1.0}
++OTHER_ENGINE = {**ROW, "conditions": {**ROW["conditions"], "engine_version": "9.9.9"}}
++
++
++async def _save(db: Database, row: dict[str, Any]) -> SaveOutcome:
++    async with db.session() as session:
++        return await BacktestRepository(session).save(row)
++
++
++async def _stored(db: Database) -> list[Any]:
++    async with db.session() as session:
++        return await BacktestRepository(session).list_recent()
++
++
++def _key(row: Any) -> tuple[Any, ...]:
++    get = row.get if isinstance(row, dict) else lambda k: getattr(row, k)
++    return (get("conditions").get("engine_version"), get("trades"), round(get("total_return_pct"), 9))
++
++
++async def test_each_save_says_what_it_did(tmp_path: Path) -> None:
++    db = Database(f"sqlite+aiosqlite:///{tmp_path / 'store.db'}")
++    await db.create_schema()
++    try:
++        assert await _save(db, ROW) is SaveOutcome.CREATED
++        assert await _save(db, dict(ROW)) is SaveOutcome.REPEATED
++        with pytest.raises(BacktestResultConflictError):
++            await _save(db, OTHER_NUMBERS)
++        with pytest.raises(BacktestProvenanceConflictError):
++            await _save(db, OTHER_ENGINE)
++        assert [_key(r) for r in await _stored(db)] == [_key(ROW)]
++    finally:
++        await db.close()
++
++
++SERVER = os.environ.get("TIA_TEST_POSTGRESQL_URL")
++postgresql = pytest.mark.skipif(not SERVER, reason="TIA_TEST_POSTGRESQL_URL names no disposable PostgreSQL server")
++
++
++@pytest.fixture
++async def pg():  # type: ignore[no-untyped-def]
++    admin = Database(SERVER or "")
++    name = "tia_race_" + uuid.uuid4().hex[:12]
++    async with admin.engine.connect() as conn:
++        await (await conn.execution_options(isolation_level="AUTOCOMMIT")).execute(text(f'CREATE DATABASE "{name}"'))
++    db = Database(make_url(SERVER or "").set(database=name).render_as_string(hide_password=False))
++    await db.create_schema()
++    try:
++        yield db
++    finally:
++        await db.close()
++        async with admin.engine.connect() as conn:
++            await (await conn.execution_options(isolation_level="AUTOCOMMIT")).execute(text(f'DROP DATABASE "{name}"'))
++        await admin.close()
++
++
++async def _writer(db: Database, row: dict[str, Any], go: asyncio.Event, delay: float) -> str:
++    try:
++        async with db.session() as session:
++            await go.wait()
++            await asyncio.sleep(delay)
++            await BacktestRepository(session).save(row)
++        return "stored"
++    except ValueError:
++        return "refused"
++
++
++async def _race(db: Database, rows: list[dict[str, Any]], delays: list[float]) -> tuple[list[str], list[Any]]:
++    async with db.engine.begin() as conn:
++        await conn.execute(text("TRUNCATE backtests"))
++    go = asyncio.Event()
++    tasks = [asyncio.create_task(_writer(db, r, go, d)) for r, d in zip(rows, delays, strict=True)]
++    await asyncio.sleep(0.02)
++    go.set()
++    return await asyncio.gather(*tasks), await _stored(db)
++
++
++@postgresql
++@pytest.mark.parametrize("other", [OTHER_NUMBERS, OTHER_ENGINE], ids=["other_numbers", "other_engine"])
++async def test_racing_writers_with_different_results_store_one_and_refuse_the_other(pg: Database, other: dict[str, Any]) -> None:
++    for attempt in range(12):
++        delays = [0.0, (0.0, 0.001, 0.005, 0.02)[attempt % 4]]
++        rows = [ROW, other] if attempt % 2 == 0 else [other, ROW]
++        said, stored = await _race(pg, rows, delays)
++        assert len(stored) == 1
++        told_stored = [r for r, s in zip(rows, said, strict=True) if s == "stored"]
++        assert len(told_stored) == 1, (attempt, said)
++        assert _key(told_stored[0]) == _key(stored[0]), "the writer told it stored is the one stored"
++
++
++@postgresql
++async def test_racing_identical_writers_are_all_accepted(pg: Database) -> None:
++    said, stored = await _race(pg, [ROW, dict(ROW), dict(ROW)], [0.0, 0.0, 0.002])
++    assert said == ["stored"] * 3 and len(stored) == 1
++
++
++@postgresql
++async def test_a_writer_whose_transaction_fails_is_not_the_one_stored(pg: Database) -> None:
++    """The first writer claims the row and then fails before its commit: its claim goes
++    with its transaction, and the second writer — waiting on the index — stores."""
++    async with pg.engine.begin() as conn:
++        await conn.execute(text("TRUNCATE backtests"))
++    go = asyncio.Event()
++
++    async def fails() -> str:
++        try:
++            async with pg.session() as session:
++                await go.wait()
++                await BacktestRepository(session).save(ROW)
++                await asyncio.sleep(0.05)
++                raise RuntimeError("the writer fails before its commit")
++        except RuntimeError:
++            return "failed"
++
++    tasks = [asyncio.create_task(fails()), asyncio.create_task(_writer(pg, OTHER_NUMBERS, go, 0.01))]
++    await asyncio.sleep(0.02)
++    go.set()
++    assert await asyncio.gather(*tasks) == ["failed", "stored"]
++    assert [_key(r) for r in await _stored(pg)] == [_key(OTHER_NUMBERS)]
++
++
++@postgresql
++async def test_a_writer_that_times_out_waiting_is_not_told_it_stored(pg: Database) -> None:
++    async with pg.engine.begin() as conn:
++        await conn.execute(text("TRUNCATE backtests"))
++    go = asyncio.Event()
++
++    async def holds() -> str:
++        async with pg.session() as session:
++            await go.wait()
++            await BacktestRepository(session).save(ROW)
++            await asyncio.sleep(1.0)
++        return "stored"
++
++    async def waits() -> str:
++        try:
++            async with pg.session() as session:
++                await go.wait()
++                await asyncio.sleep(0.1)
++                await session.execute(text("SET LOCAL lock_timeout = '200ms'"))
++                await BacktestRepository(session).save(OTHER_NUMBERS)
++            return "stored"
++        except ValueError:
++            return "refused"
++        except Exception:  # the lock timeout, whatever the driver calls it
++            return "error"
++
++    tasks = [asyncio.create_task(holds()), asyncio.create_task(waits())]
++    await asyncio.sleep(0.02)
++    go.set()
++    assert await asyncio.gather(*tasks) == ["stored", "error"]
++    assert [_key(r) for r in await _stored(pg)] == [_key(ROW)]

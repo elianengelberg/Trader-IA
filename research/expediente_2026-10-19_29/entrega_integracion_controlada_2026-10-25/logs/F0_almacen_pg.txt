@@ -1,0 +1,28 @@
+== F0 almacén de backtest en PostgreSQL (árbol dev = A+B+03+04+08+07+R15): 2026-10-25T18:48:38Z
+-- 14 pruebas de trazabilidad con _store redirigido a PostgreSQL:
+[r24] _store de test_backtest_provenance redirigido a PostgreSQL (socket /tmp/tia_ic_4899e77d)
+[r24] bases PostgreSQL creadas: 5
+[r24] bases PostgreSQL borradas: 5
+PASSED tests/integration/test_backtest_provenance.py::test_a_result_records_its_engine_its_bars_and_its_instruments
+PASSED tests/integration/test_backtest_provenance.py::test_another_engine_version_is_another_run
+PASSED tests/integration/test_backtest_provenance.py::test_an_engine_change_nobody_versioned_is_another_run
+PASSED tests/integration/test_backtest_provenance.py::test_the_fingerprint_follows_the_engine_source_and_nothing_else
+PASSED tests/integration/test_backtest_provenance.py::test_a_fingerprint_that_cannot_be_read_says_so
+PASSED tests/integration/test_backtest_provenance.py::test_one_dataset_name_over_other_bars_is_another_run
+PASSED tests/integration/test_backtest_provenance.py::test_another_strategy_set_is_another_run
+PASSED tests/integration/test_backtest_provenance.py::test_the_same_engine_on_the_same_bars_is_the_same_run
+PASSED tests/integration/test_backtest_provenance.py::test_a_result_stored_before_the_engine_was_recorded_stays_beside_the_new_one
+PASSED tests/integration/test_backtest_provenance.py::test_the_store_refuses_to_replace_a_result_of_another_provenance
+PASSED tests/integration/test_backtest_provenance.py::test_a_rerun_of_the_same_engine_over_the_same_bars_replaces_only_itself
+PASSED tests/integration/test_backtest_provenance.py::test_other_numbers_under_the_same_provenance_are_refused_not_kept_as_the_last_run
+PASSED tests/integration/test_backtest_provenance.py::test_an_undefined_ratio_does_not_make_a_rerun_look_different
+PASSED tests/integration/test_backtest_provenance.py::test_the_api_lists_the_engine_of_each_result_and_unknown_for_the_old_ones
+14 passed in 23.36s
+-- módulo 07 contra PostgreSQL:
+PASSED tests/integration/test_backtest_store_postgresql.py::test_what_is_stored_reads_back_identically_from_a_new_connection
+PASSED tests/integration/test_backtest_store_postgresql.py::test_a_rerun_with_an_undefined_ratio_replaces_only_itself
+PASSED tests/integration/test_backtest_store_postgresql.py::test_a_rolled_back_save_leaves_nothing
+PASSED tests/integration/test_backtest_store_postgresql.py::test_a_refused_save_keeps_the_stored_row_and_the_store_usable
+4 passed in 6.45s
+escrituras registradas por el servidor durante F0 (log_statement=mod): 104
+bases que quedan: 0

@@ -1,0 +1,32 @@
+== G R19 matriz (200 escrituras de incidentes a SQLite real por corrida; base=A+B, cand=dev; orden base,cand,cand,base)
+condición          árbol flush     seg cierre en base faltan reporte(conf/fall/vuelo) FALSO_COMPLETO CIERRE_LIMPIO_CON_PEND
+sin_carga          base  True     0.27 True       200      0                        - False          False
+sin_carga          base  True     0.18 True       200      0                        - False          False
+sin_carga          cand  True     0.19 True       200      0                  200/0/0 False          False
+sin_carga          cand  True     0.19 True       200      0                  200/0/0 False          False
+cpu                base  True     0.20 True       200      0                        - False          False
+cpu                base  True     0.16 True       200      0                        - False          False
+cpu                cand  True     0.15 True       200      0                  200/0/0 False          False
+cpu                cand  True     0.16 True       200      0                  200/0/0 False          False
+suite_concurrente  base  True     0.28 True       200      0                        - False          False
+suite_concurrente  base  True     0.25 True       200      0                        - False          False
+suite_concurrente  cand  True     0.19 True       200      0                  200/0/0 False          False
+suite_concurrente  cand  True     0.23 True       200      0                  200/0/0 False          False
+lentas             base  False    1.00 False       68    132                        - False          False
+lentas             base  False    1.00 False       64    136                        - False          False
+lentas             cand  False    1.00 False       63    137                 63/0/137 False          False
+lentas             cand  False    1.00 False       72    128                 72/0/128 False          False
+errores            base  True     0.17 True       171     29                        - True           True
+errores            base  True     0.21 True       171     29                        - True           True
+errores            cand  False    0.17 False      171     29                 171/29/0 False          False  pérdidas identificadas = faltantes: True
+errores            cand  False    0.16 False      171     29                 171/29/0 False          False  pérdidas identificadas = faltantes: True
+interrupcion       base  None     0.30 False       41    159                        - False          False
+interrupcion       base  None     0.30 False       41    159                        - False          False
+interrupcion       cand  None     0.30 False       41    159                 41/0/159 False          False
+interrupcion       cand  None     0.30 False       47    153                 47/0/153 False          False
+reinicio           base  False    1.00 False       68    132                        - False          False
+reinicio           base  False    1.00 False       64    136                        - False          False
+reinicio           cand  False    1.00 False       62    138                 62/0/138 False          False
+reinicio           cand  False    1.00 False       72    128                 72/0/128 False          False
+TOTAL base: 14 corridas · FALSO_COMPLETO 2 · CIERRE_LIMPIO_CON_PENDIENTES 2
+TOTAL cand: 14 corridas · FALSO_COMPLETO 0 · CIERRE_LIMPIO_CON_PENDIENTES 0

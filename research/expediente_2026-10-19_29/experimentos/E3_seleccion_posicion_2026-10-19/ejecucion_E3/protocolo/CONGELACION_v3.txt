@@ -1,0 +1,11 @@
+== CONGELACIÓN DEL PROTOCOLO E3 v3 (A1, autorizada por el usuario) — 2026-10-20T01:34:04Z
+Ningún dato de altcoins descargado ni leído a esta hora. Sin listado del bucket consultado.
+
+279a865f6471afe5b19544840f39d5783442858a64a000acb5768983dc51c18e  PROTOCOLO_E3_v3_PROPUESTO.md
+2131e676b3826ee352d239a299dafb2c212fe44fc5cccd6aeaf4de74a21279fb  PROTOCOLO_E3_v2_BORRADOR.md
+21c37596a487de5ff40f41232121971dfc003ce150483c6755ce32afad36ba72  NOTAS_IMPLEMENTACION_v3.md
+6e0e9f341ab1bab3ab8668dfb5e1c24c30ee4c0a8fc211dae3cab67323cea5d6  LIMITACIONES_REGISTRADAS.md
+0ce2e425087eb099df4851a5ee5347d0497990a0975d0179eaa242c5540d8616  DIFF_v2_a_v3.diff
+
+Protocolo vigente: PROTOCOLO_E3_v3_PROPUESTO.md (sin modificaciones; el nombre del archivo se conserva para no alterar su hash).
+v2 intacta. Diferencias v2→v3 en DIFF_v2_a_v3.diff.

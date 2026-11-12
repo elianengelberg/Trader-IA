@@ -1,0 +1,133 @@
+{
+ "version_protocolo": "PEC-1.1",
+ "id": "H-EJEMPLO-SINTETICO",
+ "titulo": "EJEMPLO SINTÉTICO para probar el validador: no es una propuesta ni una decisión",
+ "estado": "BORRADOR",
+ "es_ejemplo_sintetico": true,
+ "hipotesis": {
+  "mecanismo_economico": "Ejemplo ilustrativo: una prima por proveer liquidez tras ventas forzadas en un activo ficticio.",
+  "por_que_existiria": "Ilustrativo: vendedores forzados aceptan un descuento temporal.",
+  "por_que_no_estaria_arbitrada": "Ilustrativo: requiere capital dispuesto a soportar riesgo de cola.",
+  "h0": "mu <= 0",
+  "h1": "mu > 0"
+ },
+ "familia": {
+  "nombre": "ejemplo_sintetico",
+  "relacion_con_hipotesis_previas": "Ninguna: activo y fechas ficticios.",
+  "reabre_familia_descartada": false,
+  "aprobacion_reapertura": null
+ },
+ "universo": {
+  "activos": [
+   "SINTETICO-A"
+  ],
+  "mercado": "spot",
+  "exchange": "ninguno (sintético)",
+  "frecuencia": "1d",
+  "sesgo_supervivencia": "No aplica: un único activo sintético que existe en toda la ventana."
+ },
+ "datos": {
+  "fuente": "pec.sintetico.velas (determinista)",
+  "licencia": "no aplica (sintético)",
+  "manifiesto_sha256": null,
+  "zona_horaria": "UTC",
+  "tratamiento_faltantes": "Sin marca en la barra faltante; el rendimiento entre marcas válidas va a la barra válida siguiente (MEC §2).",
+  "umbral_faltantes": 0.005,
+  "velas_incompletas": "excluir",
+  "duplicados": "identicos_una_copia_conflictos_invalidan"
+ },
+ "reglas": {
+  "senal": "Ejemplo: z-score del rendimiento diario con desvío RMS de 60 días ≤ −3.",
+  "entrada": "Apertura siguiente a la señal.",
+  "salida": "Cierre del día 10 o recuperación del nivel previo al shock.",
+  "gestion_riesgo": "Sin apalancamiento; una posición a la vez.",
+  "parametros": {
+   "z_umbral": -3,
+   "ventana_sigma": 60,
+   "duracion_maxima": 10
+  }
+ },
+ "ejecucion": {
+  "momento": "apertura_siguiente",
+  "comision": 0.001,
+  "slippage": 0.0005,
+  "spread": 0.0002,
+  "latencia_barras": 0,
+  "funding": false,
+  "apalancamiento": 1,
+  "margen_mantenimiento": null
+ },
+ "ventanas": {
+  "desarrollo": [
+   "2030-01-01",
+   "2031-12-31"
+  ],
+  "validacion": [
+   "2032-01-01",
+   "2032-12-31"
+  ],
+  "prueba_final": [
+   "2033-01-01",
+   "2034-12-31"
+  ],
+  "prospectiva": null
+ },
+ "metrica_primaria": "exceso_diario_vs_exposicion_equivalente",
+ "benchmarks": [
+  "exposicion_equivalente",
+  "comprar_y_mantener",
+  "efectivo"
+ ],
+ "prueba": {
+  "metodo": "regla_respaldo_max_l20_l40_nw",
+  "ell": 20,
+  "B": 9999,
+  "semilla": 99,
+  "regla_respaldo": "max_l20_l40_nw",
+  "alfa": 0.025
+ },
+ "multiplicidad": {
+  "familia_confirmatoria": [
+   "H-EJEMPLO-SINTETICO"
+  ],
+  "correccion": "bonferroni",
+  "alfa_familia": 0.025
+ },
+ "potencia": {
+  "delta_anual": null,
+  "te_supuesto": 0.2,
+  "ir_neto_plausible": 0.5,
+  "horizonte_anos": 2,
+  "n_min": 30,
+  "acepta_no_concluyente": true,
+  "unidad_delta": "exceso_aritmetico_anual_neto"
+ },
+ "criterios": {
+  "regla": "MEC-v0.2-§7+PEC-1.1",
+  "aceptacion": "RESPALDADA: p ≤ α con la regla decisiva PEC-1.1 (máx de ℓ20, ℓ40 y NW) en la prueba final, con datos válidos y N ≥ N_min.",
+  "rechazo": "EN_CONTRA (IC90 envolvente superior < 0) o EFECTO_RELEVANTE_DESCARTADO (IC90 envolvente superior < δ/365,25; no disponible sin δ).",
+  "inconclusion": "INSUFICIENTE, INCONCLUSO_POR_DATOS o INVALIDO."
+ },
+ "robustez": [
+  "costos_x2",
+  "retraso_1_barra",
+  "subperiodos"
+ ],
+ "reproduccion": {
+  "exigida": "REPRODUCIDO",
+  "reproductor": "otra_persona",
+  "determinista": true,
+  "presentar_todas": true
+ },
+ "parada": {
+  "variantes_permitidas": 0,
+  "reglas": [
+   "Una sola ejecución de la prueba final; cualquier cambio es una hipótesis nueva."
+  ]
+ },
+ "calibraciones": {
+  "a_s1_zip_sha256": "37af592c865dd0379d71fad2f6b52033c019e13b20920557867c6d93548f64e6",
+  "sec_1_0_especificacion_sha256": "b4064e8c1f272cf9c126190a1439d35160819b5dcc8176de70b03ffa885fd1c5",
+  "sec_1_0_resultado_sha256": "1de0399422bca48fdaa401051fd4aeae0ccca5181e3312f6cc21780118fb91da"
+ }
+}

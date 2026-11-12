@@ -1,0 +1,93 @@
+== RA-A.3 procesos y artefactos: 2026-10-25T17:21:50Z
+procesos (ps, excluyendo esta inspección):
+       1     0       04:11 /process_api --firecracker-init --addr 0.0.0.0:2024 --max-ws-buffer-size 32768 --block-local-connections --control-vsock-port 
+       2     0       04:11 [kthreadd]
+       3     2       04:11 [pool_workqueue_release]
+       4     2       04:11 [kworker/R-rcu_gp]
+       5     2       04:11 [kworker/R-sync_wq]
+       6     2       04:11 [kworker/R-kvfree_rcu_reclaim]
+       7     2       04:11 [kworker/R-slub_flushwq]
+       8     2       04:11 [kworker/R-netns]
+       9     2       04:11 [kworker/0:0-events]
+      10     2       04:11 [kworker/0:0H-events_highpri]
+      11     2       04:11 [kworker/0:1-mm_percpu_wq]
+      12     2       04:11 [kworker/u16:0-ext4-rsv-conversion]
+      13     2       04:11 [kworker/R-mm_percpu_wq]
+      14     2       04:11 [ksoftirqd/0]
+      15     2       04:11 [rcu_preempt]
+      16     2       04:11 [rcu_exp_par_gp_kthread_worker/0]
+      17     2       04:11 [rcu_exp_gp_kthread_worker]
+      18     2       04:11 [migration/0]
+      19     2       04:11 [cpuhp/0]
+      20     2       04:11 [cpuhp/1]
+      21     2       04:11 [migration/1]
+      22     2       04:11 [ksoftirqd/1]
+      23     2       04:11 [kworker/1:0-slub_flushwq]
+      24     2       04:11 [kworker/1:0H-events_highpri]
+      25     2       04:11 [cpuhp/2]
+      26     2       04:11 [migration/2]
+      27     2       04:11 [ksoftirqd/2]
+      28     2       04:11 [kworker/2:0-slub_flushwq]
+      29     2       04:11 [kworker/2:0H-events_highpri]
+      30     2       04:11 [cpuhp/3]
+      31     2       04:11 [migration/3]
+      32     2       04:11 [ksoftirqd/3]
+      33     2       04:11 [kworker/3:0-slub_flushwq]
+      34     2       04:11 [kworker/3:0H-events_highpri]
+      35     2       04:11 [kdevtmpfs]
+      36     2       04:11 [kworker/R-inet_frag_wq]
+      37     2       04:11 [rcu_tasks_kthread]
+      38     2       04:11 [rcu_tasks_rude_kthread]
+      39     2       04:11 [rcu_tasks_trace_kthread]
+      40     2       04:11 [kauditd]
+      41     2       04:11 [khungtaskd]
+      42     2       04:11 [oom_reaper]
+      43     2       04:11 [kworker/u16:1-kvfree_rcu_reclaim]
+      44     2       04:11 [kworker/R-writeback]
+      45     2       04:11 [kworker/u16:2]
+      46     2       04:11 [kcompactd0]
+      47     2       04:11 [ksmd]
+      48     2       04:11 [khugepaged]
+      49     2       04:11 [kworker/R-kblockd]
+      50     2       04:11 [kworker/R-blkcg_punt_bio]
+      51     2       04:11 [kworker/1:1-events_freezable]
+      52     2       04:11 [kworker/3:1-virtio_vsock]
+      53     2       04:11 [kworker/2:1-mm_percpu_wq]
+      54     2       04:11 [watchdogd]
+      55     2       04:11 [kworker/R-quota_events_unbound]
+      56     2       04:11 [kworker/2:1H-kblockd]
+      57     2       04:11 [kswapd0]
+      58     2       04:11 [kworker/R-xfsalloc]
+      59     2       04:11 [kworker/R-xfs_mru_cache]
+      60     2       04:11 [kworker/u17:0]
+      61     2       04:11 [kworker/R-kthrotld]
+      62     2       04:11 [irq/24-ACPI:Ged]
+      63     2       04:11 [irq/25-ACPI:Ged]
+      64     2       04:11 [hwrng]
+      65     2       04:11 [kworker/3:1H-kblockd]
+      66     2       04:11 [kworker/R-kstrp]
+      69     2       04:11 [kworker/1:1H-kblockd]
+      70     2       04:11 [kworker/0:1H-kblockd]
+      76     2       04:09 [kworker/3:2-mm_percpu_wq]
+      77     2       04:09 [kworker/0:2]
+      79     2       04:09 [kworker/R-ext4-rsv-conversion]
+      81     2       04:09 [kworker/R-ext4-rsv-conversion]
+      82     2       04:09 [kworker/R-ext4-rsv-conversion]
+      84     1       04:09 sbx-telemetry-collector
+      85     1       04:09 /bin/sh -c if ! { [ ! -L /var/lib/ccr-ca-store ] && { [ ! -e /var/lib/ccr-ca-store ] || { [ -d /var/lib/ccr-ca-store ] && [ -O
+      89    85       04:09 /usr/local/bin/environment-manager task-run --stdin --session cse_0175CK8isDricqGQ2mHBsuJe --session-mode resume --upgrade-cla
+     129    89       04:07 /opt/claude-code/bin/claude --output-format=stream-json --verbose --settings /root/.claude/launcher-settings.json --replay-use
+     365   360       00:00 cut -c1-150
+     366   360       00:00 sed s/^/   /
+-- ZIP: -rw-r--r-- 1 root root 2355598 Oct 25 17:08 /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_integral_2026-10-22/entrega/cierre_integral_2026-10-22.zip
+sha256 calculado: ea670f911da39ff6cb03a1ff6878dee956ae437e40e09450f7d622449fc9c91b
+sha256 declarado: ea670f911da39ff6cb03a1ff6878dee956ae437e40e09450f7d622449fc9c91b
+archivo .sha256 junto al ZIP: ea670f911da39ff6cb03a1ff6878dee956ae437e40e09450f7d622449fc9c91b  cierre_integral_2026-10-22.zip
+-- inspección del ZIP SIN extraer (zipinfo):
+entradas: 892 · archivos (sin /): 826
+rutas absolutas: 0 · con '..': 0 · fuera de cierre_integral_2026-10-22/: 0 · con caracteres de control: 0
+enlaces simbólicos (atributo l en zipinfo -l): 0
+permisos ejecutables: 1 · tipos de entradas:     826 -      66 d 
+nombres duplicados: 0
+extensiones:     340 json     306 log     103 txt      30 xml      13 py      12 md       9 patch       5 sh       3 jsonl       2 sha256       1 yml       1 toml       1 diff 
+posibles bases/cachés: 0

@@ -1,0 +1,5 @@
+E           Failed: DID NOT RAISE LiveActivationError
+E           Failed: DID NOT RAISE LiveActivationError
+PASSED tests/integration/test_live_session_lease.py::test_a_stale_live_heartbeat_does_not_block_arming
+FAILED tests/integration/test_live_session_lease.py::test_arming_is_refused_while_another_process_heartbeats_a_live_session
+FAILED tests/integration/test_live_session_lease.py::test_a_store_that_cannot_be_read_refuses_the_start_instead_of_assuming_it_is_alone

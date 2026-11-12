@@ -1,0 +1,24 @@
+{
+ "q": {
+  "DEV-BTC": 0.795,
+  "DEV-ETH": 0.75
+ },
+ "medias_netas_M1_pct": {
+  "DEV-BTC": 0.2016103105840229,
+  "DEV-ETH": -0.4990505872056182
+ },
+ "n": {
+  "DEV-BTC": 88,
+  "DEV-ETH": 65
+ },
+ "bootstrap_combinado": {
+  "P_media_mayor_0": 0.2527,
+  "ic90": [
+   -0.3294257510551941,
+   0.13974294806196794
+  ],
+  "replicas_validas": 10000
+ },
+ "promovida": false,
+ "q_para_OOS_ETH": null
+}

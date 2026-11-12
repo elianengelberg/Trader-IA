@@ -1,0 +1,291 @@
+{
+ "semanas_ic": 120,
+ "semanas_h2": 120,
+ "H1": {
+  "ic_medio": -0.0015280472231049868,
+  "ee_nw": 0.00981110657995851,
+  "z": -0.1557466745113525,
+  "p1": 0.5618836474435353,
+  "ic90": [
+   -0.017665881465557195,
+   0.01460978701934722
+  ],
+  "clasificacion_6_1": "INSUFICIENTE"
+ },
+ "H2": {
+  "p": 0.4125,
+  "p_boot13": 0.4125,
+  "p_boot26": 0.3975,
+  "p_nw13": 0.4109131525232763,
+  "media_semanal": 0.0006934374244676179,
+  "anual": 0.036058746072316135,
+  "ic90_semanal": [
+   -0.0047957275145046035,
+   0.006764535283641635
+  ],
+  "ic90_anual": [
+   -0.2493778307542394,
+   0.351755834749365
+  ],
+  "n": 120,
+  "clasificacion_6_2": "INSUFICIENTE"
+ },
+ "holm": {
+  "p": {
+   "H1": 0.5618836474435353,
+   "H2": 0.4125
+  },
+  "orden": [
+   "H2",
+   "H1"
+  ],
+  "umbrales": {
+   "H2": 0.025,
+   "H1": 0.05
+  },
+  "rechaza": {
+   "H1": false,
+   "H2": false
+  }
+ },
+ "robustez": {
+  "R1_costos_x2": -0.00030054112459631057,
+  "R2_un_dia_despues": -0.0005363435914984764,
+  "R3_tercios_ic_pos": 1,
+  "R3_tercios_exceso_pos": 3,
+  "R4_sin_mayor_aporte": "C53USDT",
+  "R4_exceso": 0.00041989401320689047,
+  "R6_liquidaciones_menos_30": 0.001083367687140511,
+  "R5_exceso_bruto": 0.0016902235638193487,
+  "R5_p_nulo": 0.3698150924537731,
+  "diag_5_4_tasa_rechazo": 0.0505
+ },
+ "robusta": false,
+ "clasificacion_6_5": "INSUFICIENTE",
+ "diagnostico_6_4": {
+  "liquidaciones_estrategia": 0,
+  "liquidaciones_ew": 5,
+  "marcas_obsoletas_H1": 15,
+  "compras_omitidas": 0,
+  "ventas_diferidas": 0,
+  "ic_medio_sin_marcas_obsoletas": -0.0008178597203516811,
+  "semanas_h2_con_evento": 31,
+  "exceso_medio_sin_semanas_con_evento": 0.002401661948498547,
+  "etiqueta_dependiente": false
+ },
+ "descriptivo": {
+  "estrategia": {
+   "semanas": 120,
+   "cagr": -0.1818272602142148,
+   "vol_anual": 0.8010566533572858,
+   "sharpe_anual": 0.13809857322296631,
+   "sortino_anual": 0.21497562773768272,
+   "caida_maxima": -0.7926287293877889,
+   "cvar5_semanal": -0.18663276084467487,
+   "peor_semana": -0.24120854352227028,
+   "semanas_bajo_el_agua_max": 112
+  },
+  "ew_u30": {
+   "semanas": 120,
+   "cagr": -0.1483003168698439,
+   "vol_anual": 0.6938232743509077,
+   "sharpe_anual": 0.10747122153958882,
+   "sortino_anual": 0.16346034227784997,
+   "caida_maxima": -0.7805699764254187,
+   "cvar5_semanal": -0.17329832357252903,
+   "peor_semana": -0.19454448544580272,
+   "semanas_bajo_el_agua_max": 112
+  },
+  "frente_a_btc": {
+   "exceso_anual": 0.030999140626698205,
+   "ic90_anual": [
+    -1.0587416594906416,
+    1.1165239743724467
+   ],
+   "beta": 0.4925900970957261,
+   "correlacion": 0.5560968089282056,
+   "btc_comprar_y_mantener": {
+    "semanas": 120,
+    "cagr": -0.27840516647117464,
+    "vol_anual": 0.9043321238675366,
+    "sharpe_anual": 0.08804911179332445,
+    "sortino_anual": 0.12961956527202942,
+    "caida_maxima": -0.7502352821437759,
+    "cvar5_semanal": -0.23411952206896738,
+    "peor_semana": -0.2934219117096506,
+    "semanas_bajo_el_agua_max": 90
+   }
+  },
+  "frente_al_efectivo": {
+   "semanas": 120,
+   "cagr": -0.1818272602142148,
+   "vol_anual": 0.8010566533572858,
+   "sharpe_anual": 0.13809857322296631,
+   "sortino_anual": 0.21497562773768272,
+   "caida_maxima": -0.7926287293877889,
+   "cvar5_semanal": -0.18663276084467487,
+   "peor_semana": -0.24120854352227028,
+   "semanas_bajo_el_agua_max": 112
+  },
+  "costos": {
+   "x0": 0.08789162531860613,
+   "x1": 0.036058746072316135,
+   "x2": -0.01562813847900815
+  },
+  "exposicion_y_rotacion": {
+   "exposicion_media": 1.0,
+   "rotacion_semanal_media": 0.4238987845414068,
+   "rotacion_anual": 22.042736796153154,
+   "entradas_por_semana": 2.630252100840336,
+   "operaciones_estimadas": 626
+  },
+  "por_anio": {
+   "2018": {
+    "semanas": 18,
+    "ic_medio": 0.003345328140634242,
+    "exceso_anual": -0.030614543803043404
+   },
+   "2019": {
+    "semanas": 52,
+    "ic_medio": -0.004034038237073573,
+    "exceso_anual": 0.08242003567783307
+   },
+   "2020": {
+    "semanas": 50,
+    "ic_medio": -0.0006762316995237927,
+    "exceso_anual": 0.011845389237707957
+   }
+  },
+  "grilla_sensibilidad": {
+   "k4_N20": {
+    "exceso_anual": 0.07020590406324669,
+    "sharpe_exceso_anual": 0.1887967864235513,
+    "sharpe_cartera_anual": 0.22099079734407825
+   },
+   "k4_N30": {
+    "exceso_anual": 0.23888759637694837,
+    "sharpe_exceso_anual": 0.6340930784425111,
+    "sharpe_cartera_anual": 0.3713143072278055
+   },
+   "k4_N50": {
+    "exceso_anual": -0.11592846322113522,
+    "sharpe_exceso_anual": -0.31269386361793844,
+    "sharpe_cartera_anual": 0.04892171127204416
+   },
+   "k6_N20": {
+    "exceso_anual": 0.041259181638401546,
+    "sharpe_exceso_anual": 0.16362758752197176,
+    "sharpe_cartera_anual": 0.19756015569182328
+   },
+   "k6_N30": {
+    "exceso_anual": 0.036058746072316135,
+    "sharpe_exceso_anual": 0.1307478340182508,
+    "sharpe_cartera_anual": 0.13809857322296631
+   },
+   "k6_N50": {
+    "exceso_anual": 0.04785386535954069,
+    "sharpe_exceso_anual": 0.1639852485228517,
+    "sharpe_cartera_anual": 0.24721540471909986
+   },
+   "k10_N20": {
+    "exceso_anual": 0.10067220715983506,
+    "sharpe_exceso_anual": 0.5649713669204213,
+    "sharpe_cartera_anual": 0.2921917988289154
+   },
+   "k10_N30": {
+    "exceso_anual": 0.06906625844271376,
+    "sharpe_exceso_anual": 0.3405282761169744,
+    "sharpe_cartera_anual": 0.1830146396304127
+   },
+   "k10_N50": {
+    "exceso_anual": 0.07736202159003822,
+    "sharpe_exceso_anual": 0.3702733703357445,
+    "sharpe_cartera_anual": 0.30025579453895684
+   },
+   "h7": {
+    "exceso_anual": 0.1735279677258499,
+    "sharpe_exceso_anual": 0.6357161496970647,
+    "sharpe_cartera_anual": 0.3214108903666193
+   },
+   "h14": {
+    "exceso_anual": -0.11108541195834372,
+    "sharpe_exceso_anual": -0.36693993254243135,
+    "sharpe_cartera_anual": -0.04555270179013146
+   },
+   "h21": {
+    "exceso_anual": 0.1617817555657083,
+    "sharpe_exceso_anual": 0.5962332679783577,
+    "sharpe_cartera_anual": 0.2929145643413901
+   },
+   "h28": {
+    "exceso_anual": 0.202202364888778,
+    "sharpe_exceso_anual": 0.7239832959398249,
+    "sharpe_cartera_anual": 0.35145107563452826
+   },
+   "sin_banda": {
+    "exceso_anual": 0.09760406265698385,
+    "sharpe_exceso_anual": 0.35740354525365203,
+    "sharpe_cartera_anual": 0.21757136587964546
+   },
+   "miercoles": {
+    "exceso_anual": 0.0675766704119785,
+    "sharpe_exceso_anual": 0.25125991071423553,
+    "sharpe_cartera_anual": 0.22315382221592595
+   }
+  },
+  "sharpe_deflactado": {
+   "sr_semanal": 0.018131462296486853,
+   "sr0_semanal": 0.08004153452092413,
+   "N": 20,
+   "V_SR": 0.001773372744212984,
+   "asimetria": 0.35939889962882254,
+   "curtosis": 2.9616451030718225,
+   "dsr": 0.2490394818786963,
+   "configuraciones_en_V": 20
+  },
+  "exceso_timing_T": "NO CALCULADO: T no se reabre (regla vigente)"
+ },
+ "nota": "Ninguna clasificación autoriza capital (v3 §6.5). Evidencia histórica con contaminación declarada (v3 §1).",
+ "validez_previa": {
+  "ultimo_dia_panel": "2020-12-31",
+  "bloqueo_fechas": true,
+  "semanas": 120,
+  "evaluables": 120,
+  "no_evaluables_pct": 0.0,
+  "semanas_ok": false,
+  "invariancia_truncado": [
+   {
+    "corte": "2019-01-22",
+    "universos_y_senal": true,
+    "objetivos": true,
+    "pesos": true
+   },
+   {
+    "corte": "2019-04-17",
+    "universos_y_senal": true,
+    "objetivos": true,
+    "pesos": true
+   },
+   {
+    "corte": "2019-04-21",
+    "universos_y_senal": true,
+    "objetivos": true,
+    "pesos": true
+   },
+   {
+    "corte": "2019-10-18",
+    "universos_y_senal": true,
+    "objetivos": true,
+    "pesos": true
+   },
+   {
+    "corte": "2020-04-06",
+    "universos_y_senal": true,
+    "objetivos": true,
+    "pesos": true
+   }
+  ],
+  "invariancia_ok": true,
+  "valido": false
+ }
+}

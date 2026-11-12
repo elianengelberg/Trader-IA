@@ -1,0 +1,401 @@
+diff --git a/packages/tia/src/tia/api/state.py b/packages/tia/src/tia/api/state.py
+index f5e113a..d3dbaed 100644
+--- a/packages/tia/src/tia/api/state.py
++++ b/packages/tia/src/tia/api/state.py
+@@ -109,6 +109,8 @@ class AppState:
+         self._persist_failures = 0
+         self._persist_last_error: str | None = None
+         self._persist_last_failed_at: datetime | None = None
++        #: Alerts the webhook did not take (transport error or a non-2xx answer).
++        self._alert_failures = 0
+         self._request_errors = 0
+         self._recent_backtests: deque[dict[str, Any]] = deque(maxlen=25)
+         #: The read-only Advisor and the behaviour auditor. The Advisor is built lazily and
+@@ -289,7 +291,7 @@ class AppState:
+             self.settings,
+             config,
+             on_event=self.broadcast,
+-            persist=self._persist,
++            persist=self.session_persist,
+             prior_outcomes=await self._load_prior_outcomes(),
+         )
+ 
+@@ -338,7 +340,7 @@ class AppState:
+                 import httpx
+ 
+                 async with httpx.AsyncClient(timeout=5.0) as client:
+-                    await client.post(
++                    response = await client.post(
+                         url,
+                         json={
+                             "source": "trader-ia",
+@@ -349,7 +351,10 @@ class AppState:
+                             "at": str(incident.get("at")),
+                         },
+                     )
++                if not 200 <= response.status_code < 300:  # an answer is not a delivery
++                    raise RuntimeError(f"the webhook answered HTTP {response.status_code}")
+             except Exception as exc:
++                self._alert_failures += 1
+                 _log.warning("alert_dispatch_failed", error=str(exc)[:200])
+ 
+         with contextlib.suppress(Exception):
+@@ -733,7 +738,23 @@ class AppState:
+     # ------------------------------------------------------------------ persistence
+ 
+     async def _persist(self, kind: str, payload: Any) -> None:
+-        """Write one runtime artefact. Failures are logged, never raised."""
++        """Write one runtime artefact. Failures are logged and counted, never raised: for
++        the callers that await a write inline (the market-making services)."""
++        with contextlib.suppress(Exception):
++            await self.session_persist(kind, payload)
++
++    async def session_persist(self, kind: str, payload: Any) -> None:
++        """The dispatcher the trading sessions are given: the same write, counted the same
++        way, but a write the store refused **raises**. A session schedules each write as a
++        task and counts it failed only when that task raises (R19: the flush says complete
++        with none in flight and none failed). Handed the absorbing dispatcher, every
++        refused write was counted as confirmed: the application's counter saw it, the
++        session whose record it was did not."""
++        if kind == "incident":
++            # The alert does not wait for the store: a database that is down is exactly when
++            # an incident must still reach the operator. It used to go out only after the
++            # incident row was written, so an outage of the store silenced every alert.
++            self._dispatch_alert(payload)
+         try:
+             async with self.database.session() as session:
+                 if kind == "decision":
+@@ -788,7 +809,6 @@ class AppState:
+                     await ReconciliationRepository(session).record(payload)
+                 elif kind == "incident":
+                     await IncidentRepository(session).record(payload)
+-                    self._dispatch_alert(payload)
+                 elif kind == "latency":
+                     from tia.persistence import LatencyRepository
+ 
+@@ -810,6 +830,7 @@ class AppState:
+             self._persist_last_error = f"{kind}: {type(exc).__name__}: {str(exc)[:200]}"
+             self._persist_last_failed_at = datetime.now(UTC)
+             _log.warning("persist_failed", kind=kind, error=str(exc)[:300])
++            raise
+ 
+     def persistence_status(self) -> dict[str, Any]:
+         """What the store has absorbed: writes, failures, the last failure and when."""
+@@ -2308,7 +2329,7 @@ class AppState:
+             execution=execution,
+             clock=clock,
+             venue_time_ms=market.server_time_ms,
+-            persist=self._persist,
++            persist=self.session_persist,
+             on_event=self.broadcast,
+             prior_outcomes=prior_outcomes,
+             prior_reviews=prior_reviews,
+@@ -2466,7 +2487,7 @@ class AppState:
+             execution=execution,
+             clock=clock,
+             venue_time_ms=market.server_time_ms,
+-            persist=self._persist,
++            persist=self.session_persist,
+             on_event=self.broadcast,
+             prior_outcomes=prior_outcomes,
+             prior_reviews=prior_reviews,
+@@ -3121,6 +3142,9 @@ class AppState:
+             "# HELP tia_persist_failures_total Persistence writes the store refused",
+             "# TYPE tia_persist_failures_total counter",
+             f"tia_persist_failures_total {self._persist_failures}",
++            "# HELP tia_alert_failures_total Alerts the webhook did not take",
++            "# TYPE tia_alert_failures_total counter",
++            f"tia_alert_failures_total {self._alert_failures}",
+         ]
+         for name, value in counters.items():
+             lines.append(f"# TYPE tia_runtime_{name} counter")
+diff --git a/packages/tia/src/tia/runtime/engine.py b/packages/tia/src/tia/runtime/engine.py
+index 82694de..76d1710 100644
+--- a/packages/tia/src/tia/runtime/engine.py
++++ b/packages/tia/src/tia/runtime/engine.py
+@@ -531,10 +531,14 @@ class RuntimeEngine:
+         )
+         if not self.persistence_flushed:
+             pending = sum(1 for t in self._persist_tasks if not t.done())
+-            self.last_error = (
+-                f"{pending} persistence write(s) still in flight after "
+-                f"{self._flush_timeout_seconds:.0f}s at stop; the record may be incomplete"
+-            )
++            failed = self.counters.persist_failures
++            self.last_error = "; ".join(
++                part for part in (
++                    f"{pending} persistence write(s) still in flight after "
++                    f"{self._flush_timeout_seconds:.0f}s at stop" if pending else "",
++                    f"{failed} persistence write(s) failed during the run" if failed else "",
++                ) if part
++            ) + "; the record is incomplete"
+             _log.error(
+                 "persistence_flush_incomplete", run_id=self.run_id, pending=pending,
+                 timeout_seconds=self._flush_timeout_seconds,
+@@ -1617,9 +1621,10 @@ class RuntimeEngine:
+     async def flush_persistence(self, *, timeout_seconds: float = 10.0) -> bool:
+         """Wait for the persistence writes scheduled so far to finish.
+ 
+-        ``True`` when every write landed (or failed, which is counted) within
+-        ``timeout_seconds``; ``False`` when some were still in flight. Writes scheduled
+-        while waiting are waited for too.
++        ``True`` only when every write landed within ``timeout_seconds``: ``False`` when
++        some were still in flight, and ``False`` when any write of the run failed — a
++        record with a write missing is not complete because the failure was counted
++        (the live session's rule, R19). Writes scheduled while waiting are waited for too.
+         """
+         deadline = time.monotonic() + max(0.0, timeout_seconds)
+         while self._persist_tasks:
+@@ -1630,7 +1635,7 @@ class RuntimeEngine:
+             if remaining <= 0:
+                 return False
+             await asyncio.wait(pending, timeout=remaining)
+-        return True
++        return self.counters.persist_failures == 0
+ 
+     def snapshot(self) -> dict[str, Any]:
+         """Everything the dashboard needs in one object."""
+diff --git a/tests/integration/test_alert_delivery.py b/tests/integration/test_alert_delivery.py
+new file mode 100644
+index 0000000..3b718f0
+--- /dev/null
++++ b/tests/integration/test_alert_delivery.py
+@@ -0,0 +1,97 @@
++"""Alerts reach the operator when the store is down, and an error answer is not a delivery.
++
++The webhook was called from inside the incident's database write, after the row landed: with
++the store down — exactly when an operator must hear about it — no alert went out. And the
++webhook's answer was never looked at: a 500 counted as delivered.
++
++Expected outcomes, fixed before running: with every database session refused, an incident
++still reaches the webhook; a webhook answering 500 is counted as a failed alert.
++"""
++
++from __future__ import annotations
++
++import asyncio
++import contextlib
++from datetime import UTC, datetime
++from pathlib import Path
++from typing import Any
++
++import httpx
++import pytest
++
++from tests.integration.test_live_api import _FakePublicFeed, _settings
++from tia.api.state import AppState
++from tia.core.config import LiveConfig
++
++
++@pytest.fixture(autouse=True)
++def _feed(monkeypatch: pytest.MonkeyPatch) -> None:
++    import tia.data.providers.binance_public as binance_public
++
++    monkeypatch.setattr(binance_public, "BinancePublicProvider", _FakePublicFeed)
++
++
++def _webhook(monkeypatch: pytest.MonkeyPatch, status: int) -> list[dict[str, Any]]:
++    sent: list[dict[str, Any]] = []
++
++    class _Hook:
++        def __init__(self, *args: Any, **kwargs: Any) -> None: ...
++
++        async def __aenter__(self) -> _Hook:
++            return self
++
++        async def __aexit__(self, *args: Any) -> bool:
++            return False
++
++        async def post(self, url: str, json: dict[str, Any] | None = None) -> httpx.Response:
++            sent.append(json or {})
++            return httpx.Response(status)
++
++    monkeypatch.setattr(httpx, "AsyncClient", _Hook)
++    return sent
++
++
++def _state(tmp_path: Path) -> AppState:
++    settings = _settings(tmp_path, live=LiveConfig(market_stream=False))
++    return AppState(settings.model_copy(update={"observability": settings.observability.model_copy(
++        update={"alert_webhook_url": "https://alerts.example/hook"})}))
++
++
++INCIDENT = {"incident_id": "i-1", "at": datetime.now(UTC), "kind": "protective_stop_failed", "actor": "system",
++            "reason": "drill", "run_id": "r", "detail": {}}
++
++
++async def test_an_incident_reaches_the_webhook_with_the_store_down(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
++    sent = _webhook(monkeypatch, 200)
++    state = _state(tmp_path)
++    await state.database.ensure_schema()
++    try:
++        @contextlib.asynccontextmanager
++        async def broken_session():  # type: ignore[no-untyped-def]
++            raise RuntimeError("database is down")
++            yield  # pragma: no cover
++
++        monkeypatch.setattr(state.database, "session", broken_session)
++        await state._persist("incident", dict(INCIDENT))
++        for _ in range(5):
++            await asyncio.sleep(0)
++        assert [s["kind"] for s in sent] == ["protective_stop_failed"], "the alert went out anyway"
++        assert state.persistence_status()["failures"] == 1, "and the failed write is still counted"
++    finally:
++        monkeypatch.undo()
++        await state.shutdown()
++
++
++async def test_a_webhook_answering_an_error_is_a_failed_alert(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
++    sent = _webhook(monkeypatch, 500)
++    state = _state(tmp_path)
++    await state.database.ensure_schema()
++    try:
++        await state._persist("incident", dict(INCIDENT))
++        for _ in range(5):
++            await asyncio.sleep(0)
++        assert sent, "the webhook was called"
++        assert state._alert_failures == 1
++        assert "tia_alert_failures_total 1" in state.prometheus_metrics()
++    finally:
++        await state.shutdown()
+diff --git a/tests/integration/test_live_api.py b/tests/integration/test_live_api.py
+index eb84130..d67965b 100644
+--- a/tests/integration/test_live_api.py
++++ b/tests/integration/test_live_api.py
+@@ -667,8 +667,9 @@ async def test_incident_alerts_reach_the_webhook_and_carry_no_secret(
+         async def __aexit__(self, *args: Any) -> bool:
+             return False
+ 
+-        async def post(self, url: str, json: dict[str, Any] | None = None) -> None:
++        async def post(self, url: str, json: dict[str, Any] | None = None) -> httpx_module.Response:
+             sent.append((url, json or {}))
++            return httpx_module.Response(200)
+ 
+     monkeypatch.setattr(httpx_module, "AsyncClient", _Recorder)
+ 
+diff --git a/tests/integration/test_scenario_engine_persistence.py b/tests/integration/test_scenario_engine_persistence.py
+index f1b4a24..39ae802 100644
+--- a/tests/integration/test_scenario_engine_persistence.py
++++ b/tests/integration/test_scenario_engine_persistence.py
+@@ -118,7 +118,9 @@ async def test_persistence_failures_are_counted_and_never_stop_the_loop() -> Non
+             assert engine.is_running, "the loop went on despite the store"
+         finally:
+             await engine.stop()
+-        assert engine.persistence_flushed is True, "failed writes are finished writes"
++        # Finished, but not landed: a run with a failed write does not call its record
++        # complete (N3, the live session's rule since R19).
++        assert engine.persistence_flushed is False, "failed writes leave the record incomplete"
+         assert engine.counters.persist_failures >= 1
+         assert engine.counters.errors == 0, "a store failure is not a loop error"
+ 
+@@ -156,3 +158,22 @@ async def test_stop_is_idempotent() -> None:
+     await engine.stop()
+     assert engine.state is RuntimeState.STOPPED and engine.stopped_at is not None
+     assert first is not None and engine.stopped_at >= first
++
++
++async def test_a_run_whose_write_failed_does_not_report_its_record_complete() -> None:
++    """N3: the scenario engine counted a failed write and still flushed ``True`` — its run
++    record called complete with a fill or an outcome missing. Expected, fixed before
++    running: ``persistence_flushed`` is False and the stop says the record is incomplete."""
++    async def persist(kind: str, payload: dict[str, Any]) -> None:
++        if kind == "fill":
++            raise OSError("store refused the fill")
++
++    engine = _engine(persist)
++    await engine.start()
++    try:
++        await _until(lambda: engine.counters.persist_failures >= 1 or not engine.is_running)
++    finally:
++        await engine.stop()
++    assert engine.counters.persist_failures >= 1, "the scenario produced no fill"
++    assert engine.persistence_flushed is False
++    assert "failed during the run" in engine.last_error and "incomplete" in engine.last_error
+diff --git a/tests/integration/test_session_persistence_contract.py b/tests/integration/test_session_persistence_contract.py
+new file mode 100644
+index 0000000..80db598
+--- /dev/null
++++ b/tests/integration/test_session_persistence_contract.py
+@@ -0,0 +1,82 @@
++"""A write the store refuses reaches the session's own record of its writes — in production.
++
++The session counts a write as failed when the coroutine it scheduled raises (R19: the
++flush says "complete" only with none in flight and none failed). The tests that proved it
++handed the session a store double that raises. The application hands it
++``AppState._persist``, which absorbed every failure and returned normally — so in
++production every refused write was counted as confirmed, the flush said complete, and the
++stop's "the record is incomplete" never fired. The global counter saw the failure; the
++session, whose record it was, did not.
++
++Expected outcomes, fixed before running: with the application's own dispatcher and a store
++that refuses writes, the session counts the write as failed, the flush does not say
++complete, and the application's global counter still counts it.
++"""
++
++from __future__ import annotations
++
++import contextlib
++from datetime import UTC, datetime
++from pathlib import Path
++
++import pytest
++
++from tests.integration.test_live_api import _FakePublicFeed, _settings
++from tia.api.state import AppState
++from tia.core.config import LiveConfig
++
++from .test_account_restore import build
++
++
++@pytest.fixture(autouse=True)
++def _feed(monkeypatch: pytest.MonkeyPatch) -> None:
++    import tia.data.providers.binance_public as binance_public
++
++    monkeypatch.setattr(binance_public, "BinancePublicProvider", _FakePublicFeed)
++
++
++async def test_a_refused_write_is_a_failed_write_for_the_session(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
++    state = AppState(_settings(tmp_path, live=LiveConfig(market_stream=False)))
++    await state.database.ensure_schema()
++    runtime, *_ = build(persist=state.session_persist)
++    await runtime.start()
++    try:
++        assert await runtime.flush_persistence(timeout_seconds=5) is True
++
++        @contextlib.asynccontextmanager
++        async def broken_session():  # type: ignore[no-untyped-def]
++            raise RuntimeError("database is locked")
++            yield  # pragma: no cover
++
++        monkeypatch.setattr(state.database, "session", broken_session)
++        runtime._save("incident", {"incident_id": "drill", "at": datetime.now(UTC), "kind": "drill",
++                                   "actor": "system", "reason": "drill", "run_id": runtime.run_id, "detail": {}})
++        flushed = await runtime.flush_persistence(timeout_seconds=5)
++        report = runtime.persistence_report()
++        monkeypatch.undo()
++
++        lost = {w["kind"] for w in report["lost"]}
++        assert "incident" in lost and report["complete"] is False, "the session knows its write was lost"
++        assert flushed is False
++        assert state.persistence_status()["failures"] == report["failed"], "and the application counts the same"
++    finally:
++        await runtime.stop(reason="end")
++        await state.shutdown()
++
++
++async def test_the_dispatcher_the_application_keeps_for_itself_still_absorbs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
++    """The market-making services await the dispatcher inline and rely on it not raising."""
++    state = AppState(_settings(tmp_path, live=LiveConfig(market_stream=False)))
++    await state.database.ensure_schema()
++    try:
++        @contextlib.asynccontextmanager
++        async def broken_session():  # type: ignore[no-untyped-def]
++            raise RuntimeError("database is locked")
++            yield  # pragma: no cover
++
++        monkeypatch.setattr(state.database, "session", broken_session)
++        await state._persist("log", {"run_id": "r", "level": "INFO", "at": datetime.now(UTC)})
++        assert state.persistence_status()["failures"] == 1
++    finally:
++        monkeypatch.undo()
++        await state.shutdown()

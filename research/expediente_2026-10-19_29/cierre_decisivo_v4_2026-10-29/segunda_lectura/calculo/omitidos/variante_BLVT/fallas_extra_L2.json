@@ -1,0 +1,82 @@
+[
+ {
+  "par": "TRXUPUSDT",
+  "E": "2023-05-09",
+  "categoria_clasificar": "T",
+  "L": "2022-11-28",
+  "en_bucket": true,
+  "cita": "Token apalancado delistado sin enumerar pares: 'Binance will delist and cease redemption for the TRXUP, TRXDOWN, DOTUP, DOTDOWN, LINKUP and LINKDOWN leveraged tokens at the following timings: At 2023-05-09 06:00 (UTC) : TRXUP, TRXDOWN'",
+  "fuente": "paquete/paginas/url_https___www.binance.com_en_support_announcement_binance-to-delist-and-cease-_6079c69de2a3.json",
+  "categoria": "T"
+ },
+ {
+  "par": "LINKDOWNUSDT",
+  "E": "2023-05-11",
+  "categoria_clasificar": "T",
+  "L": "2023-04-05",
+  "en_bucket": true,
+  "cita": "Token apalancado delistado sin enumerar pares: '... leveraged tokens at the following timings: At 2023-05-09 06:00 (UTC) : TRXUP, TRXDOWN At 2023-05-10 06:00 (UTC) : DOTUP, DOTDOWN At 2023-05-11 06:00 (UTC) : LINKUP, LINKDOWN'",
+  "fuente": "paquete/paginas/url_https___www.binance.com_en_support_announcement_binance-to-delist-and-cease-_6079c69de2a3.json",
+  "categoria": "T"
+ },
+ {
+  "par": "BNBDOWNUSDT",
+  "E": "2024-04-01",
+  "categoria_clasificar": "T",
+  "L": "2024-02-27",
+  "en_bucket": true,
+  "cita": "Trading and subscription services for all BLVTs will be suspended at 2024-02-28 06:00 (UTC) . [...] BNBUP/USDT 2024-02-28 06:00 (UTC) 2024-04-01 06:00 (UTC) BNBDOWN/USDT ETHUP/USDT 2024-04-02 06:00 (UTC) ETHDOWN/USDT BTCUP/USDT 2024-04-03 06:00 (UTC) BTCDOWN/USDT",
+  "fuente": "paquete_omega/paginas/url_https___www.binance.com_en_support_announcement_updates-on-binance-leveraged_2f015a993d37.json",
+  "categoria": "T"
+ },
+ {
+  "par": "BNBUPUSDT",
+  "E": "2024-04-01",
+  "categoria_clasificar": "T",
+  "L": "2024-02-27",
+  "en_bucket": true,
+  "cita": "Trading and subscription services for all BLVTs will be suspended at 2024-02-28 06:00 (UTC) . [...] BNBUP/USDT 2024-02-28 06:00 (UTC) 2024-04-01 06:00 (UTC) BNBDOWN/USDT ETHUP/USDT 2024-04-02 06:00 (UTC) ETHDOWN/USDT BTCUP/USDT 2024-04-03 06:00 (UTC) BTCDOWN/USDT",
+  "fuente": "paquete_omega/paginas/url_https___www.binance.com_en_support_announcement_updates-on-binance-leveraged_2f015a993d37.json",
+  "categoria": "T"
+ },
+ {
+  "par": "BTCDOWNUSDT",
+  "E": "2024-04-03",
+  "categoria_clasificar": "T",
+  "L": "2024-02-27",
+  "en_bucket": true,
+  "cita": "Trading and subscription services for all BLVTs will be suspended at 2024-02-28 06:00 (UTC) . [...] BNBUP/USDT 2024-02-28 06:00 (UTC) 2024-04-01 06:00 (UTC) BNBDOWN/USDT ETHUP/USDT 2024-04-02 06:00 (UTC) ETHDOWN/USDT BTCUP/USDT 2024-04-03 06:00 (UTC) BTCDOWN/USDT",
+  "fuente": "paquete_omega/paginas/url_https___www.binance.com_en_support_announcement_updates-on-binance-leveraged_2f015a993d37.json",
+  "categoria": "T"
+ },
+ {
+  "par": "BTCUPUSDT",
+  "E": "2024-04-03",
+  "categoria_clasificar": "T",
+  "L": "2024-02-27",
+  "en_bucket": true,
+  "cita": "Trading and subscription services for all BLVTs will be suspended at 2024-02-28 06:00 (UTC) . [...] BNBUP/USDT 2024-02-28 06:00 (UTC) 2024-04-01 06:00 (UTC) BNBDOWN/USDT ETHUP/USDT 2024-04-02 06:00 (UTC) ETHDOWN/USDT BTCUP/USDT 2024-04-03 06:00 (UTC) BTCDOWN/USDT",
+  "fuente": "paquete_omega/paginas/url_https___www.binance.com_en_support_announcement_updates-on-binance-leveraged_2f015a993d37.json",
+  "categoria": "T"
+ },
+ {
+  "par": "ETHDOWNUSDT",
+  "E": "2024-04-02",
+  "categoria_clasificar": "T",
+  "L": "2024-02-27",
+  "en_bucket": true,
+  "cita": "Trading and subscription services for all BLVTs will be suspended at 2024-02-28 06:00 (UTC) . [...] BNBUP/USDT 2024-02-28 06:00 (UTC) 2024-04-01 06:00 (UTC) BNBDOWN/USDT ETHUP/USDT 2024-04-02 06:00 (UTC) ETHDOWN/USDT BTCUP/USDT 2024-04-03 06:00 (UTC) BTCDOWN/USDT",
+  "fuente": "paquete_omega/paginas/url_https___www.binance.com_en_support_announcement_updates-on-binance-leveraged_2f015a993d37.json",
+  "categoria": "T"
+ },
+ {
+  "par": "ETHUPUSDT",
+  "E": "2024-04-02",
+  "categoria_clasificar": "T",
+  "L": "2024-02-27",
+  "en_bucket": true,
+  "cita": "Trading and subscription services for all BLVTs will be suspended at 2024-02-28 06:00 (UTC) . [...] BNBUP/USDT 2024-02-28 06:00 (UTC) 2024-04-01 06:00 (UTC) BNBDOWN/USDT ETHUP/USDT 2024-04-02 06:00 (UTC) ETHDOWN/USDT BTCUP/USDT 2024-04-03 06:00 (UTC) BTCDOWN/USDT",
+  "fuente": "paquete_omega/paginas/url_https___www.binance.com_en_support_announcement_updates-on-binance-leveraged_2f015a993d37.json",
+  "categoria": "T"
+ }
+]

@@ -1,0 +1,30 @@
+== R24.2 · las 14 pruebas EXISTENTES de trazabilidad con _store redirigido a PostgreSQL (plugin r24_pg_plugin): 2026-10-22T23:00:14Z
+rc=0
+[r24] _store de test_backtest_provenance redirigido a PostgreSQL (socket /tmp/tia_r24_cfc0aa8e)
+[r24] bases PostgreSQL creadas: 5
+PASSED test_a_result_records_its_engine_its_bars_and_its_instruments
+PASSED test_another_engine_version_is_another_run
+PASSED test_an_engine_change_nobody_versioned_is_another_run
+PASSED test_the_fingerprint_follows_the_engine_source_and_nothing_else
+PASSED test_a_fingerprint_that_cannot_be_read_says_so
+PASSED test_one_dataset_name_over_other_bars_is_another_run
+PASSED test_another_strategy_set_is_another_run
+PASSED test_the_same_engine_on_the_same_bars_is_the_same_run
+PASSED test_a_result_stored_before_the_engine_was_recorded_stays_beside_the_new_one
+PASSED test_the_store_refuses_to_replace_a_result_of_another_provenance
+PASSED test_a_rerun_of_the_same_engine_over_the_same_bars_replaces_only_itself
+PASSED test_other_numbers_under_the_same_provenance_are_refused_not_kept_as_the_last_run
+PASSED test_an_undefined_ratio_does_not_make_a_rerun_look_different
+PASSED test_the_api_lists_the_engine_of_each_result_and_unknown_for_the_old_ones
+14 passed in 26.07s
+-- prueba de que el almacén de esas pruebas era PostgreSQL: bases r24_* creadas en el servidor: 5
+== R24.3 · módulo 07 (transacciones, recuperación, NaN, regla de procedencia) contra PostgreSQL
+rc=0
+PASSED test_what_is_stored_reads_back_identically_from_a_new_connection
+PASSED test_a_rerun_with_an_undefined_ratio_replaces_only_itself
+PASSED test_a_rolled_back_save_leaves_nothing
+PASSED test_a_refused_save_keeps_the_stored_row_and_the_store_usable
+4 passed in 7.47s
+-- el mismo módulo SIN la variable (debe omitirse, nunca caer a SQLite):
+4 skipped in 1.51s
+All checks passed!

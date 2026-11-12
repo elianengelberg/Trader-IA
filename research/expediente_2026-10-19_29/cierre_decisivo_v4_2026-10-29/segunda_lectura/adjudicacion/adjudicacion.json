@@ -1,0 +1,23 @@
+{"adjudicador": "Claude Sonnet 5.5 (claude-sonnet-5-5), subagente adjudicador SL-v1 sec. 6",
+ "casos": [
+  {"caso": "BNBDOWNUSDT", "eleccion": "X",
+   "cita": "Delisting & Redemption Cessation Time BNBUP/USDT 2024-02-28 06:00 (UTC) 2024-04-01 06:00 (UTC) BNBDOWN/USDT",
+   "razonamiento": "BNBDOWN es un token apalancado. La regla R-E dice que la fecha en que el token se delista es el cese de su negociacion spot. La tabla del anuncio fija el delisting de BNBUP y BNBDOWN (celda compartida) el 2024-04-01 06:00 UTC, por lo que E_N5 = 2024-04-01 (lectura X). La lectura Y (2024-02-28) es la suspension de trading y suscripcion, que el texto separa del delisting; la clausula BLVT de R-E designa el delisting como la fecha relevante."},
+  {"caso": "BNBUPUSDT", "eleccion": "Y",
+   "cita": "Delisting & Redemption Cessation Time BNBUP/USDT 2024-02-28 06:00 (UTC) 2024-04-01 06:00 (UTC) BNBDOWN/USDT",
+   "razonamiento": "BNBUP es un token apalancado. Su delisting es el 2024-04-01 06:00 UTC segun la tabla; por la clausula BLVT de R-E esa es la fecha de cese de negociacion spot, E_N5 = 2024-04-01 (lectura Y). La lectura X (2024-02-28) corresponde a la suspension de trading y suscripcion, no al delisting."},
+  {"caso": "BTCDOWNUSDT", "eleccion": "X",
+   "cita": "ETHUP/USDT 2024-04-02 06:00 (UTC) ETHDOWN/USDT BTCUP/USDT 2024-04-03 06:00 (UTC) BTCDOWN/USDT",
+   "razonamiento": "BTCDOWN es un token apalancado. La tabla fija su delisting y cese de redencion el 2024-04-03 06:00 UTC (coincide con el cese general de soporte BLVT 'by 2024-04-03 06:00 (UTC)'). Por la clausula BLVT de R-E, E_N5 = 2024-04-03 (lectura X). La lectura Y (2024-02-28) es la suspension de trading y suscripcion."},
+  {"caso": "BTCUPUSDT", "eleccion": "Y",
+   "cita": "ETHUP/USDT 2024-04-02 06:00 (UTC) ETHDOWN/USDT BTCUP/USDT 2024-04-03 06:00 (UTC) BTCDOWN/USDT",
+   "razonamiento": "BTCUP es un token apalancado. Su delisting es el 2024-04-03 06:00 UTC segun la tabla; por la clausula BLVT de R-E, E_N5 = 2024-04-03 (lectura Y). La lectura X (2024-02-28) es la suspension de trading y suscripcion, no el delisting."},
+  {"caso": "ETHDOWNUSDT", "eleccion": "Y",
+   "cita": "2024-04-01 06:00 (UTC) BNBDOWN/USDT ETHUP/USDT 2024-04-02 06:00 (UTC) ETHDOWN/USDT",
+   "razonamiento": "ETHDOWN es un token apalancado. La tabla fija el delisting de ETHUP y ETHDOWN (celda compartida) el 2024-04-02 06:00 UTC; por la clausula BLVT de R-E, E_N5 = 2024-04-02 (lectura Y). La lectura X (2024-02-28) es la suspension de trading y suscripcion."},
+  {"caso": "ETHUPUSDT", "eleccion": "X",
+   "cita": "2024-04-01 06:00 (UTC) BNBDOWN/USDT ETHUP/USDT 2024-04-02 06:00 (UTC) ETHDOWN/USDT",
+   "razonamiento": "ETHUP es un token apalancado. Su delisting es el 2024-04-02 06:00 UTC segun la tabla; por la clausula BLVT de R-E, E_N5 = 2024-04-02 (lectura X). La lectura Y (2024-02-28) es la suspension de trading y suscripcion, no el delisting."}
+ ],
+ "observacion_sobre_las_reglas": "Las seis elecciones dependen de un unico punto de interpretacion. El anuncio distingue dos fechas por par: la suspension de 'Trading & Subscription Services' (2024-02-28 06:00 UTC, para todos los BLVT; el texto dice que las ordenes se eliminan y no se pueden colocar mas) y el 'Delisting & Redemption Cessation Time' (2024-04-01, 2024-04-02 o 2024-04-03). La oracion inicial de R-E ('cesa la negociacion spot segun el texto') leida aislada apuntaria a 2024-02-28, mientras que la clausula especifica para tokens apalancados ('la fecha en que el token se delista es el cese de su negociacion spot') apunta al delisting. Las reglas no dicen expresamente cual prevalece cuando el texto separa ambas fechas. Resolvi aplicando la clausula BLVT al pie de la letra: es explicita, incondicional y nombra exactamente esta clase de instrumento (UP/DOWN); tratarla como inaplicable porque el texto da otra fecha de suspension seria agregar una excepcion que la regla no contiene. Ningun adjudicador que de prioridad a la oracion inicial sobre la clausula BLVT llegaria a la lectura opuesta en los seis casos; conviene que R-E diga explicitamente que la clausula BLVT prevalece (o no) cuando el anuncio separa suspension de trading y delisting. Ademas, la tabla aplanada usa celdas combinadas: la asignacion de BNBDOWN, ETHDOWN y BTCDOWN a la fecha de delisting de su par UP se apoya en el orden del texto y es coherente con las dos lecturas candidatas de CASOS.json. La regla 'rige la fecha final que ese documento fija' no se aplico: el documento no posterga ni cancela la suspension del 2024-02-28, solo fija una fecha de delisting distinta."
+}

@@ -1,0 +1,42 @@
+{
+ "semanas_ic": "STUB_SIN_CALCULO",
+ "H1": "STUB_SIN_CALCULO",
+ "H2": "STUB_SIN_CALCULO",
+ "holm": "STUB_SIN_CALCULO",
+ "clasificacion_6_5": "STUB_SIN_CALCULO"
+}
+{
+ "salida_1": {
+  "REGISTRO_EJECUCION.json": {
+   "sha256": "0b46eb89ad091a1c8ea19419b12504aea34d607bfb48287ee574d7808ee7705a",
+   "bytes": 764,
+   "contiene_STUB": false
+  },
+  "RESULTADO_E3.json": {
+   "sha256": "4157db0ec8e2d131f6c35735f1c404394ed31e8728148b5da34fbc608959de5c",
+   "bytes": 1266,
+   "contiene_STUB": false,
+   "veredicto": "ERROR",
+   "etapa": "panel",
+   "estadisticos_iniciados": false
+  }
+ },
+ "registro": [
+  "{\"utc\": \"2026-10-28T13:52:28.865398+00:00\", \"evento\": \"INICIADO\", \"id_intento\": \"385fcd2bc2b63e2e:/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/arnes_L13_SINTETICO_SIN_DATOS_SIN_CALCULO/B3_error_en_panel/salida_1\", \"salida\": \"/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/arnes_L13_SINTETICO_SIN_DATOS_SIN_CALCULO/B3_error_en_panel/salida_1\", \"sha_autorizacion\": \"385fcd2bc2b63e2e704b3f2df1f382611f944bcb562376abd67b4b46b200f56c\", \"sha_orquestador\": \"22b7ff20d98e4730f755fc14ccffe796a3c7836fd2b2004756583449bcb64353\", \"sha_manifiesto\": \"7dd0f1fd45965f344076156397aaa372e1f747bdff715938d0874a6d548d89ef\", \"reintento_de\": null}",
+  "{\"utc\": \"2026-10-28T13:52:28.869092+00:00\", \"evento\": \"ERROR\", \"id_intento\": \"385fcd2bc2b63e2e:/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/arnes_L13_SINTETICO_SIN_DATOS_SIN_CALCULO/B3_error_en_panel/salida_1\", \"etapa\": \"panel\", \"tipo\": \"RuntimeError\", \"estadisticos_iniciados\": false, \"sha_resultado\": \"4157db0ec8e2d131f6c35735f1c404394ed31e8728148b5da34fbc608959de5c\"}"
+ ],
+ "registro_vs_disco": [
+  {
+   "evento": "ERROR",
+   "sha_resultado": "4157db0ec8e2d131f6c35735f1c404394ed31e8728148b5da34fbc608959de5c",
+   "coincide_con_disco": true
+  }
+ ],
+ "nuevo_intento": "PERMITIDO: corrió completo",
+ "salida_2": [
+  "REGISTRO_EJECUCION.json",
+  "RESULTADO_E3.json",
+  "VALIDEZ_PREVIA.json"
+ ]
+}
+rc_observar=0

@@ -1,0 +1,46 @@
+== 2026-10-22T13:17:52Z · aplicación de los parches en cadena sobre un clon nuevo de 72ffae5d2698440c8f1afaff12e07bd8adde66fb
+HEAD 72ffae5d2698440c8f1afaff12e07bd8adde66fb · cambios 0
+-- 01_obligatorio_D1_D3_motor_y_pruebas_definitivas.patch sha256 1944f433334cada2c4fa937080241bf51643c1393f54b4d2530003557b2e60bf
+Checking patch packages/tia/src/tia/backtest/engine.py...
+Checking patch packages/tia/src/tia/execution/paper.py...
+Checking patch tests/unit/test_backtest_order_hygiene.py...
+   aplicado; cambios acumulados: 3
+-- 02_obligatorio_trazabilidad_version_motor.patch sha256 32a42a5db19f5cfab11a38a43ec10ad8968dc995286cf1e950c794501ec5ad48
+Checking patch docs/ARCHITECTURE.md...
+Checking patch packages/tia/src/tia/api/state.py...
+Checking patch packages/tia/src/tia/backtest/engine.py...
+Checking patch packages/tia/src/tia/backtest/result.py...
+Checking patch packages/tia/src/tia/persistence/repositories.py...
+Checking patch tests/integration/test_backtest_provenance.py...
+   aplicado; cambios acumulados: 8
+   registrado SHA256_archivos_resultantes_obligatoria.txt (8 archivos)
+-- 03_opcional_pruebas_reloj_y_persistencia.patch sha256 0be65ea6a5e7072ff83c25ed1cccec80877ceb7b1e0609e2468a025b5294e33a
+Checking patch tests/integration/test_account_restore.py...
+Checking patch tests/integration/test_adverse_recovery.py...
+Checking patch tests/integration/test_risk_state_persistence.py...
+   aplicado; cambios acumulados: 11
+   registrado SHA256_archivos_resultantes_completa.txt (11 archivos)
+-- comparación con los árboles verificados (final = obligatoria; b3 = pruebas del 03)
+   igual a final: docs/ARCHITECTURE.md
+   igual a final: packages/tia/src/tia/api/state.py
+   igual a final: packages/tia/src/tia/backtest/engine.py
+   igual a final: packages/tia/src/tia/backtest/result.py
+   igual a final: packages/tia/src/tia/execution/paper.py
+   igual a final: packages/tia/src/tia/persistence/repositories.py
+   igual a b3: tests/integration/test_account_restore.py
+   igual a b3: tests/integration/test_adverse_recovery.py
+   igual a b3: tests/integration/test_risk_state_persistence.py
+   igual a final: tests/integration/test_backtest_provenance.py
+   igual a final: tests/unit/test_backtest_order_hygiene.py
+-- archivos y estado
+ M docs/ARCHITECTURE.md
+ M packages/tia/src/tia/api/state.py
+ M packages/tia/src/tia/backtest/engine.py
+ M packages/tia/src/tia/backtest/result.py
+ M packages/tia/src/tia/execution/paper.py
+ M packages/tia/src/tia/persistence/repositories.py
+ M tests/integration/test_account_restore.py
+ M tests/integration/test_adverse_recovery.py
+ M tests/integration/test_risk_state_persistence.py
+?? tests/integration/test_backtest_provenance.py
+?? tests/unit/test_backtest_order_hygiene.py

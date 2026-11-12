@@ -1,0 +1,52 @@
+{
+"texto_lista_pares_sin_usdt": [
+{
+"url": "u/None2019-08-01",
+"url_archivada": "x",
+"captura": "20190101000000",
+"titulo": "Binance Will Delist CTR",
+"publicado": "2019-08-01",
+"subtipo": "exclusion_token",
+"tokens": [
+"CTR"
+],
+"texto_lista_pares": true,
+"fecha_efectiva": "2019-08-01",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": true,
+"ambiguo": []
+}
+],
+"sin_par_usdt_documentado": [
+{
+"par": "DDDUSDT",
+"E": "2019-05-01",
+"urls": [
+"u/DDDUSDT2019-05-01"
+],
+"titulos": [
+"Binance Will Delist DDD"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": false,
+"tokens": [
+"DDD"
+],
+"url_archivada": "x",
+"sin_fecha": false,
+"clave": "DDDUSDT|2019-05-01",
+"categoria_auto": "D",
+"L": null,
+"nota": {
+"A3.3": 2,
+"otros_pares_en_bucket": [
+"DDDBTC"
+]
+},
+"categoria": "fuera_sin_par_usdt_documentado"
+}
+]
+}

@@ -1,0 +1,424 @@
+{
+ "pares_hallados": 81,
+ "en_tabla": 18,
+ "en_los_117": 26,
+ "no_vistos_por_el_autor": {
+  "1MBABYDOGE->SEI": {
+   "XUSDT_en_panel": true,
+   "YUSDT_en_panel": true,
+   "paginas": [
+    "url_https___www.binance.com_en_support_announcement_20-000-ont-airdrop-to-new-ma_bbd503214738.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-list-worldcoin-_1b584723f765.json"
+   ]
+  },
+  "APE->UTC": {
+   "XUSDT_en_panel": true,
+   "YUSDT_en_panel": false,
+   "paginas": [
+    "url_https___www.binance.com_en_support_announcement_binance-nft-marketplace-will_7d9f4324de3a.json"
+   ]
+  },
+  "AR->NBS": {
+   "XUSDT_en_panel": true,
+   "YUSDT_en_panel": true,
+   "paginas": [
+    "url_https___www.binance.com_en_support_announcement_binance-will-list-first-digi_f5100e309a21.json",
+    "url_https___www.binance.com_en_support_announcement_earn-wednesday-new-limited-t_725e24b17d37.json",
+    "url_https___www.binance.com_en_support_announcement_notice-of-removal-of-trading_05a2f75d6d22.json"
+   ]
+  },
+  "AR->TRX": {
+   "XUSDT_en_panel": true,
+   "YUSDT_en_panel": true,
+   "paginas": [
+    "url_https___www.binance.com_en_support_announcement_binance-adds-front-btc-easy-_c62f348de94d.json",
+    "url_https___www.binance.com_en_support_announcement_eur-trading-competition-50-0_0c4f33d78cae.json",
+    "url_https___www.binance.com_en_support_announcement_for-trading-competition-50-0_ab5bdfbd3c55.json"
+   ]
+  },
+  "ARPA->BEL": {
+   "XUSDT_en_panel": true,
+   "YUSDT_en_panel": true,
+   "paginas": [
+    "bn_a87d145bd0644720bf93599cc5f5a3de_e70c52a3ae91.json"
+   ]
+  },
+  "ATOM->EPS": {
+   "XUSDT_en_panel": true,
+   "YUSDT_en_panel": true,
+   "paginas": [
+    "bn_05aadddb652042cf9f2d1b95e1d8668c_30f9cc17b9d8.json",
+    "bn_2647bcc9c3d6493680f287529e2d0ecc_a86b18dc6df3.json",
+    "bn_29f5433ccf774378b055f765f931a452_b3793f49f427.json"
+   ]
+  },
+  "ATOM->XTZ": {
+   "XUSDT_en_panel": true,
+   "YUSDT_en_panel": true,
+   "paginas": [
+    "zd_360035623152_4db97f2f167b.json",
+    "zd_360035641671_a811ad6567c1.json",
+    "zd_360035844031_5e88d3cf1ca1.json"
+   ]
+  },
+  "AXL->ACE": {
+   "XUSDT_en_panel": true,
+   "YUSDT_en_panel": true,
+   "paginas": [
+    "url_https___www.binance.com_en_support_announcement_binance-adds-cyber-new-sei-p_668145e19c2c.json"
+   ]
+  },
+  "BEL->UTC": {
+   "XUSDT_en_panel": true,
+   "YUSDT_en_panel": false,
+   "paginas": [
+    "bn_10b4e3d6245f4318b765979c5325c9f9_c5ea0b910991.json",
+    "url_https___www.binance.com_en_support_announcement_bella-protocol-bel-trading-s_2c83e6b2a9e3.json"
+   ]
+  },
+  "BEP20->SXP": {
+   "XUSDT_en_panel": false,
+   "YUSDT_en_panel": true,
+   "paginas": [
+    "url_https___www.binance.com_en_support_announcement_binance-nft-marketplace-laun_c3a33a5079be.json",
+    "url_https___www.binance.com_en_support_announcement_binance-spot-liquidity-provi_93e426a8aeec.json",
+    "url_https___www.binance.com_en_support_announcement_deposit-trade-neo-70-000-to-_598275c3ae97.json"
+   ]
+  },
+  "BOBA->OMG": {
+   "XUSDT_en_panel": false,
+   "YUSDT_en_panel": true,
+   "paginas": [
+    "bn_1088da29596e452389e028b0ed87a76e_fc22ffc683bb.json",
+    "bn_15a9e1a795af47b39cbe2184fd07f12f_a8783c3ab196.json",
+    "bn_1b42f5c680c24eb3baa2165faad97d94_ffc8ed806730.json"
+   ]
+  },
+  "DATA->AGI": {
+   "XUSDT_en_panel": true,
+   "YUSDT_en_panel": false,
+   "paginas": [
+    "zd_360004543052_ae9ac66a6004.json"
+   ]
+  },
+  "EDG->ETH": {
+   "XUSDT_en_panel": false,
+   "YUSDT_en_panel": true,
+   "paginas": [
+    "bn_aa00aba48425441683b23994ad25ee45_09256fb81501.json",
+    "url_https___www.binance.com_en_support_announcement_binance-completes-the-edgewa_b70454feb060.json"
+   ]
+  },
+  "FET->XYM": {
+   "XUSDT_en_panel": true,
+   "YUSDT_en_panel": false,
+   "paginas": [
+    "bn_329acb863f8749f98de6d82dbfb7ed6d_3cf024f497a4.json"
+   ]
+  },
+  "FIL->UTC": {
+   "XUSDT_en_panel": true,
+   "YUSDT_en_panel": false,
+   "paginas": [
+    "bn_3c3eafef267c42eeaecef98f32297b6c_3f7b3296829d.json"
+   ]
+  },
+  "FLR->XRP": {
+   "XUSDT_en_panel": false,
+   "YUSDT_en_panel": true,
+   "paginas": [
+    "url_https___www.binance.com_en_support_announcement_binance-completes-the-flare-_41d1e0c54bbe.json",
+    "url_https___www.binance.com_en_support_announcement_binance-convert-adds-rpl-and_33ccd15caae1.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-iot_805a8f3b7177.json"
+   ]
+  },
+  "IRIS->NEO": {
+   "XUSDT_en_panel": true,
+   "YUSDT_en_panel": true,
+   "paginas": [
+    "url_https___www.binance.com_en_support_announcement_c-00000000000000000000000000_0711da85b1d2.json",
+    "url_https___www.binance.com_en_support_announcement_c-00000000000000000000000000_078e7752798e.json",
+    "url_https___www.binance.com_en_support_announcement_c-00000000000000000000000000_0ac1bc0a4ed3.json"
+   ]
+  },
+  "JOD->IOTX": {
+   "XUSDT_en_panel": false,
+   "YUSDT_en_panel": true,
+   "paginas": [
+    "bn_479182767d2f4b69b2aba1ac12ee1096_3dbce48caf88.json",
+    "bn_c890d42730f44cc082ba5d1f927689bf_0373e66395ea.json",
+    "bn_fbf9fd008da0499cadcbe6824bf137ac_a3b6d97861d4.json"
+   ]
+  },
+  "KEYFI->KEY": {
+   "XUSDT_en_panel": false,
+   "YUSDT_en_panel": true,
+   "paginas": [
+    "bn_5696345ee4f2458a9d2b170f4aa158c8_be5484cc304c.json",
+    "url_https___www.binance.com_en_support_announcement_binance-completes-selfkey-ke_46417eb31324.json"
+   ]
+  },
+  "LEND->UTC": {
+   "XUSDT_en_panel": true,
+   "YUSDT_en_panel": false,
+   "paginas": [
+    "bn_17595222999545348c8acdd5dc41c00a_7cbc5104a088.json",
+    "url_https___www.binance.com_en_support_announcement_aave-lend-token-swap-to-aave_130c44d39fe3.json"
+   ]
+  },
+  "MITH->MATIC": {
+   "XUSDT_en_panel": true,
+   "YUSDT_en_panel": true,
+   "paginas": [
+    "zd_360027611611_f5d9066e162b.json"
+   ]
+  },
+  "MITH->US": {
+   "XUSDT_en_panel": true,
+   "YUSDT_en_panel": false,
+   "paginas": [
+    "zd_360027503551_9dee17507e73.json"
+   ]
+  },
+  "NBS->BTS": {
+   "XUSDT_en_panel": true,
+   "YUSDT_en_panel": true,
+   "paginas": [
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-upc_9052613d8f03.json"
+   ]
+  },
+  "NFT->TRX": {
+   "XUSDT_en_panel": false,
+   "YUSDT_en_panel": true,
+   "paginas": [
+    "bn_0211b0d568bd4b0ca19a3b20b60ef7fc_e51ca868a930.json",
+    "bn_042ae9591e5f460e9535bb47e47a96d8_e2c5321b5c23.json",
+    "bn_0653144188954c0982415165acbe8d02_c650d7b79a82.json"
+   ]
+  },
+  "NVT->NULS": {
+   "XUSDT_en_panel": false,
+   "YUSDT_en_panel": true,
+   "paginas": [
+    "bn_4f70a20a895f4d979ed1c2052803aa62_de0c013dd53c.json"
+   ]
+  },
+  "ONE->KAVA": {
+   "XUSDT_en_panel": true,
+   "YUSDT_en_panel": true,
+   "paginas": [
+    "bn_b2753e00b9f24ae3bf625cb61b1044b1_0b4c39da92af.json",
+    "bn_b76eb4e952a94959afb5964c32ddbb7a_e1f97c361874.json",
+    "bn_bdeacb3af60e4c56b182f55c16d7d3ea_a3c5d625e84f.json"
+   ]
+  },
+  "PHX->ONE": {
+   "XUSDT_en_panel": false,
+   "YUSDT_en_panel": true,
+   "paginas": [
+    "zd_360028459892_765547cf18bf.json"
+   ]
+  },
+  "PHX->TFUEL": {
+   "XUSDT_en_panel": false,
+   "YUSDT_en_panel": true,
+   "paginas": [
+    "zd_360028324572_a3de3de80499.json"
+   ]
+  },
+  "PNT->BEP20": {
+   "XUSDT_en_panel": true,
+   "YUSDT_en_panel": false,
+   "paginas": [
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-pne_3433d5e6ca01.json"
+   ]
+  },
+  "PURSE->PUNDIX": {
+   "XUSDT_en_panel": false,
+   "YUSDT_en_panel": true,
+   "paginas": [
+    "bn_cc002c442c5f44cc81dabaf1bca5ddfe_6d08601b83b3.json",
+    "url_https___www.binance.com_en_support_announcement_binance-completes-the-pundi-_926984ae8029.json"
+   ]
+  },
+  "QKC->AGI": {
+   "XUSDT_en_panel": true,
+   "YUSDT_en_panel": false,
+   "paginas": [
+    "zd_360004451332_a8bde9e295dc.json"
+   ]
+  },
+  "RUB->ALGO": {
+   "XUSDT_en_panel": false,
+   "YUSDT_en_panel": true,
+   "paginas": [
+    "zd_360039267892_897d6ba18a03.json"
+   ]
+  },
+  "SKY->TUSD": {
+   "XUSDT_en_panel": true,
+   "YUSDT_en_panel": true,
+   "paginas": [
+    "zd_360004162291_9ac9c290237c.json",
+    "zd_360004203551_b56b5bf54ce0.json"
+   ]
+  },
+  "SKY->ZEN": {
+   "XUSDT_en_panel": true,
+   "YUSDT_en_panel": true,
+   "paginas": [
+    "zd_360004163251_1e2847da4fa2.json"
+   ]
+  },
+  "SOL->REP": {
+   "XUSDT_en_panel": true,
+   "YUSDT_en_panel": true,
+   "paginas": [
+    "url_https___www.binance.com_en_support_announcement_c-49_03010d4e86eb.json"
+   ]
+  },
+  "SOL->UTC": {
+   "XUSDT_en_panel": true,
+   "YUSDT_en_panel": false,
+   "paginas": [
+    "url_https___www.binance.com_en_support_announcement_binance-will-delist-hnt-and-_02396f8a6af3.json"
+   ]
+  },
+  "SPARK->XRP": {
+   "XUSDT_en_panel": false,
+   "YUSDT_en_panel": true,
+   "paginas": [
+    "bn_3033b3c041fe451eb8917a49c6e49593_691dbc03dee5.json",
+    "url_https___www.binance.com_en_support_announcement_snapshot-details-update-for-_103195d1c883.json"
+   ]
+  },
+  "STMX->UTC": {
+   "XUSDT_en_panel": true,
+   "YUSDT_en_panel": false,
+   "paginas": [
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-sto_10cb3dfa6a52.json"
+   ]
+  },
+  "STRAT->UTC": {
+   "XUSDT_en_panel": true,
+   "YUSDT_en_panel": false,
+   "paginas": [
+    "bn_1937b7781c5043efa66c07141be3bdc2_e3f3ac372bca.json"
+   ]
+  },
+  "THETA->BTC": {
+   "XUSDT_en_panel": true,
+   "YUSDT_en_panel": true,
+   "paginas": [
+    "zd_360040506832_e16c8f5bb9be.json"
+   ]
+  },
+  "TRX->JST": {
+   "XUSDT_en_panel": true,
+   "YUSDT_en_panel": true,
+   "paginas": [
+    "zd_360043449331_5d5bdffe4f74.json"
+   ]
+  },
+  "TRX->UTC": {
+   "XUSDT_en_panel": true,
+   "YUSDT_en_panel": false,
+   "paginas": [
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-tro_c9bba01f3a38.json"
+   ]
+  },
+  "TRX->WINK": {
+   "XUSDT_en_panel": true,
+   "YUSDT_en_panel": false,
+   "paginas": [
+    "url_https___www.binance.com_en_support_announcement_360032248351_69e18bb47960.json"
+   ]
+  },
+  "TUSD->UTC": {
+   "XUSDT_en_panel": true,
+   "YUSDT_en_panel": false,
+   "paginas": [
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-tru_8a1e87682669.json"
+   ]
+  },
+  "UTC->BSW": {
+   "XUSDT_en_panel": false,
+   "YUSDT_en_panel": true,
+   "paginas": [
+    "bn_314603b057c346af992720a70ca8f807_f39908209ef3.json",
+    "bn_6f3daac2d0824a2cb3775d6c255c6004_aef27a305af7.json"
+   ]
+  },
+  "UTC->IOTA": {
+   "XUSDT_en_panel": false,
+   "YUSDT_en_panel": true,
+   "paginas": [
+    "bn_1dd89e459a294e0c9bdcf5d25ea821e8_73bc6bd5aa5f.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-iot_c39f35d25237.json"
+   ]
+  },
+  "XEM->ATOM": {
+   "XUSDT_en_panel": true,
+   "YUSDT_en_panel": true,
+   "paginas": [
+    "bn_1126e8be5ccb45a4a4de0d54fb68da62_e429b3f05c11.json",
+    "bn_d36a6f90fe1d4c28865d82a84ae48535_79acc966ecf2.json",
+    "bn_dc83ac10da9342fb95ecb10b3d5c63b5_26b313e216c9.json"
+   ]
+  },
+  "XPR->COCOS": {
+   "XUSDT_en_panel": false,
+   "YUSDT_en_panel": true,
+   "paginas": [
+    "zd_360027089171_8df8a545a7a3.json",
+    "zd_360039024731_de18a49fc03d.json",
+    "zd_360039676811_c3d3c80baebc.json"
+   ]
+  },
+  "XPR->MTL": {
+   "XUSDT_en_panel": false,
+   "YUSDT_en_panel": true,
+   "paginas": [
+    "zd_360027089171_8df8a545a7a3.json",
+    "zd_360039560652_5b1119fc1ebc.json",
+    "zd_360039613592_ff342d9bb603.json"
+   ]
+  },
+  "XRP->NFT": {
+   "XUSDT_en_panel": true,
+   "YUSDT_en_panel": false,
+   "paginas": [
+    "url_https___www.binance.com_en_support_announcement_c-00000000_abc745423c1e.json"
+   ]
+  },
+  "XVS->CAKE": {
+   "XUSDT_en_panel": true,
+   "YUSDT_en_panel": true,
+   "paginas": [
+    "url_https___www.binance.com_en_support_announcement_binance-will-move-pancakeswa_2e663e1171e2.json"
+   ]
+  },
+  "XVS->UTC": {
+   "XUSDT_en_panel": true,
+   "YUSDT_en_panel": false,
+   "paginas": [
+    "bn_8ab90f74b9c54e3babfe2aba4991d5c7_49b89201f1f5.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-move-pancakeswa_2e663e1171e2.json"
+   ]
+  },
+  "ZEN->GMX": {
+   "XUSDT_en_panel": true,
+   "YUSDT_en_panel": true,
+   "paginas": [
+    "url_https___www.binance.com_en_support_announcement_binance-will-extend-the-moni_c23b3ab44321.json"
+   ]
+  },
+  "ZEN->TUSD": {
+   "XUSDT_en_panel": true,
+   "YUSDT_en_panel": true,
+   "paginas": [
+    "zd_360004160491_f1d67f6dd0d5.json"
+   ]
+  }
+ }
+}

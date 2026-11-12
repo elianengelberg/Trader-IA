@@ -1,0 +1,58 @@
+== G6. Verificación desde una extracción LIMPIA del ZIP candidato
+ZIP candidato: CIERRE_AUDITORIA_v0.5_Y_PLAN_CUANTITATIVO_r1_2026-10-21.zip, SHA-256 c3e538abd8a74356a7edbfe8af4f9e5945fb61e306c48baffe63e0b91f9c943c
+Extracción nueva + sha256sum -c: OK (79 archivos + SHA256SUMS)
+Comando: TMPDIR=<vacío propio> V05_ZIP=<ZIP v0.5> REPO=/home/user/Trader-IA SCRATCH=<scratchpad> bash ejecutar_verificacion.sh
+
+-- Salida (resumen):
+== 0. integridad del paquete antes de empezar
+== 1. v0.5: SHA-256 y extracción
+== B1. ZIP v0.5: verificar_zip.py del paquete, unzip -t y comprobación independiente
+== B2. registro de acciones de v0.5
+== B4. etapa 13: v0.5 frente a la corrección propuesta (12 escenarios en copias nuevas)
+== B5. afirmaciones de v0.5 frente a su evidencia empaquetada (y a la colección real de pytest)
+== B6. análisis estático del código de v0.5
+== C1. declaración de T para firmar
+== F1. pruebas del protocolo cuantitativo (sintéticas)
+72 passed in 40.03s
+== F2. estilo (ruff, mismas reglas que v0.5)
+== F4. calibración: plan de costo y prueba de humo (NO se ejecuta la calibración: requiere A-S1)
+== F5. criba de detectabilidad y tabla de δ
+== G1–G2. estado del repositorio y huella fuerte, comparados con el inicio de la misión
+== G3–G4. inventario de entregas y originales, comparado con el inicial (A3)
+== G5. el paquete no cambió durante su propia verificación (lógica de la etapa 13 corregida)
+paquete intacto fuera de evidencia/: ni un byte distinto ni una entrada nueva
+== fin: 0 fallas; 1 desviaciones conocidas (documentadas)
+TMPDIR propio al terminar: 0 entradas (el script borra todo lo que crea)
+
+-- Evidencia de la extracción limpia frente a la de la copia de trabajo (normalizando tiempos y rutas temporales):
+IGUAL (bytes)        A1_repo_estado_inicial.txt
+IGUAL (bytes)        A2_huella_fuerte_inicial.txt
+IGUAL (bytes)        A3_inventario_inicial.json
+IGUAL (bytes)        A3_inventario_inicial.txt
+IGUAL (bytes)        B1_zip_v05.txt
+IGUAL (bytes)        B2_registro_acciones_v05.txt
+IGUAL (bytes)        B3_95_recalculado.txt
+IGUAL (bytes)        B4_etapa13_antes_despues.txt
+IGUAL (bytes)        B5_afirmaciones_vs_evidencia_v05.md
+IGUAL (bytes)        B5_afirmaciones_vs_reproduccion.md
+IGUAL (bytes)        B6_estatico_v05.txt
+IGUAL (bytes)        B7_parches.txt
+IGUAL (bytes)        B8_reproduccion_v05.txt
+IGUAL (bytes)        C1_declaracion_T.txt
+IGUAL (bytes)        D2_temporales_antes_despues.txt
+IGUAL (normalizado)  F1_pruebas_protocolo.txt
+DIFIERE              F2_ruff.txt
+IGUAL (normalizado)  F4_calibracion_plan.txt
+IGUAL (bytes)        F5_criba_candidatas.txt
+IGUAL (bytes)        G1_repo_estado.txt
+IGUAL (bytes)        G2_huella_fuerte.txt
+IGUAL (bytes)        G3_inventario.txt
+IGUAL (bytes)        G4_inventario_comparado.txt
+DIFIERE              G5_paquete_intacto.txt
+IGUAL (bytes)        I1_incidente_venv.txt
+23 de 25 iguales
+Las 2 diferencias son esperadas: F2 de la copia de trabajo era anterior a la corrección de estilo de manifiesto_evidencia.py;
+G5 no se comprueba en la copia de trabajo (sin SHA256SUMS.txt). En la extracción limpia: «All checks passed!» y «paquete intacto».
+
+-- Este paquete final usa la evidencia de la extracción limpia. Respecto del candidato solo cambian: evidencia/ (esta,
+   más este G6), 07_MANIFIESTO_EVIDENCIA.md (sin entradas pendientes) y SHA256SUMS.txt.

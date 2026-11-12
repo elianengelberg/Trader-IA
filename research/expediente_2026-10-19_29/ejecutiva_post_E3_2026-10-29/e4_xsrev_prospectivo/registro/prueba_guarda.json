@@ -1,0 +1,15 @@
+{
+ "resultados": {
+  "serie_real_directa": "RECHAZADA (1) /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicio",
+  "subarchivo_de_serie_real": "RECHAZADA (1) /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicio",
+  "enlace_simbolico_a_serie": "RECHAZADA (1) /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/ejecutiva_post_E3_2026-10-29/e4_x",
+  "enlace_a_carpeta_padre": "RECHAZADA (3) /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/ejecutiva_post_E3_2026-10-29/e4_x",
+  "ruta_relativa_con_puntos": "RECHAZADA (1) /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/ejecutiva_post_E3_2026-10-29/e4_x",
+  "orquestador_v2": "RECHAZADA (1) /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-",
+  "estructura_series_sintetica": "RECHAZADA (3) /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/ejecutiva_post_E3_2026-10-29/e4_x",
+  "carpeta_datos_nueva": "ACEPTADA",
+  "enlace_duro_a_orquestador": "RECHAZADA (2)/(4) /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/ejecutiva_post_E3_2026-10-29/"
+ },
+ "ok": true,
+ "enlace_duro_probado": true
+}

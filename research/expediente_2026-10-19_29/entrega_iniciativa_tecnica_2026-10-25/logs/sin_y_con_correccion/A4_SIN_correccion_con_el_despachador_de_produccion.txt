@@ -1,0 +1,4 @@
+2026-10-25 20:59:36 [warning  ] persist_failed                 component=api.state error='database is locked' kind=incident
+2026-10-25 20:59:36 [warning  ] persist_failed                 component=api.state error='database is locked' kind=run_heartbeat
+tests/integration/test_session_persistence_contract.py:59: AssertionError: the session knows its write was lost
+FAILED tests/integration/test_session_persistence_contract.py::test_a_refused_write_is_a_failed_write_for_the_session

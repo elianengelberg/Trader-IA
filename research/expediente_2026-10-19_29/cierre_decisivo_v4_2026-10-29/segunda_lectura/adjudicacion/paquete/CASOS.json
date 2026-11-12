@@ -1,0 +1,68 @@
+[
+ {
+  "caso": "BNBDOWNUSDT",
+  "par": "BNBDOWN/USDT",
+  "archivo": "url_https___www.binance.com_en_support_announcement_updates-on-binance-leveraged_2f015a993d37.json",
+  "lectura_X": {
+   "E_N5": "2024-04-01"
+  },
+  "lectura_Y": {
+   "E_N5": "2024-02-28"
+  }
+ },
+ {
+  "caso": "BNBUPUSDT",
+  "par": "BNBUP/USDT",
+  "archivo": "url_https___www.binance.com_en_support_announcement_updates-on-binance-leveraged_2f015a993d37.json",
+  "lectura_X": {
+   "E_N5": "2024-02-28"
+  },
+  "lectura_Y": {
+   "E_N5": "2024-04-01"
+  }
+ },
+ {
+  "caso": "BTCDOWNUSDT",
+  "par": "BTCDOWN/USDT",
+  "archivo": "url_https___www.binance.com_en_support_announcement_updates-on-binance-leveraged_2f015a993d37.json",
+  "lectura_X": {
+   "E_N5": "2024-04-03"
+  },
+  "lectura_Y": {
+   "E_N5": "2024-02-28"
+  }
+ },
+ {
+  "caso": "BTCUPUSDT",
+  "par": "BTCUP/USDT",
+  "archivo": "url_https___www.binance.com_en_support_announcement_updates-on-binance-leveraged_2f015a993d37.json",
+  "lectura_X": {
+   "E_N5": "2024-02-28"
+  },
+  "lectura_Y": {
+   "E_N5": "2024-04-03"
+  }
+ },
+ {
+  "caso": "ETHDOWNUSDT",
+  "par": "ETHDOWN/USDT",
+  "archivo": "url_https___www.binance.com_en_support_announcement_updates-on-binance-leveraged_2f015a993d37.json",
+  "lectura_X": {
+   "E_N5": "2024-02-28"
+  },
+  "lectura_Y": {
+   "E_N5": "2024-04-02"
+  }
+ },
+ {
+  "caso": "ETHUPUSDT",
+  "par": "ETHUP/USDT",
+  "archivo": "url_https___www.binance.com_en_support_announcement_updates-on-binance-leveraged_2f015a993d37.json",
+  "lectura_X": {
+   "E_N5": "2024-04-02"
+  },
+  "lectura_Y": {
+   "E_N5": "2024-02-28"
+  }
+ }
+]

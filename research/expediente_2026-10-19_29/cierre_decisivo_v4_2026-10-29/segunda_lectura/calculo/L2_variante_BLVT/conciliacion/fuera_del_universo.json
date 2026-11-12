@@ -1,0 +1,1765 @@
+{
+"texto_lista_pares_sin_usdt": [
+{
+"url": "https://www.binance.com/en/support/announcement/1ab2e9f3b5584185b03d5a785fe306c7?ref=JLI1VBLA&utm_source=BinanceTwitter&utm_medium=GlobalSocial&utm_campaign=GlobalSocial",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-10/segments/1614178359082.48/warc/CC-MAIN-20210227174711-20210227204711-00606.warc.gz bytes=704027932-704057012",
+"captura": "20210227195729",
+"titulo": "Binance Will Delist AE & HC on 2020/12/30",
+"publicado": "2020-12-24",
+"subtipo": "exclusion_token",
+"tokens": [
+"AE",
+"HC"
+],
+"texto_lista_pares": true,
+"fecha_efectiva": "2020-12-30",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/233bd25b1a0f432fbb1f3fb9d373dd15-Notice-of-Removal-of-Trading-Pairs-2020-07-31",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-34/segments/1596439739347.81/warc/CC-MAIN-20200814160701-20200814190701-00315.warc.gz bytes=580747335-580768454",
+"captura": "20200814171635",
+"titulo": "Notice of Removal of Trading Pairs - 2020/07/31",
+"publicado": "2020-07-30",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2020-07-31",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/2760bbcd37414da5b3c5226cb397ac29",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-43/segments/1634323585181.6/warc/CC-MAIN-20211017175237-20211017205237-00396.warc.gz bytes=858260868-858290495",
+"captura": "20211017203059",
+"titulo": "Notice of Removal of Trading Pairs - 2021-09-18",
+"publicado": "2021-09-17",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2021-09-18",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/2b73a2f43b834897aadc60f049fdb6ab",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-10/segments/1614178359624.36/warc/CC-MAIN-20210227234501-20210228024501-00609.warc.gz bytes=692008303-692038223",
+"captura": "20210228005453",
+"titulo": "Binance Will Delist BCPT, CMT, TNB & VIBE on 2021-02-10",
+"publicado": "2021-02-03",
+"subtipo": "exclusion_token",
+"tokens": [
+"BCPT",
+"CMT",
+"TNB",
+"VIBE"
+],
+"texto_lista_pares": true,
+"fecha_efectiva": "2021-02-10",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/3b0938634d1a454d926f0b84b0a20578",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-43/segments/1634323587711.69/warc/CC-MAIN-20211025123123-20211025153123-00550.warc.gz bytes=832935153-832966422",
+"captura": "20211025152052",
+"titulo": "Binance Will Delist SNGLS & VIA on 2021-08-26",
+"publicado": "2021-08-19",
+"subtipo": "exclusion_token",
+"tokens": [
+"SNGLS",
+"VIA"
+],
+"texto_lista_pares": true,
+"fecha_efectiva": "2021-08-26",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/54823dfc91514815a079cbd63b0a841f",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-50/segments/1606141191692.20/warc/CC-MAIN-20201127103102-20201127133102-00597.warc.gz bytes=547654584-547679831",
+"captura": "20201127122144",
+"titulo": "Notice of Removal of Trading Pairs - 2020/11/17",
+"publicado": "2020-11-16",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2020-11-17",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/5e3aa9f525ab4ef095f3705a9bf22137",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-04/segments/1610703565541.79/warc/CC-MAIN-20210125092143-20210125122143-00601.warc.gz bytes=681080933-681108699",
+"captura": "20210125113038",
+"titulo": "Notice of Removal of Trading Pairs - 2021/01/08",
+"publicado": "2021-01-07",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2021-01-08",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/69f7a2acb66340dba75c8c3374570c4f-Notice-of-Removal-of-Trading-Pairs-2020-07-03",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-34/segments/1596439739347.81/warc/CC-MAIN-20200814160701-20200814190701-00275.warc.gz bytes=592628539-592649660",
+"captura": "20200814183436",
+"titulo": "Notice of Removal of Trading Pairs - 2020/07/03",
+"publicado": "2020-07-02",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2020-07-03",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/725a176f230542c6be7704339a011030",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-04/segments/1610704804187.81/warc/CC-MAIN-20210126233034-20210127023034-00303.warc.gz bytes=684549295-684578529",
+"captura": "20210127004358",
+"titulo": "Binance Will Delist POE & TNT on 2020/11/12",
+"publicado": "2020-11-05",
+"subtipo": "exclusion_token",
+"tokens": [
+"POE",
+"TNT"
+],
+"texto_lista_pares": true,
+"fecha_efectiva": "2020-11-12",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/78677302e3af4d819fd7c08205508d98",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-43/segments/1634323588216.48/warc/CC-MAIN-20211027150823-20211027180823-00653.warc.gz bytes=804776725-804808316",
+"captura": "20211027174129",
+"titulo": "Binance Will Delist COVER on 2021-09-24",
+"publicado": "2021-09-17",
+"subtipo": "exclusion_token",
+"tokens": [
+"COVER"
+],
+"texto_lista_pares": true,
+"fecha_efectiva": "2021-09-24",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/7a38c97b6fe840859d48092b9d1da494",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-45/segments/1603107879362.3/warc/CC-MAIN-20201022082653-20201022112653-00671.warc.gz bytes=651590161-651615748",
+"captura": "20201022094218",
+"titulo": "Binance Will Delist Insolar (INS) on 2020/09/11",
+"publicado": "2020-09-04",
+"subtipo": "exclusion_token",
+"tokens": [
+"INS"
+],
+"texto_lista_pares": true,
+"fecha_efectiva": "2020-09-11",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/807964b2b1344df192814fcbc4ff97a8",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-04/segments/1610703530835.37/warc/CC-MAIN-20210122144404-20210122174404-00491.warc.gz bytes=678181257-678209315",
+"captura": "20210122171810",
+"titulo": "Notice of Removal of Trading Pairs - 2021/01/14",
+"publicado": "2021-01-13",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2021-01-14",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/89911353955047d9bf55711772cd5426",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-31/segments/1627046157039.99/warc/CC-MAIN-20210805193327-20210805223327-00170.warc.gz bytes=678018035-678046610",
+"captura": "20210805213946",
+"titulo": "Notice of Removal of Trading Pairs - 2021-06-10",
+"publicado": "2021-06-09",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2021-06-10",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/8cb0e611da3048bca70bcf19005e244d",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-17/segments/1618039596883.98/warc/CC-MAIN-20210423161713-20210423191713-00173.warc.gz bytes=725768079-725797701",
+"captura": "20210423175938",
+"titulo": "Notice of Removal of Trading Pairs - 2021-02-09",
+"publicado": "2021-02-08",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2021-02-09",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/941997b6c3c341738d0e000cc8b84222",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-31/segments/1627046149929.88/warc/CC-MAIN-20210723143921-20210723173921-00538.warc.gz bytes=694020583-694049051",
+"captura": "20210723163548",
+"titulo": "Notice of Removal of Trading Pairs - 2021-06-18",
+"publicado": "2021-06-17",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2021-06-18",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/bc59952aa7694c6aa387ed34da392f48",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-31/segments/1627046153803.69/warc/CC-MAIN-20210728220634-20210729010634-00206.warc.gz bytes=664405079-664433582",
+"captura": "20210729000415",
+"titulo": "Notice of Removal of Trading Pairs - 2021-06-25",
+"publicado": "2021-06-24",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2021-06-25",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/c04fdd0f33bb462bb53843285a55371f",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-21/segments/1620243988753.91/warc/CC-MAIN-20210506083716-20210506113716-00152.warc.gz bytes=699842744-699872997",
+"captura": "20210506103238",
+"titulo": "Binance Will Delist All ZAR Trading Pairs on 2021-04-02 |",
+"publicado": "2021-03-31",
+"subtipo": "exclusion_token",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2021-04-02",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin tokens en el título",
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/c339234324b840bf82e1355ea5dd78a8",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-25/segments/1623487635724.52/warc/CC-MAIN-20210618043356-20210618073356-00289.warc.gz bytes=600854417-600885696",
+"captura": "20210618062555",
+"titulo": "Notice of Removal of Trading Pairs - 2020/12/04",
+"publicado": "2020-12-03",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2020-12-04",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/aNnouncement/c9ba94238bd7430ab0a22ca2050924ef",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-49/segments/1637964358847.80/warc/CC-MAIN-20211129225145-20211130015145-00575.warc.gz bytes=742451636-742504258",
+"captura": "20211130010128",
+"titulo": "Binance Will Delist PPT & SWRV on 2021-09-30",
+"publicado": "2021-09-23",
+"subtipo": "exclusion_token",
+"tokens": [
+"PPT",
+"SWRV"
+],
+"texto_lista_pares": true,
+"fecha_efectiva": "2021-09-30",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/d037df42aac64b388750c006aeedb8be",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-50/segments/1606141486017.50/warc/CC-MAIN-20201130192020-20201130222020-00174.warc.gz bytes=602697356-602722842",
+"captura": "20201130193854",
+"titulo": "Binance Will Delist MCO (MCO) on 2020/11/02",
+"publicado": "2020-10-27",
+"subtipo": "exclusion_token",
+"tokens": [
+"MCO"
+],
+"texto_lista_pares": true,
+"fecha_efectiva": "2020-11-02",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/daeb6711046145ff988e5ae89e189ffa",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-49/segments/1637964363336.93/warc/CC-MAIN-20211207045002-20211207075002-00400.warc.gz bytes=723643232-723693625",
+"captura": "20211207070346",
+"titulo": "Notice of Removal of Trading Pairs - 2020/06/12",
+"publicado": "2020-06-11",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2020-06-12",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/f4d1a0da8d544b58b93ba4f0262117ce",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-10/segments/1614178347293.1/warc/CC-MAIN-20210224165708-20210224195708-00160.warc.gz bytes=734603673-734631446",
+"captura": "20210224174810",
+"titulo": "Notice of Removal of Trading Pairs - 2021-01-29",
+"publicado": "2021-01-28",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2021-01-29",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/f66cb07bc4934037b42baa88c9140904",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-39/segments/1631780057039.7/warc/CC-MAIN-20210920131052-20210920161052-00632.warc.gz bytes=690052354-690081654",
+"captura": "20210920154102",
+"titulo": "Notice of Removal of Trading Pairs - 2021-08-06",
+"publicado": "2021-08-02",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2021-08-06",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/360034580431",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-49/segments/1637964363641.20/warc/CC-MAIN-20211209000407-20211209030407-00152.warc.gz bytes=719342373-719392866",
+"captura": "20211209005949",
+"titulo": "Notice of Removal of Trading Pairs",
+"publicado": "2019-09-30",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2019-09-30",
+"origen_fecha": "cuerpo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/360037462111",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-43/segments/1634323588053.38/warc/CC-MAIN-20211027022823-20211027052823-00231.warc.gz bytes=810761841-810790415",
+"captura": "20211027042733",
+"titulo": "Notice of Removal of Trading Pairs - 2019/12/04",
+"publicado": "2019-12-03",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2019-12-04",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/360037716312",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-39/segments/1631780056890.28/warc/CC-MAIN-20210919125659-20210919155659-00206.warc.gz bytes=701403348-701431669",
+"captura": "20210919134347",
+"titulo": "Notice of Removal of Trading Pairs - 2019/12/20",
+"publicado": "2019-12-19",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2019-12-20",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/360039154812",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-25/segments/1623487643703.56/warc/CC-MAIN-20210619051239-20210619081239-00161.warc.gz bytes=606100452-606131253",
+"captura": "20210619073221",
+"titulo": "Notice of Removal of Trading Pairs - 2020/02/07 | Binance",
+"publicado": "2020-02-06",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2020-02-07",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/360040335232",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-43/segments/1634323588053.38/warc/CC-MAIN-20211027022823-20211027052823-00298.warc.gz bytes=809399134-809427952",
+"captura": "20211027034138",
+"titulo": "Notice of Removal of Trading Pairs - 2020/03/11",
+"publicado": "2020-03-10",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2020-03-11",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/360041070072/",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-49/segments/1637964358233.7/warc/CC-MAIN-20211127193525-20211127223525-00062.warc.gz bytes=766058625-766109966",
+"captura": "20211127210352",
+"titulo": "Binance Will Distribute ETH to DGD holders and Delist DGD to Support the Upcoming DGD Dissolution",
+"publicado": "2020-03-26",
+"subtipo": "exclusion_token",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2020-03-27",
+"origen_fecha": "cuerpo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin tokens en el título",
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/360041076472",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-31/segments/1627046150134.86/warc/CC-MAIN-20210724063259-20210724093259-00127.warc.gz bytes=687439972-687467968",
+"captura": "20210724082925",
+"titulo": "Notice of Removal of Trading Pairs - 2020/03/27",
+"publicado": "2020-03-26",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2020-03-27",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/binance-will-delist-cover-on-2021-09-24-78677302e3af4d819fd7c08205508d98",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2022-49/segments/1669446711077.50/warc/CC-MAIN-20221206092907-20221206122907-00454.warc.gz bytes=712995799-713064610",
+"captura": "20221206120415",
+"titulo": "Binance Will Delist COVER on 2021-09-24",
+"publicado": "2021-09-17",
+"subtipo": "exclusion_token",
+"tokens": [
+"COVER"
+],
+"texto_lista_pares": true,
+"fecha_efectiva": "2021-09-24",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/binance-will-delist-ez-qsp-brd-nxs-nav-mda-and-sparta-on-2022-08-11-d5f079935fda4abfb4a5636f01984ec2",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2023-40/segments/1695233511364.23/warc/CC-MAIN-20231004084230-20231004114230-00646.warc.gz bytes=725854324-725930419",
+"captura": "20231004095929",
+"titulo": "Binance Will Delist EZ, QSP, BRD, NXS, NAV, MDA and SPARTA on 2022-08-11",
+"publicado": "2022-08-04",
+"subtipo": "exclusion_token",
+"tokens": [
+"BRD",
+"EZ",
+"MDA",
+"NAV",
+"NXS",
+"QSP",
+"SPARTA"
+],
+"texto_lista_pares": true,
+"fecha_efectiva": "2022-08-11",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/binance-will-delist-ost-rcn-wpr-on-2021-07-16-4d6c589a033e4ee099d55d5141279578",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-30/segments/1720763514789.19/warc/CC-MAIN-20240717151625-20240717181625-00122.warc.gz bytes=585381876-585454546",
+"captura": "20240717154224",
+"titulo": "Binance Will Delist OST, RCN & WPR on 2021-07-16",
+"publicado": "2021-07-09",
+"subtipo": "exclusion_token",
+"tokens": [
+"OST",
+"RCN",
+"WPR"
+],
+"texto_lista_pares": true,
+"fecha_efectiva": "2021-07-16",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/binance-will-delist-poe-tnt-on-2020-11-12-725a176f230542c6be7704339a011030",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2022-49/segments/1669446710968.29/warc/CC-MAIN-20221204072040-20221204102040-00021.warc.gz bytes=690043735-690111354",
+"captura": "20221204082608",
+"titulo": "Binance Will Delist POE & TNT on 2020/11/12",
+"publicado": "2020-11-05",
+"subtipo": "exclusion_token",
+"tokens": [
+"POE",
+"TNT"
+],
+"texto_lista_pares": true,
+"fecha_efectiva": "2020-11-12",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/binance-will-delist-sngls-via-on-2021-08-26-3b0938634d1a454d926f0b84b0a20578",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2022-49/segments/1669446711077.50/warc/CC-MAIN-20221206092907-20221206122907-00239.warc.gz bytes=704225939-704294166",
+"captura": "20221206121423",
+"titulo": "Binance Will Delist SNGLS & VIA on 2021-08-26",
+"publicado": "2021-08-19",
+"subtipo": "exclusion_token",
+"tokens": [
+"SNGLS",
+"VIA"
+],
+"texto_lista_pares": true,
+"fecha_efectiva": "2021-08-26",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/notice-of-removal-of-spot-trading-pairs-2024-09-27-6a964b8dd8ec4f609b1b75c714240b07",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-46/segments/1730477027999.92/warc/CC-MAIN-20241107114930-20241107144930-00885.warc.gz bytes=616410499-616491303",
+"captura": "20241107124608",
+"titulo": "Notice of Removal of Spot Trading Pairs - 2024-09-27",
+"publicado": "2024-09-25",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2024-09-27",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/notice-of-removal-of-spot-trading-pairs-2023-10-27-04cbc1c3c77449f9b77d48a353cead34",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-33/segments/1722640983659.65/warc/CC-MAIN-20240811075334-20240811105334-00504.warc.gz bytes=552036658-552117671",
+"captura": "20240811081823",
+"titulo": "Notice of Removal of Spot Trading Pairs - 2023-10-27",
+"publicado": "2023-10-25",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2023-10-27",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/notice-of-removal-of-spot-trading-pairs-2024-07-12-08fb183272a8493184700d675aac6a52",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-33/segments/1722641048885.76/warc/CC-MAIN-20240812190307-20240812220307-00336.warc.gz bytes=520300643-520380839",
+"captura": "20240812193701",
+"titulo": "Notice of Removal of Spot Trading Pairs - 2024-07-12",
+"publicado": "2024-07-10",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2024-07-12",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/notice-of-removal-of-spot-trading-pairs-2024-06-14-cbc625e02b784e769eb0d59ac31d3e5a",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-33/segments/1722640822309.61/warc/CC-MAIN-20240810190707-20240810220707-00175.warc.gz bytes=540384022-540463806",
+"captura": "20240810195222",
+"titulo": "Notice of Removal of Spot Trading Pairs - 2024-06-14",
+"publicado": "2024-06-12",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2024-06-14",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/notice-of-removal-of-spot-trading-pairs-2024-06-21-b7192d0756e14156a8e401f22d0ed89d",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-30/segments/1720763514510.7/warc/CC-MAIN-20240713150314-20240713180314-00260.warc.gz bytes=554444770-554520225",
+"captura": "20240713170650",
+"titulo": "Notice of Removal of Spot Trading Pairs - 2024-06-21",
+"publicado": "2024-06-19",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2024-06-21",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/notice-of-removal-of-spot-trading-pairs-2023-11-20-5211a421359c443abcd30533c3f67e91",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-51/segments/1733066355594.66/warc/CC-MAIN-20241205150341-20241205180341-00326.warc.gz bytes=630560233-630640868",
+"captura": "20241205154741",
+"titulo": "Notice of Removal of Spot Trading Pairs - 2023-11-20",
+"publicado": "2023-11-17",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2023-11-20",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/notice-of-removal-of-spot-trading-pairs-2024-10-11-d1dd5a919cd0442187b33e2e883231eb",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-46/segments/1730477027928.77/warc/CC-MAIN-20241106100950-20241106130950-00771.warc.gz bytes=611222162-611302104",
+"captura": "20241106102611",
+"titulo": "Notice of Removal of Spot Trading Pairs - 2024-10-11",
+"publicado": "2024-10-09",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2024-10-11",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/notice-of-removal-of-spot-trading-pairs-2024-03-01-a4a8fe7c7d734cc4a31b7a24ff717621",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-18/segments/1712296816832.57/warc/CC-MAIN-20240413180040-20240413210040-00158.warc.gz bytes=648968395-649054838",
+"captura": "20240413183707",
+"titulo": "Notice of Removal of Spot Trading Pairs - 2024-03-01",
+"publicado": "2024-02-28",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2024-03-01",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/notice-of-removal-of-spot-trading-pairs-2024-06-28-3d9bdfbcdd5c4bc5801fb67765c5a15d?hl=en",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-38/segments/1725700651241.17/warc/CC-MAIN-20240910093422-20240910123422-00046.warc.gz bytes=630354696-630435849",
+"captura": "20240910101509",
+"titulo": "Notice of Removal of Spot Trading Pairs - 2024-06-28",
+"publicado": "2024-06-26",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2024-06-28",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/notice-of-removal-of-spot-trading-pairs-2024-03-15-dd8b8a2c4d2f4616ae5b927b51d31730",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-22/segments/1715971058385.38/warc/CC-MAIN-20240521060250-20240521090250-00756.warc.gz bytes=595858689-595937326",
+"captura": "20240521064359",
+"titulo": "Notice of Removal of Spot Trading Pairs - 2024-03-15",
+"publicado": "2024-03-13",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2024-03-15",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/notice-of-removal-of-trading-pairs-2023-09-15-7f6d179aff1740d387d451a9659d9c6b",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2023-50/segments/1700679100227.61/warc/CC-MAIN-20231130130218-20231130160218-00437.warc.gz bytes=774528466-774612850",
+"captura": "20231130130639",
+"titulo": "Notice of Removal of Trading Pairs - 2023-09-15",
+"publicado": "2023-09-13",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2023-09-15",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/notice-of-removal-of-trading-pairs-2022-09-16-96c8dc9145ff48069c932513f69c616a",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2022-49/segments/1669446710933.89/warc/CC-MAIN-20221203143925-20221203173925-00843.warc.gz bytes=720224826-720292165",
+"captura": "20221203171211",
+"titulo": "Notice of Removal of Trading Pairs - 2022-09-16",
+"publicado": "2022-09-12",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2022-09-16",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/notice-of-removal-of-trading-pairs-2023-10-06-ad539191a8d8447eb14dd8660bd57b44",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2023-50/segments/1700679100909.82/warc/CC-MAIN-20231209103523-20231209133523-00869.warc.gz bytes=729521255-729607337",
+"captura": "20231209123615",
+"titulo": "Notice of Removal of Trading Pairs - 2023-10-06",
+"publicado": "2023-10-04",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2023-10-06",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/notice-of-removal-of-trading-pairs-2022-05-26-665d875ded974f97a719642040dac31a",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2023-40/segments/1695233506420.84/warc/CC-MAIN-20230922134342-20230922164342-00616.warc.gz bytes=769420484-769494940",
+"captura": "20230922162053",
+"titulo": "Notice of Removal of Trading Pairs - 2022-05-26",
+"publicado": "2022-05-19",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2022-05-26",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/notice-of-removal-of-trading-pairs-2022-03-18-3c83d5627b494c5db5c0c23f572f0503",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2023-40/segments/1695233510528.86/warc/CC-MAIN-20230929190403-20230929220403-00432.warc.gz bytes=724048086-724121913",
+"captura": "20230929210204",
+"titulo": "Notice of Removal of Trading Pairs - 2022-03-18",
+"publicado": "2022-03-11",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2022-03-18",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/notice-of-removal-of-trading-pairs-2023-04-07-60fff2470a2e428da6fa9e36ed9147ad",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2023-40/segments/1695233510284.49/warc/CC-MAIN-20230927071345-20230927101345-00061.warc.gz bytes=738393175-738468116",
+"captura": "20230927074125",
+"titulo": "Notice of Removal of Trading Pairs - 2023-04-07",
+"publicado": "2023-04-05",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2023-04-07",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/notice-of-removal-of-trading-pairs-2020-05-15-360043154772",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2022-49/segments/1669446710710.91/warc/CC-MAIN-20221129164449-20221129194449-00609.warc.gz bytes=714094250-714160186",
+"captura": "20221129181507",
+"titulo": "Notice of Removal of Trading Pairs - 2020/05/15 | Binance",
+"publicado": "2020-05-14",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2020-05-15",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/notice-of-removal-of-trading-pairs-2021-09-18-2760bbcd37414da5b3c5226cb397ac29",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2022-49/segments/1669446710698.62/warc/CC-MAIN-20221129132340-20221129162340-00778.warc.gz bytes=715009680-715076317",
+"captura": "20221129155215",
+"titulo": "Notice of Removal of Trading Pairs - 2021-09-18",
+"publicado": "2021-09-17",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2021-09-18",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/notice-of-removal-of-trading-pairs-2023-09-22-c314977b8eb74f6e9c1d1b4b12bceffb",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2023-50/segments/1700679100745.32/warc/CC-MAIN-20231208112926-20231208142926-00004.warc.gz bytes=749839353-749923925",
+"captura": "20231208113359",
+"titulo": "Notice of Removal of Trading Pairs - 2023-09-22",
+"publicado": "2023-09-20",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2023-09-22",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/notice-of-removal-of-trading-pairs-2022-06-09-670a4bc8c72b46edbddf53fbb05acefd",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2022-49/segments/1669446710916.40/warc/CC-MAIN-20221202183117-20221202213117-00473.warc.gz bytes=713237237-713304041",
+"captura": "20221202200638",
+"titulo": "Notice of Removal of Trading Pairs - 2022-06-09",
+"publicado": "2022-06-07",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2022-06-09",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/notice-of-removal-of-trading-pairs-2023-06-14-ca6a53640b174613821bc993d3fd9bca",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2023-50/segments/1700679100677.45/warc/CC-MAIN-20231207153748-20231207183748-00544.warc.gz bytes=756115897-756198511",
+"captura": "20231207161111",
+"titulo": "Notice of Removal of Trading Pairs - 2023-06-14",
+"publicado": "2023-06-12",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2023-06-14",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/notice-of-removal-of-trading-pairs-2023-05-11-7734f3d4ddd14d65a7cc1563115fe30b",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2023-40/segments/1695233511361.38/warc/CC-MAIN-20231004052258-20231004082258-00512.warc.gz bytes=714737187-714813655",
+"captura": "20231004074050",
+"titulo": "Notice of Removal of Trading Pairs - 2023-05-11",
+"publicado": "2023-05-09",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2023-05-11",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/notice-of-removal-of-trading-pairs-2022-03-10-105793a7dd7b4b3dae049f1e670f3c25",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2023-40/segments/1695233510810.46/warc/CC-MAIN-20231001073649-20231001103649-00476.warc.gz bytes=713219806-713293170",
+"captura": "20231001101432",
+"titulo": "Notice of Removal of Trading Pairs - 2022-03-10",
+"publicado": "2022-03-08",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2022-03-10",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://www.binance.com/en/support/announcement/notice-of-removal-of-trading-pairs-2023-01-06-98469caac0b54a2198208b7ceed71f91",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2023-40/segments/1695233510358.68/warc/CC-MAIN-20230928031105-20230928061105-00398.warc.gz bytes=733488607-733563417",
+"captura": "20230928053041",
+"titulo": "Notice of Removal of Trading Pairs - 2023-01-06",
+"publicado": "2023-01-04",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2023-01-06",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://support.binance.com/hc/en-us/articles/360002428872-Binance-Delists-Centra-CTR-Token",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2018-17/segments/1524125945724.44/warc/CC-MAIN-20180423031429-20180423051429-00400.warc.gz bytes=709191798-709199610",
+"captura": "20180423035159",
+"titulo": "Binance Delists Centra (CTR) Token",
+"publicado": "2018-04-05",
+"subtipo": "exclusion_token",
+"tokens": [
+"CTR"
+],
+"texto_lista_pares": true,
+"fecha_efectiva": "2018-04-08",
+"origen_fecha": "cuerpo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://binance.zendesk.com/hc/en-us/articles/360034580431-Notice-of-Removal-of-Trading-Pairs",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2019-43/segments/1570986653876.31/warc/CC-MAIN-20191014150930-20191014174430-00212.warc.gz bytes=405206534-405217042",
+"captura": "20191014153625",
+"titulo": "Notice of Removal of Trading Pairs",
+"publicado": "2019-09-30",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2019-09-30",
+"origen_fecha": "cuerpo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://binance.zendesk.com/hc/en-us/articles/360035737211-Notice-of-Removal-of-Trading-Pairs-2019-11-01",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2019-51/segments/1575540523790.58/warc/CC-MAIN-20191209201914-20191209225914-00387.warc.gz bytes=287831685-287842034",
+"captura": "20191209205703",
+"titulo": "Notice of Removal of Trading Pairs - 2019/11/01",
+"publicado": "2019-10-31",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2019-11-01",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://binance.zendesk.com/hc/en-us/articles/360035903932-Notice-of-Removal-of-Trading-Pairs-2019-11-15",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-45/segments/1603107890108.60/warc/CC-MAIN-20201026002022-20201026032022-00363.warc.gz bytes=237623311-237634774",
+"captura": "20201026013255",
+"titulo": "Notice of Removal of Trading Pairs - 2019/11/15",
+"publicado": "2019-11-14",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2019-11-15",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://binance.zendesk.com/hc/en-us/articles/360037462111-Notice-of-Removal-of-Trading-Pairs-2019-12-04",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-49/segments/1637964362952.24/warc/CC-MAIN-20211204063651-20211204093651-00017.warc.gz bytes=190083477-190095143",
+"captura": "20211204075923",
+"titulo": "Notice of Removal of Trading Pairs - 2019/12/04",
+"publicado": "2019-12-03",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2019-12-04",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://binance.zendesk.com/hc/en-us/articles/360037716312-Notice-of-Removal-of-Trading-Pairs-2019-12-20",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-49/segments/1637964359073.63/warc/CC-MAIN-20211130201935-20211130231935-00226.warc.gz bytes=209715820-209727574",
+"captura": "20211130213934",
+"titulo": "Notice of Removal of Trading Pairs - 2019/12/20",
+"publicado": "2019-12-19",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2019-12-20",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://binance.zendesk.com/hc/en-us/articles/360039154812",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-16/segments/1585371893683.94/warc/CC-MAIN-20200410075105-20200410105605-00347.warc.gz bytes=351166839-351177754",
+"captura": "20200410101311",
+"titulo": "Notice of Removal of Trading Pairs - 2020/02/07",
+"publicado": "2020-02-06",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2020-02-07",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://binance.zendesk.com/hc/en-us/articles/360039565412",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-16/segments/1585370505826.39/warc/CC-MAIN-20200401161832-20200401191832-00019.warc.gz bytes=369796105-369806624",
+"captura": "20200401185343",
+"titulo": "Notice of Removal of Trading Pairs - 2020/02/20",
+"publicado": "2020-02-19",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2020-02-20",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://binance.zendesk.com/hc/en-us/articles/360040310251",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-16/segments/1585370500426.22/warc/CC-MAIN-20200331084941-20200331114941-00068.warc.gz bytes=380828802-380839580",
+"captura": "20200331104457",
+"titulo": "Notice of Removal of Trading Pairs - 2020/02/28",
+"publicado": "2020-02-28",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2020-02-28",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://binance.zendesk.com/hc/en-us/articles/360040335232",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-24/segments/1590347413624.48/warc/CC-MAIN-20200531182830-20200531212830-00444.warc.gz bytes=265730304-265741156",
+"captura": "20200531203920",
+"titulo": "Notice of Removal of Trading Pairs - 2020/03/11",
+"publicado": "2020-03-10",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2020-03-11",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://binance.zendesk.com/hc/en-us/articles/360040740472-Notice-of-Removal-of-Trading-Pairs-2020-03-20",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-24/segments/1590348502097.77/warc/CC-MAIN-20200605143036-20200605173036-00290.warc.gz bytes=256826816-256837895",
+"captura": "20200605170644",
+"titulo": "Notice of Removal of Trading Pairs - 2020/03/20",
+"publicado": "2020-03-19",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2020-03-20",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://binance.zendesk.com/hc/en-us/articles/360041070072",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-16/segments/1585370500426.22/warc/CC-MAIN-20200331084941-20200331114941-00123.warc.gz bytes=388681407-388693145",
+"captura": "20200331104019",
+"titulo": "Binance Will Distribute ETH to DGD holders and Delist DGD to Support the Upcoming DGD Dissolution",
+"publicado": "2020-03-26",
+"subtipo": "exclusion_token",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2020-03-27",
+"origen_fecha": "cuerpo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin tokens en el título",
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://binance.zendesk.com/hc/en-us/articles/360041076472",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-16/segments/1585370500426.22/warc/CC-MAIN-20200331084941-20200331114941-00153.warc.gz bytes=382575036-382585950",
+"captura": "20200331103840",
+"titulo": "Notice of Removal of Trading Pairs - 2020/03/27",
+"publicado": "2020-03-26",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2020-03-27",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://binance.zendesk.com/hc/en-us/articles/360041826351-Notice-of-Removal-of-Trading-Pairs-2020-04-03",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-24/segments/1590348493151.92/warc/CC-MAIN-20200605045722-20200605075722-00414.warc.gz bytes=260389527-260400567",
+"captura": "20200605074244",
+"titulo": "Notice of Removal of Trading Pairs - 2020/04/03",
+"publicado": "2020-04-02",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2020-04-03",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://binance.zendesk.com/hc/en-us/articles/360042235492-Notice-of-Removal-of-Trading-Pairs-2020-04-24",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-40/segments/1600400249545.55/warc/CC-MAIN-20200926231818-20200927021818-00788.warc.gz bytes=292624674-292636217",
+"captura": "20200927015616",
+"titulo": "Notice of Removal of Trading Pairs - 2020/04/24",
+"publicado": "2020-04-23",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2020-04-24",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://binance.zendesk.com/hc/en-us/articles/360042904031-Notice-of-Removal-of-Trading-Pairs-2020-04-30",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-29/segments/1593655887319.41/warc/CC-MAIN-20200705090648-20200705120648-00007.warc.gz bytes=301850068-301861450",
+"captura": "20200705101202",
+"titulo": "Notice of Removal of Trading Pairs - 2020/04/30",
+"publicado": "2020-04-29",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2020-04-30",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://binance.zendesk.com/hc/en-us/articles/360043154772-Notice-of-Removal-of-Trading-Pairs-2020-05-15",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-29/segments/1593655887319.41/warc/CC-MAIN-20200705090648-20200705120648-00263.warc.gz bytes=305458844-305470423",
+"captura": "20200705103052",
+"titulo": "Notice of Removal of Trading Pairs - 2020/05/15",
+"publicado": "2020-05-14",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2020-05-15",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://binance.zendesk.com/hc/en-us/articles/360043293451-Notice-of-Removal-of-Trading-Pairs-2020-05-09",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-29/segments/1593655929376.49/warc/CC-MAIN-20200711095334-20200711125334-00078.warc.gz bytes=303885919-303897372",
+"captura": "20200711120328",
+"titulo": "Notice of Removal of Trading Pairs - 2020/05/09",
+"publicado": "2020-05-08",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2020-05-09",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://binance.zendesk.com/hc/en-us/articles/360043486912",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-24/segments/1590348502097.77/warc/CC-MAIN-20200605143036-20200605173036-00451.warc.gz bytes=260568462-260579596",
+"captura": "20200605153119",
+"titulo": "Notice of Removal of Trading Pairs - 2020/05/22",
+"publicado": "2020-05-21",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2020-05-22",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+},
+{
+"url": "https://binance.zendesk.com/hc/en-us/articles/360044173191-Notice-of-Removal-of-Trading-Pairs-2020-05-29",
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-29/segments/1593655929376.49/warc/CC-MAIN-20200711095334-20200711125334-00197.warc.gz bytes=305286024-305297574",
+"captura": "20200711100653",
+"titulo": "Notice of Removal of Trading Pairs - 2020/05/29",
+"publicado": "2020-05-28",
+"subtipo": "remocion_pares",
+"tokens": [],
+"texto_lista_pares": true,
+"fecha_efectiva": "2020-05-29",
+"origen_fecha": "titulo",
+"par": null,
+"par_en_texto": false,
+"ambiguo": [
+"sin par USDT identificable"
+]
+}
+],
+"sin_par_usdt_documentado": [
+{
+"par": "BCNUSDT",
+"E": "2018-10-12",
+"urls": [
+"https://support.binance.com/hc/en-us/articles/360017720731?refer=coinsosik",
+"https://www.binance.com/en/support/announcement/360017720731"
+],
+"titulos": [
+"Binance Will Delist BCN, CHAT, ICN, TRIG"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": false,
+"tokens": [
+"BCN",
+"CHAT",
+"ICN",
+"TRIG"
+],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2018-43/segments/1539583511216.45/warc/CC-MAIN-20181017195553-20181017221053-00523.warc.gz bytes=808716246-808725717",
+"sin_fecha": false,
+"clave": "BCNUSDT|2018-10-12",
+"categoria_auto": "D",
+"L": null,
+"nota": {
+"A3.3": 2,
+"otros_pares_en_bucket": [
+"BCNBNB",
+"BCNBTC",
+"BCNETH"
+]
+},
+"categoria": "fuera_sin_par_usdt_documentado"
+},
+{
+"par": "CHATUSDT",
+"E": "2018-10-12",
+"urls": [
+"https://support.binance.com/hc/en-us/articles/360017720731?refer=coinsosik",
+"https://www.binance.com/en/support/announcement/360017720731"
+],
+"titulos": [
+"Binance Will Delist BCN, CHAT, ICN, TRIG"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": false,
+"tokens": [
+"BCN",
+"CHAT",
+"ICN",
+"TRIG"
+],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2018-43/segments/1539583511216.45/warc/CC-MAIN-20181017195553-20181017221053-00523.warc.gz bytes=808716246-808725717",
+"sin_fecha": false,
+"clave": "CHATUSDT|2018-10-12",
+"categoria_auto": "D",
+"L": null,
+"nota": {
+"A3.3": 2,
+"otros_pares_en_bucket": [
+"CHATBTC",
+"CHATETH"
+]
+},
+"categoria": "fuera_sin_par_usdt_documentado"
+},
+{
+"par": "CLOAKUSDT",
+"E": "2019-02-22",
+"urls": [
+"https://support.binance.com/hc/en-us/articles/360023570292-Binance-Will-Delist-CLOAK-MOD-SALT-SUB-and-WINGS",
+"https://www.binance.com/en/support/announcement/360023570292"
+],
+"titulos": [
+"Binance Will Delist CLOAK, MOD, SALT, SUB and WINGS"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": false,
+"tokens": [
+"CLOAK",
+"MOD",
+"SALT",
+"SUB",
+"WINGS"
+],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2019-13/segments/1552912203093.63/warc/CC-MAIN-20190323221914-20190324003914-00246.warc.gz bytes=632567782-632578098",
+"sin_fecha": false,
+"clave": "CLOAKUSDT|2019-02-22",
+"categoria_auto": "D",
+"L": null,
+"nota": {
+"A3.3": 2,
+"otros_pares_en_bucket": [
+"CLOAKBTC",
+"CLOAKETH"
+]
+},
+"manual": {
+"accion": "confirmar",
+"cita": "we have decided to delist and cease trading on all trading pairs for the following coins and tokens on 2019/02/22 at 10:00 AM UTC: CloakCoin (CLOAK) Modum (MOD) SALT (SALT) Substratum (SUB) Wings (WINGS)",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_360023570292_e0d8ca186f81.json",
+"zd_360023570292_80190cd7d137.json"
+],
+"categoria_pasada1": "fuera_sin_par_usdt_documentado",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "fuera_sin_par_usdt_documentado"
+},
+{
+"par": "ICNUSDT",
+"E": "2018-10-12",
+"urls": [
+"https://support.binance.com/hc/en-us/articles/360017720731?refer=coinsosik",
+"https://www.binance.com/en/support/announcement/360017720731"
+],
+"titulos": [
+"Binance Will Delist BCN, CHAT, ICN, TRIG"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": false,
+"tokens": [
+"BCN",
+"CHAT",
+"ICN",
+"TRIG"
+],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2018-43/segments/1539583511216.45/warc/CC-MAIN-20181017195553-20181017221053-00523.warc.gz bytes=808716246-808725717",
+"sin_fecha": false,
+"clave": "ICNUSDT|2018-10-12",
+"categoria_auto": "D",
+"L": null,
+"nota": {
+"A3.3": 2,
+"otros_pares_en_bucket": [
+"ICNBTC",
+"ICNETH"
+]
+},
+"categoria": "fuera_sin_par_usdt_documentado"
+},
+{
+"par": "MODUSDT",
+"E": "2019-02-22",
+"urls": [
+"https://support.binance.com/hc/en-us/articles/360023570292-Binance-Will-Delist-CLOAK-MOD-SALT-SUB-and-WINGS",
+"https://www.binance.com/en/support/announcement/360023570292"
+],
+"titulos": [
+"Binance Will Delist CLOAK, MOD, SALT, SUB and WINGS"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": false,
+"tokens": [
+"CLOAK",
+"MOD",
+"SALT",
+"SUB",
+"WINGS"
+],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2019-13/segments/1552912203093.63/warc/CC-MAIN-20190323221914-20190324003914-00246.warc.gz bytes=632567782-632578098",
+"sin_fecha": false,
+"clave": "MODUSDT|2019-02-22",
+"categoria_auto": "D",
+"L": null,
+"nota": {
+"A3.3": 2,
+"otros_pares_en_bucket": [
+"MODBTC",
+"MODETH"
+]
+},
+"manual": {
+"accion": "confirmar",
+"cita": "we have decided to delist and cease trading on all trading pairs for the following coins and tokens on 2019/02/22 at 10:00 AM UTC: CloakCoin (CLOAK) Modum (MOD) SALT (SALT) Substratum (SUB) Wings (WINGS)",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_360023570292_e0d8ca186f81.json",
+"zd_360023570292_80190cd7d137.json"
+],
+"categoria_pasada1": "fuera_sin_par_usdt_documentado",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "fuera_sin_par_usdt_documentado"
+},
+{
+"par": "SALTUSDT",
+"E": "2019-02-22",
+"urls": [
+"https://support.binance.com/hc/en-us/articles/360023570292-Binance-Will-Delist-CLOAK-MOD-SALT-SUB-and-WINGS",
+"https://www.binance.com/en/support/announcement/360023570292"
+],
+"titulos": [
+"Binance Will Delist CLOAK, MOD, SALT, SUB and WINGS"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": false,
+"tokens": [
+"CLOAK",
+"MOD",
+"SALT",
+"SUB",
+"WINGS"
+],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2019-13/segments/1552912203093.63/warc/CC-MAIN-20190323221914-20190324003914-00246.warc.gz bytes=632567782-632578098",
+"sin_fecha": false,
+"clave": "SALTUSDT|2019-02-22",
+"categoria_auto": "D",
+"L": null,
+"nota": {
+"A3.3": 2,
+"otros_pares_en_bucket": [
+"SALTBTC",
+"SALTETH"
+]
+},
+"manual": {
+"accion": "confirmar",
+"cita": "we have decided to delist and cease trading on all trading pairs for the following coins and tokens on 2019/02/22 at 10:00 AM UTC: CloakCoin (CLOAK) Modum (MOD) SALT (SALT) Substratum (SUB) Wings (WINGS)",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_360023570292_e0d8ca186f81.json",
+"zd_360023570292_80190cd7d137.json"
+],
+"categoria_pasada1": "fuera_sin_par_usdt_documentado",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "fuera_sin_par_usdt_documentado"
+},
+{
+"par": "SUBUSDT",
+"E": "2019-02-22",
+"urls": [
+"https://support.binance.com/hc/en-us/articles/360023570292-Binance-Will-Delist-CLOAK-MOD-SALT-SUB-and-WINGS",
+"https://www.binance.com/en/support/announcement/360023570292"
+],
+"titulos": [
+"Binance Will Delist CLOAK, MOD, SALT, SUB and WINGS"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": false,
+"tokens": [
+"CLOAK",
+"MOD",
+"SALT",
+"SUB",
+"WINGS"
+],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2019-13/segments/1552912203093.63/warc/CC-MAIN-20190323221914-20190324003914-00246.warc.gz bytes=632567782-632578098",
+"sin_fecha": false,
+"clave": "SUBUSDT|2019-02-22",
+"categoria_auto": "D",
+"L": null,
+"nota": {
+"A3.3": 2,
+"otros_pares_en_bucket": [
+"SUBBTC",
+"SUBETH"
+]
+},
+"manual": {
+"accion": "confirmar",
+"cita": "we have decided to delist and cease trading on all trading pairs for the following coins and tokens on 2019/02/22 at 10:00 AM UTC: CloakCoin (CLOAK) Modum (MOD) SALT (SALT) Substratum (SUB) Wings (WINGS)",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_360023570292_e0d8ca186f81.json",
+"zd_360023570292_80190cd7d137.json"
+],
+"categoria_pasada1": "fuera_sin_par_usdt_documentado",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "fuera_sin_par_usdt_documentado"
+},
+{
+"par": "TRIGUSDT",
+"E": "2018-10-12",
+"urls": [
+"https://support.binance.com/hc/en-us/articles/360017720731?refer=coinsosik",
+"https://www.binance.com/en/support/announcement/360017720731"
+],
+"titulos": [
+"Binance Will Delist BCN, CHAT, ICN, TRIG"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": false,
+"tokens": [
+"BCN",
+"CHAT",
+"ICN",
+"TRIG"
+],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2018-43/segments/1539583511216.45/warc/CC-MAIN-20181017195553-20181017221053-00523.warc.gz bytes=808716246-808725717",
+"sin_fecha": false,
+"clave": "TRIGUSDT|2018-10-12",
+"categoria_auto": "D",
+"L": null,
+"nota": {
+"A3.3": 2,
+"otros_pares_en_bucket": [
+"TRIGBNB",
+"TRIGBTC",
+"TRIGETH"
+]
+},
+"categoria": "fuera_sin_par_usdt_documentado"
+},
+{
+"par": "WINGSUSDT",
+"E": "2019-02-22",
+"urls": [
+"https://support.binance.com/hc/en-us/articles/360023570292-Binance-Will-Delist-CLOAK-MOD-SALT-SUB-and-WINGS",
+"https://www.binance.com/en/support/announcement/360023570292"
+],
+"titulos": [
+"Binance Will Delist CLOAK, MOD, SALT, SUB and WINGS"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": false,
+"tokens": [
+"CLOAK",
+"MOD",
+"SALT",
+"SUB",
+"WINGS"
+],
+"url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2019-13/segments/1552912203093.63/warc/CC-MAIN-20190323221914-20190324003914-00246.warc.gz bytes=632567782-632578098",
+"sin_fecha": false,
+"clave": "WINGSUSDT|2019-02-22",
+"categoria_auto": "D",
+"L": null,
+"nota": {
+"A3.3": 2,
+"otros_pares_en_bucket": [
+"WINGSBTC",
+"WINGSETH"
+]
+},
+"manual": {
+"accion": "confirmar",
+"cita": "we have decided to delist and cease trading on all trading pairs for the following coins and tokens on 2019/02/22 at 10:00 AM UTC: CloakCoin (CLOAK) Modum (MOD) SALT (SALT) Substratum (SUB) Wings (WINGS)",
+"fuente_paginas": [
+"url_https___www.binance.com_en_support_announcement_360023570292_e0d8ca186f81.json",
+"zd_360023570292_80190cd7d137.json"
+],
+"categoria_pasada1": "fuera_sin_par_usdt_documentado",
+"lector": "segunda lectura SL-v1",
+"certeza": "alta"
+},
+"categoria": "fuera_sin_par_usdt_documentado"
+}
+]
+}

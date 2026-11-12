@@ -1,0 +1,15 @@
+base: 1978 pruebas · 1978 pasan · 0 fallan · 0 errores · 0 omitidas
+integrado: 1985 pruebas · 1985 pasan · 0 fallan · 0 errores · 0 omitidas
+pruebas de la base que faltan en el integrado: ninguna
+pruebas nuevas: 7 · todas pasan: True
+   pasa    tests.integration.test_engine_version_contract::test_a_close_that_ends_with_position_left_is_followed_by_another
+   pasa    tests.integration.test_engine_version_contract::test_a_rejected_close_is_sent_again_as_a_new_order_and_closes
+   pasa    tests.integration.test_engine_version_contract::test_a_version_that_is_not_a_number_cannot_escape_the_guard
+   pasa    tests.integration.test_engine_version_contract::test_partial_fills_never_add_to_a_closing_position_or_reopen_one
+   pasa    tests.integration.test_engine_version_contract::test_rejections_partials_and_limit_entries_together
+   pasa    tests.integration.test_engine_version_contract::test_the_checks_pass_a_clean_record_and_catch_each_defect
+   pasa    tests.integration.test_engine_version_contract::test_the_stop_in_the_book_follows_the_leg
+pruebas de la base con otro resultado en el integrado: ninguna
+pruebas de la base que no pasan en el árbol base: ninguna
+pruebas de la base que no pasan en el árbol integrado: ninguna
+SIN REGRESIONES FRENTE A LA BASE

@@ -1,0 +1,12 @@
+{
+ "parametros_sha256": "28764d31b62028f2dd095c35449cd43fccb4c970ae6e00fdf118c744c1efc425",
+ "replicas_totales_prueba_primaria": 48000,
+ "segundos_por_replica_n_max": 0.157,
+ "horas_estimadas_cota_superior": 2.09,
+ "horas_estimadas_con_regla_de_respaldo": 6.27,
+ "nota": "estimación con una réplica de n máximo; no se estimó ninguna tasa de rechazo"
+}
+prueba de humo: 6 procesos × 2 réplicas × 2 reglas sin error (no se informa ninguna tasa)
+BLOQUEADO: la calibración requiere la autorización A-S1 (--autorizacion REF) y --salida
+sin autorización: salida 2
+28764d31b62028f2dd095c35449cd43fccb4c970ae6e00fdf118c744c1efc425  protocolo_cuantitativo/calibracion/parametros_calibracion.json

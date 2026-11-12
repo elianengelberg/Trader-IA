@@ -1,0 +1,35 @@
+== 2026-10-20T15:03:36Z
+HEAD: 692f2b2d7af3189027b62e60367d104d855b0f3f
+rama: claude/algo-trading-simulation-platform-ngf7xo
+* claude/algo-trading-simulation-platform-ngf7xo                692f2b2 [origin/claude/algo-trading-simulation-platform-ngf7xo: ahead 2] Close T-MULTI evidence package and record final research state
+  remotes/origin/claude/algo-trading-simulation-platform-ngf7xo c6339e3 Paper evaluation: record branch A decision and initial state
+origin ref: c6339e3fcd6041cb6c4ad7f5545f0ff306a4fd2f
+divergencia local...origin (izq=solo local, der=solo origin): 2	0
+692f2b2 Close T-MULTI evidence package and record final research state
+f518ac1 Freeze T-MULTI preregistration and code before any data access
+== status --porcelain
+ M research/.gitignore
+ M research/tendencia_btc/ARTEFACTOS_SHA256.txt
+ M research/tendencia_btc/papel/PRERREGISTRO_PAPEL.md
+?? research/tendencia_btc/datos_multi/nasdaq/
+?? research/tendencia_btc/datos_multi/yahoo/
+?? research/tendencia_btc/papel/VERIFICACION_OPERATIVA_2026-10-17.md
+?? research/tendencia_btc/papel/corte.py
+?? research/tendencia_btc/tests/test_papel_corte.py
+== status --porcelain --ignored (conteo)
+24
+sha256(status --ignored): 87b9585d31924f8193a6d3eb6d0712a3d3880978681c75d0dd77e00d08f34a8e
+== diff --stat de los cambios preexistentes (sin modificarlos)
+ research/.gitignore                                |  2 ++
+ research/tendencia_btc/ARTEFACTOS_SHA256.txt       |  9 ++++++---
+ research/tendencia_btc/papel/PRERREGISTRO_PAPEL.md | 17 +++++++++++++++++
+ 3 files changed, 25 insertions(+), 3 deletions(-)
+== hashes de archivos modificados/no seguidos
+ff98fa9cc48f016204e2b3e3f176b2d831ec1870d9e1242da7045ed2998f95d4  research/.gitignore
+be3d6fa9e19763d5b495a13dc6682ed8c729245f6ee4d38acec5b375d0cb5611  research/tendencia_btc/ARTEFACTOS_SHA256.txt
+695d1d0f0e952e3f8619f5be8783dc176a5a960160543b502bd07a83080a72c3  research/tendencia_btc/papel/PRERREGISTRO_PAPEL.md
+DIR research/tendencia_btc/datos_multi/nasdaq/: 24 archivos, 845ec95f51e207d4f69cedbe73be0aaa3bec7caf3c2a90801c70f458cce8aadd
+DIR research/tendencia_btc/datos_multi/yahoo/: 12 archivos, ef9cf75c5ad2146dd3b474848bfc7f4086bf9e6d11b5547f6bbffa77e09d788e
+514fc34ea3e39b820800f32504a98cef09d141563f072fcbfa763ad28d5b0670  research/tendencia_btc/papel/VERIFICACION_OPERATIVA_2026-10-17.md
+b5bc9a59263ac42f1615219c7ed02776a2f1775a7b5091be2300a7b5d1ab05a0  research/tendencia_btc/papel/corte.py
+d88aa557c1603ae4d7d9406480dcb1b345be27cf46f38991210544c4157954f2  research/tendencia_btc/tests/test_papel_corte.py

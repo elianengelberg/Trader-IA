@@ -1,0 +1,33 @@
+== 2026-10-20T15:04:07Z T: artefactos de la ejecución fuera de muestra
+94a165560ba2a1807bf604b079dbf2c8eea7e7e4401fcc5ccb5db275464db58f  PRERREGISTRO_FUERA_DE_MUESTRA_T.md  | commit: 692f2b2  | igual a HEAD: sí
+941b6e11f6566319b93614ee671b184d60c7b5fbc64a3931a6ff2c8da17fe0fa  experimentos/fuera_de_muestra_T.py  | commit: 692f2b2  | igual a HEAD: sí
+4f8fafde372931aab29b94612eb658f5fac9259e51cdf7dace7a1b30fc633c45  experimentos/fuera_de_muestra_T.json  | commit: 692f2b2  | igual a HEAD: sí
+08fa977b76fc03fe9934c237f02f83c9acc3e598960a753d78646969460d5621  INFORME_FUERA_DE_MUESTRA_T.md  | commit: 692f2b2  | igual a HEAD: sí
+836d8ee38873331c3b139aaf247e45f36a888aa7eb20e9f6461f7794fc5b6c7f  REVISION_CRITICA_FUERA_DE_MUESTRA_T.md  | commit: 692f2b2  | igual a HEAD: sí
+649c03e00f61f1854e1b651b4e3bc0f3dd0e1422cf71e48311e6593faae51898  experimentos/revision_fuera_de_muestra_T.py  | commit: 692f2b2  | igual a HEAD: sí
+ccb8fcc73260e1207098ab28d568deac1841c98dae49a0b74415e91f01123630  experimentos/revision_fuera_de_muestra_T.json  | commit: 692f2b2  | igual a HEAD: sí
+5a0805a7e22797637c400a1e939ec6c2d10e0cdc26410566f212708211b6367b  datos/BTCUSDT/MANIFIESTO.json  | commit: 5120d4c  | igual a HEAD: sí
+3998305bb38909a08a94f6365317695f930dea4ea10933b19a22e17b40998f6a  datos/ETHUSDT/MANIFIESTO.json  | commit: 5120d4c  | igual a HEAD: sí
+ce6b1ac15f351661e0341a60548f30eaa6e1a662fdaa1fcbb1175201dba25388  papel/prerregistro_papel.json  | commit: 89278f7  | igual a HEAD: sí
+b3b3728d38356f75f559987949a376a96a13ebeb6176089f85bcec7ba84d1055  src/tendencia/papel.py  | commit: 89278f7  | igual a HEAD: sí
+== hashes registrados en EVIDENCIA_T_MULTI.json (cadena_historica_T_fuera_de_muestra) frente a los actuales
+OK  INFORME_FUERA_DE_MUESTRA_T.md 08fa977b76fc03fe9934c237f02f83c9acc3e598960a753d78646969460d5621
+OK  PRERREGISTRO_FUERA_DE_MUESTRA_T.md 94a165560ba2a1807bf604b079dbf2c8eea7e7e4401fcc5ccb5db275464db58f
+OK  REVISION_CRITICA_FUERA_DE_MUESTRA_T.md 836d8ee38873331c3b139aaf247e45f36a888aa7eb20e9f6461f7794fc5b6c7f
+OK  experimentos/fuera_de_muestra_T.json 4f8fafde372931aab29b94612eb658f5fac9259e51cdf7dace7a1b30fc633c45
+OK  experimentos/fuera_de_muestra_T.py 941b6e11f6566319b93614ee671b184d60c7b5fbc64a3931a6ff2c8da17fe0fa
+OK  experimentos/revision_fuera_de_muestra_T.json ccb8fcc73260e1207098ab28d568deac1841c98dae49a0b74415e91f01123630
+OK  experimentos/revision_fuera_de_muestra_T.py 649c03e00f61f1854e1b651b4e3bc0f3dd0e1422cf71e48311e6593faae51898
+== registrado en fuera_de_muestra_T.json
+categoria = HISTÓRICO VERIFICADO, fuera de muestra para T (no prospectivo)
+prerregistro_sha256 = 94a165560ba2a1807bf604b079dbf2c8eea7e7e4401fcc5ccb5db275464db58f
+script_sha256 = 941b6e11f6566319b93614ee671b184d60c7b5fbc64a3931a6ff2c8da17fe0fa
+codigo_sha256 = 73b22f3e3a8f21513d5533fb11a7553becae30b87c8736fb6880bccc36c11d2b
+manifiestos_sha256 = {'BTCUSDT': '5a0805a7e22797637c400a1e939ec6c2d10e0cdc26410566f212708211b6367b', 'ETHUSDT': '3998305bb38909a08a94f6365317695f930dea4ea10933b19a22e17b40998f6a'}
+ventana = ['2022-01-01', '2026-06-01']
+dias = 1612
+decision_prerregistrada = EVIDENCIA INSUFICIENTE
+conjunto {'exceso_anual': 0.07048894365406465, 'ic90_anual': [-0.08820041316896611, 0.22869689090470152], 'p': 0.755}
+BTC {'exceso_anual': 0.09115545696339697, 'ic90_anual': [-0.06725777926626993, 0.24947282497554846], 'p': 0.8355}
+ETH {'exceso_anual': 0.049822430344732334, 'ic90_anual': [-0.13352220398715586, 0.23678108349195662], 'p': 0.6495}
+secundarios: ['subventanas', 'costes_x2', 'costes_x3', 'retraso_1_dia', 'nulo_circular_BTC', 'replicacion', 'desarrollo_mas_fuera_de_muestra', 'efectivo']

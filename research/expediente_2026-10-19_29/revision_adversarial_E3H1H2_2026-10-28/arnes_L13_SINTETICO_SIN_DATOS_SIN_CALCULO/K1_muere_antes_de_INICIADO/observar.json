@@ -1,0 +1,11 @@
+{
+ "salida_1": {},
+ "registro": [],
+ "registro_vs_disco": [],
+ "nuevo_intento": "PERMITIDO: corrió completo",
+ "salida_2": [
+  "REGISTRO_EJECUCION.json",
+  "RESULTADO_E3.json",
+  "VALIDEZ_PREVIA.json"
+ ]
+}

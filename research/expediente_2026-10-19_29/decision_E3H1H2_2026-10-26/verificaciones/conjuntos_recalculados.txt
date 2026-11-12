@@ -1,0 +1,7 @@
+# conjunto ejecucion_E3/datos_vision/data: 52210 archivos; 574ef630cff5ac84b69b166397ec41518d22c76076d25fc8239a4cdc559c52ac
+# conjunto ejecucion_E3/datos_anuncios/commoncrawl/paginas: 8028 archivos; 43c90bfa0b79728e522727a083ceb22a1d7efe46f84ee876f1b0bfa94f19bc01
+# conjunto ejecucion_E3/datos_anuncios/commoncrawl/indice: 96 archivos; 01b36a792868db440f7f9817d22f9302a134139d0f9fa6af2067cb23538d7bcb
+# conjunto ejecucion_E3/datos_vision/listados/por_simbolo: 757 archivos; b0095747f3c6c7acbc2d40653cfaad8c024dc927251ee0808bca4c5f32856a1a
+# conjunto ejecucion_E3/resultados/calidad/series: 757 archivos; 6506fb03c211def710abe61a2493799000b80996c63000fcfc98da624cbaba79
+páginas (8028): f12afb9897a80a1cfaeb09c94dbf11cd2cd3f3839a21883c65a5a2d461cbdb8f  (F3: f12afb98…)
+zips (26105): cf27c8ddc39ddda5f7cca0475c63518b5ecb57c8bdfb87cf3f47fb4223244109  (F3: cf27c8dd…)

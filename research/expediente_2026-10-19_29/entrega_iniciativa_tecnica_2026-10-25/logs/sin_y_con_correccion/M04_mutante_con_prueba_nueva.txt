@@ -1,0 +1,4 @@
+      comparison failed
+tests/integration/test_protective_stop_size.py:46: AssertionError: it covers the new size
+      comparison failed
+tests/integration/test_protective_stop_size.py:46: AssertionError: it covers the new size

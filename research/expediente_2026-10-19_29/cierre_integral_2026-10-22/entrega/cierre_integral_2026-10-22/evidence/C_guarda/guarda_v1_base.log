@@ -1,0 +1,7 @@
+sssss..                                                                  [100%]
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED tests/integration/test_engine_version_contract.py::test_the_checks_pass_a_clean_record_and_catch_each_defect
+PASSED tests/integration/test_engine_version_contract.py::test_a_version_that_is_not_a_number_cannot_escape_the_guard
+SKIPPED [5] tests/integration/test_engine_version_contract.py:384: the engine records version None: it does not claim D1-D3
+2 passed, 5 skipped in 13.40s

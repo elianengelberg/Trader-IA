@@ -1,0 +1,224 @@
+2023-05-03 nuevo SUIUSDT        (episodio 0) ← terminados en los 21 días previos: AUTOUSDT@2023-04-17, NEBLUSDT@2023-04-17
+2023-05-05 nuevo AERGOUSDT      (episodio 0) ← terminados en los 21 días previos: AUTOUSDT@2023-04-17, NEBLUSDT@2023-04-17
+2023-05-05 nuevo FLOKIUSDT      (episodio 0) ← terminados en los 21 días previos: AUTOUSDT@2023-04-17, NEBLUSDT@2023-04-17
+2023-05-05 nuevo PEPEUSDT       (episodio 0) ← terminados en los 21 días previos: AUTOUSDT@2023-04-17, NEBLUSDT@2023-04-17
+2023-05-12 nuevo CVCUSDT        (episodio 1) ← terminados en los 21 días previos: XRPDOWNUSDT@2023-05-11, XRPUPUSDT@2023-05-11
+2023-05-19 nuevo ASTUSDT        (episodio 0) ← terminados en los 21 días previos: XRPDOWNUSDT@2023-05-11, XRPUPUSDT@2023-05-11
+2023-05-19 nuevo SNTUSDT        (episodio 0) ← terminados en los 21 días previos: XRPDOWNUSDT@2023-05-11, XRPUPUSDT@2023-05-11
+2023-06-02 nuevo COMBOUSDT      (episodio 0) ← terminados en los 21 días previos: COCOSUSDT@2023-05-28, AUDUSDT@2023-05-31
+2023-06-28 nuevo MAVUSDT        (episodio 0) ← terminados en los 21 días previos: —
+2023-07-03 nuevo PENDLEUSDT     (episodio 0) ← terminados en los 21 días previos: —
+2023-07-18 nuevo ARKMUSDT       (episodio 0) ← terminados en los 21 días previos: —
+2023-07-19 nuevo WBETHUSDT      (episodio 0) ← terminados en los 21 días previos: —
+2023-07-24 nuevo WLDUSDT        (episodio 0) ← terminados en los 21 días previos: —
+2023-07-26 nuevo FDUSDUSDT      (episodio 0) ← terminados en los 21 días previos: —
+2023-08-15 nuevo CYBERUSDT      (episodio 0) ← terminados en los 21 días previos: —
+2023-08-15 nuevo SEIUSDT        (episodio 0) ← terminados en los 21 días previos: —
+2023-09-22 nuevo ARKUSDT        (episodio 0) ← terminados en los 21 días previos: —
+2023-09-22 nuevo CREAMUSDT      (episodio 0) ← terminados en los 21 días previos: —
+2023-09-22 nuevo FTTUSDT        (episodio 1) ← terminados en los 21 días previos: —
+2023-09-22 nuevo GFTUSDT        (episodio 0) ← terminados en los 21 días previos: —
+2023-09-22 nuevo IQUSDT         (episodio 0) ← terminados en los 21 días previos: —
+2023-10-10 nuevo NTRNUSDT       (episodio 0) ← terminados en los 21 días previos: —
+2023-10-31 nuevo TIAUSDT        (episodio 0) ← terminados en los 21 días previos: BETHUSDT@2023-10-10
+2023-11-03 nuevo MEMEUSDT       (episodio 0) ← terminados en los 21 días previos: —
+2023-11-07 nuevo ORDIUSDT       (episodio 0) ← terminados en los 21 días previos: MCUSDT@2023-11-06
+2023-11-14 nuevo BEAMXUSDT      (episodio 0) ← terminados en los 21 días previos: MCUSDT@2023-11-06
+2023-11-16 nuevo PIVXUSDT       (episodio 0) ← terminados en los 21 días previos: MCUSDT@2023-11-06
+2023-11-24 nuevo BLURUSDT       (episodio 0) ← terminados en los 21 días previos: MCUSDT@2023-11-06, TOMOUSDT@2023-11-19
+2023-11-24 nuevo VICUSDT        (episodio 0) ← terminados en los 21 días previos: MCUSDT@2023-11-06, TOMOUSDT@2023-11-19
+2023-12-01 nuevo VANRYUSDT      (episodio 0) ← terminados en los 21 días previos: TOMOUSDT@2023-11-19, TVKUSDT@2023-11-26
+2023-12-04 nuevo AEURUSDT       (episodio 0) ← terminados en los 21 días previos: TOMOUSDT@2023-11-19, TVKUSDT@2023-11-26
+2023-12-07 nuevo JTOUSDT        (episodio 0) ← terminados en los 21 días previos: TOMOUSDT@2023-11-19, TVKUSDT@2023-11-26, BTSUSDT@2023-12-06, PERLUSDT@2023-12-06, WTCUSDT@2023-12-06
+2023-12-12 nuevo 1000SATSUSDT   (episodio 0) ← terminados en los 21 días previos: TVKUSDT@2023-11-26, BTSUSDT@2023-12-06, PERLUSDT@2023-12-06, WTCUSDT@2023-12-06
+2023-12-15 nuevo BONKUSDT       (episodio 0) ← terminados en los 21 días previos: TVKUSDT@2023-11-26, BTSUSDT@2023-12-06, PERLUSDT@2023-12-06, WTCUSDT@2023-12-06, BUSDUSDT@2023-12-14
+2023-12-18 nuevo ACEUSDT        (episodio 0) ← terminados en los 21 días previos: BTSUSDT@2023-12-06, PERLUSDT@2023-12-06, WTCUSDT@2023-12-06, BUSDUSDT@2023-12-14
+2023-12-27 nuevo NFPUSDT        (episodio 0) ← terminados en los 21 días previos: BTSUSDT@2023-12-06, PERLUSDT@2023-12-06, WTCUSDT@2023-12-06, BUSDUSDT@2023-12-14
+2024-01-04 nuevo AIUSDT         (episodio 0) ← terminados en los 21 días previos: BUSDUSDT@2023-12-14, GBPUSDT@2023-12-28
+2024-01-09 nuevo XAIUSDT        (episodio 0) ← terminados en los 21 días previos: GBPUSDT@2023-12-28
+2024-01-18 nuevo MANTAUSDT      (episodio 0) ← terminados en los 21 días previos: GBPUSDT@2023-12-28
+2024-01-25 nuevo ALTUSDT        (episodio 0) ← terminados en los 21 días previos: —
+2024-01-31 nuevo JUPUSDT        (episodio 0) ← terminados en los 21 días previos: —
+2024-02-02 nuevo PYTHUSDT       (episodio 0) ← terminados en los 21 días previos: —
+2024-02-05 nuevo RONINUSDT      (episodio 0) ← terminados en los 21 días previos: —
+2024-02-06 nuevo DYMUSDT        (episodio 0) ← terminados en los 21 días previos: —
+2024-02-19 nuevo PIXELUSDT      (episodio 0) ← terminados en los 21 días previos: —
+2024-02-20 nuevo STRKUSDT       (episodio 0) ← terminados en los 21 días previos: ANTUSDT@2024-02-19, MULTIUSDT@2024-02-19, XMRUSDT@2024-02-19
+2024-02-29 nuevo PORTALUSDT     (episodio 0) ← terminados en los 21 días previos: ANTUSDT@2024-02-19, MULTIUSDT@2024-02-19, XMRUSDT@2024-02-19, PLAUSDT@2024-02-25, BNBDOWNUSDT@2024-02-27, BNBUPUSDT@2024-02-27, BTCDOWNUSDT@2024-02-27, BTCUPUSDT@2024-02-27, ETHDOWNUSDT@2024-02-27, ETHUPUSDT@2024-02-27
+2024-03-01 nuevo AXLUSDT        (episodio 0) ← terminados en los 21 días previos: ANTUSDT@2024-02-19, MULTIUSDT@2024-02-19, XMRUSDT@2024-02-19, PLAUSDT@2024-02-25, BNBDOWNUSDT@2024-02-27, BNBUPUSDT@2024-02-27, BTCDOWNUSDT@2024-02-27, BTCUPUSDT@2024-02-27, ETHDOWNUSDT@2024-02-27, ETHUPUSDT@2024-02-27
+2024-03-01 nuevo PDAUSDT        (episodio 0) ← terminados en los 21 días previos: ANTUSDT@2024-02-19, MULTIUSDT@2024-02-19, XMRUSDT@2024-02-19, PLAUSDT@2024-02-25, BNBDOWNUSDT@2024-02-27, BNBUPUSDT@2024-02-27, BTCDOWNUSDT@2024-02-27, BTCUPUSDT@2024-02-27, ETHDOWNUSDT@2024-02-27, ETHUPUSDT@2024-02-27
+2024-03-05 nuevo WIFUSDT        (episodio 0) ← terminados en los 21 días previos: ANTUSDT@2024-02-19, MULTIUSDT@2024-02-19, XMRUSDT@2024-02-19, PLAUSDT@2024-02-25, BNBDOWNUSDT@2024-02-27, BNBUPUSDT@2024-02-27, BTCDOWNUSDT@2024-02-27, BTCUPUSDT@2024-02-27, ETHDOWNUSDT@2024-02-27, ETHUPUSDT@2024-02-27
+2024-03-11 nuevo METISUSDT      (episodio 0) ← terminados en los 21 días previos: ANTUSDT@2024-02-19, MULTIUSDT@2024-02-19, XMRUSDT@2024-02-19, PLAUSDT@2024-02-25, BNBDOWNUSDT@2024-02-27, BNBUPUSDT@2024-02-27, BTCDOWNUSDT@2024-02-27, BTCUPUSDT@2024-02-27, ETHDOWNUSDT@2024-02-27, ETHUPUSDT@2024-02-27
+2024-03-13 nuevo AEVOUSDT       (episodio 0) ← terminados en los 21 días previos: PLAUSDT@2024-02-25, BNBDOWNUSDT@2024-02-27, BNBUPUSDT@2024-02-27, BTCDOWNUSDT@2024-02-27, BTCUPUSDT@2024-02-27, ETHDOWNUSDT@2024-02-27, ETHUPUSDT@2024-02-27
+2024-03-16 nuevo BOMEUSDT       (episodio 0) ← terminados en los 21 días previos: PLAUSDT@2024-02-25, BNBDOWNUSDT@2024-02-27, BNBUPUSDT@2024-02-27, BTCDOWNUSDT@2024-02-27, BTCUPUSDT@2024-02-27, ETHDOWNUSDT@2024-02-27, ETHUPUSDT@2024-02-27
+2024-03-18 nuevo ETHFIUSDT      (episodio 0) ← terminados en los 21 días previos: BNBDOWNUSDT@2024-02-27, BNBUPUSDT@2024-02-27, BTCDOWNUSDT@2024-02-27, BTCUPUSDT@2024-02-27, ETHDOWNUSDT@2024-02-27, ETHUPUSDT@2024-02-27
+2024-04-02 nuevo ENAUSDT        (episodio 0) ← terminados en los 21 días previos: —
+2024-04-03 nuevo WUSDT          (episodio 0) ← terminados en los 21 días previos: DREPUSDT@2024-04-02, MOBUSDT@2024-04-02, PNTUSDT@2024-04-02
+2024-04-08 nuevo TNSRUSDT       (episodio 0) ← terminados en los 21 días previos: DREPUSDT@2024-04-02, MOBUSDT@2024-04-02, PNTUSDT@2024-04-02
+2024-04-09 nuevo SAGAUSDT       (episodio 0) ← terminados en los 21 días previos: DREPUSDT@2024-04-02, MOBUSDT@2024-04-02, PNTUSDT@2024-04-02
+2024-04-11 nuevo TAOUSDT        (episodio 0) ← terminados en los 21 días previos: DREPUSDT@2024-04-02, MOBUSDT@2024-04-02, PNTUSDT@2024-04-02
+2024-04-17 nuevo OMNIUSDT       (episodio 0) ← terminados en los 21 días previos: DREPUSDT@2024-04-02, MOBUSDT@2024-04-02, PNTUSDT@2024-04-02
+2024-04-30 nuevo REZUSDT        (episodio 0) ← terminados en los 21 días previos: —
+2024-05-13 nuevo BBUSDT         (episodio 0) ← terminados en los 21 días previos: —
+2024-05-16 nuevo NOTUSDT        (episodio 0) ← terminados en los 21 días previos: —
+2024-06-11 nuevo IOUSDT         (episodio 0) ← terminados en los 21 días previos: —
+2024-06-17 nuevo ZKUSDT         (episodio 0) ← terminados en los 21 días previos: OMGUSDT@2024-06-16, WAVESUSDT@2024-06-16, WNXMUSDT@2024-06-16, XEMUSDT@2024-06-16
+2024-06-20 nuevo LISTAUSDT      (episodio 0) ← terminados en los 21 días previos: OMGUSDT@2024-06-16, WAVESUSDT@2024-06-16, WNXMUSDT@2024-06-16, XEMUSDT@2024-06-16
+2024-06-20 nuevo ZROUSDT        (episodio 0) ← terminados en los 21 días previos: OMGUSDT@2024-06-16, WAVESUSDT@2024-06-16, WNXMUSDT@2024-06-16, XEMUSDT@2024-06-16
+2024-07-19 nuevo GUSDT          (episodio 0) ← terminados en los 21 días previos: AGIXUSDT@2024-06-30, OCEANUSDT@2024-06-30, GALUSDT@2024-07-14
+2024-07-20 nuevo BANANAUSDT     (episodio 0) ← terminados en los 21 días previos: AGIXUSDT@2024-06-30, OCEANUSDT@2024-06-30, GALUSDT@2024-07-14
+2024-07-26 nuevo RENDERUSDT     (episodio 0) ← terminados en los 21 días previos: GALUSDT@2024-07-14, BONDUSDT@2024-07-21, DOCKUSDT@2024-07-21, MDXUSDT@2024-07-21, POLSUSDT@2024-07-21, RNDRUSDT@2024-07-21
+2024-08-08 nuevo TONUSDT        (episodio 0) ← terminados en los 21 días previos: BONDUSDT@2024-07-21, DOCKUSDT@2024-07-21, MDXUSDT@2024-07-21, POLSUSDT@2024-07-21, RNDRUSDT@2024-07-21
+2024-08-26 nuevo DOGSUSDT       (episodio 0) ← terminados en los 21 días previos: CVPUSDT@2024-08-25, EPXUSDT@2024-08-25, FORUSDT@2024-08-25, LOOMUSDT@2024-08-25, REEFUSDT@2024-08-25, VGXUSDT@2024-08-25
+2024-08-28 nuevo EURIUSDT       (episodio 0) ← terminados en los 21 días previos: CVPUSDT@2024-08-25, EPXUSDT@2024-08-25, FORUSDT@2024-08-25, LOOMUSDT@2024-08-25, REEFUSDT@2024-08-25, VGXUSDT@2024-08-25, FRONTUSDT@2024-08-26
+2024-08-30 nuevo SLFUSDT        (episodio 0) ← terminados en los 21 días previos: CVPUSDT@2024-08-25, EPXUSDT@2024-08-25, FORUSDT@2024-08-25, LOOMUSDT@2024-08-25, REEFUSDT@2024-08-25, VGXUSDT@2024-08-25, FRONTUSDT@2024-08-26
+2024-09-13 nuevo POLUSDT        (episodio 0) ← terminados en los 21 días previos: CVPUSDT@2024-08-25, EPXUSDT@2024-08-25, FORUSDT@2024-08-25, LOOMUSDT@2024-08-25, REEFUSDT@2024-08-25, VGXUSDT@2024-08-25, FRONTUSDT@2024-08-26, MATICUSDT@2024-09-09
+2024-09-16 nuevo 1MBABYDOGEUSDT (episodio 0) ← terminados en los 21 días previos: FRONTUSDT@2024-08-26, MATICUSDT@2024-09-09
+2024-09-16 nuevo NEIROUSDT      (episodio 0) ← terminados en los 21 días previos: FRONTUSDT@2024-08-26, MATICUSDT@2024-09-09
+2024-09-16 nuevo TURBOUSDT      (episodio 0) ← terminados en los 21 días previos: FRONTUSDT@2024-08-26, MATICUSDT@2024-09-09
+2024-09-20 nuevo CATIUSDT       (episodio 0) ← terminados en los 21 días previos: MATICUSDT@2024-09-09
+2024-09-26 nuevo HMSTRUSDT      (episodio 0) ← terminados en los 21 días previos: MATICUSDT@2024-09-09
+2024-10-01 nuevo EIGENUSDT      (episodio 0) ← terminados en los 21 días previos: —
+2024-10-11 nuevo SCRUSDT        (episodio 0) ← terminados en los 21 días previos: —
+2024-10-17 nuevo BNSOLUSDT      (episodio 0) ← terminados en los 21 días previos: ORNUSDT@2024-10-14
+2024-10-18 nuevo LUMIAUSDT      (episodio 0) ← terminados en los 21 días previos: ORNUSDT@2024-10-14
+2024-10-31 nuevo KAIAUSDT       (episodio 0) ← terminados en los 21 días previos: ORNUSDT@2024-10-14, KLAYUSDT@2024-10-27
+2024-11-06 nuevo CETUSUSDT      (episodio 0) ← terminados en los 21 días previos: KLAYUSDT@2024-10-27, KP3RUSDT@2024-11-05, OOKIUSDT@2024-11-05, UNFIUSDT@2024-11-05
+2024-11-06 nuevo COWUSDT        (episodio 0) ← terminados en los 21 días previos: KLAYUSDT@2024-10-27, KP3RUSDT@2024-11-05, OOKIUSDT@2024-11-05, UNFIUSDT@2024-11-05
+2024-11-11 nuevo ACTUSDT        (episodio 0) ← terminados en los 21 días previos: KLAYUSDT@2024-10-27, KP3RUSDT@2024-11-05, OOKIUSDT@2024-11-05, UNFIUSDT@2024-11-05
+2024-11-11 nuevo PNUTUSDT       (episodio 0) ← terminados en los 21 días previos: KLAYUSDT@2024-10-27, KP3RUSDT@2024-11-05, OOKIUSDT@2024-11-05, UNFIUSDT@2024-11-05
+2024-11-19 nuevo USUALUSDT      (episodio 0) ← terminados en los 21 días previos: KP3RUSDT@2024-11-05, OOKIUSDT@2024-11-05, UNFIUSDT@2024-11-05
+2024-11-27 nuevo THEUSDT        (episodio 0) ← terminados en los 21 días previos: —
+2024-12-06 nuevo ACXUSDT        (episodio 0) ← terminados en los 21 días previos: GFTUSDT@2024-12-02
+2024-12-06 nuevo ORCAUSDT       (episodio 0) ← terminados en los 21 días previos: GFTUSDT@2024-12-02
+2024-12-09 nuevo MOVEUSDT       (episodio 0) ← terminados en los 21 días previos: GFTUSDT@2024-12-02
+2024-12-10 nuevo MEUSDT         (episodio 0) ← terminados en los 21 días previos: GFTUSDT@2024-12-02, IRISUSDT@2024-12-09, KEYUSDT@2024-12-09, OAXUSDT@2024-12-09, RENUSDT@2024-12-09
+2024-12-13 nuevo VELODROMEUSDT  (episodio 0) ← terminados en los 21 días previos: GFTUSDT@2024-12-02, IRISUSDT@2024-12-09, KEYUSDT@2024-12-09, OAXUSDT@2024-12-09, RENUSDT@2024-12-09
+2024-12-16 nuevo VANAUSDT       (episodio 0) ← terminados en los 21 días previos: GFTUSDT@2024-12-02, IRISUSDT@2024-12-09, KEYUSDT@2024-12-09, OAXUSDT@2024-12-09, RENUSDT@2024-12-09
+2024-12-17 nuevo 1000CATUSDT    (episodio 0) ← terminados en los 21 días previos: GFTUSDT@2024-12-02, IRISUSDT@2024-12-09, KEYUSDT@2024-12-09, OAXUSDT@2024-12-09, RENUSDT@2024-12-09
+2024-12-17 nuevo PENGUUSDT      (episodio 0) ← terminados en los 21 días previos: GFTUSDT@2024-12-02, IRISUSDT@2024-12-09, KEYUSDT@2024-12-09, OAXUSDT@2024-12-09, RENUSDT@2024-12-09
+2025-01-03 nuevo BIOUSDT        (episodio 0) ← terminados en los 21 días previos: AKROUSDT@2024-12-24, BLZUSDT@2024-12-24, WRXUSDT@2024-12-24
+2025-01-09 nuevo DUSDT          (episodio 0) ← terminados en los 21 días previos: AKROUSDT@2024-12-24, BLZUSDT@2024-12-24, WRXUSDT@2024-12-24, DARUSDT@2025-01-05
+2025-01-10 nuevo AIXBTUSDT      (episodio 0) ← terminados en los 21 días previos: AKROUSDT@2024-12-24, BLZUSDT@2024-12-24, WRXUSDT@2024-12-24, DARUSDT@2025-01-05
+2025-01-10 nuevo CGPTUSDT       (episodio 0) ← terminados en los 21 días previos: AKROUSDT@2024-12-24, BLZUSDT@2024-12-24, WRXUSDT@2024-12-24, DARUSDT@2025-01-05
+2025-01-10 nuevo COOKIEUSDT     (episodio 0) ← terminados en los 21 días previos: AKROUSDT@2024-12-24, BLZUSDT@2024-12-24, WRXUSDT@2024-12-24, DARUSDT@2025-01-05
+2025-01-16 nuevo SUSDT          (episodio 0) ← terminados en los 21 días previos: DARUSDT@2025-01-05, FTMUSDT@2025-01-12
+2025-01-17 nuevo SOLVUSDT       (episodio 0) ← terminados en los 21 días previos: DARUSDT@2025-01-05, FTMUSDT@2025-01-12
+2025-01-19 nuevo TRUMPUSDT      (episodio 0) ← terminados en los 21 días previos: DARUSDT@2025-01-05, FTMUSDT@2025-01-12
+2025-01-23 nuevo ANIMEUSDT      (episodio 0) ← terminados en los 21 días previos: DARUSDT@2025-01-05, FTMUSDT@2025-01-12
+2025-02-06 nuevo BERAUSDT       (episodio 0) ← terminados en los 21 días previos: —
+2025-02-09 nuevo 1000CHEEMSUSDT (episodio 0) ← terminados en los 21 días previos: —
+2025-02-09 nuevo TSTUSDT        (episodio 0) ← terminados en los 21 días previos: —
+2025-02-11 nuevo LAYERUSDT      (episodio 0) ← terminados en los 21 días previos: LITUSDT@2025-02-09
+2025-02-13 nuevo HEIUSDT        (episodio 0) ← terminados en los 21 días previos: LITUSDT@2025-02-09
+2025-02-20 nuevo KAITOUSDT      (episodio 0) ← terminados en los 21 días previos: LITUSDT@2025-02-09
+2025-02-27 nuevo SHELLUSDT      (episodio 0) ← terminados en los 21 días previos: LITUSDT@2025-02-09, AMBUSDT@2025-02-23, CLVUSDT@2025-02-23, STMXUSDT@2025-02-23, VITEUSDT@2025-02-23
+2025-02-28 nuevo REDUSDT        (episodio 0) ← terminados en los 21 días previos: LITUSDT@2025-02-09, AMBUSDT@2025-02-23, CLVUSDT@2025-02-23, STMXUSDT@2025-02-23, VITEUSDT@2025-02-23
+2025-03-04 nuevo GPSUSDT        (episodio 0) ← terminados en los 21 días previos: AMBUSDT@2025-02-23, CLVUSDT@2025-02-23, STMXUSDT@2025-02-23, VITEUSDT@2025-02-23
+2025-03-13 nuevo EPICUSDT       (episodio 0) ← terminados en los 21 días previos: AMBUSDT@2025-02-23, CLVUSDT@2025-02-23, STMXUSDT@2025-02-23, VITEUSDT@2025-02-23, ERNUSDT@2025-03-09
+2025-03-18 nuevo BMTUSDT        (episodio 0) ← terminados en los 21 días previos: ERNUSDT@2025-03-09, BNXUSDT@2025-03-17
+2025-03-19 nuevo FORMUSDT       (episodio 0) ← terminados en los 21 días previos: ERNUSDT@2025-03-09, BNXUSDT@2025-03-17
+2025-03-19 nuevo XUSDUSDT       (episodio 0) ← terminados en los 21 días previos: ERNUSDT@2025-03-09, BNXUSDT@2025-03-17
+2025-03-24 nuevo NILUSDT        (episodio 0) ← terminados en los 21 días previos: ERNUSDT@2025-03-09, BNXUSDT@2025-03-17
+2025-03-25 nuevo PARTIUSDT      (episodio 0) ← terminados en los 21 días previos: ERNUSDT@2025-03-09, BNXUSDT@2025-03-17
+2025-03-27 nuevo BANANAS31USDT  (episodio 0) ← terminados en los 21 días previos: ERNUSDT@2025-03-09, BNXUSDT@2025-03-17
+2025-03-27 nuevo BROCCOLI714USDT (episodio 0) ← terminados en los 21 días previos: ERNUSDT@2025-03-09, BNXUSDT@2025-03-17
+2025-03-27 nuevo MUBARAKUSDT    (episodio 0) ← terminados en los 21 días previos: ERNUSDT@2025-03-09, BNXUSDT@2025-03-17
+2025-03-27 nuevo TUTUSDT        (episodio 0) ← terminados en los 21 días previos: ERNUSDT@2025-03-09, BNXUSDT@2025-03-17
+2025-03-31 nuevo GUNUSDT        (episodio 0) ← terminados en los 21 días previos: BNXUSDT@2025-03-17, AERGOUSDT@2025-03-27, ASTUSDT@2025-03-27, BURGERUSDT@2025-03-27, COMBOUSDT@2025-03-27, LINAUSDT@2025-03-27
+2025-04-10 nuevo BABYUSDT       (episodio 0) ← terminados en los 21 días previos: AERGOUSDT@2025-03-27, ASTUSDT@2025-03-27, BURGERUSDT@2025-03-27, COMBOUSDT@2025-03-27, LINAUSDT@2025-03-27
+2025-04-11 nuevo BIGTIMEUSDT    (episodio 0) ← terminados en los 21 días previos: AERGOUSDT@2025-03-27, ASTUSDT@2025-03-27, BURGERUSDT@2025-03-27, COMBOUSDT@2025-03-27, LINAUSDT@2025-03-27
+2025-04-11 nuevo ONDOUSDT       (episodio 0) ← terminados en los 21 días previos: AERGOUSDT@2025-03-27, ASTUSDT@2025-03-27, BURGERUSDT@2025-03-27, COMBOUSDT@2025-03-27, LINAUSDT@2025-03-27
+2025-04-11 nuevo VIRTUALUSDT    (episodio 0) ← terminados en los 21 días previos: AERGOUSDT@2025-03-27, ASTUSDT@2025-03-27, BURGERUSDT@2025-03-27, COMBOUSDT@2025-03-27, LINAUSDT@2025-03-27
+2025-04-14 nuevo KERNELUSDT     (episodio 0) ← terminados en los 21 días previos: AERGOUSDT@2025-03-27, ASTUSDT@2025-03-27, BURGERUSDT@2025-03-27, COMBOUSDT@2025-03-27, LINAUSDT@2025-03-27
+2025-04-15 nuevo WCTUSDT        (episodio 0) ← terminados en los 21 días previos: AERGOUSDT@2025-03-27, ASTUSDT@2025-03-27, BURGERUSDT@2025-03-27, COMBOUSDT@2025-03-27, LINAUSDT@2025-03-27
+2025-04-22 nuevo HYPERUSDT      (episodio 0) ← terminados en los 21 días previos: BADGERUSDT@2025-04-15, BALUSDT@2025-04-15, BETAUSDT@2025-04-15, CREAMUSDT@2025-04-15, CTXCUSDT@2025-04-15, ELFUSDT@2025-04-15, FIROUSDT@2025-04-15, HARDUSDT@2025-04-15, NULSUSDT@2025-04-15, PROSUSDT@2025-04-15, SNTUSDT@2025-04-15, TROYUSDT@2025-04-15, UFTUSDT@2025-04-15, VIDTUSDT@2025-04-15
+2025-04-24 nuevo INITUSDT       (episodio 0) ← terminados en los 21 días previos: BADGERUSDT@2025-04-15, BALUSDT@2025-04-15, BETAUSDT@2025-04-15, CREAMUSDT@2025-04-15, CTXCUSDT@2025-04-15, ELFUSDT@2025-04-15, FIROUSDT@2025-04-15, HARDUSDT@2025-04-15, NULSUSDT@2025-04-15, PROSUSDT@2025-04-15, SNTUSDT@2025-04-15, TROYUSDT@2025-04-15, UFTUSDT@2025-04-15, VIDTUSDT@2025-04-15
+2025-04-28 nuevo SIGNUSDT       (episodio 0) ← terminados en los 21 días previos: BADGERUSDT@2025-04-15, BALUSDT@2025-04-15, BETAUSDT@2025-04-15, CREAMUSDT@2025-04-15, CTXCUSDT@2025-04-15, ELFUSDT@2025-04-15, FIROUSDT@2025-04-15, HARDUSDT@2025-04-15, NULSUSDT@2025-04-15, PROSUSDT@2025-04-15, SNTUSDT@2025-04-15, TROYUSDT@2025-04-15, UFTUSDT@2025-04-15, VIDTUSDT@2025-04-15
+2025-05-02 nuevo STOUSDT        (episodio 0) ← terminados en los 21 días previos: BADGERUSDT@2025-04-15, BALUSDT@2025-04-15, BETAUSDT@2025-04-15, CREAMUSDT@2025-04-15, CTXCUSDT@2025-04-15, ELFUSDT@2025-04-15, FIROUSDT@2025-04-15, HARDUSDT@2025-04-15, NULSUSDT@2025-04-15, PROSUSDT@2025-04-15, SNTUSDT@2025-04-15, TROYUSDT@2025-04-15, UFTUSDT@2025-04-15, VIDTUSDT@2025-04-15, ALPACAUSDT@2025-05-01, PDAUSDT@2025-05-01, VIBUSDT@2025-05-01, WINGUSDT@2025-05-01
+2025-05-06 nuevo KMNOUSDT       (episodio 0) ← terminados en los 21 días previos: BADGERUSDT@2025-04-15, BALUSDT@2025-04-15, BETAUSDT@2025-04-15, CREAMUSDT@2025-04-15, CTXCUSDT@2025-04-15, ELFUSDT@2025-04-15, FIROUSDT@2025-04-15, HARDUSDT@2025-04-15, NULSUSDT@2025-04-15, PROSUSDT@2025-04-15, SNTUSDT@2025-04-15, TROYUSDT@2025-04-15, UFTUSDT@2025-04-15, VIDTUSDT@2025-04-15, ALPACAUSDT@2025-05-01, PDAUSDT@2025-05-01, VIBUSDT@2025-05-01, WINGUSDT@2025-05-01
+2025-05-06 nuevo SYRUPUSDT      (episodio 0) ← terminados en los 21 días previos: BADGERUSDT@2025-04-15, BALUSDT@2025-04-15, BETAUSDT@2025-04-15, CREAMUSDT@2025-04-15, CTXCUSDT@2025-04-15, ELFUSDT@2025-04-15, FIROUSDT@2025-04-15, HARDUSDT@2025-04-15, NULSUSDT@2025-04-15, PROSUSDT@2025-04-15, SNTUSDT@2025-04-15, TROYUSDT@2025-04-15, UFTUSDT@2025-04-15, VIDTUSDT@2025-04-15, ALPACAUSDT@2025-05-01, PDAUSDT@2025-05-01, VIBUSDT@2025-05-01, WINGUSDT@2025-05-01
+2025-05-08 nuevo SXTUSDT        (episodio 0) ← terminados en los 21 días previos: ALPACAUSDT@2025-05-01, PDAUSDT@2025-05-01, VIBUSDT@2025-05-01, WINGUSDT@2025-05-01
+2025-05-15 nuevo NXPCUSDT       (episodio 0) ← terminados en los 21 días previos: ALPACAUSDT@2025-05-01, PDAUSDT@2025-05-01, VIBUSDT@2025-05-01, WINGUSDT@2025-05-01
+2025-05-21 nuevo AWEUSDT        (episodio 0) ← terminados en los 21 días previos: ALPACAUSDT@2025-05-01, PDAUSDT@2025-05-01, VIBUSDT@2025-05-01, WINGUSDT@2025-05-01, STPTUSDT@2025-05-18
+2025-05-21 nuevo HAEDALUSDT     (episodio 0) ← terminados en los 21 días previos: ALPACAUSDT@2025-05-01, PDAUSDT@2025-05-01, VIBUSDT@2025-05-01, WINGUSDT@2025-05-01, STPTUSDT@2025-05-18
+2025-05-22 nuevo USD1USDT       (episodio 0) ← terminados en los 21 días previos: ALPACAUSDT@2025-05-01, PDAUSDT@2025-05-01, VIBUSDT@2025-05-01, WINGUSDT@2025-05-01, STPTUSDT@2025-05-18
+2025-05-26 nuevo HUMAUSDT       (episodio 0) ← terminados en los 21 días previos: STPTUSDT@2025-05-18, EOSUSDT@2025-05-25
+2025-05-28 nuevo AUSDT          (episodio 0) ← terminados en los 21 días previos: STPTUSDT@2025-05-18, EOSUSDT@2025-05-25
+2025-05-28 nuevo SOPHUSDT       (episodio 0) ← terminados en los 21 días previos: STPTUSDT@2025-05-18, EOSUSDT@2025-05-25
+2025-06-11 nuevo RESOLVUSDT     (episodio 0) ← terminados en los 21 días previos: EOSUSDT@2025-05-25
+2025-06-12 nuevo HOMEUSDT       (episodio 0) ← terminados en los 21 días previos: EOSUSDT@2025-05-25
+2025-06-17 nuevo SPKUSDT        (episodio 0) ← terminados en los 21 días previos: —
+2025-06-24 nuevo NEWTUSDT       (episodio 0) ← terminados en los 21 días previos: —
+2025-06-26 nuevo SAHARAUSDT     (episodio 0) ← terminados en los 21 días previos: —
+2025-07-09 nuevo LAUSDT         (episodio 0) ← terminados en los 21 días previos: ALPHAUSDT@2025-07-03, BSWUSDT@2025-07-03, KMDUSDT@2025-07-03, LEVERUSDT@2025-07-03, LTOUSDT@2025-07-03
+2025-07-17 nuevo ERAUSDT        (episodio 0) ← terminados en los 21 días previos: ALPHAUSDT@2025-07-03, BSWUSDT@2025-07-03, KMDUSDT@2025-07-03, LEVERUSDT@2025-07-03, LTOUSDT@2025-07-03
+2025-07-18 nuevo CUSDT          (episodio 0) ← terminados en los 21 días previos: ALPHAUSDT@2025-07-03, BSWUSDT@2025-07-03, KMDUSDT@2025-07-03, LEVERUSDT@2025-07-03, LTOUSDT@2025-07-03
+2025-07-29 nuevo TREEUSDT       (episodio 0) ← terminados en los 21 días previos: LOKAUSDT@2025-07-27
+2025-07-30 nuevo A2ZUSDT        (episodio 0) ← terminados en los 21 días previos: LOKAUSDT@2025-07-27
+2025-08-05 nuevo PROVEUSDT      (episodio 0) ← terminados en los 21 días previos: LOKAUSDT@2025-07-27
+2025-08-05 nuevo TOWNSUSDT      (episodio 0) ← terminados en los 21 días previos: LOKAUSDT@2025-07-27
+2025-08-13 nuevo BFUSDUSDT      (episodio 0) ← terminados en los 21 días previos: LOKAUSDT@2025-07-27
+2025-08-18 nuevo PLUMEUSDT      (episodio 0) ← terminados en los 21 días previos: —
+2025-08-27 nuevo DOLOUSDT       (episodio 0) ← terminados en los 21 días previos: —
+2025-08-29 nuevo MITOUSDT       (episodio 0) ← terminados en los 21 días previos: —
+2025-09-01 nuevo WLFIUSDT       (episodio 0) ← terminados en los 21 días previos: —
+2025-09-02 nuevo SOMIUSDT       (episodio 0) ← terminados en los 21 días previos: —
+2025-09-08 nuevo OPENUSDT       (episodio 0) ← terminados en los 21 días previos: —
+2025-09-09 nuevo USDEUSDT       (episodio 0) ← terminados en los 21 días previos: —
+2025-09-10 nuevo LINEAUSDT      (episodio 0) ← terminados en los 21 días previos: —
+2025-09-11 nuevo HOLOUSDT       (episodio 0) ← terminados en los 21 días previos: —
+2025-09-11 nuevo PUMPUSDT       (episodio 0) ← terminados en los 21 días previos: —
+2025-09-15 nuevo AVNTUSDT       (episodio 0) ← terminados en los 21 días previos: MKRUSDT@2025-09-14
+2025-09-15 nuevo ZKCUSDT        (episodio 0) ← terminados en los 21 días previos: MKRUSDT@2025-09-14
+2025-09-17 nuevo SKYUSDT        (episodio 0) ← terminados en los 21 días previos: MKRUSDT@2025-09-14, BAKEUSDT@2025-09-16, HIFIUSDT@2025-09-16, SLFUSDT@2025-09-16
+2025-09-18 nuevo BARDUSDT       (episodio 0) ← terminados en los 21 días previos: MKRUSDT@2025-09-14, BAKEUSDT@2025-09-16, HIFIUSDT@2025-09-16, SLFUSDT@2025-09-16
+2025-09-22 nuevo 0GUSDT         (episodio 0) ← terminados en los 21 días previos: MKRUSDT@2025-09-14, BAKEUSDT@2025-09-16, HIFIUSDT@2025-09-16, SLFUSDT@2025-09-16
+2025-09-23 nuevo HEMIUSDT       (episodio 0) ← terminados en los 21 días previos: MKRUSDT@2025-09-14, BAKEUSDT@2025-09-16, HIFIUSDT@2025-09-16, SLFUSDT@2025-09-16
+2025-09-25 nuevo XPLUSDT        (episodio 0) ← terminados en los 21 días previos: MKRUSDT@2025-09-14, BAKEUSDT@2025-09-16, HIFIUSDT@2025-09-16, SLFUSDT@2025-09-16
+2025-09-26 nuevo MIRAUSDT       (episodio 0) ← terminados en los 21 días previos: MKRUSDT@2025-09-14, BAKEUSDT@2025-09-16, HIFIUSDT@2025-09-16, SLFUSDT@2025-09-16
+2025-09-29 nuevo FFUSDT         (episodio 0) ← terminados en los 21 días previos: MKRUSDT@2025-09-14, BAKEUSDT@2025-09-16, HIFIUSDT@2025-09-16, SLFUSDT@2025-09-16, OMNIUSDT@2025-09-28
+2025-09-30 nuevo EDENUSDT       (episodio 0) ← terminados en los 21 días previos: MKRUSDT@2025-09-14, BAKEUSDT@2025-09-16, HIFIUSDT@2025-09-16, SLFUSDT@2025-09-16, OMNIUSDT@2025-09-28
+2025-10-01 nuevo NOMUSDT        (episodio 0) ← terminados en los 21 días previos: MKRUSDT@2025-09-14, BAKEUSDT@2025-09-16, HIFIUSDT@2025-09-16, SLFUSDT@2025-09-16, OMNIUSDT@2025-09-28
+2025-10-02 nuevo 2ZUSDT         (episodio 0) ← terminados en los 21 días previos: MKRUSDT@2025-09-14, BAKEUSDT@2025-09-16, HIFIUSDT@2025-09-16, SLFUSDT@2025-09-16, OMNIUSDT@2025-09-28
+2025-10-03 nuevo MORPHOUSDT     (episodio 0) ← terminados en los 21 días previos: MKRUSDT@2025-09-14, BAKEUSDT@2025-09-16, HIFIUSDT@2025-09-16, SLFUSDT@2025-09-16, OMNIUSDT@2025-09-28
+2025-10-06 nuevo ASTERUSDT      (episodio 0) ← terminados en los 21 días previos: BAKEUSDT@2025-09-16, HIFIUSDT@2025-09-16, SLFUSDT@2025-09-16, OMNIUSDT@2025-09-28
+2025-10-10 nuevo WALUSDT        (episodio 0) ← terminados en los 21 días previos: OMNIUSDT@2025-09-28
+2025-10-13 nuevo EULUSDT        (episodio 0) ← terminados en los 21 días previos: OMNIUSDT@2025-09-28
+2025-10-14 nuevo ENSOUSDT       (episodio 0) ← terminados en los 21 días previos: OMNIUSDT@2025-09-28
+2025-10-15 nuevo YBUSDT         (episodio 0) ← terminados en los 21 días previos: OMNIUSDT@2025-09-28
+2025-10-17 nuevo ZBTUSDT        (episodio 0) ← terminados en los 21 días previos: OMNIUSDT@2025-09-28
+2025-10-22 nuevo TURTLEUSDT     (episodio 0) ← terminados en los 21 días previos: —
+2025-10-25 nuevo FUSDT          (episodio 0) ← terminados en los 21 días previos: —
+2025-10-25 nuevo GIGGLEUSDT     (episodio 0) ← terminados en los 21 días previos: —
+2025-11-03 nuevo KITEUSDT       (episodio 0) ← terminados en los 21 días previos: —
+2025-11-04 nuevo MMTUSDT        (episodio 0) ← terminados en los 21 días previos: —
+2025-11-06 nuevo SAPIENUSDT     (episodio 0) ← terminados en los 21 días previos: —
+2025-11-11 nuevo ALLOUSDT       (episodio 0) ← terminados en los 21 días previos: —
+2025-11-13 nuevo BANKUSDT       (episodio 0) ← terminados en los 21 días previos: FLMUSDT@2025-11-11, KDAUSDT@2025-11-11, PERPUSDT@2025-11-11
+2025-11-13 nuevo METUSDT        (episodio 0) ← terminados en los 21 días previos: FLMUSDT@2025-11-11, KDAUSDT@2025-11-11, PERPUSDT@2025-11-11
+2025-11-27 nuevo ATUSDT         (episodio 0) ← terminados en los 21 días previos: FLMUSDT@2025-11-11, KDAUSDT@2025-11-11, PERPUSDT@2025-11-11
+2025-12-24 nuevo KGSTUSDT       (episodio 0) ← terminados en los 21 días previos: FISUSDT@2025-12-16, REIUSDT@2025-12-16, VOXELUSDT@2025-12-16
+2026-01-06 nuevo BREVUSDT       (episodio 0) ← terminados en los 21 días previos: FISUSDT@2025-12-16, REIUSDT@2025-12-16, VOXELUSDT@2025-12-16
+2026-01-07 nuevo ZKPUSDT        (episodio 0) ← terminados en los 21 días previos: —
+2026-01-07 nuevo 币安人生USDT       (episodio 0) ← terminados en los 21 días previos: —
+2026-01-13 nuevo UUSDT          (episodio 0) ← terminados en los 21 días previos: FXSUSDT@2026-01-12
+2026-01-15 nuevo FOGOUSDT       (episodio 0) ← terminados en los 21 días previos: FXSUSDT@2026-01-12
+2026-01-15 nuevo FRAXUSDT       (episodio 0) ← terminados en los 21 días previos: FXSUSDT@2026-01-12
+2026-01-22 nuevo RLUSDUSDT      (episodio 0) ← terminados en los 21 días previos: FXSUSDT@2026-01-12
+2026-01-22 nuevo SENTUSDT       (episodio 0) ← terminados en los 21 días previos: FXSUSDT@2026-01-12
+2026-02-02 nuevo ZAMAUSDT       (episodio 0) ← terminados en los 21 días previos: FXSUSDT@2026-01-12
+2026-02-12 nuevo ESPUSDT        (episodio 0) ← terminados en los 21 días previos: —
+2026-03-04 nuevo MANTRAUSDT     (episodio 0) ← terminados en los 21 días previos: ACAUSDT@2026-02-12, CHESSUSDT@2026-02-12, DATAUSDT@2026-02-12, DFUSDT@2026-02-12, GHSTUSDT@2026-02-12, NKNUSDT@2026-02-12, OMUSDT@2026-03-01
+2026-03-04 nuevo ROBOUSDT       (episodio 0) ← terminados en los 21 días previos: ACAUSDT@2026-02-12, CHESSUSDT@2026-02-12, DATAUSDT@2026-02-12, DFUSDT@2026-02-12, GHSTUSDT@2026-02-12, NKNUSDT@2026-02-12, OMUSDT@2026-03-01
+2026-03-05 nuevo OPNUSDT        (episodio 0) ← terminados en los 21 días previos: ACAUSDT@2026-02-12, CHESSUSDT@2026-02-12, DATAUSDT@2026-02-12, DFUSDT@2026-02-12, GHSTUSDT@2026-02-12, NKNUSDT@2026-02-12, OMUSDT@2026-03-01
+2026-03-11 nuevo NIGHTUSDT      (episodio 0) ← terminados en los 21 días previos: OMUSDT@2026-03-01
+2026-03-16 nuevo CFGUSDT        (episodio 0) ← terminados en los 21 días previos: OMUSDT@2026-03-01
+2026-03-18 nuevo KATUSDT        (episodio 0) ← terminados en los 21 días previos: OMUSDT@2026-03-01
+2026-03-26 nuevo XAUTUSDT       (episodio 0) ← terminados en los 21 días previos: —
+2026-04-09 nuevo USDSUSDT       (episodio 1) ← terminados en los 21 días previos: A2ZUSDT@2026-03-31, FORTHUSDT@2026-03-31, HOOKUSDT@2026-03-31, IDEXUSDT@2026-03-31, LRCUSDT@2026-03-31, NTRNUSDT@2026-03-31, RDNTUSDT@2026-03-31, SXPUSDT@2026-03-31
+2026-04-21 nuevo CHIPUSDT       (episodio 0) ← terminados en los 21 días previos: A2ZUSDT@2026-03-31, FORTHUSDT@2026-03-31, HOOKUSDT@2026-03-31, IDEXUSDT@2026-03-31, LRCUSDT@2026-03-31, NTRNUSDT@2026-03-31, RDNTUSDT@2026-03-31, SXPUSDT@2026-03-31, UTKUSDT@2026-04-13
+2026-04-30 nuevo MEGAUSDT       (episodio 0) ← terminados en los 21 días previos: UTKUSDT@2026-04-13, BIFIUSDT@2026-04-22, FIOUSDT@2026-04-22, FUNUSDT@2026-04-22, MDTUSDT@2026-04-22, OXTUSDT@2026-04-22, WANUSDT@2026-04-22, DEGOUSDT@2026-04-27, DENTUSDT@2026-04-27, TRUUSDT@2026-04-27
+2026-05-14 nuevo AIGENSYNUSDT   (episodio 0) ← terminados en los 21 días previos: DEGOUSDT@2026-04-27, DENTUSDT@2026-04-27, TRUUSDT@2026-04-27
+2026-05-22 nuevo GENIUSUSDT     (episodio 0) ← terminados en los 21 días previos: —
+2026-05-22 nuevo OPGUSDT        (episodio 0) ← terminados en los 21 días previos: —

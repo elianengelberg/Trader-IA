@@ -1,0 +1,40 @@
+{
+ "park": true,
+ "carga_inicio": [
+  0.26513671875,
+  0.2099609375,
+  0.09326171875
+ ],
+ "fondo": 0,
+ "manual": 22,
+ "flushes": [
+  {
+   "pendientes": 31,
+   "seg": 0.053,
+   "ok": true
+  },
+  {
+   "pendientes": 0,
+   "seg": 0.0,
+   "ok": true
+  },
+  {
+   "pendientes": 0,
+   "seg": 0.0,
+   "ok": true
+  }
+ ],
+ "errores_escritura": [],
+ "pruebas": {
+  "test_partial_fills_and_fees_rebuild_identically_however_often": {
+   "resultado": "passed",
+   "seg": 0.24
+  }
+ },
+ "carga_fin": [
+  0.26513671875,
+  0.2099609375,
+  0.09326171875
+ ],
+ "exit": 0
+}

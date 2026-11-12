@@ -1,0 +1,9 @@
+E           AssertionError: assert 'position_unverified' not in {'position_unverified': 'the venue holds 2.5e-07 BTC-USD this session is not tracking'}
+E            +  where {'position_unverified': 'the venue holds 2.5e-07 BTC-USD this session is not tracking'} = <tia.runtime.live.LiveRuntime object at 0x7f20633758d0>.entry_blocks
+E           AssertionError: flat at the deadline: finished
+E           assert <LiveState.HALT_NEW_ORDERS: 'halt_new_orders'> in {<LiveState.STOPPED: 'stopped'>, <LiveState.STOPPING: 'stopping'>}
+E            +  where <LiveState.HALT_NEW_ORDERS: 'halt_new_orders'> = LiveStateMachine(clock=<tia.core.clock.SimulatedClock object at 0x7f2063627610>, state=<LiveState.HALT_NEW_ORDERS: 'ha...>, to_state=<LiveState.HALT_NEW_ORDERS: 'halt_new_orders'>, reason='untracked position at the venue', actor='system')]).state
+E            +    where LiveStateMachine(clock=<tia.core.clock.SimulatedClock object at 0x7f2063627610>, state=<LiveState.HALT_NEW_ORDERS: 'ha...>, to_state=<LiveState.HALT_NEW_ORDERS: 'halt_new_orders'>, reason='untracked position at the venue', actor='system')]) = <tia.runtime.live.LiveRuntime object at 0x7f20633a7390>.machine
+PASSED tests/integration/test_dust_is_not_a_position.py::test_an_untracked_holding_of_a_lot_or_more_still_blocks_and_halts
+FAILED tests/integration/test_dust_is_not_a_position.py::test_a_sub_lot_remainder_neither_blocks_nor_halts_and_an_entry_still_happens
+FAILED tests/integration/test_dust_is_not_a_position.py::test_a_deadline_finds_a_session_with_only_dust_flat

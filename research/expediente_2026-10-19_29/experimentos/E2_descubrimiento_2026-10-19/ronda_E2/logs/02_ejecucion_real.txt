@@ -1,0 +1,26 @@
+VALIDEZ: {"problemas": [], "entrenamiento_sin_futuro": true, "filas_de_entrenamiento_comprobadas": 44846, "invariancia_frente_al_futuro": [{"corte": "2021-10-04", "variables_A_B_hasta_el_corte": true, "atencion_C_hasta_el_corte": true, "pronosticos_A": true, "exposiciones_B": true, "pronosticos_C": true}, {"corte": "2022-04-10", "variables_A_B_hasta_el_corte": true, "atencion_C_hasta_el_corte": true, "pronosticos_A": true, "exposiciones_B": true, "pronosticos_C": true}, {"corte": "2022-11-22", "variables_A_B_hasta_el_corte": true, "atencion_C_hasta_el_corte": true, "pronosticos_A": true, "exposiciones_B": true, "pronosticos_C": true}, {"corte": "2024-05-21", "variables_A_B_hasta_el_corte": true, "atencion_C_hasta_el_corte": true, "pronosticos_A": true, "exposiciones_B": true, "pronosticos_C": true}, {"corte": "2025-02-20", "variables_A_B_hasta_el_corte": true, "atencion_C_hasta_el_corte": true, "pronosticos_A": true, "exposiciones_B": true, "pronosticos_C": true}], "todo_ok": true}
+{
+ "clasificacion": {
+  "E2-A": "INSUFICIENTE",
+  "E2-B": "INSUFICIENTE (estimación puntual negativa)",
+  "E2-C": "EN CONTRA (sin información incremental detectable)"
+ },
+ "holm": {
+  "E2-B": {
+   "p": 0.4789,
+   "umbral": 0.016666666666666666,
+   "rechaza": false
+  },
+  "E2-C": {
+   "p": 0.9178529285868837,
+   "umbral": 0.025,
+   "rechaza": false
+  },
+  "E2-A": {
+   "p": 1.0,
+   "umbral": 0.05,
+   "rechaza": false
+  }
+ }
+}
+salida: 0

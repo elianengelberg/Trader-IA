@@ -1,0 +1,19 @@
+CADENA DE PARCHES DE LA MISIÓN DE DIRECCIÓN TÉCNICA (2026-10-26)
+Base: commit 72ffae5d2698440c8f1afaff12e07bd8adde66fb + parches/base_01_15 + parches/ciclo_TI (idénticos byte a byte a la entrega del 2026-10-25) = árbol T22 87af7a4504aa821b1d627be4cee178ec7be42497
+Cada árbol se verificó en un clon nuevo (evidencia/arbol_candidato/) y lo verifica reproducir_DT.sh. La CI local corrió sobre T25.
+
+== 23_DT_una_sola_sesion_viva_por_cuenta_entre_procesos.patch
+   sha256  f8bc525ae9495f5f406577fc2748a857faba060dc38c197d3d421642804017db
+   árbol   87af7a4504aa821b1d627be4cee178ec7be42497 -> 8adf4caf6824214c3cf40949a6c7cd101c27155e
+      +17 -2    packages/tia/src/tia/api/state.py
+      +94 -0    tests/integration/test_live_session_lease.py
+== 24_DT_un_resto_menor_que_un_lote_no_es_una_posicion.patch
+   sha256  cd01498474735ecaaa09bad52fcbf05540e56a7f529f708b22df3985f6891a1c
+   árbol   8adf4caf6824214c3cf40949a6c7cd101c27155e -> 8abd0e59dac78398f180d1cebcd25994cfc19b63
+      +20 -9    packages/tia/src/tia/runtime/live.py
+      +89 -0    tests/integration/test_dust_is_not_a_position.py
+== 25_DT_el_stop_cubre_los_lotes_enteros_que_hay_en_la_cuenta.patch
+   sha256  87b92d23d3193beb7f32f4a7212c392867e49bfca59c71c359c46e75a41d21f5
+   árbol   8abd0e59dac78398f180d1cebcd25994cfc19b63 -> 11f9ccca0da1a98e104132b7f7b8d249d89d463b
+       +8 -1    packages/tia/src/tia/runtime/live.py
+     +106 -0    tests/integration/test_stop_quantity_on_the_lot_grid.py

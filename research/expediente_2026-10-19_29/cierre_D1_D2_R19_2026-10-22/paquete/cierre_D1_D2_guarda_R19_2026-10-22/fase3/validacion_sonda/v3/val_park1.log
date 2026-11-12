@@ -1,0 +1,8 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+E   AssertionError: persistence writes still in flight
+    assert False
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_D1_D2_R19_2026-10-22/fase3/validacion_sonda/arbol/tests/integration/test_validacion_sonda_r19.py:8: AssertionError: persistence writes still in flight
+=========================== short test summary info ============================
+FAILED tests/integration/test_validacion_sonda_r19.py::test_trabada - Asserti...
+1 failed in 6.57s

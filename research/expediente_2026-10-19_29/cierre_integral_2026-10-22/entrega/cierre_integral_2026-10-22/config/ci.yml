@@ -1,0 +1,88 @@
+# CI: lint + every Python test + frontend typecheck/build, on every push and PR.
+#
+# STATUS: REQUIRES VALIDATION — authored in an environment that cannot reach GitHub
+# Actions, so this workflow has never run. The steps mirror `make verify` (minus the
+# browser smoke test, which needs a display server) so a green local verify is the
+# strongest available predictor of a green CI run.
+#
+# Deliberately NOT here: deployment. Deploys are an operator action via
+# scripts/deploy.sh on the target machine — a trading system should not redeploy
+# itself because a branch moved.
+
+name: ci
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      PYTHONPATH: packages/tia/src
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: constraints/ci-py311.txt
+
+      - name: Install
+        run: pip install -c constraints/ci-py311.txt -e ".[api,db,postgres,redis,llm,dev]"
+
+      - name: Lint (ruff)
+        run: ruff check packages tests scripts
+
+      - name: Tests (unit, property, integration, failure, e2e)
+        run: python -m pytest tests -q --junitxml=ci-evidence/junit.xml
+
+      # Binds this run to the exact commit, tree and resolved packages, and refuses a green
+      # run in which the engine claims engine_version >= 1.1.0 but the version guard did not
+      # run and pass (scripts/ci_gate.py). Runs even when the tests failed, so the evidence
+      # of a red run is kept too.
+      - name: Gate (provenance and version guard)
+        if: ${{ !cancelled() }}
+        run: python scripts/ci_gate.py ci-evidence ci-evidence/junit.xml
+
+      - name: Keep the evidence
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-evidence-${{ github.sha }}
+          path: ci-evidence/
+          retention-days: 90
+
+      - name: Migrations apply from empty
+        env:
+          TIA_DATABASE_URL: sqlite:///./data/runtime/ci.db
+        run: python -m alembic upgrade head
+
+  frontend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install
+        run: npm ci --no-fund --no-audit
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build

@@ -1,0 +1,50 @@
+
+[r24] _store de test_backtest_provenance redirigido a PostgreSQL (socket /tmp/tia_r24_cfc0aa8e)
+2026-10-22 23:00:17 [info     ] backtest_complete              bars=400 component=backtest.engine final_equity=99883.91 run_id=bt_111WYX71MFPWFVE30Z1CNBYH trades=9
+.2026-10-22 23:00:18 [info     ] backtest_complete              bars=400 component=backtest.engine final_equity=99883.91 run_id=bt_111WYX71MFPWFVE30Z1CNBYH trades=9
+2026-10-22 23:00:19 [info     ] backtest_complete              bars=400 component=backtest.engine final_equity=99883.91 run_id=bt_N2R63MYYJ8CJ4T5FJZPK0XXZ trades=9
+.2026-10-22 23:00:20 [info     ] backtest_complete              bars=400 component=backtest.engine final_equity=99883.91 run_id=bt_111WYX71MFPWFVE30Z1CNBYH trades=9
+2026-10-22 23:00:21 [info     ] backtest_complete              bars=400 component=backtest.engine final_equity=99883.91 run_id=bt_T02CBKSVF4FRQ0VB2XBD6E22 trades=9
+...2026-10-22 23:00:22 [info     ] backtest_complete              bars=400 component=backtest.engine final_equity=99883.91 run_id=bt_111WYX71MFPWFVE30Z1CNBYH trades=9
+2026-10-22 23:00:23 [info     ] backtest_complete              bars=350 component=backtest.engine final_equity=99918.56 run_id=bt_JYHX3N210SEKBXYEH5Y8Z4YA trades=4
+2026-10-22 23:00:24 [info     ] backtest_complete              bars=400 component=backtest.engine final_equity=99883.91 run_id=bt_DX8ECCQY1KAWFB0WZTP625CE trades=9
+.2026-10-22 23:00:25 [info     ] backtest_complete              bars=400 component=backtest.engine final_equity=99915.31 run_id=bt_DNAVJT8E7V72ZC0SR619NASJ trades=8
+2026-10-22 23:00:26 [info     ] backtest_complete              bars=400 component=backtest.engine final_equity=99883.91 run_id=bt_111WYX71MFPWFVE30Z1CNBYH trades=9
+.2026-10-22 23:00:27 [info     ] backtest_complete              bars=400 component=backtest.engine final_equity=99883.91 run_id=bt_111WYX71MFPWFVE30Z1CNBYH trades=9
+2026-10-22 23:00:28 [info     ] backtest_complete              bars=400 component=backtest.engine final_equity=99883.91 run_id=bt_111WYX71MFPWFVE30Z1CNBYH trades=9
+.2026-10-22 23:00:29 [info     ] backtest_complete              bars=400 component=backtest.engine final_equity=99883.91 run_id=bt_111WYX71MFPWFVE30Z1CNBYH trades=9
+2026-10-22 23:00:30 [info     ] schema_created                 component=persistence.database dialect=postgresql version=7
+.2026-10-22 23:00:31 [info     ] backtest_complete              bars=400 component=backtest.engine final_equity=99883.91 run_id=bt_111WYX71MFPWFVE30Z1CNBYH trades=9
+2026-10-22 23:00:31 [info     ] schema_created                 component=persistence.database dialect=postgresql version=7
+2026-10-22 23:00:32 [info     ] backtest_complete              bars=400 component=backtest.engine final_equity=99883.91 run_id=bt_N2R63MYYJ8CJ4T5FJZPK0XXZ trades=9
+.2026-10-22 23:00:33 [info     ] backtest_complete              bars=400 component=backtest.engine final_equity=99883.91 run_id=bt_111WYX71MFPWFVE30Z1CNBYH trades=9
+2026-10-22 23:00:34 [info     ] backtest_complete              bars=400 component=backtest.engine final_equity=99883.91 run_id=bt_111WYX71MFPWFVE30Z1CNBYH trades=9
+2026-10-22 23:00:34 [info     ] schema_created                 component=persistence.database dialect=postgresql version=7
+.2026-10-22 23:00:35 [info     ] backtest_complete              bars=400 component=backtest.engine final_equity=99883.91 run_id=bt_111WYX71MFPWFVE30Z1CNBYH trades=9
+2026-10-22 23:00:36 [info     ] backtest_complete              bars=400 component=backtest.engine final_equity=99911.24 run_id=bt_111WYX71MFPWFVE30Z1CNBYH trades=8
+2026-10-22 23:00:37 [info     ] schema_created                 component=persistence.database dialect=postgresql version=7
+.2026-10-22 23:00:38 [info     ] backtest_complete              bars=400 component=backtest.engine final_equity=99883.91 run_id=bt_111WYX71MFPWFVE30Z1CNBYH trades=9
+2026-10-22 23:00:38 [info     ] schema_created                 component=persistence.database dialect=postgresql version=7
+.2026-10-22 23:00:39 [info     ] backtest_complete              bars=400 component=backtest.engine final_equity=99883.91 run_id=bt_111WYX71MFPWFVE30Z1CNBYH trades=9
+2026-10-22 23:00:39 [info     ] schema_created                 component=persistence.database dialect=sqlite version=7
+2026-10-22 23:00:39 [info     ] api_ready                      component=api.app database=sqlite+aiosqlite:////tmp/pytest-of-root/pytest-358/test_the_api_lists_the_engine_0/api.db environment=testing frontend_built=False
+.
+[r24] bases PostgreSQL creadas: 5
+
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED tests/integration/test_backtest_provenance.py::test_a_result_records_its_engine_its_bars_and_its_instruments
+PASSED tests/integration/test_backtest_provenance.py::test_another_engine_version_is_another_run
+PASSED tests/integration/test_backtest_provenance.py::test_an_engine_change_nobody_versioned_is_another_run
+PASSED tests/integration/test_backtest_provenance.py::test_the_fingerprint_follows_the_engine_source_and_nothing_else
+PASSED tests/integration/test_backtest_provenance.py::test_a_fingerprint_that_cannot_be_read_says_so
+PASSED tests/integration/test_backtest_provenance.py::test_one_dataset_name_over_other_bars_is_another_run
+PASSED tests/integration/test_backtest_provenance.py::test_another_strategy_set_is_another_run
+PASSED tests/integration/test_backtest_provenance.py::test_the_same_engine_on_the_same_bars_is_the_same_run
+PASSED tests/integration/test_backtest_provenance.py::test_a_result_stored_before_the_engine_was_recorded_stays_beside_the_new_one
+PASSED tests/integration/test_backtest_provenance.py::test_the_store_refuses_to_replace_a_result_of_another_provenance
+PASSED tests/integration/test_backtest_provenance.py::test_a_rerun_of_the_same_engine_over_the_same_bars_replaces_only_itself
+PASSED tests/integration/test_backtest_provenance.py::test_other_numbers_under_the_same_provenance_are_refused_not_kept_as_the_last_run
+PASSED tests/integration/test_backtest_provenance.py::test_an_undefined_ratio_does_not_make_a_rerun_look_different
+PASSED tests/integration/test_backtest_provenance.py::test_the_api_lists_the_engine_of_each_result_and_unknown_for_the_old_ones
+14 passed in 26.07s

@@ -1,0 +1,89 @@
+{
+ "version_sonda": 2,
+ "park": true,
+ "cpus": 4,
+ "carga_inicio": [
+  1.107421875,
+  1.22314453125,
+  1.18115234375
+ ],
+ "fondo": 0,
+ "manual": 0,
+ "flushes": [
+  {
+   "prueba": "tests/integration/test_validacion_sonda_r19.py::test_trabada",
+   "llamador": "settle",
+   "plazo_s": 0.2,
+   "pendientes": 1,
+   "pendientes_por_tipo": {
+    "sin_empezar": 1
+   },
+   "bucle_vivo": false,
+   "carga1": 1.11,
+   "seg": 0.203,
+   "ok": false,
+   "ciclos_fondo_durante": 0,
+   "foto_al_vencer": 1,
+   "foto_por_tipo": {
+    "order": 1
+   },
+   "bucle_vivo_al_vencer": false,
+   "carga1_al_vencer": 1.11,
+   "terminaron_despues": 0,
+   "no_terminaron": 1,
+   "seg_hasta_terminar": 3.003,
+   "ciclos_fondo_en_espera": 0,
+   "cabeza_tras_espera": {
+    "n": 1,
+    "tipo": "order",
+    "pila": [
+     "sonda_r19_v2.py:143 sequenced",
+     "live.py:4254 _sequenced",
+     "test_validacion_sonda_r19.py:30 persist",
+     "locks.py:213 wait"
+    ]
+   },
+   "productor_detenido": false,
+   "terminaron_sin_productor": 0,
+   "no_terminaron_sin_productor": 1,
+   "tipos_sin_terminar": {
+    "order": 1
+   },
+   "cabeza_final": {
+    "n": 1,
+    "tipo": "order",
+    "pila": [
+     "sonda_r19_v2.py:143 sequenced",
+     "live.py:4254 _sequenced",
+     "test_validacion_sonda_r19.py:30 persist",
+     "locks.py:213 wait"
+    ]
+   }
+  }
+ ],
+ "errores_escritura": [],
+ "pruebas": {
+  "tests/integration/test_validacion_sonda_r19.py::test_trabada": {
+   "resultado": "failed",
+   "fases": {
+    "setup": "passed",
+    "call": "failed",
+    "teardown": "passed"
+   },
+   "seg": 5.23,
+   "mensajes": [
+    "call: AssertionError: persistence writes still in flight\nassert False"
+   ],
+   "informes": [
+    "E   AssertionError: persistence writes still in flight\n    assert False"
+   ]
+  }
+ },
+ "por_prueba": {},
+ "carga_fin": [
+  1.0986328125,
+  1.21923828125,
+  1.18017578125
+ ],
+ "exit": 1
+}

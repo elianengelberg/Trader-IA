@@ -1,0 +1,26 @@
+[RAMP] bn_0a445bbdac634512886df1bdce74f3da_3631af0d9289.json cap=20220819 titulo_legible=False
+    Fellow Binancians, Binance will support the RAMP (RAMP) token swap, redenomination and rebranding plan to LeverFi (LEVER)
+[BZRX→OOKI] bn_260d553938db4d568d7d58414fa317fa_7e314ae2c509.json cap=20220808 titulo_legible=False
+    7 TRIBE 2022-07-17 00:00 (UTC) LTOOLD LTO 1 LTOOLD : 1 LTO 2022-05-05 00:00 (UTC) ADXOLD ADX 1 ADXOLD : 1 ADX 2022-04-29 00:00 (UTC) BZRX OOKI 1 BZRX : 10 OOKI 2022-06-03 00:00 (UTC) XDATA DATA 1 XDATA : 1 DATA 2022-05-31 00:00 (UTC) PHBV1 PHB 100 PHBV1 : 1 PHB 2022-06-13 00:00 (UTC) BOT AUCTION 1 BOT : 100 AUCTION 2022-05-25 00:00 (UTC) 
+[BTT→BTTC] bn_2722e6da4f5141dd9b2fb07b5b1f3f75_372793e0ce0b.json cap=20220120 titulo_legible=False
+     Binance will recover all old BTT balances and begin the distribution of new BTT, which will be renamed as BTTC, to all eligible users at a ratio of 1 BTT (Old) = 1,000 BTTC
+[NANO→XNO] bn_3dc8f6de281f4781a246a1658a21cb80_e7bc3f27677f.json cap=20220701 titulo_legible=False
+    Fellow Binancians, Following the announcement from the Nano team, Binance will update the ticker of NANO to XNO
+[EPS] bn_4e21b7d402a840928c652e1f74812547_7d7dc741f0af.json cap=20220706 titulo_legible=False
+    Fellow Binancians, Binance will require additional time to complete the Ellipsis (EPS) token migration, redenomination and ticker change to EPX
+[GXS] bn_8b47296e01d84df1bddf4db774718d8f_311631e5ff99.json cap=20220701 titulo_legible=False
+    Fellow Binancians, Binance has completed the GXChain (GXS) mainnet swap and redenomination plan to REI Network (REI)
+[LUNA→LUNC] bn_9c8abd90df5d4890822e6988f7dc8f0c_da2dc145761b.json cap=20220812 titulo_legible=False
+    0 (LUNA) airdrop to LUNA (old) and UST (old) Locked Staking users on Binance
+[EPS] bn_bab533fdba1e4b2ba21053a7668c2865_ce3a108df373.json cap=20220707 titulo_legible=False
+    Fellow Binancians, Binance has completed the Ellipsis (EPS) token migration, redenomination and ticker change to EPX
+[GXS] bn_bdfb52830f2f4bfcba496f3f92876b5c_ccba14b6e687.json cap=20220809 titulo_legible=False
+    Fellow Binancians, Binance will support the GXChain (GXS) mainnet token swap and redenomination plan to REI Network (REI)
+[LUNA→LUNC] bn_c52fa3c686be4b2b9d5df50de15847ec_2698a027607e.json cap=20220705 titulo_legible=False
+     LUNA and UST tokens of the Terra Classic network will henceforth be referred to in this announcement as LUNA (old) and UST (old)
+[BZRX→OOKI] bn_dff27dc6bcbb432c902bcbea5e24ddfa_117538216109.json cap=20220529 titulo_legible=False
+     Following which, we will recover all BZRX balances and begin the distribution of OOKI to all eligible users at a ratio of 1 BZRX = 10 OOKI
+[BTT→BTTC] url_https___www.binance.com_en_support_announcement_36002210 cap=20220707 titulo_legible=False
+    Total Token Supply: 990,000,000,000 BTT Total Tokens Allocated to Binance Launchpad: 59,400,000,000 BTT Supported Sessions: BNB (23,760,000,000 BTT), TRX (35,640,000,000 BTT) Public Token Sale Price: 1 BTT = 0
+[NANO→XNO] url_https___www.binance.com_en_support_announcement_binance- cap=20230202 titulo_legible=True
+    Fellow Binancians, Binance has added CTXC, IRIS, FRONT, POLS, AUCTION, FIO, WAN and XNO to the list of supported assets on Simple Earn Flexible Products , a value-added service to Binance users holding idle digital assets

@@ -1,0 +1,4 @@
+{
+ "escenario": "B3_error_en_panel",
+ "termino": "FinTerminal: ERROR en la etapa «panel»: RuntimeError: fallo inyectado en la etapa panel (stub). Ver /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/arnes_L13_SINTETICO_SIN_DATOS_SIN_CALCULO/B3_error_en_panel/salida_1/RESULTADO_E3.json"
+}

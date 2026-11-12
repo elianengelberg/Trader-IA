@@ -1,0 +1,189 @@
+{
+ "datos": "SINTÉTICOS (5000 velas 1 h, semillas 11 y 99); no son históricos",
+ "V1": {
+  "original": {
+   "operaciones": 24,
+   "barras_abiertas": 3542,
+   "barras_sin_stop_activo": 3349,
+   "max_barras_seguidas_sin_stop_en_una_posicion": 3349,
+   "barras_stop_activo_a_otro_nivel": 159,
+   "max_barras_en_una_operacion": 3356,
+   "stops_sin_colocar": 3349,
+   "ordenes_rechazadas": 3172
+  },
+  "E1": {
+   "operaciones": 83,
+   "barras_abiertas": 375,
+   "barras_sin_stop_activo": 3,
+   "max_barras_seguidas_sin_stop_en_una_posicion": 1,
+   "barras_stop_activo_a_otro_nivel": 0,
+   "max_barras_en_una_operacion": 18,
+   "stops_sin_colocar": 3,
+   "ordenes_rechazadas": 2
+  },
+  "criterio": "max_barras_seguidas_sin_stop_en_una_posicion <= 1 y barras_stop_activo_a_otro_nivel == 0",
+  "ok": true
+ },
+ "V2": {
+  "trend_following": {
+   "decisiones_comparadas": 3379,
+   "decisiones_identicas": true,
+   "operaciones_comparadas": 50,
+   "operaciones_identicas": true,
+   "equity_identica_hasta_K-2": true,
+   "ok": true
+  },
+  "mean_reversion": {
+   "decisiones_comparadas": 3379,
+   "decisiones_identicas": true,
+   "operaciones_comparadas": 11,
+   "operaciones_identicas": true,
+   "equity_identica_hasta_K-2": true,
+   "ok": true
+  },
+  "breakout": {
+   "decisiones_comparadas": 3379,
+   "decisiones_identicas": true,
+   "operaciones_comparadas": 8,
+   "operaciones_identicas": true,
+   "equity_identica_hasta_K-2": true,
+   "ok": true
+  },
+  "trend_following+mean_reversion+breakout": {
+   "decisiones_comparadas": 3379,
+   "decisiones_identicas": true,
+   "operaciones_comparadas": 69,
+   "operaciones_identicas": true,
+   "equity_identica_hasta_K-2": true,
+   "ok": true
+  },
+  "fusion_cortos": {
+   "decisiones_comparadas": 3379,
+   "decisiones_identicas": true,
+   "operaciones_comparadas": 110,
+   "operaciones_identicas": true,
+   "equity_identica_hasta_K-2": true,
+   "ok": true
+  }
+ },
+ "V3": {
+  "trend_following": {
+   "decisiones_comparadas": 3379,
+   "decisiones_identicas": true,
+   "operaciones_comparadas": 50,
+   "operaciones_identicas": true,
+   "equity_identica_hasta_K-2": true,
+   "ok": true
+  },
+  "mean_reversion": {
+   "decisiones_comparadas": 3379,
+   "decisiones_identicas": true,
+   "operaciones_comparadas": 11,
+   "operaciones_identicas": true,
+   "equity_identica_hasta_K-2": true,
+   "ok": true
+  },
+  "breakout": {
+   "decisiones_comparadas": 3379,
+   "decisiones_identicas": true,
+   "operaciones_comparadas": 8,
+   "operaciones_identicas": true,
+   "equity_identica_hasta_K-2": true,
+   "ok": true
+  },
+  "trend_following+mean_reversion+breakout": {
+   "decisiones_comparadas": 3379,
+   "decisiones_identicas": true,
+   "operaciones_comparadas": 69,
+   "operaciones_identicas": true,
+   "equity_identica_hasta_K-2": true,
+   "ok": true
+  }
+ },
+ "V4": {
+  "trend_following": {
+   "barras_comparadas": 300,
+   "decisiones_replicadas_identicas": 300,
+   "ok": true
+  },
+  "mean_reversion": {
+   "barras_comparadas": 300,
+   "decisiones_replicadas_identicas": 300,
+   "ok": true
+  },
+  "breakout": {
+   "barras_comparadas": 300,
+   "decisiones_replicadas_identicas": 300,
+   "ok": true
+  }
+ },
+ "V5": {
+  "trend_following": {
+   "operaciones": 83,
+   "operaciones_cortas": 0,
+   "ok": true
+  },
+  "mean_reversion": {
+   "operaciones": 16,
+   "operaciones_cortas": 0,
+   "ok": true
+  },
+  "breakout": {
+   "operaciones": 11,
+   "operaciones_cortas": 0,
+   "ok": true
+  },
+  "trend_following+mean_reversion+breakout": {
+   "operaciones": 110,
+   "operaciones_cortas": 0,
+   "ok": true
+  },
+  "fusion_con_cortos_hipoteticos": {
+   "operaciones": 178,
+   "operaciones_cortas": 69
+  }
+ },
+ "V6": {
+  "original|trend_following": {
+   "round_trips": 2,
+   "max_barras_round_trip": 7703,
+   "ultima_entrada": "2020-01-13T09:00:00+00:00",
+   "fin_de_datos": "2020-11-29T07:00:00+00:00",
+   "d3": {}
+  },
+  "original|trend_following+mean_reversion+breakout": {
+   "round_trips": 2,
+   "max_barras_round_trip": 7710,
+   "ultima_entrada": "2020-01-13T02:00:00+00:00",
+   "fin_de_datos": "2020-11-29T07:00:00+00:00",
+   "d3": {}
+  },
+  "E1|trend_following": {
+   "round_trips": 77,
+   "max_barras_round_trip": 45,
+   "ultima_entrada": "2020-11-17T16:00:00+00:00",
+   "fin_de_datos": "2020-11-29T07:00:00+00:00",
+   "d3": {
+    "entradas_restantes_canceladas_al_salir": 20,
+    "restos_de_entrada_cancelados_en_plano": 8,
+    "salidas_terminadas_con_posicion_restante": 0,
+    "piernas_sin_stop_huerfanas": 0
+   },
+   "ok": true
+  },
+  "E1|trend_following+mean_reversion+breakout": {
+   "round_trips": 92,
+   "max_barras_round_trip": 68,
+   "ultima_entrada": "2020-11-26T21:00:00+00:00",
+   "fin_de_datos": "2020-11-29T07:00:00+00:00",
+   "d3": {
+    "entradas_restantes_canceladas_al_salir": 16,
+    "restos_de_entrada_cancelados_en_plano": 10,
+    "salidas_terminadas_con_posicion_restante": 0,
+    "piernas_sin_stop_huerfanas": 0
+   },
+   "ok": true
+  }
+ },
+ "todo_ok": true
+}

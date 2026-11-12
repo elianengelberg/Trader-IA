@@ -1,0 +1,4 @@
+== Instalación documentada (CI: pip install -e ".[api,db,postgres,redis,llm,dev]"): 2026-10-21T23:21:00Z
+python: Python 3.11.17
+
+rc=0

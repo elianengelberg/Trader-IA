@@ -1,0 +1,39 @@
+{
+ "nota": "Propiedades del criterio de la especificación CONFIRMATORIA, calculadas ANTES de ejecutarla (no usan ninguna réplica). Probabilidad de que una celda cumpla según su α_global verdadero.",
+ "alternativas_evaluadas_para_elegir_R": {
+  "R=30000, m=18": {
+   "k_max_que_cumple": 818,
+   "alfa_hat_max_que_cumple": 0.027266666666666668,
+   "error_mc_en_2.5": 0.0009013878188659974,
+   "P_cumple_celda_alfa_0.02": 0.9999999999973751,
+   "P_cumple_celda_alfa_0.025": 0.9938374132234052,
+   "P_cumple_celda_alfa_0.0275": 0.4112996582456869,
+   "P_cumple_celda_alfa_0.03": 0.0025956001577314885,
+   "P_cumple_celda_alfa_0.035": 2.1367846134183215e-14,
+   "P_cumplen_todas_si_todas_en_2.5_independientes": 0.894697353846769
+  },
+  "R=36000, m=18": {
+   "k_max_que_cumple": 990,
+   "alfa_hat_max_que_cumple": 0.0275,
+   "error_mc_en_2.5": 0.0008228507357554791,
+   "P_cumple_celda_alfa_0.02": 0.9999999999808205,
+   "P_cumple_celda_alfa_0.025": 0.9987042872740051,
+   "P_cumple_celda_alfa_0.0275": 0.5084525426284437,
+   "P_cumple_celda_alfa_0.03": 0.0025659332673971446,
+   "P_cumple_celda_alfa_0.035": 5.426494957119789e-16,
+   "P_cumplen_todas_si_todas_en_2.5_independientes": 0.9769322717870196
+  },
+  "R=40000, m=18": {
+   "k_max_que_cumple": 1105,
+   "alfa_hat_max_que_cumple": 0.027625,
+   "error_mc_en_2.5": 0.0007806247497997998,
+   "P_cumple_celda_alfa_0.02": 0.9999999999771187,
+   "P_cumple_celda_alfa_0.025": 0.9995629849160321,
+   "P_cumple_celda_alfa_0.0275": 0.5686096069809002,
+   "P_cumple_celda_alfa_0.03": 0.002542234485659014,
+   "P_cumple_celda_alfa_0.035": 4.957354104053745e-17,
+   "P_cumplen_todas_si_todas_en_2.5_independientes": 0.9921628807690765
+  }
+ },
+ "elegido": "R = 36000, m = 18: el menor de los evaluados con P(cumplen las 18 | α = 2,5 % en todas) ≥ 0,95"
+}

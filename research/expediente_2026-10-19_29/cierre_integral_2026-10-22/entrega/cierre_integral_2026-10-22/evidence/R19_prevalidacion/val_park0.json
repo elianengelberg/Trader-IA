@@ -1,0 +1,251 @@
+{
+ "version_sonda": 2,
+ "park": false,
+ "cpus": 4,
+ "carga_inicio": [
+  0.81396484375,
+  0.73583984375,
+  0.36181640625
+ ],
+ "fondo": 380976,
+ "manual": 0,
+ "flushes": [
+  {
+   "prueba": "tests/integration/test_validacion_sonda_r19.py::test_lenta_con_productor",
+   "llamador": "settle",
+   "plazo_s": 0.3,
+   "pendientes": 10,
+   "pendientes_por_tipo": {
+    "sin_empezar": 10
+   },
+   "bucle_vivo": true,
+   "carga1": 0.81,
+   "seg": 0.301,
+   "ok": false,
+   "ciclos_fondo_durante": 9578,
+   "foto_al_vencer": 808,
+   "foto_por_tipo": {
+    "reconciliation": 798,
+    "fill": 9,
+    "run_heartbeat": 1
+   },
+   "bucle_vivo_al_vencer": true,
+   "carga1_al_vencer": 0.81,
+   "terminaron_despues": 14,
+   "no_terminaron": 794,
+   "seg_hasta_terminar": 3.001,
+   "ciclos_fondo_en_espera": 174888,
+   "cabeza_tras_espera": {
+    "n": 16,
+    "tipo": "reconciliation",
+    "pila": [
+     "sonda_r19_v2.py:143 sequenced",
+     "live.py:4254 _sequenced",
+     "test_validacion_sonda_r19.py:18 persist",
+     "tasks.py:649 sleep"
+    ]
+   },
+   "productor_detenido": true,
+   "terminaron_sin_productor": 10,
+   "no_terminaron_sin_productor": 784,
+   "tipos_sin_terminar": {
+    "reconciliation": 784
+   },
+   "cabeza_final": {
+    "n": 26,
+    "tipo": "reconciliation",
+    "pila": [
+     "sonda_r19_v2.py:143 sequenced",
+     "live.py:4254 _sequenced",
+     "test_validacion_sonda_r19.py:18 persist",
+     "tasks.py:649 sleep"
+    ]
+   }
+  },
+  {
+   "prueba": "tests/integration/test_validacion_sonda_r19.py::test_trabada",
+   "llamador": "settle",
+   "plazo_s": 0.2,
+   "pendientes": 1,
+   "pendientes_por_tipo": {
+    "sin_empezar": 1
+   },
+   "bucle_vivo": true,
+   "carga1": 0.84,
+   "seg": 0.201,
+   "ok": false,
+   "ciclos_fondo_durante": 12842,
+   "foto_al_vencer": 1072,
+   "foto_por_tipo": {
+    "reconciliation": 1070,
+    "order": 1,
+    "run_heartbeat": 1
+   },
+   "bucle_vivo_al_vencer": true,
+   "carga1_al_vencer": 0.84,
+   "terminaron_despues": 0,
+   "no_terminaron": 1072,
+   "seg_hasta_terminar": 3.002,
+   "ciclos_fondo_en_espera": 183668,
+   "cabeza_tras_espera": {
+    "n": 15384,
+    "tipo": "order",
+    "pila": [
+     "sonda_r19_v2.py:143 sequenced",
+     "live.py:4254 _sequenced",
+     "test_validacion_sonda_r19.py:30 persist",
+     "locks.py:213 wait"
+    ]
+   },
+   "productor_detenido": true,
+   "terminaron_sin_productor": 0,
+   "no_terminaron_sin_productor": 1072,
+   "tipos_sin_terminar": {
+    "reconciliation": 1070,
+    "order": 1,
+    "run_heartbeat": 1
+   },
+   "cabeza_final": {
+    "n": 15384,
+    "tipo": "order",
+    "pila": [
+     "sonda_r19_v2.py:143 sequenced",
+     "live.py:4254 _sequenced",
+     "test_validacion_sonda_r19.py:30 persist",
+     "locks.py:213 wait"
+    ]
+   }
+  },
+  {
+   "prueba": "tests/integration/test_validacion_sonda_r19.py::test_errores_inyectado_y_no_inyectado",
+   "llamador": "settle",
+   "plazo_s": 2.0,
+   "pendientes": 2,
+   "pendientes_por_tipo": {
+    "sin_empezar": 2
+   },
+   "bucle_vivo": false,
+   "carga1": 0.78,
+   "seg": 0.0,
+   "ok": true,
+   "ciclos_fondo_durante": 0
+  },
+  {
+   "prueba": "tests/integration/test_validacion_sonda_r19.py::test_vaciado_que_no_pide_settle",
+   "llamador": "otro_llamador",
+   "plazo_s": 0.05,
+   "pendientes": 1,
+   "pendientes_por_tipo": {
+    "sin_empezar": 1
+   },
+   "bucle_vivo": false,
+   "carga1": 0.78,
+   "seg": 0.05,
+   "ok": false,
+   "ciclos_fondo_durante": 0,
+   "foto_al_vencer": 1,
+   "foto_por_tipo": {
+    "fill": 1
+   },
+   "bucle_vivo_al_vencer": false,
+   "carga1_al_vencer": 0.78,
+   "espera_extra": "omitida: no la pidi\u00f3 settle(); esperar cambiar\u00eda lo que la prueba ve despu\u00e9s"
+  },
+  {
+   "prueba": "tests/integration/test_validacion_sonda_r19.py::test_vaciado_que_no_pide_settle",
+   "llamador": "settle",
+   "plazo_s": 5.0,
+   "pendientes": 1,
+   "pendientes_por_tipo": {
+    "fill": 1
+   },
+   "bucle_vivo": false,
+   "carga1": 0.78,
+   "seg": 0.451,
+   "ok": true,
+   "ciclos_fondo_durante": 0
+  }
+ ],
+ "errores_escritura": [
+  {
+   "prueba": "tests/integration/test_validacion_sonda_r19.py::test_errores_inyectado_y_no_inyectado",
+   "tipo": "fill",
+   "excepcion": "RuntimeError",
+   "mensaje": "database unavailable during fill",
+   "inyectada": true
+  },
+  {
+   "prueba": "tests/integration/test_validacion_sonda_r19.py::test_errores_inyectado_y_no_inyectado",
+   "tipo": "order",
+   "excepcion": "ValueError",
+   "mensaje": "boom",
+   "inyectada": false
+  }
+ ],
+ "pruebas": {
+  "tests/integration/test_validacion_sonda_r19.py::test_lenta_con_productor": {
+   "resultado": "failed",
+   "fases": {
+    "setup": "passed",
+    "call": "failed",
+    "teardown": "passed"
+   },
+   "seg": 5.41,
+   "mensajes": [
+    "call: AssertionError: persistence writes still in flight\nassert False"
+   ],
+   "informes": [
+    "E   AssertionError: persistence writes still in flight\n    assert False"
+   ]
+  },
+  "tests/integration/test_validacion_sonda_r19.py::test_trabada": {
+   "resultado": "failed",
+   "fases": {
+    "setup": "passed",
+    "call": "failed",
+    "teardown": "passed"
+   },
+   "seg": 5.22,
+   "mensajes": [
+    "call: AssertionError: persistence writes still in flight\nassert False"
+   ],
+   "informes": [
+    "E   AssertionError: persistence writes still in flight\n    assert False"
+   ]
+  },
+  "tests/integration/test_validacion_sonda_r19.py::test_errores_inyectado_y_no_inyectado": {
+   "resultado": "passed",
+   "fases": {
+    "setup": "passed",
+    "call": "passed",
+    "teardown": "passed"
+   },
+   "seg": 0.01
+  },
+  "tests/integration/test_validacion_sonda_r19.py::test_vaciado_que_no_pide_settle": {
+   "resultado": "passed",
+   "fases": {
+    "setup": "passed",
+    "call": "passed",
+    "teardown": "passed"
+   },
+   "seg": 0.51
+  }
+ },
+ "por_prueba": {
+  "tests/integration/test_validacion_sonda_r19.py::test_lenta_con_productor": {
+   "fondo": 184466,
+   "manual": 0
+  },
+  "tests/integration/test_validacion_sonda_r19.py::test_trabada": {
+   "fondo": 196510,
+   "manual": 0
+  }
+ },
+ "carga_fin": [
+  0.775390625,
+  0.73193359375,
+  0.36669921875
+ ],
+ "exit": 1
+}

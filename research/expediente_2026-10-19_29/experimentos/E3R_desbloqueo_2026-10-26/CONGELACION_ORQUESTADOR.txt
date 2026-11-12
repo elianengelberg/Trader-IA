@@ -1,0 +1,22 @@
+Congelación del orquestador de la ejecución única E3R
+UTC: 2026-10-26T20:02:05.718Z
+Antes de leer cualquier precio con él: solo se ejecutó en modo sintético y en las guardas del modo real (todas rechazan sin leer precios).
+
+3b64a04dcb6b39d20cb218ff5f5ef0bd03c1dd45cd75e475b0640fb1ecfd8dce  ejecutar_E3R.py
+5eb838d5f3ce8e458c6218a7b357f46a16fe9239531f09fb0d1c58cc71e66d7f  pruebas/prueba_particion_R2.py
+c2b7b5582a8a0dbca910554ab6a823af8f8f50d129575833b7557606b54fbc7d  pruebas/medir_tiempo_tamano_real.py
+30aa4b5e32fd8c7f710a67528b0646790373dada2fe6d929feb53811268322f3  prueba_sintetica/sintetico_momentum_0.0.json
+1fa8de58fa597b75a68361df1f007efdb12296eebb353768a986f7c139db5bf4  prueba_sintetica/sintetico_momentum_0.02.json
+
+Módulos congelados de E3 que importa (verificados en cada ejecución):
+"universo.py": "2af45115238d0065d54f0c6230b16c71831293b235b72627e62d1d7c7d7491f7"
+"motor.py": "cadb805d2d882fcf909e0309cff85203ee383c6b8ed0ac08b89f4028ee999b2e"
+"inferencia.py": "7b28038621c1d366655d726bb885ca0105f1a25cfcdb9615e86a7fe39e85f3e1"
+pruebas_motor.py (solo modo sintético): 54f832d39422379f14bf5d0ad2f42bba9e8f0b4d40915ea72bcef0c968da04e5
+
+Resultados de las pruebas (sintéticas, no son evidencia sobre el mercado):
+  nulo (momentum 0, 2000 réplicas R5): IC̄ = −0,0015, H1 INSUFICIENTE; p₂ = 0,41; p_nulo = 0,37; rechazo diagnóstico §5.4 = 5,05 %
+  plantado (momentum 0,02, 200 réplicas): IC̄ = 0,165, Holm rechaza H1 y H2, ROBUSTA → RESPALDADA (camino completo recorrido)
+  validez previa: invariancia al truncar OK en los dos paneles; partición R2: OK; guardas del modo real: 5/5 rechazan
+  directorio de E3: huella del árbol igual antes y después (4909ef95…), CIERRE_E3_MANIFIESTO.sha256 verifica
+  tiempo estimado con panel sintético de tamaño real (760 × 3257, 274 semanas): validez previa ≈ 1 min; réplica R5 ≈ 0,02 s

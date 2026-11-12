@@ -1,0 +1,139 @@
+== 2026-10-22T19:11:04Z · verificación de entrega_integracion_D1_D3_v3r3_2026-10-22 desde una extracción limpia
+entrega_integracion_D1_D3_v3r3_2026-10-22.zip: OK
+-- extracción en directorio vacío (0 entradas antes)
+extraídas: 105
+SHA256SUMS: 104 de 104 verifican
+sin archivos de más ni de menos
+-- variables pasadas a reproducir.sh (entorno mínimo; solo red): no_proxy PIP_CONFIG_FILE https_proxy NO_PROXY HTTPS_PROXY SSL_CERT_FILE PIP_CERT REQUESTS_CA_BUNDLE 
+-- carga al inicio: 0.17 0.17 0.10 1/104 979
+-- reproducir.sh completo, ejecutado DESDE LA EXTRACCIÓN (/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_D1_D2_R19_2026-10-22/fase1/reproduccion_v3r3/extraido/entrega_integracion_D1_D3_v3r3_2026-10-22), trabajo en /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_D1_D2_R19_2026-10-22/fase1/reproduccion_v3r3/trabajo, con env -i (PATH, HOME nuevo, LANG y solo variables de red)
+== 1. Base y parches
+OK  base en 72ffae5d2698440c8f1afaff12e07bd8adde66fb
+OK  engine.py original identificado
+OK  los parches aplican limpio en cadena (01, 02; 03 en «completa»)
+OK  obligatoria: archivos idénticos a los registrados
+OK  completa: archivos idénticos a los registrados
+OK  cambian 8 archivos (obligatoria) y 11 (completa)
+== 2. Entorno: restricciones fijas (entorno/ci-py311.txt) e instalación documentada de la CI
+
+[notice] A new release of pip is available: 24.0 -> 26.2.2
+[notice] To update, run: python3.11 -m pip install --upgrade pip
+OK  entorno idéntico al de referencia (74 paquetes)
+== 3. Pruebas D1–D3 definitivas contra el motor ORIGINAL (deben fallar las 8, por aserción)
+OK  original: 8/8 fallan por aserción
+== 4. Pruebas D1–D3 y de trazabilidad en el árbol integrado (deben pasar todas)
+OK  D1–D3: 8/8 pasan
+OK  trazabilidad: 14/14 pasan
+OK  misma procedencia y otros números: el guardado lo rechaza
+OK  registros históricos: la fila de 72ffae5 convive intacta (engine_version null) y la API vieja sigue leyendo
+== 4b. Separabilidad técnica de 01 y 02v3 (r3): la unidad no la impone git, la impone el commit único
+OK  02v3 aplica sobre la base sin 01
+OK  02v3 sin 01 declara engine_version 1.1.0 en un motor sin D1–D3 (01+02v3: 1.1.0 con D1–D3)
+OK  sin 01, las 14 pruebas de trazabilidad pasan igual: ninguna prueba de esta entrega detecta la etiqueta falsa
+OK  git permite revertir solo 01 o solo 02v3 (comprobado con --check, sin cambiar el árbol)
+OK  la lista de 8 archivos del plan (paso 1.3) es exactamente lo que cambia 01+02v3
+== 5. Mutantes (cada uno debe hacer fallar al menos una prueba)
+mutantes D1–D3: 10 · vivos: ninguno
+OK  mutantes de trazabilidad: 0 vivos (14 mutantes, 1 equivalente justificado)
+== 5b. Parche 04 (opcional, CI): aplica sobre la base y fija las mismas versiones que entorno/ci-py311.txt
+OK  parche 04: ci.yml instala con -c constraints/ci-py311.txt (mismas versiones)
+== 6. Lint como la CI
+OK  ruff limpio en obligatoria
+OK  ruff limpio en completa
+== 7. Pruebas sensibles al entorno con el reloj de pared fijado (time-machine en un entorno aparte)
+
+[notice] A new release of pip is available: 24.0 -> 26.2.2
+[notice] To update, run: python3.11 -m pip install --upgrade pip
+
+[notice] A new release of pip is available: 24.0 -> 26.2.2
+[notice] To update, run: python3.11 -m pip install --upgrade pip
+00:30 UTC  base: 0/2 pasan
+00:30 UTC  completa: 2/2 pasan
+05:30 UTC  base: 0/2 pasan
+05:30 UTC  completa: 2/2 pasan
+05:56 UTC  base: 2/2 pasan
+05:56 UTC  completa: 2/2 pasan
+12:00 UTC  base: 2/2 pasan
+12:00 UTC  completa: 2/2 pasan
+23:59 UTC  base: 2/2 pasan
+23:59 UTC  completa: 2/2 pasan
+OK  con el parche 03 las pruebas de reloj pasan a las 5 horas
+1 passed in 3.13s
+1 passed in 3.30s
+1 passed in 3.14s
+OK  persistencia: 3/3 con el parche 03
+== 8. Suite completa como la CI: base, obligatoria y completa
+rc=0 · fin 2026-10-22T19:24:38Z
+JUnit: 1956 pruebas · 1956 pasan · 0 fallan · 0 errores · 0 omitidas · 292.888 s
+rc=0 · fin 2026-10-22T19:31:40Z
+JUnit: 1978 pruebas · 1978 pasan · 0 fallan · 0 errores · 0 omitidas · 419.999 s
+rc=0 · fin 2026-10-22T19:38:10Z
+JUnit: 1978 pruebas · 1978 pasan · 0 fallan · 0 errores · 0 omitidas · 388.545 s
+base: 1956 pruebas · 1956 pasan · 0 fallan · 0 errores · 0 omitidas
+integrado: 1978 pruebas · 1978 pasan · 0 fallan · 0 errores · 0 omitidas
+pruebas de la base que faltan en el integrado: ninguna
+pruebas nuevas: 22 · todas pasan: True
+   pasa    tests.integration.test_backtest_provenance::test_a_fingerprint_that_cannot_be_read_says_so
+   pasa    tests.integration.test_backtest_provenance::test_a_rerun_of_the_same_engine_over_the_same_bars_replaces_only_itself
+   pasa    tests.integration.test_backtest_provenance::test_a_result_records_its_engine_its_bars_and_its_instruments
+   pasa    tests.integration.test_backtest_provenance::test_a_result_stored_before_the_engine_was_recorded_stays_beside_the_new_one
+   pasa    tests.integration.test_backtest_provenance::test_an_engine_change_nobody_versioned_is_another_run
+   pasa    tests.integration.test_backtest_provenance::test_an_undefined_ratio_does_not_make_a_rerun_look_different
+   pasa    tests.integration.test_backtest_provenance::test_another_engine_version_is_another_run
+   pasa    tests.integration.test_backtest_provenance::test_another_strategy_set_is_another_run
+   pasa    tests.integration.test_backtest_provenance::test_one_dataset_name_over_other_bars_is_another_run
+   pasa    tests.integration.test_backtest_provenance::test_other_numbers_under_the_same_provenance_are_refused_not_kept_as_the_last_run
+   pasa    tests.integration.test_backtest_provenance::test_the_api_lists_the_engine_of_each_result_and_unknown_for_the_old_ones
+   pasa    tests.integration.test_backtest_provenance::test_the_fingerprint_follows_the_engine_source_and_nothing_else
+   pasa    tests.integration.test_backtest_provenance::test_the_same_engine_on_the_same_bars_is_the_same_run
+   pasa    tests.integration.test_backtest_provenance::test_the_store_refuses_to_replace_a_result_of_another_provenance
+   pasa    tests.unit.test_backtest_order_hygiene::test_a_close_that_leaves_position_is_released_and_retried
+   pasa    tests.unit.test_backtest_order_hygiene::test_a_leg_without_a_stop_level_is_reported
+   pasa    tests.unit.test_backtest_order_hygiene::test_a_rejected_close_is_sent_again_and_closes
+   pasa    tests.unit.test_backtest_order_hygiene::test_every_invariant_holds_under_repeated_rejections_partials_and_reversals
+   pasa    tests.unit.test_backtest_order_hygiene::test_partial_fills_leave_no_untracked_or_stuck_position
+   pasa    tests.unit.test_backtest_order_hygiene::test_stops_and_exits_survive_rejections
+   pasa    tests.unit.test_backtest_order_hygiene::test_the_stop_in_the_book_follows_the_leg
+   pasa    tests.unit.test_backtest_order_hygiene::test_the_stop_is_replaced_only_when_its_size_or_level_moved
+pruebas de la base con otro resultado en el integrado: ninguna
+pruebas de la base que no pasan en el árbol base: ninguna
+pruebas de la base que no pasan en el árbol integrado: ninguna
+SIN REGRESIONES FRENTE A LA BASE
+base: 1956 pruebas · 1956 pasan · 0 fallan · 0 errores · 0 omitidas
+integrado: 1978 pruebas · 1978 pasan · 0 fallan · 0 errores · 0 omitidas
+pruebas de la base que faltan en el integrado: ninguna
+pruebas nuevas: 22 · todas pasan: True
+   pasa    tests.integration.test_backtest_provenance::test_a_fingerprint_that_cannot_be_read_says_so
+   pasa    tests.integration.test_backtest_provenance::test_a_rerun_of_the_same_engine_over_the_same_bars_replaces_only_itself
+   pasa    tests.integration.test_backtest_provenance::test_a_result_records_its_engine_its_bars_and_its_instruments
+   pasa    tests.integration.test_backtest_provenance::test_a_result_stored_before_the_engine_was_recorded_stays_beside_the_new_one
+   pasa    tests.integration.test_backtest_provenance::test_an_engine_change_nobody_versioned_is_another_run
+   pasa    tests.integration.test_backtest_provenance::test_an_undefined_ratio_does_not_make_a_rerun_look_different
+   pasa    tests.integration.test_backtest_provenance::test_another_engine_version_is_another_run
+   pasa    tests.integration.test_backtest_provenance::test_another_strategy_set_is_another_run
+   pasa    tests.integration.test_backtest_provenance::test_one_dataset_name_over_other_bars_is_another_run
+   pasa    tests.integration.test_backtest_provenance::test_other_numbers_under_the_same_provenance_are_refused_not_kept_as_the_last_run
+   pasa    tests.integration.test_backtest_provenance::test_the_api_lists_the_engine_of_each_result_and_unknown_for_the_old_ones
+   pasa    tests.integration.test_backtest_provenance::test_the_fingerprint_follows_the_engine_source_and_nothing_else
+   pasa    tests.integration.test_backtest_provenance::test_the_same_engine_on_the_same_bars_is_the_same_run
+   pasa    tests.integration.test_backtest_provenance::test_the_store_refuses_to_replace_a_result_of_another_provenance
+   pasa    tests.unit.test_backtest_order_hygiene::test_a_close_that_leaves_position_is_released_and_retried
+   pasa    tests.unit.test_backtest_order_hygiene::test_a_leg_without_a_stop_level_is_reported
+   pasa    tests.unit.test_backtest_order_hygiene::test_a_rejected_close_is_sent_again_and_closes
+   pasa    tests.unit.test_backtest_order_hygiene::test_every_invariant_holds_under_repeated_rejections_partials_and_reversals
+   pasa    tests.unit.test_backtest_order_hygiene::test_partial_fills_leave_no_untracked_or_stuck_position
+   pasa    tests.unit.test_backtest_order_hygiene::test_stops_and_exits_survive_rejections
+   pasa    tests.unit.test_backtest_order_hygiene::test_the_stop_in_the_book_follows_the_leg
+   pasa    tests.unit.test_backtest_order_hygiene::test_the_stop_is_replaced_only_when_its_size_or_level_moved
+pruebas de la base con otro resultado en el integrado: ninguna
+pruebas de la base que no pasan en el árbol base: ninguna
+pruebas de la base que no pasan en el árbol integrado: ninguna
+sensibles al entorno en el integrado (deben pasar con el parche 03): [('test_a_day_that_hit_the_loss_limit_still_refuses_entries_after_a_restart', 'pasa'), ('test_five_restored_entries_for_the_symbol_refuse_the_sixth_after_the_restart', 'pasa'), ('test_rejects_and_partials_over_hundreds_of_bars_keep_the_invariants_and_the_record_whole', 'pasa')]
+SIN REGRESIONES FRENTE A LA BASE
+== 8b. Migraciones desde cero como la CI (alembic upgrade head), base y completa
+OK  alembic upgrade head en base
+OK  alembic upgrade head en completa
+== 9. Paridad con E1 (solo comparación con lo registrado; no es un experimento)
+OK  paridad con E1: mismas huellas que la evidencia
+REPRODUCCIÓN (completo) TERMINADA SIN DIFERENCIAS
+rc reproducir.sh = 0 · fin 2026-10-22T19:42:27Z · carga al final: 3.85 2.83 1.87 1/113 5026

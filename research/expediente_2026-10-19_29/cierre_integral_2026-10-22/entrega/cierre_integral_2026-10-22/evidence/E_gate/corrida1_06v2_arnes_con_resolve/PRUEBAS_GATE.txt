@@ -1,0 +1,13 @@
+== pruebas del gate 06v2 con variantes sintéticas del JUnit real: 2026-10-25T16:50:30Z · herramienta a8a873999aa939bb · gate d8749a9bf7ebc7c0
+OK  real_final                   esperado=pass veredicto=pass rc=0 problemas=[]
+MAL guarda_omitida               esperado=fail veredicto=pass rc=0 problemas=[]
+MAL guarda_quitada               esperado=fail veredicto=pass rc=0 problemas=[]
+MAL guarda_6_de_7                esperado=fail veredicto=pass rc=0 problemas=[]
+OK  falla_ajena                  esperado=fail veredicto=fail rc=1 problemas=['1 failed and 0 errored']
+MAL falla_en_guarda              esperado=fail veredicto=fail rc=1 problemas=['1 failed and 0 errored']
+OK  error                        esperado=fail veredicto=fail rc=1 problemas=['0 failed and 1 errored']
+OK  junit_vacio                  esperado=fail veredicto=fail rc=1 problemas=['the JUnit report holds no test']
+OK  base_sin_version_sin_guarda  esperado=pass veredicto=pass rc=0 problemas=[]
+RESULTADO: 5/9 casos con el veredicto y el motivo esperados
+rc=1
+-- el árbol base sigue sin cambios: 0 cambios

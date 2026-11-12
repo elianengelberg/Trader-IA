@@ -1,0 +1,2 @@
+{"escenario": "I5_invalido_ctrl_c_al_anotar", "termino": "FinTerminal: ERROR en la etapa «validez_previa»: KeyboardInterrupt: Ctrl-C inyectado al anotar INVALIDO. Ver /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/arnes_L13_SINTETICO_SIN_DATOS_SIN_CALCULO/I5_invalido_ctrl_c_al_anotar/salida_1/RE"}
+rc=0

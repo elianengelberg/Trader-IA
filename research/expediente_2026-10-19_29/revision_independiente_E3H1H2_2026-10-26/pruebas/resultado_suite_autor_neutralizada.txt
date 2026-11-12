@@ -1,0 +1,15 @@
+=============================== warnings summary ===============================
+reparacion_E3H1H2_2026-10-26/orquestador_v2/pruebas/test_orquestador_v2.py::test_r4_mide_el_aporte_contra_el_ew_bruto[v1]
+reparacion_E3H1H2_2026-10-26/orquestador_v2/pruebas/test_orquestador_v2.py::test_r4_mide_el_aporte_contra_el_ew_bruto[v2]
+  /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/rv_pytest_tmp_autor/e30/ejecucion_E3/codigo/universo.py:93: RuntimeWarning: All-NaN slice encountered
+    V = np.nanmedian(np.where(P.act[:, w], P.QV[:, w], np.nan), axis=1)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+XFAIL copia_aislada/reparacion_E3H1H2_2026-10-26/orquestador_v2/pruebas/test_orquestador_v2.py::test_r4_mide_el_aporte_contra_el_ew_bruto[v1] - defecto del v1 que corrige el v2
+XFAIL copia_aislada/reparacion_E3H1H2_2026-10-26/orquestador_v2/pruebas/test_orquestador_v2.py::test_serie_alterada_se_rechaza_sin_leer_precios[v1] - defecto del v1 que corrige el v2
+XFAIL copia_aislada/reparacion_E3H1H2_2026-10-26/orquestador_v2/pruebas/test_orquestador_v2.py::test_ventana_invalida_deja_resultado_explicito[v1] - defecto del v1 que corrige el v2
+XFAIL copia_aislada/reparacion_E3H1H2_2026-10-26/orquestador_v2/pruebas/test_orquestador_v2.py::test_regla2_redenominacion_conserva_edad_y_continuidad[v1] - defecto del v1 que corrige el v2
+XFAIL copia_aislada/reparacion_E3H1H2_2026-10-26/orquestador_v2/pruebas/test_orquestador_v2.py::test_regla1_renombre_hereda_edad_y_fila[v1] - defecto del v1 que corrige el v2
+XFAIL copia_aislada/reparacion_E3H1H2_2026-10-26/orquestador_v2/pruebas/test_orquestador_v2.py::test_corte_sin_anuncio_sigue_la_regla_3[v1] - defecto del v1 que corrige el v2
+28 passed, 6 xfailed, 2 warnings in 3.58s

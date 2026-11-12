@@ -1,0 +1,40 @@
+{
+ "python": "3.13.16",
+ "replicas_comparadas": 4800,
+ "identicas": 4197,
+ "distintas": 603,
+ "con_decision_distinta_al_2.5_o_5": 0,
+ "max_diferencia_relativa_de_p": 3.387227673976834e-14,
+ "ejemplos": [
+  {
+   "celda": "respaldo_C1_n1612",
+   "r": 3,
+   "p_a_s1": 0.15407641308278197,
+   "p_ahora": 0.1540764130827822
+  },
+  {
+   "celda": "respaldo_C1_n1612",
+   "r": 61,
+   "p_a_s1": 0.2590218271834085,
+   "p_ahora": 0.2590218271834086
+  },
+  {
+   "celda": "respaldo_C1_n1612",
+   "r": 131,
+   "p_a_s1": 0.03562148188889158,
+   "p_ahora": 0.035621481888891804
+  },
+  {
+   "celda": "respaldo_C1_n1612",
+   "r": 204,
+   "p_a_s1": 0.5706551832785389,
+   "p_ahora": 0.5706551832785387
+  },
+  {
+   "celda": "respaldo_C1_n1612",
+   "r": 474,
+   "p_a_s1": 0.6321957027382643,
+   "p_ahora": 0.632195702738264
+  }
+ ]
+}

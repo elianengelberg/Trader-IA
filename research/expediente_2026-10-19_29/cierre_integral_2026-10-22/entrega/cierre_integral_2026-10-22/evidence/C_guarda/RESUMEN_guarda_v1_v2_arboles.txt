@@ -1,0 +1,14 @@
+== Guarda 05 v1 y v2 sobre árboles de la extracción limpia de v3r3: 2026-10-22T22:51:56Z
+v1 ff1ad5402b41ccf8… (paquete 410ae629) · v2 262840b3f0fc7807… (esta misión)
+v1  obl     7 passed
+v1  comp    7 passed
+v1  base    2 passed, 5 skipped
+v1  solo02  5 failed, 2 passed
+v1  solo01  2 passed, 5 skipped
+v2  obl     7 passed
+v2  comp    7 passed
+v2  base    5 failed, 2 passed
+v2  solo02  5 failed, 2 passed
+v2  solo01  5 failed, 2 passed
+-- lint (ruff del entorno fijado, con la configuración del proyecto) de v2 dentro del árbol:
+All checks passed!

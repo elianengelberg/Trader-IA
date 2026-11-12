@@ -1,0 +1,20 @@
+{
+ "20261026/0.02": {
+  "campos": 143,
+  "difieren": []
+ },
+ "20261026/0.0": {
+  "campos": 143,
+  "difieren": []
+ },
+ "37/0.0": {
+  "campos": 143,
+  "difieren": [
+   "descriptivo.sharpe_deflactado.V_SR",
+   "descriptivo.sharpe_deflactado.dsr",
+   "descriptivo.sharpe_deflactado.sr0_semanal",
+   "robustez.R4_exceso",
+   "robustez.R4_sin_mayor_aporte"
+  ]
+ }
+}

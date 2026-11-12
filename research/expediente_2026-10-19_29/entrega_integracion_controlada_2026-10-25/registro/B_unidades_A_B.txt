@@ -1,0 +1,10 @@
+== IC-B unidades A y B: 2026-10-25T18:33:25Z
+B1 simular_integracion.sh del paquete (inspeccionado; clones aislados, sin commits): 13 OK · 0 MAL · RESULTADO: 0 problemas
+   log sha256 5d8c75a274001e972ce112a42a31f16a2d6cda9e9c23964a0331ce35fd25c527
+B2 mutantes de la guarda 05v2 (26 casos, venv de esta misión):
+     19 OK (detectado, razón correcta)
+      4 OK fallan=0 omitidas=0 ['7
+      1 de alcance no detectado
+      2 omite OK fallan=0 omitidas=5
+   json sha256 eb723cb19f841fe00faf36fb73ccb3e9fdf26908bcb03ae6b8aa5bff850d3667
+lectura: A (01+02v3) aplica, revierte y reproduce su árbol; B falla cerrado sin A, con 02v3 sin 01 y con 01 sin 02v3 (5 fallan); versión ilegible (1.1.0-dev, v1.1.0) falla; 1.0.9 omite; 1.2.0 y '1.1' pasan con D1-D3

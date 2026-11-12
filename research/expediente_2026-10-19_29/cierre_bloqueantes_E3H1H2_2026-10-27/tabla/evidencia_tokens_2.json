@@ -1,0 +1,544 @@
+{
+ "AGIX": {
+  "actividad": {
+   "episodios": [
+    [
+     "2023-02-17",
+     "2024-06-30"
+    ]
+   ],
+   "cortes": []
+  },
+  "cuerpos": [
+   {
+    "archivo": "url_https___www.binance.com_en_support_announcement_earn-wednesday-new-limited-t_ee5f39ea07c1.json",
+    "captura": "20230530170255",
+    "titulo": "Announcement",
+    "url": "https://www.binance.com/en/support/announcement/earn-wednesday-new-limited-time-offers-available-now-2023-03-08-0b910fed1f1b42469119de782069cb3c",
+    "cuerpo": "Fellow Binancians, Binance Earn presents to you new offers that will launch each Wednesday. Stay tuned for Earn Wednesday to get rewards across Simple Earn, DeFi Staking, Liquid Swap, Dual Investment and more. [Limited-Time Offers] Product Token Duration APR Min. Limit Per User Max. Limit Per User Flexible Products TROY Flexible Real-Time APR 10 TROY Unlimited ADA Flexible Real-Time APR + 2.0% Bonus Tiered APR (0 - 14,000,000 ADA) 0.1 ADA Unlimited ATOM Flexible Real-Time APR + 1.0% Bonus Tiered APR (0 - 400,000 ATOM) 0.1 ATOM Unlimited AVAX Flexible Real-Time APR + 1.0% Bonus Tiered APR (0 - 280,000 AVAX) 0.1 AVAX Unlimited MATIC Flexible Real-Time APR + 2.0% Bonus Tiered APR (0 - 4,000,000 MATIC) 1 MATIC Unlimited SOL Flexible Real-Time APR + 1.0% Bonus Tiered APR (0 - 220,000 SOL) 0.01 SOL Unlimited Locked Products FIL 30 Days 4.5% 0.1 FIL 5,000 FIL 60 Days 6.96% 0.1 FIL 1,200 FIL 120 Days 9.8% 0.1 FIL 100 FIL Liquidity Farming AGIX/USDT Flexible Up to 10%* 20 USDT Unlimited GMX/USDT Flexible Up to 10%* 20 USDT Unlimited MKR/USDT Flexible Up to 10%* 20 USDT Unlimited BTC/USDT Flexible 5.33%* 0.007 BTC Unlimited BTC/BUSD Flexible 6.10%* 0.007 BTC Unlimited BTC/ETH Flexible 2.83%* 0.045 BTC Unlimited Rules for the Limited-Time Offers This is available on a first-come, first-served basis. Once subscribed, users can view their assets by going to Wallets > Earn. Users can choose to redeem their assets in advance in Simple Earn Locked Products. After choosing early redemption, the principal will be returned to the spot account, and the distributed interest will be deducted fro"
+   }
+  ]
+ },
+ "OCEAN": {
+  "actividad": {
+   "episodios": [
+    [
+     "2020-08-19",
+     "2024-06-30"
+    ]
+   ],
+   "cortes": []
+  },
+  "cuerpos": [
+   {
+    "archivo": "bn_5f429e75c2ce42f68a8ff0fbd132c721_a615e4728c6b.json",
+    "captura": "20201022101328",
+    "titulo": "Binance has Completed the Ocean Protocol (OCEAN) & Chromia (CHR) Token Swaps | Binance Support",
+    "url": "https://www.binance.com/en/support/announcement/5f429e75c2ce42f68a8ff0fbd132c721",
+    "cuerpo": "Fellow Binancians, Binance has completed the OCEAN and CHR token swaps and has re-opened deposits and withdrawals for both tokens. Please note: Please ensure that you are using the new OCEAN and CHR smart contract addresses listed below. Deposits of the old OCEAN and CHR tokens will not be credited to your Binance account. New OCEAN smart contract address: 0x967da4048cD07aB37855c090aAF366e4ce1b9F48 New CHR smart contract address: 0x8a2279d4a90b6fe1c4b30fa660cc9f926797baa2 For further information from the OCEAN and CHR teams on the token swaps, please refer to: The hard fork of the Ocean Token contract is now complete , Migration to new ERC-20 token contract is 90% complete . "
+   },
+   {
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-ade_cceebbf12374.json",
+    "captura": "20230602110426",
+    "titulo": "Announcement",
+    "url": "https://www.binance.com/en/support/announcement/binance-will-support-the-adex-adx-ocean-protocol-ocean-smart-contract-swaps-8dfCB46D18B549C88fe753Fab318308b",
+    "cuerpo": "Fellow Binancians, Binance will support the Adex (ADX) and Ocean Protocol (OCEAN) smart contract upgrades with the following timeline: Deposits and withdrawals of ADX will be suspended starting from 2020/08/21 0:00 AM (UTC), at which point we will begin the upgrade. ADX deposited after this time will not be credited to your account. The new smart contract address is: 0xade00c28244d5ce17d72e40330b1c318cd12b7c3 . Deposits and withdrawals of OCEAN will be suspended starting from 2020/08/21 2:00 PM (UTC), at which point we will begin the upgrade. OCEAN deposited after this time will not be credited to your account. For the new OCEAN smart contract address, please refer to information provided by the project team after the new smart contract is deployed. Note： Please ensure that you leave sufficient time for your deposits to be fully processed prior to this time. Binance will handle all technical requirements involved for all users in their Binance accounts. Once the smart contract upgrades are completed, deposits and withdrawals of ADX and OCEAN will open. There will be no separate announcement. For further information on the upgrades, please refer to the announcements here from ADX and OCEAN . "
+   }
+  ]
+ },
+ "FET": {
+  "actividad": {
+   "episodios": [
+    [
+     "2019-02-28",
+     "2026-05-31"
+    ]
+   ],
+   "cortes": []
+  },
+  "cuerpos": [
+   {
+    "archivo": "bn_06679d12083f4c26b805f060581d5de3_9d20cb2572f3.json",
+    "captura": "20220120202636",
+    "titulo": "(ilegible)",
+    "url": "https://www.binance.com/en/support/announcement/06679d12083f4c26b805f060581d5de3?ref=AZTKZ9XS&utm_source=BinanceTwitter&utm_medium=GlobalSocial&utm_campaign=GlobalSocial",
+    "cuerpo": "Fellow Binancians, In order to enhance our wallet services, Binance will perform wallet maintenance for the networks listed below at 2021-12-09 06:30 AM (UTC). The maintenance will take about 1.5 hours . Please note: Withdrawals on the affected networks will be suspended starting from 2021-12-09 06:25 AM (UTC). Withdrawals will be reopened after the maintenance is completed. There will be no further announcement. Impacted Networks: Ambrosus Network (AMB) Cosmos Network (ATOM) AVAX C-Chain Network (AVAXC) Binance Chain (BNB) Binance Smart Chain (BSC) Bitcoin Network (BTC) CELO Network (CELO) Chiliz Chain (CHZ) Cortex Network (CTXC) Doge Network (DOGE) Polkadot Network (DOT) Ethereum Classic Network (ETC) Ethereum Network (ETH) EOS Network (EOS) Fetch.AI Network (FET) Fantom Network (FTM) GoChain Network (GO) Klaytn Network (KLAY) Kusama Network (KSM) Terra Network (LUNA) Moonriver Network (MOVR) Neo N3 Mainnet (NEO) Polygon Network (MATIC) POA Network (POA) Ronin Network (RON) Theta Network (THETA) TomoChain Network (TOMO) Tron Network (TRX) VeChain Network (VET) Wanchain Network (WAN) WAX Network (WAX) Walton Network (WTC) Stellar Network (XLM) Risk warning : Cryptocurrency trading is subject to high market risk. Please make your trades cautiously. You are advised that Binance is not responsible for your trading losses. "
+   },
+   {
+    "archivo": "bn_61c5a8c3063143e89727f0343c2cf80b_b2600bbf9b21.json",
+    "captura": "20210519003049",
+    "titulo": "Binance Will Support the Mettalex (MTLX) Airdrop Program for Fetch.ai (FET) Holders | Binance Support",
+    "url": "https://www.binance.com/en/support/announcement/61c5a8c3063143e89727f0343c2cf80b",
+    "cuerpo": "Fellow Binancians, Binance will support the Mettalex (MTLX) airdrop program for Fetch.ai (FET) holders. Snapshots of FET balances will be performed weekly over a 50-day period. We will take snapshots of FET tokens held by Binance users at the following time: MTLX Airdrop Program Schedule Round Snapshot Time (UTC) Airdrop Ratio 1 2021-04-13 11:59 PM FET:MTLX = 10,000:1 2 2021-04-20 11:59 PM 3 2021-04-27 11:59 PM 4 2021-05-04 11:59 PM 5 2021-05-11 11:59 PM 6 2021-05-18 11:59 PM 7 2021-05-25 11:59 PM 8 2021-06-01 11:59 PM Please note: FET tokens that are pending deposit or withdrawal at the time of each snapshot will not count towards your FET balances. Please ensure you leave sufficient time for deposits and withdrawals to complete prior to the snapshot. FET in pending orders will not count towards your FET balances. In order to be eligible to receive the MTLX airdrop, the average amount of FET held throughout the eight snapshots must be above 10,000 FET (excluding those in pending trade orders). The snapshots will include FET balances in Spot wallets, Margin accounts and Savings accounts. Undistributed FET interest payments will not be included. FET borrowed from Margin, or FET transferred to Spot wallets from these accounts, will not count towards the airdrop threshold. For the trading and listing of MTLX on Binance, MTLX will go through the same strict listing review process as Binance does for any other coin/token. Supporting this airdrop does not guarantee the listing of MTLX. Binance does not guarantee any listings as per its internal policy. Binance will distribute the"
+   },
+   {
+    "archivo": "bn_689734d9f4f24a678d81d8bdb573cf98_2a2708b08b2d.json",
+    "captura": "20210724055025",
+    "titulo": "Mettalex (MTLX) Distribution Is Now Complete",
+    "url": "https://www.binance.com/en/support/announcement/689734d9f4f24a678d81d8bdb573cf98?ref=JLI1VBLA&utm_source=BinanceTwitter&utm_medium=GlobalSocial&utm_campaign=GlobalSocial",
+    "cuerpo": "Fellow Binancians, The Mettalex (MTLX) airdrop program is now complete. Binance has completed the distribution of MTLX tokens to Fetch.ai (FET) holders . Users can confirm receipt of the MTLX tokens via the “ Transaction History ” page in the Wallet page. The snapshots for MTLX airdrop had been taken as per the MTLX Airdrop Program Schedule below. Round Snapshot Time (UTC) Airdrop Ratio 1 2021-04-13 11:59 PM FET : MTLX = 10,000 : 1 2 2021-04-20 11:59 PM 3 2021-04-27 11:59 PM 4 2021-05-04 11:59 PM 5 2021-05-11 11:59 PM 6 2021-05-18 11:59 PM 7 2021-05-25 11:59 PM 8 2021-06-01 11:59 PM Please note: In order to be eligible to receive the MTLX airdrop, the average amount of FET held throughout the eight snapshots must be at least 10,000 FET (excluding those in pending trade orders). Please ensure that you have not selected “ Hide Small Balances '' to view your MTLX tokens in your Funds page. For the trading and listing of MTLX on Binance, MTLX will go through the same strict listing review process as Binance does for any other coin/token. Supporting this airdrop does not guarantee the listing of MTLX. For more information on the airdrop, please refer to the following: Binance Will Support the Mettalex (MTLX) Airdrop Program for Fetch.ai (FET) Holders . Risk warning : Cryptocurrency trading is subject to high market risk. Please make your trades cautiously. Binance will make best efforts to choose high-quality coins, but will not be responsible for your trading losses. "
+   },
+   {
+    "archivo": "bn_78679f697a6a4dba96956b3c55b88221_407faf1de349.json",
+    "captura": "20220706065937",
+    "titulo": "(ilegible)",
+    "url": "https://www.binance.com/en/support/announcement/78679f697a6a4dba96956b3c55b88221",
+    "cuerpo": "Fellow Binancians, In order to improve user experience, Binance will perform wallet maintenance from 2022-05-19 06:00 (UTC) for the following networks. The maintenance may take about three hours . Please Note: Withdrawals on the impacted networks will be suspended starting from 2022-05-19 05:55 (UTC) . We will reopen withdrawals on the impacted networks after the maintenance is complete. There will be no further announcement. Impacted Networks: Ambrosus Network (AMB) Cosmos Network (ATOM) AVAX C-Chain Network (AVAXC) BNB Chain (BNB Beacon Chain, BNB Smart Chain) Bitcoin Network (BTC) CELO Network (CELO) Chiliz Chain (CHZ) Cortex Network (CTXC) Dash Network (DASH) Doge Network (DOGE) Polkadot Network (DOT) Ethereum Classic Network (ETC) Ethereum Network (ETH) EOS Network (EOS) Fetch.AI Network (FET) Fantom Network (FTM) GoChain Network (GO) Klaytn Network (KLAY) Kusama Network (KSM) Litecoin Network (LTC) Terra Network (LUNA) Moonriver Network (MOVR) Neo N3 Mainnet (NEO3) Polygon Network (MATIC) POA Network (POA) Ripple (XRP) Ronin Network (RON) Secret Network (SCRT) Songbird Network (SGB) Stellar Network (XLM) Theta Network (THETA) TomoChain Network (TOMO) Tron Network (TRX) VeChain Network (VET) Wanchain Network (WAN) WAX Network (WAX) Walton Network (WTC) Edgeware Network (EDG) Parallel Finance Network (PARA) Kadena Network (KDA) Astar Network (ASTR) CertiK Network (CTK) Lisk Network (LSK) Bitcoin Cash Network (BCH) Ravencoin Network (RVN) eCash Network (XEC) Zcash Network (ZEC) Moonbeam Network (GLMR) Kava Network (KAVA) Arbitrum One Network (ARBITRUM) Injective Protocol"
+   },
+   {
+    "archivo": "bn_91fdc9517de346cba2c7e45e30934a2f_fbb0c1394098.json",
+    "captura": "20201022101234",
+    "titulo": "Fetch.ai (FET) Smart Contract Swap Supported on Binance | Binance Support",
+    "url": "https://www.binance.com/en/support/announcement/91fdc9517de346cba2c7e45e30934a2f",
+    "cuerpo": "Fellow Binancians, Binance will support the Fetch.ai (FET) smart contract upgrade/swap and handle all technical requirements for users holding FET on Binance. Deposits and withdrawals of FET will be suspended starting from 2020/10/14 10:00 AM (UTC), at which point we will begin the smart contract swap. Trading of FET will not be affected during the upgrade period. Note: Please ensure that you leave sufficient time for your FET deposits to be fully processed prior to the time above. If deposited after the time above, the tokens will not be credited to your account. Once the smart contract upgrade is completed, deposits and withdrawals of FET will reopen. New FET smart contract address: 0xaea46A60368A7bD060eec7DF8CBa43b7EF41Ad85 For further information from the Fetch.ai team, please refer to Announcing the $FET token swap . "
+   },
+   {
+    "archivo": "bn_9346a3edb1904d80a6354073045b37fd_29521da783e6.json",
+    "captura": "20220629064742",
+    "titulo": "(ilegible)",
+    "url": "https://www.binance.com/en/support/announcement/9346a3edb1904d80a6354073045b37fd",
+    "cuerpo": "Fellow Binancians, To provide users with better wallet services, Binance will perform wallet maintenance for the following networks at 2022-04-14 05:30 (UTC) . The maintenance will take about three hours . Please Note: Withdrawals on the impacted networks will be suspended starting from 2022-04-14 05:25 (UTC) . We will reopen withdrawals on the impacted networks after the maintenance is completed. There will be no further announcement. Impacted Networks: Ambrosus Network (AMB) Cosmos Network (ATOM) AVAX C-Chain Network (AVAXC) BNB Chain (BNB Beacon Chain, BNB Smart Chain) Bitcoin Network (BTC) CELO Network (CELO) Chiliz Chain (CHZ) Cortex Network (CTXC) Dash Network (DASH) Doge Network (DOGE) Polkadot Network (DOT) Ethereum Classic Network (ETC) Ethereum Network (ETH) EOS Network (EOS) Fetch.AI Network (FET) Fantom Network (FTM) GoChain Network (GO) Klaytn Network (KLAY) Kusama Network (KSM) Litecoin Network (LTC) Terra Network (LUNA) Moonriver Network (MOVR) Neo N3 Mainnet (NEO3) Polygon Network (MATIC) POA Network (POA) Ripple (XRP) Ronin Network (RON) Secret Network (SCRT) Songbird Network (SGB) Stellar Network (XLM) Theta Network (THETA) TomoChain Network (TOMO) Tron Network (TRX) VeChain Network (VET) Wanchain Network (WAN) WAX Network (WAX) Walton Network (WTC) Edgeware Network (EDG) Parallel Finance Network (PARA) Kadena Network (KDA) Astar Network (ASTR) CertiK Network (CTK) Lisk Network (LSK) Bitcoin Cash Network (BCH) Ravencoin Network (RVN) eCash Network (XEC) Zcash Network (ZEC) Moonbeam Network (GLMR) KAVA Network (KAVA) Arbitrum One Network (ARBITRUM) Injectiv"
+   },
+   {
+    "archivo": "bn_99626f6c327442fab374eaa050f4a551_e3eeeb24655f.json",
+    "captura": "20221005142244",
+    "titulo": "(ilegible)",
+    "url": "https://www.binance.com/en/support/announcement/99626f6c327442fab374eaa050f4a551",
+    "cuerpo": "Fellow Binancians, In order to enhance our wallet services, Binance will perform wallet maintenance for the networks listed below at 2022-01-10 06:30 AM (UTC) . The maintenance will take about one hour . Please note: Withdrawals on the affected networks will be suspended starting from 2022-01-10 06:25 AM (UTC). Withdrawals will be reopened after the maintenance is completed. There will be no further announcement. Impacted Networks: Ambrosus Network (AMB) Cosmos Network (ATOM) AVAX C-Chain Network (AVAXC) Binance Chain (BNB) Binance Smart Chain (BSC) Bitcoin Network (BTC) CELO Network (CELO) Chiliz Chain (CHZ) Cortex Network (CTXC) Dash Network (DASH) Doge Network (DOGE) Polkadot Network (DOT) Ethereum Classic Network (ETC) Ethereum Network (ETH) EOS Network (EOS) Fetch.AI Network (FET) Fantom Network (FTM) GoChain Network (GO) Klaytn Network (KLAY) Kusama Network (KSM) Litecoin Network (LTC) Terra Network (LUNA) Moonriver Network (MOVR) Neo N3 Mainnet (NEO) Polygon Network (MATIC) POA Network (POA) Ripple (XRP) Ronin Network (RON) Secret Network (SCRT) Songbird Network (SGB) Stellar Network (XLM) Theta Network (THETA) TomoChain Network (TOMO) Tron Network (TRX) VeChain Network (VET) Wanchain Network (WAN) WAX Network (WAX) Walton Network (WTC) Risk warning : Cryptocurrency trading is subject to high market risk. Please make your trades cautiously. You are advised that Binance is not responsible for your trading losses. "
+   },
+   {
+    "archivo": "bn_a73205f15c5c4fa39e0f5c6b38d4d4fc_85b7bf4ddc62.json",
+    "captura": "20211019051927",
+    "titulo": "Binance Concludes 6 Promos: SAND, RAY, FET and Olympics Trading Competitions, and More",
+    "url": "https://www.binance.com/en/support/announcement/a73205f15c5c4fa39e0f5c6b38d4d4fc",
+    "cuerpo": "Fellow Binancians, The following promotions have now concluded: SAND Trading Competition RAY Trading Competition FET Trading Competition African Users Exclusive BNB, ADA & SHIB Airdrop Olympics Trading Competition All rewards have been distributed to the winners’ accounts. For SAND, RAY, and FET Trading Competitions , users will be able to login and redeem their vouchers via Account > Reward Center . The validity period for the token vouchers is set at 14 days from the day of distribution. For African Users Exclusive, “BNB, ADA & SHIB” Airdrop, and Olympics Trading Competition , users can see their rewards via Account Center > Wallet > Distribution . Original promotion links: The Sandbox (SAND) Trading Competition - $100,000 To Be Won! RAY Trading Competition - $100,000 Rewards Up for Grabs! Crypto Summer Is Here! Stay Fit with Fetch.ai (FET) and Dive into the $200,000 Prize Pool! African Users Exclusive: August Visitor Special ADA, SHIB & BNB Airdrop - Up To $75,000 To Be Shared! Olympics Trading Competition: Trade Fiat & Cheer On Your Nation Risk warning : Cryptocurrency trading is subject to high market risk. Please make your trades cautiously. Binance will make best efforts to choose high-quality coins, but will not be responsible for your trading losses. "
+   },
+   {
+    "archivo": "bn_d68c8463b00b49b28c7d489d055c5282_c2a24f81e721.json",
+    "captura": "20211128215850",
+    "titulo": "Wallet Maintenance for Multiple Networks - 2021-10-26",
+    "url": "https://www.binance.com/en/support/announcement/d68c8463b00b49b28c7d489d055c5282",
+    "cuerpo": "Fellow Binancians, Binance will perform wallet maintenance for the networks listed as below at 2021-10-27 07:00 AM (UTC). The maintenance will take about 3 hours. Please note: Withdrawals on the affected networks will be suspended starting from 2021-10-27 06:55 AM (UTC). Withdrawals will be reopened after the maintenance is completed. There will be no further announcement. Impacted Networks: Ambrosus Network (AMB) AVAX C-Chain Network (AVAXC) Binance Chain (BNB) Binance Smart Chain (BSC) CELO Network (CELO) Chiliz Chain (CHZ) Cortex Network (CTXC) Ethereum Classic Network (ETC) Ethereum Network (ETH) Fetch.AI Network (FET) Fantom Network (FTM) GoChain Network (GO) Klaytn Network (KLAY) Polygon Network (MATIC) POA Network (POA) Ronin Network (RON) Theta Network (THETA) TomoChain Network (TOMO) Tron Network (TRX) VeChain Network (VET) Wanchain Network (WAN) WAX Network (WAX) Walton Network (WTC) Risk warning : Cryptocurrency trading is subject to high market risk. Please make your trades cautiously. You are advised that Binance is not responsible for your trading losses. "
+   },
+   {
+    "archivo": "bn_f25208a937fe4be983da2b2d83d0beee_1cb9b5e120eb.json",
+    "captura": "20221006111809",
+    "titulo": "(ilegible)",
+    "url": "https://www.binance.com/en/support/announcement/f25208a937fe4be983da2b2d83d0beee",
+    "cuerpo": "Fellow Binancians, Binance will perform wallet maintenance for the networks listed below at 2022-07-21 06:00 (UTC) . The maintenance will take about three hours . Please Note: Withdrawals on the impacted networks will be suspended starting from 2022-07-21 05:55 (UTC) . We will reopen withdrawals on the impacted networks after the maintenance is complete, and will send a further notice to notify users. Impacted Networks: Acala Network (ACA) Ambrosus Network (AMB) Arbitrum One Network (ARBITRUM) AVAX C-Chain Network (AVAXC) BAND Protocol Network (BAND) Bitcoin Cash Network (BCH) Bitcoin Network (BTC) BNB Chain (BNB Beacon Chain, BNB Smart Chain) CELO Network (CELO) CertiK Network (CTK) Chiliz Chain (CHZ) Cortex Network (CTXC) Cosmos Network (ATOM) Dash Network (DASH) Doge Network (DOGE) eCash Network (XEC) Edgeware Network (EDG) EOS Network (EOS) Ethereum Classic Network (ETC) Ethereum Network (ETH) Fantom Network (FTM) Fetch.AI Network (FET) Gnosis Chain Network (XDAI) GoChain Network (GO) Injective Protocol Network (INJ) Internet Computer Network (ICP) IOST Network (IOST) IRISnet Network (IRIS) Kadena Network (KDA) Kava Network (KAVA) Klaytn Network (KLAY) Kusama Network (KSM) Lisk Network (LSK) Litecoin Network (LTC) Moonbeam Network (GLMR) Moonriver Network (MOVR) NEAR Protocol Network (NEAR) Neo N3 Mainnet (NEO3) Optimism Network (OP) Parallel Finance Network (PARA) POA Network (POA) Polkadot Network (DOT) Polygon Network (MATIC) Qtum Network (QTUM) Ravencoin Network (RVN) Reef Network (REEF) REI Network (REI) Ripple Network (XRP) Ronin Network (RON) Secret Network (SCRT"
+   },
+   {
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-lists-fetch-ai-fet-a_b94babaa00be.json",
+    "captura": "20230209035745",
+    "titulo": "Announcement",
+    "url": "https://www.binance.com/en/support/announcement/binance-lists-fetch-ai-fet-and-completes-distribution-for-successful-launchpad-participants-360024623051",
+    "cuerpo": "Fellow Binancians, Binance will open trading for FET/BNB, FET/BTC and FET/USDT trading pairs at 2019/02/28 10:00 AM (UTC). Fetch.AI Listing Fee: 0 BNB Binance has also completed the distribution of FET to all successful Binance Launchpad participants You may confirm receipt of these tokens via the “Distribution History” page in the User Center. To learn more about the Fetch.AI (FET) project, read our in-depth Binance Research Report on FET . Note: To view your FET balances, please ensure you have not selected “Hide small assets” in your Funds page. Details: About Fetch.AI(FET) Fees Rules Risk warning: Cryptocurrency investment is subject to high market risk. Please make your investments cautiously. Binance will make best efforts to choose high quality coins, but will not be responsible for your investment losses. "
+   },
+   {
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-fet_11ab15c53664.json",
+    "captura": "20230929235630",
+    "titulo": "Binance Will Support the Fetch.ai (FET) and Terra Classic (LUNC) Network Upgrades",
+    "url": "https://www.binance.com/en/support/announcement/binance-will-support-the-fetch-ai-fet-and-terra-classic-lunc-network-upgrades-4de42c6210394603a9d22ae94c8ea542",
+    "cuerpo": "Fellow Binancians, Binance will support the Fetch.ai (FET) and Terra Classic (LUNC) network upgrades. The Fetch.ai (FET) network upgrade will take place at the Fetch.ai block height of 11,235,813 , or approximately at 2023-05-23 13:00 (UTC). Deposits and withdrawals of FET will be suspended approximately starting from 2023-05-23 12:00 (UTC). The Terra Classic (LUNC) network upgrade will take place at the Terra Classic block height of 12,902,400 , or approximately at 2023-05-23 22:00 (UTC). Deposits and withdrawals for LUNC and USTC via the Terra Classic (LUNC) network will be suspended approximately starting from 2023-05-23 21:30 (UTC). Please note: The trading of FET, LUNC and USTC will not be affected during the network upgrades. While the Fetch.ai (FET) network upgrade will take place at the Fetch.ai block height of 11,235,813 , the Terra Classic (LUNC) network upgrade will take place at the Terra Classic block height of 12,902,400 . The estimated timings are for users’ reference only. Binance will handle all technical requirements involved for all users holding FET, LUNC and USTC in their Binance accounts. We will reopen deposits and withdrawals for FET, LUNC and USTC once we deem the upgraded networks to be stable, and we will not notify users in a further announcement. Where any discrepancy arises between the translated versions and the original English version, the English version shall prevail. For more information on the network upgrades, please refer to the following: Fetch.ai Release V0.10.7 Fetch.ai Proposal 19 Terra Classic Community's Latest Burn Tax Proposal "
+   },
+   {
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-fet_c42fc2d410ea.json",
+    "captura": "20221129115247",
+    "titulo": "Binance Will Support the Fetch.ai (FET) Network Upgrade | Binance Support",
+    "url": "https://www.binance.com/en/support/announcement/binance-will-support-the-fetch-ai-fet-network-upgrade-f9bc38475ff546beb6f8effd30fd7b8b",
+    "cuerpo": "Fellow Binancians, Binance will support the Fetch.ai (FET) network upgrade. The Fetch.ai (FET) network upgrade will take place at the Fetch.ai block height of 7,305,500 , or approximately at 2022-08-23 15:00 (UTC). Deposits and withdrawals for FET will be suspended approximately from 2022-08-23 14:00 (UTC). Please note: The trading of FET will not be affected during the network upgrade. The Fetch.ai (FET) network upgrade will take place at the Fetch.ai block height of 7,305,500 . The estimated time is for users’ reference only. Binance will handle all technical requirements involved for all users holding FET in their Binance accounts. We will reopen deposits and withdrawals for FET once we deem the upgraded network to be stable, and we will not notify users in a further announcement. For more information on the network upgrade, please refer to the following: Fetch.ai Mainnet Upgrade Fetch.ai v0.10.5 "
+   }
+  ]
+ },
+ "TOMO": {
+  "actividad": {
+   "episodios": [
+    [
+     "2019-08-24",
+     "2023-11-19"
+    ]
+   ],
+   "cortes": []
+  },
+  "cuerpos": [
+   {
+    "archivo": "bn_06679d12083f4c26b805f060581d5de3_9d20cb2572f3.json",
+    "captura": "20220120202636",
+    "titulo": "(ilegible)",
+    "url": "https://www.binance.com/en/support/announcement/06679d12083f4c26b805f060581d5de3?ref=AZTKZ9XS&utm_source=BinanceTwitter&utm_medium=GlobalSocial&utm_campaign=GlobalSocial",
+    "cuerpo": "Fellow Binancians, In order to enhance our wallet services, Binance will perform wallet maintenance for the networks listed below at 2021-12-09 06:30 AM (UTC). The maintenance will take about 1.5 hours . Please note: Withdrawals on the affected networks will be suspended starting from 2021-12-09 06:25 AM (UTC). Withdrawals will be reopened after the maintenance is completed. There will be no further announcement. Impacted Networks: Ambrosus Network (AMB) Cosmos Network (ATOM) AVAX C-Chain Network (AVAXC) Binance Chain (BNB) Binance Smart Chain (BSC) Bitcoin Network (BTC) CELO Network (CELO) Chiliz Chain (CHZ) Cortex Network (CTXC) Doge Network (DOGE) Polkadot Network (DOT) Ethereum Classic Network (ETC) Ethereum Network (ETH) EOS Network (EOS) Fetch.AI Network (FET) Fantom Network (FTM) GoChain Network (GO) Klaytn Network (KLAY) Kusama Network (KSM) Terra Network (LUNA) Moonriver Network (MOVR) Neo N3 Mainnet (NEO) Polygon Network (MATIC) POA Network (POA) Ronin Network (RON) Theta Network (THETA) TomoChain Network (TOMO) Tron Network (TRX) VeChain Network (VET) Wanchain Network (WAN) WAX Network (WAX) Walton Network (WTC) Stellar Network (XLM) Risk warning : Cryptocurrency trading is subject to high market risk. Please make your trades cautiously. You are advised that Binance is not responsible for your trading losses. "
+   },
+   {
+    "archivo": "bn_1b42f5c680c24eb3baa2165faad97d94_ffc8ed806730.json",
+    "captura": "20211130100409",
+    "titulo": "Binance Will Support the TomoChain (TOMO) Network Upgrade & Hard Fork",
+    "url": "https://www.binance.com/en/support/announcement/1b42f5c680c24eb3baa2165faad97d94/",
+    "cuerpo": "Fellow Binancians, Binance will support the TomoChain (TOMO) network upgrade & hard fork at the TomoChain block height of 30,915,660 or at approximately 2021/01/21 23:54 PM (UTC). Deposits and withdrawals of TOMO will be suspended starting from 2021/01/21 12:00 PM (UTC). Note: The trading of TOMO will not be affected during the upgrade. Binance will handle all technical requirements involved for all users holding TOMO in their Binance accounts. The TOMO network upgrade & hard fork will not result in a new token being created. We will reopen deposits and withdrawals for TOMO once we deem the upgraded network to be stable, and will not notify users in a further announcement. For more information on the network upgrade & hard fork, please refer to the following: TomoChain Network Upgrade— The Zorro Release , TomoChain Block Countdown Risk warning : Cryptocurrency trading is subject to high market risk. Please make your trades cautiously. Binance will make best efforts to choose high-quality coins, but will not be responsible for your trading losses. "
+   },
+   {
+    "archivo": "bn_78679f697a6a4dba96956b3c55b88221_407faf1de349.json",
+    "captura": "20220706065937",
+    "titulo": "(ilegible)",
+    "url": "https://www.binance.com/en/support/announcement/78679f697a6a4dba96956b3c55b88221",
+    "cuerpo": "Fellow Binancians, In order to improve user experience, Binance will perform wallet maintenance from 2022-05-19 06:00 (UTC) for the following networks. The maintenance may take about three hours . Please Note: Withdrawals on the impacted networks will be suspended starting from 2022-05-19 05:55 (UTC) . We will reopen withdrawals on the impacted networks after the maintenance is complete. There will be no further announcement. Impacted Networks: Ambrosus Network (AMB) Cosmos Network (ATOM) AVAX C-Chain Network (AVAXC) BNB Chain (BNB Beacon Chain, BNB Smart Chain) Bitcoin Network (BTC) CELO Network (CELO) Chiliz Chain (CHZ) Cortex Network (CTXC) Dash Network (DASH) Doge Network (DOGE) Polkadot Network (DOT) Ethereum Classic Network (ETC) Ethereum Network (ETH) EOS Network (EOS) Fetch.AI Network (FET) Fantom Network (FTM) GoChain Network (GO) Klaytn Network (KLAY) Kusama Network (KSM) Litecoin Network (LTC) Terra Network (LUNA) Moonriver Network (MOVR) Neo N3 Mainnet (NEO3) Polygon Network (MATIC) POA Network (POA) Ripple (XRP) Ronin Network (RON) Secret Network (SCRT) Songbird Network (SGB) Stellar Network (XLM) Theta Network (THETA) TomoChain Network (TOMO) Tron Network (TRX) VeChain Network (VET) Wanchain Network (WAN) WAX Network (WAX) Walton Network (WTC) Edgeware Network (EDG) Parallel Finance Network (PARA) Kadena Network (KDA) Astar Network (ASTR) CertiK Network (CTK) Lisk Network (LSK) Bitcoin Cash Network (BCH) Ravencoin Network (RVN) eCash Network (XEC) Zcash Network (ZEC) Moonbeam Network (GLMR) Kava Network (KAVA) Arbitrum One Network (ARBITRUM) Injective Protocol"
+   },
+   {
+    "archivo": "bn_9346a3edb1904d80a6354073045b37fd_29521da783e6.json",
+    "captura": "20220629064742",
+    "titulo": "(ilegible)",
+    "url": "https://www.binance.com/en/support/announcement/9346a3edb1904d80a6354073045b37fd",
+    "cuerpo": "Fellow Binancians, To provide users with better wallet services, Binance will perform wallet maintenance for the following networks at 2022-04-14 05:30 (UTC) . The maintenance will take about three hours . Please Note: Withdrawals on the impacted networks will be suspended starting from 2022-04-14 05:25 (UTC) . We will reopen withdrawals on the impacted networks after the maintenance is completed. There will be no further announcement. Impacted Networks: Ambrosus Network (AMB) Cosmos Network (ATOM) AVAX C-Chain Network (AVAXC) BNB Chain (BNB Beacon Chain, BNB Smart Chain) Bitcoin Network (BTC) CELO Network (CELO) Chiliz Chain (CHZ) Cortex Network (CTXC) Dash Network (DASH) Doge Network (DOGE) Polkadot Network (DOT) Ethereum Classic Network (ETC) Ethereum Network (ETH) EOS Network (EOS) Fetch.AI Network (FET) Fantom Network (FTM) GoChain Network (GO) Klaytn Network (KLAY) Kusama Network (KSM) Litecoin Network (LTC) Terra Network (LUNA) Moonriver Network (MOVR) Neo N3 Mainnet (NEO3) Polygon Network (MATIC) POA Network (POA) Ripple (XRP) Ronin Network (RON) Secret Network (SCRT) Songbird Network (SGB) Stellar Network (XLM) Theta Network (THETA) TomoChain Network (TOMO) Tron Network (TRX) VeChain Network (VET) Wanchain Network (WAN) WAX Network (WAX) Walton Network (WTC) Edgeware Network (EDG) Parallel Finance Network (PARA) Kadena Network (KDA) Astar Network (ASTR) CertiK Network (CTK) Lisk Network (LSK) Bitcoin Cash Network (BCH) Ravencoin Network (RVN) eCash Network (XEC) Zcash Network (ZEC) Moonbeam Network (GLMR) KAVA Network (KAVA) Arbitrum One Network (ARBITRUM) Injectiv"
+   },
+   {
+    "archivo": "bn_99626f6c327442fab374eaa050f4a551_e3eeeb24655f.json",
+    "captura": "20221005142244",
+    "titulo": "(ilegible)",
+    "url": "https://www.binance.com/en/support/announcement/99626f6c327442fab374eaa050f4a551",
+    "cuerpo": "Fellow Binancians, In order to enhance our wallet services, Binance will perform wallet maintenance for the networks listed below at 2022-01-10 06:30 AM (UTC) . The maintenance will take about one hour . Please note: Withdrawals on the affected networks will be suspended starting from 2022-01-10 06:25 AM (UTC). Withdrawals will be reopened after the maintenance is completed. There will be no further announcement. Impacted Networks: Ambrosus Network (AMB) Cosmos Network (ATOM) AVAX C-Chain Network (AVAXC) Binance Chain (BNB) Binance Smart Chain (BSC) Bitcoin Network (BTC) CELO Network (CELO) Chiliz Chain (CHZ) Cortex Network (CTXC) Dash Network (DASH) Doge Network (DOGE) Polkadot Network (DOT) Ethereum Classic Network (ETC) Ethereum Network (ETH) EOS Network (EOS) Fetch.AI Network (FET) Fantom Network (FTM) GoChain Network (GO) Klaytn Network (KLAY) Kusama Network (KSM) Litecoin Network (LTC) Terra Network (LUNA) Moonriver Network (MOVR) Neo N3 Mainnet (NEO) Polygon Network (MATIC) POA Network (POA) Ripple (XRP) Ronin Network (RON) Secret Network (SCRT) Songbird Network (SGB) Stellar Network (XLM) Theta Network (THETA) TomoChain Network (TOMO) Tron Network (TRX) VeChain Network (VET) Wanchain Network (WAN) WAX Network (WAX) Walton Network (WTC) Risk warning : Cryptocurrency trading is subject to high market risk. Please make your trades cautiously. You are advised that Binance is not responsible for your trading losses. "
+   },
+   {
+    "archivo": "bn_d68c8463b00b49b28c7d489d055c5282_c2a24f81e721.json",
+    "captura": "20211128215850",
+    "titulo": "Wallet Maintenance for Multiple Networks - 2021-10-26",
+    "url": "https://www.binance.com/en/support/announcement/d68c8463b00b49b28c7d489d055c5282",
+    "cuerpo": "Fellow Binancians, Binance will perform wallet maintenance for the networks listed as below at 2021-10-27 07:00 AM (UTC). The maintenance will take about 3 hours. Please note: Withdrawals on the affected networks will be suspended starting from 2021-10-27 06:55 AM (UTC). Withdrawals will be reopened after the maintenance is completed. There will be no further announcement. Impacted Networks: Ambrosus Network (AMB) AVAX C-Chain Network (AVAXC) Binance Chain (BNB) Binance Smart Chain (BSC) CELO Network (CELO) Chiliz Chain (CHZ) Cortex Network (CTXC) Ethereum Classic Network (ETC) Ethereum Network (ETH) Fetch.AI Network (FET) Fantom Network (FTM) GoChain Network (GO) Klaytn Network (KLAY) Polygon Network (MATIC) POA Network (POA) Ronin Network (RON) Theta Network (THETA) TomoChain Network (TOMO) Tron Network (TRX) VeChain Network (VET) Wanchain Network (WAN) WAX Network (WAX) Walton Network (WTC) Risk warning : Cryptocurrency trading is subject to high market risk. Please make your trades cautiously. You are advised that Binance is not responsible for your trading losses. "
+   },
+   {
+    "archivo": "bn_f25208a937fe4be983da2b2d83d0beee_1cb9b5e120eb.json",
+    "captura": "20221006111809",
+    "titulo": "(ilegible)",
+    "url": "https://www.binance.com/en/support/announcement/f25208a937fe4be983da2b2d83d0beee",
+    "cuerpo": "Fellow Binancians, Binance will perform wallet maintenance for the networks listed below at 2022-07-21 06:00 (UTC) . The maintenance will take about three hours . Please Note: Withdrawals on the impacted networks will be suspended starting from 2022-07-21 05:55 (UTC) . We will reopen withdrawals on the impacted networks after the maintenance is complete, and will send a further notice to notify users. Impacted Networks: Acala Network (ACA) Ambrosus Network (AMB) Arbitrum One Network (ARBITRUM) AVAX C-Chain Network (AVAXC) BAND Protocol Network (BAND) Bitcoin Cash Network (BCH) Bitcoin Network (BTC) BNB Chain (BNB Beacon Chain, BNB Smart Chain) CELO Network (CELO) CertiK Network (CTK) Chiliz Chain (CHZ) Cortex Network (CTXC) Cosmos Network (ATOM) Dash Network (DASH) Doge Network (DOGE) eCash Network (XEC) Edgeware Network (EDG) EOS Network (EOS) Ethereum Classic Network (ETC) Ethereum Network (ETH) Fantom Network (FTM) Fetch.AI Network (FET) Gnosis Chain Network (XDAI) GoChain Network (GO) Injective Protocol Network (INJ) Internet Computer Network (ICP) IOST Network (IOST) IRISnet Network (IRIS) Kadena Network (KDA) Kava Network (KAVA) Klaytn Network (KLAY) Kusama Network (KSM) Lisk Network (LSK) Litecoin Network (LTC) Moonbeam Network (GLMR) Moonriver Network (MOVR) NEAR Protocol Network (NEAR) Neo N3 Mainnet (NEO3) Optimism Network (OP) Parallel Finance Network (PARA) POA Network (POA) Polkadot Network (DOT) Polygon Network (MATIC) Qtum Network (QTUM) Ravencoin Network (RVN) Reef Network (REEF) REI Network (REI) Ripple Network (XRP) Ronin Network (RON) Secret Network (SCRT"
+   },
+   {
+    "archivo": "url_https___www.binance.com_en_support_announcement_360042426811_d564dd67271c.json",
+    "captura": "20211203073341",
+    "titulo": "Binance Will Support TomoChain (TOMO) Staking",
+    "url": "https://www.binance.com/en/support/announcement/360042426811",
+    "cuerpo": "Fellow Binancians, Binance will be adding support for TomoChain (TOMO) staking starting from 2020/04/18 and will distribute TOMO staking rewards as detailed below: Monthly TOMO Staking Airdrop Program Starting from 2020/04/18 at 00:00 AM UTC, Binance will begin taking live snapshots of user TOMO balances. TOMO Staking distribution will be calculated as follows: TOMO generated by each user = Total TOMO staking rewards received by Binance * User TOMO holdings ratio. User TOMO holdings ratio = Average user TOMO holdings / Average total TOMO staked by Binance. Users must hold at least 5 TOMO in order to qualify for staking rewards. The initial distribution of TOMO staking rewards will be calculated through to 2020/05/31 , with the total amount distributed equal to the staking rewards accrued during the period. TOMO rewards are calculated daily and distributed monthly. Distributions will be completed before the 20th of each month. Move your coins to Binance from anywhere and enjoy hassle-free staking rewards. Other rewarded coins supported by Binance can be found on the Staking Home Page here . Thank you for your support! "
+   }
+  ]
+ },
+ "VIC": {
+  "actividad": {
+   "episodios": [
+    [
+     "2023-11-24",
+     "2026-05-31"
+    ]
+   ],
+   "cortes": []
+  },
+  "cuerpos": []
+ },
+ "GAL": {
+  "actividad": {
+   "episodios": [
+    [
+     "2022-05-05",
+     "2024-07-14"
+    ]
+   ],
+   "cortes": []
+  },
+  "cuerpos": [
+   {
+    "archivo": "bn_ea7c702d59a84dc29e2ed7ab3ad24c38_3e4f48f02638.json",
+    "captura": "20220517001800",
+    "titulo": "(ilegible)",
+    "url": "https://www.binance.com/en/support/announcement/ea7c702d59a84dc29e2ed7ab3ad24c38",
+    "cuerpo": "Fellow Binancians, Binance is excited to announce the 30th project on Binance Launchpool - Project Galaxy (GAL) , a Web3 credential data network. Users will be able to stake their BNB, BUSD and CAKE into separate pools to farm GAL tokens over 30 days, with farming starting from 2022-04-29 00:00 AM (UTC). Binance will then list GAL into the innovation zone at 2022-05-05 12:00 PM (UTC) and open trading with GAL/BTC, GAL/BNB, GAL/BUSD and GAL/USDT trading pairs. GAL Launchpool Details: Token Name: Project Galaxy (GAL) Total Token Supply: 200,000,000 GAL Launchpool Token Rewards: 3,000,000 GAL (1.5% of total token supply) Initial Circulating Supply: 35,161,333 GAL (17.58% of total token supply) Smart Contract Address: GAL ( ERC-20 ); GAL ( BEP-20 ) Staking Terms: No upper limit. KYC required Supported Pools: Stake BNB : 2,100,000 GAL in rewards (70%) Stake CAKE : 600,000 GAL in rewards (20%) Stake BUSD : 300,000 GAL in rewards (10%) Farming Period: 2022-04-29 00:00 AM (UTC) to 2022-05-28 11:59 PM (UTC). GAL Farming Distribution Dates (00:00:00 - 23:59:59 UTC each day) Total Daily Rewards (GAL) BNB Pool Daily Rewards (GAL) CAKE Pool Daily Rewards (GAL) BUSD Pool Daily Rewards (GAL) 2022-04-29 - 2022-05-05 214,285.71 150,000.00 42,857.14 21,428.57 2022-05-06 - 2022-05-28 65,217.39 45,652.17 13,043.48 6,521.74 Read about Project Galaxy (GAL) in our research report here . Please note: Snapshots of user balances and total pool balances will be taken each hour to calculate user rewards, which will also be updated each hour. Users will be able to accumulate their rewards (calculated e"
+   },
+   {
+    "archivo": "bn_f5dc72c8219746a09fa527fb134719db_e816d3e42df6.json",
+    "captura": "20220705210157",
+    "titulo": "(ilegible)",
+    "url": "https://www.binance.com/en/support/announcement/f5dc72c8219746a09fa527fb134719db",
+    "cuerpo": "Fellow Binancians, The following promotions have now concluded: Learn & Trade GAL Register & Share GAL JASMY Futures Trading Tournament For token voucher rewards from Learn & Trade GAL and Register & Share GAL, users will be able to login and redeem their vouchers via Account > Reward Center . The validity period for the token vouchers is set at 14 days from the day of distribution. For token rewards from JASMY Futures Trading Tournament , users will be able to view their rewards by selecting Account > Wallet > Transaction History > Distribution . For gift rewards from Register & Share GAL , users can redeem them by going to Account > My Gifts > Claim your Gifts. Original promotion links: Learn & Trade Project Galaxy (GAL) - $75,000 in GAL to Be Shared! Register, Complete KYC & Share Rewards of $45,000 in Project Galaxy (GAL) ! JASMY USDⓈ-M Futures Trading Tournament - 50,000 BUSD Up for Grabs! Risk warning : Cryptocurrency trading is subject to high market risk. Please make your trades cautiously. You are advised that Binance is not responsible for your trading losses. "
+   }
+  ]
+ },
+ "G": {
+  "actividad": {
+   "episodios": [
+    [
+     "2024-07-19",
+     "2026-05-31"
+    ]
+   ],
+   "cortes": []
+  },
+  "cuerpos": []
+ },
+ "RNDR": {
+  "actividad": {
+   "episodios": [
+    [
+     "2021-11-27",
+     "2024-07-21"
+    ]
+   ],
+   "cortes": []
+  },
+  "cuerpos": []
+ },
+ "RENDER": {
+  "actividad": {
+   "episodios": [
+    [
+     "2024-07-26",
+     "2026-05-31"
+    ]
+   ],
+   "cortes": []
+  },
+  "cuerpos": [
+   {
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-adds-render-render-o_f64537929c7f.json",
+    "captura": "20240919170900",
+    "titulo": "Binance Adds Render (RENDER) on Earn, Buy Crypto, Convert, Margin & Futures",
+    "url": "https://www.binance.com/en/support/announcement/binance-adds-render-render-on-earn-buy-crypto-convert-margin-futures-3e0b3e47a09c4e7ea6963d467c1eec28",
+    "cuerpo": "Fellow Binancians, Binance is excited to announce that Render (RENDER) has been added to Binance Simple Earn , \"Buy Crypto\" , and Binance Convert . In addition, Binance will add RENDER on Binance Margin , Binance Futures , and Binance Auto-Invest at 2024-07-26 10:00 (UTC), 2024-07-26 10:00 (UTC) and 2024-07-29 10:00 (UTC) respectively. Earn Users can now subscribe to RENDER Flexible Products on Binance Simple Earn. From 2024-07-29 10:00 (UTC) , users may purchase RENDER using any of the payment options supported on Binance Auto-Invest . Buy & Sell Crypto Users may now buy RENDER directly with their credit/debit cards, Google Pay, Apple Pay , or buy and sell RENDER directly with their available wallet balances at the “ Buy Crypto ” page. Convert Users can now trade RENDER against BTC, USDT, and any other tokens supported by Binance Convert at zero fees . Margin Binance Margin will add RENDER as a new borrowable asset on Cross and Isolated Margin, as well as the RENDER/USDT and RENDER/USDC pairs on Cross and Isolated Margin at 2024-07-26 10:00 (UTC) . Please refer to Margin Data for a list of the most updated marginable assets and further information on specific limits, collateral ratio and rates. Futures Binance Futures will launch the USDⓈ-M RENDER Perpetual Contract at 2024-07-26 10:00 (UTC) , with up to 50x leverage. More details on the USDⓈ-M RENDER Perpetual Contract can be found in the table below: USDⓈ-M Perpetual Contract RENDERUSDT Launch Time 2024-07-26 10:00 (UTC) Underlying Asset Render (RENDER) Settlement Asset USDT Tick Size 0.001 Capped Funding Rate +2.00% / -"
+   }
+  ]
+ },
+ "KLAY": {
+  "actividad": {
+   "episodios": [
+    [
+     "2021-06-24",
+     "2024-10-27"
+    ]
+   ],
+   "cortes": []
+  },
+  "cuerpos": [
+   {
+    "archivo": "bn_06679d12083f4c26b805f060581d5de3_9d20cb2572f3.json",
+    "captura": "20220120202636",
+    "titulo": "(ilegible)",
+    "url": "https://www.binance.com/en/support/announcement/06679d12083f4c26b805f060581d5de3?ref=AZTKZ9XS&utm_source=BinanceTwitter&utm_medium=GlobalSocial&utm_campaign=GlobalSocial",
+    "cuerpo": "Fellow Binancians, In order to enhance our wallet services, Binance will perform wallet maintenance for the networks listed below at 2021-12-09 06:30 AM (UTC). The maintenance will take about 1.5 hours . Please note: Withdrawals on the affected networks will be suspended starting from 2021-12-09 06:25 AM (UTC). Withdrawals will be reopened after the maintenance is completed. There will be no further announcement. Impacted Networks: Ambrosus Network (AMB) Cosmos Network (ATOM) AVAX C-Chain Network (AVAXC) Binance Chain (BNB) Binance Smart Chain (BSC) Bitcoin Network (BTC) CELO Network (CELO) Chiliz Chain (CHZ) Cortex Network (CTXC) Doge Network (DOGE) Polkadot Network (DOT) Ethereum Classic Network (ETC) Ethereum Network (ETH) EOS Network (EOS) Fetch.AI Network (FET) Fantom Network (FTM) GoChain Network (GO) Klaytn Network (KLAY) Kusama Network (KSM) Terra Network (LUNA) Moonriver Network (MOVR) Neo N3 Mainnet (NEO) Polygon Network (MATIC) POA Network (POA) Ronin Network (RON) Theta Network (THETA) TomoChain Network (TOMO) Tron Network (TRX) VeChain Network (VET) Wanchain Network (WAN) WAX Network (WAX) Walton Network (WTC) Stellar Network (XLM) Risk warning : Cryptocurrency trading is subject to high market risk. Please make your trades cautiously. You are advised that Binance is not responsible for your trading losses. "
+   },
+   {
+    "archivo": "bn_2717f4e91d5a476493ba5380f12f8ebc_12852988e0fe.json",
+    "captura": "20210805221658",
+    "titulo": "Introducing Klaytn (KLAY) on Binance Launchpool! Farm KLAY by Staking BNB & BUSD Tokens",
+    "url": "https://www.binance.com/en/support/announcement/2717f4e91d5a476493ba5380f12f8ebc",
+    "cuerpo": "Fellow Binancians, Binance is excited to announce the 21st project on Binance Launchpool - Klaytn (KLAY) , an open-source blockchain built by Kakao for performance and scalability. Users will be able to stake their BNB and BUSD into separate pools to farm KLAY tokens over 14 days, with farming starting from 2021-06-25 00:00 AM (UTC). KLAY Launchpool Details: Token Name: Klaytn (KLAY） Total Supply: 10,602,731,555 KLAY Circulating Supply: 2,476,554,233 KLAY (25% of total supply） Launchpool Supply: 1,327,433 KLAY Research Report: Klaytn (KLAY) Block explorer: Klaytn Scope Staking Terms: No upper limit. No KYC required Supported Pools: Stake BNB : 1,061,946.4 KLAY in rewards (80%) Stake BUSD : 265,486.6 KLAY in rewards (20%) Farming Period: 2021-06-25 00:00 AM (UTC) to 2021-07-08 11:59 PM (UTC). KLAY Farming Distribution Dates (00:00:00 - 23:59:59 UTC each day) Total Daily Rewards (KLAY) BNB Pool Daily Rewards (KLAY) BUSD Pool Daily Rewards (KLAY) 2021-06-25 - 2021-07-08 94,816.64 75,853.31 18,963.33 Read about Klaytn (KLAY) in our research report here . Please note: Snapshots of user balances and total pool balances will be taken each hour to calculate user rewards, which will also be updated each hour. Users will be able to accumulate their rewards (calculated each hour) and claim these rewards directly to their spot accounts at any time. Each pool’s annual percentage yield (APY) and total pool balance will be updated in real time. Tokens can only be staked in one pool at a time. For example, User A cannot stake the same BNB into two different pools at the same time, but can "
+   },
+   {
+    "archivo": "bn_78679f697a6a4dba96956b3c55b88221_407faf1de349.json",
+    "captura": "20220706065937",
+    "titulo": "(ilegible)",
+    "url": "https://www.binance.com/en/support/announcement/78679f697a6a4dba96956b3c55b88221",
+    "cuerpo": "Fellow Binancians, In order to improve user experience, Binance will perform wallet maintenance from 2022-05-19 06:00 (UTC) for the following networks. The maintenance may take about three hours . Please Note: Withdrawals on the impacted networks will be suspended starting from 2022-05-19 05:55 (UTC) . We will reopen withdrawals on the impacted networks after the maintenance is complete. There will be no further announcement. Impacted Networks: Ambrosus Network (AMB) Cosmos Network (ATOM) AVAX C-Chain Network (AVAXC) BNB Chain (BNB Beacon Chain, BNB Smart Chain) Bitcoin Network (BTC) CELO Network (CELO) Chiliz Chain (CHZ) Cortex Network (CTXC) Dash Network (DASH) Doge Network (DOGE) Polkadot Network (DOT) Ethereum Classic Network (ETC) Ethereum Network (ETH) EOS Network (EOS) Fetch.AI Network (FET) Fantom Network (FTM) GoChain Network (GO) Klaytn Network (KLAY) Kusama Network (KSM) Litecoin Network (LTC) Terra Network (LUNA) Moonriver Network (MOVR) Neo N3 Mainnet (NEO3) Polygon Network (MATIC) POA Network (POA) Ripple (XRP) Ronin Network (RON) Secret Network (SCRT) Songbird Network (SGB) Stellar Network (XLM) Theta Network (THETA) TomoChain Network (TOMO) Tron Network (TRX) VeChain Network (VET) Wanchain Network (WAN) WAX Network (WAX) Walton Network (WTC) Edgeware Network (EDG) Parallel Finance Network (PARA) Kadena Network (KDA) Astar Network (ASTR) CertiK Network (CTK) Lisk Network (LSK) Bitcoin Cash Network (BCH) Ravencoin Network (RVN) eCash Network (XEC) Zcash Network (ZEC) Moonbeam Network (GLMR) Kava Network (KAVA) Arbitrum One Network (ARBITRUM) Injective Protocol"
+   },
+   {
+    "archivo": "bn_9346a3edb1904d80a6354073045b37fd_29521da783e6.json",
+    "captura": "20220629064742",
+    "titulo": "(ilegible)",
+    "url": "https://www.binance.com/en/support/announcement/9346a3edb1904d80a6354073045b37fd",
+    "cuerpo": "Fellow Binancians, To provide users with better wallet services, Binance will perform wallet maintenance for the following networks at 2022-04-14 05:30 (UTC) . The maintenance will take about three hours . Please Note: Withdrawals on the impacted networks will be suspended starting from 2022-04-14 05:25 (UTC) . We will reopen withdrawals on the impacted networks after the maintenance is completed. There will be no further announcement. Impacted Networks: Ambrosus Network (AMB) Cosmos Network (ATOM) AVAX C-Chain Network (AVAXC) BNB Chain (BNB Beacon Chain, BNB Smart Chain) Bitcoin Network (BTC) CELO Network (CELO) Chiliz Chain (CHZ) Cortex Network (CTXC) Dash Network (DASH) Doge Network (DOGE) Polkadot Network (DOT) Ethereum Classic Network (ETC) Ethereum Network (ETH) EOS Network (EOS) Fetch.AI Network (FET) Fantom Network (FTM) GoChain Network (GO) Klaytn Network (KLAY) Kusama Network (KSM) Litecoin Network (LTC) Terra Network (LUNA) Moonriver Network (MOVR) Neo N3 Mainnet (NEO3) Polygon Network (MATIC) POA Network (POA) Ripple (XRP) Ronin Network (RON) Secret Network (SCRT) Songbird Network (SGB) Stellar Network (XLM) Theta Network (THETA) TomoChain Network (TOMO) Tron Network (TRX) VeChain Network (VET) Wanchain Network (WAN) WAX Network (WAX) Walton Network (WTC) Edgeware Network (EDG) Parallel Finance Network (PARA) Kadena Network (KDA) Astar Network (ASTR) CertiK Network (CTK) Lisk Network (LSK) Bitcoin Cash Network (BCH) Ravencoin Network (RVN) eCash Network (XEC) Zcash Network (ZEC) Moonbeam Network (GLMR) KAVA Network (KAVA) Arbitrum One Network (ARBITRUM) Injectiv"
+   },
+   {
+    "archivo": "bn_99626f6c327442fab374eaa050f4a551_e3eeeb24655f.json",
+    "captura": "20221005142244",
+    "titulo": "(ilegible)",
+    "url": "https://www.binance.com/en/support/announcement/99626f6c327442fab374eaa050f4a551",
+    "cuerpo": "Fellow Binancians, In order to enhance our wallet services, Binance will perform wallet maintenance for the networks listed below at 2022-01-10 06:30 AM (UTC) . The maintenance will take about one hour . Please note: Withdrawals on the affected networks will be suspended starting from 2022-01-10 06:25 AM (UTC). Withdrawals will be reopened after the maintenance is completed. There will be no further announcement. Impacted Networks: Ambrosus Network (AMB) Cosmos Network (ATOM) AVAX C-Chain Network (AVAXC) Binance Chain (BNB) Binance Smart Chain (BSC) Bitcoin Network (BTC) CELO Network (CELO) Chiliz Chain (CHZ) Cortex Network (CTXC) Dash Network (DASH) Doge Network (DOGE) Polkadot Network (DOT) Ethereum Classic Network (ETC) Ethereum Network (ETH) EOS Network (EOS) Fetch.AI Network (FET) Fantom Network (FTM) GoChain Network (GO) Klaytn Network (KLAY) Kusama Network (KSM) Litecoin Network (LTC) Terra Network (LUNA) Moonriver Network (MOVR) Neo N3 Mainnet (NEO) Polygon Network (MATIC) POA Network (POA) Ripple (XRP) Ronin Network (RON) Secret Network (SCRT) Songbird Network (SGB) Stellar Network (XLM) Theta Network (THETA) TomoChain Network (TOMO) Tron Network (TRX) VeChain Network (VET) Wanchain Network (WAN) WAX Network (WAX) Walton Network (WTC) Risk warning : Cryptocurrency trading is subject to high market risk. Please make your trades cautiously. You are advised that Binance is not responsible for your trading losses. "
+   },
+   {
+    "archivo": "bn_a9abd04bce8a4a8cbafcbfd330c21248_1b6d8d08240a.json",
+    "captura": "20220808035053",
+    "titulo": "(ilegible)",
+    "url": "https://www.binance.com/en/support/announcement/a9abd04bce8a4a8cbafcbfd330c21248/",
+    "cuerpo": "Fellow Binancians, Binance will support the Klaytn (KLAY) network upgrade. The Klaytn (KLAY) network upgrade will take place at KLAY block height of 75,334,961 or approximately at 2021-11-17 05:00 (UTC). Deposits and withdrawals of KLAY will be suspended approximately starting from 2021-11-17 04:00 (UTC). Please note: The trading of KLAY will not be affected during the upgrade. The Klaytn (KLAY) network upgrade will take place at KLAY block height of 75,334,961 . The estimated time is for users’ reference only. Binance will handle all technical requirements involved for all users holding KLAY in their Binance accounts. The KLAY network upgrade will not result in new tokens being created. We will reopen deposits and withdrawals for KLAY once we deem the upgraded network to be stable, and we will not notify users in a further announcement. For more information on the network upgrade, please refer to the following: [Notice] Klaytn v1.7.1 Released Risk warning : Cryptocurrency trading is subject to high market risk. Please make your trades cautiously. You are advised that Binance is not responsible for your trading losses. "
+   },
+   {
+    "archivo": "bn_c623fd647d264e64980a4c987f6ecdb4_d506efa15340.json",
+    "captura": "20210919203929",
+    "titulo": "FOR, FXS, HNT, KLAY, LPT and PERP Listing on Isolated Margin, $1M Margin 0% Interest Vouchers Giveaway",
+    "url": "https://www.binance.com/en/support/announcement/c623fd647d264e64980a4c987f6ecdb4",
+    "cuerpo": "Fellow Binancians, Binance has added FOR, FXS, HNT, KLAY, LPT and PERP as new isolated margin/borrowable assets on Binance Isolated Margin, and has enabled isolated margin trading for new margin pairs: COTI/BUSD, FOR/BUSD, FXS/BUSD, HNT/BUSD, HNT/USDT, KAVA/BUSD, KLAY/BUSD, KLAY/USDT, LPT/BUSD, LPT/USDT, LPT/BTC, PERP/BUSD, PERP/USDT, PERP/BTC. One Million Margin 0% Interest Vouchers to Be Won! Campaign Period: 2021-07-02 13:00 (UTC) to 2021-07-10 03:59 (UTC) Both new and existing VIP 0 & VIP 1 users can join the campaign by trading a minimum of 850 HNT , 10,500 KLAY , 600 LPT or 1,400 PERP (buys and sells) on eligible isolated margin pairs during the campaign period. HNT pairs: HNT/BUSD, HNT/USDT KLAY pairs: KLAY/BUSD, KLAY/USDT LPT pairs: LPT/BUSD, LPT/USDT, LPT/BTC PERP pairs: PERP/BUSD, PERP/USDT, PERP/BTC The top 2,000 users ranked by trading volume will each win 500 USDT margin 0% interest vouchers. Further information: How to Margin Trade How to Short on Margin Trading How to Long on Margin Trading Terms & Conditions: The campaign applies to verified VIP 0 & VIP 1 users only. Margin 0% Interest Voucher is only valid for HNT/USDT, KLAY/USDT, LPT/USDT and PERP/USDT isolated margin pairs. Rewards will be distributed within 7 days after the campaign ends. You will be able to redeem your voucher via Account > Reward Center . The validity period for the voucher is set at 7 days from the day of distribution. How to Redeem a Voucher. Binance will combine sub-account’s trading volume with the master account’s standard trading volume in the final calculation. Each sub-account "
+   },
+   {
+    "archivo": "bn_d68c8463b00b49b28c7d489d055c5282_c2a24f81e721.json",
+    "captura": "20211128215850",
+    "titulo": "Wallet Maintenance for Multiple Networks - 2021-10-26",
+    "url": "https://www.binance.com/en/support/announcement/d68c8463b00b49b28c7d489d055c5282",
+    "cuerpo": "Fellow Binancians, Binance will perform wallet maintenance for the networks listed as below at 2021-10-27 07:00 AM (UTC). The maintenance will take about 3 hours. Please note: Withdrawals on the affected networks will be suspended starting from 2021-10-27 06:55 AM (UTC). Withdrawals will be reopened after the maintenance is completed. There will be no further announcement. Impacted Networks: Ambrosus Network (AMB) AVAX C-Chain Network (AVAXC) Binance Chain (BNB) Binance Smart Chain (BSC) CELO Network (CELO) Chiliz Chain (CHZ) Cortex Network (CTXC) Ethereum Classic Network (ETC) Ethereum Network (ETH) Fetch.AI Network (FET) Fantom Network (FTM) GoChain Network (GO) Klaytn Network (KLAY) Polygon Network (MATIC) POA Network (POA) Ronin Network (RON) Theta Network (THETA) TomoChain Network (TOMO) Tron Network (TRX) VeChain Network (VET) Wanchain Network (WAN) WAX Network (WAX) Walton Network (WTC) Risk warning : Cryptocurrency trading is subject to high market risk. Please make your trades cautiously. You are advised that Binance is not responsible for your trading losses. "
+   },
+   {
+    "archivo": "bn_f25208a937fe4be983da2b2d83d0beee_1cb9b5e120eb.json",
+    "captura": "20221006111809",
+    "titulo": "(ilegible)",
+    "url": "https://www.binance.com/en/support/announcement/f25208a937fe4be983da2b2d83d0beee",
+    "cuerpo": "Fellow Binancians, Binance will perform wallet maintenance for the networks listed below at 2022-07-21 06:00 (UTC) . The maintenance will take about three hours . Please Note: Withdrawals on the impacted networks will be suspended starting from 2022-07-21 05:55 (UTC) . We will reopen withdrawals on the impacted networks after the maintenance is complete, and will send a further notice to notify users. Impacted Networks: Acala Network (ACA) Ambrosus Network (AMB) Arbitrum One Network (ARBITRUM) AVAX C-Chain Network (AVAXC) BAND Protocol Network (BAND) Bitcoin Cash Network (BCH) Bitcoin Network (BTC) BNB Chain (BNB Beacon Chain, BNB Smart Chain) CELO Network (CELO) CertiK Network (CTK) Chiliz Chain (CHZ) Cortex Network (CTXC) Cosmos Network (ATOM) Dash Network (DASH) Doge Network (DOGE) eCash Network (XEC) Edgeware Network (EDG) EOS Network (EOS) Ethereum Classic Network (ETC) Ethereum Network (ETH) Fantom Network (FTM) Fetch.AI Network (FET) Gnosis Chain Network (XDAI) GoChain Network (GO) Injective Protocol Network (INJ) Internet Computer Network (ICP) IOST Network (IOST) IRISnet Network (IRIS) Kadena Network (KDA) Kava Network (KAVA) Klaytn Network (KLAY) Kusama Network (KSM) Lisk Network (LSK) Litecoin Network (LTC) Moonbeam Network (GLMR) Moonriver Network (MOVR) NEAR Protocol Network (NEAR) Neo N3 Mainnet (NEO3) Optimism Network (OP) Parallel Finance Network (PARA) POA Network (POA) Polkadot Network (DOT) Polygon Network (MATIC) Qtum Network (QTUM) Ravencoin Network (RVN) Reef Network (REEF) REI Network (REI) Ripple Network (XRP) Ronin Network (RON) Secret Network (SCRT"
+   },
+   {
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-kla_a1542803f940.json",
+    "captura": "20221127025243",
+    "titulo": "Binance Will Support the Klaytn (KLAY) Network Upgrade | Binance Support",
+    "url": "https://www.binance.com/en/support/announcement/binance-will-support-the-klaytn-klay-network-upgrade-a8850f71c24a49db88f5d332cd412601",
+    "cuerpo": "Fellow Binancians, Binance will support the Klaytn (KLAY) network upgrade. The Klaytn (KLAY) network upgrade will take place at the Klaytn block height of 99,841,497 , or approximately at 2022-08-29 02:00 (UTC). Deposits and withdrawals for KLAY will be suspended approximately from 2022-08-29 01:00 (UTC). Please note: The trading of KLAY will not be affected during the network upgrade. The Klaytn (KLAY) network upgrade will take place at the Klaytn block height of 99,841,497 . The estimated time is for users’ reference only. Binance will handle all technical requirements involved for all users holding KLAY in their Binance accounts. We will reopen deposits and withdrawals for KLAY once we deem the upgraded network to be stable, and we will not notify users in a further announcement. The network upgrade will introduce a dynamic gas calculation mechanism to the Klaytn (KLAY) network, and 50% of the gas fees will be burned. For more information on the network upgrade, please refer to the following: Klaytn v1.9.0 Release Notes Dynamic Gas Fee Pricing Mechanism "
+   }
+  ]
+ },
+ "KAIA": {
+  "actividad": {
+   "episodios": [
+    [
+     "2024-10-31",
+     "2026-05-31"
+    ]
+   ],
+   "cortes": []
+  },
+  "cuerpos": []
+ },
+ "KEY": {
+  "actividad": {
+   "episodios": [
+    [
+     "2019-08-27",
+     "2024-12-09"
+    ]
+   ],
+   "cortes": [
+    [
+     "2023-02-09",
+     "2023-03-10",
+     28
+    ]
+   ]
+  },
+  "cuerpos": [
+   {
+    "archivo": "bn_5696345ee4f2458a9d2b170f4aa158c8_be5484cc304c.json",
+    "captura": "20210725232828",
+    "titulo": "Binance Completes SelfKey (KEY) & KeyFi (KEYFI) Airdrop Distribution to SelfKey (KEY) Holders",
+    "url": "https://www.binance.com/en/support/announcement/5696345ee4f2458a9d2b170f4aa158c8",
+    "cuerpo": "Fellow Binancians, Binance has completed the SelfKey (KEY) & KeyFi (KEYFI) airdrop to SelfKey (KEY) holders. Users can confirm the receipt of these tokens via the Distribution History page in the User Center. Please note: The average amount of KEY held throughout the five snapshots under 88,000 KEY (including those in trade orders) will not be eligible to receive the KEYFI airdrop. The average amount of KEY held throughout the five snapshots under 500,000 KEY (including those in trade orders) will not be eligible to receive the KEY airdrop. Please ensure that you have not selected “ Hide Small Balances '' to view your KEY and KEYFI tokens in your Funds page. For the trading and listing of KEYFI on Binance, KEYFI will go through the same strict listing review process as Binance does for any other coin/token. Supporting this airdrop does not guarantee the listing of KEYFI. For more information, please refer to the original announcement: Binance Will Support the SelfKey (KEY) & KeyFi (KEYFI) Airdrop Program for SelfKey (KEY) Holders Risk warning : Cryptocurrency trading is subject to high market risk. Please make your trades cautiously. Binance will make best efforts to choose high-quality coins, but will not be responsible for your trading losses. "
+   },
+   {
+    "archivo": "bn_a976b8105e0c48179b29c1757f9a623f_3e8eb9d39d3f.json",
+    "captura": "20210412033831",
+    "titulo": "Binance Will Support the SelfKey (KEY) & KeyFi (KEYFI) Airdrop Program for SelfKey (KEY) Holders | Binance Support",
+    "url": "https://www.binance.com/en/support/announcement/a976b8105e0c48179b29c1757f9a623f",
+    "cuerpo": "Fellow Binancians, Binance will support the SelfKey (KEY) & KeyFi (KEYFI) Airdrop Program for SelfKey (KEY) holders. Snapshots of KEY balances will be taken in 2 rounds over a 5-month period to give out a total of 60,000,000 KEY tokens and 80,000 KEYFI tokens, with each round having 5 snapshots. We will take snapshots of KEY tokens held by Binance users at the following time: KEY & KEYFI Airdrop Program Schedule Round Snapshot Time (UTC) Airdrop Ratio 1 2021-02-28 - 2021-06-28: Monthly snapshot at the 28th, 00:00 AM for a total of 5 snapshots KEY : KEYFI = 22,500 : 1 2 2021-03-08 - 2021-07-08: Monthly snapshot at the 8th, 00:00 AM for a total of 5 snapshots KEY (Hold) : KEY (Airdrop) = 60 : 1 Please note: KEY tokens that are pending deposit or withdrawal at the time of each snapshot will not count towards your KEY balance. Please ensure you leave sufficient time for deposits and withdrawals to complete prior to the snapshot. The average amount of KEY held throughout the five snapshots under 88,000 KEY (including those in trade orders) will not be eligible to receive the KEYFI airdrop. The average amount of KEY held throughout the five snapshots under 500,000 KEY (including those in trade orders) will not be eligible to receive the KEY airdrop. For the trading and listing of KEYFI on Binance, KEYFI will go through the same strict listing review process as Binance does for any other coin/token. Supporting this airdrop does not guarantee the listing of KEYFI. Binance does not guarantee any listings as per its internal policy. Binance will distribute the KEYFI & KEY tokens afte"
+   },
+   {
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-margin-will-delist-a_143d8b32c790.json",
+    "captura": "20230322040122",
+    "titulo": "Announcement",
+    "url": "https://www.binance.com/en/support/announcement/binance-margin-will-delist-agld-data-ern-fio-troy-as-borrowable-assets-from-cross-margin-and-key-from-isolated-margin-4de1611d14ed44d2b9923b0540193f70",
+    "cuerpo": "Fellow Binancians , Binance Margin will delist AGLD, DATA, ERN, FIO and TROY as borrowable assets from Cross Margin, as well as KEY from Isolated Margin at 2023-01-19 06:00 (UTC) . Cross Margin Pairs: AGLD/BTC, AGLD/BUSD, AGLD/USDT, DATA/BUSD, DATA/USDT, ERN/BUSD, ERN/USDT, FIO/BUSD, FIO/USDT, TROY/BUSD, TROY/USDT Isolated Margin Pair: KEY/USDT Please note: At 2023-01-09 06:00 (UTC) , Binance will suspend AGLD/BTC, AGLD/BUSD, AGLD/USDT, DATA/BUSD, DATA/USDT, ERN/BUSD, ERN/USDT, FIO/BUSD, FIO/USDT, TROY/BUSD and TROY/USDT cross margin borrowing, as well as KEY/USDT isolated margin borrowing. At 2023-01-19 06:00 (UTC) , Binance will close users’ positions, conduct an automatic settlement and cancel all pending orders on the AGLD/BTC, AGLD/BUSD, AGLD/USDT, DATA/BUSD, DATA/USDT, ERN/BUSD, ERN/USDT, FIO/BUSD, FIO/USDT, TROY/BUSD and TROY/USDT cross margin pairs, as well as the KEY/USDT isolated margin pair. We will then delist these pairs from Cross Margin and Isolated Margin. Users are strongly advised to close their positions prior to the cessation of margin trading to avoid any potential losses. Portfolio Margin users are advised to transfer the tokens mentioned above out of their Margin Wallet to their Spot Wallet and to top up their margin balance, if required before 2023-01-19 06:00 (UTC) . Users should monitor Unified Maintenance Margin Ratio (Uni-MMR) closely to avoid any potential liquidation that may result from the removal of the tokens mentioned above from the Margin Wallet. ​​Where any discrepancy arises between the translated versions and the original English versi"
+   },
+   {
+    "archivo": "url_https___www.binance.com_en_support_announcement_notice-of-removal-of-trading_6bd297194a12.json",
+    "captura": "20230321171030",
+    "titulo": "Announcement",
+    "url": "https://www.binance.com/en/support/announcement/notice-of-removal-of-trading-pairs-2023-02-10-7ec33a2d62974c3490b92ff0780ba461",
+    "cuerpo": "Fellow Binancians , Binance will remove and cease trading on the following spot trading pairs: At 2023-02-10 03:00 (UTC) : BOND/ETH, BSW/ETH, C98/BNB, C98/BRL, ERN/BNB, ENJ/GBP, KEY/USDT, TRU/RUB At 2023-02-10 08:00 (UTC): ASR/BTC, JUV/BTC, SXP/EUR Please note: Users can still trade the above assets on other trading pairs that are available on Binance. Binance will terminate strategy trading services for the aforementioned spot trading pairs at 2023-02-10 03:00 (UTC) and 2023-02-10 08:00 (UTC) respectively, where applicable. Users are strongly advised to update and/or cancel their trading strategies prior to the cessation of strategy trading services to avoid any potential losses. Where any discrepancy arises between the translated versions and the original English version, the English version shall prevail. "
+   }
+  ]
+ },
+ "NBT": {
+  "actividad": {
+   "episodios": [
+    [
+     "2022-03-11",
+     "2023-02-28"
+    ]
+   ],
+   "cortes": [
+    [
+     "2022-09-11",
+     "2022-10-01",
+     19
+    ]
+   ]
+  },
+  "cuerpos": []
+ },
+ "SCR": {
+  "actividad": {
+   "episodios": [
+    [
+     "2024-10-11",
+     "2026-05-31"
+    ]
+   ],
+   "cortes": [
+    [
+     "2024-10-20",
+     "2024-10-22",
+     1
+    ]
+   ]
+  },
+  "cuerpos": [
+   {
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-end-the-scroll-_3831fc868ecd.json",
+    "captura": "20241210141004",
+    "titulo": "Binance Will End the Scroll (SCR) Pre-Market and List Scroll (SCR) with Seed Tag Applied",
+    "url": "https://www.binance.com/en/support/announcement/binance-will-end-the-scroll-scr-pre-market-and-list-scroll-scr-with-seed-tag-applied-765ca1b5b58848fd88c9ee3684b91201?hl=en",
+    "cuerpo": "Fellow Binancians, Binance will end the Scroll (SCR) Pre-Market at 2024-10-21 09:00 (UTC) and open spot trading for the following pairs at 2024-10-22 08:00 (UTC) . New Spot Trading Pairs: SCR/BTC, SCR/USDT, SCR/FDUSD and SCR/TRY. Users can now get the SCR deposit address, and start depositing SCR in preparation for trading at 2024-10-21 10:00 (UTC) . Withdrawals will open at 2024-10-23 08:00 (UTC) . Transfer function will resume before 2024-10-21 10:00 (UTC) SCR Listing Fee: 0 BNB. Smart Contract/Network Details: Scroll Network (0xd29687c813D741E2F938F4aC377128810E217b1b) Notes: USDT deposits and withdrawals on the Scroll network are now available, and no further announcement will be made. The seed tag will be applied to SCR. All Pre-Market orders will be automatically removed after trading ceases for the Pre-Market trading pair. TRY is a fiat currency and does not represent any other digital currencies. The withdrawal open time is an estimated time for users’ reference. Users can view the actual status of withdrawals on the withdrawal page. Trading Bots & Spot Copy Trading will be enabled for the aforementioned token within 24 hours of it being listed on Spot. For users with running Spot Copy Trading portfolios, pairs can be included by enabling them in the [Personal Pair Preference] section of the Spot Copy Trading settings. There may be discrepancies between this original content in English and any translated versions. Please refer to the original English version for the most accurate information, in case any discrepancies arise. What Is Scroll (SCR) Scroll is a Bytecode"
+   },
+   {
+    "archivo": "url_https___www.binance.com_en_support_announcement_introducing-scroll-scr-on-bi_3eb9eb5b2312.json",
+    "captura": "20241106195654",
+    "titulo": "Introducing Scroll (SCR) on Binance Launchpool and Pre-Market!",
+    "url": "https://www.binance.com/en/support/announcement/introducing-scroll-scr-on-binance-launchpool-and-pre-market-22df1ba38f4a4033924a1adecf93735e",
+    "cuerpo": "Fellow Binancians, Binance is excited to announce the 60th project on Binance Launchpool - Scroll (SCR) , a Bytecode-level compatible zkEVM Rollup. The webpage is estimated to be available in 24 hours, before the Launchpool starts. Users will be able to lock their BNB and FDUSD to receive SCR Airdrops over two days , with farming starting from 2024-10-09 00:00 (UTC). Pre-Market Binance Pre-Market will then list SCR at 2024-10-11 10:00 (UTC) and open pre-market trading for the SCR/USDT trading pair. Pre-Market end time and spot listing time will be announced at a later date. Please stay tuned for our upcoming announcement. Participation in Binance Pre-Market is subject to eligibility based on the user's country or region of residence . Maximum holding limit per user: 2500 SCR More Information about Pre-Market: Binance Launches Pre-Market: Exclusive Offering for Users to Acquire Tokens Before Official Spot Listing What Is Binance Pre-Market How to Spot Trade on Binance Website How to Spot Trade on Binance App SCR Launchpool Details: Token Name: Scroll (SCR) Total and Max Token Supply: 1,000,000,000 SCR Launchpool Token Rewards: 55,000,000 SCR (5.5% of total token supply) Initial Circulating Supply When Listed on Binance: 190,000,000 SCR (19% of total token supply) Smart Contract/ Network Details: Scroll Network (0xd29687c813D741E2F938F4aC377128810E217b1b) Launchpool Terms will apply and KYC completed to Binance’s satisfaction is required Hourly Hard Cap per User: 97,395 SCR in BNB pool 17,187 SCR in FDUSD pool Supported Pools: Lock BNB (webpage will be available in around 24 "
+   }
+  ]
+ },
+ "TRIBE": {
+  "actividad": {
+   "episodios": [
+    [
+     "2021-08-24",
+     "2022-11-27"
+    ]
+   ],
+   "cortes": []
+  },
+  "cuerpos": [
+   {
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-delist-mith-tri_a05f087a5bd6.json",
+    "captura": "20230321021045",
+    "titulo": "Announcement",
+    "url": "https://www.binance.com/en/support/announcement/binance-will-delist-mith-tribe-rep-and-btcst-on-2022-12-22-35a4169422154c838f012331f5f4b425",
+    "cuerpo": "Fellow Binancians, At Binance, we periodically review each digital asset we list to ensure that it continues to meet the high level of standard we expect. When a coin or token no longer meets this standard, or the industry changes, we conduct a more in-depth review and potentially delist it. We believe this best protects all our users. When we conduct these reviews, we consider a variety of factors. Here are some that drive whether we decide to delist a digital asset: Commitment of team to project Level and quality of development activity Trading volume and liquidity Stability and safety of network from attacks Network / smart contract stability Level of public communication Responsiveness to our periodic due diligence requests Evidence of unethical/fraudulent conduct or negligence Contribution to a healthy and sustainable crypto ecosystem Based on our most recent reviews, we have decided to delist and cease trading on all trading pairs for the following tokens at 2022-12-22 09:00 (UTC): Mithril (MITH) Tribe (TRIBE) Augur (REP) Bitcoin Standard Hashrate Token (BTCST) Please note: The exact trading pairs being removed are: MITH/USDT, TRIBE/BUSD, REP/USDT, and BTCST/BUSD. All trade orders will be automatically removed after trading ceases in each respective trading pair. To view your assets after trading ceases, please ensure you have not selected “Hide small assets” in your Funds page. Deposits of these tokens after 2022-12-23 01:00 (UTC) will not be credited to your account. Withdrawals of these coins and tokens from Binance will continue to be supported until 2023-03-23 at"
+   },
+   {
+    "archivo": "url_https___www.binance.com_en_support_announcement_notice-of-removal-of-trading_e69561bf9f77.json",
+    "captura": "20230202160055",
+    "titulo": "Announcement",
+    "url": "https://www.binance.com/en/support/announcement/notice-of-removal-of-trading-pairs-2022-11-28-f88299165488493cba3e53208c19080d",
+    "cuerpo": "Fellow Binancians , Binance will remove and cease trading on the following trading pairs at 2022-11-28 03:00 (UTC) : Spot Pairs : ARK/BTC, BEAM/BTC, BTCST/BTC, BTCST/USDT, GTO/BTC, GTO/USDT, MITH/BTC, MITH/BNB, PERL/BTC, PNT/BTC, REP/BTC, SRM/BNB, SRM/BTC, SRM/USDT, TRIBE/USDT, XEM/BTC Please note: Users can still trade the above assets on other trading pairs that are available on Binance. Binance will terminate strategy trading services for the aforementioned spot trading pairs at 2022-11-28 03:00 (UTC) , where applicable. Users are strongly advised to update their trading strategies prior to the cessation of strategy trading services to avoid any potential losses. "
+   },
+   {
+    "archivo": "url_https___www.binance.com_en_support_announcement_notice-on-the-withdrawals-of_950c1cf8ea63.json",
+    "captura": "20240909104852",
+    "titulo": "Notice on the Withdrawals of Delisted Tokens & Conversion of Selected Tokens to USDC (2024-08-12)",
+    "url": "https://www.binance.com/en/support/announcement/notice-on-the-withdrawals-of-delisted-tokens-conversion-of-selected-tokens-to-usdc-2024-08-12-9ec5cabbc8974a1c8890e1c9d87a98a7",
+    "cuerpo": "Fellow Binancians, Binance will perform a conversion of the below tokens to USDC based on users’ holdings in their Binance wallets at the snapshot time of 2024-09-02 00:00 (UTC) . The conversion will be completed and an equivalent amount of USDC will be credited to users’ Binance wallets by 2025-03-01 23:59 (UTC) . Users may withdraw the airdropped/delisted tokens as shown below before 2024-09-01 23:59 (UTC) , after which withdrawals will become unavailable. List of Impacted Tokens: Bitcoin Gold (BTG) Bitcoin Standard Hashrate Token (BTCST) Bitshares (BTS) District0x (DNT) Groestlcoin (GRS) Hegic (HEGIC) MobileCoin (MOB) Monero (XMR) Monetha (MTH) Multichain (MULTI) Navcoin (NAV) Sologenic (SOLO) Spartan Protocol (SPARTA) Symbol (XYM) Tribe (TRIBE) On the Conversion The conversion will be executed on the basis of the average token to USDC exchange rate between 2024-09-02 00:00 (UTC) and 2025-03-01 23:59 (UTC) (hereinafter referred to as “Conversion Period” ). Please note that Binance will update this announcement and send a separate email to all impacted users when the conversion of the aforementioned tokens to USDC is complete. More information on the average exchange rates during the Conversion Period will also be provided in the email. Notes: All users who hold any of the above tokens in their Binance wallets will receive an email notification by 2024-08-19 23:59 (UTC) . Deposits of any of the above tokens are no longer supported, and will not be credited to users’ accounts. Withdrawals of the above tokens from Binance will be supported until 2024-09-01 23:59 (UTC) , sub"
+   }
+  ]
+ },
+ "RGT": {
+  "actividad": {
+   "episodios": [
+    [
+     "2021-11-05",
+     "2022-03-13"
+    ]
+   ],
+   "cortes": []
+  },
+  "cuerpos": []
+ }
+}

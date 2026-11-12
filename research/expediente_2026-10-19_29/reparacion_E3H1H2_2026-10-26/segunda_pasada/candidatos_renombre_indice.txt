@@ -1,0 +1,164 @@
+123 2018-03-12 Binance Will Support EOS MainNet Token Swap                                                               | tok= | usdt=
+ 55 2018-03-12 Binance Will Support EOS MainNet Token Swap | Binance                                                     | tok= | usdt=
+ 56 2018-05-28 Binance Adds EOS/BNB, EOS/USDT Trading Pairs and EOS Mainnet Swap Update                                  | tok= | usdt=EOSUSDT
+124 2018-05-28 Binance Adds EOS/BNB, EOS/USDT Trading Pairs and EOS Mainnet Swap Update                                  | tok= | usdt=EOSUSDT
+ 57 2018-06-01 EOS Mainnet Swap Update                                                                                   | tok= | usdt=
+125 2018-06-01 EOS Mainnet Swap Update                                                                                   | tok= | usdt=
+ 59 2018-06-08 Binance Supports ONT Mainnet Swap and Adds ONT/USDT Trading Pair                                          | tok= | usdt=ONTUSDT
+127 2018-06-08 Binance Supports ONT Mainnet Swap and Adds ONT/USDT Trading Pair                                          | tok= | usdt=ONTUSDT
+ 58 2018-06-11 Binance Supports TRX Mainnet Swap and Adds TRX/USDT Trading Pair                                          | tok= | usdt=TRXUSDT
+126 2018-06-11 Binance Supports TRX Mainnet Swap and Adds TRX/USDT Trading Pair                                          | tok= | usdt=TRXUSDT
+ 60 2018-06-13 Binance Supports ICX Mainnet Swap and Adds ICX/USDT Trading Pair                                          | tok= | usdt=ICXUSDT
+128 2018-06-13 Binance Supports ICX Mainnet Swap and Adds ICX/USDT Trading Pair                                          | tok= | usdt=ICXUSDT
+ 61 2018-06-22 Binance Supports VEN Mainnet Swap and Adds VEN/USDT Trading Pair                                          | tok= | usdt=VENUSDT
+129 2018-06-22 Binance Supports VEN Mainnet Swap and Adds VEN/USDT Trading Pair                                          | tok= | usdt=VENUSDT
+ 99 2018-06-22 Binance Supports VEN Mainnet Swap and Adds VEN/USDT Trading Pair | Binance                                | tok= | usdt=VENUSDT
+ 62 2018-07-10 Binance Completes TRX and ICX Mainnet Swaps                                                               | tok= | usdt=
+130 2018-07-10 Binance Completes TRX and ICX Mainnet Swaps                                                               | tok= | usdt=
+131 2018-07-19 Information Regarding the Upcoming VEN/VET Mainnet Swap                                                   | tok= | usdt=VETUSDT
+ 63 2018-07-19 Information Regarding the Upcoming VEN/VET Mainnet Swap | Binance                                         | tok= | usdt=VETUSDT
+120 2018-07-19 Information Regarding the Upcoming VEN/VET Mainnet Swap | Binance                                         | tok= | usdt=VETUSDT
+ 64 2018-07-23 Binance Supports NULS Mainnet Swap and Adds NULS/USDT Trading Pair                                        | tok= | usdt=NULSUSDT
+132 2018-07-23 Binance Supports NULS Mainnet Swap and Adds NULS/USDT Trading Pair                                        | tok= | usdt=NULSUSDT
+ 65 2018-07-24 Binance Completes VEN Mainnet Swap to VET                                                                 | tok= | usdt=VETUSDT
+133 2018-07-24 Binance Completes VEN Mainnet Swap to VET                                                                 | tok= | usdt=VETUSDT
+ 66 2018-07-27 Binance Completes ONT Mainnet Swap                                                                        | tok= | usdt=
+134 2018-07-27 Binance Completes ONT Mainnet Swap                                                                        | tok= | usdt=
+ 68 2018-08-06 Binance Supports Hcash (HSR) Mainnet Swap to HyperCash (HC)                                               | tok=HC,HSR | usdt=
+136 2018-08-06 Binance Supports Hcash (HSR) Mainnet Swap to HyperCash (HC)                                               | tok=HC,HSR | usdt=
+ 69 2018-08-06 Binance Supports Red Pulse (RPX) Token Swap to PHOENIX (PHX)                                              | tok=PHX,RPX | usdt=
+137 2018-08-06 Binance Supports Red Pulse (RPX) Token Swap to PHOENIX (PHX)                                              | tok=PHX,RPX | usdt=
+ 98 2018-08-06 Binance Supports Red Pulse (RPX) Token Swap to PHOENIX (PHX) | Binance                                    | tok=PHX,RPX | usdt=
+135 2018-08-07 Binance Will Support YOYOW (YOYO) MainNet Token Swap                                                      | tok=YOYO | usdt=
+ 67 2018-08-07 Binance Will Support YOYOW (YOYO) MainNet Token Swap | Binance                                            | tok=YOYO | usdt=
+138 2018-08-10 Binance Completes YOYO Mainnet Swap                                                                       | tok= | usdt=
+ 70 2018-08-10 Binance Completes YOYO Mainnet Swap | Binance                                                             | tok= | usdt=
+ 71 2018-08-21 Binance Completes HSR to HC Mainnet Swap and Opens Trading                                                | tok= | usdt=
+139 2018-08-21 Binance Completes HSR to HC Mainnet Swap and Opens Trading                                                | tok= | usdt=
+ 72 2018-08-22 Binance Will Support Nuls (NULS) Mainnet Token Swap                                                       | tok=NULS | usdt=
+140 2018-08-22 Binance Will Support Nuls (NULS) Mainnet Token Swap                                                       | tok=NULS | usdt=
+141 2018-09-30 Binance Will Support CyberMiles (CMT) Mainnet Token Swap                                                  | tok=CMT | usdt=
+142 2018-10-13 Binance Will Support AION (AION) Mainnet Token Swap                                                       | tok=AION | usdt=
+ 73 2018-10-23 Binance Completes AION Mainnet Swap                                                                       | tok= | usdt=
+143 2018-10-23 Binance Completes AION Mainnet Swap                                                                       | tok= | usdt=
+ 74 2018-10-24 Binance Completes CMT Mainnet Swap                                                                        | tok= | usdt=
+144 2018-10-24 Binance Completes CMT Mainnet Swap                                                                        | tok= | usdt=
+ 75 2019-03-06 Binance Will Support The Theta Network (THETA) Mainnet Token Swap and Distribution of TFUEL               | tok=THETA | usdt=
+145 2019-03-06 Binance Will Support The Theta Network (THETA) Mainnet Token Swap and Distribution of TFUEL               | tok=THETA | usdt=
+ 76 2019-03-07 Binance Will Support The IOST Mainnet Token Swap                                                          | tok= | usdt=
+146 2019-03-07 Binance Will Support The IOST Mainnet Token Swap                                                          | tok= | usdt=
+ 77 2019-03-26 Binance Completes THETA Mainnet Swap and Opens Deposits / Withdrawals                                     | tok= | usdt=
+147 2019-03-26 Binance Completes THETA Mainnet Swap and Opens Deposits / Withdrawals                                     | tok= | usdt=
+ 78 2019-04-18 Binance Will Support the ZIL Mainnet Token Swap                                                           | tok= | usdt=
+148 2019-04-18 Binance Will Support the ZIL Mainnet Token Swap                                                           | tok= | usdt=
+149 2019-04-23 Binance Completes BNB Mainnet Swap and Opens Deposits / Withdrawals                                       | tok= | usdt=
+ 79 2019-04-23 Binance Completes BNB Mainnet Swap and Opens Deposits / Withdrawals | Binance                             | tok= | usdt=
+150 2019-04-24 Binance Will Support the Mithril (MITH) Token Migration to Binance Chain                                  | tok=MITH | usdt=
+ 80 2019-04-24 Binance Will Support the Mithril (MITH) Token Migration to Binance Chain | Binance                        | tok=MITH | usdt=
+151 2019-04-25 Binance Has Completed the MITH Token Migration and Has Opened Deposits / Withdrawals                      | tok= | usdt=
+ 81 2019-04-25 Binance Has Completed the MITH Token Migration and Has Opened Deposits / Withdrawals | Binance            | tok= | usdt=
+ 82 2019-05-13 Binance Will Support the AE Mainnet Token Swap                                                            | tok= | usdt=
+152 2019-05-13 Binance Will Support the AE Mainnet Token Swap                                                            | tok= | usdt=
+153 2019-05-20 Binance Will Support the Red Pulse Phoenix (PHX) Token Migration to Binance Chain                         | tok=PHX | usdt=
+ 83 2019-05-20 Binance Will Support the Red Pulse Phoenix (PHX) Token Migration to Binance Chain | Binance               | tok=PHX | usdt=
+ 84 2019-05-30 Binance Will Support the BCPT, GTO and ARN Token Migration to Binance Chain                               | tok= | usdt=
+154 2019-05-30 Binance Will Support the BCPT, GTO and ARN Token Migration to Binance Chain                               | tok= | usdt=
+155 2020-01-14 Binance Will Support the IOTX Mainnet Token Swap                                                          | tok= | usdt=
+156 2020-01-19 Binance Will Support the WTC Mainnet Token Swap                                                           | tok= | usdt=
+159 2020-01-20 Notice Regarding Zilliqa Mainnet Token Swap Deadline                                                      | tok= | usdt=
+ 85 2020-01-21 Binance Completes Mainnet Swaps and Opens Deposits & Withdrawals for IOTX & WTC                           | tok= | usdt=
+157 2020-01-21 Binance Completes Mainnet Swaps and Opens Deposits & Withdrawals for IOTX & WTC                           | tok= | usdt=
+158 2020-01-23 Binance Will Support the Harmony (ONE) Mainnet Token Swap                                                 | tok=ONE | usdt=
+ 86 2020-01-23 Binance Will Support the Harmony (ONE) Mainnet Token Swap | Binance                                       | tok=ONE | usdt=
+ 87 2020-02-19 Binance Completes Harmony (ONE) Mainnet Swap and Opens Deposits & Withdrawals for ONE                     | tok=ONE | usdt=
+160 2020-02-19 Binance Completes Harmony (ONE) Mainnet Swap and Opens Deposits & Withdrawals for ONE                     | tok=ONE | usdt=
+161 2020-03-20 Binance Will Support the COCOS Mainnet Token Swap                                                         | tok= | usdt=
+162 2020-04-02 Binance Completes Cocos-BCX (COCOS) Mainnet Swap and Opens Deposits & Withdrawals                         | tok=COCOS | usdt=
+ 88 2020-06-03 Storm (STORM) Token Swap to STMX Will Be Supported on Binance                                             | tok=STORM | usdt=STMXUSDT
+163 2020-06-03 Storm (STORM) Token Swap to STMX Will Be Supported on Binance                                             | tok=STORM | usdt=STMXUSDT
+ 32 2020-07-28 Augur (REP) Token Swap to Augur (REPV2) Will Be Supported on Binance                                      | tok=REP,REPV2 | usdt=REPV2USDT
+ 35 2020-07-29 Updates to the Augur (REP) Token Swap on Binance                                                          | tok=REP | usdt=
+  2 2020-08-18 Binance Will List Polkadot (DOT) & Support 1:100 Redenomination Plan                                      | tok=DOT | usdt=DOTUSDT
+101 2020-08-18 Binance Will List Polkadot (DOT) & Support 1:100 Redenomination Plan                                      | tok=DOT | usdt=DOTUSDT
+  1 2020-08-24 Binance Will Support the Enigma (ENG) Mainnet Swap                                                        | tok=ENG | usdt=
+ 33 2020-08-28 Elrond (ERD) Mainnet & Token Swap to Elrond Gold (EGLD) Will Be Supported on Binance                      | tok=EGLD,ERD | usdt=EGLDUSDT
+ 54 2020-08-31 Binance Will Support the Ambrosus (AMB) Mainnet Swap                                                      | tok=AMB | usdt=
+  8 2020-09-01 Binance Completes Elrond (ERD) Mainnet & Token Swap to Elrond Gold (EGLD)                                 | tok=EGLD,ERD | usdt=EGLDUSDT
+ 41 2020-10-01 Binance Completes the Enigma (ENG) to Secret Network (SCRT) Token Swap and Opens Deposits & Withdrawals   | tok=ENG,SCRT | usdt=
+  5 2020-10-03 Aave (LEND) Token Swap to AAVE Will Be Supported on Binance With Various Service Updates & Settlements    | tok=LEND | usdt=AAVEUSDT,LENDUSDT
+ 89 2020-10-03 Aave (LEND) Token Swap to AAVE Will Be Supported on Binance With Various Service Updates & Settlements    | tok=LEND | usdt=AAVEUSDT,LENDUSDT
+ 28 2020-10-13 Fetch.ai (FET) Smart Contract Swap Supported on Binance                                                   | tok=FET | usdt=
+ 24 2020-10-14 Binance has Completed the Ocean Protocol (OCEAN) & Chromia (CHR) Token Swaps                              | tok=CHR,OCEAN | usdt=
+ 47 2020-10-27 Binance Will Support the Aragon (ANT) Smart Contract Swap & Upgrade                                       | tok=ANT | usdt=
+  6 2020-11-10 Stratis (STRAT) Token Swap to STRAX Will Be Supported on Binance                                          | tok=STRAT | usdt=STRAXUSDT
+ 17 2020-11-13 Binance Completes Ambrosus (AMB) Mainnet Swap                                                             | tok=AMB | usdt=
+ 31 2020-12-04 Binance Will Support Golem (GNT) Token Swap to GLM                                                        | tok=GNT | usdt=
+ 48 2020-12-31 Binance Completes Stratis (STRAX) Token Swap                                                              | tok=STRAX | usdt=
+ 26 2021-01-04 Binance Will Support the Dock (DOCK) Mainnet Swap                                                         | tok=DOCK | usdt=
+104 2021-01-04 Binance Will Support the Dock (DOCK) Mainnet Swap                                                         | tok=DOCK | usdt=
+ 51 2021-01-18 Binance Will Support the Cocos-BCX (COCOS) 1,000:1 Redenomination Plan                                    | tok=COCOS | usdt=COCOSUSDT
+103 2021-01-18 Binance Will Support the Cocos-BCX (COCOS) 1,000:1 Redenomination Plan                                    | tok=COCOS | usdt=COCOSUSDT
+ 18 2021-02-08 Binance Will Support the Bounce (BOT) Token Migration & Redenomination Plan                               | tok=BOT | usdt=
+  4 2021-02-20 Binance Will Initiate the Bounce (BOT) Token Migration & Redenomination Plan                              | tok=BOT | usdt=
+ 10 2021-03-11 Binance Will Support the BTC Standard Hashrate Token (BTCST) 1:10 Redenomination Plan                     | tok=BTCST | usdt=BTCSTUSDT
+ 44 2021-03-13 Binance Will Support the Loom Network (LOOM) Contract Swap/Upgrade                                        | tok=LOOM | usdt=
+ 46 2021-03-16 Binance Has Completed the Tellor Tributes (TRB) Contract Swap                                             | tok=TRB | usdt=
+ 96 2021-03-16 Binance Has Completed the Tellor Tributes (TRB) Contract Swap                                             | tok=TRB | usdt=
+105 2021-03-19 Binance Will Support the DREP (DREP) 100:1 Redenomination Plan                                            | tok=DREP | usdt=DREPUSDT
+ 19 2021-03-19 Binance Will Support the DREP (DREP) 100:1 Redenomination Plan |                                          | tok=DREP | usdt=DREPUSDT
+ 30 2021-03-22 Updates to the DREP (DREP) 100:1 Redenomination Plan |                                                    | tok=DREP | usdt=DREPUSDT
+ 37 2021-03-26 Binance To Initiate Dock (DOCK) Mainnet Token Swap                                                        | tok=DOCK | usdt=
+100 2021-03-26 Binance To Initiate Dock (DOCK) Mainnet Token Swap                                                        | tok=DOCK | usdt=
+ 27 2021-03-31 Binance Will Support the Pundi X (NPXS) Token Migration & Redenomination Plan |                           | tok=NPXS | usdt=NPXSUSDT,PUNDIXUSDT
+  0 2021-04-02 Binance Has Completed the DREP (DREP) 100:1 Redenomination Plan                                           | tok=DREP | usdt=
+ 92 2021-04-02 Binance Has Completed the DREP (DREP) 100:1 Redenomination Plan                                           | tok=DREP | usdt=
+ 36 2021-04-07 Binance Has Completed the Dock (DOCK) Mainnet Swap                                                        | tok=DOCK | usdt=
+ 12 2021-04-09 Binance Has Completed Pundi X (NPXS) Token Migration & Redenomination Plan |                              | tok=NPXS | usdt=
+ 45 2021-04-21 Binance Will Support the SONM (SNM) 10:1 Redenomination Plan |                                            | tok=SNM | usdt=
+  7 2021-04-26 Binance Will Support the IOTA (IOTA) Token Migration to the Chrysalis Network |                           | tok=IOTA | usdt=
+ 11 2021-04-26 Notice Regarding the Upcoming EASY Hard Fork and Token Swap to EZ                                         | tok= | usdt=
+121 2021-04-26 Notice Regarding the Upcoming EASY Hard Fork and Token Swap to EZ                                         | tok= | usdt=
+ 50 2021-04-30 Binance Has Completed SONM (SNM) Token Migration & Redenomination Plan                                    | tok=SNM | usdt=
+ 15 2021-04-30 Updates to the EASY Hard Fork and Token Migration Plan                                                    | tok= | usdt=
+ 16 2021-05-12 Binance Will Support the Kyber Network (KNC) Contract Swap                                                | tok=KNC | usdt=
+ 40 2021-05-19 Binance Will Support the Axie Infinity (AXS) & Smooth Love Potion (SLP) Contract Swap                     | tok=AXS,SLP | usdt=
+ 20 2021-05-26 Binance Will Support the SingularityNET (AGI) Hard Fork and Token Migration Plan                          | tok=AGI | usdt=
+ 43 2021-05-31 Binance Has Completed the Axie Infinity (AXS) & Smooth Love Potion (SLP) Contract Swap                    | tok=AXS,SLP | usdt=
+ 52 2021-06-08 Binance Will Support the SUN (SUN) Token Migration & Redenomination Plan                                  | tok=SUN | usdt=SUNUSDT
+ 49 2021-06-08 The SingularityNET (AGI) Hard Fork and Token Migration Is Now Complete                                    | tok=AGI | usdt=
+ 22 2021-06-18 Binance Will Support the Spartan Protocol (SPARTA) Contract Swap                                          | tok=SPARTA | usdt=
+ 14 2021-07-16 Ceasing Support for Stock Tokens on Binance.com and Migration to CM-Equity AG for EEA Users               | tok= | usdt=
+119 2021-07-16 Ceasing Support for Stock Tokens on Binance.com and Migration to CM-Equity AG for EEA Users               | tok= | usdt=
+ 21 2021-07-30 Binance Will Initiate the Bitcoin Cash ABC (BCHA) Rebrand to eCash (XEC) & Redenomination Plan            | tok=BCHA,XEC | usdt=
+  9 2021-08-10 Binance Will Support the Voyager Token (BQX) Token Swap to Voyager Token (VGX)                            | tok=BQX,VGX | usdt=
+  3 2021-08-17 Binance Has Completed the Bitcoin Cash ABC (BCHA) Rebrand to eCash (XEC) & Redenomination Plan            | tok=BCHA,XEC | usdt=
+ 90 2021-08-17 Binance Has Completed the Bitcoin Cash ABC (BCHA) Rebrand to eCash (XEC) & Redenomination Plan            | tok=BCHA,XEC | usdt=
+ 53 2021-08-27 Binance Will Support the Streamr (DATA) Token Migration Plan                                              | tok=DATA | usdt=
+ 38 2021-08-30 Binance Will Support the Paxos Standard (PAX) Rebrand to Pax Dollar (USDP)                                | tok=PAX,USDP | usdt=PAXUSDT,USDPUSDT
+ 39 2021-09-06 Binance Has Completed the Streamr (DATA) Token Migration                                                  | tok=DATA | usdt=
+ 25 2021-09-13 Binance Has Completed the Paxos Standard (PAX) Rebrand to Pax Dollar (USDP)                               | tok=PAX,USDP | usdt=
+ 13 2021-09-14 Binance Has Completed the IOTA (IOTA) Token Migration to the Chrysalis Network                            | tok=IOTA | usdt=
+ 29 2021-10-14 Binance Will Support the Blox (CDT) Rebrand to ssv.network (SSV) & Redenomination Plan                    | tok=CDT,SSV | usdt=
+ 23 2021-10-22 The Blox (CDT) Rebrand to ssv.network (SSV) & Redenomination Is Now Complete                              | tok=CDT,SSV | usdt=
+122 2021-10-22 The Blox (CDT) Rebrand to ssv.network (SSV) & Redenomination Is Now Complete                              | tok=CDT,SSV | usdt=
+ 93 2021-12-17 Binance Has Completed the LTO Network (LTO) Contract Swap                                                 | tok=LTO | usdt=
+113 2022-01-24 Binance Will Support the Reserve Rights (RSR) Contract Swap                                               | tok=RSR | usdt=RSRUSDT
+102 2022-03-24 Binance Will Support the Anyswap (ANY) Token Migration and Renaming Plan                                  | tok=ANY | usdt=ANYUSDT,MULTIUSDT
+ 42 2022-04-07 Binance Has Completed the Anyswap (ANY) Token Migration and Renaming Plan                                 | tok=ANY | usdt=
+ 94 2022-04-20 Binance Has Completed the Mainnet Swap of ERC20 Injective Protocol (INJ)                                  | tok=INJ | usdt=
+116 2022-04-29 Binance Will Support the TerraUSD (UST) Contract Swap                                                     | tok=UST | usdt=
+ 34 2022-06-02 Binance Will Support the Mainnet Swap of BEP2 THORChain (RUNE)                                            | tok=RUNE | usdt=
+107 2022-06-02 Binance Will Support the Mainnet Swap of BEP2 THORChain (RUNE)                                            | tok=RUNE | usdt=
+ 95 2022-06-15 Binance Has Completed the Mainnet Swap of BEP2 THORChain (RUNE)                                           | tok=RUNE | usdt=
+110 2022-09-26 Binance Will Support the Polymath (POLY) Mainnet Swap and Rebranding Plan to Polymesh (POLYX)             | tok=POLY,POLYX | usdt=POLYUSDT,POLYXUSDT
+114 2023-03-01 Binance Will Support the Stargate Finance (STG) Contract Swap                                             | tok=STG | usdt=
+106 2023-05-10 Binance Will Support the Gala (GALA) Contract Swap                                                        | tok=GALA | usdt=
+ 91 2023-06-02 Binance Has Completed the Cocos-BCX (COCOS) Token Swap & Rebranding Plan to COMBO (COMBO)                 | tok=COCOS,COMBO | usdt=
+117 2023-06-08 Binance Will Support the TrueUSD (TUSD) Contract Swap                                                     | tok=TUSD | usdt=
+112 2023-07-10 Binance Will Support the QuickSwap (QUICK) Token Swap and Redenomination Plan                             | tok=QUICK | usdt=QUICKUSDT
+108 2023-10-25 Binance Will Support the Merit Circle (MC) Token Swap, Redenomination and Rebranding to Beam (BEAMX)      | tok=BEAMX,MC | usdt=BEAMXUSDT,MCUSDT
+ 97 2023-12-01 Binance Has Completed the Virtua (TVK) Token Swap and Rebranding to Vanar (VANRY)                         | tok=TVK,VANRY | usdt=
+109 2024-02-22 Binance Will Support the PlayDapp (PLA) Token Swap to PlayDapp (PDA)                                      | tok=PDA,PLA | usdt=PDAUSDT,PLAUSDT
+115 2024-03-08 Binance Will Support the Stratis (STRAX) Token Swap and Redenomination Plan                               | tok=STRAX | usdt=STRAXUSDT
+118 2024-03-22 BNB Beacon Chain (BEP2) Network Sunset Plan: BEP2 Projects to Bind Their Tokens to BEP20 Network and Comp | tok=BEP2 | usdt=
+111 2024-08-28 Binance Will Support the Polygon (MATIC) Token Swap to Polygon (POL)                                      | tok=MATIC,POL | usdt=MATICUSDT,POLUSDT

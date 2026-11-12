@@ -1,0 +1,1337 @@
+{
+ "_nota": "Segunda pasada A3.11. Claves y acciones con el formato que lee conciliacion.py (6f764845…). Las secciones que empiezan con «_» son solo documentación: el código no las lee.",
+ "eventos": {
+  "CLOAKUSDT|2019-02-22": {
+   "accion": "confirmar",
+   "cita": "for the following coins and tokens on 2019/02/22 at 10:00 AM UTC: CloakCoin (CLOAK) Modum (MOD) SALT (SALT) Substratum (SUB) Wings (WINGS)",
+   "justificacion": "El texto archivado fija la misma fecha de cese de la negociación spot que la primera pasada (N5).",
+   "fuente": {
+    "url": "https://support.binance.com/hc/en-us/articles/360023570292-Binance-Will-Delist-CLOAK-MOD-SALT-SUB-and-WINGS",
+    "archivo": "zd_360023570292_80190cd7d137.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2019-13/segments/1552912203093.63/warc/CC-MAIN-20190323221914-20190324003914-00246.warc.gz bytes=632567782-632578098",
+    "captura": "20190323223148"
+   },
+   "categoria_pasada1": "fuera_sin_par_usdt_documentado",
+   "certeza": "alta"
+  },
+  "MODUSDT|2019-02-22": {
+   "accion": "confirmar",
+   "cita": "for the following coins and tokens on 2019/02/22 at 10:00 AM UTC: CloakCoin (CLOAK) Modum (MOD) SALT (SALT) Substratum (SUB) Wings (WINGS)",
+   "justificacion": "El texto archivado fija la misma fecha de cese de la negociación spot que la primera pasada (N5).",
+   "fuente": {
+    "url": "https://support.binance.com/hc/en-us/articles/360023570292-Binance-Will-Delist-CLOAK-MOD-SALT-SUB-and-WINGS",
+    "archivo": "zd_360023570292_80190cd7d137.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2019-13/segments/1552912203093.63/warc/CC-MAIN-20190323221914-20190324003914-00246.warc.gz bytes=632567782-632578098",
+    "captura": "20190323223148"
+   },
+   "categoria_pasada1": "fuera_sin_par_usdt_documentado",
+   "certeza": "alta"
+  },
+  "SALTUSDT|2019-02-22": {
+   "accion": "confirmar",
+   "cita": "for the following coins and tokens on 2019/02/22 at 10:00 AM UTC: CloakCoin (CLOAK) Modum (MOD) SALT (SALT) Substratum (SUB) Wings (WINGS)",
+   "justificacion": "El texto archivado fija la misma fecha de cese de la negociación spot que la primera pasada (N5).",
+   "fuente": {
+    "url": "https://support.binance.com/hc/en-us/articles/360023570292-Binance-Will-Delist-CLOAK-MOD-SALT-SUB-and-WINGS",
+    "archivo": "zd_360023570292_80190cd7d137.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2019-13/segments/1552912203093.63/warc/CC-MAIN-20190323221914-20190324003914-00246.warc.gz bytes=632567782-632578098",
+    "captura": "20190323223148"
+   },
+   "categoria_pasada1": "fuera_sin_par_usdt_documentado",
+   "certeza": "alta"
+  },
+  "SUBUSDT|2019-02-22": {
+   "accion": "confirmar",
+   "cita": "for the following coins and tokens on 2019/02/22 at 10:00 AM UTC: CloakCoin (CLOAK) Modum (MOD) SALT (SALT) Substratum (SUB) Wings (WINGS)",
+   "justificacion": "El texto archivado fija la misma fecha de cese de la negociación spot que la primera pasada (N5).",
+   "fuente": {
+    "url": "https://support.binance.com/hc/en-us/articles/360023570292-Binance-Will-Delist-CLOAK-MOD-SALT-SUB-and-WINGS",
+    "archivo": "zd_360023570292_80190cd7d137.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2019-13/segments/1552912203093.63/warc/CC-MAIN-20190323221914-20190324003914-00246.warc.gz bytes=632567782-632578098",
+    "captura": "20190323223148"
+   },
+   "categoria_pasada1": "fuera_sin_par_usdt_documentado",
+   "certeza": "alta"
+  },
+  "WINGSUSDT|2019-02-22": {
+   "accion": "confirmar",
+   "cita": "for the following coins and tokens on 2019/02/22 at 10:00 AM UTC: CloakCoin (CLOAK) Modum (MOD) SALT (SALT) Substratum (SUB) Wings (WINGS)",
+   "justificacion": "El texto archivado fija la misma fecha de cese de la negociación spot que la primera pasada (N5).",
+   "fuente": {
+    "url": "https://support.binance.com/hc/en-us/articles/360023570292-Binance-Will-Delist-CLOAK-MOD-SALT-SUB-and-WINGS",
+    "archivo": "zd_360023570292_80190cd7d137.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2019-13/segments/1552912203093.63/warc/CC-MAIN-20190323221914-20190324003914-00246.warc.gz bytes=632567782-632578098",
+    "captura": "20190323223148"
+   },
+   "categoria_pasada1": "fuera_sin_par_usdt_documentado",
+   "certeza": "alta"
+  },
+  "BCHSVUSDT|2019-04-22": {
+   "accion": "confirmar",
+   "cita": "for the following coin on 2019/04/22 at 10:00 AM UTC: Bitcoin SV (BCHSV)",
+   "justificacion": "El texto archivado fija la misma fecha de cese de la negociación spot que la primera pasada (N5).",
+   "fuente": {
+    "url": "https://support.binance.com/hc/en-us/articles/360026666152?fbclid=IwAR3ysVzVLT5um_x3Wgq4X3UEPhdi7UdIN4PrzzQO5jduUQoeQ6z_FSpHUf4",
+    "archivo": "zd_360026666152_70a328bf3f4b.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2019-18/segments/1555578517682.16/warc/CC-MAIN-20190418141430-20190418163430-00428.warc.gz bytes=556702301-556712131",
+    "captura": "20190418150212"
+   },
+   "categoria_pasada1": "A",
+   "certeza": "alta"
+  },
+  "BEARUSDT|2020-03-31": {
+   "accion": "confirmar",
+   "cita": "and will stop trading at 2020/03/31 10:00 AM (UTC)",
+   "justificacion": "El texto archivado fija la misma fecha de cese de la negociación spot que la primera pasada (N5).",
+   "fuente": {
+    "url": "https://binance.zendesk.com/hc/en-us/articles/360041613471-Binance-Will-Delist-All-FTX-Leveraged-Tokens",
+    "archivo": "zd_360041613471_7f63c6ebd36b.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-24/segments/1590348502097.77/warc/CC-MAIN-20200605143036-20200605173036-00319.warc.gz bytes=249808591-249820109",
+    "captura": "20200605155228"
+   },
+   "categoria_pasada1": "A",
+   "certeza": "alta"
+  },
+  "BNBBEARUSDT|2020-03-31": {
+   "accion": "confirmar",
+   "cita": "and will stop trading at 2020/03/31 10:00 AM (UTC)",
+   "justificacion": "El texto archivado fija la misma fecha de cese de la negociación spot que la primera pasada (N5).",
+   "fuente": {
+    "url": "https://binance.zendesk.com/hc/en-us/articles/360041613471-Binance-Will-Delist-All-FTX-Leveraged-Tokens",
+    "archivo": "zd_360041613471_7f63c6ebd36b.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-24/segments/1590348502097.77/warc/CC-MAIN-20200605143036-20200605173036-00319.warc.gz bytes=249808591-249820109",
+    "captura": "20200605155228"
+   },
+   "categoria_pasada1": "A",
+   "certeza": "alta"
+  },
+  "BNBBULLUSDT|2020-03-31": {
+   "accion": "confirmar",
+   "cita": "and will stop trading at 2020/03/31 10:00 AM (UTC)",
+   "justificacion": "El texto archivado fija la misma fecha de cese de la negociación spot que la primera pasada (N5).",
+   "fuente": {
+    "url": "https://binance.zendesk.com/hc/en-us/articles/360041613471-Binance-Will-Delist-All-FTX-Leveraged-Tokens",
+    "archivo": "zd_360041613471_7f63c6ebd36b.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-24/segments/1590348502097.77/warc/CC-MAIN-20200605143036-20200605173036-00319.warc.gz bytes=249808591-249820109",
+    "captura": "20200605155228"
+   },
+   "categoria_pasada1": "A",
+   "certeza": "alta"
+  },
+  "BULLUSDT|2020-03-31": {
+   "accion": "confirmar",
+   "cita": "and will stop trading at 2020/03/31 10:00 AM (UTC)",
+   "justificacion": "El texto archivado fija la misma fecha de cese de la negociación spot que la primera pasada (N5).",
+   "fuente": {
+    "url": "https://binance.zendesk.com/hc/en-us/articles/360041613471-Binance-Will-Delist-All-FTX-Leveraged-Tokens",
+    "archivo": "zd_360041613471_7f63c6ebd36b.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-24/segments/1590348502097.77/warc/CC-MAIN-20200605143036-20200605173036-00319.warc.gz bytes=249808591-249820109",
+    "captura": "20200605155228"
+   },
+   "categoria_pasada1": "A",
+   "certeza": "alta"
+  },
+  "EOSBEARUSDT|2020-03-31": {
+   "accion": "confirmar",
+   "cita": "and will stop trading at 2020/03/31 10:00 AM (UTC)",
+   "justificacion": "El texto archivado fija la misma fecha de cese de la negociación spot que la primera pasada (N5).",
+   "fuente": {
+    "url": "https://binance.zendesk.com/hc/en-us/articles/360041613471-Binance-Will-Delist-All-FTX-Leveraged-Tokens",
+    "archivo": "zd_360041613471_7f63c6ebd36b.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-24/segments/1590348502097.77/warc/CC-MAIN-20200605143036-20200605173036-00319.warc.gz bytes=249808591-249820109",
+    "captura": "20200605155228"
+   },
+   "categoria_pasada1": "A",
+   "certeza": "alta"
+  },
+  "EOSBULLUSDT|2020-03-31": {
+   "accion": "confirmar",
+   "cita": "and will stop trading at 2020/03/31 10:00 AM (UTC)",
+   "justificacion": "El texto archivado fija la misma fecha de cese de la negociación spot que la primera pasada (N5).",
+   "fuente": {
+    "url": "https://binance.zendesk.com/hc/en-us/articles/360041613471-Binance-Will-Delist-All-FTX-Leveraged-Tokens",
+    "archivo": "zd_360041613471_7f63c6ebd36b.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-24/segments/1590348502097.77/warc/CC-MAIN-20200605143036-20200605173036-00319.warc.gz bytes=249808591-249820109",
+    "captura": "20200605155228"
+   },
+   "categoria_pasada1": "A",
+   "certeza": "alta"
+  },
+  "ETHBEARUSDT|2020-03-31": {
+   "accion": "confirmar",
+   "cita": "and will stop trading at 2020/03/31 10:00 AM (UTC)",
+   "justificacion": "El texto archivado fija la misma fecha de cese de la negociación spot que la primera pasada (N5).",
+   "fuente": {
+    "url": "https://binance.zendesk.com/hc/en-us/articles/360041613471-Binance-Will-Delist-All-FTX-Leveraged-Tokens",
+    "archivo": "zd_360041613471_7f63c6ebd36b.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-24/segments/1590348502097.77/warc/CC-MAIN-20200605143036-20200605173036-00319.warc.gz bytes=249808591-249820109",
+    "captura": "20200605155228"
+   },
+   "categoria_pasada1": "A",
+   "certeza": "alta"
+  },
+  "ETHBULLUSDT|2020-03-31": {
+   "accion": "confirmar",
+   "cita": "and will stop trading at 2020/03/31 10:00 AM (UTC)",
+   "justificacion": "El texto archivado fija la misma fecha de cese de la negociación spot que la primera pasada (N5).",
+   "fuente": {
+    "url": "https://binance.zendesk.com/hc/en-us/articles/360041613471-Binance-Will-Delist-All-FTX-Leveraged-Tokens",
+    "archivo": "zd_360041613471_7f63c6ebd36b.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-24/segments/1590348502097.77/warc/CC-MAIN-20200605143036-20200605173036-00319.warc.gz bytes=249808591-249820109",
+    "captura": "20200605155228"
+   },
+   "categoria_pasada1": "A",
+   "certeza": "alta"
+  },
+  "XRPBEARUSDT|2020-03-31": {
+   "accion": "confirmar",
+   "cita": "and will stop trading at 2020/03/31 10:00 AM (UTC)",
+   "justificacion": "El texto archivado fija la misma fecha de cese de la negociación spot que la primera pasada (N5).",
+   "fuente": {
+    "url": "https://binance.zendesk.com/hc/en-us/articles/360041613471-Binance-Will-Delist-All-FTX-Leveraged-Tokens",
+    "archivo": "zd_360041613471_7f63c6ebd36b.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-24/segments/1590348502097.77/warc/CC-MAIN-20200605143036-20200605173036-00319.warc.gz bytes=249808591-249820109",
+    "captura": "20200605155228"
+   },
+   "categoria_pasada1": "A",
+   "certeza": "alta"
+  },
+  "XRPBULLUSDT|2020-03-31": {
+   "accion": "confirmar",
+   "cita": "and will stop trading at 2020/03/31 10:00 AM (UTC)",
+   "justificacion": "El texto archivado fija la misma fecha de cese de la negociación spot que la primera pasada (N5).",
+   "fuente": {
+    "url": "https://binance.zendesk.com/hc/en-us/articles/360041613471-Binance-Will-Delist-All-FTX-Leveraged-Tokens",
+    "archivo": "zd_360041613471_7f63c6ebd36b.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-24/segments/1590348502097.77/warc/CC-MAIN-20200605143036-20200605173036-00319.warc.gz bytes=249808591-249820109",
+    "captura": "20200605155228"
+   },
+   "categoria_pasada1": "A",
+   "certeza": "alta"
+  },
+  "MCOUSDT|2020-10-23": {
+   "accion": "confirmar",
+   "cita": "Binance will remove and cease trading on the following trading pairs at 2020/10/23 12:00 PM (UTC): BTS/BUSD, MCO/BTC, MCO/USDT",
+   "justificacion": "El texto archivado fija la misma fecha de cese de la negociación spot que la primera pasada (N5).",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/1841b3af92f34349a918f80cb8fcc9de",
+    "archivo": "bn_1841b3af92f34349a918f80cb8fcc9de_8ff1bf4780bd.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-50/segments/1606141171077.4/warc/CC-MAIN-20201124025131-20201124055131-00481.warc.gz bytes=616382252-616407170",
+    "captura": "20201124034739"
+   },
+   "categoria_pasada1": "A",
+   "certeza": "alta"
+  },
+  "HCUSDT|2020-11-10": {
+   "accion": "confirmar",
+   "cita": "Binance will remove and cease trading on the following trading pairs at 2020/11/10 12:00 PM (UTC): AION/BUSD, DCR/BUSD, EVX/ETH, HC/USDT",
+   "justificacion": "El texto archivado fija la misma fecha de cese de la negociación spot que la primera pasada (N5).",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/dcb2722913ee4dec9a8be29da9e3aeb0",
+    "archivo": "bn_dcb2722913ee4dec9a8be29da9e3aeb0_b1f63e7c797e.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-10/segments/1614178359082.48/warc/CC-MAIN-20210227174711-20210227204711-00402.warc.gz bytes=689885778-689913560",
+    "captura": "20210227200051"
+   },
+   "categoria_pasada1": "A",
+   "certeza": "alta"
+  },
+  "BKRWUSDT|2021-02-19": {
+   "accion": "descartar",
+   "cita": "This announcement has been updated on 2021-02-20 to correct the BKRW/USDT trading pair to the USDT/BKRW trading pair",
+   "justificacion": "El propio anuncio corrige el par: el removido es USDT/BKRW (otro símbolo), no BKRW/USDT. Error de identificación del par.",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/89c3426b722341269effb0c073b30cdf?ref=JLI1VBLA&utm_source=BinanceTwitter&utm_medium=GlobalSocial&utm_campaign=GlobalSocial",
+    "archivo": "bn_89c3426b722341269effb0c073b30cdf_4b94fd16208f.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-10/segments/1614178365454.63/warc/CC-MAIN-20210303042832-20210303072832-00243.warc.gz bytes=679439014-679467525",
+    "captura": "20210303065648"
+   },
+   "categoria_pasada1": "T",
+   "certeza": "alta"
+  },
+  "HNTUSDT|2022-10-14": {
+   "accion": "confirmar",
+   "cita": "Binance will remove and cease trading on the following trading pairs at 2022-10-14 03:00 (UTC) : Spot Pairs : HNT/BTC, HNT/USDT",
+   "justificacion": "El texto archivado fija la misma fecha de cese de la negociación spot que la primera pasada (N5).",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/notice-of-removal-of-trading-pairs-2022-10-14-64b9451dc9394f058802dd9ee4b52913",
+    "archivo": "url_https___www.binance.com_en_support_announcement_notice-of-removal-of-trading_e6861e874e5f.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2022-49/segments/1669446710533.96/warc/CC-MAIN-20221128135348-20221128165348-00267.warc.gz bytes=704483278-704550643",
+    "captura": "20221128155640"
+   },
+   "categoria_pasada1": "A",
+   "certeza": "alta"
+  },
+  "FTTUSDT|2022-11-15": {
+   "accion": "confirmar",
+   "cita": "Binance will remove and cease trading on the following trading pairs at 2022-11-15 04:30 (UTC) : Spot Pairs : FTT/BNB, FTT/BTC, FTT/ETH and FTT/USDT",
+   "justificacion": "El texto archivado fija la misma fecha de cese de la negociación spot que la primera pasada (N5).",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/notice-of-removal-of-trading-pairs-2022-11-15-47642955ae7f4a3688133df8067ac3c2",
+    "archivo": "url_https___www.binance.com_en_support_announcement_notice-of-removal-of-trading_3e662b1baa19.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2022-49/segments/1669446711286.17/warc/CC-MAIN-20221208082315-20221208112315-00341.warc.gz bytes=708521050-708588388",
+    "captura": "20221208104318"
+   },
+   "categoria_pasada1": "A",
+   "certeza": "alta"
+  },
+  "AUTOUSDT|2023-04-18": {
+   "accion": "confirmar",
+   "cita": "for the following tokens at 2023-04-18 03:00 (UTC) : Kepple (QLC) Neblio (NEBL) Auto",
+   "justificacion": "El texto archivado fija la misma fecha de cese de la negociación spot que la primera pasada (N5).",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/binance-will-delist-qlc-nebl-and-auto-on-2023-04-18-27933fc8f6c8451fbb18c0189681441a",
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-delist-qlc-nebl_0a0c8d0291fd.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2023-40/segments/1695233510284.49/warc/CC-MAIN-20230927071345-20230927101345-00258.warc.gz bytes=727107255-727185206",
+    "captura": "20230927092116"
+   },
+   "categoria_pasada1": "A",
+   "certeza": "alta"
+  },
+  "NEBLUSDT|2023-04-18": {
+   "accion": "confirmar",
+   "cita": "for the following tokens at 2023-04-18 03:00 (UTC) : Kepple (QLC) Neblio (NEBL) Auto",
+   "justificacion": "El texto archivado fija la misma fecha de cese de la negociación spot que la primera pasada (N5).",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/binance-will-delist-qlc-nebl-and-auto-on-2023-04-18-27933fc8f6c8451fbb18c0189681441a",
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-delist-qlc-nebl_0a0c8d0291fd.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2023-40/segments/1695233510284.49/warc/CC-MAIN-20230927071345-20230927101345-00258.warc.gz bytes=727107255-727185206",
+    "captura": "20230927092116"
+   },
+   "categoria_pasada1": "A",
+   "certeza": "alta"
+  },
+  "DOTDOWNUSDT|2023-04-27": {
+   "accion": "fecha_corregida",
+   "cita": "At 2023-05-10 06:00 (UTC) : DOTUP, DOTDOWN",
+   "justificacion": "La primera pasada tomó la fecha del título (fecha de publicación, A3.1.5); el cuerpo fija el cese de la negociación del par en otra fecha. Se aplica N5: E = día UTC en que cesa la negociación spot según el texto.",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/binance-to-delist-and-cease-redemption-for-trxup-trxdown-dotup-dotdown-linkup-linkdown-leveraged-tokens-2023-04-27-f9ed8900260141bbb2af4bb71741839a",
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-to-delist-and-cease-_6079c69de2a3.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-33/segments/1722640822309.61/warc/CC-MAIN-20240810190707-20240810220707-00558.warc.gz bytes=533876796-533951524",
+    "captura": "20240810193751"
+   },
+   "categoria_pasada1": "T",
+   "certeza": "alta",
+   "E": "2023-05-10"
+  },
+  "DOTUPUSDT|2023-04-27": {
+   "accion": "fecha_corregida",
+   "cita": "At 2023-05-10 06:00 (UTC) : DOTUP, DOTDOWN",
+   "justificacion": "La primera pasada tomó la fecha del título (fecha de publicación, A3.1.5); el cuerpo fija el cese de la negociación del par en otra fecha. Se aplica N5: E = día UTC en que cesa la negociación spot según el texto.",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/binance-to-delist-and-cease-redemption-for-trxup-trxdown-dotup-dotdown-linkup-linkdown-leveraged-tokens-2023-04-27-f9ed8900260141bbb2af4bb71741839a",
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-to-delist-and-cease-_6079c69de2a3.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-33/segments/1722640822309.61/warc/CC-MAIN-20240810190707-20240810220707-00558.warc.gz bytes=533876796-533951524",
+    "captura": "20240810193751"
+   },
+   "categoria_pasada1": "T",
+   "certeza": "alta",
+   "E": "2023-05-10"
+  },
+  "TRXDOWNUSDT|2023-04-27": {
+   "accion": "fecha_corregida",
+   "cita": "At 2023-05-09 06:00 (UTC) : TRXUP, TRXDOWN",
+   "justificacion": "La primera pasada tomó la fecha del título (fecha de publicación, A3.1.5); el cuerpo fija el cese de la negociación del par en otra fecha. Se aplica N5: E = día UTC en que cesa la negociación spot según el texto.",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/binance-to-delist-and-cease-redemption-for-trxup-trxdown-dotup-dotdown-linkup-linkdown-leveraged-tokens-2023-04-27-f9ed8900260141bbb2af4bb71741839a",
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-to-delist-and-cease-_6079c69de2a3.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-33/segments/1722640822309.61/warc/CC-MAIN-20240810190707-20240810220707-00558.warc.gz bytes=533876796-533951524",
+    "captura": "20240810193751"
+   },
+   "categoria_pasada1": "T",
+   "certeza": "alta",
+   "E": "2023-05-09"
+  },
+  "LINKUPUSDT|2023-04-27": {
+   "accion": "fecha_corregida",
+   "cita": "At 2023-05-11 06:00 (UTC) : LINKUP, LINKDOWN",
+   "justificacion": "La primera pasada tomó la fecha del título (fecha de publicación, A3.1.5); el cuerpo fija el cese de la negociación del par en otra fecha. Se aplica N5: E = día UTC en que cesa la negociación spot según el texto.",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/binance-to-delist-and-cease-redemption-for-trxup-trxdown-dotup-dotdown-linkup-linkdown-leveraged-tokens-2023-04-27-f9ed8900260141bbb2af4bb71741839a",
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-to-delist-and-cease-_6079c69de2a3.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-33/segments/1722640822309.61/warc/CC-MAIN-20240810190707-20240810220707-00558.warc.gz bytes=533876796-533951524",
+    "captura": "20240810193751"
+   },
+   "categoria_pasada1": "B",
+   "certeza": "alta",
+   "E": "2023-05-11"
+  },
+  "AUDUSDT|2023-06-01": {
+   "accion": "confirmar",
+   "cita": "Binance will remove and cease trading on the following spot trading pairs at 2023-06-01 06:00 (UTC): Spot Pairs: ADA/AUD, AUD/BUSD, AUD/USDT",
+   "justificacion": "El texto archivado fija la misma fecha de cese de la negociación spot que la primera pasada (N5).",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/notice-of-removal-of-trading-pairs-2023-06-01-bd9a8eb9e0c940278d888cb95b76ba41",
+    "archivo": "url_https___www.binance.com_en_support_announcement_notice-of-removal-of-trading_5b877cc8b91f.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2023-40/segments/1695233505362.29/warc/CC-MAIN-20230921073711-20230921103711-00556.warc.gz bytes=741396699-741474229",
+    "captura": "20230921100939"
+   },
+   "categoria_pasada1": "A",
+   "certeza": "alta"
+  },
+  "YFIIUSDT|2023-08-22": {
+   "accion": "confirmar",
+   "cita": "for the following tokens at 2023-08-22 03:00 (UTC) : Sonm (SNM) Serum (SRM) DFI.Mone",
+   "justificacion": "El texto archivado fija la misma fecha de cese de la negociación spot que la primera pasada (N5).",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/binance-will-delist-snm-srm-and-yfii-on-2023-08-22-f43511a4c1d347a8a2dd1efbdd2fe716?ref=blog.nami.exchange",
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-delist-snm-srm-_013faf0901ef.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-46/segments/1730477027710.33/warc/CC-MAIN-20241102102832-20241102132832-00210.warc.gz bytes=654721166-654805305",
+    "captura": "20241102104255"
+   },
+   "categoria_pasada1": "A",
+   "certeza": "alta"
+  },
+  "ARKUSDT|2023-09-22": {
+   "accion": "C_explicada",
+   "cita": "Binance will open trading for the ARK/USDT, CREAM/USDT, FTT/USDT, GFT/USDT, IQ/USDT",
+   "justificacion": "A3.5 (b): el texto agrega (abre) el par USDT en esa fecha; lo que remueve son los pares BUSD. Relisting documentado; no es una exclusión del par USDT.",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/notice-of-addition-removal-of-trading-pairs-2023-09-22-fe93095a80944d31b42fa7eb2afdb12c?ref=AZTKZ9XS&utm_source=BinanceTwitter&utm_medium=GlobalSocial&utm_campaign=GlobalSocial",
+    "archivo": "url_https___www.binance.com_en_support_announcement_notice-of-addition-removal-o_de27e21c5438.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2023-50/segments/1700679100531.77/warc/CC-MAIN-20231204151108-20231204181108-00646.warc.gz bytes=754296238-754378911",
+    "captura": "20231204155528"
+   },
+   "categoria_pasada1": "C_no_explicada",
+   "certeza": "alta"
+  },
+  "CREAMUSDT|2023-09-22": {
+   "accion": "C_explicada",
+   "cita": "Binance will open trading for the ARK/USDT, CREAM/USDT, FTT/USDT, GFT/USDT, IQ/USDT",
+   "justificacion": "A3.5 (b): el texto agrega (abre) el par USDT en esa fecha; lo que remueve son los pares BUSD. Relisting documentado; no es una exclusión del par USDT.",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/notice-of-addition-removal-of-trading-pairs-2023-09-22-fe93095a80944d31b42fa7eb2afdb12c?ref=AZTKZ9XS&utm_source=BinanceTwitter&utm_medium=GlobalSocial&utm_campaign=GlobalSocial",
+    "archivo": "url_https___www.binance.com_en_support_announcement_notice-of-addition-removal-o_de27e21c5438.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2023-50/segments/1700679100531.77/warc/CC-MAIN-20231204151108-20231204181108-00646.warc.gz bytes=754296238-754378911",
+    "captura": "20231204155528"
+   },
+   "categoria_pasada1": "C_no_explicada",
+   "certeza": "alta"
+  },
+  "FTTUSDT|2023-09-22": {
+   "accion": "C_explicada",
+   "cita": "Binance will open trading for the ARK/USDT, CREAM/USDT, FTT/USDT, GFT/USDT, IQ/USDT",
+   "justificacion": "A3.5 (b): el texto agrega (abre) el par USDT en esa fecha; lo que remueve son los pares BUSD. Relisting documentado; no es una exclusión del par USDT.",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/notice-of-addition-removal-of-trading-pairs-2023-09-22-fe93095a80944d31b42fa7eb2afdb12c?ref=AZTKZ9XS&utm_source=BinanceTwitter&utm_medium=GlobalSocial&utm_campaign=GlobalSocial",
+    "archivo": "url_https___www.binance.com_en_support_announcement_notice-of-addition-removal-o_de27e21c5438.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2023-50/segments/1700679100531.77/warc/CC-MAIN-20231204151108-20231204181108-00646.warc.gz bytes=754296238-754378911",
+    "captura": "20231204155528"
+   },
+   "categoria_pasada1": "C_no_explicada",
+   "certeza": "alta"
+  },
+  "GFTUSDT|2023-09-22": {
+   "accion": "C_explicada",
+   "cita": "Binance will open trading for the ARK/USDT, CREAM/USDT, FTT/USDT, GFT/USDT, IQ/USDT",
+   "justificacion": "A3.5 (b): el texto agrega (abre) el par USDT en esa fecha; lo que remueve son los pares BUSD. Relisting documentado; no es una exclusión del par USDT.",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/notice-of-addition-removal-of-trading-pairs-2023-09-22-fe93095a80944d31b42fa7eb2afdb12c?ref=AZTKZ9XS&utm_source=BinanceTwitter&utm_medium=GlobalSocial&utm_campaign=GlobalSocial",
+    "archivo": "url_https___www.binance.com_en_support_announcement_notice-of-addition-removal-o_de27e21c5438.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2023-50/segments/1700679100531.77/warc/CC-MAIN-20231204151108-20231204181108-00646.warc.gz bytes=754296238-754378911",
+    "captura": "20231204155528"
+   },
+   "categoria_pasada1": "C_no_explicada",
+   "certeza": "alta"
+  },
+  "IQUSDT|2023-09-22": {
+   "accion": "C_explicada",
+   "cita": "Binance will open trading for the ARK/USDT, CREAM/USDT, FTT/USDT, GFT/USDT, IQ/USDT",
+   "justificacion": "A3.5 (b): el texto agrega (abre) el par USDT en esa fecha; lo que remueve son los pares BUSD. Relisting documentado; no es una exclusión del par USDT.",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/notice-of-addition-removal-of-trading-pairs-2023-09-22-fe93095a80944d31b42fa7eb2afdb12c?ref=AZTKZ9XS&utm_source=BinanceTwitter&utm_medium=GlobalSocial&utm_campaign=GlobalSocial",
+    "archivo": "url_https___www.binance.com_en_support_announcement_notice-of-addition-removal-o_de27e21c5438.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2023-50/segments/1700679100531.77/warc/CC-MAIN-20231204151108-20231204181108-00646.warc.gz bytes=754296238-754378911",
+    "captura": "20231204155528"
+   },
+   "categoria_pasada1": "C_no_explicada",
+   "certeza": "alta"
+  },
+  "BTSUSDT|2023-12-07": {
+   "accion": "confirmar",
+   "cita": "for the following token(s) at 2023-12-07 03:00 (UTC) : BitShares (BTS) PERL.eco (PER",
+   "justificacion": "El texto archivado fija la misma fecha de cese de la negociación spot que la primera pasada (N5).",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/binance-will-delist-bts-perl-torn-wtc-on-2023-12-07-d24dd4a035c443b1ad8cf49f60b9d194",
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-delist-bts-perl_f8e94ac0bfb3.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-10/segments/1707947474659.73/warc/CC-MAIN-20240226094435-20240226124435-00198.warc.gz bytes=703161015-703248733",
+    "captura": "20240226113614"
+   },
+   "categoria_pasada1": "A",
+   "certeza": "alta"
+  },
+  "PERLUSDT|2023-12-07": {
+   "accion": "confirmar",
+   "cita": "for the following token(s) at 2023-12-07 03:00 (UTC) : BitShares (BTS) PERL.eco (PER",
+   "justificacion": "El texto archivado fija la misma fecha de cese de la negociación spot que la primera pasada (N5).",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/binance-will-delist-bts-perl-torn-wtc-on-2023-12-07-d24dd4a035c443b1ad8cf49f60b9d194",
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-delist-bts-perl_f8e94ac0bfb3.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-10/segments/1707947474659.73/warc/CC-MAIN-20240226094435-20240226124435-00198.warc.gz bytes=703161015-703248733",
+    "captura": "20240226113614"
+   },
+   "categoria_pasada1": "A",
+   "certeza": "alta"
+  },
+  "WTCUSDT|2023-12-07": {
+   "accion": "confirmar",
+   "cita": "for the following token(s) at 2023-12-07 03:00 (UTC) : BitShares (BTS) PERL.eco (PER",
+   "justificacion": "El texto archivado fija la misma fecha de cese de la negociación spot que la primera pasada (N5).",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/binance-will-delist-bts-perl-torn-wtc-on-2023-12-07-d24dd4a035c443b1ad8cf49f60b9d194",
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-delist-bts-perl_f8e94ac0bfb3.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-10/segments/1707947474659.73/warc/CC-MAIN-20240226094435-20240226124435-00198.warc.gz bytes=703161015-703248733",
+    "captura": "20240226113614"
+   },
+   "categoria_pasada1": "A",
+   "certeza": "alta"
+  },
+  "ANTUSDT|2024-02-20": {
+   "accion": "confirmar",
+   "cita": "for the following token(s) at 2024-02-20 03:00 (UTC) : Aragon (ANT) Multichain (MULT",
+   "justificacion": "El texto archivado fija la misma fecha de cese de la negociación spot que la primera pasada (N5).",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/binance-will-delist-ant-multi-vai-xmr-on-2024-02-20-f73b083ba6834771b07dbe5319917ae5",
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-delist-ant-mult_f317e3f215f3.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-10/segments/1707947473598.4/warc/CC-MAIN-20240221234056-20240222024056-00331.warc.gz bytes=681578330-681672187",
+    "captura": "20240222002333"
+   },
+   "categoria_pasada1": "A",
+   "certeza": "alta"
+  },
+  "MULTIUSDT|2024-02-20": {
+   "accion": "confirmar",
+   "cita": "for the following token(s) at 2024-02-20 03:00 (UTC) : Aragon (ANT) Multichain (MULT",
+   "justificacion": "El texto archivado fija la misma fecha de cese de la negociación spot que la primera pasada (N5).",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/binance-will-delist-ant-multi-vai-xmr-on-2024-02-20-f73b083ba6834771b07dbe5319917ae5",
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-delist-ant-mult_f317e3f215f3.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-10/segments/1707947473598.4/warc/CC-MAIN-20240221234056-20240222024056-00331.warc.gz bytes=681578330-681672187",
+    "captura": "20240222002333"
+   },
+   "categoria_pasada1": "A",
+   "certeza": "alta"
+  },
+  "XMRUSDT|2024-02-20": {
+   "accion": "confirmar",
+   "cita": "for the following token(s) at 2024-02-20 03:00 (UTC) : Aragon (ANT) Multichain (MULT",
+   "justificacion": "El texto archivado fija la misma fecha de cese de la negociación spot que la primera pasada (N5).",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/binance-will-delist-ant-multi-vai-xmr-on-2024-02-20-f73b083ba6834771b07dbe5319917ae5",
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-delist-ant-mult_f317e3f215f3.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-10/segments/1707947473598.4/warc/CC-MAIN-20240221234056-20240222024056-00331.warc.gz bytes=681578330-681672187",
+    "captura": "20240222002333"
+   },
+   "categoria_pasada1": "A",
+   "certeza": "alta"
+  },
+  "BONDUSDT|2024-07-22": {
+   "accion": "confirmar",
+   "cita": "on all spot trading pairs for the following token(s) at 2024-07-22 03:00 (UTC) : BarnBridge (BOND) Dock (",
+   "justificacion": "El texto archivado fija la misma fecha de cese de la negociación spot que la primera pasada (N5).",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/binance-will-delist-bond-dock-mdx-pols-on-2024-07-22-4ffb7170f2f84ce3a06cc0cf1a788c23",
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-delist-bond-doc_fb422c08c50b.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-33/segments/1722640759711.49/warc/CC-MAIN-20240809044241-20240809074241-00105.warc.gz bytes=529660114-529748932",
+    "captura": "20240809061308"
+   },
+   "categoria_pasada1": "A",
+   "certeza": "alta"
+  },
+  "DOCKUSDT|2024-07-22": {
+   "accion": "confirmar",
+   "cita": "on all spot trading pairs for the following token(s) at 2024-07-22 03:00 (UTC) : BarnBridge (BOND) Dock (",
+   "justificacion": "El texto archivado fija la misma fecha de cese de la negociación spot que la primera pasada (N5).",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/binance-will-delist-bond-dock-mdx-pols-on-2024-07-22-4ffb7170f2f84ce3a06cc0cf1a788c23",
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-delist-bond-doc_fb422c08c50b.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-33/segments/1722640759711.49/warc/CC-MAIN-20240809044241-20240809074241-00105.warc.gz bytes=529660114-529748932",
+    "captura": "20240809061308"
+   },
+   "categoria_pasada1": "A",
+   "certeza": "alta"
+  },
+  "MDXUSDT|2024-07-22": {
+   "accion": "confirmar",
+   "cita": "on all spot trading pairs for the following token(s) at 2024-07-22 03:00 (UTC) : BarnBridge (BOND) Dock (",
+   "justificacion": "El texto archivado fija la misma fecha de cese de la negociación spot que la primera pasada (N5).",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/binance-will-delist-bond-dock-mdx-pols-on-2024-07-22-4ffb7170f2f84ce3a06cc0cf1a788c23",
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-delist-bond-doc_fb422c08c50b.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-33/segments/1722640759711.49/warc/CC-MAIN-20240809044241-20240809074241-00105.warc.gz bytes=529660114-529748932",
+    "captura": "20240809061308"
+   },
+   "categoria_pasada1": "A",
+   "certeza": "alta"
+  },
+  "POLSUSDT|2024-07-22": {
+   "accion": "confirmar",
+   "cita": "on all spot trading pairs for the following token(s) at 2024-07-22 03:00 (UTC) : BarnBridge (BOND) Dock (",
+   "justificacion": "El texto archivado fija la misma fecha de cese de la negociación spot que la primera pasada (N5).",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/binance-will-delist-bond-dock-mdx-pols-on-2024-07-22-4ffb7170f2f84ce3a06cc0cf1a788c23",
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-delist-bond-doc_fb422c08c50b.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-33/segments/1722640759711.49/warc/CC-MAIN-20240809044241-20240809074241-00105.warc.gz bytes=529660114-529748932",
+    "captura": "20240809061308"
+   },
+   "categoria_pasada1": "A",
+   "certeza": "alta"
+  },
+  "KP3RUSDT|2024-11-06": {
+   "accion": "confirmar",
+   "cita": "on all spot trading pairs for the following token(s) at 2024-11-06 03:00 (UTC) : Rupiah Token (IDRT) Keep",
+   "justificacion": "El texto archivado fija la misma fecha de cese de la negociación spot que la primera pasada (N5).",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/binance-will-delist-idrt-kp3r-ooki-unfi-on-2024-11-06-043c8407bb904652a428573a50d07e07?utm_source=CoinGabbar&utm_medium=Website",
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-delist-idrt-kp3_1ffb11650aa9.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-51/segments/1733066433271.86/warc/CC-MAIN-20241207224914-20241208014914-00417.warc.gz bytes=611005252-611075961",
+    "captura": "20241207230630"
+   },
+   "categoria_pasada1": "A",
+   "certeza": "alta"
+  },
+  "OOKIUSDT|2024-11-06": {
+   "accion": "confirmar",
+   "cita": "on all spot trading pairs for the following token(s) at 2024-11-06 03:00 (UTC) : Rupiah Token (IDRT) Keep",
+   "justificacion": "El texto archivado fija la misma fecha de cese de la negociación spot que la primera pasada (N5).",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/binance-will-delist-idrt-kp3r-ooki-unfi-on-2024-11-06-043c8407bb904652a428573a50d07e07?utm_source=CoinGabbar&utm_medium=Website",
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-delist-idrt-kp3_1ffb11650aa9.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-51/segments/1733066433271.86/warc/CC-MAIN-20241207224914-20241208014914-00417.warc.gz bytes=611005252-611075961",
+    "captura": "20241207230630"
+   },
+   "categoria_pasada1": "A",
+   "certeza": "alta"
+  },
+  "UNFIUSDT|2024-11-06": {
+   "accion": "confirmar",
+   "cita": "on all spot trading pairs for the following token(s) at 2024-11-06 03:00 (UTC) : Rupiah Token (IDRT) Keep",
+   "justificacion": "El texto archivado fija la misma fecha de cese de la negociación spot que la primera pasada (N5).",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/binance-will-delist-idrt-kp3r-ooki-unfi-on-2024-11-06-043c8407bb904652a428573a50d07e07?utm_source=CoinGabbar&utm_medium=Website",
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-delist-idrt-kp3_1ffb11650aa9.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-51/segments/1733066433271.86/warc/CC-MAIN-20241207224914-20241208014914-00417.warc.gz bytes=611005252-611075961",
+    "captura": "20241207230630"
+   },
+   "categoria_pasada1": "A",
+   "certeza": "alta"
+  }
+ },
+ "sin_fecha": {
+  "BCNUSDT|https://www.binance.com/en/support/announcement/360017720731": {
+   "E": "2018-10-12",
+   "cita": "for the following coins and tokens at 2018/10/12 10:00 AM (UTC)",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/360017720731",
+    "archivo": "url_https___www.binance.com_en_support_announcement_360017720731_5746bab4e096.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-31/segments/1627046153854.42/warc/CC-MAIN-20210729074313-20210729104313-00472.warc.gz bytes=685846057-685874657",
+    "captura": "20210729084627"
+   },
+   "certeza": "alta",
+   "justificacion": "A3.4.1: el cuerpo fija el cese (fecha explícita). Ningún par USDT del token en el bucket: sigue fuera del universo por A3.3.2."
+  },
+  "CHATUSDT|https://www.binance.com/en/support/announcement/360017720731": {
+   "E": "2018-10-12",
+   "cita": "for the following coins and tokens at 2018/10/12 10:00 AM (UTC)",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/360017720731",
+    "archivo": "url_https___www.binance.com_en_support_announcement_360017720731_5746bab4e096.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-31/segments/1627046153854.42/warc/CC-MAIN-20210729074313-20210729104313-00472.warc.gz bytes=685846057-685874657",
+    "captura": "20210729084627"
+   },
+   "certeza": "alta",
+   "justificacion": "A3.4.1: el cuerpo fija el cese (fecha explícita). Ningún par USDT del token en el bucket: sigue fuera del universo por A3.3.2."
+  },
+  "ICNUSDT|https://www.binance.com/en/support/announcement/360017720731": {
+   "E": "2018-10-12",
+   "cita": "for the following coins and tokens at 2018/10/12 10:00 AM (UTC)",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/360017720731",
+    "archivo": "url_https___www.binance.com_en_support_announcement_360017720731_5746bab4e096.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-31/segments/1627046153854.42/warc/CC-MAIN-20210729074313-20210729104313-00472.warc.gz bytes=685846057-685874657",
+    "captura": "20210729084627"
+   },
+   "certeza": "alta",
+   "justificacion": "A3.4.1: el cuerpo fija el cese (fecha explícita). Ningún par USDT del token en el bucket: sigue fuera del universo por A3.3.2."
+  },
+  "TRIGUSDT|https://www.binance.com/en/support/announcement/360017720731": {
+   "E": "2018-10-12",
+   "cita": "for the following coins and tokens at 2018/10/12 10:00 AM (UTC)",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/360017720731",
+    "archivo": "url_https___www.binance.com_en_support_announcement_360017720731_5746bab4e096.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-31/segments/1627046153854.42/warc/CC-MAIN-20210729074313-20210729104313-00472.warc.gz bytes=685846057-685874657",
+    "captura": "20210729084627"
+   },
+   "certeza": "alta",
+   "justificacion": "A3.4.1: el cuerpo fija el cese (fecha explícita). Ningún par USDT del token en el bucket: sigue fuera del universo por A3.3.2."
+  },
+  "BCNUSDT|https://support.binance.com/hc/en-us/articles/360017720731?refer=coinsosik": {
+   "E": "2018-10-12",
+   "cita": "for the following coins and tokens at 2018/10/12 10:00 AM (UTC)",
+   "fuente": {
+    "url": "https://support.binance.com/hc/en-us/articles/360017720731?refer=coinsosik",
+    "archivo": "zd_360017720731_f8ac092ad057.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2018-43/segments/1539583511216.45/warc/CC-MAIN-20181017195553-20181017221053-00523.warc.gz bytes=808716246-808725717",
+    "captura": "20181017200529"
+   },
+   "certeza": "alta",
+   "justificacion": "A3.4.1: el cuerpo fija el cese (fecha explícita). Ningún par USDT del token en el bucket: sigue fuera del universo por A3.3.2."
+  },
+  "CHATUSDT|https://support.binance.com/hc/en-us/articles/360017720731?refer=coinsosik": {
+   "E": "2018-10-12",
+   "cita": "for the following coins and tokens at 2018/10/12 10:00 AM (UTC)",
+   "fuente": {
+    "url": "https://support.binance.com/hc/en-us/articles/360017720731?refer=coinsosik",
+    "archivo": "zd_360017720731_f8ac092ad057.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2018-43/segments/1539583511216.45/warc/CC-MAIN-20181017195553-20181017221053-00523.warc.gz bytes=808716246-808725717",
+    "captura": "20181017200529"
+   },
+   "certeza": "alta",
+   "justificacion": "A3.4.1: el cuerpo fija el cese (fecha explícita). Ningún par USDT del token en el bucket: sigue fuera del universo por A3.3.2."
+  },
+  "ICNUSDT|https://support.binance.com/hc/en-us/articles/360017720731?refer=coinsosik": {
+   "E": "2018-10-12",
+   "cita": "for the following coins and tokens at 2018/10/12 10:00 AM (UTC)",
+   "fuente": {
+    "url": "https://support.binance.com/hc/en-us/articles/360017720731?refer=coinsosik",
+    "archivo": "zd_360017720731_f8ac092ad057.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2018-43/segments/1539583511216.45/warc/CC-MAIN-20181017195553-20181017221053-00523.warc.gz bytes=808716246-808725717",
+    "captura": "20181017200529"
+   },
+   "certeza": "alta",
+   "justificacion": "A3.4.1: el cuerpo fija el cese (fecha explícita). Ningún par USDT del token en el bucket: sigue fuera del universo por A3.3.2."
+  },
+  "TRIGUSDT|https://support.binance.com/hc/en-us/articles/360017720731?refer=coinsosik": {
+   "E": "2018-10-12",
+   "cita": "for the following coins and tokens at 2018/10/12 10:00 AM (UTC)",
+   "fuente": {
+    "url": "https://support.binance.com/hc/en-us/articles/360017720731?refer=coinsosik",
+    "archivo": "zd_360017720731_f8ac092ad057.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2018-43/segments/1539583511216.45/warc/CC-MAIN-20181017195553-20181017221053-00523.warc.gz bytes=808716246-808725717",
+    "captura": "20181017200529"
+   },
+   "certeza": "alta",
+   "justificacion": "A3.4.1: el cuerpo fija el cese (fecha explícita). Ningún par USDT del token en el bucket: sigue fuera del universo por A3.3.2."
+  }
+ },
+ "tokens_sin_par": {},
+ "renombres": [
+  {
+   "viejo": "VENUSDT",
+   "nuevo": "VETUSDT",
+   "E": "2018-07-23",
+   "relacion_nuevas_por_vieja": 100,
+   "cita": "at a ratio of 1 VEN = 100 VET",
+   "fuente": {
+    "url": "https://support.binance.com/hc/en-us/articles/360007439672",
+    "archivo": "zd_360007439672_d538039394aa.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2018-34/segments/1534221218357.92/warc/CC-MAIN-20180821151743-20180821171743-00711.warc.gz bytes=798585015-798594486",
+    "captura": "20180821152757"
+   },
+   "certeza": "alta"
+  },
+  {
+   "viejo": "BCHABCUSDT",
+   "nuevo": "BCHUSDT",
+   "E": "2019-11-28",
+   "relacion_nuevas_por_vieja": 1,
+   "cita": "at a ratio of 1 BCHABC = 1 BCH",
+   "fuente": {
+    "archivo": "zd_360037219511_27e27ad63185.json"
+   },
+   "certeza": "alta"
+  },
+  {
+   "viejo": "STORMUSDT",
+   "nuevo": "STMXUSDT",
+   "E": "2020-06-08",
+   "relacion_nuevas_por_vieja": 1,
+   "cita": "at a ratio of 1 STORM = 1 STMX",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/360043990532",
+    "archivo": "url_https___www.binance.com_en_support_announcement_360043990532_0dedae609be8.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-49/segments/1637964363336.93/warc/CC-MAIN-20211207045002-20211207075002-00373.warc.gz bytes=729201402-729252447",
+    "captura": "20211207070421"
+   },
+   "certeza": "alta"
+  },
+  {
+   "viejo": "ERDUSDT",
+   "nuevo": "EGLDUSDT",
+   "E": "2020-08-31",
+   "relacion_nuevas_por_vieja": 0.001,
+   "cita": "at a ratio of 1000 ERD = 1 EGLD",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/aa864b2d4db24379b606249d0cba87fb",
+    "archivo": "bn_aa864b2d4db24379b606249d0cba87fb_923aec2ca107.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-31/segments/1627046150266.65/warc/CC-MAIN-20210724125655-20210724155655-00338.warc.gz bytes=690575718-690604545",
+    "captura": "20210724153628"
+   },
+   "certeza": "alta"
+  },
+  {
+   "viejo": "LENDUSDT",
+   "nuevo": "AAVEUSDT",
+   "E": "2020-10-12",
+   "relacion_nuevas_por_vieja": 0.01,
+   "cita": "at a ratio of 100 LEND = 1 AAVE",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/17595222999545348c8acdd5dc41c00a",
+    "archivo": "bn_17595222999545348c8acdd5dc41c00a_7cbc5104a088.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-50/segments/1606141176049.8/warc/CC-MAIN-20201124082900-20201124112900-00068.warc.gz bytes=614872577-614898862",
+    "captura": "20201124101808"
+   },
+   "certeza": "alta"
+  },
+  {
+   "viejo": "STRATUSDT",
+   "nuevo": "STRAXUSDT",
+   "E": "2020-11-12",
+   "relacion_nuevas_por_vieja": 1,
+   "cita": "at a ratio of 1 STRAT = 1 STRAX",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/1937b7781c5043efa66c07141be3bdc2",
+    "archivo": "bn_1937b7781c5043efa66c07141be3bdc2_e3f3ac372bca.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-50/segments/1606141191692.20/warc/CC-MAIN-20201127103102-20201127133102-00410.warc.gz bytes=557347146-557373277",
+    "captura": "20201127115620"
+   },
+   "certeza": "alta"
+  },
+  {
+   "viejo": "XZCUSDT",
+   "nuevo": "FIROUSDT",
+   "E": "2021-01-25",
+   "relacion_nuevas_por_vieja": 1,
+   "cita": "at a ratio of 1 XZC = 1 FIRO",
+   "fuente": {
+    "archivo": "bn_4a06d6ab6abb4f08b12bb93d6fec30ec_1d51d7029751.json"
+   },
+   "certeza": "alta"
+  },
+  {
+   "viejo": "NPXSUSDT",
+   "nuevo": "PUNDIXUSDT",
+   "E": "2021-04-05",
+   "relacion_nuevas_por_vieja": 0.001,
+   "cita": "at a ratio of 1,000 NPXS = 1 PUNDIX",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/8bdcb060635b491d912247fb00603d4d",
+    "archivo": "bn_8bdcb060635b491d912247fb00603d4d_821867c8b60e.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-21/segments/1620243990449.41/warc/CC-MAIN-20210514091252-20210514121252-00564.warc.gz bytes=655330706-655361861",
+    "captura": "20210514113643"
+   },
+   "certeza": "alta"
+  },
+  {
+   "viejo": "PAXUSDT",
+   "nuevo": "USDPUSDT",
+   "E": "2021-09-06",
+   "relacion_nuevas_por_vieja": 1,
+   "cita": "ratio of 1 PAX = 1 USDP",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcemenT/c313480177e4457bb1e1b848c88bbf78",
+    "archivo": "bn_c313480177e4457bb1e1b848c88bbf78_5cdfdffc3e32.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-43/segments/1634323585405.74/warc/CC-MAIN-20211021102435-20211021132435-00282.warc.gz bytes=809991858-810022531",
+    "captura": "20211021123240"
+   },
+   "certeza": "alta"
+  },
+  {
+   "viejo": "ANYUSDT",
+   "nuevo": "MULTIUSDT",
+   "E": "2022-03-30",
+   "relacion_nuevas_por_vieja": 1,
+   "cita": "at a ratio of 1 ANY = 1 MULTI",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/binance-will-support-the-anyswap-any-token-migration-and-renaming-plan-d14ebaed2c2d40d591ad377653009151",
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-any_0d963f079737.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2022-49/segments/1669446710765.76/warc/CC-MAIN-20221130160457-20221130190457-00741.warc.gz bytes=711535526-711603595",
+    "captura": "20221130172228"
+   },
+   "certeza": "alta"
+  },
+  {
+   "viejo": "POLYUSDT",
+   "nuevo": "POLYXUSDT",
+   "E": "2022-10-10",
+   "relacion_nuevas_por_vieja": 1,
+   "cita": "at a ratio of 1 POLY = 1 POLYX",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/binance-will-support-the-polymath-poly-mainnet-swap-and-rebranding-plan-to-polymesh-polyx-25556b2e078740f1b1e7357a7aa6a94d",
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-pol_070c8129db69.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2022-49/segments/1669446710918.58/warc/CC-MAIN-20221203011523-20221203041523-00299.warc.gz bytes=729024765-729094018",
+    "captura": "20221203013208"
+   },
+   "certeza": "alta"
+  },
+  {
+   "viejo": "COCOSUSDT",
+   "nuevo": "COMBOUSDT",
+   "E": "2023-06-02",
+   "relacion_nuevas_por_vieja": 1,
+   "cita": "The distribution of COMBO (COMBO) was conducted at a ratio of 1 COCOS = 1 COMBO",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/binance-has-completed-the-cocos-bcx-cocos-token-swap-rebranding-plan-to-combo-combo-18550322a4944094840831c3efe2d223",
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-co_4886d9ba7798.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2023-40/segments/1695233510259.52/warc/CC-MAIN-20230927035329-20230927065329-00348.warc.gz bytes=740774635-740852860",
+    "captura": "20230927051545"
+   },
+   "certeza": "media"
+  },
+  {
+   "viejo": "MCUSDT",
+   "nuevo": "BEAMXUSDT",
+   "E": "2023-11-07",
+   "relacion_nuevas_por_vieja": 100,
+   "cita": "All MC tokens will be swapped for BEAMX at a ratio of 1 MC = 100 BEAMX",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/binance-will-support-the-merit-circle-mc-token-swap-redenomination-and-rebranding-to-beam-beamx-0b171519f1824ee288af7343ec91ce33?ref=blog.nami.exchange",
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-mer_425adfd88510.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-46/segments/1730477027819.53/warc/CC-MAIN-20241104065437-20241104095437-00499.warc.gz bytes=635958656-636045801",
+    "captura": "20241104073422"
+   },
+   "certeza": "alta"
+  },
+  {
+   "viejo": "TVKUSDT",
+   "nuevo": "VANRYUSDT",
+   "E": "2023-12-01",
+   "relacion_nuevas_por_vieja": 1,
+   "cita": "The distribution was conducted at a ratio of 1 TVK = 1 VANRY",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/binance-has-completed-the-virtua-tvk-token-swap-and-rebranding-to-vanar-vanry-4701f3d28a244d1f824aa05f009ddc40",
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-vi_317e63335f04.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-10/segments/1707947474948.91/warc/CC-MAIN-20240301030138-20240301060138-00146.warc.gz bytes=667555086-667637759",
+    "captura": "20240301031625"
+   },
+   "certeza": "media"
+  },
+  {
+   "viejo": "PLAUSDT",
+   "nuevo": "PDAUSDT",
+   "E": "2024-02-26",
+   "relacion_nuevas_por_vieja": 1,
+   "cita": "PLA tokens will assume the ticker of PDA on Binance",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/binance-will-support-the-playdapp-pla-token-swap-to-playdapp-pda-f0fafa66fedf4e058aaacb57c206c597",
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-pla_dc497a97c163.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-22/segments/1715971059148.63/warc/CC-MAIN-20240528185253-20240528215253-00125.warc.gz bytes=551773479-551856269",
+    "captura": "20240528192632"
+   },
+   "certeza": "alta"
+  },
+  {
+   "viejo": "MATICUSDT",
+   "nuevo": "POLUSDT",
+   "E": "2024-09-10",
+   "relacion_nuevas_por_vieja": 1,
+   "cita": "All MATIC tokens will be swapped to POL at a ratio of 1 MATIC = 1 POL",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/binance-will-support-the-polygon-matic-token-swap-to-polygon-pol-6a6de383727f4659a3050f7982e1620f?hl=en",
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-pol_6ce597c88773.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-42/segments/1727944253634.18/warc/CC-MAIN-20241009115334-20241009145334-00480.warc.gz bytes=616352220-616454261",
+    "captura": "20241009121816"
+   },
+   "certeza": "alta"
+  }
+ ],
+ "vs2": {
+  "ETHBEARUSDT|2020-01-17": {
+   "revision": "Sin corrección. El texto de listado es correcto (apertura 2020-01-17); el primer día activo del bucket es 2020-02-03 porque hubo una suspensión documentada en otro anuncio archivado (reanudación 2020-02-03). El par y la fecha extraídos no estaban mal, así que A3.6 no permite corregir: sigue siendo un desacierto (49/50 = 98 % ≥ 95 %).",
+   "cita": "ETHBEAR/USDT and ETHBULL/BUSD trading pairs at 2020/01/17 12:00 PM (UTC)",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcemenT/360038933471",
+    "archivo": "url_https___www.binance.com_en_support_announcement_360038933471_5a2f4e1d60f5.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-43/segments/1634323585322.63/warc/CC-MAIN-20211020152307-20211020182307-00220.warc.gz bytes=832153130-832182650",
+    "captura": "20211020175549"
+   },
+   "cita_reanudacion": "ETHBEAR/USDT and ETHBEAR/BUSD trading pairs at 2020/02/03 10:00 AM (UTC)",
+   "fuente_reanudacion": {
+    "url": "https://www.binance.com/en/support/announcement/360039036032",
+    "archivo": "url_https___www.binance.com_en_support_announcement_360039036032_79fb888ae040.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-31/segments/1627046150067.87/warc/CC-MAIN-20210724001211-20210724031211-00404.warc.gz bytes=681112720-681140247",
+    "captura": "20210724023947"
+   },
+   "certeza": "alta"
+  }
+ },
+ "vs3": {
+  "CLOAKUSDT|2019-02-22": {
+   "muestra_pasada1": false,
+   "par_ok": true,
+   "categoria_pasada1": "fuera_sin_par_usdt_documentado",
+   "resultado": "confirmar",
+   "E_texto": "2019-02-22",
+   "cita": "for the following coins and tokens on 2019/02/22 at 10:00 AM UTC: CloakCoin (CLOAK) Modum (MOD) SALT (SALT) Substratum (SUB) Wings (WINGS)"
+  },
+  "MODUSDT|2019-02-22": {
+   "muestra_pasada1": false,
+   "par_ok": true,
+   "categoria_pasada1": "fuera_sin_par_usdt_documentado",
+   "resultado": "confirmar",
+   "E_texto": "2019-02-22",
+   "cita": "for the following coins and tokens on 2019/02/22 at 10:00 AM UTC: CloakCoin (CLOAK) Modum (MOD) SALT (SALT) Substratum (SUB) Wings (WINGS)"
+  },
+  "SALTUSDT|2019-02-22": {
+   "muestra_pasada1": false,
+   "par_ok": true,
+   "categoria_pasada1": "fuera_sin_par_usdt_documentado",
+   "resultado": "confirmar",
+   "E_texto": "2019-02-22",
+   "cita": "for the following coins and tokens on 2019/02/22 at 10:00 AM UTC: CloakCoin (CLOAK) Modum (MOD) SALT (SALT) Substratum (SUB) Wings (WINGS)"
+  },
+  "SUBUSDT|2019-02-22": {
+   "muestra_pasada1": false,
+   "par_ok": true,
+   "categoria_pasada1": "fuera_sin_par_usdt_documentado",
+   "resultado": "confirmar",
+   "E_texto": "2019-02-22",
+   "cita": "for the following coins and tokens on 2019/02/22 at 10:00 AM UTC: CloakCoin (CLOAK) Modum (MOD) SALT (SALT) Substratum (SUB) Wings (WINGS)"
+  },
+  "WINGSUSDT|2019-02-22": {
+   "muestra_pasada1": false,
+   "par_ok": true,
+   "categoria_pasada1": "fuera_sin_par_usdt_documentado",
+   "resultado": "confirmar",
+   "E_texto": "2019-02-22",
+   "cita": "for the following coins and tokens on 2019/02/22 at 10:00 AM UTC: CloakCoin (CLOAK) Modum (MOD) SALT (SALT) Substratum (SUB) Wings (WINGS)"
+  },
+  "BCHSVUSDT|2019-04-22": {
+   "muestra_pasada1": false,
+   "par_ok": true,
+   "categoria_pasada1": "A",
+   "resultado": "confirmar",
+   "E_texto": "2019-04-22",
+   "cita": "for the following coin on 2019/04/22 at 10:00 AM UTC: Bitcoin SV (BCHSV)"
+  },
+  "BEARUSDT|2020-03-31": {
+   "muestra_pasada1": false,
+   "par_ok": true,
+   "categoria_pasada1": "A",
+   "resultado": "confirmar",
+   "E_texto": "2020-03-31",
+   "cita": "and will stop trading at 2020/03/31 10:00 AM (UTC)"
+  },
+  "BNBBEARUSDT|2020-03-31": {
+   "muestra_pasada1": false,
+   "par_ok": true,
+   "categoria_pasada1": "A",
+   "resultado": "confirmar",
+   "E_texto": "2020-03-31",
+   "cita": "and will stop trading at 2020/03/31 10:00 AM (UTC)"
+  },
+  "BNBBULLUSDT|2020-03-31": {
+   "muestra_pasada1": false,
+   "par_ok": true,
+   "categoria_pasada1": "A",
+   "resultado": "confirmar",
+   "E_texto": "2020-03-31",
+   "cita": "and will stop trading at 2020/03/31 10:00 AM (UTC)"
+  },
+  "BULLUSDT|2020-03-31": {
+   "muestra_pasada1": false,
+   "par_ok": true,
+   "categoria_pasada1": "A",
+   "resultado": "confirmar",
+   "E_texto": "2020-03-31",
+   "cita": "and will stop trading at 2020/03/31 10:00 AM (UTC)"
+  },
+  "EOSBEARUSDT|2020-03-31": {
+   "muestra_pasada1": false,
+   "par_ok": true,
+   "categoria_pasada1": "A",
+   "resultado": "confirmar",
+   "E_texto": "2020-03-31",
+   "cita": "and will stop trading at 2020/03/31 10:00 AM (UTC)"
+  },
+  "EOSBULLUSDT|2020-03-31": {
+   "muestra_pasada1": false,
+   "par_ok": true,
+   "categoria_pasada1": "A",
+   "resultado": "confirmar",
+   "E_texto": "2020-03-31",
+   "cita": "and will stop trading at 2020/03/31 10:00 AM (UTC)"
+  },
+  "ETHBEARUSDT|2020-03-31": {
+   "muestra_pasada1": true,
+   "par_ok": true,
+   "categoria_pasada1": "A",
+   "resultado": "confirmar",
+   "E_texto": "2020-03-31",
+   "cita": "and will stop trading at 2020/03/31 10:00 AM (UTC)"
+  },
+  "ETHBULLUSDT|2020-03-31": {
+   "muestra_pasada1": true,
+   "par_ok": true,
+   "categoria_pasada1": "A",
+   "resultado": "confirmar",
+   "E_texto": "2020-03-31",
+   "cita": "and will stop trading at 2020/03/31 10:00 AM (UTC)"
+  },
+  "XRPBEARUSDT|2020-03-31": {
+   "muestra_pasada1": false,
+   "par_ok": true,
+   "categoria_pasada1": "A",
+   "resultado": "confirmar",
+   "E_texto": "2020-03-31",
+   "cita": "and will stop trading at 2020/03/31 10:00 AM (UTC)"
+  },
+  "XRPBULLUSDT|2020-03-31": {
+   "muestra_pasada1": false,
+   "par_ok": true,
+   "categoria_pasada1": "A",
+   "resultado": "confirmar",
+   "E_texto": "2020-03-31",
+   "cita": "and will stop trading at 2020/03/31 10:00 AM (UTC)"
+  },
+  "MCOUSDT|2020-10-23": {
+   "muestra_pasada1": false,
+   "par_ok": true,
+   "categoria_pasada1": "A",
+   "resultado": "confirmar",
+   "E_texto": "2020-10-23",
+   "cita": "Binance will remove and cease trading on the following trading pairs at 2020/10/23 12:00 PM (UTC): BTS/BUSD, MCO/BTC, MCO/USDT"
+  },
+  "HCUSDT|2020-11-10": {
+   "muestra_pasada1": false,
+   "par_ok": true,
+   "categoria_pasada1": "A",
+   "resultado": "confirmar",
+   "E_texto": "2020-11-10",
+   "cita": "Binance will remove and cease trading on the following trading pairs at 2020/11/10 12:00 PM (UTC): AION/BUSD, DCR/BUSD, EVX/ETH, HC/USDT"
+  },
+  "BKRWUSDT|2021-02-19": {
+   "muestra_pasada1": false,
+   "par_ok": false,
+   "categoria_pasada1": "T",
+   "resultado": "descartar",
+   "E_texto": "2021-02-19",
+   "cita": "This announcement has been updated on 2021-02-20 to correct the BKRW/USDT trading pair to the USDT/BKRW trading pair"
+  },
+  "HNTUSDT|2022-10-14": {
+   "muestra_pasada1": false,
+   "par_ok": true,
+   "categoria_pasada1": "A",
+   "resultado": "confirmar",
+   "E_texto": "2022-10-14",
+   "cita": "Binance will remove and cease trading on the following trading pairs at 2022-10-14 03:00 (UTC) : Spot Pairs : HNT/BTC, HNT/USDT"
+  },
+  "FTTUSDT|2022-11-15": {
+   "muestra_pasada1": false,
+   "par_ok": true,
+   "categoria_pasada1": "A",
+   "resultado": "confirmar",
+   "E_texto": "2022-11-15",
+   "cita": "Binance will remove and cease trading on the following trading pairs at 2022-11-15 04:30 (UTC) : Spot Pairs : FTT/BNB, FTT/BTC, FTT/ETH and FTT/USDT"
+  },
+  "AUTOUSDT|2023-04-18": {
+   "muestra_pasada1": true,
+   "par_ok": true,
+   "categoria_pasada1": "A",
+   "resultado": "confirmar",
+   "E_texto": "2023-04-18",
+   "cita": "for the following tokens at 2023-04-18 03:00 (UTC) : Kepple (QLC) Neblio (NEBL) Auto"
+  },
+  "NEBLUSDT|2023-04-18": {
+   "muestra_pasada1": false,
+   "par_ok": true,
+   "categoria_pasada1": "A",
+   "resultado": "confirmar",
+   "E_texto": "2023-04-18",
+   "cita": "for the following tokens at 2023-04-18 03:00 (UTC) : Kepple (QLC) Neblio (NEBL) Auto"
+  },
+  "DOTDOWNUSDT|2023-04-27": {
+   "muestra_pasada1": false,
+   "par_ok": true,
+   "categoria_pasada1": "T",
+   "resultado": "fecha_corregida",
+   "E_texto": "2023-05-10",
+   "cita": "At 2023-05-10 06:00 (UTC) : DOTUP, DOTDOWN"
+  },
+  "DOTUPUSDT|2023-04-27": {
+   "muestra_pasada1": true,
+   "par_ok": true,
+   "categoria_pasada1": "T",
+   "resultado": "fecha_corregida",
+   "E_texto": "2023-05-10",
+   "cita": "At 2023-05-10 06:00 (UTC) : DOTUP, DOTDOWN"
+  },
+  "TRXDOWNUSDT|2023-04-27": {
+   "muestra_pasada1": false,
+   "par_ok": true,
+   "categoria_pasada1": "T",
+   "resultado": "fecha_corregida",
+   "E_texto": "2023-05-09",
+   "cita": "At 2023-05-09 06:00 (UTC) : TRXUP, TRXDOWN"
+  },
+  "LINKUPUSDT|2023-04-27": {
+   "muestra_pasada1": false,
+   "par_ok": true,
+   "categoria_pasada1": "B",
+   "resultado": "fecha_corregida",
+   "E_texto": "2023-05-11",
+   "cita": "At 2023-05-11 06:00 (UTC) : LINKUP, LINKDOWN"
+  },
+  "AUDUSDT|2023-06-01": {
+   "muestra_pasada1": false,
+   "par_ok": true,
+   "categoria_pasada1": "A",
+   "resultado": "confirmar",
+   "E_texto": "2023-06-01",
+   "cita": "Binance will remove and cease trading on the following spot trading pairs at 2023-06-01 06:00 (UTC): Spot Pairs: ADA/AUD, AUD/BUSD, AUD/USDT"
+  },
+  "YFIIUSDT|2023-08-22": {
+   "muestra_pasada1": false,
+   "par_ok": true,
+   "categoria_pasada1": "A",
+   "resultado": "confirmar",
+   "E_texto": "2023-08-22",
+   "cita": "for the following tokens at 2023-08-22 03:00 (UTC) : Sonm (SNM) Serum (SRM) DFI.Mone"
+  },
+  "ARKUSDT|2023-09-22": {
+   "muestra_pasada1": false,
+   "par_ok": true,
+   "categoria_pasada1": "C_no_explicada",
+   "resultado": "C_explicada",
+   "E_texto": "2023-09-22",
+   "cita": "Binance will open trading for the ARK/USDT, CREAM/USDT, FTT/USDT, GFT/USDT, IQ/USDT"
+  },
+  "CREAMUSDT|2023-09-22": {
+   "muestra_pasada1": true,
+   "par_ok": true,
+   "categoria_pasada1": "C_no_explicada",
+   "resultado": "C_explicada",
+   "E_texto": "2023-09-22",
+   "cita": "Binance will open trading for the ARK/USDT, CREAM/USDT, FTT/USDT, GFT/USDT, IQ/USDT"
+  },
+  "FTTUSDT|2023-09-22": {
+   "muestra_pasada1": false,
+   "par_ok": true,
+   "categoria_pasada1": "C_no_explicada",
+   "resultado": "C_explicada",
+   "E_texto": "2023-09-22",
+   "cita": "Binance will open trading for the ARK/USDT, CREAM/USDT, FTT/USDT, GFT/USDT, IQ/USDT"
+  },
+  "GFTUSDT|2023-09-22": {
+   "muestra_pasada1": true,
+   "par_ok": true,
+   "categoria_pasada1": "C_no_explicada",
+   "resultado": "C_explicada",
+   "E_texto": "2023-09-22",
+   "cita": "Binance will open trading for the ARK/USDT, CREAM/USDT, FTT/USDT, GFT/USDT, IQ/USDT"
+  },
+  "IQUSDT|2023-09-22": {
+   "muestra_pasada1": false,
+   "par_ok": true,
+   "categoria_pasada1": "C_no_explicada",
+   "resultado": "C_explicada",
+   "E_texto": "2023-09-22",
+   "cita": "Binance will open trading for the ARK/USDT, CREAM/USDT, FTT/USDT, GFT/USDT, IQ/USDT"
+  },
+  "BTSUSDT|2023-12-07": {
+   "muestra_pasada1": false,
+   "par_ok": true,
+   "categoria_pasada1": "A",
+   "resultado": "confirmar",
+   "E_texto": "2023-12-07",
+   "cita": "for the following token(s) at 2023-12-07 03:00 (UTC) : BitShares (BTS) PERL.eco (PER"
+  },
+  "PERLUSDT|2023-12-07": {
+   "muestra_pasada1": false,
+   "par_ok": true,
+   "categoria_pasada1": "A",
+   "resultado": "confirmar",
+   "E_texto": "2023-12-07",
+   "cita": "for the following token(s) at 2023-12-07 03:00 (UTC) : BitShares (BTS) PERL.eco (PER"
+  },
+  "WTCUSDT|2023-12-07": {
+   "muestra_pasada1": false,
+   "par_ok": true,
+   "categoria_pasada1": "A",
+   "resultado": "confirmar",
+   "E_texto": "2023-12-07",
+   "cita": "for the following token(s) at 2023-12-07 03:00 (UTC) : BitShares (BTS) PERL.eco (PER"
+  },
+  "ANTUSDT|2024-02-20": {
+   "muestra_pasada1": true,
+   "par_ok": true,
+   "categoria_pasada1": "A",
+   "resultado": "confirmar",
+   "E_texto": "2024-02-20",
+   "cita": "for the following token(s) at 2024-02-20 03:00 (UTC) : Aragon (ANT) Multichain (MULT"
+  },
+  "MULTIUSDT|2024-02-20": {
+   "muestra_pasada1": false,
+   "par_ok": true,
+   "categoria_pasada1": "A",
+   "resultado": "confirmar",
+   "E_texto": "2024-02-20",
+   "cita": "for the following token(s) at 2024-02-20 03:00 (UTC) : Aragon (ANT) Multichain (MULT"
+  },
+  "XMRUSDT|2024-02-20": {
+   "muestra_pasada1": false,
+   "par_ok": true,
+   "categoria_pasada1": "A",
+   "resultado": "confirmar",
+   "E_texto": "2024-02-20",
+   "cita": "for the following token(s) at 2024-02-20 03:00 (UTC) : Aragon (ANT) Multichain (MULT"
+  },
+  "BONDUSDT|2024-07-22": {
+   "muestra_pasada1": false,
+   "par_ok": true,
+   "categoria_pasada1": "A",
+   "resultado": "confirmar",
+   "E_texto": "2024-07-22",
+   "cita": "on all spot trading pairs for the following token(s) at 2024-07-22 03:00 (UTC) : BarnBridge (BOND) Dock ("
+  },
+  "DOCKUSDT|2024-07-22": {
+   "muestra_pasada1": true,
+   "par_ok": true,
+   "categoria_pasada1": "A",
+   "resultado": "confirmar",
+   "E_texto": "2024-07-22",
+   "cita": "on all spot trading pairs for the following token(s) at 2024-07-22 03:00 (UTC) : BarnBridge (BOND) Dock ("
+  },
+  "MDXUSDT|2024-07-22": {
+   "muestra_pasada1": false,
+   "par_ok": true,
+   "categoria_pasada1": "A",
+   "resultado": "confirmar",
+   "E_texto": "2024-07-22",
+   "cita": "on all spot trading pairs for the following token(s) at 2024-07-22 03:00 (UTC) : BarnBridge (BOND) Dock ("
+  },
+  "POLSUSDT|2024-07-22": {
+   "muestra_pasada1": true,
+   "par_ok": true,
+   "categoria_pasada1": "A",
+   "resultado": "confirmar",
+   "E_texto": "2024-07-22",
+   "cita": "on all spot trading pairs for the following token(s) at 2024-07-22 03:00 (UTC) : BarnBridge (BOND) Dock ("
+  },
+  "KP3RUSDT|2024-11-06": {
+   "muestra_pasada1": true,
+   "par_ok": true,
+   "categoria_pasada1": "A",
+   "resultado": "confirmar",
+   "E_texto": "2024-11-06",
+   "cita": "on all spot trading pairs for the following token(s) at 2024-11-06 03:00 (UTC) : Rupiah Token (IDRT) Keep"
+  },
+  "OOKIUSDT|2024-11-06": {
+   "muestra_pasada1": false,
+   "par_ok": true,
+   "categoria_pasada1": "A",
+   "resultado": "confirmar",
+   "E_texto": "2024-11-06",
+   "cita": "on all spot trading pairs for the following token(s) at 2024-11-06 03:00 (UTC) : Rupiah Token (IDRT) Keep"
+  },
+  "UNFIUSDT|2024-11-06": {
+   "muestra_pasada1": false,
+   "par_ok": true,
+   "categoria_pasada1": "A",
+   "resultado": "confirmar",
+   "E_texto": "2024-11-06",
+   "cita": "on all spot trading pairs for the following token(s) at 2024-11-06 03:00 (UTC) : Rupiah Token (IDRT) Keep"
+  }
+ }
+}

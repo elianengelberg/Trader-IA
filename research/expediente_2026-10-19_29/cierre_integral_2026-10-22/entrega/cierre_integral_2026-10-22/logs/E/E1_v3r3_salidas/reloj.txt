@@ -1,0 +1,10 @@
+00:30 UTC  base: 0/2 pasan
+00:30 UTC  completa: 2/2 pasan
+05:30 UTC  base: 0/2 pasan
+05:30 UTC  completa: 2/2 pasan
+05:56 UTC  base: 2/2 pasan
+05:56 UTC  completa: 2/2 pasan
+12:00 UTC  base: 2/2 pasan
+12:00 UTC  completa: 2/2 pasan
+23:59 UTC  base: 2/2 pasan
+23:59 UTC  completa: 2/2 pasan

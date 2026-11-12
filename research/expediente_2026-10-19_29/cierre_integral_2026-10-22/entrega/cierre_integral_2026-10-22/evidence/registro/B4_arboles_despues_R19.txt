@@ -1,0 +1,4 @@
+== Árboles de R19 DESPUÉS de las 252 + 24 corridas: 2026-10-22T22:50:46Z
+r19_base: cambios 0 · ignorados nuevos 0 · código = registro 03 · test c38c5f40e1b56168
+r19_cand: cambios 11 · ignorados nuevos 0 · código = registro 03 · test 1c3cc4e7c7166da5
+salida principal: 253 JSON · 252 logs · 187M

@@ -1,0 +1,91 @@
+{
+ "aviso": "DATOS SINTÉTICOS en /dev/shm; fechas ficticias (2030–2031)",
+ "recoleccion": {
+  "rc": 0,
+  "salida": "{\"desde\": \"2030-12-01\", \"hasta\": \"2031-05-01\", \"simbolos\": 38, \"errores\": 0, \"guardados\": 11551}",
+  "cadena_ok": true,
+  "dias_registrados": 152,
+  "checksum_distinto": 1,
+  "malo_no_guardado": true,
+  "reejecucion_sin_reescritura": true,
+  "destino_protegido_rechazado": true
+ },
+ "evaluador": {
+  "congelacion_alterada": true,
+  "inicio_no_anclado": true,
+  "t0_corrido": true,
+  "antes_de_tiempo": true,
+  "modo_real_sobre_sinteticos": true,
+  "mirada2_antes_que_1": true,
+  "zip_alterado": true,
+  "zip_fuera_del_manifiesto": true,
+  "recolector_error_codigo_2": true,
+  "dia_con_errores_rechazado": true,
+  "rerecoleccion_ok": true,
+  "solo_validar": {
+   "validacion": "OK",
+   "dias": 92,
+   "archivos": 6992,
+   "ilegibles": 1,
+   "frac_ilegible": 0.00014302059496567506,
+   "ejemplos_ilegibles": [
+    "2031-01-21/1h/S07USDT.zip: File is not a zip file"
+   ]
+  },
+  "mirada1": {
+   "mirada": 1,
+   "decision": "CONTINUAR",
+   "n_evaluables": 60,
+   "frac_no_evaluable": 0.0,
+   "experimento": "E4 v1 H-XS-REV-1 prospectivo",
+   "sintetico": true,
+   "t0": "2031-01-01",
+   "congelacion_sha256": "d3610f3ed0ba8755732b88dd113c1f8545f0a5de61115865bf122ec903b9b82f",
+   "lectura": {
+    "dias": 92,
+    "archivos": 6992,
+    "ilegibles": 1,
+    "frac_ilegible": 0.00014302059496567506,
+    "ejemplos_ilegibles": [
+     "2031-01-21/1h/S07USDT.zip: File is not a zip file"
+    ]
+   }
+  },
+  "mirada1_sin_estadisticos": true,
+  "mirada1_repetida": true,
+  "mirada2": {
+   "decision": "FINAL",
+   "clasificacion": "RESPALDADA_INFORMACION",
+   "ic_medio": 0.12549808211572916,
+   "t": 3.9179440306132016,
+   "limite": 2.1195224791755956,
+   "n_dias": 120,
+   "salidas_totales": 2,
+   "lectura": {
+    "dias": 152,
+    "archivos": 11552,
+    "ilegibles": 1,
+    "frac_ilegible": 8.656509695290859e-05,
+    "ejemplos_ilegibles": [
+     "2031-01-21/1h/S07USDT.zip: File is not a zip file"
+    ]
+   }
+  },
+  "mirada2_repetida": true
+ },
+ "registro_evaluaciones": [
+  {
+   "mirada": 1,
+   "decision": "CONTINUAR",
+   "clasificacion": null,
+   "n_evaluables": 60
+  },
+  {
+   "mirada": 2,
+   "decision": "FINAL",
+   "clasificacion": "RESPALDADA_INFORMACION",
+   "n_evaluables": 120
+  }
+ ],
+ "ok": true
+}

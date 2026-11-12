@@ -1,0 +1,28 @@
+{
+ "C4_r0_usa_C2_r1": {
+  "cocientes_distintos": 1,
+  "cociente": [
+   100.0
+  ]
+ },
+ "C4_r1_usa_C2_r2": {
+  "cocientes_distintos": 1,
+  "cociente": [
+   100.0
+  ]
+ },
+ "C4_r7_usa_C2_r8": {
+  "cocientes_distintos": 1,
+  "cociente": [
+   100.0
+  ]
+ },
+ "inicios_bootstrap_r0_iguales_en_todos_los_procesos": "la semilla no depende del proceso: random.Random(20261103 + r)",
+ "primeros_inicios_r0_n366": [
+  45,
+  73,
+  83,
+  83,
+  99
+ ]
+}

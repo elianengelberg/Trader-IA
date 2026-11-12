@@ -1,0 +1,6 @@
+Adjudicación §6 (ambigüedad BLVT señalada por el lector), fijada antes de lanzar al adjudicador
+UTC: 2026-10-29T01:00:11.375Z
+9c15ee5c5ba12b5703643cdd3fbe95f2af9e0f8e099bf1acfde249eb46709274  segunda_lectura/adjudicacion/ENCARGO_ADJUDICADOR.md
+3873ad016ddc5682303fe1a557aff5e49b2d0bb7f5de80ed25454035c0a2b6cd  segunda_lectura/adjudicacion/paquete/CASOS.json
+b85b2657948787af8d3cc69c1a8d1ac45e067ef5a83a551580cd70bc41efde7c  segunda_lectura/adjudicacion/paquete/paginas/url_https___www.binance.com_en_support_announcement_updates-on-binance-leveraged_2f015a993d37.json
+a4f07f35986af2a34c7935d5b76bc961c46b4bcb6fa7dc46c4459bd9a25b1f0e  segunda_lectura/privado/orden_XY_adjudicacion.json

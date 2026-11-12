@@ -1,0 +1,120 @@
+diff --git a/packages/tia/src/tia/data/providers/binance_live.py b/packages/tia/src/tia/data/providers/binance_live.py
+index c42ab53..832b802 100644
+--- a/packages/tia/src/tia/data/providers/binance_live.py
++++ b/packages/tia/src/tia/data/providers/binance_live.py
+@@ -99,6 +99,11 @@ _VENUE_ORDER_TYPE = {venue: ours for ours, venue in _ORDER_TYPE_MAP.items()}
+ #: Order types the venue refuses a timeInForce on ("parameter sent when not required").
+ _NO_TIME_IN_FORCE = frozenset({OrderType.MARKET, OrderType.LIMIT_MAKER, OrderType.STOP})
+ 
++#: Transport failures that happen before a request leaves this host: no connection was made,
++#: so nothing reached the venue. Every other transport failure may come after the venue got
++#: the request (a connection dropped while the answer was on its way).
++_NOT_SENT = (httpx.ConnectError, httpx.ProxyError, httpx.UnsupportedProtocol)
++
+ _TIF_MAP = {
+     TimeInForce.GTC: "GTC",
+     TimeInForce.IOC: "IOC",
+@@ -208,6 +213,11 @@ class BinanceExecutionProvider(ExecutionProvider):
+         * The venue did not answer — a timeout or a transport error. The order's fate is
+           **unknown**, and the only safe response is to say that too. This is why
+           ``httpx.TimeoutException`` is not folded in with the rest.
++
++        A transport error on a request that changes the venue (an order or a cancel) is
++        unknown too, unless the connection was never made: a connection dropped after the
++        request went out leaves an order the venue may hold. Only reads, and requests that
++        never left, are a plain outage.
+         """
+         await self._budget.acquire(path)
+         signed = self._signer.sign(params)
+@@ -225,6 +235,14 @@ class BinanceExecutionProvider(ExecutionProvider):
+                 key=self._signer.key_fingerprint,
+             ) from exc
+         except httpx.HTTPError as exc:
++            if method != "GET" and not isinstance(exc, _NOT_SENT):
++                raise ReconciliationError(
++                    f"{method} {path} failed after the request may have reached the venue "
++                    f"({type(exc).__name__}); the order state at the venue is UNKNOWN. Not "
++                    "retrying. Reconcile against the venue before submitting anything else.",
++                    path=path,
++                    key=self._signer.key_fingerprint,
++                ) from exc
+             raise ProviderUnavailableError(
+                 f"binance transport error on {method} {path}: {exc}",
+                 provider=self.name,
+diff --git a/tests/unit/test_binance_ambiguous_transport.py b/tests/unit/test_binance_ambiguous_transport.py
+new file mode 100644
+index 0000000..7d99a6c
+--- /dev/null
++++ b/tests/unit/test_binance_ambiguous_transport.py
+@@ -0,0 +1,71 @@
++"""A transport failure after an order request may have left is an unknown order state.
++
++The adapter already reports a timeout on an order as UNKNOWN and never retries it. Other
++transport failures were all reported as an outage (``ProviderUnavailableError``), which the
++live session treats as "nothing happened": a connection reset while the venue's answer was on
++its way left an order the venue may hold and the session did not look for. Only a failure to
++connect at all is known to have sent nothing; reads stay an outage either way.
++
++Expected outcomes, fixed before running: order and cancel requests that fail after the
++connection was made raise ``ReconciliationError`` (one attempt, no retry); a failed connect
++and any failed read raise ``ProviderUnavailableError``.
++"""
++
++from __future__ import annotations
++
++from typing import Any
++
++import httpx
++import pytest
++
++from tia.core.errors import ProviderUnavailableError, ReconciliationError
++
++from .test_binance_live import ACK_RESPONSE, intent, provider
++
++AFTER_SENDING = [
++    httpx.ReadError("connection reset by peer"),
++    httpx.RemoteProtocolError("server disconnected without sending a response"),
++    httpx.WriteError("broken pipe"),
++]
++
++
++def failing(exc: httpx.HTTPError, attempts: list[str], *, only: str | None = None) -> Any:
++    def handler(request: httpx.Request) -> httpx.Response:
++        attempts.append(request.method)
++        if only is None or request.method == only:
++            exc.request = request
++            raise exc
++        return httpx.Response(200, json=ACK_RESPONSE)
++    return handler
++
++
++@pytest.mark.parametrize("exc", AFTER_SENDING, ids=lambda e: type(e).__name__)
++async def test_an_order_that_may_have_reached_the_venue_is_unknown_not_unsent(exc: httpx.HTTPError) -> None:
++    attempts: list[str] = []
++    with pytest.raises(ReconciliationError, match="UNKNOWN"):
++        await provider(failing(exc, attempts)).submit_order(intent())
++    assert attempts == ["POST"], "one request, never retried"
++
++
++async def test_a_connection_that_was_never_made_sent_nothing() -> None:
++    attempts: list[str] = []
++    with pytest.raises(ProviderUnavailableError):
++        await provider(failing(httpx.ConnectError("no route"), attempts)).submit_order(intent())
++    assert attempts == ["POST"]
++
++
++async def test_a_cancel_that_may_have_reached_the_venue_is_unknown() -> None:
++    attempts: list[str] = []
++    adapter = provider(failing(httpx.ReadError("connection reset by peer"), attempts, only="DELETE"))
++    order = await adapter.submit_order(intent())
++    with pytest.raises(ReconciliationError, match="UNKNOWN"):
++        await adapter.cancel_order(order.order_id)
++    assert attempts == ["POST", "DELETE"]
++
++
++async def test_a_failed_read_is_an_outage() -> None:
++    attempts: list[str] = []
++    adapter = provider(failing(httpx.ReadError("connection reset by peer"), attempts, only="GET"))
++    with pytest.raises(ProviderUnavailableError):
++        await adapter.get_orders(open_only=True, symbol="BTC-USD")
++    assert attempts == ["GET"]

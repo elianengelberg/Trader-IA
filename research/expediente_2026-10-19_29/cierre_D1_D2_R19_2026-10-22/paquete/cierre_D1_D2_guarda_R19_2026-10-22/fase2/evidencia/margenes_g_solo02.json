@@ -1,0 +1,488 @@
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_PR2WTJRP16WVGHBKGYYSEWTX component=execution.paper order_id=ord_F0XZM7BBVS9GNEWE496CS62Q
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_XKYT673WPSADN10GJKN638JT component=execution.paper order_id=ord_6DC5932ADBDEYZK1Q7J0TBJV
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_PR2WTJRP16WVGHBKGYYSEWTX component=execution.paper order_id=ord_F0XZM7BBVS9GNEWE496CS62Q
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_XKYT673WPSADN10GJKN638JT component=execution.paper order_id=ord_6DC5932ADBDEYZK1Q7J0TBJV
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_PR2WTJRP16WVGHBKGYYSEWTX component=execution.paper order_id=ord_F0XZM7BBVS9GNEWE496CS62Q
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_XKYT673WPSADN10GJKN638JT component=execution.paper order_id=ord_6DC5932ADBDEYZK1Q7J0TBJV
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_PR2WTJRP16WVGHBKGYYSEWTX component=execution.paper order_id=ord_F0XZM7BBVS9GNEWE496CS62Q
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 19:19:41 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_39CNTNKB1ASCD9R1ENYXD2A8 component=execution.paper order_id=ord_RMEZRPZB1XTRC5XA4S9ZKEHR
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_39CNTNKB1ASCD9R1ENYXD2A8 component=execution.paper order_id=ord_RMEZRPZB1XTRC5XA4S9ZKEHR
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_39CNTNKB1ASCD9R1ENYXD2A8 component=execution.paper order_id=ord_RMEZRPZB1XTRC5XA4S9ZKEHR
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_39CNTNKB1ASCD9R1ENYXD2A8 component=execution.paper order_id=ord_RMEZRPZB1XTRC5XA4S9ZKEHR
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_39CNTNKB1ASCD9R1ENYXD2A8 component=execution.paper order_id=ord_RMEZRPZB1XTRC5XA4S9ZKEHR
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_39CNTNKB1ASCD9R1ENYXD2A8 component=execution.paper order_id=ord_RMEZRPZB1XTRC5XA4S9ZKEHR
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_39CNTNKB1ASCD9R1ENYXD2A8 component=execution.paper order_id=ord_RMEZRPZB1XTRC5XA4S9ZKEHR
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_39CNTNKB1ASCD9R1ENYXD2A8 component=execution.paper order_id=ord_RMEZRPZB1XTRC5XA4S9ZKEHR
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_39CNTNKB1ASCD9R1ENYXD2A8 component=execution.paper order_id=ord_RMEZRPZB1XTRC5XA4S9ZKEHR
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_39CNTNKB1ASCD9R1ENYXD2A8 component=execution.paper order_id=ord_RMEZRPZB1XTRC5XA4S9ZKEHR
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_39CNTNKB1ASCD9R1ENYXD2A8 component=execution.paper order_id=ord_RMEZRPZB1XTRC5XA4S9ZKEHR
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_39CNTNKB1ASCD9R1ENYXD2A8 component=execution.paper order_id=ord_RMEZRPZB1XTRC5XA4S9ZKEHR
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_39CNTNKB1ASCD9R1ENYXD2A8 component=execution.paper order_id=ord_RMEZRPZB1XTRC5XA4S9ZKEHR
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_39CNTNKB1ASCD9R1ENYXD2A8 component=execution.paper order_id=ord_RMEZRPZB1XTRC5XA4S9ZKEHR
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_39CNTNKB1ASCD9R1ENYXD2A8 component=execution.paper order_id=ord_RMEZRPZB1XTRC5XA4S9ZKEHR
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_39CNTNKB1ASCD9R1ENYXD2A8 component=execution.paper order_id=ord_RMEZRPZB1XTRC5XA4S9ZKEHR
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_39CNTNKB1ASCD9R1ENYXD2A8 component=execution.paper order_id=ord_RMEZRPZB1XTRC5XA4S9ZKEHR
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_39CNTNKB1ASCD9R1ENYXD2A8 component=execution.paper order_id=ord_RMEZRPZB1XTRC5XA4S9ZKEHR
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_39CNTNKB1ASCD9R1ENYXD2A8 component=execution.paper order_id=ord_RMEZRPZB1XTRC5XA4S9ZKEHR
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_VJYWHRXY62Z4TJVBJ3EHZP2Y component=execution.paper order_id=ord_HKQEGG71C0MFHBXHY58SMXSX
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 19:19:43 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 19:19:43 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=99894.71 run_id=bt_WX9BCCC7N7FE8J3JYGMGBH39 trades=7
+2026-10-22 19:19:45 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=99879.01 run_id=bt_ZYPG062F211B3DNHSNBHWNYG trades=10
+2026-10-22 19:19:48 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=100004.89 run_id=bt_TPY3ER86P49E791XECQV0HM3 trades=29
+2026-10-22 19:19:50 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=99999.57 run_id=bt_WQGXBJND0TVZTPHN5M8S66KN trades=2
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_9DJQ1W32F88ZVGK0YD3EHD47 component=execution.paper order_id=ord_Z451H12PHTR6RGWZCKN3RNZ5
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 19:19:50 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 19:19:51 [info     ] duplicate_order_suppressed     client_order_id=coid_EABAAW8DD1S3BM3WQDV1QPQM component=execution.paper order_id=ord_7FM4J70F3ZM25D77G950QGYX
+2026-10-22 19:19:51 [info     ] duplicate_order_suppressed     client_order_id=coid_EABAAW8DD1S3BM3WQDV1QPQM component=execution.paper order_id=ord_7FM4J70F3ZM25D77G950QGYX
+2026-10-22 19:19:51 [info     ] duplicate_order_suppressed     client_order_id=coid_EABAAW8DD1S3BM3WQDV1QPQM component=execution.paper order_id=ord_7FM4J70F3ZM25D77G950QGYX
+2026-10-22 19:19:51 [info     ] duplicate_order_suppressed     client_order_id=coid_EABAAW8DD1S3BM3WQDV1QPQM component=execution.paper order_id=ord_7FM4J70F3ZM25D77G950QGYX
+2026-10-22 19:19:51 [info     ] duplicate_order_suppressed     client_order_id=coid_EABAAW8DD1S3BM3WQDV1QPQM component=execution.paper order_id=ord_7FM4J70F3ZM25D77G950QGYX
+2026-10-22 19:19:51 [info     ] duplicate_order_suppressed     client_order_id=coid_9SVZEQ0YGJMQ5FDKBQEPFJWN component=execution.paper order_id=ord_D6R3RV546KJB77A06PJCEZ84
+2026-10-22 19:19:51 [info     ] duplicate_order_suppressed     client_order_id=coid_EABAAW8DD1S3BM3WQDV1QPQM component=execution.paper order_id=ord_7FM4J70F3ZM25D77G950QGYX
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_MS2B5BA5FHAGHVWX3HKZZR7C component=execution.paper order_id=ord_Y4Z5QQDKV5NCVAP0ZMAQ28NF
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_MS2B5BA5FHAGHVWX3HKZZR7C component=execution.paper order_id=ord_Y4Z5QQDKV5NCVAP0ZMAQ28NF
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_MS2B5BA5FHAGHVWX3HKZZR7C component=execution.paper order_id=ord_Y4Z5QQDKV5NCVAP0ZMAQ28NF
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_MS2B5BA5FHAGHVWX3HKZZR7C component=execution.paper order_id=ord_Y4Z5QQDKV5NCVAP0ZMAQ28NF
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_MS2B5BA5FHAGHVWX3HKZZR7C component=execution.paper order_id=ord_Y4Z5QQDKV5NCVAP0ZMAQ28NF
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_MS2B5BA5FHAGHVWX3HKZZR7C component=execution.paper order_id=ord_Y4Z5QQDKV5NCVAP0ZMAQ28NF
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_MS2B5BA5FHAGHVWX3HKZZR7C component=execution.paper order_id=ord_Y4Z5QQDKV5NCVAP0ZMAQ28NF
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_MS2B5BA5FHAGHVWX3HKZZR7C component=execution.paper order_id=ord_Y4Z5QQDKV5NCVAP0ZMAQ28NF
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_MS2B5BA5FHAGHVWX3HKZZR7C component=execution.paper order_id=ord_Y4Z5QQDKV5NCVAP0ZMAQ28NF
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_MS2B5BA5FHAGHVWX3HKZZR7C component=execution.paper order_id=ord_Y4Z5QQDKV5NCVAP0ZMAQ28NF
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_MS2B5BA5FHAGHVWX3HKZZR7C component=execution.paper order_id=ord_Y4Z5QQDKV5NCVAP0ZMAQ28NF
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_MS2B5BA5FHAGHVWX3HKZZR7C component=execution.paper order_id=ord_Y4Z5QQDKV5NCVAP0ZMAQ28NF
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_MS2B5BA5FHAGHVWX3HKZZR7C component=execution.paper order_id=ord_Y4Z5QQDKV5NCVAP0ZMAQ28NF
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_MS2B5BA5FHAGHVWX3HKZZR7C component=execution.paper order_id=ord_Y4Z5QQDKV5NCVAP0ZMAQ28NF
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_MS2B5BA5FHAGHVWX3HKZZR7C component=execution.paper order_id=ord_Y4Z5QQDKV5NCVAP0ZMAQ28NF
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_MS2B5BA5FHAGHVWX3HKZZR7C component=execution.paper order_id=ord_Y4Z5QQDKV5NCVAP0ZMAQ28NF
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_MS2B5BA5FHAGHVWX3HKZZR7C component=execution.paper order_id=ord_Y4Z5QQDKV5NCVAP0ZMAQ28NF
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_MS2B5BA5FHAGHVWX3HKZZR7C component=execution.paper order_id=ord_Y4Z5QQDKV5NCVAP0ZMAQ28NF
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 19:19:52 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 19:19:52 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=100018.09 run_id=bt_F1XQNB5HXMBRZ3EA9WWTDC4V trades=19
+{
+ "rechazo_primer_cierre": {
+  "posiciones": 7,
+  "enviadas": 224,
+  "cierres_enviados": 107,
+  "cierres_rechazados": 5,
+  "cierres_expirados_con_posicion": 0,
+  "racha_max_sin_cobertura": 42,
+  "permanencia_max_barras": 45,
+  "stops_movidos": 0,
+  "stops_mal": 0,
+  "muertas_reenviadas": 201,
+  "crece_tras_cierre": 0,
+  "entrada_en_posicion_posterior": 0,
+  "cierres_sin_reduce_only": 0
+ },
+ "calmo": {
+  "posiciones": 10,
+  "enviadas": 25,
+  "cierres_enviados": 5,
+  "cierres_rechazados": 0,
+  "cierres_expirados_con_posicion": 0,
+  "racha_max_sin_cobertura": 0,
+  "permanencia_max_barras": 41,
+  "stops_movidos": 0,
+  "stops_mal": 0,
+  "muertas_reenviadas": 0,
+  "crece_tras_cierre": 0,
+  "entrada_en_posicion_posterior": 0,
+  "cierres_sin_reduce_only": 0
+ },
+ "parciales": {
+  "posiciones": 3,
+  "enviadas": 28,
+  "cierres_enviados": 3,
+  "cierres_rechazados": 0,
+  "cierres_expirados_con_posicion": 0,
+  "racha_max_sin_cobertura": 192,
+  "permanencia_max_barras": 200,
+  "stops_movidos": 0,
+  "stops_mal": 0,
+  "muertas_reenviadas": 0,
+  "crece_tras_cierre": 1,
+  "entrada_en_posicion_posterior": 0,
+  "cierres_sin_reduce_only": 0
+ },
+ "ioc": {
+  "posiciones": 1,
+  "enviadas": 8,
+  "cierres_enviados": 1,
+  "cierres_rechazados": 0,
+  "cierres_expirados_con_posicion": 0,
+  "racha_max_sin_cobertura": 519,
+  "permanencia_max_barras": 525,
+  "stops_movidos": 0,
+  "stops_mal": 0,
+  "muertas_reenviadas": 0,
+  "crece_tras_cierre": 1,
+  "entrada_en_posicion_posterior": 0,
+  "cierres_sin_reduce_only": 0
+ },
+ "todo_junto": {
+  "posiciones": 6,
+  "enviadas": 231,
+  "cierres_enviados": 105,
+  "cierres_rechazados": 5,
+  "cierres_expirados_con_posicion": 0,
+  "racha_max_sin_cobertura": 49,
+  "permanencia_max_barras": 54,
+  "stops_movidos": 0,
+  "stops_mal": 0,
+  "muertas_reenviadas": 205,
+  "crece_tras_cierre": 0,
+  "entrada_en_posicion_posterior": 0,
+  "cierres_sin_reduce_only": 0
+ }
+}

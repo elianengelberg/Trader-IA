@@ -1,0 +1,13 @@
+{
+ "inicio_utc": "2026-10-28T13:52:31.190850+00:00",
+ "estado": "EN_CURSO",
+ "ventana": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/arnes_L13_SINTETICO_SIN_DATOS_SIN_CALCULO/I1_invalido_anotar_falla_antes/ventana_inexistente",
+ "sha_ventana": "4fae07a11378c2ee2e3d5cf90cf1ce78bf33f0e6af4af3ee43560d9cfd66edcb",
+ "sha_orquestador": "22b7ff20d98e4730f755fc14ccffe796a3c7836fd2b2004756583449bcb64353",
+ "sha_manifiesto": "7dd0f1fd45965f344076156397aaa372e1f747bdff715938d0874a6d548d89ef",
+ "sha_autorizacion": "3609f13b0343f68e72119bd0a0caa3c33dbf3650e9c2a156731ac89c143e86c4",
+ "inicio_H": "2023-05-15",
+ "mapeos_en_tabla": 0,
+ "mapeos_aplicados_en_la_comprobacion_previa": 0,
+ "reintento_de": "85015f64956790f614b9b005d07ce8cde4e8c496539faec094a166b2007b254a"
+}

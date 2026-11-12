@@ -1,0 +1,29 @@
+{
+ "commit": "72ffae5d2698440c8f1afaff12e07bd8adde66fb",
+ "tree": "44850cfcbf53c3f8223d38a92031f4402f8ffb32",
+ "github_sha": null,
+ "github_ref": null,
+ "run": null,
+ "python": "3.11.17",
+ "pip_freeze_sha256": "480fcee9a7d51c51da7dc4920dfea13bee4250c0d7c095a58e4a918a3766be70",
+ "inputs_sha256": {
+  ".github/workflows/ci.yml": "032cbdb898154dd64df25c6d7a690e3a50a5403d89766951c634dbc89fa637f5",
+  "constraints/ci-py311.txt": "0f42875fa7eb1894be30c0b12734c7d95a16a95debb7e2d54c38fd3b88edd71a",
+  "pyproject.toml": "fb3bc273b2a385db042b4f9a89fb660223622ede63b892608d791caf9ac2ae7a"
+ },
+ "junit_sha256": "e70d5d47a3966d79c03e09224997579c02ac8db569a7b634c463165de35b6548",
+ "engine_version": null,
+ "report": {
+  "tests": 1985,
+  "passed": 1984,
+  "failure": 1,
+  "error": 0,
+  "skipped": 0,
+  "guard_ran": 7,
+  "guard_passed": 7
+ },
+ "verdict": "fail",
+ "problems": [
+  "1 failed and 0 errored"
+ ]
+}

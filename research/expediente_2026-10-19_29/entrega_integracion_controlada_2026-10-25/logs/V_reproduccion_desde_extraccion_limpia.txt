@@ -1,0 +1,34 @@
+== 1. manifiesto del paquete
+MANIFEST.sha256: todo verifica
+== 2. clon aislado
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/verif_entrega_ic_20261025T201138Z/extraido/entrega_integracion_controlada_2026-10-25/reproducir.sh: line 45: cd: /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/verif_entrega_ic_20261025T201138Z/clon_reproduccion: No such file or directory
+base: 44850cfcbf53c3f8223d38a92031f4402f8ffb32 OK
+== 3. cadena de parches
+01 01_obligatorio_D1_D3_motor_y_pruebas_definitivas.patch: aplicado
+02 02v3_obligatorio_trazabilidad_version_motor_CORREGIDO.patch: 5d6a09549a8314f6e6e9386f82a52ca7628510d1 OK
+03 05v2_guarda_version_motor.patch: 4ef14d31d686f4b0521207bd1e011d96e6c74822 OK
+04 03_opcional_pruebas_reloj_y_persistencia.patch: 84f9e349526d061771de74ae799d4ecd6e3732ce OK
+05 04_opcional_CI_versiones_fijadas.patch: 665d0643bd986a5e484192ef50957b64992305cc OK
+06 08_R25_R18_proteccion_de_posiciones.patch: defa96c7ae494b462dc16d5702ca81119b0082ea OK
+07 07_opcional_pruebas_almacen_postgresql.patch: ab62a136ad9ca9dd357353e3bde881fd99f29c2e OK
+08 09_R15_guardado_atomico_backtest.patch: e4d8761996b66aabd391d2138e99cc323f066aa3 OK
+09 10_R24H1_largo_de_incidentes.patch: 43a8979a9c5aef64913d3637249dd4b76f19ea22 OK
+10 11_R19_escrituras_confirmadas.patch: 06243b4a646401177cf337314aa2d1e7d9896c8d OK
+11 12_gate_v4_procedencia_y_ci_postgresql.patch: 91dfea3421ed398cab9a5790afb7f18dd4049ada OK
+12 13_R18_reproteccion_al_reiniciar.patch: c7688384d8005be4f95b378f8699b38a5b81dfe7 OK
+13 15_R25b_transporte_ambiguo_es_estado_desconocido.patch: 17332e1c510d0004f7744bde0a68f008f01652b7 OK
+árbol final: 17332e1c510d0004f7744bde0a68f008f01652b7 OK (candidato)
+== 4. pruebas con Python 3.11.17
+All checks passed!
+ruff rc=0
+pytest rc=0 (salida en /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/verif_entrega_ic_20261025T201138Z/clon_reproduccion/pytest.txt)
+commit `72ffae5d2698440c8f1afaff12e07bd8adde66fb` · working tree `17332e1c510d0004f7744bde0a68f008f01652b7`
+tests 2038 · passed 2028 · failed 0 · errors 0 · skipped 10 · guard {'defined': 7, 'ran': 7, 'passed': 7}
+engine_version 1.2.0 · Python 3.11.17 · distributions `4541005a29772a2f…`
+**gate: pass**
+gate rc=0
+== 5. origen intacto
+índice del origen: IGUAL (37490035d6706739fd7c9add42ad62c4e0c9260089e8e2e77a486f55e3bdcd1b)
+clon de trabajo: /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/verif_entrega_ic_20261025T201138Z/clon_reproduccion/clon (borralo cuando termines)
+RESULTADO: reproducido sin diferencias
+rc=0

@@ -1,0 +1,85 @@
+== 2026-10-20T15:04:40+00:00 inventario de manifiestos (solo lectura)
+
+tendencia_btc/datos/BTCUSDT/MANIFIESTO.json
+  sha256=5a0805a7e22797637c400a1e939ec6c2d10e0cdc26410566f212708211b6367b
+  claves=['archivos', 'ausentes', 'desde', 'fecha_utc', 'fuente', 'hasta', 'intervalo', 'procedencia', 'simbolo']
+  simbolo=BTCUSDT intervalo=1d desde=2017-08 hasta=2026-06
+  archivos=106 por_tipo={'spot_1d:klines': 106}
+  ausentes_declarados=0 []
+  verificacion_en_disco: faltan=0 hash_distinto=0
+
+tendencia_btc/datos/ETHUSDT/MANIFIESTO.json
+  sha256=3998305bb38909a08a94f6365317695f930dea4ea10933b19a22e17b40998f6a
+  claves=['archivos', 'ausentes', 'desde', 'fecha_utc', 'fuente', 'hasta', 'intervalo', 'procedencia', 'simbolo']
+  simbolo=ETHUSDT intervalo=1d desde=2017-08 hasta=2026-06
+  archivos=106 por_tipo={'spot_1d:klines': 106}
+  ausentes_declarados=0 []
+  verificacion_en_disco: faltan=0 hash_distinto=0
+
+tendencia_btc/datos_papel/BTCUSDT/MANIFIESTO.json
+  sha256=efb175d92032b03c996ef013f5b3f3e0d328d9a253c20c983b3368236ea02022
+  claves=['archivos', 'ausentes', 'desde', 'fecha_utc', 'hasta', 'procedencia', 'simbolo', 'uso']
+  simbolo=BTCUSDT intervalo=None desde=2026-04-20 hasta=2026-10-17
+  archivos=180 por_tipo={'spot_1d:klines': 180}
+  ausentes_declarados=0 []
+  verificacion_en_disco: faltan=0 hash_distinto=0
+
+tendencia_btc/datos_papel/ETHUSDT/MANIFIESTO.json
+  sha256=6aa31937ed02503d27978eaeb82012ea2920ffae5e79ceb13d655353bc7fda49
+  claves=['archivos', 'ausentes', 'desde', 'fecha_utc', 'hasta', 'procedencia', 'simbolo', 'uso']
+  simbolo=ETHUSDT intervalo=None desde=2026-04-20 hasta=2026-10-17
+  archivos=180 por_tipo={'spot_1d:klines': 180}
+  ausentes_declarados=0 []
+  verificacion_en_disco: faltan=0 hash_distinto=0
+
+tendencia_btc/datos_papel/funding_BTCUSDT/MANIFIESTO.json
+  sha256=f3a0e5f85a3f97a37c589575433c601b6d87289f5e38860998f45ab082a4ab50
+  claves=['archivos', 'procedencia', 'uso']
+  simbolo=None intervalo=None desde=None hasta=None
+  archivos=3 por_tipo={'funding:fundingRate': 3}
+  ausentes_declarados=0 None
+  verificacion_en_disco: faltan=0 hash_distinto=0
+
+tendencia_btc/datos_multi/MANIFIESTO.json
+  sha256=c64f3bf4c055aad4af6ecde32b30cca0dc42a3728580647d92644805514fb4ad
+  claves=['prerregistro_sha256', 'script_sha256', 'entradas']
+  simbolo=None intervalo=None desde=None hasta=None
+  archivos=36 por_tipo={':yahoo': 12, ':nasdaq': 24}
+  ausentes_declarados=0 None
+  verificacion_en_disco: faltan=0 hash_distinto=0
+
+hcarry_next/datos/binance_vision/MANIFIESTO.json
+  sha256=8bdabde706bffadca3f4b7ca39937bff14a95ab3ecdc77707bfe4bb434f381d1
+  claves=['archivos', 'ausentes', 'ausentes_diarios', 'complementos_diarios', 'desde', 'fecha_utc', 'fuente', 'hasta', 'procedencia', 'simbolo', 'via']
+  simbolo=BTCUSDT intervalo=None desde=2019-10 hasta=2026-06
+  archivos=412 por_tipo={'mark:markPriceKlines': 85, 'funding:fundingRate': 77, 'perp:klines': 77, 'premium:premiumIndexKlines': 77, 'spot:klines': 96}
+  ausentes_declarados=12 [{'ruta': 'futures/um/monthly/klines/BTCUSDT/1h/BTCUSDT-1h-2019-10.zip', 'tipo': 'perp'}, {'ruta': 'futures/um/monthly/klines/BTCUSDT/1h/BTCUSDT-1h-2019-11.zip', 'tipo': 'perp'}, {'ruta': 'futures/um/
+  verificacion_en_disco: faltan=0 hash_distinto=0
+
+hcarry_next/datos/MANIFIESTO_solo_mensual.json
+  sha256=7c08ac3dec404465d23301c39de91bd9d0ea3b643cdaebffabe857b2f219d283
+  claves=['archivos', 'ausentes', 'desde', 'fecha_utc', 'fuente', 'hasta', 'procedencia', 'simbolo', 'via']
+  simbolo=BTCUSDT intervalo=None desde=2019-10 hasta=2026-06
+  archivos=388 por_tipo={'funding:fundingRate': 77, 'perp:klines': 77, 'mark:markPriceKlines': 77, 'premium:premiumIndexKlines': 77, 'spot:klines': 80}
+  ausentes_declarados=12 [{'ruta': 'futures/um/monthly/klines/BTCUSDT/1h/BTCUSDT-1h-2019-10.zip', 'tipo': 'perp'}, {'ruta': 'futures/um/monthly/klines/BTCUSDT/1h/BTCUSDT-1h-2019-11.zip', 'tipo': 'perp'}, {'ruta': 'futures/um/
+  verificacion_en_disco: faltan=388 hash_distinto=0
+
+hcarry_next/datos/otros_simbolos/ETHUSDT/MANIFIESTO.json
+  sha256=7ca2ccb2f6ead9fb5d24248534c2b7bd43ba008ca72f907acbc5f63ba39fed3a
+  claves=['archivos', 'ausentes', 'desde', 'fecha_utc', 'fuente', 'hasta', 'procedencia', 'simbolo', 'via']
+  simbolo=ETHUSDT intervalo=None desde=2020-01 hasta=2026-06
+  archivos=77 por_tipo={'funding:fundingRate': 77}
+  ausentes_declarados=0 []
+  verificacion_en_disco: faltan=0 hash_distinto=0
+
+hcarry_next/datos/otros_simbolos/SOLUSDT/MANIFIESTO.json
+  sha256=8aeedb354791d6db8dad3eb70d24e6d3b36cc002d5cacb479dfd21b353aaee50
+  claves=['archivos', 'ausentes', 'desde', 'fecha_utc', 'fuente', 'hasta', 'procedencia', 'simbolo', 'via']
+  simbolo=SOLUSDT intervalo=None desde=2020-01 hasta=2026-06
+  archivos=69 por_tipo={'funding:fundingRate': 69}
+  ausentes_declarados=8 [{'ruta': 'futures/um/monthly/fundingRate/SOLUSDT/SOLUSDT-fundingRate-2020-01.zip', 'tipo': 'funding'}, {'ruta': 'futures/um/monthly/fundingRate/SOLUSDT/SOLUSDT-fundingRate-2020-02.zip', 'tipo': 'fund
+  verificacion_en_disco: faltan=0 hash_distinto=0
+
+hcarry_next/experimentos/historico/ARCHIVOS_REQUERIDOS.txt: 640 líneas; {'1h': 320, 'markPriceKlines': 160, 'fundingRate': 160}; ej: https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1h/BTCUSDT-1h-2019-10.zip
+
+hcarry_next/experimentos/historico/ARCHIVOS_OPCIONALES.txt: 160 líneas; {'premiumIndexKlines': 160}; ej: https://data.binance.vision/data/futures/um/monthly/premiumIndexKlines/BTCUSDT/1h/BTCUSDT-1h-2019-10.zip

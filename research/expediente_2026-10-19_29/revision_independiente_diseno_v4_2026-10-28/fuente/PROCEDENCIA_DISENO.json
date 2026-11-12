@@ -1,0 +1,10 @@
+{
+ "origen": "registro de la sesión (transcripción JSONL de Claude Code)",
+ "archivo_registro": "/root/.claude/projects/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b.jsonl",
+ "linea": 32735,
+ "timestamp": "2026-10-28T14:35:24.627Z",
+ "uuid_mensaje": "5532d66c-c4ca-41ed-9e13-1520349113f0",
+ "sha256_texto": "c41a5a081f1a56ae996499b034be83c1a770ba53b837b8e6336a075a68b757f8",
+ "bytes": 28194,
+ "nota": "El diseño nunca se escribió como archivo (la fase anterior lo prohibía). Este archivo es el texto del mensaje del asistente, sin modificar."
+}

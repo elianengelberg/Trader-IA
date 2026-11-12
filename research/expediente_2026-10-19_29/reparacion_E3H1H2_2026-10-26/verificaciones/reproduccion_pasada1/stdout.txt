@@ -1,0 +1,230 @@
+{
+ "eventos_total": 55,
+ "eventos_en_universo": 42,
+ "fuera_por_texto_sin_usdt": 79,
+ "fuera_sin_par_usdt_documentado": 13,
+ "descartados": 0,
+ "por_anio": {
+  "2018": {
+   "total": 0,
+   "A": 0,
+   "B": 0,
+   "T": 0,
+   "C_explicada": 0,
+   "C_no_explicada": 0,
+   "D": 0,
+   "E_sin_fecha": 0,
+   "cobertura_conservadora_AB": null,
+   "fallas": 0
+  },
+  "2019": {
+   "total": 1,
+   "A": 1,
+   "B": 0,
+   "T": 0,
+   "C_explicada": 0,
+   "C_no_explicada": 0,
+   "D": 0,
+   "E_sin_fecha": 0,
+   "cobertura_conservadora_AB": 1.0,
+   "fallas": 0
+  },
+  "2020": {
+   "total": 12,
+   "A": 12,
+   "B": 0,
+   "T": 0,
+   "C_explicada": 0,
+   "C_no_explicada": 0,
+   "D": 0,
+   "E_sin_fecha": 0,
+   "cobertura_conservadora_AB": 1.0,
+   "fallas": 0
+  },
+  "2021": {
+   "total": 1,
+   "A": 0,
+   "B": 0,
+   "T": 1,
+   "C_explicada": 0,
+   "C_no_explicada": 0,
+   "D": 0,
+   "E_sin_fecha": 0,
+   "cobertura_conservadora_AB": 0.0,
+   "fallas": 1
+  },
+  "2022": {
+   "total": 2,
+   "A": 2,
+   "B": 0,
+   "T": 0,
+   "C_explicada": 0,
+   "C_no_explicada": 0,
+   "D": 0,
+   "E_sin_fecha": 0,
+   "cobertura_conservadora_AB": 1.0,
+   "fallas": 0
+  },
+  "2023": {
+   "total": 16,
+   "A": 7,
+   "B": 1,
+   "T": 3,
+   "C_explicada": 0,
+   "C_no_explicada": 5,
+   "D": 0,
+   "E_sin_fecha": 0,
+   "cobertura_conservadora_AB": 0.5,
+   "fallas": 8
+  },
+  "2024": {
+   "total": 10,
+   "A": 10,
+   "B": 0,
+   "T": 0,
+   "C_explicada": 0,
+   "C_no_explicada": 0,
+   "D": 0,
+   "E_sin_fecha": 0,
+   "cobertura_conservadora_AB": 1.0,
+   "fallas": 0
+  },
+  "2025": {
+   "total": 0,
+   "A": 0,
+   "B": 0,
+   "T": 0,
+   "C_explicada": 0,
+   "C_no_explicada": 0,
+   "D": 0,
+   "E_sin_fecha": 0,
+   "cobertura_conservadora_AB": null,
+   "fallas": 0
+  },
+  "2026": {
+   "total": 0,
+   "A": 0,
+   "B": 0,
+   "T": 0,
+   "C_explicada": 0,
+   "C_no_explicada": 0,
+   "D": 0,
+   "E_sin_fecha": 0,
+   "cobertura_conservadora_AB": null,
+   "fallas": 0
+  }
+ },
+ "salidas_por_anio": {
+  "2017": {
+   "observadas": 0,
+   "con_anuncio": 0,
+   "sin_anuncio": 0,
+   "frac_sin_anuncio": null
+  },
+  "2018": {
+   "observadas": 2,
+   "con_anuncio": 0,
+   "sin_anuncio": 2,
+   "frac_sin_anuncio": 1.0
+  },
+  "2019": {
+   "observadas": 3,
+   "con_anuncio": 1,
+   "sin_anuncio": 2,
+   "frac_sin_anuncio": 0.6666666666666666
+  },
+  "2020": {
+   "observadas": 21,
+   "con_anuncio": 13,
+   "sin_anuncio": 8,
+   "frac_sin_anuncio": 0.38095238095238093
+  },
+  "2021": {
+   "observadas": 20,
+   "con_anuncio": 0,
+   "sin_anuncio": 20,
+   "frac_sin_anuncio": 1.0
+  },
+  "2022": {
+   "observadas": 43,
+   "con_anuncio": 7,
+   "sin_anuncio": 36,
+   "frac_sin_anuncio": 0.8372093023255814
+  },
+  "2023": {
+   "observadas": 24,
+   "con_anuncio": 8,
+   "sin_anuncio": 16,
+   "frac_sin_anuncio": 0.6666666666666666
+  },
+  "2024": {
+   "observadas": 46,
+   "con_anuncio": 10,
+   "sin_anuncio": 36,
+   "frac_sin_anuncio": 0.782608695652174
+  },
+  "2025": {
+   "observadas": 51,
+   "con_anuncio": 0,
+   "sin_anuncio": 51,
+   "frac_sin_anuncio": 1.0
+  },
+  "2026": {
+   "observadas": 26,
+   "con_anuncio": 0,
+   "sin_anuncio": 26,
+   "frac_sin_anuncio": 1.0
+  }
+ },
+ "salidas_renombre_mapeado": 0,
+ "primer_evento": "2019-04-22",
+ "ultima_falla": {
+  "par": "ARKUSDT",
+  "E": "2023-09-22",
+  "urls": [
+   "https://www.binance.com/en/support/announcement/notice-of-addition-removal-of-trading-pairs-2023-09-22-fe93095a80944d31b42fa7eb2afdb12c?ref=AZTKZ9XS&utm_source=BinanceTwitter&utm_medium=GlobalSocial&utm_campaign=GlobalSocial"
+  ],
+  "titulos": [
+   "Notice of Addition & Removal of Trading Pairs - 2023-09-22"
+  ],
+  "subtipos": [
+   "remocion_pares"
+  ],
+  "par_en_texto": true,
+  "tokens": [],
+  "url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2023-50/segments/1700679100531.77/warc/CC-MAIN-20231204151108-20231204181108-00646.warc.gz bytes=754296238-754378911",
+  "sin_fecha": false,
+  "clave": "ARKUSDT|2023-09-22",
+  "categoria_auto": "C",
+  "L": null,
+  "nota": null,
+  "categoria": "C_no_explicada"
+ },
+ "componentes_inicio": {
+  "i": "2020-05-11",
+  "ii": "2023-09-23",
+  "iii": "2019-01-01",
+  "iv": null
+ },
+ "inicio_H": null,
+ "semanas_H": 0,
+ "evaluables_H": 0,
+ "pct_no_evaluables_H": null,
+ "INVALIDO": true,
+ "V_S2": {
+  "n": 50,
+  "aciertos": 49,
+  "tasa": 0.98,
+  "cumple": true
+ },
+ "V_S3_revisados": 0,
+ "V_S4": "NO EJECUTADO (HTTP 451; Adenda 3, A3.9)",
+ "V_S5_dias_activos_con_0_operaciones": 0,
+ "pendiente_revision_manual": {
+  "C": 5,
+  "D_sin_evidencia_ni_otro_par": 0,
+  "sin_fecha": 8,
+  "sin_par": 12
+ },
+ "resoluciones_manuales_usadas": false
+}

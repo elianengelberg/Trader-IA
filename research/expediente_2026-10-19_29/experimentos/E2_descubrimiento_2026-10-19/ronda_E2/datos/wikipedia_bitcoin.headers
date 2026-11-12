@@ -1,0 +1,26 @@
+HTTP/1.1 200 Connection Established
+
+HTTP/2 200 
+cache-control: s-maxage=14400, max-age=14400
+content-security-policy: default-src 'none'; frame-ancestors 'none'
+content-type: application/json; charset=utf-8
+etag: W/"20-da39a3ee5e6b4b0d3255bfef95601890afd80709"
+date: Mon, 19 Oct 2026 23:19:01 GMT
+server: main-tls
+access-control-allow-origin: *
+access-control-allow-methods: GET,HEAD
+access-control-allow-headers: accept, content-type, content-length, cache-control, accept-language, api-user-agent, if-match, if-modified-since, if-none-match, dnt, accept-encoding
+access-control-expose-headers: etag
+x-content-type-options: nosniff
+x-frame-options: SAMEORIGIN
+referrer-policy: origin-when-cross-origin
+x-xss-protection: 1; mode=block
+age: 1
+accept-ranges: bytes
+vary: Accept-Encoding
+x-cache: cp1108 miss, cp1108 miss
+x-cache-status: miss
+strict-transport-security: max-age=106384710; includeSubDomains; preload
+x-request-id: aed28d17-c64a-4fb0-8a00-919c2124a790
+x-analytics: 
+

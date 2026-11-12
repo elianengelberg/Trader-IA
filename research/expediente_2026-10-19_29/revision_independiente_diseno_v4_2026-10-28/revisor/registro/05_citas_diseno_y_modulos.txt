@@ -1,0 +1,55 @@
+# citas del diseño usadas en el dictamen (sed -n, con número de línea) · 2026-10-28T19:59:02Z
+   28	| `objetos/<sha256>` | Objetos inmutables, con el nombre igual a su hash: resultados, validez e informes de error. Se escriben a un temporal con `O_EXCL`, se si
+   29	| `bloqueo` | `flock` exclusivo durante todo el intento. Cada línea se agrega bajo el bloqueo y comparando antes la cabeza del registro |
+   30	| Ancla externa | El hash de la cabeza del registro, después de cada consumo y de cada cierre, se guarda fuera del entorno: en un commit tuyo, en tu registro p
+   45	4. **`DECISION(tipo, sha_objeto)` durable**, con tipo EVALUADO o INVALIDO, en cuanto el veredicto existe en memoria y **antes** de escribir el objeto. Es una l�
+   50	**ERROR.** Solo se escribe si no hay una `DECISION` del intento: primero el objeto de error, después la línea `ERROR(etapa_max, sha_objeto)`. El manejador de 
+   52	**Señales.** Durante los pasos 4 a 6, SIGINT y SIGTERM se difieren con `pthread_sigmask`. Una muerte del proceso con SIGKILL queda cubierta por la reconciliaci
+   68	| Hay `DECISION` y falta el objeto | `TERMINAL_SIN_OBJETO(tipo)` | Terminal: **nunca** admite reintento |
+   83	| I-7 | Un fallo después de una `DECISION` nunca produce un ERROR, y **INVALIDO nunca pasa a un estado reintentable** |
+   85	| I-9 | La cadena es válida. Si la cabeza difiere del ancla externa, todo queda bloqueado |
+   86	| I-10 | Un reintento, si la política lo admite, exige una autorización nueva ligada a la cabeza actual que cite el objeto de error y su etapa |
+  102	**Residuo honesto.** Si falla justo la escritura de `DECISION(INVALIDO)`, la reconciliación ve la etapa `simulacion`. Con la política de reintentos (i), que p
+  110	| `DECISION` | El manejador escribe un ERROR en la etapa actual. Con estadísticos, no hay reintento | DECIDIDO: queda terminal pase lo que pase |
+  114	| Ancla externa | Cerrado, pero con discrepancia con el ancla: bloqueo hasta que lo actualices | — |
+  125	Hoy, en el scratchpad, se dan las cuatro cosas a la vez para el v1 y el v2. Además, para el v2 la autorización ya existe: `INFORME_REPARACION_E3H1H2.md`.
+  132	**La única garantía técnica es que esos puntos de entrada no existan en ningún entorno donde haya datos y capacidad de ejecutar.**
+  149	- lee una vez los bytes del orquestador, comprueba que su sha256 esté en una lista blanca (fijada en el lanzador **y** en la autorización) y lo compila desde 
+  150	- el orquestador del v4 se niega a correr si no lo invocó el lanzador, mediante un token que solo existe en memoria.
+  153	- algún archivo de la zona tiene un sha256 de la lista de revocados: v1 (`3b64a04d…`), v2 (`01fc9344…`), sus copias y **también el v3** (`c089cc6a…`), p
+  154	- existe en las raíces conocidas algún `RESULTADO_E3*.json`, `REGISTRO_EJECUCION.json` o `VALIDEZ_PREVIA.json` de cualquier versión;
+  161	Si querés quitarles la ejecutabilidad del todo en la zona de archivo, hay que retirar las copias extraídas del scratchpad una vez verificados los tarballs sel
+  165	En un contenedor donde todo corre como root, ninguna medida resiste un uso deliberado. El diseño protege contra:
+  179	- Un único objeto JSON en **forma canónica** (RFC 8785 o una canonicalización equivalente fijada en el código):
+  185	- El archivo tiene que ser **exactamente** esos bytes, sin texto antes ni después.
+  186	- Va acompañado de una **firma Ed25519 separada** con una clave que **solo tenés vos**. La clave pública se fija en el código.
+  205	| `registro` | `cabeza_esperada` (`GENESIS` o el hash de la cabeza) e `intento_previo` (`null` o `{sha_objeto_error, etapa_max}`) |
+  212	3. Cada hash tiene 64 caracteres hexadecimales en minúscula e **igual** al que calcula el lanzador sobre los bytes que efectivamente va a ejecutar o leer.
+  227	**Las negaciones, las citas y el texto libre no pueden pasar la validación**, porque no existe ningún campo de texto libre y los bytes tienen que ser exactame
+  313	**Principio.** Las pruebas solas no prueban la integridad. Hace falta, además:
+  329	| Límites | La sincronización a disco se confía al sistema de archivos. Matar el proceso no equivale a un corte de energía. Se prueba en un solo tipo de sis
+  338	- **Determinismo** de la etapa de simulación.
+  353	| Invariante | En la zona de ejecución, el único punto de entrada es el lanzador. Ningún archivo tiene un hash revocado. Los datos solo existen en el almacé
+  356	| Límites | Como root no hay defensa contra un uso deliberado. Detectar ejecuciones previas fuera de las raíces conocidas depende de tu declaración |
+  375	| Límites | La firma prueba que se tiene la clave, no la intención. El esquema garantiza falta de ambigüedad, no comprensión |
+  400	El único caso positivo usa una **clave de prueba** que solo existe en el entorno de pruebas. El entorno real fija tu clave pública, así que esa autorización
+
+# citas adicionales del v3
+  548	    ic_sin = float(np.nanmean(sin_obs)) if sin_obs else float("nan")
+  614	        "R4_exceso": exc("R4", {"excluidos": frozenset({P.sym[mayor]})}) if mayor is not None else float("nan"),
+  734	    texto = json.dumps(obj, indent=1, default=float, ensure_ascii=False)
+  814	           "estadisticos_iniciados": etapa not in ETAPAS_SIN_ESTADISTICOS, "H1": None, "H2": None,
+  867	        etapa = "panel"
+  872	            etapa = "validez_previa"
+  877	            etapa = "calculo"
+  880	            etapa = "escritura"
+
+# citas de universo.py / motor.py
+universo  108	    orden = sorted(range(idx.size), key=lambda k: (-V[idx[k]], P.sym[idx[k]]))
+universo  112	    n = Mf @ Mf.T
+universo  113	    Sx = X @ Mf.T
+universo  114	    Sxx = (X * X) @ Mf.T
+universo  115	    Sxy = X @ X.T
+universo  122	        if any(n[k, a] >= 60 and corr[k, a] > 0.98 for a in aceptados):
+universo  136	    inv_orden = sorted(U_inv.tolist(), key=lambda s: (-S[pos_pred[s]], -V[s], P.sym[s]))
+motor 105	                cost = {s: costo(U["rango_V"].get(s), cfg.mult_costo) for s in set(T) | set(unidades)}

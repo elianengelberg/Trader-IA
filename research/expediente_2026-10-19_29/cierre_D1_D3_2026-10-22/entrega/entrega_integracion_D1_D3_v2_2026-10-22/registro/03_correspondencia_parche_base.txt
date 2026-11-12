@@ -1,0 +1,25 @@
+== Correspondencia del parche con la base: 2026-10-22T12:21:41Z
+patch sha256: 5fbf97468191fd1420ffc0b3a3bef2aac8015523874bbc57a4dabe1021502c87
+prueba final sha256: f10baa1041a031ff72013e77680f33b13bc338dd613a5dcbd16be74551f5fc65
+index del parche vs blobs de 72ffae5:
+   index 1a1ba3d15b21bc32d43d0a0ee050830dfa5cb411..0f681d81be669c10ca53727487435adeba5263ac 100644
+   index a6212245a7c7643fb45a27e8ce1c20bd7c4a45d3..2d98faddde3179fcdd89bcbd91fbff722e45ab8c 100644
+   index 0000000000000000000000000000000000000000..efe0c662b06aac7cbfa4d17c358ec509f19bba22
+   blob packages/tia/src/tia/backtest/engine.py en 72ffae5: 1a1ba3d15b21bc32d43d0a0ee050830dfa5cb411
+   blob packages/tia/src/tia/execution/paper.py en 72ffae5: a6212245a7c7643fb45a27e8ce1c20bd7c4a45d3
+git apply --check: Checking patch packages/tia/src/tia/backtest/engine.py... Checking patch packages/tia/src/tia/execution/paper.py... Checking patch tests/unit/test_backtest_order_hygiene.py... 
+archivos tocados: packages/tia/src/tia/backtest/engine.py packages/tia/src/tia/execution/paper.py tests/unit/test_backtest_order_hygiene.py 
+hunks por archivo:
+   a/packages/tia/src/tia/backtest/engine.py: 7
+   a/tests/unit/test_backtest_order_hygiene.py: 1
+   a/packages/tia/src/tia/execution/paper.py: 1
+funciones tocadas (contexto de cada hunk):
+   class BacktestEngine:
+   class BacktestEngine:
+   class BacktestEngine:
+   class BacktestEngine:
+   class BacktestEngine:
+   class BacktestEngine:
+   class BacktestEngine:
+   class PaperExecutionProvider(ExecutionProvider):
+   

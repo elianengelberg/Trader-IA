@@ -1,0 +1,12 @@
+== 2026-10-20T15:16:10Z estado final del repositorio
+HEAD: 692f2b2d7af3189027b62e60367d104d855b0f3f
+divergencia: 2	0
+ M research/.gitignore
+ M research/tendencia_btc/ARTEFACTOS_SHA256.txt
+ M research/tendencia_btc/papel/PRERREGISTRO_PAPEL.md
+?? research/tendencia_btc/datos_multi/nasdaq/
+?? research/tendencia_btc/datos_multi/yahoo/
+?? research/tendencia_btc/papel/VERIFICACION_OPERATIVA_2026-10-17.md
+?? research/tendencia_btc/papel/corte.py
+?? research/tendencia_btc/tests/test_papel_corte.py
+sha256(status --ignored): 87b9585d31924f8193a6d3eb6d0712a3d3880978681c75d0dd77e00d08f34a8e

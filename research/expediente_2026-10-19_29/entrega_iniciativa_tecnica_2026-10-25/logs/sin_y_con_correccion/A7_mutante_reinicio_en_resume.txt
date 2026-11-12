@@ -1,0 +1,1 @@
+FAILED tests/integration/test_watchdog_after_standing.py::test_a_feed_that_stopped_during_the_pause_is_still_caught_after_the_resume

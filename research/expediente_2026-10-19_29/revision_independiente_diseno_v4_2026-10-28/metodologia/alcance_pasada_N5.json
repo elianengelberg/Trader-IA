@@ -1,0 +1,943 @@
+{
+ "eventos": 55,
+ "con_paginas_leidas": 55,
+ "E_desde_titulo": 31,
+ "con_fecha_de_cese_distinta_en_el_cuerpo": 30,
+ "por_categoria_con_discrepancia": {
+  "A": 20,
+  "T": 4,
+  "B": 1,
+  "C_no_explicada": 5
+ },
+ "filas": [
+  {
+   "par": "BCNUSDT",
+   "E": "2018-10-09",
+   "categoria_pasada1": "fuera_sin_par_usdt_documentado",
+   "L": null,
+   "paginas": 1,
+   "origen_E": [],
+   "fechas_cese_en_cuerpo": [],
+   "difieren_de_E": []
+  },
+  {
+   "par": "BCNUSDT",
+   "E": "2018-10-09",
+   "categoria_pasada1": "fuera_sin_par_usdt_documentado",
+   "L": null,
+   "paginas": 1,
+   "origen_E": [],
+   "fechas_cese_en_cuerpo": [],
+   "difieren_de_E": []
+  },
+  {
+   "par": "CHATUSDT",
+   "E": "2018-10-09",
+   "categoria_pasada1": "fuera_sin_par_usdt_documentado",
+   "L": null,
+   "paginas": 1,
+   "origen_E": [],
+   "fechas_cese_en_cuerpo": [],
+   "difieren_de_E": []
+  },
+  {
+   "par": "CHATUSDT",
+   "E": "2018-10-09",
+   "categoria_pasada1": "fuera_sin_par_usdt_documentado",
+   "L": null,
+   "paginas": 1,
+   "origen_E": [],
+   "fechas_cese_en_cuerpo": [],
+   "difieren_de_E": []
+  },
+  {
+   "par": "ICNUSDT",
+   "E": "2018-10-09",
+   "categoria_pasada1": "fuera_sin_par_usdt_documentado",
+   "L": null,
+   "paginas": 1,
+   "origen_E": [],
+   "fechas_cese_en_cuerpo": [],
+   "difieren_de_E": []
+  },
+  {
+   "par": "ICNUSDT",
+   "E": "2018-10-09",
+   "categoria_pasada1": "fuera_sin_par_usdt_documentado",
+   "L": null,
+   "paginas": 1,
+   "origen_E": [],
+   "fechas_cese_en_cuerpo": [],
+   "difieren_de_E": []
+  },
+  {
+   "par": "TRIGUSDT",
+   "E": "2018-10-09",
+   "categoria_pasada1": "fuera_sin_par_usdt_documentado",
+   "L": null,
+   "paginas": 1,
+   "origen_E": [],
+   "fechas_cese_en_cuerpo": [],
+   "difieren_de_E": []
+  },
+  {
+   "par": "TRIGUSDT",
+   "E": "2018-10-09",
+   "categoria_pasada1": "fuera_sin_par_usdt_documentado",
+   "L": null,
+   "paginas": 1,
+   "origen_E": [],
+   "fechas_cese_en_cuerpo": [],
+   "difieren_de_E": []
+  },
+  {
+   "par": "CLOAKUSDT",
+   "E": "2019-02-22",
+   "categoria_pasada1": "fuera_sin_par_usdt_documentado",
+   "L": null,
+   "paginas": 2,
+   "origen_E": [
+    "cuerpo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2019-02-22"
+   ],
+   "difieren_de_E": []
+  },
+  {
+   "par": "MODUSDT",
+   "E": "2019-02-22",
+   "categoria_pasada1": "fuera_sin_par_usdt_documentado",
+   "L": null,
+   "paginas": 2,
+   "origen_E": [
+    "cuerpo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2019-02-22"
+   ],
+   "difieren_de_E": []
+  },
+  {
+   "par": "SALTUSDT",
+   "E": "2019-02-22",
+   "categoria_pasada1": "fuera_sin_par_usdt_documentado",
+   "L": null,
+   "paginas": 2,
+   "origen_E": [
+    "cuerpo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2019-02-22"
+   ],
+   "difieren_de_E": []
+  },
+  {
+   "par": "SUBUSDT",
+   "E": "2019-02-22",
+   "categoria_pasada1": "fuera_sin_par_usdt_documentado",
+   "L": null,
+   "paginas": 2,
+   "origen_E": [
+    "cuerpo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2019-02-22"
+   ],
+   "difieren_de_E": []
+  },
+  {
+   "par": "WINGSUSDT",
+   "E": "2019-02-22",
+   "categoria_pasada1": "fuera_sin_par_usdt_documentado",
+   "L": null,
+   "paginas": 2,
+   "origen_E": [
+    "cuerpo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2019-02-22"
+   ],
+   "difieren_de_E": []
+  },
+  {
+   "par": "BCHSVUSDT",
+   "E": "2019-04-22",
+   "categoria_pasada1": "A",
+   "L": "2019-04-21",
+   "paginas": 1,
+   "origen_E": [
+    "cuerpo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2019-04-22"
+   ],
+   "difieren_de_E": []
+  },
+  {
+   "par": "BEARUSDT",
+   "E": "2020-03-31",
+   "categoria_pasada1": "A",
+   "L": "2020-03-30",
+   "paginas": 2,
+   "origen_E": [
+    "cuerpo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2020-03-31"
+   ],
+   "difieren_de_E": []
+  },
+  {
+   "par": "BNBBEARUSDT",
+   "E": "2020-03-31",
+   "categoria_pasada1": "A",
+   "L": "2020-03-30",
+   "paginas": 2,
+   "origen_E": [
+    "cuerpo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2020-03-31"
+   ],
+   "difieren_de_E": []
+  },
+  {
+   "par": "BNBBULLUSDT",
+   "E": "2020-03-31",
+   "categoria_pasada1": "A",
+   "L": "2020-03-30",
+   "paginas": 2,
+   "origen_E": [
+    "cuerpo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2020-03-31"
+   ],
+   "difieren_de_E": []
+  },
+  {
+   "par": "BULLUSDT",
+   "E": "2020-03-31",
+   "categoria_pasada1": "A",
+   "L": "2020-03-30",
+   "paginas": 2,
+   "origen_E": [
+    "cuerpo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2020-03-31"
+   ],
+   "difieren_de_E": []
+  },
+  {
+   "par": "EOSBEARUSDT",
+   "E": "2020-03-31",
+   "categoria_pasada1": "A",
+   "L": "2020-03-30",
+   "paginas": 2,
+   "origen_E": [
+    "cuerpo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2020-03-31"
+   ],
+   "difieren_de_E": []
+  },
+  {
+   "par": "EOSBULLUSDT",
+   "E": "2020-03-31",
+   "categoria_pasada1": "A",
+   "L": "2020-03-30",
+   "paginas": 2,
+   "origen_E": [
+    "cuerpo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2020-03-31"
+   ],
+   "difieren_de_E": []
+  },
+  {
+   "par": "ETHBEARUSDT",
+   "E": "2020-03-31",
+   "categoria_pasada1": "A",
+   "L": "2020-03-30",
+   "paginas": 2,
+   "origen_E": [
+    "cuerpo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2020-03-31"
+   ],
+   "difieren_de_E": []
+  },
+  {
+   "par": "ETHBULLUSDT",
+   "E": "2020-03-31",
+   "categoria_pasada1": "A",
+   "L": "2020-03-30",
+   "paginas": 2,
+   "origen_E": [
+    "cuerpo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2020-03-31"
+   ],
+   "difieren_de_E": []
+  },
+  {
+   "par": "XRPBEARUSDT",
+   "E": "2020-03-31",
+   "categoria_pasada1": "A",
+   "L": "2020-03-30",
+   "paginas": 2,
+   "origen_E": [
+    "cuerpo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2020-03-31"
+   ],
+   "difieren_de_E": []
+  },
+  {
+   "par": "XRPBULLUSDT",
+   "E": "2020-03-31",
+   "categoria_pasada1": "A",
+   "L": "2020-03-30",
+   "paginas": 2,
+   "origen_E": [
+    "cuerpo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2020-03-31"
+   ],
+   "difieren_de_E": []
+  },
+  {
+   "par": "MCOUSDT",
+   "E": "2020-10-23",
+   "categoria_pasada1": "A",
+   "L": "2020-10-22",
+   "paginas": 1,
+   "origen_E": [
+    "titulo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2020-10-22",
+    "2020-10-23"
+   ],
+   "difieren_de_E": [
+    "2020-10-22"
+   ]
+  },
+  {
+   "par": "HCUSDT",
+   "E": "2020-11-10",
+   "categoria_pasada1": "A",
+   "L": "2020-11-09",
+   "paginas": 1,
+   "origen_E": [
+    "titulo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2020-11-09",
+    "2020-11-10"
+   ],
+   "difieren_de_E": [
+    "2020-11-09"
+   ]
+  },
+  {
+   "par": "BKRWUSDT",
+   "E": "2021-02-19",
+   "categoria_pasada1": "T",
+   "L": "2020-08-06",
+   "paginas": 1,
+   "origen_E": [
+    "titulo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2021-02-18",
+    "2021-02-19"
+   ],
+   "difieren_de_E": [
+    "2021-02-18"
+   ]
+  },
+  {
+   "par": "HNTUSDT",
+   "E": "2022-10-14",
+   "categoria_pasada1": "A",
+   "L": "2022-10-13",
+   "paginas": 1,
+   "origen_E": [
+    "titulo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2022-10-06",
+    "2022-10-12",
+    "2022-10-14"
+   ],
+   "difieren_de_E": [
+    "2022-10-06",
+    "2022-10-12"
+   ]
+  },
+  {
+   "par": "FTTUSDT",
+   "E": "2022-11-15",
+   "categoria_pasada1": "A",
+   "L": "2022-11-14",
+   "paginas": 1,
+   "origen_E": [
+    "titulo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2022-11-14",
+    "2022-11-15"
+   ],
+   "difieren_de_E": [
+    "2022-11-14"
+   ]
+  },
+  {
+   "par": "AUTOUSDT",
+   "E": "2023-04-18",
+   "categoria_pasada1": "A",
+   "L": "2023-04-17",
+   "paginas": 1,
+   "origen_E": [
+    "titulo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2023-04-17",
+    "2023-04-18"
+   ],
+   "difieren_de_E": [
+    "2023-04-17"
+   ]
+  },
+  {
+   "par": "NEBLUSDT",
+   "E": "2023-04-18",
+   "categoria_pasada1": "A",
+   "L": "2023-04-17",
+   "paginas": 1,
+   "origen_E": [
+    "titulo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2023-04-17",
+    "2023-04-18"
+   ],
+   "difieren_de_E": [
+    "2023-04-17"
+   ]
+  },
+  {
+   "par": "DOTDOWNUSDT",
+   "E": "2023-04-27",
+   "categoria_pasada1": "T",
+   "L": "2022-11-28",
+   "paginas": 1,
+   "origen_E": [
+    "titulo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2023-04-27",
+    "2023-05-09",
+    "2023-05-10",
+    "2023-05-11"
+   ],
+   "difieren_de_E": [
+    "2023-05-09",
+    "2023-05-10",
+    "2023-05-11"
+   ]
+  },
+  {
+   "par": "DOTUPUSDT",
+   "E": "2023-04-27",
+   "categoria_pasada1": "T",
+   "L": "2022-11-28",
+   "paginas": 1,
+   "origen_E": [
+    "titulo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2023-04-27",
+    "2023-05-09",
+    "2023-05-10",
+    "2023-05-11"
+   ],
+   "difieren_de_E": [
+    "2023-05-09",
+    "2023-05-10",
+    "2023-05-11"
+   ]
+  },
+  {
+   "par": "LINKUPUSDT",
+   "E": "2023-04-27",
+   "categoria_pasada1": "B",
+   "L": "2023-04-05",
+   "paginas": 1,
+   "origen_E": [
+    "titulo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2023-04-27",
+    "2023-05-09",
+    "2023-05-10",
+    "2023-05-11"
+   ],
+   "difieren_de_E": [
+    "2023-05-09",
+    "2023-05-10",
+    "2023-05-11"
+   ]
+  },
+  {
+   "par": "TRXDOWNUSDT",
+   "E": "2023-04-27",
+   "categoria_pasada1": "T",
+   "L": "2022-11-28",
+   "paginas": 1,
+   "origen_E": [
+    "titulo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2023-04-27",
+    "2023-05-09",
+    "2023-05-10",
+    "2023-05-11"
+   ],
+   "difieren_de_E": [
+    "2023-05-09",
+    "2023-05-10",
+    "2023-05-11"
+   ]
+  },
+  {
+   "par": "AUDUSDT",
+   "E": "2023-06-01",
+   "categoria_pasada1": "A",
+   "L": "2023-05-31",
+   "paginas": 1,
+   "origen_E": [
+    "titulo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2023-06-01"
+   ],
+   "difieren_de_E": []
+  },
+  {
+   "par": "YFIIUSDT",
+   "E": "2023-08-22",
+   "categoria_pasada1": "A",
+   "L": "2023-08-21",
+   "paginas": 1,
+   "origen_E": [
+    "titulo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2023-08-21",
+    "2023-08-22",
+    "2023-11-22"
+   ],
+   "difieren_de_E": [
+    "2023-08-21",
+    "2023-11-22"
+   ]
+  },
+  {
+   "par": "ARKUSDT",
+   "E": "2023-09-22",
+   "categoria_pasada1": "C_no_explicada",
+   "L": null,
+   "paginas": 1,
+   "origen_E": [
+    "titulo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2023-09-29"
+   ],
+   "difieren_de_E": [
+    "2023-09-29"
+   ]
+  },
+  {
+   "par": "CREAMUSDT",
+   "E": "2023-09-22",
+   "categoria_pasada1": "C_no_explicada",
+   "L": null,
+   "paginas": 1,
+   "origen_E": [
+    "titulo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2023-09-29"
+   ],
+   "difieren_de_E": [
+    "2023-09-29"
+   ]
+  },
+  {
+   "par": "FTTUSDT",
+   "E": "2023-09-22",
+   "categoria_pasada1": "C_no_explicada",
+   "L": null,
+   "paginas": 1,
+   "origen_E": [
+    "titulo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2023-09-29"
+   ],
+   "difieren_de_E": [
+    "2023-09-29"
+   ]
+  },
+  {
+   "par": "GFTUSDT",
+   "E": "2023-09-22",
+   "categoria_pasada1": "C_no_explicada",
+   "L": null,
+   "paginas": 1,
+   "origen_E": [
+    "titulo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2023-09-29"
+   ],
+   "difieren_de_E": [
+    "2023-09-29"
+   ]
+  },
+  {
+   "par": "IQUSDT",
+   "E": "2023-09-22",
+   "categoria_pasada1": "C_no_explicada",
+   "L": null,
+   "paginas": 1,
+   "origen_E": [
+    "titulo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2023-09-29"
+   ],
+   "difieren_de_E": [
+    "2023-09-29"
+   ]
+  },
+  {
+   "par": "BTSUSDT",
+   "E": "2023-12-07",
+   "categoria_pasada1": "A",
+   "L": "2023-12-06",
+   "paginas": 1,
+   "origen_E": [
+    "titulo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2023-12-05",
+    "2023-12-07",
+    "2024-03-07"
+   ],
+   "difieren_de_E": [
+    "2023-12-05",
+    "2024-03-07"
+   ]
+  },
+  {
+   "par": "PERLUSDT",
+   "E": "2023-12-07",
+   "categoria_pasada1": "A",
+   "L": "2023-12-06",
+   "paginas": 1,
+   "origen_E": [
+    "titulo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2023-12-05",
+    "2023-12-07",
+    "2024-03-07"
+   ],
+   "difieren_de_E": [
+    "2023-12-05",
+    "2024-03-07"
+   ]
+  },
+  {
+   "par": "WTCUSDT",
+   "E": "2023-12-07",
+   "categoria_pasada1": "A",
+   "L": "2023-12-06",
+   "paginas": 1,
+   "origen_E": [
+    "titulo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2023-12-05",
+    "2023-12-07",
+    "2024-03-07"
+   ],
+   "difieren_de_E": [
+    "2023-12-05",
+    "2024-03-07"
+   ]
+  },
+  {
+   "par": "ANTUSDT",
+   "E": "2024-02-20",
+   "categoria_pasada1": "A",
+   "L": "2024-02-19",
+   "paginas": 1,
+   "origen_E": [
+    "titulo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2024-02-14",
+    "2024-02-16",
+    "2024-02-18",
+    "2024-02-19",
+    "2024-02-20",
+    "2024-05-21"
+   ],
+   "difieren_de_E": [
+    "2024-02-14",
+    "2024-02-16",
+    "2024-02-18",
+    "2024-02-19",
+    "2024-05-21"
+   ]
+  },
+  {
+   "par": "MULTIUSDT",
+   "E": "2024-02-20",
+   "categoria_pasada1": "A",
+   "L": "2024-02-19",
+   "paginas": 1,
+   "origen_E": [
+    "titulo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2024-02-14",
+    "2024-02-16",
+    "2024-02-18",
+    "2024-02-19",
+    "2024-02-20",
+    "2024-05-21"
+   ],
+   "difieren_de_E": [
+    "2024-02-14",
+    "2024-02-16",
+    "2024-02-18",
+    "2024-02-19",
+    "2024-05-21"
+   ]
+  },
+  {
+   "par": "XMRUSDT",
+   "E": "2024-02-20",
+   "categoria_pasada1": "A",
+   "L": "2024-02-19",
+   "paginas": 1,
+   "origen_E": [
+    "titulo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2024-02-14",
+    "2024-02-16",
+    "2024-02-18",
+    "2024-02-19",
+    "2024-02-20",
+    "2024-05-21"
+   ],
+   "difieren_de_E": [
+    "2024-02-14",
+    "2024-02-16",
+    "2024-02-18",
+    "2024-02-19",
+    "2024-05-21"
+   ]
+  },
+  {
+   "par": "BONDUSDT",
+   "E": "2024-07-22",
+   "categoria_pasada1": "A",
+   "L": "2024-07-21",
+   "paginas": 1,
+   "origen_E": [
+    "titulo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2024-07-15",
+    "2024-07-17",
+    "2024-07-18",
+    "2024-07-19",
+    "2024-07-22",
+    "2024-10-23"
+   ],
+   "difieren_de_E": [
+    "2024-07-15",
+    "2024-07-17",
+    "2024-07-18",
+    "2024-07-19",
+    "2024-10-23"
+   ]
+  },
+  {
+   "par": "DOCKUSDT",
+   "E": "2024-07-22",
+   "categoria_pasada1": "A",
+   "L": "2024-07-21",
+   "paginas": 1,
+   "origen_E": [
+    "titulo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2024-07-15",
+    "2024-07-17",
+    "2024-07-18",
+    "2024-07-19",
+    "2024-07-22",
+    "2024-10-23"
+   ],
+   "difieren_de_E": [
+    "2024-07-15",
+    "2024-07-17",
+    "2024-07-18",
+    "2024-07-19",
+    "2024-10-23"
+   ]
+  },
+  {
+   "par": "MDXUSDT",
+   "E": "2024-07-22",
+   "categoria_pasada1": "A",
+   "L": "2024-07-21",
+   "paginas": 1,
+   "origen_E": [
+    "titulo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2024-07-15",
+    "2024-07-17",
+    "2024-07-18",
+    "2024-07-19",
+    "2024-07-22",
+    "2024-10-23"
+   ],
+   "difieren_de_E": [
+    "2024-07-15",
+    "2024-07-17",
+    "2024-07-18",
+    "2024-07-19",
+    "2024-10-23"
+   ]
+  },
+  {
+   "par": "POLSUSDT",
+   "E": "2024-07-22",
+   "categoria_pasada1": "A",
+   "L": "2024-07-21",
+   "paginas": 1,
+   "origen_E": [
+    "titulo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2024-07-15",
+    "2024-07-17",
+    "2024-07-18",
+    "2024-07-19",
+    "2024-07-22",
+    "2024-10-23"
+   ],
+   "difieren_de_E": [
+    "2024-07-15",
+    "2024-07-17",
+    "2024-07-18",
+    "2024-07-19",
+    "2024-10-23"
+   ]
+  },
+  {
+   "par": "KP3RUSDT",
+   "E": "2024-11-06",
+   "categoria_pasada1": "A",
+   "L": "2024-11-05",
+   "paginas": 1,
+   "origen_E": [
+    "titulo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2024-10-31",
+    "2024-11-01",
+    "2024-11-04",
+    "2024-11-05",
+    "2024-11-06",
+    "2025-02-07"
+   ],
+   "difieren_de_E": [
+    "2024-10-31",
+    "2024-11-01",
+    "2024-11-04",
+    "2024-11-05",
+    "2025-02-07"
+   ]
+  },
+  {
+   "par": "OOKIUSDT",
+   "E": "2024-11-06",
+   "categoria_pasada1": "A",
+   "L": "2024-11-05",
+   "paginas": 1,
+   "origen_E": [
+    "titulo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2024-10-31",
+    "2024-11-01",
+    "2024-11-04",
+    "2024-11-05",
+    "2024-11-06",
+    "2025-02-07"
+   ],
+   "difieren_de_E": [
+    "2024-10-31",
+    "2024-11-01",
+    "2024-11-04",
+    "2024-11-05",
+    "2025-02-07"
+   ]
+  },
+  {
+   "par": "UNFIUSDT",
+   "E": "2024-11-06",
+   "categoria_pasada1": "A",
+   "L": "2024-11-05",
+   "paginas": 1,
+   "origen_E": [
+    "titulo"
+   ],
+   "fechas_cese_en_cuerpo": [
+    "2024-10-31",
+    "2024-11-01",
+    "2024-11-04",
+    "2024-11-05",
+    "2024-11-06",
+    "2025-02-07"
+   ],
+   "difieren_de_E": [
+    "2024-10-31",
+    "2024-11-01",
+    "2024-11-04",
+    "2024-11-05",
+    "2025-02-07"
+   ]
+  }
+ ]
+}

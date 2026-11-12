@@ -1,0 +1,12 @@
+== Frontera horaria de las 2 pruebas dependientes del reloj (base, reloj fijado con time-machine) · 2026-10-22T02:32:47Z
+-- 2026-10-22T01:30 Z: SKIPPED test_account_restore FAILED test_risk_state_persistence 
+-- 2026-10-22T02:30 Z: SKIPPED test_account_restore FAILED test_risk_state_persistence 
+-- 2026-10-22T03:30 Z: SKIPPED test_account_restore FAILED test_risk_state_persistence 
+-- 2026-10-22T04:30 Z: SKIPPED test_account_restore FAILED test_risk_state_persistence 
+-- 2026-10-22T05:30 Z: SKIPPED test_account_restore FAILED test_risk_state_persistence 
+-- 2026-10-22T06:30 Z: PASSED test_risk_state_persistence PASSED test_account_restore 
+-- 2026-10-22T08:00 Z: PASSED test_risk_state_persistence PASSED test_account_restore 
+-- 2026-10-22T05:55 Z: PASSED test_risk_state_persistence PASSED test_account_restore 
+-- 2026-10-22T06:05 Z: PASSED test_risk_state_persistence PASSED test_account_restore 
+-- 2026-10-22T06:20 Z: PASSED test_risk_state_persistence PASSED test_account_restore 
+-- 2026-10-22T23:59 Z: PASSED test_risk_state_persistence PASSED test_account_restore 

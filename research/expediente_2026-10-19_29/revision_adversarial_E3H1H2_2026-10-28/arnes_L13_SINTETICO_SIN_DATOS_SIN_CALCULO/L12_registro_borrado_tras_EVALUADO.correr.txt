@@ -1,0 +1,8 @@
+{
+ "semanas_ic": "STUB_SIN_CALCULO",
+ "H1": "STUB_SIN_CALCULO",
+ "H2": "STUB_SIN_CALCULO",
+ "holm": "STUB_SIN_CALCULO",
+ "clasificacion_6_5": "STUB_SIN_CALCULO"
+}
+{"escenario": "B1_evaluado_sin_fallo", "termino": "sin excepción"}

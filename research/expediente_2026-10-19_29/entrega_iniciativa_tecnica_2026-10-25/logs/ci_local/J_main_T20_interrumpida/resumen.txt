@@ -1,0 +1,2 @@
+== ci_local main_T20 () · árbol 361b2ea6db34501ff15cb749156a73c16123bb7c · nonce local-main_T20-4f7583dee02fee4f · inicio 2026-10-25T21:19:59Z · carga 1.37 1.24 1.13
+ruff rc=0 · All checks passed!

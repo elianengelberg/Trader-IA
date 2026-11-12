@@ -1,0 +1,4 @@
+1) módulos tia.* cargados: 57 · subpaquetes: ['backtest', 'core', 'data', 'domain', 'economics', 'execution', 'quant', 'regime', 'risk', 'strategy']
+   hasheados por la huella: ['backtest', 'core', 'data', 'domain', 'economics', 'execution', 'quant', 'regime', 'risk', 'strategy'] · fuera de la huella: ninguno
+2) campos de BacktestConfig: 27 · escalares probados: 20 · que NO cambian el digest: ninguno
+   compuestos (volcados enteros en el digest): ['strategy', 'risk', 'execution', 'data_quality'] · explícitos en el run_id: ['dataset', 'is_out_of_sample', 'liquidate_at_end']

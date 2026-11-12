@@ -1,0 +1,307 @@
+--- /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3R_desbloqueo_2026-10-26/ejecutar_E3R.py	2026-10-26 20:00:48.253334644 +0000
++++ /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/reparacion_E3H1H2_2026-10-26/orquestador_v2/ejecutar_E3_v2.py	2026-10-26 22:53:58.398916256 +0000
+@@ -1,32 +1,23 @@
+-"""E3 · ejecución confirmatoria ÚNICA de la v3 con la Adenda R (+ R1′ opcional) y la Adenda R2. Orquestador.
++"""E3 · orquestador v2 de la ejecución confirmatoria ÚNICA de la v3 (H1 y H2) en la ventana A. NO autoriza ninguna ejecución.
+ 
+-No reimplementa nada del protocolo: importa sin modificarlos los módulos congelados de E3 (`universo.py`, `motor.py`,
+-`inferencia.py`, sha256 verificados contra CONGELACION_ADENDA_3.txt) y solo los conecta:
+-  - Validez previa (v3 §10.5, §10.7, §10.8), antes de calcular cualquier estadístico: bloqueo de fechas, semanas evaluables
+-    del panel con R2 y invariancia al truncar en 5 cortes (semilla 20261022: universos, señal, objetivos y pesos).
+-    Si falla, en modo real se detiene sin calcular H1 ni H2.
+-  - H1: IC semanal (motor.ic_semanal) → Newey–West L = 4 (v3 §5.1; DECISION_CALIBRACION).
+-  - H2: cartera k = 6 frente a EW-U30 (motor.simular) → p₂ = máx(p_boot ℓ13, p_boot ℓ26, p_NW 13) (DECISION_CALIBRACION);
+-    IC90 = envolvente de los tres intervalos (Enmienda 2, E2.2).
+-  - Holm m = 2 (inferencia.holm_dos); clasificación v3 §6.1, §6.2, §6.5; robustez R1–R6 (§6.3); diagnóstico §5.4 (N13).
+-  - Descriptivo prescripto (sin decisión): grilla de sensibilidad (§3.4 ítem 29, N17, 15 configuraciones), Sharpe
+-    deflactado (N18, N = 20), frente a BTC y al efectivo (§6.2), diagnóstico §6.4, exposición, rotación y estabilidad por año.
+-  - Adenda R2: cortes con salto ≥ ×10 sin mapeo → fin de listado + listado nuevo (la serie se parte; nada más cambia).
+-
+-Operacionalizaciones fijadas aquí, antes de cualquier resultado (la v3 no las fija; ninguna cambia una clasificación):
+-  - R5: la réplica b usa la semilla 20261021 + b. Diagnóstico §5.4: bootstrap con semilla 20261027 y B = 999 en cada réplica.
+-  - §6.4 «al anular esos aportes»: IC̄ recalculado sin las monedas con marca obsoleta en t+6; ē recalculado sin las semanas
+-    con una liquidación contable o una posición sin apertura en t+7, en la cartera o en EW-U30. Etiqueta si cambia un signo.
+-  - Sharpe deflactado: V[SR] sobre los 20 excesos calculados (15 de la grilla, R1, R2, R4, R6 y el bruto).
+-  - BTC: la fila BTCUSDT del mismo panel de Vision (no `research/tendencia_btc/datos/`, N20): misma fuente que la cartera.
+-  - Exceso de timing de T (N19): NO se calcula; T no se reabre (regla vigente del proyecto).
++Base: `ejecutar_E3R.py` (3b64a04d…, congelado, sin modificar). Cambios, y solo estos (diff en DIFF_v1_v2.diff):
++  C2. R4 (N14): el aporte de cada moneda se mide contra el retorno BRUTO de EW-U30 (antes, contra el neto).
++  C3. Modo real: antes de leer cualquier precio verifica el sha256 exacto de cada insumo (conjunto de las 757 series,
++      estructural, listas, segunda pasada, mapeos, ventana A y módulos congelados) contra `ENTRADAS_CONGELADAS.json`.
++      Si algo no coincide, se detiene sin crear la salida y sin leer precios.
++  C4. Panel: aplica los mapeos de la Adenda 1 (regla 1, renombre X → Y; regla 2, redenominación X → X con r) y deja de
++      aplicar la Adenda R2. Los cortes sin anuncio archivado siguen la regla 3 (mismo listado si el corte dura < 30 días).
++  C5. INVÁLIDO es un resultado explícito: si la ventana o la validez previa (v3 §10) fallan, escribe RESULTADO_E3.json
++      con «INVALIDO» y el motivo, sin calcular H1 ni H2.
++  C6. Solo la ventana A: se eliminan la opción B, R1′ y la elección entre varios P0. La autorización debe contener la
++      FRASE nueva, el sha256 de este archivo y el de ENTRADAS_CONGELADAS.json (que fija, entre otros, el de la ventana A).
++Todo lo demás (validez previa, H1, H2, Holm, robustez, descriptivo) es idéntico al v1.
+ 
+ Modos:
+-  sintetico <salida_dir> <momentum> [replicas_R5]
++  sintetico <salida_dir> <momentum> [replicas_R5] [dir_ejecucion_E3]
+       Panel sintético de `pruebas_motor.panel_sintetico` (sin datos reales). Prueba el camino completo.
+-  real <dir_ejecucion_E3> <P0_resultado.json> <autorizacion.txt> <salida_dir>
+-      SOLO con autorización: el archivo debe contener la FRASE y los sha256 de la adenda R, de R2, de R1′ si se usa,
+-      del P0 elegido y de este orquestador. La salida no puede existir (ejecución única). Se registra antes de calcular.
++  real <dir_ejecucion_E3> <ventana_A_pasada2.json> <autorizacion.txt> <salida_dir>
++      SOLO con autorización explícita posterior. La salida no puede existir (ejecución única).
+ """
+ import datetime as dt
+ import hashlib
+@@ -40,12 +31,14 @@
+ 
+ sys.dont_write_bytecode = True  # no escribir cachés en el directorio congelado de E3
+ AQUI = Path(__file__).resolve().parent
+-E3_DEFECTO = AQUI.parent / "E3_seleccion_posicion_2026-10-19" / "ejecucion_E3"
++E3_DEFECTO = AQUI.parent.parent / "experimentos" / "E3_seleccion_posicion_2026-10-19" / "ejecucion_E3"
++MANIFIESTO = AQUI / "ENTRADAS_CONGELADAS.json"
+ CONGELADOS = {"universo.py": "2af45115238d0065d54f0c6230b16c71831293b235b72627e62d1d7c7d7491f7",
+               "motor.py": "cadb805d2d882fcf909e0309cff85203ee383c6b8ed0ac08b89f4028ee999b2e",
+               "inferencia.py": "7b28038621c1d366655d726bb885ca0105f1a25cfcdb9615e86a7fe39e85f3e1"}
+ PRUEBAS_MOTOR = "54f832d39422379f14bf5d0ad2f42bba9e8f0b4d40915ea72bcef0c968da04e5"  # HUELLAS_codigo_preparado.txt
+-FRASE = "AUTORIZO LA EJECUCION UNICA DE E3 (H1 Y H2) CON LA V3 MAS LA ADENDA R Y LA ADENDA R2"
++FRASE = ("AUTORIZO LA EJECUCION UNICA DE E3 (H1 Y H2) EN LA VENTANA A CON LA V3, LA ADENDA R CON R1 LITERAL, "
++         "LA SEGUNDA PASADA Y LOS MAPEOS DE LA ADENDA 1")
+ ULTIMA_FORMACION = dt.date(2026, 5, 18)
+ ULTIMO_DIA_DATOS = dt.date(2026, 5, 31)
+ SEMILLA_H2, SEMILLA_R5, SEMILLA_CORTES, SEMILLA_DIAG = 20261020, 20261021, 20261022, 20261027
+@@ -69,10 +62,40 @@
+     return universo, motor, inferencia
+ 
+ 
++# ------------------------------------------------------------------ insumos (C3), sin leer precios
++
++def hash_conjunto(d: Path) -> str:
++    """Receta de CIERRE_E3: sha256 de la salida de `find . -type f -print0 | sort -z | xargs -0 sha256sum`."""
++    d = Path(d)
++    rel = sorted(("./" + p.relative_to(d).as_posix() for p in d.rglob("*") if p.is_file()), key=lambda r: r.encode())
++    return hashlib.sha256("".join(f"{sha(d / r[2:])}  {r}\n" for r in rel).encode()).hexdigest()
++
++
++def verificar_entradas(e3: Path, ventana: Path, manifiesto: Path = None) -> dict:
++    """Compara cada insumo con su sha256 congelado. Lee bytes para el hash, no interpreta ningún precio.
++    Si falta un insumo o un hash no coincide, aborta: la salida no se crea y no se lee ningún precio."""
++    m = json.loads(Path(manifiesto or MANIFIESTO).read_text())
++    raices = {"E3": Path(e3), "reparacion": AQUI.parent, "ventana": Path(ventana)}
++    obs, malos = {}, {}
++    for x in m["entradas"]:
++        ruta = raices[x["base"]] if x["base"] == "ventana" else raices[x["base"]] / x["ruta"]
++        if not ruta.exists():
++            malos[x["nombre"]] = {"esperado": x["sha256"], "observado": "AUSENTE"}
++            continue
++        h = hash_conjunto(ruta) if x["tipo"] == "conjunto" else sha(ruta)
++        obs[x["nombre"]] = h
++        if h != x["sha256"]:
++            malos[x["nombre"]] = {"esperado": x["sha256"], "observado": h}
++    if malos:
++        raise SystemExit(f"insumos que no coinciden con ENTRADAS_CONGELADAS.json: {malos}. No se lee ningún precio.")
++    return {"manifiesto": sha(Path(manifiesto or MANIFIESTO)), "insumos": obs, "inicio_H_esperado": m["inicio_H_esperado"],
++            "mapeos": m["mapeos"]}
++
++
+ # ------------------------------------------------------------------ panel real (solo en modo real, con autorización)
+ 
+-def panel_real(e3: Path, universo):
+-    """Series de calidad de E3: act = estado == 1. Aplica la Adenda R2 (partición en cortes con salto ≥ ×10)."""
++def panel_real(e3: Path, universo, mapeos):
++    """Series de calidad de E3: act = estado == 1. Aplica los mapeos de la Adenda 1 (C4); no aplica la Adenda R2."""
+     series = sorted((e3 / "resultados" / "calidad" / "series").glob("*.npz"))
+     syms, O, C, QV, act = [], [], [], [], []
+     for f in series:
+@@ -80,37 +103,57 @@
+         syms.append(str(z["simbolo"]))
+         O.append(z["O"]), C.append(z["C"]), QV.append(z["QV"]), act.append(z["estado"] == 1)
+     O, C, QV, act = (np.array(x) for x in (O, C, QV, act))
+-    saltos = json.loads((e3 / "resultados" / "estructural" / "estructural.json").read_text())
+-    saltos = saltos["cortes_con_reanudacion"]["lista_saltos"]
+-    return particionar(syms, O, C, QV, act, saltos, universo)
++    syms, O, C, QV, act, registro = aplicar_mapeos(syms, O, C, QV, act, mapeos, universo.INICIO)
++    return universo.Panel(syms, O, C, QV, act, mapeos_renombre=registro), registro
+ 
+ 
+-def particionar(syms, O, C, QV, act, saltos, universo):
+-    """Adenda R2: el tramo posterior a un corte con |log10 ratio| ≥ 1 pasa a otro símbolo (edad desde cero)."""
+-    bases = {universo.base_de(s) for s in syms}
+-    apal = {s for s in syms if any(universo.base_de(s).endswith(x) and universo.base_de(s)[:-len(x)] in bases
+-                                   for x in ("UP", "DOWN", "BULL", "BEAR"))}
+-    syms, filas, particiones = list(syms), {k: [] for k in ("O", "C", "QV", "act")}, []
++def aplicar_mapeos(syms, O, C, QV, act, mapeos, inicio):
++    """Adenda 1, reglas 1 y 2 (v3 §2.2.4; §4.10 «renombre mapeado»), en orden de fecha efectiva E.
++    r = unidades nuevas por unidad vieja. QV está en USDT y no cambia.
++    Regla 2 (X → X): los precios de X anteriores a la reapertura (primer día activo > E) se dividen por r. La serie queda
++      continua a través de r y las unidades de una posición, multiplicadas por r. Edad y listado no cambian.
++    Regla 1 (X → Y): Y continúa a X en la fila de X: historia de X con precios / r hasta su último día activo y, desde el
++      primer día activo de Y, los datos de Y. La fila pasa a llamarse Y (hereda edad y posiciones) y la fila original de Y
++      se retira. Aborta si falta X o Y, si X vuelve a estar activo después de E, si Y estuvo activo antes del cese de X,
++      o si no hay reapertura: no se une nada a ciegas."""
++    syms = list(syms)
+     O, C, QV, act = O.copy(), C.copy(), QV.copy(), act.copy()
+-    for k, c in enumerate(saltos):
+-        s = c["simbolo"]
+-        if s in apal or abs(math.log10(c["ratio_precio"])) < 1 or s not in syms:
++    retirar, registro = [], []
++    for m in sorted(mapeos, key=lambda m: (m["E"], m["regla"])):
++        x, y, r = m["viejo_usdt"], m["nuevo_usdt"], float(m["r"])
++        if x not in syms or y not in syms or not r > 0:
++            raise SystemExit(f"mapeo imposible: {x} → {y} (r = {m['r']})")
++        i, e = syms.index(x), (dt.date.fromisoformat(m["E"]) - inicio).days
++        if m["regla"] == 2:
++            if x != y:
++                raise SystemExit(f"regla 2 con símbolos distintos: {x} → {y}")
++            despues = np.flatnonzero(act[i, e + 1:])
++            if despues.size == 0:
++                raise SystemExit(f"{x}: no hay reapertura después de {m['E']}")
++            k = e + 1 + int(despues[0])
++            antes = np.flatnonzero(act[i, :e + 1])
++            if antes.size == 0 or k - int(antes[-1]) < 2:
++                raise SystemExit(f"{x}: no hay un corte de negociación alrededor de E = {m['E']}; no se aplica r")
++            O[i, :k] /= r
++            C[i, :k] /= r
++            registro.append({**m, "fila": x, "dia_reapertura": (inicio + dt.timedelta(days=k)).isoformat()})
+             continue
+-        i = syms.index(s)
+-        r = (dt.date.fromisoformat(c["reanuda"]) - universo.INICIO).days
+-        nuevo = {"O": O[i].copy(), "C": C[i].copy(), "QV": QV[i].copy(), "act": act[i].copy()}
+-        for arr in nuevo.values():
+-            arr[:r] = False if arr.dtype == bool else np.nan
+-        O[i, r:], C[i, r:], QV[i, r:], act[i, r:] = np.nan, np.nan, np.nan, False
+-        for key in filas:
+-            filas[key].append(nuevo[key])
+-        nombre = f"R2X{k}{universo.base_de(s)}USDT"
+-        syms.append(nombre)
+-        particiones.append({"simbolo": s, "nuevo": nombre, "reanuda": c["reanuda"], "ratio": c["ratio_precio"]})
+-    if particiones:
+-        O, C, QV = (np.vstack([a, np.array(filas[k])]) for a, k in ((O, "O"), (C, "C"), (QV, "QV")))
+-        act = np.vstack([act, np.array(filas["act"])])
+-    return universo.Panel(syms, O, C, QV, act), particiones
++        j = syms.index(y)
++        activos_x = np.flatnonzero(act[i])
++        if activos_x.size == 0 or activos_x[-1] > e:
++            raise SystemExit(f"{x}: sin actividad o activo después de E = {m['E']}; no se mapea")
++        activos_y = np.flatnonzero(act[j])
++        if activos_y.size == 0 or activos_y[0] <= activos_x[-1]:
++            raise SystemExit(f"{y}: sin actividad o activo antes del cese de {x}; no se mapea")
++        k = int(activos_y[0])
++        O[i, :k], C[i, :k] = O[i, :k] / r, C[i, :k] / r
++        O[i, k:], C[i, k:], QV[i, k:], act[i, k:] = O[j, k:], C[j, k:], QV[j, k:], act[j, k:]
++        syms[i], syms[j] = y, f"#retirada:{y}"
++        retirar.append(j)
++        registro.append({**m, "fila": y, "ultimo_activo_viejo": (inicio + dt.timedelta(days=int(activos_x[-1]))).isoformat(),
++                         "primer_activo_nuevo": (inicio + dt.timedelta(days=k)).isoformat()})
++    quedan = [s for s in range(len(syms)) if s not in set(retirar)]
++    return [syms[s] for s in quedan], O[quedan], C[quedan], QV[quedan], act[quedan], registro
+ 
+ 
+ # ------------------------------------------------------------------ validez previa (v3 §10), sin estadísticos
+@@ -332,7 +375,9 @@
+         excesos[nombre] = (exceso(s, b), s)
+         return float(excesos[nombre][0].mean())
+ 
+-    aporte = contribuciones(P, base, formaciones, ew)
++    bruto_s = motor.simular(P, formaciones, Cfg(mult_costo=0.0), cache)
++    bruto_ew = motor.simular(P, formaciones, Cfg(objetivo="ew", mult_costo=0.0), cache)
++    aporte = contribuciones(P, base, formaciones, bruto_ew)  # N14: r_EW bruto (v1 usaba el neto)
+     mayor = max(aporte, key=lambda s: aporte[s]) if aporte else None
+     rob = {
+         "R1_costos_x2": exc("R1", {"mult_costo": 2.0}),
+@@ -343,8 +388,6 @@
+         "R4_exceso": exc("R4", {"excluidos": frozenset({P.sym[mayor]})}) if mayor is not None else float("nan"),
+         "R6_liquidaciones_menos_30": exc("R6", {"recorte_liq": 0.70}),
+     }
+-    bruto_s = motor.simular(P, formaciones, Cfg(mult_costo=0.0), cache)
+-    bruto_ew = motor.simular(P, formaciones, Cfg(objetivo="ew", mult_costo=0.0), cache)
+     excesos["bruto"] = (exceso(bruto_s, bruto_ew), bruto_s)
+     exc_bruto = float(excesos["bruto"][0].mean())
+     nulos, rech_diag = [], 0
+@@ -438,9 +481,9 @@
+ 
+ # ------------------------------------------------------------------ modos
+ 
+-def modo_sintetico(salida: Path, momentum: float, replicas: int):
+-    universo, motor, inferencia = importar_congelados(E3_DEFECTO)
+-    if sha(E3_DEFECTO / "codigo" / "pruebas_motor.py") != PRUEBAS_MOTOR:
++def modo_sintetico(salida: Path, momentum: float, replicas: int, e3: Path = E3_DEFECTO):
++    universo, motor, inferencia = importar_congelados(e3)
++    if sha(e3 / "codigo" / "pruebas_motor.py") != PRUEBAS_MOTOR:
+         raise SystemExit("pruebas_motor.py no coincide con su huella")
+     import pruebas_motor
+     P = pruebas_motor.panel_sintetico(20261026, momentum=momentum)
+@@ -456,47 +499,56 @@
+                       **{k: res[k] for k in ("semanas_ic", "H1", "clasificacion_6_5")}}, default=float, ensure_ascii=False))
+ 
+ 
+-def modo_real(e3: Path, p0: Path, autorizacion: Path, salida: Path):
++def resultado_invalido(salida: Path, motivo: str, **extra):
++    """C5: INVÁLIDO como resultado explícito, sin H1 ni H2."""
++    res = {"veredicto": "INVALIDO", "motivo": motivo, "H1": None, "H2": None, **extra,
++           "nota": "E3-H1/H2 NO EVALUABLES con esta ventana. No se busca otra ventana ni se cambia ninguna regla."}
++    (salida / "RESULTADO_E3.json").write_text(json.dumps(res, indent=1, default=float, ensure_ascii=False))
++    raise SystemExit(f"INVALIDO: {motivo}. Ver {salida / 'RESULTADO_E3.json'}")
++
++
++def modo_real(e3: Path, ventana: Path, autorizacion: Path, salida: Path, manifiesto: Path = None):
+     if salida.exists():
+         raise SystemExit(f"{salida} ya existe: la ejecución confirmatoria es única")
++    manifiesto = Path(manifiesto or MANIFIESTO)
+     texto = autorizacion.read_text() if autorizacion.exists() else ""
+-    requeridos = {"FRASE": FRASE in texto, "orquestador": sha(Path(__file__)) in texto, "P0": sha(p0) in texto,
+-                  "adenda_R": sha(AQUI / "ADENDA_R_auditoria_de_supervivencia_interna.md") in texto,
+-                  "adenda_R2": sha(AQUI / "ADENDA_R2_cortes_con_salto_de_precio.md") in texto}
+-    p0d = json.loads(p0.read_text())
+-    if "R1prima" in p0d.get("adenda", ""):
+-        requeridos["correccion_R1prima"] = sha(AQUI / "CORRECCION_R1prima_alcance_por_clase.md") in texto
+-    otros = [q for q in AQUI.glob("P0_resultado*.json") if q.resolve() != p0.resolve()]
+-    requeridos["una_sola_opcion"] = not any(sha(q) in texto for q in otros)  # la autorización elige una única ventana
++    requeridos = {"FRASE": FRASE in texto, "orquestador_v2": sha(Path(__file__)) in texto,
++                  "entradas_congeladas": manifiesto.exists() and sha(manifiesto) in texto}
+     if not all(requeridos.values()):
+         raise SystemExit(f"autorización ausente o incompleta: {requeridos}. No se lee ningún precio.")
+-    if p0d.get("veredicto") != "VALIDO":
+-        raise SystemExit("P0 no es VÁLIDO: no hay ventana H")
+-    universo, motor, inferencia = importar_congelados(e3)
++    entradas = verificar_entradas(e3, ventana, manifiesto)  # C3: antes de leer cualquier precio
++    vd = json.loads(ventana.read_text())
+     salida.mkdir(parents=True)
+-    registro = {"inicio_utc": dt.datetime.now(dt.UTC).isoformat(), "p0": str(p0), "sha_p0": sha(p0),
+-                "sha_orquestador": sha(Path(__file__)), "sha_autorizacion": sha(autorizacion), "inicio_H": p0d["inicio_H"]}
++    registro = {"inicio_utc": dt.datetime.now(dt.UTC).isoformat(), "ventana": str(ventana), "sha_ventana": sha(ventana),
++                "sha_orquestador": sha(Path(__file__)), "sha_autorizacion": sha(autorizacion), "entradas": entradas,
++                "inicio_H": vd.get("inicio_H")}
+     (salida / "REGISTRO_EJECUCION.json").write_text(json.dumps(registro, indent=1))  # antes de calcular
+-    P, particiones = panel_real(e3, universo)
+-    inicio = dt.date.fromisoformat(p0d["inicio_H"])
++    if vd.get("veredicto") != "VALIDO" or vd.get("inicio_H") != entradas["inicio_H_esperado"]:
++        resultado_invalido(salida, "la ventana A no es VÁLIDA o no es la congelada", ventana=vd.get("veredicto"))
++    universo, motor, inferencia = importar_congelados(e3)
++    mapeos = json.loads((AQUI.parent / entradas["mapeos"]).read_text())["mapeos"]
++    P, registro_mapeos = panel_real(e3, universo, mapeos)
++    inicio = dt.date.fromisoformat(vd["inicio_H"])
+     formaciones = universo.lunes(inicio, ULTIMA_FORMACION + dt.timedelta(days=7))
+     validez, cache = validez_previa(P, formaciones, universo, motor)
+-    (salida / "VALIDEZ_PREVIA.json").write_text(json.dumps({**validez, "particiones_R2": particiones}, indent=1, default=float))
++    (salida / "VALIDEZ_PREVIA.json").write_text(json.dumps({**validez, "mapeos_aplicados": registro_mapeos}, indent=1, default=float))
+     if not validez["valido"]:
+-        raise SystemExit("INVALIDO (v3 §10): se detiene sin calcular H1 ni H2. Ver VALIDEZ_PREVIA.json")
++        resultado_invalido(salida, "validez previa (v3 §10)", validez_previa=validez)
+     Fm = universo.lunes(inicio, ULTIMA_FORMACION + dt.timedelta(days=9), dia_semana=2)
+     res = ejecutar(P, formaciones, universo, motor, inferencia, cache=cache, formaciones_miercoles=Fm)
++    res["veredicto"] = "EVALUADO"
+     res["validez_previa"] = validez
+-    res["particiones_R2"] = particiones
++    res["mapeos_aplicados"] = registro_mapeos
+     res["registro"] = registro
+-    (salida / "RESULTADO_E3R.json").write_text(json.dumps(res, indent=1, default=float, ensure_ascii=False))
++    (salida / "RESULTADO_E3.json").write_text(json.dumps(res, indent=1, default=float, ensure_ascii=False))
+     print(json.dumps({k: res[k] for k in ("semanas_ic", "H1", "H2", "holm", "clasificacion_6_5")}, default=float,
+                      ensure_ascii=False, indent=1))
+ 
+ 
+ if __name__ == "__main__":
+     if sys.argv[1] == "sintetico":
+-        modo_sintetico(Path(sys.argv[2]), float(sys.argv[3]), int(sys.argv[4]) if len(sys.argv) > 4 else 50)
++        modo_sintetico(Path(sys.argv[2]), float(sys.argv[3]), int(sys.argv[4]) if len(sys.argv) > 4 else 50,
++                       Path(sys.argv[5]) if len(sys.argv) > 5 else E3_DEFECTO)
+     elif sys.argv[1] == "real":
+         modo_real(Path(sys.argv[2]), Path(sys.argv[3]), Path(sys.argv[4]), Path(sys.argv[5]))
+     else:

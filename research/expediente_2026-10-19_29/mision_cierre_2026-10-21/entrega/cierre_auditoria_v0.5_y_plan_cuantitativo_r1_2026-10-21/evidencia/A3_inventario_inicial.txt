@@ -1,0 +1,23 @@
+repositorio: HEAD 692f2b2, huella 87b9585d31924f81…
+tendencia_btc frente a HEAD: 50 iguales; distintos: ['research/tendencia_btc/ARTEFACTOS_SHA256.txt', 'research/tendencia_btc/papel/PRERREGISTRO_PAPEL.md']
+T protegidos iguales a v0.5: 4 de 4
+ZIP: 25 (19 con SHA-256 igual al registrado; 5 sin SHA-256 por datos)
+  auditoria_T_REV_EMA9/SHA256SUMS: 12 OK, 0 fallan, 0 faltan, 0 omitidas (datos)
+  auditoria_paralela_P1_P2_P4_2026-10-20/SHA256SUMS.txt: 229 OK, 0 fallan, 0 faltan, 0 omitidas (datos)
+  auditoria_paralela_P1_P2_P4_2026-10-20/00_entrega_original/SHA256SUMS: 122 OK, 0 fallan, 0 faltan, 0 omitidas (datos)
+  cierre_final_P1_P2_P4_2026-10-20/SHA256SUMS.txt: 68 OK, 0 fallan, 0 faltan, 0 omitidas (datos)
+  entregables_P1_P2_P4_2026-10-20/SHA256SUMS: 122 OK, 0 fallan, 0 faltan, 0 omitidas (datos)
+  expediente_metodologico_2026-10-20/SHA256SUMS: 13 OK, 0 fallan, 0 faltan, 0 omitidas (datos)
+  experimentos/E2_descubrimiento_2026-10-19/SHA256SUMS: 3 OK, 0 fallan, 0 faltan, 0 omitidas (datos)
+  experimentos/E3_seleccion_posicion_2026-10-19/SHA256SUMS: 8 OK, 0 fallan, 0 faltan, 0 omitidas (datos)
+  fase_documental_2026-10-20/SHA256SUMS: 18 OK, 0 fallan, 0 faltan, 0 omitidas (datos)
+  preservacion/contenido/SHA256SUMS: 6 OK, 0 fallan, 0 faltan, 36 omitidas (datos)
+  auditoria_preservacion/fase3_pendientes/SHA256SUMS_arbol: 10 OK, 0 fallan, 0 faltan, 2304 omitidas (datos)
+  solucion_verificada_P1_P2_P4_2026-10-20/SHA256SUMS.txt: 148 OK, 0 fallan, 0 faltan, 0 omitidas (datos)
+  solucion_final_trader_ia_v0.5_2026-10-20/SHA256SUMS.txt: 205 OK, 0 fallan, 0 faltan, 0 omitidas (datos)
+  /home/user/Trader-IA/research/entregas_hcarry/SHA256SUMS: 1 OK, 0 fallan, 0 faltan, 0 omitidas (datos)
+  /home/user/Trader-IA/research/entregas_hcarry/SHA256SUMS_2026-10-17: 3 OK, 0 fallan, 0 faltan, 2 omitidas (datos)
+  /home/user/Trader-IA/research/hcarry_next/recuperado/SHA256SUMS: 9 OK, 0 fallan, 0 faltan, 0 omitidas (datos)
+  /home/user/Trader-IA/research/hcarry_next/ARTEFACTOS_SHA256_2026-10-17.txt: 16 OK, 0 fallan, 0 faltan, 0 omitidas (datos)
+  /home/user/Trader-IA/research/tendencia_btc/ARTEFACTOS_SHA256.txt: 36 OK, 0 fallan, 0 faltan, 0 omitidas (datos)
+problemas: ninguno

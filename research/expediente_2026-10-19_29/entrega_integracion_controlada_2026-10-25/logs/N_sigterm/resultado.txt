@@ -1,0 +1,2 @@
+sin_exec: sh -c 'true && sin_execpython …' → python vivo, sin SIGTERM · python vivo tras el SIGTERM a sh: 1
+con_exec: sh -c 'true && con_execexec python …' → python recibió SIGTERM · python vivo tras el SIGTERM a sh: 0

@@ -1,0 +1,75 @@
+# citas de fase 2 verificadas con sed -n · 2026-10-28T20:07:40Z
+## informe del autor L369-374
+   369	**Comando** (cada escenario en un proceso nuevo):
+   370	
+   371	```
+   372	python -B -I arnes/arnes_L13.py correr   <copia_A>/…/ejecutar_E3_v3.py <base>/<escenario> <escenario>
+   373	python -B -I arnes/arnes_L13.py observar <copia_A>/…/ejecutar_E3_v3.py <base>/<escenario>
+   374	```
+## arnes_L13.py L80-106 (inyectar), L121-140 (ESCENARIOS), L216-226 (concurrencia)
+    80	def inyectar(V, evento_objetivo: str, modo: str, tambien_error: bool = False):
+    81	    """Fallo en Intentos.anotar la PRIMERA vez que se anota `evento_objetivo` (y, opcionalmente, también en ERROR)."""
+    82	    original = V.Intentos.anotar
+    83	    estado = {"hecho": set()}
+    84	
+    85	    def anotar(self, **ev):
+    86	        e = ev.get("evento")
+    87	        objetivo = (e == evento_objetivo and evento_objetivo not in estado["hecho"]) or (tambien_error and e == "ERROR")
+    88	        if not objetivo:
+    89	            return original(self, **ev)
+    90	        estado["hecho"].add(e)
+    91	        if modo == "antes":
+    92	            raise OSError(28, f"fallo inyectado al anotar {e} (antes de escribir)")
+    93	        if modo == "despues":
+    94	            original(self, **ev)
+    95	            raise OSError(5, f"fallo inyectado al anotar {e} (después de escribir la línea)")
+    96	        if modo == "matar":
+    97	            os._exit(137)
+    98	        if modo == "interrumpir":
+    99	            raise KeyboardInterrupt(f"Ctrl-C inyectado al anotar {e}")
+   100	        if modo == "parcial":
+   101	            self.f.write(json.dumps({"evento": e, **ev})[:25])
+   102	            self.f.flush()
+   103	            os.fsync(self.f.fileno())
+   104	            os._exit(137)
+   105	        raise AssertionError(modo)
+   106	    V.Intentos.anotar = anotar
+--
+   121	ESCENARIOS = {
+   122	    # nombre: (válido, falla_panel, evento, modo, también_error, falla_escritura_resultado)
+   123	    "B1_evaluado_sin_fallo": (True, False, None, None, False, False),
+   124	    "B2_invalido_sin_fallo": (False, False, None, None, False, False),
+   125	    "B3_error_en_panel": (True, True, None, None, False, False),
+   126	    "E1_evaluado_anotar_falla_antes": (True, False, "EVALUADO", "antes", False, False),
+   127	    "E2_evaluado_anotar_falla_despues": (True, False, "EVALUADO", "despues", False, False),
+   128	    "E3_evaluado_proceso_muere": (True, False, "EVALUADO", "matar", False, False),
+   129	    "E4_evaluado_escritura_resultado_falla": (True, False, None, None, False, True),
+   130	    "E5_evaluado_anotar_falla_y_error_tambien": (True, False, "EVALUADO", "antes", True, False),
+   131	    "E6_evaluado_linea_parcial_y_muere": (True, False, "EVALUADO", "parcial", False, False),
+   132	    "I1_invalido_anotar_falla_antes": (False, False, "INVALIDO", "antes", False, False),
+   133	    "I2_invalido_anotar_falla_despues": (False, False, "INVALIDO", "despues", False, False),
+   134	    "I3_invalido_proceso_muere": (False, False, "INVALIDO", "matar", False, False),
+   135	    "I4_invalido_anotar_falla_y_error_tambien": (False, False, "INVALIDO", "antes", True, False),
+   136	    "E7_evaluado_ctrl_c_al_anotar": (True, False, "EVALUADO", "interrumpir", False, False),
+   137	    "I5_invalido_ctrl_c_al_anotar": (False, False, "INVALIDO", "interrumpir", False, False),
+   138	    "K1_muere_antes_de_INICIADO": (True, False, "INICIADO", "matar", False, False),
+   139	    "K2_INICIADO_falla_antes": (True, False, "INICIADO", "antes", False, False),
+   140	}
+--
+   216	def concurrencia(v3, base):
+   217	    """Un proceso retiene el bloqueo del registro; otro proceso intenta una ejecución."""
+   218	    import subprocess
+   219	    base.mkdir(parents=True, exist_ok=True)
+   220	    V, _ = cargar(v3, base, "v3_retiene_bloqueo")
+   221	    retenido = V.Intentos(V.INTENTOS)  # toma el flock exclusivo
+   222	    r = subprocess.run([sys.executable, "-B", "-I", __file__, "correr", str(v3), str(base), "B1_evaluado_sin_fallo"],
+   223	                       capture_output=True, text=True, timeout=120)
+   224	    retenido.cerrar()
+   225	    out = {"segundo_proceso": r.stdout.strip()[-300:], "salida_1_existe": (base / "salida_1").exists()}
+   226	    print(json.dumps(out, ensure_ascii=False))
+--
+## test_orquestador_v3.py L378, L385, L626-627 (las 4 pruebas bloqueadas por la guarda)
+  378	def test_INVALIDO_explicito_y_no_reescrito_como_ERROR(ent):
+  385	def test_EVALUADO_de_punta_a_punta_y_sin_segunda_ejecucion(tmp_path, monkeypatch):
+  626	@pytest.mark.parametrize("semilla,momentum", [(20261026, 0.02), (37, 0.0)])
+  627	def test_ejecutar_del_v3_identico_al_del_v2(mods, semilla, momentum):

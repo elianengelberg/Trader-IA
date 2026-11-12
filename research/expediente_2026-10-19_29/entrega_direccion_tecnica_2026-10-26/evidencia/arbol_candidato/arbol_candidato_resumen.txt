@@ -1,0 +1,6 @@
++23: 8adf4caf6824214c3cf40949a6c7cd101c27155e esperado 8adf4caf6824214c3cf40949a6c7cd101c27155e OK
+   ruff rc=0 · pruebas del parche rc=0 · ...                                                                      [100%]
++24: 8abd0e59dac78398f180d1cebcd25994cfc19b63 esperado 8abd0e59dac78398f180d1cebcd25994cfc19b63 OK
+   ruff rc=0 · pruebas del parche rc=0 · ...                                                                      [100%]
++25: 11f9ccca0da1a98e104132b7f7b8d249d89d463b esperado 11f9ccca0da1a98e104132b7f7b8d249d89d463b OK
+   ruff rc=0 · pruebas del parche rc=0 · .                                                                        [100%]

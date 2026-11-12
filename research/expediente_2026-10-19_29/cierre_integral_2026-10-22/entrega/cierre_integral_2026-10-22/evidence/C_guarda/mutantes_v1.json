@@ -1,0 +1,874 @@
+{
+ "guarda": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_integral_2026-10-22/extraccion_paquete/cierre_D1_D2_guarda_R19_2026-10-22/fase2/guarda/test_engine_version_contract.py",
+ "casos": {
+  "N0_obligatoria": {
+   "parte_de": "obligatoria",
+   "cambios": [],
+   "esperado": "pasa",
+   "razon_esperada": {},
+   "por_que": "control positivo: 01+02v3",
+   "veredicto": "OK",
+   "rc": 0,
+   "resultados": {
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "PASSED",
+    "test_the_stop_in_the_book_follows_the_leg": "PASSED",
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "PASSED",
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "PASSED",
+    "test_rejections_partials_and_limit_entries_together": "PASSED",
+    "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+    "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED"
+   },
+   "omitidas": 0,
+   "aserciones": {
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "",
+    "test_the_stop_in_the_book_follows_the_leg": "",
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "",
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "",
+    "test_rejections_partials_and_limit_entries_together": ""
+   },
+   "resumen": [
+    "7 passed in 13.12s"
+   ]
+  },
+  "N1_02v3_sin_01": {
+   "parte_de": "solo02v3",
+   "cambios": [],
+   "esperado": "falla",
+   "razon_esperada": {
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "sent again after it was dead",
+    "test_the_stop_in_the_book_follows_the_leg": "no stop in the book ever moved"
+   },
+   "por_que": "etiqueta 1.1.0 sin D1-D3",
+   "veredicto": "OK (detectado, razón correcta)",
+   "rc": 1,
+   "resultados": {
+    "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+    "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED",
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "FAILED",
+    "test_the_stop_in_the_book_follows_the_leg": "FAILED",
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "FAILED",
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "FAILED",
+    "test_rejections_partials_and_limit_entries_together": "FAILED"
+   },
+   "omitidas": 0,
+   "aserciones": {
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "E   AssertionError: ['bar 179: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead', 'bar 180: market ord_6DC5932ADBDEYZK1Q7J0TBJV sent again after it was dead', 'bar 180: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead']\nE   assert not ['bar 179: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead', 'bar 180: market ord_6DC5932ADBDEYZK1Q7J0T...6CS62Q sent again after it was dead', 'bar 182: market ord_6DC5932ADBDEYZK1Q7J0TBJV sent again after it was dead', ...]\nE    +  where ['bar 179: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead', 'bar 180: market ord_6DC5932ADBDEYZK1Q7J0T...6CS62Q sent again after it was dead', 'bar 182: market ord_6DC5932ADBDEYZK1Q7J0TBJV sent again after it was dead', ...] = dead_orders_sent_again(Record(sent=[Sent(bar=172, order_id='ord_TE6KRG0PP9W1KQQSAWJ3FCMS', order_type=<OrderType.MARKET: 'market'>, side=<Sid...g=0.113791, stop_price=61299.528262181746, was_open=True, seq=145)], closes_rejected=5, closes_expired_with_position=0))",
+    "test_the_stop_in_the_book_follows_the_leg": "E   AssertionError: no stop in the book ever moved at the same size: break-even and trailing stayed on paper\nE   assert 0",
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "E   AssertionError: ('growth_after_close', ['bar 507: grew from 0.025974000000000004 to 0.026017000000000005 after the close at bar 506'])\nE   assert not ['bar 507: grew from 0.025974000000000004 to 0.026017000000000005 after the close at bar 506']\nE    +  where ['bar 507: grew from 0.025974000000000004 to 0.026017000000000005 after the close at bar 506'] = <function growth_after_close at 0x7f9996b05f80>(Record(sent=[Sent(bar=172, order_id='ord_TE6KRG0PP9W1KQQSAWJ3FCMS', order_type=<OrderType.MARKET: 'market'>, side=<Sid...000000000002, stop_price=62072.86465243754, was_open=True, seq=49)], closes_rejected=0, closes_expired_with_position=0))",
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "E   AssertionError: ('uncovered_streaks', ['bar 182: -0.00011299999999999863 held, uncovered for 2 bars', 'bar 183: -0.00014199999999999863 held, uncovered for 3 bars', 'bar 184: -0.00015099999999999863 held, uncovered for 4 bars'])\nE   assert not ['bar 182: -0.00011299999999999863 held, uncovered for 2 bars', 'bar 183: -0.00014199999999999863 held, uncovered for ...0.00015299999999999862 held, uncovered for 6 bars', 'bar 187: -0.00015399999999999862 held, uncovered for 7 bars', ...]\nE    +  where ['bar 182: -0.00011299999999999863 held, uncovered for 2 bars', 'bar 183: -0.00014199999999999863 held, uncovered for ...0.00015299999999999862 held, uncovered for 6 bars', 'bar 187: -0.00015399999999999862 held, uncovered for 7 bars', ...] = <function uncovered_streaks at 0x7f9996b05da0>(Record(sent=[Sent(bar=172, order_id='ord_TE6KRG0PP9W1KQQSAWJ3FCMS', order_type=<OrderType.MARKET: 'market'>, side=<Sid...ing=0.111686, stop_price=62488.12001492422, was_open=True, seq=13)], closes_rejected=0, closes_expired_with_position=0))",
+    "test_rejections_partials_and_limit_entries_together": "E   AssertionError: ('dead_orders_sent_again', ['bar 182: stop ord_Z451H12PHTR6RGWZCKN3RNZ5 sent again after it was dead', 'bar 198: stop ...1S3433FCA1 sent again after it was dead', 'bar 199: market ord_S0Y86FKHWARY71CXSWDMXCNN sent again after it was dead'])\nE   assert not ['bar 182: stop ord_Z451H12PHTR6RGWZCKN3RNZ5 sent again after it was dead', 'bar 198: stop ord_9F70XXPEAWEMYF1S3433FCA...SWDMXCNN sent again after it was dead', 'bar 200: stop ord_9F70XXPEAWEMYF1S3433FCA1 sent again after it was dead', ...]\nE    +  where ['bar 182: stop ord_Z451H12PHTR6RGWZCKN3RNZ5 sent again after it was dead', 'bar 198: stop ord_9F70XXPEAWEMYF1S3433FCA...SWDMXCNN sent again after it was dead', 'bar 200: stop ord_9F70XXPEAWEMYF1S3433FCA1 sent again after it was dead', ...] = <function dead_orders_sent_again at 0x7f9996b05d00>(Record(sent=[Sent(bar=172, order_id='ord_KGEAVZ0VZ2SFXDXQFB4SE7Z5', order_type=<OrderType.LIMIT: 'limit'>, side=<Side....ng=0.095614, stop_price=61032.25712373285, was_open=True, seq=137)], closes_rejected=5, closes_expired_with_position=0))"
+   },
+   "resumen": [
+    "5 failed, 2 passed in 13.58s"
+   ]
+  },
+  "N2_base_con_guarda_B_sin_A": {
+   "parte_de": "base",
+   "cambios": [],
+   "esperado": "falla",
+   "razon_esperada": {
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "no engine_version"
+   },
+   "por_que": "B sin A: la guarda sin 01+02v3",
+   "veredicto": "VIVO",
+   "rc": 0,
+   "resultados": {
+    "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+    "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED"
+   },
+   "omitidas": 5,
+   "aserciones": {},
+   "resumen": [
+    "2 passed, 5 skipped in 13.21s"
+   ]
+  },
+  "N3_01_sin_02v3_reversion_parcial": {
+   "parte_de": "solo01",
+   "cambios": [],
+   "esperado": "falla",
+   "razon_esperada": {
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "no engine_version"
+   },
+   "por_que": "A revertida a medias: 02v3 revertido solo (R4)",
+   "veredicto": "VIVO",
+   "rc": 0,
+   "resultados": {
+    "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+    "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED"
+   },
+   "omitidas": 5,
+   "aserciones": {},
+   "resumen": [
+    "2 passed, 5 skipped in 13.51s"
+   ]
+  },
+  "M1_D1_salida_id_sin_barra": {
+   "parte_de": "obligatoria",
+   "cambios": [
+    [
+     "packages/tia/src/tia/backtest/engine.py",
+     "signal_id=f\"{exit_key}:{candle.close_time.isoformat()}\",",
+     "signal_id=exit_key,"
+    ]
+   ],
+   "esperado": "falla",
+   "razon_esperada": {
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "market"
+   },
+   "por_que": "D1 cierres: el reintento reusa el id del cierre rechazado",
+   "veredicto": "OK (detectado, razón correcta)",
+   "rc": 1,
+   "resultados": {
+    "test_the_stop_in_the_book_follows_the_leg": "PASSED",
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "PASSED",
+    "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+    "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED",
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "FAILED",
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "FAILED",
+    "test_rejections_partials_and_limit_entries_together": "FAILED"
+   },
+   "omitidas": 0,
+   "aserciones": {
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "E   AssertionError: ['bar 180: market ord_6DC5932ADBDEYZK1Q7J0TBJV sent again after it was dead', 'bar 181: market ord_6DC5932ADBDEYZK1Q7J0TBJV sent again after it was dead', 'bar 182: market ord_6DC5932ADBDEYZK1Q7J0TBJV sent again after it was dead']\nE   assert not ['bar 180: market ord_6DC5932ADBDEYZK1Q7J0TBJV sent again after it was dead', 'bar 181: market ord_6DC5932ADBDEYZK1Q7J...FNEBRA sent again after it was dead', 'bar 202: market ord_FJ6F7CSGRSY8ERSGSGFNEBRA sent again after it was dead', ...]\nE    +  where ['bar 180: market ord_6DC5932ADBDEYZK1Q7J0TBJV sent again after it was dead', 'bar 181: market ord_6DC5932ADBDEYZK1Q7J...FNEBRA sent again after it was dead', 'bar 202: market ord_FJ6F7CSGRSY8ERSGSGFNEBRA sent again after it was dead', ...] = dead_orders_sent_again(Record(sent=[Sent(bar=172, order_id='ord_TE6KRG0PP9W1KQQSAWJ3FCMS', order_type=<OrderType.MARKET: 'market'>, side=<Sid...maining=0.114478, stop_price=61192.861815, was_open=True, seq=335)], closes_rejected=5, closes_expired_with_position=0))",
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "E   AssertionError: ('uncovered_streaks', ['bar 645: -9.999999999871848e-07 held, uncovered for 2 bars', 'bar 646: -9.999999999871848e-07 held, uncovered for 3 bars', 'bar 647: -9.999999999871848e-07 held, uncovered for 4 bars'])\nE   assert not ['bar 645: -9.999999999871848e-07 held, uncovered for 2 bars', 'bar 646: -9.999999999871848e-07 held, uncovered for 3 ... -9.999999999871848e-07 held, uncovered for 6 bars', 'bar 650: -9.999999999871848e-07 held, uncovered for 7 bars', ...]\nE    +  where ['bar 645: -9.999999999871848e-07 held, uncovered for 2 bars', 'bar 646: -9.999999999871848e-07 held, uncovered for 3 ... -9.999999999871848e-07 held, uncovered for 6 bars', 'bar 650: -9.999999999871848e-07 held, uncovered for 7 bars', ...] = <function uncovered_streaks at 0x7f71cd201f80>(Record(sent=[Sent(bar=172, order_id='ord_TE6KRG0PP9W1KQQSAWJ3FCMS', order_type=<OrderType.MARKET: 'market'>, side=<Sid...3937e-17, stop_price=61372.157087992564, was_open=False, seq=717)], closes_rejected=0, closes_expired_with_position=29))",
+    "test_rejections_partials_and_limit_entries_together": "E   AssertionError: ('dead_orders_sent_again', ['bar 201: market ord_F3YXSV0XP8B8KJ0ABTRKJNJJ sent again after it was dead', 'bar 202: mar...0ABTRKJNJJ sent again after it was dead', 'bar 203: market ord_F3YXSV0XP8B8KJ0ABTRKJNJJ sent again after it was dead'])\nE   assert not ['bar 201: market ord_F3YXSV0XP8B8KJ0ABTRKJNJJ sent again after it was dead', 'bar 202: market ord_F3YXSV0XP8B8KJ0ABTR...RKJNJJ sent again after it was dead', 'bar 206: market ord_F3YXSV0XP8B8KJ0ABTRKJNJJ sent again after it was dead', ...]\nE    +  where ['bar 201: market ord_F3YXSV0XP8B8KJ0ABTRKJNJJ sent again after it was dead', 'bar 202: market ord_F3YXSV0XP8B8KJ0ABTR...RKJNJJ sent again after it was dead', 'bar 206: market ord_F3YXSV0XP8B8KJ0ABTRKJNJJ sent again after it was dead', ...] = <function dead_orders_sent_again at 0x7f71cd201ee0>(Record(sent=[Sent(bar=172, order_id='ord_KGEAVZ0VZ2SFXDXQFB4SE7Z5', order_type=<OrderType.LIMIT: 'limit'>, side=<Side....ning=0.095732, stop_price=61147.798368998, was_open=True, seq=298)], closes_rejected=5, closes_expired_with_position=0))",
+    "test_the_stop_in_the_book_follows_the_leg": "",
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": ""
+   },
+   "resumen": [
+    "3 failed, 4 passed in 13.19s"
+   ]
+  },
+  "M2_D1_stop_id_sin_colocacion": {
+   "parte_de": "obligatoria",
+   "cambios": [
+    [
+     "packages/tia/src/tia/backtest/engine.py",
+     "signal_id=f\"{leg.signal_id}:protective:{self._stop_placements}\",",
+     "signal_id=f\"{leg.signal_id}:protective\","
+    ]
+   ],
+   "esperado": "falla",
+   "razon_esperada": {
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "stop"
+   },
+   "por_que": "D1 stops: la recolocación reusa el id del stop cancelado",
+   "veredicto": "OK (detectado, razón correcta)",
+   "rc": 1,
+   "resultados": {
+    "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+    "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED",
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "FAILED",
+    "test_the_stop_in_the_book_follows_the_leg": "FAILED",
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "FAILED",
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "FAILED",
+    "test_rejections_partials_and_limit_entries_together": "FAILED"
+   },
+   "omitidas": 0,
+   "aserciones": {
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "E   AssertionError: ['bar 174: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead', 'bar 175: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead', 'bar 176: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead']\nE   assert not ['bar 174: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead', 'bar 175: stop ord_F0XZM7BBVS9GNEWE496CS62...496CS62Q sent again after it was dead', 'bar 179: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead', ...]\nE    +  where ['bar 174: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead', 'bar 175: stop ord_F0XZM7BBVS9GNEWE496CS62...496CS62Q sent again after it was dead', 'bar 179: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead', ...] = dead_orders_sent_again(Record(sent=[Sent(bar=172, order_id='ord_TE6KRG0PP9W1KQQSAWJ3FCMS', order_type=<OrderType.MARKET: 'market'>, side=<Sid...ining=0.0, stop_price=61846.42945516584, was_open=False, seq=111)], closes_rejected=10, closes_expired_with_position=0))",
+    "test_the_stop_in_the_book_follows_the_leg": "E   AssertionError: no stop in the book ever moved at the same size: break-even and trailing stayed on paper\nE   assert 0",
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "E   AssertionError: ('dead_orders_sent_again', ['bar 182: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead', 'bar 202: stop ...5BJ7W1TF2816 sent again after it was dead', 'bar 203: stop ord_0F96FP0R8T805BJ7W1TF2816 sent again after it was dead'])\nE   assert not ['bar 182: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead', 'bar 202: stop ord_0F96FP0R8T805BJ7W1TF281...W1TF2816 sent again after it was dead', 'bar 206: stop ord_0F96FP0R8T805BJ7W1TF2816 sent again after it was dead', ...]\nE    +  where ['bar 182: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead', 'bar 202: stop ord_0F96FP0R8T805BJ7W1TF281...W1TF2816 sent again after it was dead', 'bar 206: stop ord_0F96FP0R8T805BJ7W1TF2816 sent again after it was dead', ...] = <function dead_orders_sent_again at 0x7f1d3e8d5ee0>(Record(sent=[Sent(bar=172, order_id='ord_TE6KRG0PP9W1KQQSAWJ3FCMS', order_type=<OrderType.MARKET: 'market'>, side=<Sid...9999999999, stop_price=61885.727642152466, was_open=True, seq=188)], closes_rejected=0, closes_expired_with_position=0))",
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "E   AssertionError: ('dead_orders_sent_again', ['bar 202: stop ord_DS467MBNEFBGV4MXY9X6K0ZB sent again after it was dead', 'bar 228: stop ...71RVHGQ175R4 sent again after it was dead', 'bar 230: stop ord_M5MV28YT738B71RVHGQ175R4 sent again after it was dead'])\nE   assert not ['bar 202: stop ord_DS467MBNEFBGV4MXY9X6K0ZB sent again after it was dead', 'bar 228: stop ord_M5MV28YT738B71RVHGQ175R...HGQ175R4 sent again after it was dead', 'bar 236: stop ord_M5MV28YT738B71RVHGQ175R4 sent again after it was dead', ...]\nE    +  where ['bar 202: stop ord_DS467MBNEFBGV4MXY9X6K0ZB sent again after it was dead', 'bar 228: stop ord_M5MV28YT738B71RVHGQ175R...HGQ175R4 sent again after it was dead', 'bar 236: stop ord_M5MV28YT738B71RVHGQ175R4 sent again after it was dead', ...] = <function dead_orders_sent_again at 0x7f1d3e8d5ee0>(Record(sent=[Sent(bar=172, order_id='ord_TE6KRG0PP9W1KQQSAWJ3FCMS', order_type=<OrderType.MARKET: 'market'>, side=<Sid...013599e-06, stop_price=61351.47870138103, was_open=True, seq=326)], closes_rejected=0, closes_expired_with_position=97))",
+    "test_rejections_partials_and_limit_entries_together": "E   AssertionError: ('dead_orders_sent_again', ['bar 177: stop ord_Z451H12PHTR6RGWZCKN3RNZ5 sent again after it was dead', 'bar 178: stop ...RGWZCKN3RNZ5 sent again after it was dead', 'bar 179: stop ord_Z451H12PHTR6RGWZCKN3RNZ5 sent again after it was dead'])\nE   assert not ['bar 177: stop ord_Z451H12PHTR6RGWZCKN3RNZ5 sent again after it was dead', 'bar 178: stop ord_Z451H12PHTR6RGWZCKN3RNZ...CKN3RNZ5 sent again after it was dead', 'bar 182: stop ord_Z451H12PHTR6RGWZCKN3RNZ5 sent again after it was dead', ...]\nE    +  where ['bar 177: stop ord_Z451H12PHTR6RGWZCKN3RNZ5 sent again after it was dead', 'bar 178: stop ord_Z451H12PHTR6RGWZCKN3RNZ...CKN3RNZ5 sent again after it was dead', 'bar 182: stop ord_Z451H12PHTR6RGWZCKN3RNZ5 sent again after it was dead', ...] = <function dead_orders_sent_again at 0x7f1d3e8d5ee0>(Record(sent=[Sent(bar=172, order_id='ord_KGEAVZ0VZ2SFXDXQFB4SE7Z5', order_type=<OrderType.LIMIT: 'limit'>, side=<Side....ng=0.021158, stop_price=61874.43611622153, was_open=True, seq=101)], closes_rejected=8, closes_expired_with_position=0))"
+   },
+   "resumen": [
+    "5 failed, 2 passed in 13.52s"
+   ]
+  },
+  "M3_D2_sin_comparar_nivel": {
+   "parte_de": "obligatoria",
+   "cambios": [
+    [
+     "packages/tia/src/tia/backtest/engine.py",
+     "if same_size and same_level:",
+     "if same_size:"
+    ]
+   ],
+   "esperado": "falla",
+   "razon_esperada": {
+    "test_the_stop_in_the_book_follows_the_leg": "no stop in the book ever moved"
+   },
+   "por_que": "D2",
+   "veredicto": "OK (detectado, razón correcta)",
+   "rc": 1,
+   "resultados": {
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "PASSED",
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "PASSED",
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "PASSED",
+    "test_rejections_partials_and_limit_entries_together": "PASSED",
+    "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+    "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED",
+    "test_the_stop_in_the_book_follows_the_leg": "FAILED"
+   },
+   "omitidas": 0,
+   "aserciones": {
+    "test_the_stop_in_the_book_follows_the_leg": "E   AssertionError: no stop in the book ever moved at the same size: break-even and trailing stayed on paper\nE   assert 0",
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "",
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "",
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "",
+    "test_rejections_partials_and_limit_entries_together": ""
+   },
+   "resumen": [
+    "1 failed, 6 passed in 13.42s"
+   ]
+  },
+  "M4_D3_sin_cancelar_resto_al_salir": {
+   "parte_de": "obligatoria",
+   "cambios": [
+    [
+     "packages/tia/src/tia/backtest/engine.py",
+     "for order in provider.resting_orders(leg.symbol):",
+     "for order in ():"
+    ]
+   ],
+   "esperado": "falla",
+   "razon_esperada": {
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "growth_after_close"
+   },
+   "por_que": "D3 capa 1",
+   "veredicto": "OK (detectado, razón correcta)",
+   "rc": 1,
+   "resultados": {
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "PASSED",
+    "test_the_stop_in_the_book_follows_the_leg": "PASSED",
+    "test_rejections_partials_and_limit_entries_together": "PASSED",
+    "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+    "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED",
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "FAILED",
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "FAILED"
+   },
+   "omitidas": 0,
+   "aserciones": {
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "E   AssertionError: ('growth_after_close', ['bar 507: grew from 0.025967999999999998 to 0.026011 after the close at bar 506', 'bar 656: grew from 0.027044999999999996 to 0.027051999999999996 after the close at bar 655'])\nE   assert not ['bar 507: grew from 0.025967999999999998 to 0.026011 after the close at bar 506', 'bar 656: grew from 0.027044999999999996 to 0.027051999999999996 after the close at bar 655']\nE    +  where ['bar 507: grew from 0.025967999999999998 to 0.026011 after the close at bar 506', 'bar 656: grew from 0.027044999999999996 to 0.027051999999999996 after the close at bar 655'] = <function growth_after_close at 0x7f0b0fbf6160>(Record(sent=[Sent(bar=172, order_id='ord_TE6KRG0PP9W1KQQSAWJ3FCMS', order_type=<OrderType.MARKET: 'market'>, side=<Sid...9973839e-07, stop_price=61351.47870138103, was_open=True, seq=113)], closes_rejected=0, closes_expired_with_position=0))",
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "E   AssertionError: ('growth_after_close', ['bar 180: grew from 0.111896 to 0.111964 after the close at bar 179', 'bar 204: grew from 0.11...ter the close at bar 203', 'bar 505: grew from 0.05542500000000001 to 0.05544600000000001 after the close at bar 504'])\nE   assert not ['bar 180: grew from 0.111896 to 0.111964 after the close at bar 179', 'bar 204: grew from 0.11190000000000001 to 0.11...er the close at bar 623', 'bar 657: grew from 0.028241000000000006 to 0.028499000000000007 after the close at bar 656']\nE    +  where ['bar 180: grew from 0.111896 to 0.111964 after the close at bar 179', 'bar 204: grew from 0.11190000000000001 to 0.11...er the close at bar 623', 'bar 657: grew from 0.028241000000000006 to 0.028499000000000007 after the close at bar 656'] = <function growth_after_close at 0x7f0b0fbf6160>(Record(sent=[Sent(bar=172, order_id='ord_TE6KRG0PP9W1KQQSAWJ3FCMS', order_type=<OrderType.MARKET: 'market'>, side=<Sid...061155e-06, stop_price=61427.75490599707, was_open=True, seq=367)], closes_rejected=0, closes_expired_with_position=95))",
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "",
+    "test_the_stop_in_the_book_follows_the_leg": "",
+    "test_rejections_partials_and_limit_entries_together": ""
+   },
+   "resumen": [
+    "2 failed, 5 passed in 13.34s"
+   ]
+  },
+  "M5_D3_sin_cancelar_resto_en_plano": {
+   "parte_de": "obligatoria",
+   "cambios": [
+    [
+     "packages/tia/src/tia/backtest/engine.py",
+     "for order in provider.resting_orders(symbol):",
+     "for order in ():"
+    ]
+   ],
+   "esperado": "falla",
+   "razon_esperada": {
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "entries_filling_a_later_position"
+   },
+   "por_que": "D3 capa 2",
+   "veredicto": "OK (detectado, razón correcta)",
+   "rc": 1,
+   "resultados": {
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "PASSED",
+    "test_the_stop_in_the_book_follows_the_leg": "PASSED",
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "PASSED",
+    "test_rejections_partials_and_limit_entries_together": "PASSED",
+    "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+    "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED",
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "FAILED"
+   },
+   "omitidas": 0,
+   "aserciones": {
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "E   AssertionError: ('entries_filling_a_later_position', ['bar 562: entry ord_FH204F9J744C8EB30PGMXMV8 of position 4 filled into position 5'])\nE   assert not ['bar 562: entry ord_FH204F9J744C8EB30PGMXMV8 of position 4 filled into position 5']\nE    +  where ['bar 562: entry ord_FH204F9J744C8EB30PGMXMV8 of position 4 filled into position 5'] = <function entries_filling_a_later_position at 0x7f622d2c2200>(Record(sent=[Sent(bar=172, order_id='ord_TE6KRG0PP9W1KQQSAWJ3FCMS', order_type=<OrderType.MARKET: 'market'>, side=<Sid...g=0.112929, stop_price=61885.727642152466, was_open=True, seq=133)], closes_rejected=0, closes_expired_with_position=0))",
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "",
+    "test_the_stop_in_the_book_follows_the_leg": "",
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "",
+    "test_rejections_partials_and_limit_entries_together": ""
+   },
+   "resumen": [
+    "1 failed, 6 passed in 13.48s"
+   ]
+  },
+  "M6_D3_sin_red_de_seguridad": {
+   "parte_de": "obligatoria",
+   "cambios": [
+    [
+     "packages/tia/src/tia/backtest/engine.py",
+     "if exit_order is not None and exit_order.state.is_terminal and leg.quantity > 0:",
+     "if False:"
+    ]
+   ],
+   "esperado": "falla",
+   "razon_esperada": {
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "uncovered_streaks"
+   },
+   "por_que": "D3 capa 3",
+   "veredicto": "OK (detectado, razón correcta)",
+   "rc": 1,
+   "resultados": {
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "PASSED",
+    "test_the_stop_in_the_book_follows_the_leg": "PASSED",
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "PASSED",
+    "test_rejections_partials_and_limit_entries_together": "PASSED",
+    "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+    "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED",
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "FAILED"
+   },
+   "omitidas": 0,
+   "aserciones": {
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "E   AssertionError: ('uncovered_streaks', ['bar 182: -0.06254199999999999 held, uncovered for 2 bars', 'bar 183: -0.06254199999999999 held, uncovered for 3 bars', 'bar 184: -0.06254199999999999 held, uncovered for 4 bars'])\nE   assert not ['bar 182: -0.06254199999999999 held, uncovered for 2 bars', 'bar 183: -0.06254199999999999 held, uncovered for 3 bars...186: -0.06254199999999999 held, uncovered for 6 bars', 'bar 187: -0.06254199999999999 held, uncovered for 7 bars', ...]\nE    +  where ['bar 182: -0.06254199999999999 held, uncovered for 2 bars', 'bar 183: -0.06254199999999999 held, uncovered for 3 bars...186: -0.06254199999999999 held, uncovered for 6 bars', 'bar 187: -0.06254199999999999 held, uncovered for 7 bars', ...] = <function uncovered_streaks at 0x7fbd38a01f80>(Record(sent=[Sent(bar=172, order_id='ord_TE6KRG0PP9W1KQQSAWJ3FCMS', order_type=<OrderType.MARKET: 'market'>, side=<Sid...ing=0.111686, stop_price=62488.12001492422, was_open=True, seq=14)], closes_rejected=0, closes_expired_with_position=1))",
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "",
+    "test_the_stop_in_the_book_follows_the_leg": "",
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "",
+    "test_rejections_partials_and_limit_entries_together": ""
+   },
+   "resumen": [
+    "1 failed, 6 passed in 13.27s"
+   ]
+  },
+  "M7_sin_aviso_de_pierna_sin_stop": {
+   "parte_de": "obligatoria",
+   "cambios": [
+    [
+     "packages/tia/src/tia/backtest/engine.py",
+     "if cfg.use_protective_stops and unprotected:",
+     "if False:"
+    ]
+   ],
+   "esperado": "fuera de alcance",
+   "razon_esperada": {},
+   "por_que": "aviso del informe, no regla de venue (lo cubre 01)",
+   "veredicto": "no detectado",
+   "rc": 0,
+   "resultados": {
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "PASSED",
+    "test_the_stop_in_the_book_follows_the_leg": "PASSED",
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "PASSED",
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "PASSED",
+    "test_rejections_partials_and_limit_entries_together": "PASSED",
+    "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+    "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED"
+   },
+   "omitidas": 0,
+   "aserciones": {
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "",
+    "test_the_stop_in_the_book_follows_the_leg": "",
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "",
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "",
+    "test_rejections_partials_and_limit_entries_together": ""
+   },
+   "resumen": [
+    "7 passed in 13.25s"
+   ]
+  },
+  "M8_D3_sin_ninguna_capa": {
+   "parte_de": "obligatoria",
+   "cambios": [
+    [
+     "packages/tia/src/tia/backtest/engine.py",
+     "for order in provider.resting_orders(leg.symbol):",
+     "for order in ():"
+    ],
+    [
+     "packages/tia/src/tia/backtest/engine.py",
+     "for order in provider.resting_orders(symbol):",
+     "for order in ():"
+    ],
+    [
+     "packages/tia/src/tia/backtest/engine.py",
+     "if exit_order is not None and exit_order.state.is_terminal and leg.quantity > 0:",
+     "if False:"
+    ]
+   ],
+   "esperado": "falla",
+   "razon_esperada": {
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "growth_after_close"
+   },
+   "por_que": "D3 entero",
+   "veredicto": "OK (detectado, razón correcta)",
+   "rc": 1,
+   "resultados": {
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "PASSED",
+    "test_the_stop_in_the_book_follows_the_leg": "PASSED",
+    "test_rejections_partials_and_limit_entries_together": "PASSED",
+    "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+    "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED",
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "FAILED",
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "FAILED"
+   },
+   "omitidas": 0,
+   "aserciones": {
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "E   AssertionError: ('growth_after_close', ['bar 507: grew from 0.025967999999999998 to 0.026011 after the close at bar 506'])\nE   assert not ['bar 507: grew from 0.025967999999999998 to 0.026011 after the close at bar 506']\nE    +  where ['bar 507: grew from 0.025967999999999998 to 0.026011 after the close at bar 506'] = <function growth_after_close at 0x7f32ef206160>(Record(sent=[Sent(bar=172, order_id='ord_TE6KRG0PP9W1KQQSAWJ3FCMS', order_type=<OrderType.MARKET: 'market'>, side=<Sid...999999999996, stop_price=62072.86277907594, was_open=True, seq=59)], closes_rejected=0, closes_expired_with_position=0))",
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "E   AssertionError: ('uncovered_streaks', ['bar 182: -0.00011299999999999863 held, uncovered for 2 bars', 'bar 183: -0.00014199999999999863 held, uncovered for 3 bars', 'bar 184: -0.00015099999999999863 held, uncovered for 4 bars'])\nE   assert not ['bar 182: -0.00011299999999999863 held, uncovered for 2 bars', 'bar 183: -0.00014199999999999863 held, uncovered for ...0.00015299999999999862 held, uncovered for 6 bars', 'bar 187: -0.00015399999999999862 held, uncovered for 7 bars', ...]\nE    +  where ['bar 182: -0.00011299999999999863 held, uncovered for 2 bars', 'bar 183: -0.00014199999999999863 held, uncovered for ...0.00015299999999999862 held, uncovered for 6 bars', 'bar 187: -0.00015399999999999862 held, uncovered for 7 bars', ...] = <function uncovered_streaks at 0x7f32ef205f80>(Record(sent=[Sent(bar=172, order_id='ord_TE6KRG0PP9W1KQQSAWJ3FCMS', order_type=<OrderType.MARKET: 'market'>, side=<Sid...ing=0.111686, stop_price=62488.12001492422, was_open=True, seq=13)], closes_rejected=0, closes_expired_with_position=0))",
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "",
+    "test_the_stop_in_the_book_follows_the_leg": "",
+    "test_rejections_partials_and_limit_entries_together": ""
+   },
+   "resumen": [
+    "2 failed, 5 passed in 13.37s"
+   ]
+  },
+  "M9_D2_recoloca_el_stop_en_cada_barra": {
+   "parte_de": "obligatoria",
+   "cambios": [
+    [
+     "packages/tia/src/tia/backtest/engine.py",
+     "if same_size and same_level:",
+     "if False:"
+    ]
+   ],
+   "esperado": "falla",
+   "razon_esperada": {
+    "test_the_stop_in_the_book_follows_the_leg": "replaced at the same size and level"
+   },
+   "por_que": "D2 sin recolocaciones de más",
+   "veredicto": "OK (detectado, razón correcta)",
+   "rc": 1,
+   "resultados": {
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "PASSED",
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "PASSED",
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "PASSED",
+    "test_rejections_partials_and_limit_entries_together": "PASSED",
+    "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+    "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED",
+    "test_the_stop_in_the_book_follows_the_leg": "FAILED"
+   },
+   "omitidas": 0,
+   "aserciones": {
+    "test_the_stop_in_the_book_follows_the_leg": "E   AssertionError: ['bar 176: a working stop replaced at the same size and level 62567.83067468193', 'bar 178: a working stop replaced at...ame size and level 62488.12001492422', 'bar 180: a working stop replaced at the same size and level 62462.69553130117']\nE   assert not ['bar 176: a working stop replaced at the same size and level 62567.83067468193', 'bar 178: a working stop replaced at...ize and level 62292.30874025205', 'bar 191: a working stop replaced at the same size and level 62292.30874025205', ...]",
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "",
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "",
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "",
+    "test_rejections_partials_and_limit_entries_together": ""
+   },
+   "resumen": [
+    "1 failed, 6 passed in 13.27s"
+   ]
+  },
+  "M10_cierre_sin_reduce_only": {
+   "parte_de": "obligatoria",
+   "cambios": [
+    [
+     "packages/tia/src/tia/backtest/engine.py",
+     "            created_at=candle.close_time,\n            reduce_only=True,",
+     "            created_at=candle.close_time,\n            reduce_only=False,"
+    ]
+   ],
+   "esperado": "falla",
+   "razon_esperada": {
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "without reduce_only"
+   },
+   "por_que": "regla previa que 1.1.0 no debilita",
+   "veredicto": "OK (detectado, razón correcta)",
+   "rc": 1,
+   "resultados": {
+    "test_the_stop_in_the_book_follows_the_leg": "PASSED",
+    "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+    "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED",
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "FAILED",
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "FAILED",
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "FAILED",
+    "test_rejections_partials_and_limit_entries_together": "FAILED"
+   },
+   "omitidas": 0,
+   "aserciones": {
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "E   AssertionError: the scenario must reject closes\nE   assert 0\nE    +  where 0 = Record(sent=[Sent(bar=172, order_id='ord_TE6KRG0PP9W1KQQSAWJ3FCMS', order_type=<OrderType.MARKET: 'market'>, side=<Sid...aining=0.0, stop_price=61870.50417856719, was_open=False, seq=108)], closes_rejected=0, closes_expired_with_position=0).closes_rejected",
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "E   AssertionError: ('closes_without_reduce_only', ['bar 183: market buy against -0.112051 without reduce_only', 'bar 233: market buy against -0.0026459999999999995 without reduce_only', 'bar 506: market sell against 0.025967999999999998 without reduce_only'])\nE   assert not ['bar 183: market buy against -0.112051 without reduce_only', 'bar 233: market buy against -0.0026459999999999995 with...t buy against -1.0000000000006477e-06 without reduce_only', 'bar 657: market sell against 0.02741 without reduce_only']\nE    +  where ['bar 183: market buy against -0.112051 without reduce_only', 'bar 233: market buy against -0.0026459999999999995 with...t buy against -1.0000000000006477e-06 without reduce_only', 'bar 657: market sell against 0.02741 without reduce_only'] = <function closes_without_reduce_only at 0x7fdf7def62a0>(Record(sent=[Sent(bar=172, order_id='ord_TE6KRG0PP9W1KQQSAWJ3FCMS', order_type=<OrderType.MARKET: 'market'>, side=<Sid...99873876e-07, stop_price=61975.8623041106, was_open=True, seq=148)], closes_rejected=0, closes_expired_with_position=0))",
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "E   AssertionError: ('uncovered_streaks', ['bar 181: -0.06254199999999999 held, uncovered for 2 bars', 'bar 190: -0.018461999999999992 held, uncovered for 2 bars', 'bar 191: -0.006138999999999992 held, uncovered for 3 bars'])\nE   assert not ['bar 181: -0.06254199999999999 held, uncovered for 2 bars', 'bar 190: -0.018461999999999992 held, uncovered for 2 bar...1: -0.021994999999999987 held, uncovered for 2 bars', 'bar 202: -0.011484999999999987 held, uncovered for 3 bars', ...]\nE    +  where ['bar 181: -0.06254199999999999 held, uncovered for 2 bars', 'bar 190: -0.018461999999999992 held, uncovered for 2 bar...1: -0.021994999999999987 held, uncovered for 2 bars', 'bar 202: -0.011484999999999987 held, uncovered for 3 bars', ...] = <function uncovered_streaks at 0x7fdf7def5f80>(Record(sent=[Sent(bar=172, order_id='ord_TE6KRG0PP9W1KQQSAWJ3FCMS', order_type=<OrderType.MARKET: 'market'>, side=<Sid...00000000004, stop_price=61870.50417856719, was_open=True, seq=132)], closes_rejected=0, closes_expired_with_position=0))",
+    "test_rejections_partials_and_limit_entries_together": "E   AssertionError: ('closes_without_reduce_only', ['bar 182: market buy against -0.11211 without reduce_only', 'bar 197: market buy against -0.112431 without reduce_only', 'bar 205: market buy against -0.112544 without reduce_only'])\nE   assert not ['bar 182: market buy against -0.11211 without reduce_only', 'bar 197: market buy against -0.112431 without reduce_onl...3: market buy against -0.115948 without reduce_only', 'bar 649: market sell against 0.076452 without reduce_only', ...]\nE    +  where ['bar 182: market buy against -0.11211 without reduce_only', 'bar 197: market buy against -0.112431 without reduce_onl...3: market buy against -0.115948 without reduce_only', 'bar 649: market sell against 0.076452 without reduce_only', ...] = <function closes_without_reduce_only at 0x7fdf7def62a0>(Record(sent=[Sent(bar=172, order_id='ord_KGEAVZ0VZ2SFXDXQFB4SE7Z5', order_type=<OrderType.LIMIT: 'limit'>, side=<Side....99999999999, stop_price=61846.42945516584, was_open=True, seq=106)], closes_rejected=0, closes_expired_with_position=0))",
+    "test_the_stop_in_the_book_follows_the_leg": ""
+   },
+   "resumen": [
+    "4 failed, 3 passed in 13.15s"
+   ]
+  },
+  "E1_02v3_sin_01_con_contadores_falsos": {
+   "parte_de": "solo02v3",
+   "cambios": [
+    [
+     "packages/tia/src/tia/backtest/engine.py",
+     "        counts = _MutableCounts()\n",
+     "        counts = _MutableCounts()\n        self.order_hygiene = {'entry_remainders_cancelled_on_exit': 0, 'stale_entry_remainders_cancelled_flat': 0, 'exits_done_with_position_left': 0, 'bars_with_leg_and_no_stop': 0}\n"
+    ]
+   ],
+   "esperado": "falla",
+   "razon_esperada": {
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "sent again after it was dead"
+   },
+   "por_que": "evasión: interfaz de 01 sin comportamiento",
+   "veredicto": "OK (detectado, razón correcta)",
+   "rc": 1,
+   "resultados": {
+    "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+    "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED",
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "FAILED",
+    "test_the_stop_in_the_book_follows_the_leg": "FAILED",
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "FAILED",
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "FAILED",
+    "test_rejections_partials_and_limit_entries_together": "FAILED"
+   },
+   "omitidas": 0,
+   "aserciones": {
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "E   AssertionError: ['bar 179: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead', 'bar 180: market ord_6DC5932ADBDEYZK1Q7J0TBJV sent again after it was dead', 'bar 180: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead']\nE   assert not ['bar 179: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead', 'bar 180: market ord_6DC5932ADBDEYZK1Q7J0T...6CS62Q sent again after it was dead', 'bar 182: market ord_6DC5932ADBDEYZK1Q7J0TBJV sent again after it was dead', ...]\nE    +  where ['bar 179: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead', 'bar 180: market ord_6DC5932ADBDEYZK1Q7J0T...6CS62Q sent again after it was dead', 'bar 182: market ord_6DC5932ADBDEYZK1Q7J0TBJV sent again after it was dead', ...] = dead_orders_sent_again(Record(sent=[Sent(bar=172, order_id='ord_TE6KRG0PP9W1KQQSAWJ3FCMS', order_type=<OrderType.MARKET: 'market'>, side=<Sid...g=0.113791, stop_price=61299.528262181746, was_open=True, seq=145)], closes_rejected=5, closes_expired_with_position=0))",
+    "test_the_stop_in_the_book_follows_the_leg": "E   AssertionError: no stop in the book ever moved at the same size: break-even and trailing stayed on paper\nE   assert 0",
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "E   AssertionError: ('growth_after_close', ['bar 507: grew from 0.025974000000000004 to 0.026017000000000005 after the close at bar 506'])\nE   assert not ['bar 507: grew from 0.025974000000000004 to 0.026017000000000005 after the close at bar 506']\nE    +  where ['bar 507: grew from 0.025974000000000004 to 0.026017000000000005 after the close at bar 506'] = <function growth_after_close at 0x7fb48da05f80>(Record(sent=[Sent(bar=172, order_id='ord_TE6KRG0PP9W1KQQSAWJ3FCMS', order_type=<OrderType.MARKET: 'market'>, side=<Sid...000000000002, stop_price=62072.86465243754, was_open=True, seq=49)], closes_rejected=0, closes_expired_with_position=0))",
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "E   AssertionError: ('uncovered_streaks', ['bar 182: -0.00011299999999999863 held, uncovered for 2 bars', 'bar 183: -0.00014199999999999863 held, uncovered for 3 bars', 'bar 184: -0.00015099999999999863 held, uncovered for 4 bars'])\nE   assert not ['bar 182: -0.00011299999999999863 held, uncovered for 2 bars', 'bar 183: -0.00014199999999999863 held, uncovered for ...0.00015299999999999862 held, uncovered for 6 bars', 'bar 187: -0.00015399999999999862 held, uncovered for 7 bars', ...]\nE    +  where ['bar 182: -0.00011299999999999863 held, uncovered for 2 bars', 'bar 183: -0.00014199999999999863 held, uncovered for ...0.00015299999999999862 held, uncovered for 6 bars', 'bar 187: -0.00015399999999999862 held, uncovered for 7 bars', ...] = <function uncovered_streaks at 0x7fb48da05da0>(Record(sent=[Sent(bar=172, order_id='ord_TE6KRG0PP9W1KQQSAWJ3FCMS', order_type=<OrderType.MARKET: 'market'>, side=<Sid...ing=0.111686, stop_price=62488.12001492422, was_open=True, seq=13)], closes_rejected=0, closes_expired_with_position=0))",
+    "test_rejections_partials_and_limit_entries_together": "E   AssertionError: ('dead_orders_sent_again', ['bar 182: stop ord_Z451H12PHTR6RGWZCKN3RNZ5 sent again after it was dead', 'bar 198: stop ...1S3433FCA1 sent again after it was dead', 'bar 199: market ord_S0Y86FKHWARY71CXSWDMXCNN sent again after it was dead'])\nE   assert not ['bar 182: stop ord_Z451H12PHTR6RGWZCKN3RNZ5 sent again after it was dead', 'bar 198: stop ord_9F70XXPEAWEMYF1S3433FCA...SWDMXCNN sent again after it was dead', 'bar 200: stop ord_9F70XXPEAWEMYF1S3433FCA1 sent again after it was dead', ...]\nE    +  where ['bar 182: stop ord_Z451H12PHTR6RGWZCKN3RNZ5 sent again after it was dead', 'bar 198: stop ord_9F70XXPEAWEMYF1S3433FCA...SWDMXCNN sent again after it was dead', 'bar 200: stop ord_9F70XXPEAWEMYF1S3433FCA1 sent again after it was dead', ...] = <function dead_orders_sent_again at 0x7fb48da05d00>(Record(sent=[Sent(bar=172, order_id='ord_KGEAVZ0VZ2SFXDXQFB4SE7Z5', order_type=<OrderType.LIMIT: 'limit'>, side=<Side....ng=0.095614, stop_price=61032.25712373285, was_open=True, seq=137)], closes_rejected=5, closes_expired_with_position=0))"
+   },
+   "resumen": [
+    "5 failed, 2 passed in 13.03s"
+   ]
+  },
+  "E2_02v3_sin_01_con_resting_orders": {
+   "parte_de": "solo02v3",
+   "cambios": [
+    [
+     "packages/tia/src/tia/execution/paper.py",
+     "    async def get_positions(self) -> dict[str, Position]:",
+     "    def resting_orders(self, symbol):\n        return [o for o in self._orders.values() if o.symbol == symbol and not o.state.is_terminal]\n\n    async def get_positions(self) -> dict[str, Position]:"
+    ]
+   ],
+   "esperado": "falla",
+   "razon_esperada": {
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "sent again after it was dead"
+   },
+   "por_que": "evasión: método de 01 sin usarlo",
+   "veredicto": "OK (detectado, razón correcta)",
+   "rc": 1,
+   "resultados": {
+    "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+    "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED",
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "FAILED",
+    "test_the_stop_in_the_book_follows_the_leg": "FAILED",
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "FAILED",
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "FAILED",
+    "test_rejections_partials_and_limit_entries_together": "FAILED"
+   },
+   "omitidas": 0,
+   "aserciones": {
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "E   AssertionError: ['bar 179: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead', 'bar 180: market ord_6DC5932ADBDEYZK1Q7J0TBJV sent again after it was dead', 'bar 180: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead']\nE   assert not ['bar 179: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead', 'bar 180: market ord_6DC5932ADBDEYZK1Q7J0T...6CS62Q sent again after it was dead', 'bar 182: market ord_6DC5932ADBDEYZK1Q7J0TBJV sent again after it was dead', ...]\nE    +  where ['bar 179: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead', 'bar 180: market ord_6DC5932ADBDEYZK1Q7J0T...6CS62Q sent again after it was dead', 'bar 182: market ord_6DC5932ADBDEYZK1Q7J0TBJV sent again after it was dead', ...] = dead_orders_sent_again(Record(sent=[Sent(bar=172, order_id='ord_TE6KRG0PP9W1KQQSAWJ3FCMS', order_type=<OrderType.MARKET: 'market'>, side=<Sid...g=0.113791, stop_price=61299.528262181746, was_open=True, seq=145)], closes_rejected=5, closes_expired_with_position=0))",
+    "test_the_stop_in_the_book_follows_the_leg": "E   AssertionError: no stop in the book ever moved at the same size: break-even and trailing stayed on paper\nE   assert 0",
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "E   AssertionError: ('growth_after_close', ['bar 507: grew from 0.025974000000000004 to 0.026017000000000005 after the close at bar 506'])\nE   assert not ['bar 507: grew from 0.025974000000000004 to 0.026017000000000005 after the close at bar 506']\nE    +  where ['bar 507: grew from 0.025974000000000004 to 0.026017000000000005 after the close at bar 506'] = <function growth_after_close at 0x7f56ee20a020>(Record(sent=[Sent(bar=172, order_id='ord_TE6KRG0PP9W1KQQSAWJ3FCMS', order_type=<OrderType.MARKET: 'market'>, side=<Sid...000000000002, stop_price=62072.86465243754, was_open=True, seq=49)], closes_rejected=0, closes_expired_with_position=0))",
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "E   AssertionError: ('uncovered_streaks', ['bar 182: -0.00011299999999999863 held, uncovered for 2 bars', 'bar 183: -0.00014199999999999863 held, uncovered for 3 bars', 'bar 184: -0.00015099999999999863 held, uncovered for 4 bars'])\nE   assert not ['bar 182: -0.00011299999999999863 held, uncovered for 2 bars', 'bar 183: -0.00014199999999999863 held, uncovered for ...0.00015299999999999862 held, uncovered for 6 bars', 'bar 187: -0.00015399999999999862 held, uncovered for 7 bars', ...]\nE    +  where ['bar 182: -0.00011299999999999863 held, uncovered for 2 bars', 'bar 183: -0.00014199999999999863 held, uncovered for ...0.00015299999999999862 held, uncovered for 6 bars', 'bar 187: -0.00015399999999999862 held, uncovered for 7 bars', ...] = <function uncovered_streaks at 0x7f56ee209e40>(Record(sent=[Sent(bar=172, order_id='ord_TE6KRG0PP9W1KQQSAWJ3FCMS', order_type=<OrderType.MARKET: 'market'>, side=<Sid...ing=0.111686, stop_price=62488.12001492422, was_open=True, seq=13)], closes_rejected=0, closes_expired_with_position=0))",
+    "test_rejections_partials_and_limit_entries_together": "E   AssertionError: ('dead_orders_sent_again', ['bar 182: stop ord_Z451H12PHTR6RGWZCKN3RNZ5 sent again after it was dead', 'bar 198: stop ...1S3433FCA1 sent again after it was dead', 'bar 199: market ord_S0Y86FKHWARY71CXSWDMXCNN sent again after it was dead'])\nE   assert not ['bar 182: stop ord_Z451H12PHTR6RGWZCKN3RNZ5 sent again after it was dead', 'bar 198: stop ord_9F70XXPEAWEMYF1S3433FCA...SWDMXCNN sent again after it was dead', 'bar 200: stop ord_9F70XXPEAWEMYF1S3433FCA1 sent again after it was dead', ...]\nE    +  where ['bar 182: stop ord_Z451H12PHTR6RGWZCKN3RNZ5 sent again after it was dead', 'bar 198: stop ord_9F70XXPEAWEMYF1S3433FCA...SWDMXCNN sent again after it was dead', 'bar 200: stop ord_9F70XXPEAWEMYF1S3433FCA1 sent again after it was dead', ...] = <function dead_orders_sent_again at 0x7f56ee209da0>(Record(sent=[Sent(bar=172, order_id='ord_KGEAVZ0VZ2SFXDXQFB4SE7Z5', order_type=<OrderType.LIMIT: 'limit'>, side=<Side....ng=0.095614, stop_price=61032.25712373285, was_open=True, seq=137)], closes_rejected=5, closes_expired_with_position=0))"
+   },
+   "resumen": [
+    "5 failed, 2 passed in 13.30s"
+   ]
+  },
+  "C1_cierre_limite_reduce_only": {
+   "parte_de": "obligatoria",
+   "cambios": [
+    [
+     "packages/tia/src/tia/backtest/engine.py",
+     "            order_type=OrderType.MARKET,\n            time_in_force=TimeInForce.GTC,\n            created_at=candle.close_time,\n            reduce_only=True,",
+     "            order_type=OrderType.LIMIT,\n            limit_price=candle.close * (0.98 if side is Side.SELL else 1.02),\n            time_in_force=TimeInForce.GTC,\n            created_at=candle.close_time,\n            reduce_only=True,"
+    ]
+   ],
+   "esperado": "pasa",
+   "razon_esperada": {},
+   "por_que": "otra implementación válida del cierre: límite agresiva reduce-only",
+   "veredicto": "MAL",
+   "rc": 1,
+   "resultados": {
+    "test_the_stop_in_the_book_follows_the_leg": "PASSED",
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "PASSED",
+    "test_rejections_partials_and_limit_entries_together": "PASSED",
+    "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+    "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED",
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "FAILED",
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "FAILED"
+   },
+   "omitidas": 0,
+   "aserciones": {
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "E   AssertionError: the scenario must reject closes\nE   assert 0\nE    +  where 0 = Record(sent=[Sent(bar=172, order_id='ord_TE6KRG0PP9W1KQQSAWJ3FCMS', order_type=<OrderType.MARKET: 'market'>, side=<Sid...aining=0.0, stop_price=61870.50417856719, was_open=False, seq=108)], closes_rejected=0, closes_expired_with_position=0).closes_rejected",
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "E   AssertionError: the scenario must end closes with position left\nE   assert 0\nE    +  where 0 = Record(sent=[Sent(bar=172, order_id='ord_TE6KRG0PP9W1KQQSAWJ3FCMS', order_type=<OrderType.MARKET: 'market'>, side=<Sid...00000000002, stop_price=61870.50417856719, was_open=True, seq=132)], closes_rejected=0, closes_expired_with_position=0).closes_expired_with_position",
+    "test_the_stop_in_the_book_follows_the_leg": "",
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "",
+    "test_rejections_partials_and_limit_entries_together": ""
+   },
+   "resumen": [
+    "2 failed, 5 passed in 13.21s"
+   ]
+  },
+  "C2_02v3_sin_01_cierre_limite": {
+   "parte_de": "solo02v3",
+   "cambios": [
+    [
+     "packages/tia/src/tia/backtest/engine.py",
+     "            order_type=OrderType.MARKET,\n            time_in_force=TimeInForce.GTC,\n            created_at=candle.close_time,\n            reduce_only=True,",
+     "            order_type=OrderType.LIMIT,\n            limit_price=candle.close * (0.98 if side is Side.SELL else 1.02),\n            time_in_force=TimeInForce.GTC,\n            created_at=candle.close_time,\n            reduce_only=True,"
+    ]
+   ],
+   "esperado": "falla",
+   "razon_esperada": {
+    "test_the_stop_in_the_book_follows_the_leg": "no stop in the book ever moved"
+   },
+   "por_que": "otra forma de cierre sin D1-D3",
+   "veredicto": "OK (detectado, razón correcta)",
+   "rc": 1,
+   "resultados": {
+    "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+    "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED",
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "FAILED",
+    "test_the_stop_in_the_book_follows_the_leg": "FAILED",
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "FAILED",
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "FAILED",
+    "test_rejections_partials_and_limit_entries_together": "FAILED"
+   },
+   "omitidas": 0,
+   "aserciones": {
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "E   AssertionError: the scenario must reject closes\nE   assert 0\nE    +  where 0 = Record(sent=[Sent(bar=172, order_id='ord_TE6KRG0PP9W1KQQSAWJ3FCMS', order_type=<OrderType.MARKET: 'market'>, side=<Sid...maining=0.0, stop_price=61870.50417856719, was_open=False, seq=48)], closes_rejected=0, closes_expired_with_position=0).closes_rejected",
+    "test_the_stop_in_the_book_follows_the_leg": "E   AssertionError: no stop in the book ever moved at the same size: break-even and trailing stayed on paper\nE   assert 0",
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "E   AssertionError: ('uncovered_streaks', ['bar 509: 1.5999999999994185e-05 held, uncovered for 2 bars', 'bar 510: 1.6999999999994186e-05 held, uncovered for 3 bars', 'bar 511: 1.7999999999994186e-05 held, uncovered for 4 bars'])\nE   assert not ['bar 509: 1.5999999999994185e-05 held, uncovered for 2 bars', 'bar 510: 1.6999999999994186e-05 held, uncovered for 3 ... 1.7999999999994186e-05 held, uncovered for 6 bars', 'bar 514: 1.7999999999994186e-05 held, uncovered for 7 bars', ...]\nE    +  where ['bar 509: 1.5999999999994185e-05 held, uncovered for 2 bars', 'bar 510: 1.6999999999994186e-05 held, uncovered for 3 ... 1.7999999999994186e-05 held, uncovered for 6 bars', 'bar 514: 1.7999999999994186e-05 held, uncovered for 7 bars', ...] = <function uncovered_streaks at 0x7f8aaf301e40>(Record(sent=[Sent(bar=172, order_id='ord_TE6KRG0PP9W1KQQSAWJ3FCMS', order_type=<OrderType.MARKET: 'market'>, side=<Sid...99999999996, stop_price=62071.072674655254, was_open=True, seq=49)], closes_rejected=0, closes_expired_with_position=0))",
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "E   AssertionError: ('uncovered_streaks', ['bar 182: -0.00011299999999999863 held, uncovered for 2 bars', 'bar 183: -0.00014199999999999863 held, uncovered for 3 bars', 'bar 184: -0.00015099999999999863 held, uncovered for 4 bars'])\nE   assert not ['bar 182: -0.00011299999999999863 held, uncovered for 2 bars', 'bar 183: -0.00014199999999999863 held, uncovered for ...0.00015299999999999862 held, uncovered for 6 bars', 'bar 187: -0.00015399999999999862 held, uncovered for 7 bars', ...]\nE    +  where ['bar 182: -0.00011299999999999863 held, uncovered for 2 bars', 'bar 183: -0.00014199999999999863 held, uncovered for ...0.00015299999999999862 held, uncovered for 6 bars', 'bar 187: -0.00015399999999999862 held, uncovered for 7 bars', ...] = <function uncovered_streaks at 0x7f8aaf301e40>(Record(sent=[Sent(bar=172, order_id='ord_TE6KRG0PP9W1KQQSAWJ3FCMS', order_type=<OrderType.MARKET: 'market'>, side=<Sid...ing=0.111686, stop_price=62488.12001492422, was_open=True, seq=13)], closes_rejected=0, closes_expired_with_position=0))",
+    "test_rejections_partials_and_limit_entries_together": "E   AssertionError: ('dead_orders_sent_again', ['bar 201: stop ord_DFN7C9BVAB4Z6H7T3V17PH3M sent again after it was dead', 'bar 202: stop ...6H7T3V17PH3M sent again after it was dead', 'bar 203: stop ord_DFN7C9BVAB4Z6H7T3V17PH3M sent again after it was dead'])\nE   assert not ['bar 201: stop ord_DFN7C9BVAB4Z6H7T3V17PH3M sent again after it was dead', 'bar 202: stop ord_DFN7C9BVAB4Z6H7T3V17PH3...T4KDV2EC sent again after it was dead', 'bar 505: stop ord_5HZ7CM6HEB1Z8ZC85JD273P7 sent again after it was dead', ...]\nE    +  where ['bar 201: stop ord_DFN7C9BVAB4Z6H7T3V17PH3M sent again after it was dead', 'bar 202: stop ord_DFN7C9BVAB4Z6H7T3V17PH3...T4KDV2EC sent again after it was dead', 'bar 505: stop ord_5HZ7CM6HEB1Z8ZC85JD273P7 sent again after it was dead', ...] = <function dead_orders_sent_again at 0x7f8aaf301da0>(Record(sent=[Sent(bar=172, order_id='ord_KGEAVZ0VZ2SFXDXQFB4SE7Z5', order_type=<OrderType.LIMIT: 'limit'>, side=<Side....ng=0.017679, stop_price=61468.14204821618, was_open=True, seq=129)], closes_rejected=0, closes_expired_with_position=0))"
+   },
+   "resumen": [
+    "5 failed, 2 passed in 12.93s"
+   ]
+  },
+  "L1_obligatoria_1_0_9": {
+   "parte_de": "obligatoria",
+   "cambios": [
+    [
+     "packages/tia/src/tia/backtest/engine.py",
+     "ENGINE_VERSION = \"1.1.0\"",
+     "ENGINE_VERSION = \"1.0.9\""
+    ]
+   ],
+   "esperado": "se omite",
+   "razon_esperada": {},
+   "por_que": "no promete D1-D3",
+   "veredicto": "OK",
+   "rc": 0,
+   "resultados": {
+    "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+    "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED"
+   },
+   "omitidas": 5,
+   "aserciones": {},
+   "resumen": [
+    "2 passed, 5 skipped in 12.88s"
+   ]
+  },
+  "L2_02v3_sin_01_1_0_9": {
+   "parte_de": "solo02v3",
+   "cambios": [
+    [
+     "packages/tia/src/tia/backtest/engine.py",
+     "ENGINE_VERSION = \"1.1.0\"",
+     "ENGINE_VERSION = \"1.0.9\""
+    ]
+   ],
+   "esperado": "se omite",
+   "razon_esperada": {},
+   "por_que": "etiqueta veraz",
+   "veredicto": "OK",
+   "rc": 0,
+   "resultados": {
+    "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+    "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED"
+   },
+   "omitidas": 5,
+   "aserciones": {},
+   "resumen": [
+    "2 passed, 5 skipped in 12.79s"
+   ]
+  },
+  "L3_obligatoria_1_2_0": {
+   "parte_de": "obligatoria",
+   "cambios": [
+    [
+     "packages/tia/src/tia/backtest/engine.py",
+     "ENGINE_VERSION = \"1.1.0\"",
+     "ENGINE_VERSION = \"1.2.0\""
+    ]
+   ],
+   "esperado": "pasa",
+   "razon_esperada": {},
+   "por_que": "versión posterior",
+   "veredicto": "OK",
+   "rc": 0,
+   "resultados": {
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "PASSED",
+    "test_the_stop_in_the_book_follows_the_leg": "PASSED",
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "PASSED",
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "PASSED",
+    "test_rejections_partials_and_limit_entries_together": "PASSED",
+    "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+    "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED"
+   },
+   "omitidas": 0,
+   "aserciones": {
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "",
+    "test_the_stop_in_the_book_follows_the_leg": "",
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "",
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "",
+    "test_rejections_partials_and_limit_entries_together": ""
+   },
+   "resumen": [
+    "7 passed in 12.94s"
+   ]
+  },
+  "L4_02v3_sin_01_1_2_0": {
+   "parte_de": "solo02v3",
+   "cambios": [
+    [
+     "packages/tia/src/tia/backtest/engine.py",
+     "ENGINE_VERSION = \"1.1.0\"",
+     "ENGINE_VERSION = \"1.2.0\""
+    ]
+   ],
+   "esperado": "falla",
+   "razon_esperada": {
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "sent again after it was dead"
+   },
+   "por_que": "posterior sin D1-D3",
+   "veredicto": "OK (detectado, razón correcta)",
+   "rc": 1,
+   "resultados": {
+    "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+    "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED",
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "FAILED",
+    "test_the_stop_in_the_book_follows_the_leg": "FAILED",
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "FAILED",
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "FAILED",
+    "test_rejections_partials_and_limit_entries_together": "FAILED"
+   },
+   "omitidas": 0,
+   "aserciones": {
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "E   AssertionError: ['bar 179: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead', 'bar 180: market ord_6DC5932ADBDEYZK1Q7J0TBJV sent again after it was dead', 'bar 180: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead']\nE   assert not ['bar 179: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead', 'bar 180: market ord_6DC5932ADBDEYZK1Q7J0T...6CS62Q sent again after it was dead', 'bar 182: market ord_6DC5932ADBDEYZK1Q7J0TBJV sent again after it was dead', ...]\nE    +  where ['bar 179: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead', 'bar 180: market ord_6DC5932ADBDEYZK1Q7J0T...6CS62Q sent again after it was dead', 'bar 182: market ord_6DC5932ADBDEYZK1Q7J0TBJV sent again after it was dead', ...] = dead_orders_sent_again(Record(sent=[Sent(bar=172, order_id='ord_TE6KRG0PP9W1KQQSAWJ3FCMS', order_type=<OrderType.MARKET: 'market'>, side=<Sid...g=0.113791, stop_price=61299.528262181746, was_open=True, seq=145)], closes_rejected=5, closes_expired_with_position=0))",
+    "test_the_stop_in_the_book_follows_the_leg": "E   AssertionError: no stop in the book ever moved at the same size: break-even and trailing stayed on paper\nE   assert 0",
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "E   AssertionError: ('growth_after_close', ['bar 507: grew from 0.025974000000000004 to 0.026017000000000005 after the close at bar 506'])\nE   assert not ['bar 507: grew from 0.025974000000000004 to 0.026017000000000005 after the close at bar 506']\nE    +  where ['bar 507: grew from 0.025974000000000004 to 0.026017000000000005 after the close at bar 506'] = <function growth_after_close at 0x7fe966201f80>(Record(sent=[Sent(bar=172, order_id='ord_TE6KRG0PP9W1KQQSAWJ3FCMS', order_type=<OrderType.MARKET: 'market'>, side=<Sid...000000000002, stop_price=62072.86465243754, was_open=True, seq=49)], closes_rejected=0, closes_expired_with_position=0))",
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "E   AssertionError: ('uncovered_streaks', ['bar 182: -0.00011299999999999863 held, uncovered for 2 bars', 'bar 183: -0.00014199999999999863 held, uncovered for 3 bars', 'bar 184: -0.00015099999999999863 held, uncovered for 4 bars'])\nE   assert not ['bar 182: -0.00011299999999999863 held, uncovered for 2 bars', 'bar 183: -0.00014199999999999863 held, uncovered for ...0.00015299999999999862 held, uncovered for 6 bars', 'bar 187: -0.00015399999999999862 held, uncovered for 7 bars', ...]\nE    +  where ['bar 182: -0.00011299999999999863 held, uncovered for 2 bars', 'bar 183: -0.00014199999999999863 held, uncovered for ...0.00015299999999999862 held, uncovered for 6 bars', 'bar 187: -0.00015399999999999862 held, uncovered for 7 bars', ...] = <function uncovered_streaks at 0x7fe966201da0>(Record(sent=[Sent(bar=172, order_id='ord_TE6KRG0PP9W1KQQSAWJ3FCMS', order_type=<OrderType.MARKET: 'market'>, side=<Sid...ing=0.111686, stop_price=62488.12001492422, was_open=True, seq=13)], closes_rejected=0, closes_expired_with_position=0))",
+    "test_rejections_partials_and_limit_entries_together": "E   AssertionError: ('dead_orders_sent_again', ['bar 182: stop ord_Z451H12PHTR6RGWZCKN3RNZ5 sent again after it was dead', 'bar 198: stop ...1S3433FCA1 sent again after it was dead', 'bar 199: market ord_S0Y86FKHWARY71CXSWDMXCNN sent again after it was dead'])\nE   assert not ['bar 182: stop ord_Z451H12PHTR6RGWZCKN3RNZ5 sent again after it was dead', 'bar 198: stop ord_9F70XXPEAWEMYF1S3433FCA...SWDMXCNN sent again after it was dead', 'bar 200: stop ord_9F70XXPEAWEMYF1S3433FCA1 sent again after it was dead', ...]\nE    +  where ['bar 182: stop ord_Z451H12PHTR6RGWZCKN3RNZ5 sent again after it was dead', 'bar 198: stop ord_9F70XXPEAWEMYF1S3433FCA...SWDMXCNN sent again after it was dead', 'bar 200: stop ord_9F70XXPEAWEMYF1S3433FCA1 sent again after it was dead', ...] = <function dead_orders_sent_again at 0x7fe966201d00>(Record(sent=[Sent(bar=172, order_id='ord_KGEAVZ0VZ2SFXDXQFB4SE7Z5', order_type=<OrderType.LIMIT: 'limit'>, side=<Side....ng=0.095614, stop_price=61032.25712373285, was_open=True, seq=137)], closes_rejected=5, closes_expired_with_position=0))"
+   },
+   "resumen": [
+    "5 failed, 2 passed in 13.23s"
+   ]
+  },
+  "L5_obligatoria_1_1_0_dev": {
+   "parte_de": "obligatoria",
+   "cambios": [
+    [
+     "packages/tia/src/tia/backtest/engine.py",
+     "ENGINE_VERSION = \"1.1.0\"",
+     "ENGINE_VERSION = \"1.1.0-dev\""
+    ]
+   ],
+   "esperado": "falla",
+   "razon_esperada": {
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "not a dotted number"
+   },
+   "por_que": "ilegible: falla cerrado",
+   "veredicto": "OK (detectado, razón correcta)",
+   "rc": 1,
+   "resultados": {
+    "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+    "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED",
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "FAILED",
+    "test_the_stop_in_the_book_follows_the_leg": "FAILED",
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "FAILED",
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "FAILED",
+    "test_rejections_partials_and_limit_entries_together": "FAILED"
+   },
+   "omitidas": 0,
+   "aserciones": {
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "E   AssertionError: engine_version '1.1.0-dev' is not a dotted number: no promise can be read from it",
+    "test_the_stop_in_the_book_follows_the_leg": "E   AssertionError: engine_version '1.1.0-dev' is not a dotted number: no promise can be read from it",
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "E   AssertionError: engine_version '1.1.0-dev' is not a dotted number: no promise can be read from it",
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "E   AssertionError: engine_version '1.1.0-dev' is not a dotted number: no promise can be read from it",
+    "test_rejections_partials_and_limit_entries_together": "E   AssertionError: engine_version '1.1.0-dev' is not a dotted number: no promise can be read from it"
+   },
+   "resumen": [
+    "5 failed, 2 passed in 13.14s"
+   ]
+  },
+  "L6_02v3_sin_01_1_1": {
+   "parte_de": "solo02v3",
+   "cambios": [
+    [
+     "packages/tia/src/tia/backtest/engine.py",
+     "ENGINE_VERSION = \"1.1.0\"",
+     "ENGINE_VERSION = \"1.1\""
+    ]
+   ],
+   "esperado": "falla",
+   "razon_esperada": {
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "sent again after it was dead"
+   },
+   "por_que": "forma corta = 1.1.0",
+   "veredicto": "VIVO",
+   "rc": 0,
+   "resultados": {
+    "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+    "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED"
+   },
+   "omitidas": 5,
+   "aserciones": {},
+   "resumen": [
+    "2 passed, 5 skipped in 13.10s"
+   ]
+  },
+  "L7_obligatoria_1_1": {
+   "parte_de": "obligatoria",
+   "cambios": [
+    [
+     "packages/tia/src/tia/backtest/engine.py",
+     "ENGINE_VERSION = \"1.1.0\"",
+     "ENGINE_VERSION = \"1.1\""
+    ]
+   ],
+   "esperado": "pasa",
+   "razon_esperada": {},
+   "por_que": "forma corta = 1.1.0",
+   "veredicto": "MAL",
+   "rc": 0,
+   "resultados": {
+    "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+    "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED"
+   },
+   "omitidas": 5,
+   "aserciones": {},
+   "resumen": [
+    "2 passed, 5 skipped in 13.36s"
+   ]
+  },
+  "L8_obligatoria_v1_1_0": {
+   "parte_de": "obligatoria",
+   "cambios": [
+    [
+     "packages/tia/src/tia/backtest/engine.py",
+     "ENGINE_VERSION = \"1.1.0\"",
+     "ENGINE_VERSION = \"v1.1.0\""
+    ]
+   ],
+   "esperado": "falla",
+   "razon_esperada": {
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "not a dotted number"
+   },
+   "por_que": "prefijo v: ilegible",
+   "veredicto": "OK (detectado, razón correcta)",
+   "rc": 1,
+   "resultados": {
+    "test_the_checks_pass_a_clean_record_and_catch_each_defect": "PASSED",
+    "test_a_version_that_is_not_a_number_cannot_escape_the_guard": "PASSED",
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "FAILED",
+    "test_the_stop_in_the_book_follows_the_leg": "FAILED",
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "FAILED",
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "FAILED",
+    "test_rejections_partials_and_limit_entries_together": "FAILED"
+   },
+   "omitidas": 0,
+   "aserciones": {
+    "test_a_rejected_close_is_sent_again_as_a_new_order_and_closes": "E   AssertionError: engine_version 'v1.1.0' is not a dotted number: no promise can be read from it",
+    "test_the_stop_in_the_book_follows_the_leg": "E   AssertionError: engine_version 'v1.1.0' is not a dotted number: no promise can be read from it",
+    "test_partial_fills_never_add_to_a_closing_position_or_reopen_one": "E   AssertionError: engine_version 'v1.1.0' is not a dotted number: no promise can be read from it",
+    "test_a_close_that_ends_with_position_left_is_followed_by_another": "E   AssertionError: engine_version 'v1.1.0' is not a dotted number: no promise can be read from it",
+    "test_rejections_partials_and_limit_entries_together": "E   AssertionError: engine_version 'v1.1.0' is not a dotted number: no promise can be read from it"
+   },
+   "resumen": [
+    "5 failed, 2 passed in 13.51s"
+   ]
+  }
+ }
+}

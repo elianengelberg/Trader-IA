@@ -1,0 +1,28 @@
+{
+ "paginas": 8028,
+ "cuerpo_identificado": 7099,
+ "por_tipo": {
+  "exclusion": 112,
+  "correccion": 0,
+  "renombre": 164,
+  "listado": 853,
+  "otro": 6899
+ },
+ "exclusiones_filas_par": 161,
+ "exclusiones_ambiguas": 119,
+ "listados_pares_usdt": 511,
+ "renombres": 164,
+ "correcciones": 0,
+ "paginas_por_anio_publicacion": {
+  "2017": 651,
+  "2018": 610,
+  "2019": 958,
+  "2020": 1671,
+  "2021": 2079,
+  "2022": 1180,
+  "2023": 604,
+  "2024": 135,
+  "2025": 1,
+  "sin_": 139
+ }
+}

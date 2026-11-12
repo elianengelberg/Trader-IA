@@ -1,0 +1,5032 @@
+{
+ "paginas_sin_saludo": 1636,
+ "pares_con_par_usdt_en_panel": 117,
+ "pares": [
+  {
+   "viejo": "ADXOLD",
+   "nuevo": "ADX",
+   "viejo_usdt_en_panel": false,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "1 ADXOLD = 1 ADX",
+    "1 ADXOLD : 1 ADX"
+   ],
+   "fechas_en_cuerpos": [
+    "2022-01-20",
+    "2022-03-04",
+    "2022-03-24",
+    "2022-04-12",
+    "2022-04-13",
+    "2022-04-29",
+    "2022-05-05",
+    "2022-05-17",
+    "2022-05-25",
+    "2022-05-31",
+    "2022-06-03",
+    "2022-06-13",
+    "2022-07-08",
+    "2022-07-12",
+    "2022-07-17",
+    "2022-07-20"
+   ],
+   "capturas": [
+    "20201023",
+    "20220808"
+   ],
+   "archivos": [
+    "bn_21cd9be5f8d4449ebf6fd063df3162eb_f3012d181c43.json",
+    "bn_260d553938db4d568d7d58414fa317fa_7e314ae2c509.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": null,
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2021-10-29",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "AGI",
+   "nuevo": "AGIX",
+   "viejo_usdt_en_panel": false,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "1 AGI = 1 AGIX"
+   ],
+   "fechas_en_cuerpos": [
+    "2021-05-28",
+    "2021-06-02"
+   ],
+   "capturas": [
+    "20211021"
+   ],
+   "archivos": [
+    "bn_54cc6f779ec2419ea6b94d88769a517f_e8784911a2b7.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": null,
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2023-02-17",
+      "2024-06-30"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "ANTOLD",
+   "nuevo": "ANT",
+   "viejo_usdt_en_panel": false,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "1 ANTOLD : 1 ANT"
+   ],
+   "fechas_en_cuerpos": [
+    "2022-01-20",
+    "2022-03-04",
+    "2022-03-24",
+    "2022-04-12",
+    "2022-04-13",
+    "2022-04-29",
+    "2022-05-05",
+    "2022-05-17",
+    "2022-05-25",
+    "2022-05-31",
+    "2022-06-03",
+    "2022-06-13",
+    "2022-07-08",
+    "2022-07-12",
+    "2022-07-17",
+    "2022-07-20"
+   ],
+   "capturas": [
+    "20220808"
+   ],
+   "archivos": [
+    "bn_260d553938db4d568d7d58414fa317fa_7e314ae2c509.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": null,
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2020-08-13",
+      "2024-02-19"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "ANY",
+   "nuevo": "MULTI",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "(ANY) token migration and renaming to Multichain (MULTI)",
+    "1 ANY = 1 MULTI",
+    "(ANY) token will be renamed to Multichain (MULTI)"
+   ],
+   "fechas_en_cuerpos": [
+    "2022-03-25",
+    "2022-03-29",
+    "2022-03-30",
+    "2022-04-06"
+   ],
+   "capturas": [
+    "20221001",
+    "20221130"
+   ],
+   "archivos": [
+    "bn_cd39354caeee4361badf9a57e92cd5da_8104c4fb75cc.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-any_0d963f079737.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2021-12-04",
+      "2022-03-29"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2022-04-06",
+      "2024-02-19"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "AXSOLD",
+   "nuevo": "AXS",
+   "viejo_usdt_en_panel": false,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "1 AXSOLD : 1 AXS"
+   ],
+   "fechas_en_cuerpos": [
+    "2022-01-20",
+    "2022-03-04",
+    "2022-03-24",
+    "2022-04-12",
+    "2022-04-13",
+    "2022-04-29",
+    "2022-05-05",
+    "2022-05-17",
+    "2022-05-25",
+    "2022-05-31",
+    "2022-06-03",
+    "2022-06-13",
+    "2022-07-08",
+    "2022-07-12",
+    "2022-07-17",
+    "2022-07-20"
+   ],
+   "capturas": [
+    "20220808"
+   ],
+   "archivos": [
+    "bn_260d553938db4d568d7d58414fa317fa_7e314ae2c509.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": null,
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2020-11-04",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": [
+     [
+      "2026-02-09",
+      "2026-02-11",
+      1
+     ]
+    ]
+   }
+  },
+  {
+   "viejo": "BCC",
+   "nuevo": "BCHABC",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "1 BCC = 1 BCHABC"
+   ],
+   "fechas_en_cuerpos": [
+    "2018-11-15",
+    "2018-11-16"
+   ],
+   "capturas": [
+    "20181210",
+    "20210517",
+    "20230601"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_360019875411_1a77d5c2148e.json",
+    "url_https___www.binance.com_en_support_announcement_binance-has-distributed-bitc_332f495b36dc.json",
+    "zd_360019875411_885ab7a1c7c7.json"
+   ],
+   "n_archivos": 3,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2017-11-11",
+      "2018-11-14"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2018-11-16",
+      "2019-11-27"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "BCC",
+   "nuevo": "BCHSV",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "1 BCC = 1 BCHSV"
+   ],
+   "fechas_en_cuerpos": [
+    "2018-11-15",
+    "2018-11-16"
+   ],
+   "capturas": [
+    "20181210",
+    "20210517",
+    "20230601"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_360019875411_1a77d5c2148e.json",
+    "url_https___www.binance.com_en_support_announcement_binance-has-distributed-bitc_332f495b36dc.json",
+    "zd_360019875411_885ab7a1c7c7.json"
+   ],
+   "n_archivos": 3,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2017-11-11",
+      "2018-11-14"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2018-11-16",
+      "2019-04-21"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "BCH",
+   "nuevo": "BCHA",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": false,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "1 BCH = 1 BCHA"
+   ],
+   "fechas_en_cuerpos": [
+    "2020-11-15",
+    "2020-11-18"
+   ],
+   "capturas": [
+    "20201129"
+   ],
+   "archivos": [
+    "bn_6d0b3851f6934ec58d4f87ac37fd19a5_f81c7651ee94.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2019-11-28",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": null
+  },
+  {
+   "viejo": "BCHA",
+   "nuevo": "XEC",
+   "viejo_usdt_en_panel": false,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1000000.0
+   ],
+   "frases": [
+    "(BCHA) rebrand to eCash (XEC)",
+    "1 BCHA = 1,000,000 XEC",
+    "BCHA coins will be rebranded to XEC"
+   ],
+   "fechas_en_cuerpos": [
+    "2021-08-02",
+    "2021-08-06"
+   ],
+   "capturas": [
+    "20210921",
+    "20211018",
+    "20220814",
+    "20221207"
+   ],
+   "archivos": [
+    "bn_10da0df3e6f84c42977d0864d6d2d000_69fde8bfec9a.json",
+    "bn_55803feab78342f596c1eca9f26f3d71_b3968efe47df.json",
+    "bn_94ce0aa94d984c38b1c2eee4f253a024_5cf90675b623.json",
+    "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-bi_8d73cfa23aa8.json"
+   ],
+   "n_archivos": 4,
+   "actividad_viejo": null,
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2021-09-03",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "BCHABC",
+   "nuevo": "BCH",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [],
+   "frases": [
+    "ticker of BCHABC to BCH"
+   ],
+   "fechas_en_cuerpos": [
+    "2019-11-28"
+   ],
+   "capturas": [
+    "20220119",
+    "20220703"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_360037219511_0baafa92df92.json",
+    "zd_360037219511_27e27ad63185.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2018-11-16",
+      "2019-11-27"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2019-11-28",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "BEAR",
+   "nuevo": "BUSD",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    11.16
+   ],
+   "frases": [
+    "1 BEAR = 11.16 BUSD"
+   ],
+   "fechas_en_cuerpos": [
+    "2020-03-31"
+   ],
+   "capturas": [
+    "20200605",
+    "20210805"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_360041278332_63b96139b92e.json",
+    "zd_360041278332_d330c39364d2.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2020-01-17",
+      "2020-03-30"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2019-09-20",
+      "2023-12-14"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "BNB",
+   "nuevo": "USDT",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": false,
+   "relaciones_nuevo_por_viejo": [
+    272.1225,
+    549.9491
+   ],
+   "frases": [
+    "1 BNB = 272.1225 USDT",
+    "1 BNB = 549.9491 USDT"
+   ],
+   "fechas_en_cuerpos": [
+    "2021-03-06",
+    "2021-03-20",
+    "2021-03-29",
+    "2021-04-02",
+    "2021-04-15"
+   ],
+   "capturas": [
+    "20210518",
+    "20210926",
+    "20221208"
+   ],
+   "archivos": [
+    "bn_21978a1ea8fc4fec90093c146bb1cbc3_59183a041b78.json",
+    "bn_aa07e78e18be4fc0a3135e6cf51a00f1_bd404cba510d.json",
+    "url_https___www.binance.com_en_support_announcement_binance-concludes-3-promotio_94891a6da3b5.json"
+   ],
+   "n_archivos": 3,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2017-11-06",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": null
+  },
+  {
+   "viejo": "BNBBEAR",
+   "nuevo": "BUSD",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    58.61
+   ],
+   "frases": [
+    "1 BNBBEAR = 58.61 BUSD"
+   ],
+   "fechas_en_cuerpos": [
+    "2020-03-31"
+   ],
+   "capturas": [
+    "20200605",
+    "20210805"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_360041278332_63b96139b92e.json",
+    "zd_360041278332_d330c39364d2.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2020-03-11",
+      "2020-03-30"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2019-09-20",
+      "2023-12-14"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "BNBBULL",
+   "nuevo": "BUSD",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    57.21
+   ],
+   "frases": [
+    "1 BNBBULL = 57.21 BUSD"
+   ],
+   "fechas_en_cuerpos": [
+    "2020-03-31"
+   ],
+   "capturas": [
+    "20200605",
+    "20210805"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_360041278332_63b96139b92e.json",
+    "zd_360041278332_d330c39364d2.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2020-03-11",
+      "2020-03-30"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2019-09-20",
+      "2023-12-14"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "BNX",
+   "nuevo": "BNX",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    100.0
+   ],
+   "frases": [
+    "1 old BNX = 100 new BNX"
+   ],
+   "fechas_en_cuerpos": [
+    "2023-02-10",
+    "2023-02-11",
+    "2023-02-12",
+    "2023-02-13",
+    "2023-02-14",
+    "2023-02-15",
+    "2023-02-16",
+    "2023-02-24"
+   ],
+   "capturas": [
+    "20230609"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-bin_8c6a897856c8.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2021-11-04",
+      "2025-03-17"
+     ]
+    ],
+    "cortes": [
+     [
+      "2023-02-15",
+      "2023-02-22",
+      6
+     ]
+    ]
+   },
+   "actividad_nuevo": null
+  },
+  {
+   "viejo": "BNX",
+   "nuevo": "BNXOLD",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": false,
+   "relaciones_nuevo_por_viejo": [],
+   "frases": [
+    "old BNX token has assumed BNXOLD"
+   ],
+   "fechas_en_cuerpos": [],
+   "capturas": [
+    "20230603"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-bi_cb114013aaba.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2021-11-04",
+      "2025-03-17"
+     ]
+    ],
+    "cortes": [
+     [
+      "2023-02-15",
+      "2023-02-22",
+      6
+     ]
+    ]
+   },
+   "actividad_nuevo": null
+  },
+  {
+   "viejo": "BNXOLD",
+   "nuevo": "BNX",
+   "viejo_usdt_en_panel": false,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    100.0
+   ],
+   "frases": [
+    "1 BNXOLD = 100 BNX"
+   ],
+   "fechas_en_cuerpos": [],
+   "capturas": [
+    "20230603"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-bi_cb114013aaba.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": null,
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2021-11-04",
+      "2025-03-17"
+     ]
+    ],
+    "cortes": [
+     [
+      "2023-02-15",
+      "2023-02-22",
+      6
+     ]
+    ]
+   }
+  },
+  {
+   "viejo": "BOT",
+   "nuevo": "AUCTION",
+   "viejo_usdt_en_panel": false,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    100.0
+   ],
+   "frases": [
+    "1 BOT = 100 AUCTION",
+    "1 BOT : 100 AUCTION"
+   ],
+   "fechas_en_cuerpos": [
+    "2021-02-21",
+    "2021-02-25",
+    "2022-01-20",
+    "2022-03-04",
+    "2022-03-24",
+    "2022-04-12",
+    "2022-04-13",
+    "2022-04-29",
+    "2022-05-05",
+    "2022-05-17",
+    "2022-05-25",
+    "2022-05-31",
+    "2022-06-03",
+    "2022-06-13",
+    "2022-07-08",
+    "2022-07-12",
+    "2022-07-17",
+    "2022-07-20"
+   ],
+   "capturas": [
+    "20210418",
+    "20220808"
+   ],
+   "archivos": [
+    "bn_15d3ee5164424edab3c604501e794701_169d0a7f185b.json",
+    "bn_260d553938db4d568d7d58414fa317fa_7e314ae2c509.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": null,
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2021-10-29",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "BQX",
+   "nuevo": "VGX",
+   "viejo_usdt_en_panel": false,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "(BQX) token swap to Voyager Token (VGX)",
+    "1 BQX = 1 VGX"
+   ],
+   "fechas_en_cuerpos": [
+    "2021-08-11",
+    "2021-08-13",
+    "2021-08-16",
+    "2021-08-20"
+   ],
+   "capturas": [
+    "20210921"
+   ],
+   "archivos": [
+    "bn_25e17090279543948c8c7d27ab1668d1_3edfdb977d70.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": null,
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2021-11-22",
+      "2024-08-25"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "BTC",
+   "nuevo": "BCD",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": false,
+   "relaciones_nuevo_por_viejo": [
+    10.0
+   ],
+   "frases": [
+    "1 BTC:10 BCD"
+   ],
+   "fechas_en_cuerpos": [
+    "2017-11-24"
+   ],
+   "capturas": [
+    "20171214",
+    "20210729"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_115002998351_809945efa0dd.json",
+    "zd_115002998351_c1f040fe58db.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2017-08-17",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": null
+  },
+  {
+   "viejo": "BTC",
+   "nuevo": "BCX",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": false,
+   "relaciones_nuevo_por_viejo": [
+    10000.0
+   ],
+   "frases": [
+    "1 BTC: 10,000 BCX"
+   ],
+   "fechas_en_cuerpos": [
+    "2017-12-12"
+   ],
+   "capturas": [
+    "20180218",
+    "20210727"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_115003414491_a1bed92705a0.json",
+    "zd_115003414491_2c01d92289a5.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2017-08-17",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": null
+  },
+  {
+   "viejo": "BTC",
+   "nuevo": "SBTC",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": false,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "1 BTC: 1 SBTC"
+   ],
+   "fechas_en_cuerpos": [
+    "2017-12-12"
+   ],
+   "capturas": [
+    "20180218",
+    "20210727"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_115003414491_a1bed92705a0.json",
+    "zd_115003414491_2c01d92289a5.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2017-08-17",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": null
+  },
+  {
+   "viejo": "BTCB",
+   "nuevo": "BTC",
+   "viejo_usdt_en_panel": false,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "1 BTCB = 1 BTC"
+   ],
+   "fechas_en_cuerpos": [
+    "2019-09-27"
+   ],
+   "capturas": [
+    "20191014",
+    "20220120",
+    "20221208"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_360034156752_302a31dcd79b.json",
+    "url_https___www.binance.com_en_support_announcement_binance-upgrades-deposits-an_fd19d5e96e1d.json",
+    "zd_360034156752_65ed2879c5d8.json"
+   ],
+   "n_archivos": 3,
+   "actividad_viejo": null,
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2017-08-17",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "BTS",
+   "nuevo": "NBS",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "1 BTS = 1 NBS"
+   ],
+   "fechas_en_cuerpos": [
+    "2020-09-10",
+    "2020-09-21"
+   ],
+   "capturas": [
+    "20201029",
+    "20210622",
+    "20240718"
+   ],
+   "archivos": [
+    "bn_2c0350951f364ceba624d404d7f917e8_bae8ac4c26d7.json",
+    "bn_e37aa4cc22214958abb7b513ff3e48db_93e985993ac1.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-upc_9052613d8f03.json"
+   ],
+   "n_archivos": 3,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2020-02-06",
+      "2023-12-06"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2020-09-21",
+      "2022-10-23"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "BTT",
+   "nuevo": "BTTC",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1000.0
+   ],
+   "frases": [
+    "1 BTT (Old) = 1,000 BTTC",
+    "old BTT balances and begin the distribution of new BTT, which will be renamed as BTTC"
+   ],
+   "fechas_en_cuerpos": [
+    "2022-01-11",
+    "2022-01-14",
+    "2022-01-17",
+    "2022-01-25"
+   ],
+   "capturas": [
+    "20220120",
+    "20230130"
+   ],
+   "archivos": [
+    "bn_2722e6da4f5141dd9b2fb07b5b1f3f75_372793e0ce0b.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-bit_29500a1b4744.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2019-01-31",
+      "2022-01-16"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2022-01-25",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "BTT",
+   "nuevo": "BTTOLD",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": false,
+   "relaciones_nuevo_por_viejo": [],
+   "frases": [
+    "old BTT tokens will be renamed as BTTOLD"
+   ],
+   "fechas_en_cuerpos": [
+    "2022-01-11",
+    "2022-01-14",
+    "2022-01-17",
+    "2022-01-25"
+   ],
+   "capturas": [
+    "20220120",
+    "20230130"
+   ],
+   "archivos": [
+    "bn_2722e6da4f5141dd9b2fb07b5b1f3f75_372793e0ce0b.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-bit_29500a1b4744.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2019-01-31",
+      "2022-01-16"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": null
+  },
+  {
+   "viejo": "BULL",
+   "nuevo": "BUSD",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1370.28
+   ],
+   "frases": [
+    "1 BULL = 1370.28 BUSD"
+   ],
+   "fechas_en_cuerpos": [
+    "2020-03-31"
+   ],
+   "capturas": [
+    "20200605",
+    "20210805"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_360041278332_63b96139b92e.json",
+    "zd_360041278332_d330c39364d2.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2020-01-17",
+      "2020-03-30"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2019-09-20",
+      "2023-12-14"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "BZRX",
+   "nuevo": "OOKI",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    10.0
+   ],
+   "frases": [
+    "1 BZRX : 10 OOKI",
+    "(BZRX) token swap and redenomination plan to OokiDAO Token (OOKI)",
+    "1 BZRX = 10 OOKI",
+    "(BZRX) token swap and 1:10 redenomination to OokiDAO Token (OOKI)"
+   ],
+   "fechas_en_cuerpos": [
+    "2021-12-16",
+    "2021-12-19",
+    "2021-12-20",
+    "2021-12-24",
+    "2022-01-20",
+    "2022-03-04",
+    "2022-03-24",
+    "2022-04-12",
+    "2022-04-13",
+    "2022-04-29",
+    "2022-05-05",
+    "2022-05-17",
+    "2022-05-25",
+    "2022-05-31",
+    "2022-06-03",
+    "2022-06-13",
+    "2022-07-08",
+    "2022-07-12",
+    "2022-07-17",
+    "2022-07-20"
+   ],
+   "capturas": [
+    "20220525",
+    "20220529",
+    "20220808"
+   ],
+   "archivos": [
+    "bn_260d553938db4d568d7d58414fa317fa_7e314ae2c509.json",
+    "bn_dff27dc6bcbb432c902bcbea5e24ddfa_117538216109.json",
+    "bn_f97738a409ca40fbb7fb4e7740e5cd00_ac0588227028.json"
+   ],
+   "n_archivos": 3,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2020-08-31",
+      "2021-12-19"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2021-12-24",
+      "2024-11-05"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "CBK",
+   "nuevo": "MBL",
+   "viejo_usdt_en_panel": false,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    35000.0
+   ],
+   "frases": [
+    "1 CBK = 35,000 MBL"
+   ],
+   "fechas_en_cuerpos": [
+    "2020-12-23"
+   ],
+   "capturas": [
+    "20210618",
+    "20230331"
+   ],
+   "archivos": [
+    "bn_c8d8534b4b7a4d73a959dc3ff39af30c_d8e6908e840d.json",
+    "url_https___www.binance.com_en_support_announcement_cbk-distribution-is-now-comp_845f8212ae99.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": null,
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2020-02-21",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "CDT",
+   "nuevo": "SSV",
+   "viejo_usdt_en_panel": false,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    0.01
+   ],
+   "frases": [
+    "100 CDT : 1 SSV",
+    "100 CDT = 1 SSV",
+    "CDT tokens will be renamed as SSV"
+   ],
+   "fechas_en_cuerpos": [
+    "2021-10-18",
+    "2021-10-22",
+    "2022-01-20",
+    "2022-03-04",
+    "2022-03-24",
+    "2022-04-12",
+    "2022-04-13",
+    "2022-04-29",
+    "2022-05-05",
+    "2022-05-17",
+    "2022-05-25",
+    "2022-05-31",
+    "2022-06-03",
+    "2022-06-13",
+    "2022-07-08",
+    "2022-07-12",
+    "2022-07-17",
+    "2022-07-20"
+   ],
+   "capturas": [
+    "20211026",
+    "20220808"
+   ],
+   "archivos": [
+    "bn_260d553938db4d568d7d58414fa317fa_7e314ae2c509.json",
+    "bn_96e8866829784919a739c1855d21ef76_945ec7c93fae.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": null,
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2023-02-24",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "CHZ",
+   "nuevo": "CHZ",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [],
+   "frases": [
+    "ratio of 1:1 [Please note: All BEP2 standard Chiliz (CHZ) tokens will be swapped to the CAP20 standard at a ratio of 1:1 .]"
+   ],
+   "fechas_en_cuerpos": [],
+   "capturas": [
+    "20240914"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-chi_408142978a59.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2019-09-06",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": null
+  },
+  {
+   "viejo": "COCOS",
+   "nuevo": "COMBO",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "(COCOS) token swap and rebranding plan to COMBO (COMBO)",
+    "1 COCOS = 1 COMBO"
+   ],
+   "fechas_en_cuerpos": [],
+   "capturas": [
+    "20230927"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-co_4886d9ba7798.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2019-08-21",
+      "2023-05-28"
+     ]
+    ],
+    "cortes": [
+     [
+      "2021-01-18",
+      "2021-01-23",
+      4
+     ]
+    ]
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2023-06-02",
+      "2025-03-27"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "DATA",
+   "nuevo": "XDATA",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": false,
+   "relaciones_nuevo_por_viejo": [],
+   "frases": [
+    "old DATA tokens deposited will be renamed as XDATA"
+   ],
+   "fechas_en_cuerpos": [
+    "2021-08-30"
+   ],
+   "capturas": [
+    "20211021",
+    "20211028",
+    "20230322",
+    "20230603"
+   ],
+   "archivos": [
+    "bn_c918076ae8a54c0ab1a80a58dbf44428_08d67da48c6c.json",
+    "bn_fbf9fd008da0499cadcbe6824bf137ac_a3b6d97861d4.json",
+    "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-st_99ed97ae4f79.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-str_1e58458cb980.json"
+   ],
+   "n_archivos": 4,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2020-04-07",
+      "2026-02-12"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": null
+  },
+  {
+   "viejo": "DGD",
+   "nuevo": "ETH",
+   "viejo_usdt_en_panel": false,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    0.193054178
+   ],
+   "frases": [
+    "1 DGD = 0.193054178 ETH"
+   ],
+   "fechas_en_cuerpos": [
+    "2020-03-27",
+    "2020-03-28",
+    "2020-04-04"
+   ],
+   "capturas": [
+    "20200331",
+    "20211127"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_360041070072__01f4c3c23422.json",
+    "zd_360041070072_30b2038e444f.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": null,
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2017-08-17",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "EDO",
+   "nuevo": "PNT",
+   "viejo_usdt_en_panel": false,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "1 EDO = 1 PNT"
+   ],
+   "fechas_en_cuerpos": [
+    "2020-06-18",
+    "2020-06-22"
+   ],
+   "capturas": [
+    "20211017"
+   ],
+   "archivos": [
+    "bn_4a5f8ba82c1c4e4fa10235bf2a48a666_b71f2285a915.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": null,
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2020-06-22",
+      "2024-04-02"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "ENG",
+   "nuevo": "SCRT",
+   "viejo_usdt_en_panel": false,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "(ENG) mainnet swap to Secret Network (SCRT)",
+    "1 ENG : 1 SCRT",
+    "1 ENG = 1 SCRT"
+   ],
+   "fechas_en_cuerpos": [
+    "2020-09-27",
+    "2020-09-30",
+    "2022-01-20",
+    "2022-03-04",
+    "2022-03-24",
+    "2022-04-12",
+    "2022-04-13",
+    "2022-04-29",
+    "2022-05-05",
+    "2022-05-17",
+    "2022-05-25",
+    "2022-05-31",
+    "2022-06-03",
+    "2022-06-13",
+    "2022-07-08",
+    "2022-07-12",
+    "2022-07-17",
+    "2022-07-20"
+   ],
+   "capturas": [
+    "20210225",
+    "20210625",
+    "20220808",
+    "20230129",
+    "20230530"
+   ],
+   "archivos": [
+    "bn_08082b3cbb874a23bd0b21aedae24852_2b8fb95d680a.json",
+    "bn_260d553938db4d568d7d58414fa317fa_7e314ae2c509.json",
+    "bn_ab16b0fedc734c8e83bf0a5ba60cf024_f428834b0c88.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-begin-the-swap-_7a9abb731311.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-eni_2915a9a32ae6.json"
+   ],
+   "n_archivos": 5,
+   "actividad_viejo": null,
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2022-01-21",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "EOS",
+   "nuevo": "ADD",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": false,
+   "relaciones_nuevo_por_viejo": [
+    0.5
+   ],
+   "frases": [
+    "2 EOS : 1 ADD"
+   ],
+   "fechas_en_cuerpos": [
+    "2018-06-02"
+   ],
+   "capturas": [
+    "20180717",
+    "20210621"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_360006657132_60ccfa700eb6.json",
+    "zd_360006657132_0c17d4567b46.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2018-05-28",
+      "2025-05-25"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": null
+  },
+  {
+   "viejo": "EOS",
+   "nuevo": "ATD",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": false,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "1 EOS : 1 ATD"
+   ],
+   "fechas_en_cuerpos": [
+    "2018-06-02"
+   ],
+   "capturas": [
+    "20180717"
+   ],
+   "archivos": [
+    "zd_360006697812_552d62271511.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2018-05-28",
+      "2025-05-25"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": null
+  },
+  {
+   "viejo": "EOS",
+   "nuevo": "EON",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": false,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "1 EOS:1 EON"
+   ],
+   "fechas_en_cuerpos": [
+    "2018-06-01"
+   ],
+   "capturas": [
+    "20180722",
+    "20211206"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_360004910291_70648f166f55.json",
+    "zd_360004910291_33295a8c730f.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2018-05-28",
+      "2025-05-25"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": null
+  },
+  {
+   "viejo": "EOS",
+   "nuevo": "EOP",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": false,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "1 EOS : 1 EOP"
+   ],
+   "fechas_en_cuerpos": [
+    "2018-06-02"
+   ],
+   "capturas": [
+    "20180717",
+    "20210624"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_360006705992_a527afe0183e.json",
+    "zd_360006705992_bcf6fa601685.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2018-05-28",
+      "2025-05-25"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": null
+  },
+  {
+   "viejo": "EOS",
+   "nuevo": "IQ",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    5.1
+   ],
+   "frases": [
+    "1 EOS : 5.1 IQ"
+   ],
+   "fechas_en_cuerpos": [
+    "2018-06-02"
+   ],
+   "capturas": [
+    "20180821",
+    "20211018"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_360007162232_d23429afa84c.json",
+    "zd_360007162232_da382df6ef01.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2018-05-28",
+      "2025-05-25"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2023-09-22",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "EOSBEAR",
+   "nuevo": "BUSD",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    30.21
+   ],
+   "frases": [
+    "1 EOSBEAR = 30.21 BUSD"
+   ],
+   "fechas_en_cuerpos": [
+    "2020-03-31"
+   ],
+   "capturas": [
+    "20200605",
+    "20210805"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_360041278332_63b96139b92e.json",
+    "zd_360041278332_d330c39364d2.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2020-02-12",
+      "2020-03-30"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2019-09-20",
+      "2023-12-14"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "EOSBULL",
+   "nuevo": "BUSD",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    3.85
+   ],
+   "frases": [
+    "1 EOSBULL = 3.85 BUSD"
+   ],
+   "fechas_en_cuerpos": [
+    "2020-03-31"
+   ],
+   "capturas": [
+    "20200605",
+    "20210805"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_360041278332_63b96139b92e.json",
+    "zd_360041278332_d330c39364d2.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2020-02-12",
+      "2020-03-30"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2019-09-20",
+      "2023-12-14"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "EPS",
+   "nuevo": "EPX",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    88.0
+   ],
+   "frases": [
+    "1 EPS = 88 EPX",
+    "ticker of EPS will be updated to EPX"
+   ],
+   "fechas_en_cuerpos": [
+    "2022-05-03",
+    "2022-05-06",
+    "2022-05-09",
+    "2022-05-18"
+   ],
+   "capturas": [
+    "20220707",
+    "20220819"
+   ],
+   "archivos": [
+    "bn_bab533fdba1e4b2ba21053a7668c2865_ce3a108df373.json",
+    "bn_cf9526489aa041508f4cd57612f34119_c6ec648a669e.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2021-04-02",
+      "2022-05-08"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2022-05-23",
+      "2024-08-25"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "ERD",
+   "nuevo": "EGLD",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    0.001
+   ],
+   "frases": [
+    "1000 ERD = 1 EGLD",
+    "1,000 ERD = 1 EGLD",
+    "1,000 ERD : 1 EGLD",
+    "(ERD) mainnet and token swap to Elrond Gold (EGLD)"
+   ],
+   "fechas_en_cuerpos": [
+    "2020-08-30",
+    "2020-08-31",
+    "2020-09-03",
+    "2022-01-20",
+    "2022-03-04",
+    "2022-03-24",
+    "2022-04-12",
+    "2022-04-13",
+    "2022-04-29",
+    "2022-05-05",
+    "2022-05-17",
+    "2022-05-25",
+    "2022-05-31",
+    "2022-06-03",
+    "2022-06-13",
+    "2022-07-08",
+    "2022-07-12",
+    "2022-07-17",
+    "2022-07-20"
+   ],
+   "capturas": [
+    "20201023",
+    "20210724",
+    "20211025",
+    "20220808",
+    "20230129",
+    "20230530"
+   ],
+   "archivos": [
+    "bn_21cd9be5f8d4449ebf6fd063df3162eb_f3012d181c43.json",
+    "bn_24feffc4fccf446f9c97fe527cf379be_5370e6ef7591.json",
+    "bn_260d553938db4d568d7d58414fa317fa_7e314ae2c509.json",
+    "bn_aa864b2d4db24379b606249d0cba87fb_923aec2ca107.json",
+    "url_https___www.binance.com_en_support_announcement_binance-completes-elrond-erd_e9182481ec00.json",
+    "url_https___www.binance.com_en_support_announcement_elrond-erd-mainnet-token-swa_ecd7a353c383.json"
+   ],
+   "n_archivos": 6,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2019-07-04",
+      "2020-08-30"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2020-09-03",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "ETHBEAR",
+   "nuevo": "BUSD",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    12.2
+   ],
+   "frases": [
+    "1 ETHBEAR = 12.20 BUSD"
+   ],
+   "fechas_en_cuerpos": [
+    "2020-03-31"
+   ],
+   "capturas": [
+    "20200605",
+    "20210805"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_360041278332_63b96139b92e.json",
+    "zd_360041278332_d330c39364d2.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2020-02-03",
+      "2020-03-30"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2019-09-20",
+      "2023-12-14"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "ETHBULL",
+   "nuevo": "BUSD",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    79.18
+   ],
+   "frases": [
+    "1 ETHBULL = 79.18 BUSD"
+   ],
+   "fechas_en_cuerpos": [
+    "2020-03-31"
+   ],
+   "capturas": [
+    "20200605",
+    "20210805"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_360041278332_63b96139b92e.json",
+    "zd_360041278332_d330c39364d2.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2020-02-03",
+      "2020-03-30"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2019-09-20",
+      "2023-12-14"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "GNT",
+   "nuevo": "GLM",
+   "viejo_usdt_en_panel": false,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "1 GNT : 1 GLM",
+    "1 GNT = 1 GLM"
+   ],
+   "fechas_en_cuerpos": [
+    "2020-12-07",
+    "2020-12-10",
+    "2022-01-20",
+    "2022-03-04",
+    "2022-03-24",
+    "2022-04-12",
+    "2022-04-13",
+    "2022-04-29",
+    "2022-05-05",
+    "2022-05-17",
+    "2022-05-25",
+    "2022-05-31",
+    "2022-06-03",
+    "2022-06-13",
+    "2022-07-08",
+    "2022-07-12",
+    "2022-07-17",
+    "2022-07-20"
+   ],
+   "capturas": [
+    "20210302",
+    "20220808",
+    "20230605"
+   ],
+   "archivos": [
+    "bn_260d553938db4d568d7d58414fa317fa_7e314ae2c509.json",
+    "bn_a41ae46cd3ef4a76b502730e6e5baaee_e1efd9170c44.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-golem-g_d1bdd162cd6f.json"
+   ],
+   "n_archivos": 3,
+   "actividad_viejo": null,
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2023-03-17",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "GTO",
+   "nuevo": "GFT",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "(GTO) token swap to Gifto (GFT)",
+    "1 GTO = 1 GFT"
+   ],
+   "fechas_en_cuerpos": [
+    "2023-01-18",
+    "2023-01-20",
+    "2023-01-30",
+    "2023-02-08"
+   ],
+   "capturas": [
+    "20230207",
+    "20230321"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-gi_680cabd50dfb.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-gif_a146802a7fbd.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2019-07-01",
+      "2022-11-27"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2023-09-22",
+      "2024-12-02"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "GXS",
+   "nuevo": "REI",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    10.0
+   ],
+   "frases": [
+    "(GXS) mainnet swap and redenomination plan to REI Network (REI)",
+    "1 GXS = 10 REI",
+    "(GXS) mainnet token swap and redenomination plan to REI Network (REI)"
+   ],
+   "fechas_en_cuerpos": [
+    "2022-04-20",
+    "2022-04-22",
+    "2022-04-25",
+    "2022-05-04"
+   ],
+   "capturas": [
+    "20220701",
+    "20220809"
+   ],
+   "archivos": [
+    "bn_8b47296e01d84df1bddf4db774718d8f_311631e5ff99.json",
+    "bn_bdfb52830f2f4bfcba496f3f92876b5c_ccba14b6e687.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2020-05-13",
+      "2022-04-24"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2022-05-04",
+      "2025-12-16"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "HSR",
+   "nuevo": "HC",
+   "viejo_usdt_en_panel": false,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "(HSR) mainnet swap to HyperCash (HC)",
+    "1 HSR = 1 HC"
+   ],
+   "fechas_en_cuerpos": [
+    "2018-08-06",
+    "2018-08-08",
+    "2018-08-21"
+   ],
+   "capturas": [
+    "20180821",
+    "20180919",
+    "20210728",
+    "20210920"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_360012489731_57fa7c0198bb.json",
+    "url_https___www.binance.com_en_support_announcement_360013954012_e57f758bbece.json",
+    "zd_360012489731_39e0983f21b4.json",
+    "zd_360013954012_92a50442c9cf.json"
+   ],
+   "n_archivos": 4,
+   "actividad_viejo": null,
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2019-09-25",
+      "2020-11-09"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "INJ",
+   "nuevo": "INJ",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [],
+   "frases": [
+    "ratio of 1:1 [The distribution of mainnet Injective Protocol (INJ) tokens was conducted at a ratio of 1:1.]"
+   ],
+   "fechas_en_cuerpos": [],
+   "capturas": [
+    "20220516",
+    "20240617"
+   ],
+   "archivos": [
+    "bn_a8828667d8bf4158aa0f74ab382f1a1a_73730d6b3119.json",
+    "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-ma_47055b0502a7.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2020-10-21",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": null
+  },
+  {
+   "viejo": "KNCL",
+   "nuevo": "KNC",
+   "viejo_usdt_en_panel": false,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "1 KNCL : 1 KNC"
+   ],
+   "fechas_en_cuerpos": [
+    "2022-01-20",
+    "2022-03-04",
+    "2022-03-24",
+    "2022-04-12",
+    "2022-04-13",
+    "2022-04-29",
+    "2022-05-05",
+    "2022-05-17",
+    "2022-05-25",
+    "2022-05-31",
+    "2022-06-03",
+    "2022-06-13",
+    "2022-07-08",
+    "2022-07-12",
+    "2022-07-17",
+    "2022-07-20"
+   ],
+   "capturas": [
+    "20220808"
+   ],
+   "archivos": [
+    "bn_260d553938db4d568d7d58414fa317fa_7e314ae2c509.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": null,
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2020-06-12",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "LEND",
+   "nuevo": "AAVE",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    0.01
+   ],
+   "frases": [
+    "100 LEND = 1 AAVE",
+    "100 LEND : 1 AAVE"
+   ],
+   "fechas_en_cuerpos": [
+    "2020-10-04",
+    "2020-10-10",
+    "2020-10-11",
+    "2020-10-12",
+    "2020-10-15",
+    "2020-10-16",
+    "2022-01-20",
+    "2022-03-04",
+    "2022-03-24",
+    "2022-04-12",
+    "2022-04-13",
+    "2022-04-29",
+    "2022-05-05",
+    "2022-05-17",
+    "2022-05-25",
+    "2022-05-31",
+    "2022-06-03",
+    "2022-06-13",
+    "2022-07-08",
+    "2022-07-12",
+    "2022-07-17",
+    "2022-07-20"
+   ],
+   "capturas": [
+    "20201124",
+    "20220808",
+    "20231002"
+   ],
+   "archivos": [
+    "bn_17595222999545348c8acdd5dc41c00a_7cbc5104a088.json",
+    "bn_260d553938db4d568d7d58414fa317fa_7e314ae2c509.json",
+    "url_https___www.binance.com_en_support_announcement_aave-lend-token-swap-to-aave_130c44d39fe3.json"
+   ],
+   "n_archivos": 3,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2020-05-15",
+      "2020-10-11"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2020-10-15",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "LOOMOLD",
+   "nuevo": "LOOM",
+   "viejo_usdt_en_panel": false,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "1 LOOMOLD : 1 LOOM"
+   ],
+   "fechas_en_cuerpos": [
+    "2022-01-20",
+    "2022-03-04",
+    "2022-03-24",
+    "2022-04-12",
+    "2022-04-13",
+    "2022-04-29",
+    "2022-05-05",
+    "2022-05-17",
+    "2022-05-25",
+    "2022-05-31",
+    "2022-06-03",
+    "2022-06-13",
+    "2022-07-08",
+    "2022-07-12",
+    "2022-07-17",
+    "2022-07-20"
+   ],
+   "capturas": [
+    "20220808"
+   ],
+   "archivos": [
+    "bn_260d553938db4d568d7d58414fa317fa_7e314ae2c509.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": null,
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2023-03-24",
+      "2024-08-25"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "LTOOLD",
+   "nuevo": "LTO",
+   "viejo_usdt_en_panel": false,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "1 LTOOLD : 1 LTO"
+   ],
+   "fechas_en_cuerpos": [
+    "2022-01-20",
+    "2022-03-04",
+    "2022-03-24",
+    "2022-04-12",
+    "2022-04-13",
+    "2022-04-29",
+    "2022-05-05",
+    "2022-05-17",
+    "2022-05-25",
+    "2022-05-31",
+    "2022-06-03",
+    "2022-06-13",
+    "2022-07-08",
+    "2022-07-12",
+    "2022-07-17",
+    "2022-07-20"
+   ],
+   "capturas": [
+    "20220808"
+   ],
+   "archivos": [
+    "bn_260d553938db4d568d7d58414fa317fa_7e314ae2c509.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": null,
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2020-02-07",
+      "2025-07-03"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "LUNA",
+   "nuevo": "LUNA",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.034735071
+   ],
+   "frases": [
+    "1 LUNA (old) = 1.034735071 LUNA"
+   ],
+   "fechas_en_cuerpos": [
+    "2022-05-07",
+    "2022-05-31"
+   ],
+   "capturas": [
+    "20220812",
+    "20230205"
+   ],
+   "archivos": [
+    "bn_9c8abd90df5d4890822e6988f7dc8f0c_da2dc145761b.json",
+    "url_https___www.binance.com_en_support_announcement_binance-staking-completes-fi_8414ccd949d3.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2020-08-21",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": [
+     [
+      "2022-05-12",
+      "2022-05-31",
+      18
+     ]
+    ]
+   },
+   "actividad_nuevo": null
+  },
+  {
+   "viejo": "LUNA",
+   "nuevo": "LUNC",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [],
+   "frases": [
+    "LUNA (old) was renamed as LUNC"
+   ],
+   "fechas_en_cuerpos": [
+    "2022-05-07",
+    "2022-05-31"
+   ],
+   "capturas": [
+    "20220812",
+    "20230205"
+   ],
+   "archivos": [
+    "bn_9c8abd90df5d4890822e6988f7dc8f0c_da2dc145761b.json",
+    "url_https___www.binance.com_en_support_announcement_binance-staking-completes-fi_8414ccd949d3.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2020-08-21",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": [
+     [
+      "2022-05-12",
+      "2022-05-31",
+      18
+     ]
+    ]
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2022-09-09",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "LUNC",
+   "nuevo": "LUNA",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.53079e-05,
+    1.034735071
+   ],
+   "frases": [
+    "1 LUNC = 1.034735071 LUNA",
+    "1 LUNC = 0.000015307927 LUNA"
+   ],
+   "fechas_en_cuerpos": [
+    "2022-05-07",
+    "2022-05-26",
+    "2022-05-31"
+   ],
+   "capturas": [
+    "20220707",
+    "20230324",
+    "20230608"
+   ],
+   "archivos": [
+    "bn_d044a6742e484b77a170111460b0eed3_a6996a0ba9ba.json",
+    "url_https___www.binance.com_en_support_announcement_binance-completes-second-rou_1880de843f14.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-list-terra-2-0-_fbd6b2e339f9.json"
+   ],
+   "n_archivos": 3,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2022-09-09",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2020-08-21",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": [
+     [
+      "2022-05-12",
+      "2022-05-31",
+      18
+     ]
+    ]
+   }
+  },
+  {
+   "viejo": "MATIC",
+   "nuevo": "POL",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "(MATIC) token swap to Polygon (POL)",
+    "MATIC tokens will assume the ticker of POL",
+    "1 MATIC = 1 POL"
+   ],
+   "fechas_en_cuerpos": [
+    "2024-08-20",
+    "2024-09-02",
+    "2024-09-04",
+    "2024-09-05",
+    "2024-09-06",
+    "2024-09-08",
+    "2024-09-09",
+    "2024-09-10",
+    "2024-09-13",
+    "2024-09-20",
+    "2024-09-27",
+    "2024-10-25",
+    "2024-11-29",
+    "2024-12-27"
+   ],
+   "capturas": [
+    "20241009"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-pol_6ce597c88773.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2019-04-26",
+      "2024-09-09"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2024-09-13",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "MC",
+   "nuevo": "BEAMX",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    100.0
+   ],
+   "frases": [
+    "(MC) token swap, redenomination and rebranding to Beam (BEAMX)",
+    "MC token will assume the ticker of BEAMX",
+    "1 MC = 100 BEAMX"
+   ],
+   "fechas_en_cuerpos": [
+    "2023-10-26",
+    "2023-10-31",
+    "2023-11-01",
+    "2023-11-02",
+    "2023-11-07",
+    "2023-11-14"
+   ],
+   "capturas": [
+    "20241104"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-mer_425adfd88510.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2021-12-02",
+      "2023-11-06"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2023-11-14",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "MFT",
+   "nuevo": "HIFI",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    0.01
+   ],
+   "frases": [
+    "(MFT) token swap, redenomination and rebranding plan to Hifi Finance (HIFI)",
+    "1 MFT = 0.01 HIFI"
+   ],
+   "fechas_en_cuerpos": [],
+   "capturas": [
+    "20230322"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-ma_934dcf237cdb.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2019-08-27",
+      "2023-01-02"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2023-01-12",
+      "2025-09-16"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "MTL",
+   "nuevo": "XPR",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": false,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "1 MTL = 1 XPR"
+   ],
+   "fechas_en_cuerpos": [
+    "2020-03-30"
+   ],
+   "capturas": [
+    "20200605",
+    "20210620"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_360041447032_9c5c07166fa4.json",
+    "zd_360041447032_6a7b94af6e95.json",
+    "zd_360041649191_438e4de52fa2.json"
+   ],
+   "n_archivos": 3,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2019-08-23",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": null
+  },
+  {
+   "viejo": "NANO",
+   "nuevo": "XNO",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "ticker of NANO to XNO",
+    "1 NANO = 1 XNO"
+   ],
+   "fechas_en_cuerpos": [
+    "2022-01-19",
+    "2022-01-21",
+    "2022-01-24",
+    "2022-01-28"
+   ],
+   "capturas": [
+    "20220701",
+    "20230603"
+   ],
+   "archivos": [
+    "bn_3dc8f6de281f4781a246a1658a21cb80_e7bc3f27677f.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-update-the-tick_d2499125b809.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2019-04-03",
+      "2022-01-23"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2022-01-28",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "NEO",
+   "nuevo": "ONT",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    0.1
+   ],
+   "frases": [
+    "1 NEO:0.1 ONT"
+   ],
+   "fechas_en_cuerpos": [
+    "2018-03-01"
+   ],
+   "capturas": [
+    "20180318",
+    "20180717",
+    "20211128"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_360001356471_a5cc0eddbb40.json",
+    "zd_360001356471_8f405aabeea2.json",
+    "zd_360006975892_0779983c891c.json"
+   ],
+   "n_archivos": 3,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2017-11-20",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2018-06-08",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "NPXS",
+   "nuevo": "PUNDIX",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    0.001
+   ],
+   "frases": [
+    "1,000 NPXS = 1 PUNDIX"
+   ],
+   "fechas_en_cuerpos": [
+    "2021-04-01",
+    "2021-04-03",
+    "2021-04-05",
+    "2021-04-09"
+   ],
+   "capturas": [
+    "20210514",
+    "20230207"
+   ],
+   "archivos": [
+    "bn_8bdcb060635b491d912247fb00603d4d_821867c8b60e.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-pun_d284dc7b03f5.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2019-08-13",
+      "2021-04-04"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2021-04-09",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "NULS",
+   "nuevo": "NVT",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": false,
+   "relaciones_nuevo_por_viejo": [
+    0.1
+   ],
+   "frases": [
+    "1 NULS = 0.1 NVT"
+   ],
+   "fechas_en_cuerpos": [
+    "2020-07-12"
+   ],
+   "capturas": [
+    "20210920"
+   ],
+   "archivos": [
+    "bn_4f70a20a895f4d979ed1c2052803aa62_de0c013dd53c.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2018-07-23",
+      "2025-04-15"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": null
+  },
+  {
+   "viejo": "OGN",
+   "nuevo": "OGV",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": false,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "1 OGN = 1 OGV"
+   ],
+   "fechas_en_cuerpos": [
+    "2022-07-05",
+    "2022-07-12"
+   ],
+   "capturas": [
+    "20221005",
+    "20221206"
+   ],
+   "archivos": [
+    "bn_7f7464e238fa45409b454912e874cb5f_b63cdd02f18a.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-ori_4d7d31d34599.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2020-01-09",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": null
+  },
+  {
+   "viejo": "OMG",
+   "nuevo": "BOBA",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": false,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "1 OMG = 1 BOBA"
+   ],
+   "fechas_en_cuerpos": [
+    "2021-11-11",
+    "2021-11-12"
+   ],
+   "capturas": [
+    "20211208",
+    "20230205"
+   ],
+   "archivos": [
+    "bn_ccb567574cb14c528b3e5e8e69752c6a_5e8ef6997072.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-bob_bc3bbefab266.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2019-04-03",
+      "2024-06-16"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": null
+  },
+  {
+   "viejo": "OMOLD",
+   "nuevo": "OM",
+   "viejo_usdt_en_panel": false,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "1 OMOLD : 1 OM"
+   ],
+   "fechas_en_cuerpos": [
+    "2022-01-20",
+    "2022-03-04",
+    "2022-03-24",
+    "2022-04-12",
+    "2022-04-13",
+    "2022-04-29",
+    "2022-05-05",
+    "2022-05-17",
+    "2022-05-25",
+    "2022-05-31",
+    "2022-06-03",
+    "2022-06-13",
+    "2022-07-08",
+    "2022-07-12",
+    "2022-07-17",
+    "2022-07-20"
+   ],
+   "capturas": [
+    "20220808"
+   ],
+   "archivos": [
+    "bn_260d553938db4d568d7d58414fa317fa_7e314ae2c509.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": null,
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2021-03-08",
+      "2026-03-01"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "ONX",
+   "nuevo": "ANKR",
+   "viejo_usdt_en_panel": false,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    10000.0
+   ],
+   "frases": [
+    "1 ONX = 10,000 ANKR"
+   ],
+   "fechas_en_cuerpos": [
+    "2020-12-23",
+    "2020-12-24"
+   ],
+   "capturas": [
+    "20210227",
+    "20210509"
+   ],
+   "archivos": [
+    "bn_2127a89b19364e3c97d9bb0c7d1027f3_a2cb4c233b06.json",
+    "bn_be517700a940423c8d88f9947c83e01f_0d4a8a1b930a.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": null,
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2019-07-23",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "PAX",
+   "nuevo": "USDP",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "(PAX) rebrand to Pax Dollar (USDP)",
+    "1 PAX = 1 USDP"
+   ],
+   "fechas_en_cuerpos": [
+    "2021-09-06",
+    "2021-09-10"
+   ],
+   "capturas": [
+    "20211021",
+    "20211026"
+   ],
+   "archivos": [
+    "bn_627ea984daa44ee4a5ac27fe658cc180_39f1ba508d29.json",
+    "bn_c313480177e4457bb1e1b848c88bbf78_5cdfdffc3e32.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2018-10-04",
+      "2021-09-05"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2021-09-10",
+      "2022-09-25"
+     ],
+     [
+      "2023-03-11",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "PERLOLD",
+   "nuevo": "PERL",
+   "viejo_usdt_en_panel": false,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "1 PERLOLD = 1 PERL",
+    "1 PERLOLD : 1 PERL"
+   ],
+   "fechas_en_cuerpos": [
+    "2022-01-20",
+    "2022-03-04",
+    "2022-03-24",
+    "2022-04-12",
+    "2022-04-13",
+    "2022-04-29",
+    "2022-05-05",
+    "2022-05-17",
+    "2022-05-25",
+    "2022-05-31",
+    "2022-06-03",
+    "2022-06-13",
+    "2022-07-08",
+    "2022-07-12",
+    "2022-07-17",
+    "2022-07-20"
+   ],
+   "capturas": [
+    "20201023",
+    "20220808"
+   ],
+   "archivos": [
+    "bn_21cd9be5f8d4449ebf6fd063df3162eb_f3012d181c43.json",
+    "bn_260d553938db4d568d7d58414fa317fa_7e314ae2c509.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": null,
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2019-08-26",
+      "2023-12-06"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "PHB",
+   "nuevo": "PHB",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    0.01
+   ],
+   "frases": [
+    "100 PHB (Old) = 1 PHB"
+   ],
+   "fechas_en_cuerpos": [
+    "2021-11-01",
+    "2021-11-05"
+   ],
+   "capturas": [
+    "20220519"
+   ],
+   "archivos": [
+    "bn_3ff40fefd7b54cfc9f745cce0d9dbd37_ac4f79013fc3.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2022-11-18",
+      "2026-05-26"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": null
+  },
+  {
+   "viejo": "PHBV1",
+   "nuevo": "PHB",
+   "viejo_usdt_en_panel": false,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    0.01
+   ],
+   "frases": [
+    "100 PHBV1 : 1 PHB"
+   ],
+   "fechas_en_cuerpos": [
+    "2022-01-20",
+    "2022-03-04",
+    "2022-03-24",
+    "2022-04-12",
+    "2022-04-13",
+    "2022-04-29",
+    "2022-05-05",
+    "2022-05-17",
+    "2022-05-25",
+    "2022-05-31",
+    "2022-06-03",
+    "2022-06-13",
+    "2022-07-08",
+    "2022-07-12",
+    "2022-07-17",
+    "2022-07-20"
+   ],
+   "capturas": [
+    "20220808"
+   ],
+   "archivos": [
+    "bn_260d553938db4d568d7d58414fa317fa_7e314ae2c509.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": null,
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2022-11-18",
+      "2026-05-26"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "PHX",
+   "nuevo": "PHB",
+   "viejo_usdt_en_panel": false,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "1 PHX = 1 PHB"
+   ],
+   "fechas_en_cuerpos": [
+    "2019-05-22",
+    "2019-05-24"
+   ],
+   "capturas": [
+    "20190626",
+    "20210619"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_360028589091_28647c10b524.json",
+    "zd_360028589091_e1147f6316ab.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": null,
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2022-11-18",
+      "2026-05-26"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "PLA",
+   "nuevo": "PDA",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "(PLA) token swap to PlayDapp (PDA)",
+    "1 PLA = 1 PDA",
+    "PLA tokens will assume the ticker of PDA"
+   ],
+   "fechas_en_cuerpos": [
+    "2024-02-23",
+    "2024-02-26",
+    "2024-03-01"
+   ],
+   "capturas": [
+    "20240528"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-pla_dc497a97c163.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2021-11-23",
+      "2024-02-25"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2024-03-01",
+      "2025-05-01"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "POLY",
+   "nuevo": "POLYX",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "(POLY) mainnet swap and rebranding plan to Polymesh (POLYX)",
+    "1 POLY = 1 POLYX"
+   ],
+   "fechas_en_cuerpos": [
+    "2022-09-28",
+    "2022-10-05",
+    "2022-10-10",
+    "2022-10-17"
+   ],
+   "capturas": [
+    "20221203",
+    "20230606"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-po_e3dd40cfff11.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-pol_070c8129db69.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2021-09-09",
+      "2022-10-09"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2022-10-17",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "PUNDIX",
+   "nuevo": "PURSE",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": false,
+   "relaciones_nuevo_por_viejo": [
+    8.93061
+   ],
+   "frases": [
+    "1 PUNDIX = 8.93061 PURSE"
+   ],
+   "fechas_en_cuerpos": [
+    "2021-06-21",
+    "2021-10-13"
+   ],
+   "capturas": [
+    "20220118",
+    "20230925"
+   ],
+   "archivos": [
+    "bn_4132bfe935cc4930b1a7c2e829492f36_b57c9ee7845f.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-pun_68eb7ff016da.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2021-04-09",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": null
+  },
+  {
+   "viejo": "PYR",
+   "nuevo": "PYR",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "1 PYR (Old) = 1 PYR"
+   ],
+   "fechas_en_cuerpos": [
+    "2021-12-13",
+    "2021-12-23"
+   ],
+   "capturas": [
+    "20220705"
+   ],
+   "archivos": [
+    "bn_d1c4582f164348a1a062aefc5892892a_a42c59be7aa6.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2021-11-26",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": null
+  },
+  {
+   "viejo": "QTUM",
+   "nuevo": "QI",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    0.5
+   ],
+   "frases": [
+    "1 QTUM = 0.5 QI"
+   ],
+   "fechas_en_cuerpos": [
+    "2021-02-12"
+   ],
+   "capturas": [
+    "20210418",
+    "20230323"
+   ],
+   "archivos": [
+    "bn_9ba712cc2d2043bbb28e47e590706c02_7acff2209df8.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-qis_535d013da921.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2018-03-19",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2021-11-15",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "QUICK",
+   "nuevo": "QUICK",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1000.0
+   ],
+   "frases": [
+    "1 old QUICK = 1,000 new QUICK"
+   ],
+   "fechas_en_cuerpos": [
+    "2023-07-11",
+    "2023-07-13",
+    "2023-07-14",
+    "2023-07-17",
+    "2023-07-21"
+   ],
+   "capturas": [
+    "20240222"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-qui_8e8c44b03471.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2021-08-13",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": [
+     [
+      "2023-07-16",
+      "2023-07-21",
+      4
+     ]
+    ]
+   },
+   "actividad_nuevo": null
+  },
+  {
+   "viejo": "RAMP",
+   "nuevo": "LEVER",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    35.0
+   ],
+   "frases": [
+    "(RAMP) token swap, redenomination and rebranding plan to LeverFi (LEVER)",
+    "1 RAMP = 35 LEVER"
+   ],
+   "fechas_en_cuerpos": [
+    "2022-06-29",
+    "2022-07-01",
+    "2022-07-04",
+    "2022-07-13"
+   ],
+   "capturas": [
+    "20220819"
+   ],
+   "archivos": [
+    "bn_0a445bbdac634512886df1bdce74f3da_3631af0d9289.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2021-03-22",
+      "2022-07-03"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2022-07-13",
+      "2025-07-03"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "REP",
+   "nuevo": "REPV2",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": false,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "(REP) smart contract and token swap to Augur (REPV2)",
+    "1 REP = 1 REPV2"
+   ],
+   "fechas_en_cuerpos": [
+    "2020-07-29",
+    "2020-07-30",
+    "2020-08-03"
+   ],
+   "capturas": [
+    "20200808"
+   ],
+   "archivos": [
+    "bn_a480e52438bd44fdb06703abc76ec84c_cbf55c215120.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2020-06-12",
+      "2022-12-21"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": null
+  },
+  {
+   "viejo": "REPV1",
+   "nuevo": "REP",
+   "viejo_usdt_en_panel": false,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "1 REPV1 = 1 REP",
+    "1 REPV1 : 1 REP"
+   ],
+   "fechas_en_cuerpos": [
+    "2022-01-20",
+    "2022-03-04",
+    "2022-03-24",
+    "2022-04-12",
+    "2022-04-13",
+    "2022-04-29",
+    "2022-05-05",
+    "2022-05-17",
+    "2022-05-25",
+    "2022-05-31",
+    "2022-06-03",
+    "2022-06-13",
+    "2022-07-08",
+    "2022-07-12",
+    "2022-07-17",
+    "2022-07-20"
+   ],
+   "capturas": [
+    "20201023",
+    "20220808"
+   ],
+   "archivos": [
+    "bn_21cd9be5f8d4449ebf6fd063df3162eb_f3012d181c43.json",
+    "bn_260d553938db4d568d7d58414fa317fa_7e314ae2c509.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": null,
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2020-06-12",
+      "2022-12-21"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "RGT",
+   "nuevo": "TRIBE",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    26.7
+   ],
+   "frases": [
+    "1 RGT : 26.7 TRIBE"
+   ],
+   "fechas_en_cuerpos": [
+    "2022-01-20",
+    "2022-03-04",
+    "2022-03-24",
+    "2022-04-12",
+    "2022-04-13",
+    "2022-04-29",
+    "2022-05-05",
+    "2022-05-17",
+    "2022-05-25",
+    "2022-05-31",
+    "2022-06-03",
+    "2022-06-13",
+    "2022-07-08",
+    "2022-07-12",
+    "2022-07-17",
+    "2022-07-20"
+   ],
+   "capturas": [
+    "20220808"
+   ],
+   "archivos": [
+    "bn_260d553938db4d568d7d58414fa317fa_7e314ae2c509.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2021-11-05",
+      "2022-03-13"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2021-08-24",
+      "2022-11-27"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "RUNE",
+   "nuevo": "RUNE",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [],
+   "frases": [
+    "ratio of 1:1 [The conversion to mainnet THORChain (RUNE) tokens will be conducted at a ratio of 1:1.]",
+    "ratio of 1:1 [The conversion to mainnet THORChain (RUNE) tokens was conducted at a ratio of 1:1.]"
+   ],
+   "fechas_en_cuerpos": [
+    "2022-06-06"
+   ],
+   "capturas": [
+    "20220929",
+    "20221205",
+    "20240620"
+   ],
+   "archivos": [
+    "bn_ad8d5f890de44ccaaf5b9a67b9e6e71e_49fd1255c700.json",
+    "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-ma_b7c9dc855329.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-mai_4c6d23cc2034.json"
+   ],
+   "n_archivos": 3,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2020-09-04",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": null
+  },
+  {
+   "viejo": "SLPOLD",
+   "nuevo": "SLP",
+   "viejo_usdt_en_panel": false,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "1 SLPOLD : 1 SLP"
+   ],
+   "fechas_en_cuerpos": [
+    "2022-01-20",
+    "2022-03-04",
+    "2022-03-24",
+    "2022-04-12",
+    "2022-04-13",
+    "2022-04-29",
+    "2022-05-05",
+    "2022-05-17",
+    "2022-05-25",
+    "2022-05-31",
+    "2022-06-03",
+    "2022-06-13",
+    "2022-07-08",
+    "2022-07-12",
+    "2022-07-17",
+    "2022-07-20"
+   ],
+   "capturas": [
+    "20220808"
+   ],
+   "archivos": [
+    "bn_260d553938db4d568d7d58414fa317fa_7e314ae2c509.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": null,
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2021-04-30",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "STEEM",
+   "nuevo": "HIVE",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "1 STEEM = 1 HIVE"
+   ],
+   "fechas_en_cuerpos": [
+    "2020-03-20"
+   ],
+   "capturas": [
+    "20200331",
+    "20220703",
+    "20220819"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_360040692692_cf9cfb94690a.json",
+    "url_https___www.binance.com_en_support_announcement_360040957592__a1749df82f00.json",
+    "zd_360040692692_88ecc53fbc91.json",
+    "zd_360040957592_fa7057b1af26.json"
+   ],
+   "n_archivos": 4,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2022-04-22",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2020-04-27",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "STORM",
+   "nuevo": "STMX",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "1 STORM : 1 STMX",
+    "(STORM) smart contract and token swap to StormX (STMX)",
+    "1 STORM = 1 STMX"
+   ],
+   "fechas_en_cuerpos": [
+    "2020-06-07",
+    "2020-06-08",
+    "2020-06-11",
+    "2022-01-20",
+    "2022-03-04",
+    "2022-03-24",
+    "2022-04-12",
+    "2022-04-13",
+    "2022-04-29",
+    "2022-05-05",
+    "2022-05-17",
+    "2022-05-25",
+    "2022-05-31",
+    "2022-06-03",
+    "2022-06-13",
+    "2022-07-08",
+    "2022-07-12",
+    "2022-07-17",
+    "2022-07-20"
+   ],
+   "capturas": [
+    "20200711",
+    "20211207",
+    "20220808"
+   ],
+   "archivos": [
+    "bn_260d553938db4d568d7d58414fa317fa_7e314ae2c509.json",
+    "url_https___www.binance.com_en_support_announcement_360043990532_0dedae609be8.json",
+    "zd_360043990532_a82be0836ca5.json"
+   ],
+   "n_archivos": 3,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2019-08-27",
+      "2020-06-07"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2020-06-11",
+      "2025-02-23"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "STRAT",
+   "nuevo": "STRAX",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "1 STRAT = 1 STRAX"
+   ],
+   "fechas_en_cuerpos": [
+    "2020-11-11",
+    "2020-11-12",
+    "2020-11-18"
+   ],
+   "capturas": [
+    "20201127"
+   ],
+   "archivos": [
+    "bn_1937b7781c5043efa66c07141be3bdc2_e3f3ac372bca.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2020-02-19",
+      "2020-11-11"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2020-11-18",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": [
+     [
+      "2024-03-19",
+      "2024-03-28",
+      8
+     ]
+    ]
+   }
+  },
+  {
+   "viejo": "STRAX",
+   "nuevo": "STRAX",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    10.0
+   ],
+   "frases": [
+    "1 old STRAX = 10 new STRAX"
+   ],
+   "fechas_en_cuerpos": [
+    "2024-03-08",
+    "2024-03-12",
+    "2024-03-15",
+    "2024-03-18",
+    "2024-03-19",
+    "2024-03-20",
+    "2024-03-28"
+   ],
+   "capturas": [
+    "20241011"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-str_b8603784a245.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2020-11-18",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": [
+     [
+      "2024-03-19",
+      "2024-03-28",
+      8
+     ]
+    ]
+   },
+   "actividad_nuevo": null
+  },
+  {
+   "viejo": "SUN",
+   "nuevo": "SUN",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1000.0
+   ],
+   "frases": [
+    "1 SUN (Old) = 1,000 SUN"
+   ],
+   "fechas_en_cuerpos": [
+    "2021-06-09",
+    "2021-06-11",
+    "2021-06-14",
+    "2021-06-18"
+   ],
+   "capturas": [
+    "20210729"
+   ],
+   "archivos": [
+    "bn_f923f2e4056843a9a9b87beb2aaa2f31_e761d45b0dcc.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2020-09-21",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": [
+     [
+      "2021-06-13",
+      "2021-06-18",
+      4
+     ]
+    ]
+   },
+   "actividad_nuevo": null
+  },
+  {
+   "viejo": "SUN",
+   "nuevo": "SUNOLD",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": false,
+   "relaciones_nuevo_por_viejo": [],
+   "frases": [
+    "old SUN tokens will be renamed as SUNOLD"
+   ],
+   "fechas_en_cuerpos": [
+    "2021-06-09",
+    "2021-06-11",
+    "2021-06-14",
+    "2021-06-18"
+   ],
+   "capturas": [
+    "20210729"
+   ],
+   "archivos": [
+    "bn_f923f2e4056843a9a9b87beb2aaa2f31_e761d45b0dcc.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2020-09-21",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": [
+     [
+      "2021-06-13",
+      "2021-06-18",
+      4
+     ]
+    ]
+   },
+   "actividad_nuevo": null
+  },
+  {
+   "viejo": "SUNOLD",
+   "nuevo": "SUN",
+   "viejo_usdt_en_panel": false,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1000.0
+   ],
+   "frases": [
+    "1 SUNOLD : 1,000 SUN"
+   ],
+   "fechas_en_cuerpos": [
+    "2022-01-20",
+    "2022-03-04",
+    "2022-03-24",
+    "2022-04-12",
+    "2022-04-13",
+    "2022-04-29",
+    "2022-05-05",
+    "2022-05-17",
+    "2022-05-25",
+    "2022-05-31",
+    "2022-06-03",
+    "2022-06-13",
+    "2022-07-08",
+    "2022-07-12",
+    "2022-07-17",
+    "2022-07-20"
+   ],
+   "capturas": [
+    "20220808"
+   ],
+   "archivos": [
+    "bn_260d553938db4d568d7d58414fa317fa_7e314ae2c509.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": null,
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2020-09-21",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": [
+     [
+      "2021-06-13",
+      "2021-06-18",
+      4
+     ]
+    ]
+   }
+  },
+  {
+   "viejo": "THETA",
+   "nuevo": "TFUEL",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    5.0
+   ],
+   "frases": [
+    "1 THETA = 5 TFUEL"
+   ],
+   "fechas_en_cuerpos": [
+    "2019-03-12"
+   ],
+   "capturas": [
+    "20190323",
+    "20190418",
+    "20210919",
+    "20210925"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_360024584132_8973bad3998e.json",
+    "url_https___www.binance.com_en_support_announcement_360025204532_b6a35df737a7.json",
+    "zd_360024584132_fd228a913347.json",
+    "zd_360025204532_5cae947507dc.json"
+   ],
+   "n_archivos": 4,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2019-04-10",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2019-05-24",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "TRX",
+   "nuevo": "BTT",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    0.1097681177,
+    0.11
+   ],
+   "frases": [
+    "1 TRX = 0.11 BTT",
+    "1 TRX = 0.1097681177 BTT"
+   ],
+   "fechas_en_cuerpos": [
+    "2019-02-11",
+    "2019-03-11",
+    "2020-02-11",
+    "2020-03-11",
+    "2021-02-11",
+    "2021-03-11",
+    "2022-02-11",
+    "2022-03-11",
+    "2023-02-11",
+    "2023-03-11",
+    "2024-02-11",
+    "2024-03-11",
+    "2025-02-11"
+   ],
+   "capturas": [
+    "20190220",
+    "20201124",
+    "20210614",
+    "20210917",
+    "20230607",
+    "20230923"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_360022060492__2f61f3882dec.json",
+    "url_https___www.binance.com_en_support_announcement_360022060492_b6a405841b28.json",
+    "url_https___www.binance.com_en_support_announcement_360023241871_9023880d8f6f.json",
+    "url_https___www.binance.com_en_support_announcement_binance-completes-distributi_e8dffe4aa705.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-bit_3843b72858c0.json",
+    "zd_360022060492_40bcface5369.json",
+    "zd_360023241871_648546f36622.json"
+   ],
+   "n_archivos": 7,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2018-06-11",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2019-01-31",
+      "2022-01-16"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "TRX",
+   "nuevo": "TRXOLD",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": false,
+   "relaciones_nuevo_por_viejo": [],
+   "frases": [
+    "old TRX token has assumed TRXOLD"
+   ],
+   "fechas_en_cuerpos": [],
+   "capturas": [
+    "20230331"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-tr_b57561803ec8.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2018-06-11",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": null
+  },
+  {
+   "viejo": "TUSDB",
+   "nuevo": "TUSD",
+   "viejo_usdt_en_panel": false,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "1 TUSDB = 1 TUSD"
+   ],
+   "fechas_en_cuerpos": [
+    "2019-09-27"
+   ],
+   "capturas": [
+    "20191014",
+    "20220120",
+    "20221208"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_360034156752_302a31dcd79b.json",
+    "url_https___www.binance.com_en_support_announcement_binance-upgrades-deposits-an_fd19d5e96e1d.json",
+    "zd_360034156752_65ed2879c5d8.json"
+   ],
+   "n_archivos": 3,
+   "actividad_viejo": null,
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2018-05-31",
+      "2022-09-25"
+     ],
+     [
+      "2023-03-11",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "TVK",
+   "nuevo": "VANRY",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "(TVK) token swap and rebranding to Vanar (VANRY)",
+    "1 TVK = 1 VANRY"
+   ],
+   "fechas_en_cuerpos": [],
+   "capturas": [
+    "20240301"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-vi_317e63335f04.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2021-08-06",
+      "2023-11-26"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2023-12-01",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "USDS",
+   "nuevo": "BUSD",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "1 USDS = 1 BUSD"
+   ],
+   "fechas_en_cuerpos": [
+    "2020-06-24"
+   ],
+   "capturas": [
+    "20220628"
+   ],
+   "archivos": [
+    "bn_52e0db956218405b8b5eda03012a0798_8f554e84d309.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2019-02-14",
+      "2020-06-23"
+     ],
+     [
+      "2026-04-09",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2019-09-20",
+      "2023-12-14"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "USDSB",
+   "nuevo": "USDS",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "1 USDSB = 1 USDS"
+   ],
+   "fechas_en_cuerpos": [
+    "2019-09-27"
+   ],
+   "capturas": [
+    "20191014",
+    "20220120",
+    "20221208"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_360034156752_302a31dcd79b.json",
+    "url_https___www.binance.com_en_support_announcement_binance-upgrades-deposits-an_fd19d5e96e1d.json",
+    "zd_360034156752_65ed2879c5d8.json"
+   ],
+   "n_archivos": 3,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2019-06-24",
+      "2019-09-26"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2019-02-14",
+      "2020-06-23"
+     ],
+     [
+      "2026-04-09",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "UST",
+   "nuevo": "LUNA",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    0.01468985
+   ],
+   "frases": [
+    "1 UST (old) = 0.01468985 LUNA"
+   ],
+   "fechas_en_cuerpos": [
+    "2022-05-07",
+    "2022-05-31"
+   ],
+   "capturas": [
+    "20220812",
+    "20230205"
+   ],
+   "archivos": [
+    "bn_9c8abd90df5d4890822e6988f7dc8f0c_da2dc145761b.json",
+    "url_https___www.binance.com_en_support_announcement_binance-staking-completes-fi_8414ccd949d3.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2021-12-24",
+      "2022-05-12"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2020-08-21",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": [
+     [
+      "2022-05-12",
+      "2022-05-31",
+      18
+     ]
+    ]
+   }
+  },
+  {
+   "viejo": "UST",
+   "nuevo": "USTC",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [],
+   "frases": [
+    "UST (old) was renamed as USTC",
+    "UST (old) token will be renamed as USTC"
+   ],
+   "fechas_en_cuerpos": [
+    "2022-05-07",
+    "2022-05-26",
+    "2022-05-30",
+    "2022-05-31"
+   ],
+   "capturas": [
+    "20220705",
+    "20220812",
+    "20230205",
+    "20230528"
+   ],
+   "archivos": [
+    "bn_9c8abd90df5d4890822e6988f7dc8f0c_da2dc145761b.json",
+    "bn_c52fa3c686be4b2b9d5df50de15847ec_2698a027607e.json",
+    "url_https___www.binance.com_en_support_announcement_binance-staking-completes-fi_8414ccd949d3.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-ter_4ee04325bfb3.json"
+   ],
+   "n_archivos": 4,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2021-12-24",
+      "2022-05-12"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2023-03-10",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "UST",
+   "nuevo": "WUST",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": false,
+   "relaciones_nuevo_por_viejo": [],
+   "frases": [
+    "UST (Shuttle) will be renamed as WUST"
+   ],
+   "fechas_en_cuerpos": [
+    "2022-05-09"
+   ],
+   "capturas": [
+    "20220808",
+    "20231002"
+   ],
+   "archivos": [
+    "bn_d8789986888240ac9dd42a1a04af1f08_1818d4f9cfad.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-ter_76fc46572d3e.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2021-12-24",
+      "2022-05-12"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": null
+  },
+  {
+   "viejo": "USTC",
+   "nuevo": "LUNA",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    0.0235480008
+   ],
+   "frases": [
+    "1 USTC = 0.02354800084 LUNA"
+   ],
+   "fechas_en_cuerpos": [
+    "2022-05-07",
+    "2022-05-26",
+    "2022-05-31"
+   ],
+   "capturas": [
+    "20220707",
+    "20230324",
+    "20230608"
+   ],
+   "archivos": [
+    "bn_d044a6742e484b77a170111460b0eed3_a6996a0ba9ba.json",
+    "url_https___www.binance.com_en_support_announcement_binance-completes-second-rou_1880de843f14.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-list-terra-2-0-_fbd6b2e339f9.json"
+   ],
+   "n_archivos": 3,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2023-03-10",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2020-08-21",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": [
+     [
+      "2022-05-12",
+      "2022-05-31",
+      18
+     ]
+    ]
+   }
+  },
+  {
+   "viejo": "VEN",
+   "nuevo": "VET",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    100.0
+   ],
+   "frases": [
+    "1 VEN = 100 VET"
+   ],
+   "fechas_en_cuerpos": [
+    "2018-07-22",
+    "2018-07-23",
+    "2018-07-25"
+   ],
+   "capturas": [
+    "20180821",
+    "20210623",
+    "20230128"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_360007439672_d808c8a76e81.json",
+    "url_https___www.binance.com_en_support_announcement_information-regarding-the-up_8abefb6c9063.json",
+    "zd_360007439672_d538039394aa.json"
+   ],
+   "n_archivos": 3,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2018-06-22",
+      "2018-07-22"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2018-07-25",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "VIDT",
+   "nuevo": "VIDT",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    10.0
+   ],
+   "frases": [
+    "1 old VIDT = 10 new VIDT"
+   ],
+   "fechas_en_cuerpos": [
+    "2022-10-21",
+    "2022-10-27",
+    "2022-10-28",
+    "2022-10-31",
+    "2022-11-09"
+   ],
+   "capturas": [
+    "20230204"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-vid_5d4ce6e224e4.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2021-09-09",
+      "2025-04-15"
+     ]
+    ],
+    "cortes": [
+     [
+      "2022-10-30",
+      "2022-11-09",
+      9
+     ]
+    ]
+   },
+   "actividad_nuevo": null
+  },
+  {
+   "viejo": "WBETH",
+   "nuevo": "BETH",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "1 WBETH = 1 BETH"
+   ],
+   "fechas_en_cuerpos": [
+    "2023-04-26",
+    "2023-04-27",
+    "2023-04-28"
+   ],
+   "capturas": [
+    "20230930"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_binance-introduces-wrapped-b_296d1552616a.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2023-07-19",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2023-03-03",
+      "2023-10-10"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "WIN",
+   "nuevo": "TRX",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    0.010045191
+   ],
+   "frases": [
+    "1 WIN = 0.010045191 TRX"
+   ],
+   "fechas_en_cuerpos": [],
+   "capturas": [
+    "20191014",
+    "20210804",
+    "20221207"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_360034213912_f1547a237a05.json",
+    "url_https___www.binance.com_en_support_announcement_binance-has-distributed-sept_40052d3de730.json",
+    "zd_360034213912_f4a1e6b361ba.json"
+   ],
+   "n_archivos": 3,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2019-08-01",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2018-06-11",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "XDATA",
+   "nuevo": "DATA",
+   "viejo_usdt_en_panel": false,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "1 XDATA : 1 DATA",
+    "1 XDATA = 1 DATA"
+   ],
+   "fechas_en_cuerpos": [
+    "2021-08-30",
+    "2022-01-20",
+    "2022-03-04",
+    "2022-03-24",
+    "2022-04-12",
+    "2022-04-13",
+    "2022-04-29",
+    "2022-05-05",
+    "2022-05-17",
+    "2022-05-25",
+    "2022-05-31",
+    "2022-06-03",
+    "2022-06-13",
+    "2022-07-08",
+    "2022-07-12",
+    "2022-07-17",
+    "2022-07-20"
+   ],
+   "capturas": [
+    "20211028",
+    "20220808",
+    "20230603"
+   ],
+   "archivos": [
+    "bn_260d553938db4d568d7d58414fa317fa_7e314ae2c509.json",
+    "bn_fbf9fd008da0499cadcbe6824bf137ac_a3b6d97861d4.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-str_1e58458cb980.json"
+   ],
+   "n_archivos": 3,
+   "actividad_viejo": null,
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2020-04-07",
+      "2026-02-12"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "XEM",
+   "nuevo": "XYM",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": false,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "1 XEM = 1 XYM"
+   ],
+   "fechas_en_cuerpos": [
+    "2021-01-14"
+   ],
+   "capturas": [
+    "20210418",
+    "20221202"
+   ],
+   "archivos": [
+    "bn_983a85523b36455b8d802b2c3723fa5f_40e4e6ba09a1.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-sym_43766ebdd960.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2020-11-24",
+      "2024-06-16"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": null
+  },
+  {
+   "viejo": "XRP",
+   "nuevo": "FLR",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": false,
+   "relaciones_nuevo_por_viejo": [
+    0.1511
+   ],
+   "frases": [
+    "1 XRP = 0.1511 FLR"
+   ],
+   "fechas_en_cuerpos": [
+    "2020-12-12"
+   ],
+   "capturas": [
+    "20230329"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_binance-completes-the-flare-_41d1e0c54bbe.json"
+   ],
+   "n_archivos": 1,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2018-05-04",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": null
+  },
+  {
+   "viejo": "XRPBEAR",
+   "nuevo": "BUSD",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    548.55
+   ],
+   "frases": [
+    "1 XRPBEAR = 548.55 BUSD"
+   ],
+   "fechas_en_cuerpos": [
+    "2020-03-31"
+   ],
+   "capturas": [
+    "20200605",
+    "20210805"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_360041278332_63b96139b92e.json",
+    "zd_360041278332_d330c39364d2.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2020-02-12",
+      "2020-03-30"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2019-09-20",
+      "2023-12-14"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "XRPBULL",
+   "nuevo": "BUSD",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    8.74
+   ],
+   "frases": [
+    "1 XRPBULL = 8.74 BUSD"
+   ],
+   "fechas_en_cuerpos": [
+    "2020-03-31"
+   ],
+   "capturas": [
+    "20200605",
+    "20210805"
+   ],
+   "archivos": [
+    "url_https___www.binance.com_en_support_announcement_360041278332_63b96139b92e.json",
+    "zd_360041278332_d330c39364d2.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2020-02-12",
+      "2020-03-30"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2019-09-20",
+      "2023-12-14"
+     ]
+    ],
+    "cortes": []
+   }
+  },
+  {
+   "viejo": "XVS",
+   "nuevo": "VRT",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": false,
+   "relaciones_nuevo_por_viejo": [
+    1000.0
+   ],
+   "frases": [
+    "1 XVS = 1,000 VRT"
+   ],
+   "fechas_en_cuerpos": [
+    "2021-05-17"
+   ],
+   "capturas": [
+    "20210621",
+    "20230603"
+   ],
+   "archivos": [
+    "bn_7e9d5fa946fd4a889deb45c63a76e304_3a4e395317dc.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-ven_4cce11fcb6fe.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2020-10-06",
+      "2026-05-31"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": null
+  },
+  {
+   "viejo": "XZC",
+   "nuevo": "FIRO",
+   "viejo_usdt_en_panel": true,
+   "nuevo_usdt_en_panel": true,
+   "relaciones_nuevo_por_viejo": [
+    1.0
+   ],
+   "frases": [
+    "ticker of XZC to FIRO",
+    "1 XZC = 1 FIRO"
+   ],
+   "fechas_en_cuerpos": [
+    "2021-01-20",
+    "2021-01-22",
+    "2021-01-24",
+    "2021-01-25",
+    "2021-01-29"
+   ],
+   "capturas": [
+    "20210302",
+    "20230208"
+   ],
+   "archivos": [
+    "bn_4a06d6ab6abb4f08b12bb93d6fec30ec_1d51d7029751.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-update-the-tick_0b101f17c4f5.json"
+   ],
+   "n_archivos": 2,
+   "actividad_viejo": {
+    "episodios": [
+     [
+      "2020-04-07",
+      "2021-01-24"
+     ]
+    ],
+    "cortes": []
+   },
+   "actividad_nuevo": {
+    "episodios": [
+     [
+      "2021-01-29",
+      "2025-04-15"
+     ]
+    ],
+    "cortes": []
+   }
+  }
+ ]
+}

@@ -1,0 +1,16 @@
+== Árbol parcheado: 2026-10-21T23:20:28Z
+sha256 engine.py: 85965ec56298519ca107d2bb61f301fe22a02584b5fc98917d147d81e036da88 (HUELLAS SIM1: 85965ec5…)
+sha256 paper.py:  05569d169edc8faacb0d7720747005fd3249ed2247acb8063500dc7e518bfe2b (HUELLAS SIM1: 05569d16…)
+sha256 prueba:    685cf4ec9d5f5a36c087ecaf06f7bfac4cb903509f1d984e48e68208312a4cd5 (HUELLAS SIM1: 685cf4ec…)
+git status:
+ M packages/tia/src/tia/backtest/engine.py
+ M packages/tia/src/tia/execution/paper.py
+?? tests/unit/test_backtest_order_hygiene.py
+archivos de la copia de trabajo SIM1 (mision_simulacion/trader-ia) frente al árbol parcheado:
+  idéntico: packages/tia/src/tia/backtest/engine.py
+  idéntico: packages/tia/src/tia/execution/paper.py
+  idéntico: tests/unit/test_backtest_order_hygiene.py
+otros cambios en la copia SIM1 respecto de su base 5b08a14:
+ M packages/tia/src/tia/backtest/engine.py
+ M packages/tia/src/tia/execution/paper.py
+?? tests/unit/test_backtest_order_hygiene.py

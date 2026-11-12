@@ -1,0 +1,122 @@
+.......................                                                  [100%]
+==================================== PASSES ====================================
+___ test_a_day_that_hit_the_loss_limit_still_refuses_entries_after_a_restart ___
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:34:56 [info     ] schema_created                 component=persistence.database dialect=sqlite version=7
+2026-10-22 22:34:56 [info     ] paper_portfolio_restored       cash=9735.1 component=execution.paper day_start_equity=10000.0 peak_equity=10000.0 positions={}
+_____________ test_a_drawdown_past_the_breaker_survives_a_restart ______________
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:34:57 [info     ] schema_created                 component=persistence.database dialect=sqlite version=7
+2026-10-22 22:34:57 [info     ] paper_portfolio_restored       cash=8795.3 component=execution.paper day_start_equity=8795.3 peak_equity=11197.5 positions={}
+2026-10-22 22:34:57 [error    ] safe_mode_entered              component=risk.engine reason='max drawdown 21.45% >= 10.00%'
+_ test_restarting_before_and_after_midnight_utc_keeps_the_peak_and_rolls_the_day_correctly _
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:34:57 [info     ] schema_created                 component=persistence.database dialect=sqlite version=7
+_ test_an_open_position_is_restored_protected_scorable_and_closable_after_a_restart _
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:34:57 [info     ] schema_created                 component=persistence.database dialect=sqlite version=7
+2026-10-22 22:34:58 [info     ] paper_portfolio_restored       cash=5996.0204 component=execution.paper day_start_equity=10000.0 peak_equity=10000.9302 positions={'BTC-USD': 0.080117}
+___ test_a_resting_entry_left_by_a_dead_session_is_orphaned_not_resurrected ____
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:34:58 [info     ] schema_created                 component=persistence.database dialect=sqlite version=7
+_ test_a_pending_exit_at_restart_leaves_the_position_open_and_the_new_session_closes_it _
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:34:58 [info     ] schema_created                 component=persistence.database dialect=sqlite version=7
+2026-10-22 22:34:58 [info     ] paper_portfolio_restored       cash=5996.0204 component=execution.paper day_start_equity=10000.0 peak_equity=10000.9302 positions={'BTC-USD': 0.080117}
+________ test_partial_fills_and_fees_rebuild_identically_however_often _________
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:34:58 [info     ] schema_created                 component=persistence.database dialect=sqlite version=7
+_ test_an_unreadable_store_at_start_blocks_entries_and_never_substitutes_base_capital _
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:34:59 [warning  ] entries_blocked                cause=account_state component=runtime.live reason='the account could not be rebuilt from its journal: database unavailable at startup'
+2026-10-22 22:34:59 [info     ] risk_state_restored            by_symbol={} component=risk.engine cooldown_anchors=0 day=2026-10-22 trades_today=0
+2026-10-22 22:34:59 [info     ] entries_unblocked              cause=account_state component=runtime.live
+_ test_a_lost_journal_write_makes_the_rebuild_incomplete_and_the_next_session_blocked _
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:34:59 [info     ] schema_created                 component=persistence.database dialect=sqlite version=7
+2026-10-22 22:34:59 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during account_event'
+2026-10-22 22:34:59 [warning  ] entries_blocked                cause=account_state component=runtime.live reason='the account could not be rebuilt from its journal: account record inconsistent: 0 fills in the journal, 1 in the fills table; net position 0.0 from the journal, 0.080117 from the fills table; fees 0.000000 in the journal, 3.000734 in the fills table'
+__ test_a_database_outage_during_a_write_does_not_pretend_the_state_was_saved __
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:35:00 [info     ] schema_created                 component=persistence.database dialect=sqlite version=7
+2026-10-22 22:35:00 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during fill'
+2026-10-22 22:35:00 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during account_event'
+2026-10-22 22:35:00 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during account_event'
+2026-10-22 22:35:00 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during account_event'
+2026-10-22 22:35:00 [warning  ] entries_blocked                cause=account_state component=runtime.live reason='the account could not be verified: the venue holds 0.080117 but the journal says 0.0'
+______ test_fill_rows_without_journal_events_are_an_inconsistent_account _______
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:35:00 [info     ] schema_created                 component=persistence.database dialect=sqlite version=7
+_ test_a_restored_position_whose_side_disagrees_with_the_engine_blocks_entries _
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:35:00 [warning  ] entries_blocked                cause=account_state component=runtime.live reason='the account could not be verified: the venue holds 0.0 but the journal says 0.01'
+_ test_legacy_fills_before_an_operator_baseline_are_set_aside_pinned_and_still_in_view _
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:35:00 [info     ] schema_created                 component=persistence.database dialect=sqlite version=7
+2026-10-22 22:35:00 [info     ] account_baseline_staged        actor=op at=2026-10-20T22:35:00.868987+00:00 component=persistence.repositories detail="commits or rolls back with the caller's session" informational_events_before=0 legacy_fees=16.9932 legacy_fills=5 legacy_net_quantity=-0.276436 run_id=run_legacy symbol=BTC-USD
+___ test_a_baseline_seeds_a_runtime_flat_at_base_capital_and_lifts_the_block ___
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:35:01 [info     ] schema_created                 component=persistence.database dialect=sqlite version=7
+2026-10-22 22:35:01 [warning  ] entries_blocked                cause=account_state component=runtime.live reason='the account could not be rebuilt from its journal: account record inconsistent: 0 fills in the journal, 5 in the fills table; net position 0.0 from the journal, -0.276436 from the fills table; fees 0.000000 in the journal, 16.993200 in the fills table'
+2026-10-22 22:35:01 [info     ] account_baseline_staged        actor=operator at=2026-10-21T22:35:01.136141+00:00 component=persistence.repositories detail="commits or rolls back with the caller's session" informational_events_before=0 legacy_fees=16.9932 legacy_fills=5 legacy_net_quantity=-0.276436 run_id=run_legacy symbol=BTC-USD
+___ test_a_baseline_pins_the_legacy_set_so_it_cannot_grow_or_shrink_silently ___
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:35:01 [info     ] schema_created                 component=persistence.database dialect=sqlite version=7
+2026-10-22 22:35:01 [info     ] account_baseline_staged        actor=operator at=2026-10-21T22:35:01.371798+00:00 component=persistence.repositories detail="commits or rolls back with the caller's session" informational_events_before=0 legacy_fees=16.9932 legacy_fills=5 legacy_net_quantity=-0.276436 run_id=run_legacy symbol=BTC-USD
+_____ test_a_baseline_refuses_to_open_a_journal_that_already_has_a_record ______
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:35:01 [info     ] schema_created                 component=persistence.database dialect=sqlite version=7
+_ test_a_baseline_needs_legacy_fills_a_stopped_session_and_a_time_after_every_fill _
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:35:01 [info     ] schema_created                 component=persistence.database dialect=sqlite version=7
+2026-10-22 22:35:01 [info     ] account_baseline_staged        actor=operator at=2026-10-22T22:35:01.675734+00:00 component=persistence.repositories detail="commits or rolls back with the caller's session" informational_events_before=0 legacy_fees=16.9932 legacy_fills=5 legacy_net_quantity=-0.276436 run_id=run_legacy symbol=BTC-USD
+2026-10-22 22:35:01 [info     ] account_baseline_staged        actor=operator at=2026-10-22T22:35:01.675734+00:00 component=persistence.repositories detail="commits or rolls back with the caller's session" informational_events_before=1 legacy_fees=16.9932 legacy_fills=5 legacy_net_quantity=-0.276436 run_id=run_legacy symbol=BTC-USD
+_ test_a_session_resumed_after_the_deploy_leaves_marks_that_do_not_block_the_baseline _
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:35:01 [info     ] schema_created                 component=persistence.database dialect=sqlite version=7
+2026-10-22 22:35:01 [info     ] account_baseline_staged        actor=operator at=2026-10-21T19:35:01.851425+00:00 component=persistence.repositories detail="commits or rolls back with the caller's session" informational_events_before=3 legacy_fees=16.9932 legacy_fills=5 legacy_net_quantity=-0.276436 run_id=run_resumed symbol=BTC-USD
+_____ test_a_leg_entered_in_two_partial_fills_is_protected_and_closes_flat _____
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:35:02 [info     ] schema_created                 component=persistence.database dialect=sqlite version=7
+2026-10-22 22:35:02 [info     ] paper_portfolio_restored       cash=9800.812 component=execution.paper day_start_equity=10000.0 peak_equity=10000.0 positions={'BTC-USD': 0.0039959999999999996}
+____ test_the_residue_the_12h_session_left_is_one_whole_lot_and_closes_flat ____
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:35:02 [info     ] schema_created                 component=persistence.database dialect=sqlite version=7
+2026-10-22 22:35:02 [info     ] paper_portfolio_restored       cash=10000.2173 component=execution.paper day_start_equity=10000.0 peak_equity=10000.2673 positions={'BTC-USD': 9.999999999992654e-07}
+_ test_a_restored_open_leg_starts_at_its_base_capital_and_the_books_agree[short] _
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:35:02 [info     ] schema_created                 component=persistence.database dialect=sqlite version=7
+2026-10-22 22:35:02 [info     ] paper_portfolio_restored       cash=10199.028 component=execution.paper day_start_equity=10000.0 peak_equity=10000.0 positions={'BTC-USD': -0.0039959999999999996}
+_ test_a_restored_open_leg_starts_at_its_base_capital_and_the_books_agree[long] _
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:35:02 [info     ] schema_created                 component=persistence.database dialect=sqlite version=7
+2026-10-22 22:35:02 [info     ] paper_portfolio_restored       cash=9800.812 component=execution.paper day_start_equity=10000.0 peak_equity=10000.0 positions={'BTC-USD': 0.0039959999999999996}
+___ test_the_12h_session_s_short_residue_with_its_funding_starts_and_closes ____
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:35:02 [info     ] schema_created                 component=persistence.database dialect=sqlite version=7
+2026-10-22 22:35:02 [info     ] paper_portfolio_restored       cash=10000.317 component=execution.paper day_start_equity=10000.0 peak_equity=10000.2673 positions={'BTC-USD': -9.999999999992654e-07}
+=========================== short test summary info ============================
+PASSED tests/integration/test_account_restore.py::test_a_day_that_hit_the_loss_limit_still_refuses_entries_after_a_restart
+PASSED tests/integration/test_account_restore.py::test_a_drawdown_past_the_breaker_survives_a_restart
+PASSED tests/integration/test_account_restore.py::test_restarting_before_and_after_midnight_utc_keeps_the_peak_and_rolls_the_day_correctly
+PASSED tests/integration/test_account_restore.py::test_an_open_position_is_restored_protected_scorable_and_closable_after_a_restart
+PASSED tests/integration/test_account_restore.py::test_a_resting_entry_left_by_a_dead_session_is_orphaned_not_resurrected
+PASSED tests/integration/test_account_restore.py::test_a_pending_exit_at_restart_leaves_the_position_open_and_the_new_session_closes_it
+PASSED tests/integration/test_account_restore.py::test_partial_fills_and_fees_rebuild_identically_however_often
+PASSED tests/integration/test_account_restore.py::test_an_unreadable_store_at_start_blocks_entries_and_never_substitutes_base_capital
+PASSED tests/integration/test_account_restore.py::test_a_lost_journal_write_makes_the_rebuild_incomplete_and_the_next_session_blocked
+PASSED tests/integration/test_account_restore.py::test_a_database_outage_during_a_write_does_not_pretend_the_state_was_saved
+PASSED tests/integration/test_account_restore.py::test_fill_rows_without_journal_events_are_an_inconsistent_account
+PASSED tests/integration/test_account_restore.py::test_a_restored_position_whose_side_disagrees_with_the_engine_blocks_entries
+PASSED tests/integration/test_account_restore.py::test_legacy_fills_before_an_operator_baseline_are_set_aside_pinned_and_still_in_view
+PASSED tests/integration/test_account_restore.py::test_a_baseline_seeds_a_runtime_flat_at_base_capital_and_lifts_the_block
+PASSED tests/integration/test_account_restore.py::test_a_baseline_pins_the_legacy_set_so_it_cannot_grow_or_shrink_silently
+PASSED tests/integration/test_account_restore.py::test_a_baseline_refuses_to_open_a_journal_that_already_has_a_record
+PASSED tests/integration/test_account_restore.py::test_a_baseline_needs_legacy_fills_a_stopped_session_and_a_time_after_every_fill
+PASSED tests/integration/test_account_restore.py::test_a_session_resumed_after_the_deploy_leaves_marks_that_do_not_block_the_baseline
+PASSED tests/integration/test_account_restore.py::test_a_leg_entered_in_two_partial_fills_is_protected_and_closes_flat
+PASSED tests/integration/test_account_restore.py::test_the_residue_the_12h_session_left_is_one_whole_lot_and_closes_flat
+PASSED tests/integration/test_account_restore.py::test_a_restored_open_leg_starts_at_its_base_capital_and_the_books_agree[short]
+PASSED tests/integration/test_account_restore.py::test_a_restored_open_leg_starts_at_its_base_capital_and_the_books_agree[long]
+PASSED tests/integration/test_account_restore.py::test_the_12h_session_s_short_residue_with_its_funding_starts_and_closes
+23 passed in 9.83s

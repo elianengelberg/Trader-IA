@@ -1,0 +1,57 @@
+VERIFICACIÓN DESDE UNA EXTRACCIÓN LIMPIA — entrega de integración D1–D3 (versión final)
+
+ZIP: entrega_integracion_D1_D3_2026-10-22.zip
+sha256 f9495ad8d1e767e9eadf56cb77bd8dd2ad9a2fb12d5ec0de304f85bc2f06d269  (245099 bytes; 62 archivos + SHA256SUMS)
+
+1. Extracción en un directorio nuevo (verif_extraccion/extraido): unzip -t sin errores · sha256sum -c SHA256SUMS → 62/62 OK
+   · 0 archivos fuera del manifiesto.
+2. bash reproducir.sh /home/user/Trader-IA <dir nuevo> completo, desde la extracción.
+   Pasos 1–6 (corrida verif_extraccion/reproducir_completo.txt, interrumpida en el paso 7 por un reinicio del contenedor a las 02:38Z):
+   == 1. Base y parche
+   OK  base en 72ffae5d2698440c8f1afaff12e07bd8adde66fb
+   OK  engine.py original identificado
+   OK  git apply --check limpio
+   OK  archivos resultantes idénticos a los registrados
+   == 2. Entorno (instalación documentada de la CI: pip install -e ".[api,db,postgres,redis,llm,dev]")
+   == 3. Pruebas D1–D3 contra el motor ORIGINAL (deben fallar todas, por aserción)
+   OK  original: 6/6 fallan
+   == 4. Pruebas D1–D3 contra el árbol INTEGRADO (deben pasar todas)
+   OK  integrado: 6/6 pasan
+   == 5. Mutantes (cada pieza del parche revertida por separado: ninguno debe sobrevivir)
+   mutantes: 8 · vivos: ninguno
+   == 6. Lint como la CI
+   OK  ruff check limpio
+   Paso 7 relanzado con las herramientas y los árboles de la misma extracción (verif_extraccion/paso7_relanzado.txt):
+   == paso 7 relanzado tras reinicio del contenedor: 2026-10-22T02:39:09Z
+   ==> /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_parche_D1_D3_2026-10-21/verif_extraccion/trabajo/salidas/suite_base.txt <==
+   JUnit: 1956 pruebas · 1954 pasan · 1 fallan · 0 errores · 1 omitidas · 420.052 s
+   
+   ==> /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_parche_D1_D3_2026-10-21/verif_extraccion/trabajo/salidas/suite_integracion.txt <==
+   JUnit: 1962 pruebas · 1960 pasan · 1 fallan · 0 errores · 1 omitidas · 444.610 s
+   base: 1956 pruebas, 1954 pasan · integrado: 1962 pruebas, 1960 pasan
+   pruebas de la base que faltan en el integrado: ninguna
+   pruebas nuevas: ['test_a_close_that_leaves_position_is_released_and_retried', 'test_a_leg_without_a_stop_level_is_reported', 'test_a_rejected_close_is_sent_again_and_closes', 'test_partial_fills_leave_no_untracked_or_stuck_position', 'test_stops_and_exits_survive_rejections', 'test_the_stop_in_the_book_follows_the_leg'] · todas pasan: True
+   pruebas de la base con otro resultado en el integrado: ninguna
+   pruebas de la base que no pasan en el árbol base: [('test_a_day_that_hit_the_loss_limit_still_refuses_entries_after_a_restart', 'omitida', 'reloj (E20, E24)'), ('test_five_restored_entries_for_the_symbol_refuse_the_sixth_after_the_restart', 'falla', 'reloj (E20, E24)')]
+   pruebas de la base que no pasan en el árbol integrado: [('test_a_day_that_hit_the_loss_limit_still_refuses_entries_after_a_restart', 'omitida', 'reloj (E20, E24)'), ('test_five_restored_entries_for_the_symbol_refuse_the_sixth_after_the_restart', 'falla', 'reloj (E20, E24)')]
+   SIN REGRESIONES FRENTE A LA BASE
+   rc=0
+
+CONTEXTO DEL PASO 7 (ver INFORME §5–§6, R11 y R13):
+ - Corrida limpia a las 23:36Z (evidencia E7–E9): base 1956/1956, integración 1962/1962.
+ - En las 4 corridas completas posteriores (00:12Z, 00:36Z, 02:01Z y 02:39Z), base e integración dieron el mismo resultado prueba a prueba (E25 y el paso 7 de arriba).
+   Las únicas pruebas de la base que no pasaron son las 3 sensibles al entorno:
+   - 2 de reloj, entre las 00:00 y ≈ 05:45 UTC;
+   - 1 con un límite de 10 s, en una máquina lenta tras un reinicio.
+   Las tres fallan también sin el parche.
+
+INTENTOS PREVIOS (conservados con sus ZIP anteriores; ninguno se borró):
+ a) verif_extraccion_intento1_FALLO_rutas/ (ZIP 7c4476c0…):
+    - reproducir.sh pasaba rutas relativas al ejecutor de la suite, que entra al árbol antes de escribir: la suite no corrió;
+    - corregido con rutas absolutas.
+ b) verif_extraccion_intento2_reloj/ (ZIP be9ba987…):
+    - el paso 7 exigía 1956/1956 y 1962/1962 exactos y falló por las 2 pruebas de reloj, idénticas en ambos árboles;
+    - el criterio pasó a ser la comparación prueba a prueba con la base.
+ c) verif_extraccion_intento3_criterio/ (ZIP 297b1aa3…):
+    - pasos 1–7 OK, pero se descubrió que la franja de reloj llega hasta ≈ 05:45 UTC (no hasta 02:00) y la prueba con límite de 10 s (R13);
+    - se corrigieron el informe, el plan y el criterio, y se rehízo el ZIP.

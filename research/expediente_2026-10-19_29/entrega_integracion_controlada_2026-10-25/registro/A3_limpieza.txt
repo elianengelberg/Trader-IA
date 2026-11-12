@@ -1,0 +1,22 @@
+== IC-A.3 limpieza (solo clones de trabajo de la revisión, fuera de su manifiesto): 2026-10-25T18:12:38Z
+rutas de trabajo/ citadas en MANIFEST_REVISION.sha256: 0
+   934M	/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversaria_2026-10-25/trabajo
+   443M	/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversaria_2026-10-25/venv
+   22M	/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversaria_2026-10-25/extraccion
+   borro A (86M)
+   borro A3 (86M)
+   borro AB (85M)
+   borro ABC (85M)
+   borro base (86M)
+   borro final (86M)
+   borro gatecase (85M)
+   borro inst (85M)
+   borro pg (16K)
+   borro pg2 (16K)
+   borro r19base (85M)
+   borro solo01 (85M)
+   borro solo02 (85M)
+se conservan: venv de la revisión (se reutiliza solo si su freeze verifica), extraccion/ y toda la evidencia
+disco libre después: 3.0G
+== IC-A.3b 2026-10-25T18:20:56Z: borro el venv de la revisión (443M); no figura en MANIFEST_REVISION (0 rutas) y tiene una instalación editable hacia un clon borrado
+disco libre después: 2.5G

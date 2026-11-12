@@ -1,0 +1,232 @@
+{
+ "eventos_total": 6,
+ "eventos_en_universo": 5,
+ "fuera_por_texto_sin_usdt": 1,
+ "fuera_sin_par_usdt_documentado": 1,
+ "descartados": 0,
+ "por_anio": {
+  "2018": {
+   "total": 0,
+   "A": 0,
+   "B": 0,
+   "T": 0,
+   "C_explicada": 0,
+   "C_no_explicada": 0,
+   "D": 0,
+   "E_sin_fecha": 0,
+   "cobertura_conservadora_AB": null,
+   "fallas": 0
+  },
+  "2019": {
+   "total": 4,
+   "A": 1,
+   "B": 1,
+   "T": 1,
+   "C_explicada": 0,
+   "C_no_explicada": 0,
+   "D": 1,
+   "E_sin_fecha": 0,
+   "cobertura_conservadora_AB": 0.5,
+   "fallas": 2
+  },
+  "2020": {
+   "total": 1,
+   "A": 0,
+   "B": 0,
+   "T": 0,
+   "C_explicada": 0,
+   "C_no_explicada": 1,
+   "D": 0,
+   "E_sin_fecha": 0,
+   "cobertura_conservadora_AB": 0.0,
+   "fallas": 1
+  },
+  "2021": {
+   "total": 0,
+   "A": 0,
+   "B": 0,
+   "T": 0,
+   "C_explicada": 0,
+   "C_no_explicada": 0,
+   "D": 0,
+   "E_sin_fecha": 0,
+   "cobertura_conservadora_AB": null,
+   "fallas": 0
+  },
+  "2022": {
+   "total": 0,
+   "A": 0,
+   "B": 0,
+   "T": 0,
+   "C_explicada": 0,
+   "C_no_explicada": 0,
+   "D": 0,
+   "E_sin_fecha": 0,
+   "cobertura_conservadora_AB": null,
+   "fallas": 0
+  },
+  "2023": {
+   "total": 0,
+   "A": 0,
+   "B": 0,
+   "T": 0,
+   "C_explicada": 0,
+   "C_no_explicada": 0,
+   "D": 0,
+   "E_sin_fecha": 0,
+   "cobertura_conservadora_AB": null,
+   "fallas": 0
+  },
+  "2024": {
+   "total": 0,
+   "A": 0,
+   "B": 0,
+   "T": 0,
+   "C_explicada": 0,
+   "C_no_explicada": 0,
+   "D": 0,
+   "E_sin_fecha": 0,
+   "cobertura_conservadora_AB": null,
+   "fallas": 0
+  },
+  "2025": {
+   "total": 0,
+   "A": 0,
+   "B": 0,
+   "T": 0,
+   "C_explicada": 0,
+   "C_no_explicada": 0,
+   "D": 0,
+   "E_sin_fecha": 0,
+   "cobertura_conservadora_AB": null,
+   "fallas": 0
+  },
+  "2026": {
+   "total": 0,
+   "A": 0,
+   "B": 0,
+   "T": 0,
+   "C_explicada": 0,
+   "C_no_explicada": 0,
+   "D": 0,
+   "E_sin_fecha": 0,
+   "cobertura_conservadora_AB": null,
+   "fallas": 0
+  }
+ },
+ "salidas_por_anio": {
+  "2017": {
+   "observadas": 0,
+   "con_anuncio": 0,
+   "sin_anuncio": 0,
+   "frac_sin_anuncio": null
+  },
+  "2018": {
+   "observadas": 1,
+   "con_anuncio": 1,
+   "sin_anuncio": 0,
+   "frac_sin_anuncio": 0.0
+  },
+  "2019": {
+   "observadas": 2,
+   "con_anuncio": 2,
+   "sin_anuncio": 0,
+   "frac_sin_anuncio": 0.0
+  },
+  "2020": {
+   "observadas": 0,
+   "con_anuncio": 0,
+   "sin_anuncio": 0,
+   "frac_sin_anuncio": null
+  },
+  "2021": {
+   "observadas": 1,
+   "con_anuncio": 0,
+   "sin_anuncio": 1,
+   "frac_sin_anuncio": 1.0
+  },
+  "2022": {
+   "observadas": 0,
+   "con_anuncio": 0,
+   "sin_anuncio": 0,
+   "frac_sin_anuncio": null
+  },
+  "2023": {
+   "observadas": 0,
+   "con_anuncio": 0,
+   "sin_anuncio": 0,
+   "frac_sin_anuncio": null
+  },
+  "2024": {
+   "observadas": 0,
+   "con_anuncio": 0,
+   "sin_anuncio": 0,
+   "frac_sin_anuncio": null
+  },
+  "2025": {
+   "observadas": 0,
+   "con_anuncio": 0,
+   "sin_anuncio": 0,
+   "frac_sin_anuncio": null
+  },
+  "2026": {
+   "observadas": 0,
+   "con_anuncio": 0,
+   "sin_anuncio": 0,
+   "frac_sin_anuncio": null
+  }
+ },
+ "salidas_renombre_mapeado": 0,
+ "primer_evento": "2019-01-01",
+ "ultima_falla": {
+  "par": "CCCUSDT",
+  "E": "2020-01-01",
+  "urls": [
+   "u/CCCUSDT2020-01-01"
+  ],
+  "titulos": [
+   "Binance Will Delist CCC"
+  ],
+  "subtipos": [
+   "exclusion_token"
+  ],
+  "par_en_texto": true,
+  "tokens": [
+   "CCC"
+  ],
+  "url_archivada": "x",
+  "sin_fecha": false,
+  "clave": "CCCUSDT|2020-01-01",
+  "categoria_auto": "C",
+  "L": null,
+  "nota": null,
+  "categoria": "C_no_explicada"
+ },
+ "componentes_inicio": {
+  "i": "2018-01-01",
+  "ii": "2020-01-02",
+  "iii": "2019-01-01",
+  "iv": "2022-01-01"
+ },
+ "inicio_H": "2022-01-03",
+ "semanas_H": 229,
+ "evaluables_H": 229,
+ "pct_no_evaluables_H": 0.0,
+ "INVALIDO": false,
+ "V_S2": {
+  "n": 0,
+  "aciertos": 0,
+  "tasa": null,
+  "cumple": false
+ },
+ "V_S3_revisados": 0,
+ "V_S4": "NO EJECUTADO (HTTP 451; Adenda 3, A3.9)",
+ "V_S5_dias_activos_con_0_operaciones": 0,
+ "pendiente_revision_manual": {
+  "C": 1,
+  "D_sin_evidencia_ni_otro_par": 1,
+  "sin_fecha": 0,
+  "sin_par": 0
+ },
+ "resoluciones_manuales_usadas": false
+}

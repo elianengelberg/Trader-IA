@@ -1,0 +1,153 @@
+[
+ {
+  "simbolo": "BETAUSDT",
+  "L": "2025-04-15",
+  "dia": "2025-04-16",
+  "zip": "BETAUSDT-1d-2025-04.zip",
+  "existe": true,
+  "open_time": "2025-04-16T00:00:00+00:00",
+  "close_time": "2025-04-16T02:59:59.999000+00:00",
+  "horas": 3.0,
+  "operaciones": 1600,
+  "zip_sin_cambios": true
+ },
+ {
+  "simbolo": "WNXMUSDT",
+  "L": "2024-06-16",
+  "dia": "2024-06-17",
+  "zip": "WNXMUSDT-1d-2024-06.zip",
+  "existe": true,
+  "open_time": "2024-06-17T00:00:00+00:00",
+  "close_time": "2024-06-17T02:59:59.999000+00:00",
+  "horas": 3.0,
+  "operaciones": 6360,
+  "zip_sin_cambios": true
+ },
+ {
+  "simbolo": "DAIUSDT",
+  "L": "2020-08-11",
+  "dia": "2020-08-12",
+  "zip": "DAIUSDT-1d-2020-08.zip",
+  "existe": true,
+  "open_time": "2020-08-12T00:00:00+00:00",
+  "close_time": "2020-08-12T03:59:59.999000+00:00",
+  "horas": 4.0,
+  "operaciones": 2095,
+  "zip_sin_cambios": true
+ },
+ {
+  "simbolo": "STPTUSDT",
+  "L": "2025-05-18",
+  "dia": "2025-05-19",
+  "zip": "STPTUSDT-1d-2025-05.zip",
+  "existe": true,
+  "open_time": "2025-05-19T00:00:00+00:00",
+  "close_time": "2025-05-19T02:59:59.999000+00:00",
+  "horas": 3.0,
+  "operaciones": 2241,
+  "zip_sin_cambios": true
+ },
+ {
+  "simbolo": "BNBBEARUSDT",
+  "L": "2020-03-30",
+  "dia": "2020-03-31",
+  "zip": "BNBBEARUSDT-1d-2020-03.zip",
+  "existe": true,
+  "open_time": "2020-03-31T00:00:00+00:00",
+  "close_time": "2020-03-31T09:59:59.999000+00:00",
+  "horas": 10.0,
+  "operaciones": 1857,
+  "zip_sin_cambios": true
+ },
+ {
+  "simbolo": "XMRUSDT",
+  "L": "2024-02-19",
+  "dia": "2024-02-20",
+  "zip": "XMRUSDT-1d-2024-02.zip",
+  "existe": true,
+  "open_time": "2024-02-20T00:00:00+00:00",
+  "close_time": "2024-02-20T02:59:59.999000+00:00",
+  "horas": 3.0,
+  "operaciones": 5865,
+  "zip_sin_cambios": true
+ },
+ {
+  "simbolo": "MATICUSDT",
+  "L": "2024-09-09",
+  "dia": "2024-09-10",
+  "zip": "MATICUSDT-1d-2024-09.zip",
+  "existe": true,
+  "open_time": "2024-09-10T00:00:00+00:00",
+  "close_time": "2024-09-10T02:59:59.999000+00:00",
+  "horas": 3.0,
+  "operaciones": 6495,
+  "zip_sin_cambios": true
+ },
+ {
+  "simbolo": "HNTUSDT",
+  "L": "2022-10-13",
+  "dia": "2022-10-14",
+  "zip": "HNTUSDT-1d-2022-10.zip",
+  "existe": true,
+  "open_time": "2022-10-14T00:00:00+00:00",
+  "close_time": "2022-10-14T02:59:59.999000+00:00",
+  "horas": 3.0,
+  "operaciones": 1163,
+  "zip_sin_cambios": true
+ },
+ {
+  "simbolo": "NKNUSDT",
+  "L": "2026-02-12",
+  "dia": "2026-02-13",
+  "zip": "NKNUSDT-1d-2026-02.zip",
+  "existe": true,
+  "open_time": "2026-02-13T00:00:00+00:00",
+  "close_time": "2026-02-13T02:59:59.999000+00:00",
+  "horas": 3.0,
+  "operaciones": 1900,
+  "zip_sin_cambios": true
+ },
+ {
+  "simbolo": "BCHDOWNUSDT",
+  "L": "2020-11-08",
+  "dia": "2020-11-09",
+  "zip": "BCHDOWNUSDT-1d-2020-11.zip",
+  "existe": true,
+  "open_time": "2020-11-09T00:00:00+00:00",
+  "close_time": "2020-11-09T07:59:59.999000+00:00",
+  "horas": 8.0,
+  "operaciones": 267,
+  "zip_sin_cambios": true
+ },
+ {
+  "simbolo": "ACAUSDT",
+  "L": "2026-02-12",
+  "dia": "2026-02-13",
+  "zip": "ACAUSDT-1d-2026-02.zip",
+  "existe": true,
+  "open_time": "2026-02-13T00:00:00+00:00",
+  "close_time": "2026-02-13T02:59:59.999000+00:00",
+  "horas": 3.0,
+  "operaciones": 1009,
+  "zip_sin_cambios": true
+ },
+ {
+  "simbolo": "XRPDOWNUSDT",
+  "L": "2023-05-11",
+  "dia": "2023-05-12",
+  "zip": "XRPDOWNUSDT-1d-2023-05.zip",
+  "existe": true,
+  "open_time": "2023-05-12T00:00:00+00:00",
+  "close_time": "2023-05-12T02:59:59.999000+00:00",
+  "horas": 3.0,
+  "operaciones": 2106,
+  "zip_sin_cambios": true
+ },
+ {
+  "simbolo": "NBTUSDT",
+  "L": "2023-02-28",
+  "dia": "2023-03-01",
+  "zip": "NBTUSDT-1d-2023-03.zip",
+  "existe": false
+ }
+]

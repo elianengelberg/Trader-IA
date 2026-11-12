@@ -1,0 +1,4 @@
+{
+ "escenario": "E2_evaluado_anotar_falla_despues",
+ "termino": "FinTerminal: ERROR en la etapa «escritura»: OSError: [Errno 5] fallo inyectado al anotar EVALUADO (después de escribir la línea). Ver /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/arnes_L13_SINTETICO_SIN_DATOS_SIN_CALCULO/E2_evaluado_ano"
+}

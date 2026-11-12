@@ -1,0 +1,182 @@
+{
+ "exit": 0,
+ "flushes": [
+  {
+   "pendientes": 32,
+   "seg": 0.053,
+   "ok": true,
+   "quedan": 0
+  },
+  {
+   "pendientes": 4,
+   "seg": 0.006,
+   "ok": true,
+   "quedan": 0
+  },
+  {
+   "pendientes": 4,
+   "seg": 0.005,
+   "ok": true,
+   "quedan": 0
+  },
+  {
+   "pendientes": 3,
+   "seg": 0.004,
+   "ok": true,
+   "quedan": 0
+  },
+  {
+   "pendientes": 41,
+   "seg": 0.096,
+   "ok": true,
+   "quedan": 0
+  },
+  {
+   "pendientes": 62,
+   "seg": 0.104,
+   "ok": true,
+   "quedan": 0
+  },
+  {
+   "pendientes": 3,
+   "seg": 0.003,
+   "ok": true,
+   "quedan": 0
+  },
+  {
+   "pendientes": 4,
+   "seg": 0.006,
+   "ok": true,
+   "quedan": 0
+  },
+  {
+   "pendientes": 4,
+   "seg": 0.006,
+   "ok": true,
+   "quedan": 0
+  },
+  {
+   "pendientes": 3,
+   "seg": 0.003,
+   "ok": true,
+   "quedan": 0
+  },
+  {
+   "pendientes": 4,
+   "seg": 0.006,
+   "ok": true,
+   "quedan": 0
+  },
+  {
+   "pendientes": 5,
+   "seg": 0.006,
+   "ok": true,
+   "quedan": 0
+  },
+  {
+   "pendientes": 3,
+   "seg": 0.003,
+   "ok": true,
+   "quedan": 0
+  },
+  {
+   "pendientes": 4,
+   "seg": 0.006,
+   "ok": true,
+   "quedan": 0
+  },
+  {
+   "pendientes": 2,
+   "seg": 0.001,
+   "ok": true,
+   "quedan": 0
+  },
+  {
+   "pendientes": 2,
+   "seg": 0.0,
+   "ok": true,
+   "quedan": 0
+  },
+  {
+   "pendientes": 2,
+   "seg": 0.0,
+   "ok": true,
+   "quedan": 0
+  },
+  {
+   "pendientes": 2,
+   "seg": 0.0,
+   "ok": true,
+   "quedan": 0
+  },
+  {
+   "pendientes": 2,
+   "seg": 0.0,
+   "ok": true,
+   "quedan": 0
+  },
+  {
+   "pendientes": 2,
+   "seg": 0.0,
+   "ok": true,
+   "quedan": 0
+  },
+  {
+   "pendientes": 0,
+   "seg": 0.0,
+   "ok": true,
+   "quedan": 0
+  },
+  {
+   "pendientes": 0,
+   "seg": 0.0,
+   "ok": true,
+   "quedan": 0
+  },
+  {
+   "pendientes": 0,
+   "seg": 0.0,
+   "ok": true,
+   "quedan": 0
+  }
+ ],
+ "escrituras": 188,
+ "seg_escritura_total": 0.304,
+ "por_tipo": {
+  "account_event": {
+   "n": 78,
+   "seg": 0.173,
+   "ms_media": 2.22
+  },
+  "edge_outcome": {
+   "n": 5,
+   "seg": 0.001,
+   "ms_media": 0.15
+  },
+  "fill": {
+   "n": 16,
+   "seg": 0.028,
+   "ms_media": 1.77
+  },
+  "latency": {
+   "n": 6,
+   "seg": 0.001,
+   "ms_media": 0.17
+  },
+  "order": {
+   "n": 41,
+   "seg": 0.09,
+   "ms_media": 2.2
+  },
+  "reconciliation": {
+   "n": 41,
+   "seg": 0.01,
+   "ms_media": 0.23
+  },
+  "run_heartbeat": {
+   "n": 1,
+   "seg": 0.001,
+   "ms_media": 0.61
+  }
+ }
+}

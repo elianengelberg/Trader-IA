@@ -1,0 +1,12 @@
+== RA-A.4 extracción e integridad: 2026-10-25T17:22:06Z
+   ejecutable: -rwxr-xr-x  3.0 unx      598 t-      386 defN 26-Oct-25 17:04 cierre_integral_2026-10-22/reproduction/herramientas/clon_seguro.sh
+entradas antes de extraer en /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversaria_2026-10-25/extraccion: 0
+archivos extraídos: 826 · enlaces: 0 · dispositivos/fifos: 0 · setuid/setgid: 0
+MANIFEST.sha256 sha256 calculado: ce2612a9c6ba17b1b8f464c88f4fd1eda11643cea861542893c55082e304984c · declarado: ce2612a9c6ba17b1b8f464c88f4fd1eda11643cea861542893c55082e304984c
+líneas del manifiesto: 825 · formato inválido: 0
+verifican: 825 de 825
+en disco y no en el manifiesto: MANIFEST.sha256 
+en el manifiesto y no en disco: 0
+rutas del manifiesto con '..' o absolutas: 0
+-- la extracción es idéntica a la carpeta publicada junto al ZIP: sí
+-- procedencia del manifiesto: lo genera armar_paquete.sh (find + sha256sum) DENTRO del paquete; no está firmado. Solo prueba coherencia interna; su anclaje externo es el hash del ZIP y el del propio manifiesto, declarados por el autor.

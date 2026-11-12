@@ -1,0 +1,152 @@
+{
+ "decision": "H-SINC",
+ "criterios_H_ENT": {
+  "a_todas_con_bucle_activo": true,
+  "b_tasa_crece_con_K": false,
+  "c_ninguna_trabada": true,
+  "d_aparcado_sin_fallas": true
+ },
+ "fallas_R19_por_K_bucle_activo": {
+  "0": 0,
+  "1": 0
+ },
+ "fallas_R19_aparcado": 0,
+ "trabadas": [],
+ "errores_escritura_no_inyectados": [
+  {
+   "prueba": "tests/integration/test_validacion_sonda_r19.py::test_errores_inyectado_y_no_inyectado",
+   "tipo": "order",
+   "excepcion": "ValueError",
+   "mensaje": "boom",
+   "inyectada": false,
+   "tag": "001_val_K1_park0_prueba1"
+  },
+  {
+   "prueba": "tests/integration/test_validacion_sonda_r19.py::test_errores_inyectado_y_no_inyectado",
+   "tipo": "order",
+   "excepcion": "ValueError",
+   "mensaje": "boom",
+   "inyectada": false,
+   "tag": "002_val_K0_park0_prueba1"
+  }
+ ],
+ "corridas_con_FK_en_registro": [],
+ "otras_fallas": [],
+ "comparacion_cand_base": null,
+ "celdas": {
+  "val|K1|park0|prueba": {
+   "corridas": 1,
+   "sin_sonda": 0,
+   "rc_distinto_de_0": 0,
+   "fallas_por_clase": {},
+   "pruebas_que_fallan": {},
+   "vaciado_settle": {
+    "n": 1,
+    "mediana": 0.0,
+    "max": 0.0,
+    ">=8s": 0
+   },
+   "carga_con_quemadores_mediana": 1.30517578125,
+   "ejecutables_mediana": 3,
+   "fraccion_cpu_pytest_mediana": 1.057
+  },
+  "val|K0|park0|prueba": {
+   "corridas": 1,
+   "sin_sonda": 0,
+   "rc_distinto_de_0": 0,
+   "fallas_por_clase": {},
+   "pruebas_que_fallan": {},
+   "vaciado_settle": {
+    "n": 1,
+    "mediana": 0.0,
+    "max": 0.0,
+    ">=8s": 0
+   },
+   "carga_con_quemadores_mediana": 1.30517578125,
+   "ejecutables_mediana": 2,
+   "fraccion_cpu_pytest_mediana": 1.087
+  }
+ },
+ "corridas": [
+  {
+   "arbol": "val",
+   "K": 1,
+   "park": 0,
+   "sel": "prueba",
+   "rep": 1,
+   "n": 1,
+   "tag": "001_val_K1_park0_prueba1",
+   "rc": 0,
+   "seg": 2.28,
+   "inicio_utc": "2026-10-22T19:35:10Z",
+   "carga_antes": [
+    1.24462890625,
+    1.2197265625,
+    1.18408203125
+   ],
+   "carga_con_quemadores": [
+    1.30517578125,
+    1.23291015625,
+    1.1884765625
+   ],
+   "carga_despues": [
+    1.30517578125,
+    1.23291015625,
+    1.1884765625
+   ],
+   "ejecutables_antes": 2,
+   "ejecutables_con_quemadores": 3,
+   "cpu_pytest_s": 2.41,
+   "fraccion_cpu_pytest": 1.057,
+   "json": true,
+   "sonda": true,
+   "exit_pytest": 0,
+   "fallas": [],
+   "ciclos_fondo": 0,
+   "vaciado_settle_max_s": 0.0,
+   "vaciado_settle_bucle_vivo_max_s": null,
+   "pendientes_max": 2,
+   "errores_inyectados": 1
+  },
+  {
+   "arbol": "val",
+   "K": 0,
+   "park": 0,
+   "sel": "prueba",
+   "rep": 1,
+   "n": 2,
+   "tag": "002_val_K0_park0_prueba1",
+   "rc": 0,
+   "seg": 2.65,
+   "inicio_utc": "2026-10-22T19:35:12Z",
+   "carga_antes": [
+    1.30517578125,
+    1.23291015625,
+    1.1884765625
+   ],
+   "carga_con_quemadores": [
+    1.30517578125,
+    1.23291015625,
+    1.1884765625
+   ],
+   "carga_despues": [
+    1.36083984375,
+    1.24609375,
+    1.19287109375
+   ],
+   "ejecutables_antes": 3,
+   "ejecutables_con_quemadores": 2,
+   "cpu_pytest_s": 2.88,
+   "fraccion_cpu_pytest": 1.087,
+   "json": true,
+   "sonda": true,
+   "exit_pytest": 0,
+   "fallas": [],
+   "ciclos_fondo": 0,
+   "vaciado_settle_max_s": 0.0,
+   "vaciado_settle_bucle_vivo_max_s": null,
+   "pendientes_max": 2,
+   "errores_inyectados": 1
+  }
+ ]
+}

@@ -1,0 +1,11 @@
+E   AssertionError: no queda ningún estado explícito del fallo
+E   AssertionError: el panel se construyó con datos alterados después de la guarda
+E   AssertionError: usó un archivo de mapeos sin verificar: llego_a_panel_real
+E   AssertionError: aceptó otra ventana: llego_a_panel_real
+E   AssertionError: aceptó un manifiesto vacío: llego_a_panel_real
+E   AssertionError: el token apalancado perdió su marca
+E   AssertionError: edad reiniciada en el día 140
+E   AssertionError: assert 'C34USDT' == 'C04USDT'
+E   AssertionError: se ejecutó un .pyc distinto del .py verificado
+E   Failed: DID NOT RAISE SystemExit
+10 failed, 7 passed in 7.47s

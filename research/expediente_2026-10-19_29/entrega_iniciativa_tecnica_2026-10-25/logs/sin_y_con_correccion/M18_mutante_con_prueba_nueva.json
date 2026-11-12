@@ -1,0 +1,16 @@
+{
+ "pruebas": [
+  "tests/integration/test_unknown_entry_halts_entries.py"
+ ],
+ "mutantes": [
+  {
+   "id": "M18",
+   "archivo": "packages/tia/src/tia/runtime/live.py",
+   "descripcion": "estado desconocido sin detener las entradas",
+   "rc": 1,
+   "resultado": "MUERTO",
+   "primera_falla": "FAILED tests/integration/test_unknown_entry_halts_entries.py::test_an_entry_the_venue_cannot_resolve_halts_entries_and_none_follows",
+   "segundos": 1.6
+  }
+ ]
+}

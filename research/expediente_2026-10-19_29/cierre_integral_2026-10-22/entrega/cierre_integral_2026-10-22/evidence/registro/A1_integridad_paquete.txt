@@ -1,0 +1,27 @@
+== Fase A.1–A.3 · integridad del paquete informado: 2026-10-22T22:06:40Z
+ruta: /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_D1_D2_R19_2026-10-22/paquete/cierre_D1_D2_guarda_R19_2026-10-22.zip
+-rw-r--r-- 1 root root 884784 Oct 22 20:00 /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_D1_D2_R19_2026-10-22/paquete/cierre_D1_D2_guarda_R19_2026-10-22.zip
+sha256 calculado: 410ae629de17957fc6fb60701f94aee9c73631bc3e9238c67a4c75983efba3c5
+sha256 informado: 410ae629de17957fc6fb60701f94aee9c73631bc3e9238c67a4c75983efba3c5
+COINCIDE
+tamaño: 884784 bytes (informado: 884.784)
+cierre_D1_D2_guarda_R19_2026-10-22.zip: OK
+entradas antes de extraer: 0
+archivos extraídos: 68
+SHA256SUMS: 67 de 67 verifican
+sin archivos de más ni de menos
+bytecode o enlaces simbólicos: 0
+-- candidata v3r3 dentro del paquete:
+-rw-r--r-- 1 root root 705169 Oct 22 20:05 /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_integral_2026-10-22/extraccion_paquete/cierre_D1_D2_guarda_R19_2026-10-22/fase1/entrega_integracion_D1_D3_v3r3_2026-10-22.zip
+sha256 calculado: 25902649d6d0789598870769670f2e7a5c707f1856e1e1538bd4f74d37877c4a
+sha256 informado: 25902649d6d0789598870769670f2e7a5c707f1856e1e1538bd4f74d37877c4a
+entrega_integracion_D1_D3_v3r3_2026-10-22.zip: OK
+v3r3 SHA256SUMS: 104 de 104 verifican
+v3r3: sin archivos de más ni de menos
+1944f433334cada2c4fa937080241bf51643c1393f54b4d2530003557b2e60bf  parches/01_obligatorio_D1_D3_motor_y_pruebas_definitivas.patch
+d5c90091b705647cdbdd9044d0406ccc28f12e39c6070deeb5cd8aef03cf6a62  parches/02v3_obligatorio_trazabilidad_version_motor_CORREGIDO.patch
+0be65ea6a5e7072ff83c25ed1cccec80877ceb7b1e0609e2468a025b5294e33a  parches/03_opcional_pruebas_reloj_y_persistencia.patch
+8d39635635c81a4bf91071a42fb3a348ebf50b819efd92227915be3953306dd5  parches/04_opcional_CI_versiones_fijadas.patch
+32a42a5db19f5cfab11a38a43ec10ad8968dc995286cf1e950c794501ec5ad48  parches/originales_v2/02_obligatorio_trazabilidad_version_motor.patch
+-- la extracción coincide con la carpeta publicada junto al ZIP:
+idéntica

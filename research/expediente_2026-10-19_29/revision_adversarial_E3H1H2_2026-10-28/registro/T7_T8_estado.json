@@ -1,0 +1,321 @@
+{
+ "T8": [
+  {
+   "x": "VENUSDT",
+   "y": "VETUSDT",
+   "E": "2018-07-23",
+   "ultimo_activo_x": "2018-07-22",
+   "primer_activo_y": "2018-07-25",
+   "hueco_dias": 2,
+   "y_empieza_despues_de_x": true,
+   "coincide_con_tabla": true
+  },
+  {
+   "x": "BCHABCUSDT",
+   "y": "BCHUSDT",
+   "E": "2019-11-28",
+   "ultimo_activo_x": "2019-11-27",
+   "primer_activo_y": "2019-11-28",
+   "hueco_dias": 0,
+   "y_empieza_despues_de_x": true,
+   "coincide_con_tabla": true
+  },
+  {
+   "x": "STORMUSDT",
+   "y": "STMXUSDT",
+   "E": "2020-06-08",
+   "ultimo_activo_x": "2020-06-07",
+   "primer_activo_y": "2020-06-11",
+   "hueco_dias": 3,
+   "y_empieza_despues_de_x": true,
+   "coincide_con_tabla": true
+  },
+  {
+   "x": "ERDUSDT",
+   "y": "EGLDUSDT",
+   "E": "2020-08-31",
+   "ultimo_activo_x": "2020-08-30",
+   "primer_activo_y": "2020-09-03",
+   "hueco_dias": 3,
+   "y_empieza_despues_de_x": true,
+   "coincide_con_tabla": true
+  },
+  {
+   "x": "LENDUSDT",
+   "y": "AAVEUSDT",
+   "E": "2020-10-12",
+   "ultimo_activo_x": "2020-10-11",
+   "primer_activo_y": "2020-10-15",
+   "hueco_dias": 3,
+   "y_empieza_despues_de_x": true,
+   "coincide_con_tabla": true
+  },
+  {
+   "x": "STRATUSDT",
+   "y": "STRAXUSDT",
+   "E": "2020-11-12",
+   "ultimo_activo_x": "2020-11-11",
+   "primer_activo_y": "2020-11-18",
+   "hueco_dias": 6,
+   "y_empieza_despues_de_x": true,
+   "coincide_con_tabla": true
+  },
+  {
+   "x": "XZCUSDT",
+   "y": "FIROUSDT",
+   "E": "2021-01-25",
+   "ultimo_activo_x": "2021-01-24",
+   "primer_activo_y": "2021-01-29",
+   "hueco_dias": 4,
+   "y_empieza_despues_de_x": true,
+   "coincide_con_tabla": true
+  },
+  {
+   "x": "NPXSUSDT",
+   "y": "PUNDIXUSDT",
+   "E": "2021-04-05",
+   "ultimo_activo_x": "2021-04-04",
+   "primer_activo_y": "2021-04-09",
+   "hueco_dias": 4,
+   "y_empieza_despues_de_x": true,
+   "coincide_con_tabla": true
+  },
+  {
+   "x": "PAXUSDT",
+   "y": "USDPUSDT",
+   "E": "2021-09-06",
+   "ultimo_activo_x": "2021-09-05",
+   "primer_activo_y": "2021-09-10",
+   "hueco_dias": 4,
+   "y_empieza_despues_de_x": true,
+   "coincide_con_tabla": true
+  },
+  {
+   "x": "BZRXUSDT",
+   "y": "OOKIUSDT",
+   "E": "2021-12-20",
+   "ultimo_activo_x": "2021-12-19",
+   "primer_activo_y": "2021-12-24",
+   "hueco_dias": 4,
+   "y_empieza_despues_de_x": true,
+   "coincide_con_tabla": true
+  },
+  {
+   "x": "BTTUSDT",
+   "y": "BTTCUSDT",
+   "E": "2022-01-17",
+   "ultimo_activo_x": "2022-01-16",
+   "primer_activo_y": "2022-01-25",
+   "hueco_dias": 8,
+   "y_empieza_despues_de_x": true,
+   "coincide_con_tabla": true
+  },
+  {
+   "x": "NANOUSDT",
+   "y": "XNOUSDT",
+   "E": "2022-01-24",
+   "ultimo_activo_x": "2022-01-23",
+   "primer_activo_y": "2022-01-28",
+   "hueco_dias": 4,
+   "y_empieza_despues_de_x": true,
+   "coincide_con_tabla": true
+  },
+  {
+   "x": "ANYUSDT",
+   "y": "MULTIUSDT",
+   "E": "2022-03-30",
+   "ultimo_activo_x": "2022-03-29",
+   "primer_activo_y": "2022-04-06",
+   "hueco_dias": 7,
+   "y_empieza_despues_de_x": true,
+   "coincide_con_tabla": true
+  },
+  {
+   "x": "GXSUSDT",
+   "y": "REIUSDT",
+   "E": "2022-04-25",
+   "ultimo_activo_x": "2022-04-24",
+   "primer_activo_y": "2022-05-04",
+   "hueco_dias": 9,
+   "y_empieza_despues_de_x": true,
+   "coincide_con_tabla": true
+  },
+  {
+   "x": "EPSUSDT",
+   "y": "EPXUSDT",
+   "E": "2022-05-09",
+   "ultimo_activo_x": "2022-05-08",
+   "primer_activo_y": "2022-05-23",
+   "hueco_dias": 14,
+   "y_empieza_despues_de_x": true,
+   "coincide_con_tabla": true
+  },
+  {
+   "x": "RAMPUSDT",
+   "y": "LEVERUSDT",
+   "E": "2022-07-04",
+   "ultimo_activo_x": "2022-07-03",
+   "primer_activo_y": "2022-07-13",
+   "hueco_dias": 9,
+   "y_empieza_despues_de_x": true,
+   "coincide_con_tabla": true
+  },
+  {
+   "x": "POLYUSDT",
+   "y": "POLYXUSDT",
+   "E": "2022-10-10",
+   "ultimo_activo_x": "2022-10-09",
+   "primer_activo_y": "2022-10-17",
+   "hueco_dias": 7,
+   "y_empieza_despues_de_x": true,
+   "coincide_con_tabla": true
+  },
+  {
+   "x": "MFTUSDT",
+   "y": "HIFIUSDT",
+   "E": "2023-01-12",
+   "ultimo_activo_x": "2023-01-02",
+   "primer_activo_y": "2023-01-12",
+   "hueco_dias": 9,
+   "y_empieza_despues_de_x": true,
+   "coincide_con_tabla": true
+  },
+  {
+   "x": "COCOSUSDT",
+   "y": "COMBOUSDT",
+   "E": "2023-06-02",
+   "ultimo_activo_x": "2023-05-28",
+   "primer_activo_y": "2023-06-02",
+   "hueco_dias": 4,
+   "y_empieza_despues_de_x": true,
+   "coincide_con_tabla": true
+  },
+  {
+   "x": "MCUSDT",
+   "y": "BEAMXUSDT",
+   "E": "2023-11-07",
+   "ultimo_activo_x": "2023-11-06",
+   "primer_activo_y": "2023-11-14",
+   "hueco_dias": 7,
+   "y_empieza_despues_de_x": true,
+   "coincide_con_tabla": true
+  },
+  {
+   "x": "TVKUSDT",
+   "y": "VANRYUSDT",
+   "E": "2023-12-01",
+   "ultimo_activo_x": "2023-11-26",
+   "primer_activo_y": "2023-12-01",
+   "hueco_dias": 4,
+   "y_empieza_despues_de_x": true,
+   "coincide_con_tabla": true
+  },
+  {
+   "x": "PLAUSDT",
+   "y": "PDAUSDT",
+   "E": "2024-02-26",
+   "ultimo_activo_x": "2024-02-25",
+   "primer_activo_y": "2024-03-01",
+   "hueco_dias": 4,
+   "y_empieza_despues_de_x": true,
+   "coincide_con_tabla": true
+  },
+  {
+   "x": "MATICUSDT",
+   "y": "POLUSDT",
+   "E": "2024-09-10",
+   "ultimo_activo_x": "2024-09-09",
+   "primer_activo_y": "2024-09-13",
+   "hueco_dias": 3,
+   "y_empieza_despues_de_x": true,
+   "coincide_con_tabla": true
+  }
+ ],
+ "T7": {
+  "ultima_falla_en_alcance": "2023-05-11",
+  "lunes_siguiente": "2023-05-15",
+  "semanas_desde_inicio_hasta_fin": 158,
+  "semanas_si_inicio_2023_05_01": 160,
+  "iv_prima_recalculado": 2018,
+  "por_anio_en_alcance_sin_evidencia": {
+   "2018": [
+    1,
+    0
+   ],
+   "2019": [
+    2,
+    0
+   ],
+   "2020": [
+    17,
+    0
+   ],
+   "2021": [
+    10,
+    0
+   ],
+   "2022": [
+    35,
+    0
+   ],
+   "2023": [
+    19,
+    1
+   ],
+   "2024": [
+    44,
+    0
+   ],
+   "2025": [
+    51,
+    0
+   ],
+   "2026": [
+    26,
+    0
+   ]
+  },
+  "fallas_en_alcance": [
+   [
+    "TRXDOWNUSDT",
+    "2023-05-09",
+    "T",
+    false
+   ],
+   [
+    "TRXUPUSDT",
+    "2023-05-09",
+    "T",
+    true
+   ],
+   [
+    "DOTDOWNUSDT",
+    "2023-05-10",
+    "T",
+    false
+   ],
+   [
+    "DOTUPUSDT",
+    "2023-05-10",
+    "T",
+    false
+   ],
+   [
+    "LINKDOWNUSDT",
+    "2023-05-11",
+    "T",
+    true
+   ],
+   [
+    "LINKUPUSDT",
+    "2023-05-11",
+    "T",
+    false
+   ]
+  ]
+ },
+ "arreglos_leidos": [
+  "estado",
+  "simbolo"
+ ]
+}

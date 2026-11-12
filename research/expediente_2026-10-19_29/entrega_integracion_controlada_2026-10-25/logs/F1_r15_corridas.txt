@@ -1,0 +1,112 @@
+== base semilla 11 árbol /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/AB inicio 2026-10-25T18:50:27Z
+identico@0.0                       exito_descartado=  0/20 ambos_aceptados=20 uno_aceptado=0 errores=[] rechazos=[] filas_finales=[1]
+identico@0.001                     exito_descartado=  0/20 ambos_aceptados=20 uno_aceptado=0 errores=[] rechazos=[] filas_finales=[1]
+identico@0.005                     exito_descartado=  0/20 ambos_aceptados=20 uno_aceptado=0 errores=[] rechazos=[] filas_finales=[1]
+identico@0.02                      exito_descartado=  0/20 ambos_aceptados=20 uno_aceptado=0 errores=[] rechazos=[] filas_finales=[1]
+identico@0.1                       exito_descartado=  0/20 ambos_aceptados=20 uno_aceptado=0 errores=[] rechazos=[] filas_finales=[1]
+otros_numeros@0.0                  exito_descartado= 20/20 ambos_aceptados=20 uno_aceptado=0 errores=[] rechazos=[] filas_finales=[1]
+otros_numeros@0.001                exito_descartado= 14/20 ambos_aceptados=14 uno_aceptado=6 errores=[] rechazos=['ValueError'] filas_finales=[1]
+otros_numeros@0.005                exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['ValueError'] filas_finales=[1]
+otros_numeros@0.02                 exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['ValueError'] filas_finales=[1]
+otros_numeros@0.1                  exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['ValueError'] filas_finales=[1]
+otra_version@0.0                   exito_descartado= 20/20 ambos_aceptados=20 uno_aceptado=0 errores=[] rechazos=[] filas_finales=[1]
+otra_version@0.001                 exito_descartado= 15/20 ambos_aceptados=15 uno_aceptado=5 errores=[] rechazos=['ValueError'] filas_finales=[1]
+otra_version@0.005                 exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['ValueError'] filas_finales=[1]
+otra_version@0.02                  exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['ValueError'] filas_finales=[1]
+otra_version@0.1                   exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['ValueError'] filas_finales=[1]
+otra_version_y_numeros@0.0         exito_descartado= 20/20 ambos_aceptados=20 uno_aceptado=0 errores=[] rechazos=[] filas_finales=[1]
+otra_version_y_numeros@0.001       exito_descartado= 16/20 ambos_aceptados=16 uno_aceptado=4 errores=[] rechazos=['ValueError'] filas_finales=[1]
+otra_version_y_numeros@0.005       exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['ValueError'] filas_finales=[1]
+otra_version_y_numeros@0.02        exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['ValueError'] filas_finales=[1]
+otra_version_y_numeros@0.1         exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['ValueError'] filas_finales=[1]
+cuatro_escritores_aleatorio        exito_descartado= 38/40 filas_finales=[1] aceptados_por_intento=[1, 2, 3, 4]
+rollback_del_primero               {'resultados': [('error', 'RuntimeError: fallo del escritor antes del commit'), ('aceptado', 'None')], 'guardada': ('1.1.0', 10, 0.88390665), 'esperado': '1º error, 2º aceptado, queda el 2º', 'exito_descartado': 0}
+timeout_de_bloqueo_del_segundo     {'resultados': [('aceptado', 'None'), ('error', "DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.LockNo")], 'guardada': ('1.1.0', 9, -0.11609335), 'esperado': '1º aceptado, 2º error (lock timeout), queda el 1º', 'exito_descartado': 0}
+desconexion_antes_del_commit       {'resultados': [('error', "InterfaceError: (sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptio"), ('aceptado', 'None')], 'guardada': ('1.1.0', 10, 0.88390665), 'esperado': '1º error (conexión cortada), 2º aceptado, queda el 2º', 'exito_descartado': 0}
+reintento_tras_ambiguo_commit_hecho {'resultados': [('aceptado', 'None'), ('aceptado', 'None')], 'filas': 1, 'guardada': ('1.1.0', 9, -0.11609335), 'esperado': 'ambos aceptados (creado, repetido), 1 fila, sin cambios'}
+total exito_descartado: 143 · 26.4 s
+rc=0
+== cand semilla 11 árbol /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev inicio 2026-10-25T18:50:56Z
+identico@0.0                       exito_descartado=  0/20 ambos_aceptados=20 uno_aceptado=0 errores=[] rechazos=[] filas_finales=[1]
+identico@0.001                     exito_descartado=  0/20 ambos_aceptados=20 uno_aceptado=0 errores=[] rechazos=[] filas_finales=[1]
+identico@0.005                     exito_descartado=  0/20 ambos_aceptados=20 uno_aceptado=0 errores=[] rechazos=[] filas_finales=[1]
+identico@0.02                      exito_descartado=  0/20 ambos_aceptados=20 uno_aceptado=0 errores=[] rechazos=[] filas_finales=[1]
+identico@0.1                       exito_descartado=  0/20 ambos_aceptados=20 uno_aceptado=0 errores=[] rechazos=[] filas_finales=[1]
+otros_numeros@0.0                  exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['BacktestResultConflictError'] filas_finales=[1]
+otros_numeros@0.001                exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['BacktestResultConflictError'] filas_finales=[1]
+otros_numeros@0.005                exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['BacktestResultConflictError'] filas_finales=[1]
+otros_numeros@0.02                 exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['BacktestResultConflictError'] filas_finales=[1]
+otros_numeros@0.1                  exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['BacktestResultConflictError'] filas_finales=[1]
+otra_version@0.0                   exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['BacktestProvenanceConflictError'] filas_finales=[1]
+otra_version@0.001                 exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['BacktestProvenanceConflictError'] filas_finales=[1]
+otra_version@0.005                 exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['BacktestProvenanceConflictError'] filas_finales=[1]
+otra_version@0.02                  exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['BacktestProvenanceConflictError'] filas_finales=[1]
+otra_version@0.1                   exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['BacktestProvenanceConflictError'] filas_finales=[1]
+otra_version_y_numeros@0.0         exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['BacktestProvenanceConflictError'] filas_finales=[1]
+otra_version_y_numeros@0.001       exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['BacktestProvenanceConflictError'] filas_finales=[1]
+otra_version_y_numeros@0.005       exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['BacktestProvenanceConflictError'] filas_finales=[1]
+otra_version_y_numeros@0.02        exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['BacktestProvenanceConflictError'] filas_finales=[1]
+otra_version_y_numeros@0.1         exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['BacktestProvenanceConflictError'] filas_finales=[1]
+cuatro_escritores_aleatorio        exito_descartado=  0/40 filas_finales=[1] aceptados_por_intento=[1, 2]
+rollback_del_primero               {'resultados': [('error', 'RuntimeError: fallo del escritor antes del commit'), ('aceptado', 'created')], 'guardada': ('1.2.0', 10, 0.88390665), 'esperado': '1º error, 2º aceptado, queda el 2º', 'exito_descartado': 0}
+timeout_de_bloqueo_del_segundo     {'resultados': [('aceptado', 'created'), ('error', "DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.LockNo")], 'guardada': ('1.2.0', 9, -0.11609335), 'esperado': '1º aceptado, 2º error (lock timeout), queda el 1º', 'exito_descartado': 0}
+desconexion_antes_del_commit       {'resultados': [('error', "InterfaceError: (sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptio"), ('aceptado', 'created')], 'guardada': ('1.2.0', 10, 0.88390665), 'esperado': '1º error (conexión cortada), 2º aceptado, queda el 2º', 'exito_descartado': 0}
+reintento_tras_ambiguo_commit_hecho {'resultados': [('aceptado', 'created'), ('aceptado', 'repeated')], 'filas': 1, 'guardada': ('1.2.0', 9, -0.11609335), 'esperado': 'ambos aceptados (creado, repetido), 1 fila, sin cambios'}
+total exito_descartado: 0 · 27.3 s
+rc=0
+== cand semilla 12 árbol /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev inicio 2026-10-25T18:51:26Z
+identico@0.0                       exito_descartado=  0/20 ambos_aceptados=20 uno_aceptado=0 errores=[] rechazos=[] filas_finales=[1]
+identico@0.001                     exito_descartado=  0/20 ambos_aceptados=20 uno_aceptado=0 errores=[] rechazos=[] filas_finales=[1]
+identico@0.005                     exito_descartado=  0/20 ambos_aceptados=20 uno_aceptado=0 errores=[] rechazos=[] filas_finales=[1]
+identico@0.02                      exito_descartado=  0/20 ambos_aceptados=20 uno_aceptado=0 errores=[] rechazos=[] filas_finales=[1]
+identico@0.1                       exito_descartado=  0/20 ambos_aceptados=20 uno_aceptado=0 errores=[] rechazos=[] filas_finales=[1]
+otros_numeros@0.0                  exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['BacktestResultConflictError'] filas_finales=[1]
+otros_numeros@0.001                exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['BacktestResultConflictError'] filas_finales=[1]
+otros_numeros@0.005                exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['BacktestResultConflictError'] filas_finales=[1]
+otros_numeros@0.02                 exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['BacktestResultConflictError'] filas_finales=[1]
+otros_numeros@0.1                  exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['BacktestResultConflictError'] filas_finales=[1]
+otra_version@0.0                   exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['BacktestProvenanceConflictError'] filas_finales=[1]
+otra_version@0.001                 exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['BacktestProvenanceConflictError'] filas_finales=[1]
+otra_version@0.005                 exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['BacktestProvenanceConflictError'] filas_finales=[1]
+otra_version@0.02                  exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['BacktestProvenanceConflictError'] filas_finales=[1]
+otra_version@0.1                   exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['BacktestProvenanceConflictError'] filas_finales=[1]
+otra_version_y_numeros@0.0         exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['BacktestProvenanceConflictError'] filas_finales=[1]
+otra_version_y_numeros@0.001       exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['BacktestProvenanceConflictError'] filas_finales=[1]
+otra_version_y_numeros@0.005       exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['BacktestProvenanceConflictError'] filas_finales=[1]
+otra_version_y_numeros@0.02        exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['BacktestProvenanceConflictError'] filas_finales=[1]
+otra_version_y_numeros@0.1         exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['BacktestProvenanceConflictError'] filas_finales=[1]
+cuatro_escritores_aleatorio        exito_descartado=  0/40 filas_finales=[1] aceptados_por_intento=[1, 2]
+rollback_del_primero               {'resultados': [('error', 'RuntimeError: fallo del escritor antes del commit'), ('aceptado', 'created')], 'guardada': ('1.2.0', 10, 0.88390665), 'esperado': '1º error, 2º aceptado, queda el 2º', 'exito_descartado': 0}
+timeout_de_bloqueo_del_segundo     {'resultados': [('aceptado', 'created'), ('error', "DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.LockNo")], 'guardada': ('1.2.0', 9, -0.11609335), 'esperado': '1º aceptado, 2º error (lock timeout), queda el 1º', 'exito_descartado': 0}
+desconexion_antes_del_commit       {'resultados': [('error', "InterfaceError: (sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptio"), ('aceptado', 'created')], 'guardada': ('1.2.0', 10, 0.88390665), 'esperado': '1º error (conexión cortada), 2º aceptado, queda el 2º', 'exito_descartado': 0}
+reintento_tras_ambiguo_commit_hecho {'resultados': [('aceptado', 'created'), ('aceptado', 'repeated')], 'filas': 1, 'guardada': ('1.2.0', 9, -0.11609335), 'esperado': 'ambos aceptados (creado, repetido), 1 fila, sin cambios'}
+total exito_descartado: 0 · 27.4 s
+rc=0
+== base semilla 12 árbol /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/AB inicio 2026-10-25T18:51:56Z
+identico@0.0                       exito_descartado=  0/20 ambos_aceptados=20 uno_aceptado=0 errores=[] rechazos=[] filas_finales=[1]
+identico@0.001                     exito_descartado=  0/20 ambos_aceptados=20 uno_aceptado=0 errores=[] rechazos=[] filas_finales=[1]
+identico@0.005                     exito_descartado=  0/20 ambos_aceptados=20 uno_aceptado=0 errores=[] rechazos=[] filas_finales=[1]
+identico@0.02                      exito_descartado=  0/20 ambos_aceptados=20 uno_aceptado=0 errores=[] rechazos=[] filas_finales=[1]
+identico@0.1                       exito_descartado=  0/20 ambos_aceptados=20 uno_aceptado=0 errores=[] rechazos=[] filas_finales=[1]
+otros_numeros@0.0                  exito_descartado= 20/20 ambos_aceptados=20 uno_aceptado=0 errores=[] rechazos=[] filas_finales=[1]
+otros_numeros@0.001                exito_descartado= 11/20 ambos_aceptados=11 uno_aceptado=9 errores=[] rechazos=['ValueError'] filas_finales=[1]
+otros_numeros@0.005                exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['ValueError'] filas_finales=[1]
+otros_numeros@0.02                 exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['ValueError'] filas_finales=[1]
+otros_numeros@0.1                  exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['ValueError'] filas_finales=[1]
+otra_version@0.0                   exito_descartado= 20/20 ambos_aceptados=20 uno_aceptado=0 errores=[] rechazos=[] filas_finales=[1]
+otra_version@0.001                 exito_descartado= 12/20 ambos_aceptados=12 uno_aceptado=8 errores=[] rechazos=['ValueError'] filas_finales=[1]
+otra_version@0.005                 exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['ValueError'] filas_finales=[1]
+otra_version@0.02                  exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['ValueError'] filas_finales=[1]
+otra_version@0.1                   exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['ValueError'] filas_finales=[1]
+otra_version_y_numeros@0.0         exito_descartado= 20/20 ambos_aceptados=20 uno_aceptado=0 errores=[] rechazos=[] filas_finales=[1]
+otra_version_y_numeros@0.001       exito_descartado= 12/20 ambos_aceptados=12 uno_aceptado=8 errores=[] rechazos=['ValueError'] filas_finales=[1]
+otra_version_y_numeros@0.005       exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['ValueError'] filas_finales=[1]
+otra_version_y_numeros@0.02        exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['ValueError'] filas_finales=[1]
+otra_version_y_numeros@0.1         exito_descartado=  0/20 ambos_aceptados=0 uno_aceptado=20 errores=[] rechazos=['ValueError'] filas_finales=[1]
+cuatro_escritores_aleatorio        exito_descartado= 28/40 filas_finales=[1] aceptados_por_intento=[1, 2, 3, 4]
+rollback_del_primero               {'resultados': [('error', 'RuntimeError: fallo del escritor antes del commit'), ('aceptado', 'None')], 'guardada': ('1.1.0', 10, 0.88390665), 'esperado': '1º error, 2º aceptado, queda el 2º', 'exito_descartado': 0}
+timeout_de_bloqueo_del_segundo     {'resultados': [('aceptado', 'None'), ('error', "DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.LockNo")], 'guardada': ('1.1.0', 9, -0.11609335), 'esperado': '1º aceptado, 2º error (lock timeout), queda el 1º', 'exito_descartado': 0}
+desconexion_antes_del_commit       {'resultados': [('error', "InterfaceError: (sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptio"), ('aceptado', 'None')], 'guardada': ('1.1.0', 10, 0.88390665), 'esperado': '1º error (conexión cortada), 2º aceptado, queda el 2º', 'exito_descartado': 0}
+reintento_tras_ambiguo_commit_hecho {'resultados': [('aceptado', 'None'), ('aceptado', 'None')], 'filas': 1, 'guardada': ('1.1.0', 9, -0.11609335), 'esperado': 'ambos aceptados (creado, repetido), 1 fila, sin cambios'}
+total exito_descartado: 123 · 26.9 s
+rc=0

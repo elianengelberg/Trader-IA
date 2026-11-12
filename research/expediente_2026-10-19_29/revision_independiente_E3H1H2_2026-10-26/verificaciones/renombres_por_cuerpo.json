@@ -1,0 +1,620 @@
+{
+ "RAMP->LEVER": {
+  "frag": "ratio of 1 RAMP = 35 LEVER",
+  "archivos": [
+   "bn_0a445bbdac634512886df1bdce74f3da_3631af0d9289.json"
+  ],
+  "fechas": [
+   "2022-06-29",
+   "2022-07-01",
+   "2022-07-04",
+   "2022-07-13"
+  ],
+  "viejo_usdt_en_bucket": true,
+  "nuevo_usdt_en_bucket": true,
+  "en_tabla_de_22": false
+ },
+ "ONX->ANKR": {
+  "frag": "ratio of 1 ONX = 10,000 ANKR",
+  "archivos": [
+   "bn_2127a89b19364e3c97d9bb0c7d1027f3_a2cb4c233b06.json",
+   "bn_be517700a940423c8d88f9947c83e01f_0d4a8a1b930a.json"
+  ],
+  "fechas": [
+   "2020-12-23",
+   "2020-12-24"
+  ],
+  "viejo_usdt_en_bucket": false,
+  "nuevo_usdt_en_bucket": true,
+  "en_tabla_de_22": false
+ },
+ "BTT->BTTC": {
+  "frag": "ratio of 1 BTT (Old) = 1,000 BTTC",
+  "archivos": [
+   "bn_2722e6da4f5141dd9b2fb07b5b1f3f75_372793e0ce0b.json",
+   "url_https___www.binance.com_en_support_announcement_binance-will-support-the-bit_29500a1b4744.json"
+  ],
+  "fechas": [
+   "2022-01-11",
+   "2022-01-14",
+   "2022-01-17",
+   "2022-01-25"
+  ],
+  "viejo_usdt_en_bucket": true,
+  "nuevo_usdt_en_bucket": true,
+  "en_tabla_de_22": false
+ },
+ "BTS->NBS": {
+  "frag": "ratio of 1 BTS = 1 NBS",
+  "archivos": [
+   "bn_2c0350951f364ceba624d404d7f917e8_bae8ac4c26d7.json",
+   "bn_e37aa4cc22214958abb7b513ff3e48db_93e985993ac1.json",
+   "url_https___www.binance.com_en_support_announcement_binance-will-support-the-upc_9052613d8f03.json"
+  ],
+  "fechas": [
+   "2020-09-10",
+   "2020-09-21"
+  ],
+  "viejo_usdt_en_bucket": true,
+  "nuevo_usdt_en_bucket": true,
+  "en_tabla_de_22": false
+ },
+ "SNGLS->SGT": {
+  "frag": "ratio of 1 SNGLS = 1 SGT",
+  "archivos": [
+   "bn_31e67997e3a04dbd92ef6a273b8a2152_ab6c219ff7c6.json",
+   "bn_328da0614dc94917b49437581e300014_ab021a7d368f.json",
+   "url_https___www.binance.com_en_support_announcement_snglsdao-governance-token-sg_e581bc236f3f.json"
+  ],
+  "fechas": [
+   "2020-06-15"
+  ],
+  "viejo_usdt_en_bucket": false,
+  "nuevo_usdt_en_bucket": false,
+  "en_tabla_de_22": false
+ },
+ "NANO->XNO": {
+  "frag": "ratio of 1 NANO = 1 XNO",
+  "archivos": [
+   "bn_3dc8f6de281f4781a246a1658a21cb80_e7bc3f27677f.json",
+   "url_https___www.binance.com_en_support_announcement_binance-will-update-the-tick_d2499125b809.json"
+  ],
+  "fechas": [
+   "2022-01-19",
+   "2022-01-21",
+   "2022-01-24",
+   "2022-01-28"
+  ],
+  "viejo_usdt_en_bucket": true,
+  "nuevo_usdt_en_bucket": true,
+  "en_tabla_de_22": false
+ },
+ "PHB->PHB": {
+  "frag": "ratio of 100 PHB (Old) = 1 PHB",
+  "archivos": [
+   "bn_3ff40fefd7b54cfc9f745cce0d9dbd37_ac4f79013fc3.json"
+  ],
+  "fechas": [
+   "2021-11-01",
+   "2021-11-05"
+  ],
+  "viejo_usdt_en_bucket": true,
+  "nuevo_usdt_en_bucket": true,
+  "en_tabla_de_22": false
+ },
+ "XZC->FIRO": {
+  "frag": "ratio of 1 XZC = 1 FIRO",
+  "archivos": [
+   "bn_4a06d6ab6abb4f08b12bb93d6fec30ec_1d51d7029751.json",
+   "url_https___www.binance.com_en_support_announcement_binance-will-update-the-tick_0b101f17c4f5.json"
+  ],
+  "fechas": [
+   "2021-01-20",
+   "2021-01-22",
+   "2021-01-24",
+   "2021-01-25",
+   "2021-01-29"
+  ],
+  "viejo_usdt_en_bucket": true,
+  "nuevo_usdt_en_bucket": true,
+  "en_tabla_de_22": true
+ },
+ "EDO->PNT": {
+  "frag": "ratio of 1 EDO = 1 PNT",
+  "archivos": [
+   "bn_4a5f8ba82c1c4e4fa10235bf2a48a666_b71f2285a915.json"
+  ],
+  "fechas": [
+   "2020-06-18",
+   "2020-06-22"
+  ],
+  "viejo_usdt_en_bucket": false,
+  "nuevo_usdt_en_bucket": true,
+  "en_tabla_de_22": false
+ },
+ "USDS->BUSD": {
+  "frag": "ratio of 1 USDS = 1 BUSD",
+  "archivos": [
+   "bn_52e0db956218405b8b5eda03012a0798_8f554e84d309.json"
+  ],
+  "fechas": [
+   "2020-06-24"
+  ],
+  "viejo_usdt_en_bucket": true,
+  "nuevo_usdt_en_bucket": true,
+  "en_tabla_de_22": false
+ },
+ "BCH->BCHA": {
+  "frag": "ratio of 1 BCH = 1 BCHA",
+  "archivos": [
+   "bn_6d0b3851f6934ec58d4f87ac37fd19a5_f81c7651ee94.json"
+  ],
+  "fechas": [
+   "2020-11-15",
+   "2020-11-18"
+  ],
+  "viejo_usdt_en_bucket": true,
+  "nuevo_usdt_en_bucket": false,
+  "en_tabla_de_22": false
+ },
+ "XVS->VRT": {
+  "frag": "ratio of 1 XVS = 1,000 VRT",
+  "archivos": [
+   "bn_7e9d5fa946fd4a889deb45c63a76e304_3a4e395317dc.json",
+   "url_https___www.binance.com_en_support_announcement_binance-will-support-the-ven_4cce11fcb6fe.json"
+  ],
+  "fechas": [
+   "2021-05-17"
+  ],
+  "viejo_usdt_en_bucket": true,
+  "nuevo_usdt_en_bucket": false,
+  "en_tabla_de_22": false
+ },
+ "OGN->OGV": {
+  "frag": "ratio of 1 OGN = 1 OGV",
+  "archivos": [
+   "bn_7f7464e238fa45409b454912e874cb5f_b63cdd02f18a.json",
+   "url_https___www.binance.com_en_support_announcement_binance-will-support-the-ori_4d7d31d34599.json"
+  ],
+  "fechas": [
+   "2022-07-05",
+   "2022-07-12"
+  ],
+  "viejo_usdt_en_bucket": true,
+  "nuevo_usdt_en_bucket": false,
+  "en_tabla_de_22": false
+ },
+ "GXS->REI": {
+  "frag": "ratio of 1 GXS = 10 REI",
+  "archivos": [
+   "bn_8b47296e01d84df1bddf4db774718d8f_311631e5ff99.json",
+   "bn_bdfb52830f2f4bfcba496f3f92876b5c_ccba14b6e687.json"
+  ],
+  "fechas": [
+   "2022-04-20",
+   "2022-04-22",
+   "2022-04-25",
+   "2022-05-04"
+  ],
+  "viejo_usdt_en_bucket": true,
+  "nuevo_usdt_en_bucket": true,
+  "en_tabla_de_22": false
+ },
+ "BCHA->XEC": {
+  "frag": "(BCHA) rebrand to eCash (XEC)",
+  "archivos": [
+   "bn_94ce0aa94d984c38b1c2eee4f253a024_5cf90675b623.json"
+  ],
+  "fechas": [],
+  "viejo_usdt_en_bucket": false,
+  "nuevo_usdt_en_bucket": true,
+  "en_tabla_de_22": false
+ },
+ "XEM->XYM": {
+  "frag": "ratio of 1 XEM = 1 XYM",
+  "archivos": [
+   "bn_983a85523b36455b8d802b2c3723fa5f_40e4e6ba09a1.json",
+   "url_https___www.binance.com_en_support_announcement_binance-will-support-the-sym_43766ebdd960.json"
+  ],
+  "fechas": [
+   "2021-01-14"
+  ],
+  "viejo_usdt_en_bucket": true,
+  "nuevo_usdt_en_bucket": false,
+  "en_tabla_de_22": false
+ },
+ "ETH->BETH": {
+  "frag": "ratio of 1 ETH = 1 BETH",
+  "archivos": [
+   "bn_a640a714e067433abae871f6b621836f_e3a0866ccb3f.json",
+   "url_https___www.binance.com_en_support_announcement_binance-launches-eth-2-0-sta_280283ca1cc5.json"
+  ],
+  "fechas": [
+   "2020-12-02",
+   "2020-12-10",
+   "2020-12-11",
+   "2020-12-16",
+   "2020-12-18"
+  ],
+  "viejo_usdt_en_bucket": true,
+  "nuevo_usdt_en_bucket": true,
+  "en_tabla_de_22": false
+ },
+ "ARPA->BEL": {
+  "frag": "ratio of 5000 ARPA = 1 BEL",
+  "archivos": [
+   "bn_a87d145bd0644720bf93599cc5f5a3de_e70c52a3ae91.json",
+   "url_https___www.binance.com_en_support_announcement_binance-will-support-the-bel_fcb3341a5365.json"
+  ],
+  "fechas": [
+   "2020-09-29",
+   "2020-10-14",
+   "2020-12-29",
+   "2021-01-13",
+   "2021-03-29",
+   "2021-04-13",
+   "2021-06-29",
+   "2021-07-14",
+   "2021-09-29",
+   "2021-10-14",
+   "2021-12-29",
+   "2022-01-13",
+   "2022-03-29",
+   "2022-04-13",
+   "2022-06-29",
+   "2022-07-14"
+  ],
+  "viejo_usdt_en_bucket": true,
+  "nuevo_usdt_en_bucket": true,
+  "en_tabla_de_22": false
+ },
+ "ENG->SCRT": {
+  "frag": "ratio of 1 ENG = 1 SCRT",
+  "archivos": [
+   "bn_ab16b0fedc734c8e83bf0a5ba60cf024_f428834b0c88.json",
+   "url_https___www.binance.com_en_support_announcement_binance-will-begin-the-swap-_7a9abb731311.json"
+  ],
+  "fechas": [
+   "2020-09-27",
+   "2020-09-30"
+  ],
+  "viejo_usdt_en_bucket": false,
+  "nuevo_usdt_en_bucket": true,
+  "en_tabla_de_22": false
+ },
+ "EPS->EPX": {
+  "frag": "ratio of 1 EPS = 88 EPX",
+  "archivos": [
+   "bn_bab533fdba1e4b2ba21053a7668c2865_ce3a108df373.json",
+   "bn_cf9526489aa041508f4cd57612f34119_c6ec648a669e.json"
+  ],
+  "fechas": [
+   "2022-05-03",
+   "2022-05-06",
+   "2022-05-09",
+   "2022-05-18"
+  ],
+  "viejo_usdt_en_bucket": true,
+  "nuevo_usdt_en_bucket": true,
+  "en_tabla_de_22": false
+ },
+ "CBK->MBL": {
+  "frag": "ratio of 1 CBK = 35,000 MBL",
+  "archivos": [
+   "bn_c8d8534b4b7a4d73a959dc3ff39af30c_d8e6908e840d.json",
+   "url_https___www.binance.com_en_support_announcement_cbk-distribution-is-now-comp_845f8212ae99.json"
+  ],
+  "fechas": [
+   "2020-12-23"
+  ],
+  "viejo_usdt_en_bucket": false,
+  "nuevo_usdt_en_bucket": true,
+  "en_tabla_de_22": false
+ },
+ "OMG->BOBA": {
+  "frag": "ratio of 1 OMG = 1 BOBA",
+  "archivos": [
+   "bn_ccb567574cb14c528b3e5e8e69752c6a_5e8ef6997072.json",
+   "url_https___www.binance.com_en_support_announcement_binance-will-support-the-bob_bc3bbefab266.json"
+  ],
+  "fechas": [
+   "2021-11-11",
+   "2021-11-12"
+  ],
+  "viejo_usdt_en_bucket": true,
+  "nuevo_usdt_en_bucket": false,
+  "en_tabla_de_22": false
+ },
+ "PYR->PYR": {
+  "frag": "ratio of 1 PYR (Old) = 1 PYR",
+  "archivos": [
+   "bn_d1c4582f164348a1a062aefc5892892a_a42c59be7aa6.json"
+  ],
+  "fechas": [
+   "2021-12-13",
+   "2021-12-23"
+  ],
+  "viejo_usdt_en_bucket": true,
+  "nuevo_usdt_en_bucket": true,
+  "en_tabla_de_22": false
+ },
+ "BZRX->OOKI": {
+  "frag": "ratio of 1 BZRX = 10 OOKI",
+  "archivos": [
+   "bn_dff27dc6bcbb432c902bcbea5e24ddfa_117538216109.json",
+   "bn_f97738a409ca40fbb7fb4e7740e5cd00_ac0588227028.json"
+  ],
+  "fechas": [
+   "2021-12-16",
+   "2021-12-19",
+   "2021-12-20",
+   "2021-12-24"
+  ],
+  "viejo_usdt_en_bucket": true,
+  "nuevo_usdt_en_bucket": true,
+  "en_tabla_de_22": false
+ },
+ "BCC->BCHABC": {
+  "frag": "ratio of 1 BCC = 1 BCHABC",
+  "archivos": [
+   "url_https___www.binance.com_en_support_announcement_360019875411_1a77d5c2148e.json",
+   "url_https___www.binance.com_en_support_announcement_binance-has-distributed-bitc_332f495b36dc.json",
+   "zd_360019875411_885ab7a1c7c7.json"
+  ],
+  "fechas": [
+   "2018-11-15",
+   "2018-11-16"
+  ],
+  "viejo_usdt_en_bucket": true,
+  "nuevo_usdt_en_bucket": true,
+  "en_tabla_de_22": false
+ },
+ "ARN->CBM": {
+  "frag": "ratio of 1 ARN = 18 CBM",
+  "archivos": [
+   "url_https___www.binance.com_en_support_announcement_360020374331_6384ff1fc53a.json",
+   "zd_360020374331_3d06deef938b.json"
+  ],
+  "fechas": [
+   "2018-11-30"
+  ],
+  "viejo_usdt_en_bucket": false,
+  "nuevo_usdt_en_bucket": false,
+  "en_tabla_de_22": false
+ },
+ "THETA->TFUEL": {
+  "frag": "ratio of 1 THETA = 5 TFUEL",
+  "archivos": [
+   "url_https___www.binance.com_en_support_announcement_360025204532_b6a35df737a7.json",
+   "zd_360025204532_5cae947507dc.json"
+  ],
+  "fechas": [],
+  "viejo_usdt_en_bucket": true,
+  "nuevo_usdt_en_bucket": true,
+  "en_tabla_de_22": false
+ },
+ "BTCB->BTC": {
+  "frag": "ratio of 1 BTCB = 1 BTC",
+  "archivos": [
+   "url_https___www.binance.com_en_support_announcement_360034156752_302a31dcd79b.json",
+   "url_https___www.binance.com_en_support_announcement_binance-upgrades-deposits-an_fd19d5e96e1d.json",
+   "zd_360034156752_65ed2879c5d8.json"
+  ],
+  "fechas": [
+   "2019-09-27"
+  ],
+  "viejo_usdt_en_bucket": false,
+  "nuevo_usdt_en_bucket": true,
+  "en_tabla_de_22": false
+ },
+ "BCHABC->BCH": {
+  "frag": "ratio of 1 BCHABC = 1 BCH",
+  "archivos": [
+   "url_https___www.binance.com_en_support_announcement_360037219511_0baafa92df92.json",
+   "zd_360037219511_27e27ad63185.json"
+  ],
+  "fechas": [
+   "2019-11-28"
+  ],
+  "viejo_usdt_en_bucket": true,
+  "nuevo_usdt_en_bucket": true,
+  "en_tabla_de_22": true
+ },
+ "STEEM->HIVE": {
+  "frag": "ratio of 1 STEEM = 1 HIVE",
+  "archivos": [
+   "url_https___www.binance.com_en_support_announcement_360040692692_cf9cfb94690a.json",
+   "url_https___www.binance.com_en_support_announcement_360040957592__a1749df82f00.json",
+   "zd_360040692692_88ecc53fbc91.json"
+  ],
+  "fechas": [
+   "2020-03-20"
+  ],
+  "viejo_usdt_en_bucket": true,
+  "nuevo_usdt_en_bucket": true,
+  "en_tabla_de_22": false
+ },
+ "MTL->XPR": {
+  "frag": "ratio of 1 MTL = 1 XPR",
+  "archivos": [
+   "url_https___www.binance.com_en_support_announcement_360041447032_9c5c07166fa4.json",
+   "zd_360041447032_6a7b94af6e95.json",
+   "zd_360041649191_438e4de52fa2.json"
+  ],
+  "fechas": [
+   "2020-03-30"
+  ],
+  "viejo_usdt_en_bucket": true,
+  "nuevo_usdt_en_bucket": false,
+  "en_tabla_de_22": false
+ },
+ "BNXOLD->BNX": {
+  "frag": "ratio of 1 BNXOLD = 100 BNX",
+  "archivos": [
+   "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-bi_cb114013aaba.json"
+  ],
+  "fechas": [],
+  "viejo_usdt_en_bucket": false,
+  "nuevo_usdt_en_bucket": true,
+  "en_tabla_de_22": false
+ },
+ "BNX->BNXOLD": {
+  "frag": "old BNX token has assumed BNXOLD as the ticker",
+  "archivos": [
+   "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-bi_cb114013aaba.json"
+  ],
+  "fechas": [],
+  "viejo_usdt_en_bucket": true,
+  "nuevo_usdt_en_bucket": false,
+  "en_tabla_de_22": false
+ },
+ "GTO->GFT": {
+  "frag": "ratio of 1 GTO = 1 GFT",
+  "archivos": [
+   "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-gi_680cabd50dfb.json",
+   "url_https___www.binance.com_en_support_announcement_binance-will-support-the-gif_a146802a7fbd.json"
+  ],
+  "fechas": [
+   "2023-01-18",
+   "2023-01-20",
+   "2023-01-30",
+   "2023-02-08"
+  ],
+  "viejo_usdt_en_bucket": true,
+  "nuevo_usdt_en_bucket": true,
+  "en_tabla_de_22": false
+ },
+ "MFT->HIFI": {
+  "frag": "(MFT) token swap, redenomination and rebranding plan to Hifi Finance (HIFI)",
+  "archivos": [
+   "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-ma_934dcf237cdb.json"
+  ],
+  "fechas": [],
+  "viejo_usdt_en_bucket": true,
+  "nuevo_usdt_en_bucket": true,
+  "en_tabla_de_22": false
+ },
+ "POLY->POLYX": {
+  "frag": "(POLY) mainnet swap and rebranding plan to Polymesh (POLYX)",
+  "archivos": [
+   "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-po_e3dd40cfff11.json"
+  ],
+  "fechas": [],
+  "viejo_usdt_en_bucket": true,
+  "nuevo_usdt_en_bucket": true,
+  "en_tabla_de_22": true
+ },
+ "TRX->TRXOLD": {
+  "frag": "old TRX token has assumed TRXOLD as the ticker",
+  "archivos": [
+   "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-tr_b57561803ec8.json"
+  ],
+  "fechas": [],
+  "viejo_usdt_en_bucket": true,
+  "nuevo_usdt_en_bucket": false,
+  "en_tabla_de_22": false
+ },
+ "GNT->GLM": {
+  "frag": "ratio of 1 GNT = 1 GLM",
+  "archivos": [
+   "url_https___www.binance.com_en_support_announcement_binance-will-support-golem-g_d1bdd162cd6f.json"
+  ],
+  "fechas": [
+   "2020-12-07",
+   "2020-12-10"
+  ],
+  "viejo_usdt_en_bucket": false,
+  "nuevo_usdt_en_bucket": true,
+  "en_tabla_de_22": false
+ },
+ "BNX->BNX": {
+  "frag": "ratio of 1 old BNX = 100 new BNX",
+  "archivos": [
+   "url_https___www.binance.com_en_support_announcement_binance-will-support-the-bin_8c6a897856c8.json"
+  ],
+  "fechas": [
+   "2023-02-10",
+   "2023-02-11",
+   "2023-02-12",
+   "2023-02-13",
+   "2023-02-14",
+   "2023-02-15",
+   "2023-02-16",
+   "2023-02-24"
+  ],
+  "viejo_usdt_en_bucket": true,
+  "nuevo_usdt_en_bucket": true,
+  "en_tabla_de_22": false
+ },
+ "NPXS->PUNDIX": {
+  "frag": "ratio of 1,000 NPXS = 1 PUNDIX",
+  "archivos": [
+   "url_https___www.binance.com_en_support_announcement_binance-will-support-the-pun_d284dc7b03f5.json"
+  ],
+  "fechas": [
+   "2021-04-01",
+   "2021-04-03",
+   "2021-04-05",
+   "2021-04-09"
+  ],
+  "viejo_usdt_en_bucket": true,
+  "nuevo_usdt_en_bucket": true,
+  "en_tabla_de_22": true
+ },
+ "XDATA->DATA": {
+  "frag": "ratio of 1 XDATA = 1 DATA",
+  "archivos": [
+   "url_https___www.binance.com_en_support_announcement_binance-will-support-the-str_1e58458cb980.json"
+  ],
+  "fechas": [
+   "2021-08-30"
+  ],
+  "viejo_usdt_en_bucket": false,
+  "nuevo_usdt_en_bucket": true,
+  "en_tabla_de_22": false
+ },
+ "VIDT->VIDT": {
+  "frag": "ratio of 1 old VIDT = 10 new VIDT",
+  "archivos": [
+   "url_https___www.binance.com_en_support_announcement_binance-will-support-the-vid_5d4ce6e224e4.json"
+  ],
+  "fechas": [
+   "2022-10-21",
+   "2022-10-27",
+   "2022-10-28",
+   "2022-10-31",
+   "2022-11-09"
+  ],
+  "viejo_usdt_en_bucket": true,
+  "nuevo_usdt_en_bucket": true,
+  "en_tabla_de_22": false
+ },
+ "ERD->EGLD": {
+  "frag": "ratio of 1000 ERD = 1 EGLD",
+  "archivos": [
+   "url_https___www.binance.com_en_support_announcement_elrond-erd-mainnet-token-swa_ecd7a353c383.json"
+  ],
+  "fechas": [
+   "2020-08-30",
+   "2020-08-31",
+   "2020-09-03"
+  ],
+  "viejo_usdt_en_bucket": true,
+  "nuevo_usdt_en_bucket": true,
+  "en_tabla_de_22": true
+ },
+ "ETH->ETHW": {
+  "frag": "ratio of 1 ETH = 1 ETHW",
+  "archivos": [
+   "url_https___www.binance.com_en_support_announcement_notice-regarding-the-complet_a5b22d9f8b43.json"
+  ],
+  "fechas": [
+   "2022-08-25",
+   "2022-09-13",
+   "2022-09-15"
+  ],
+  "viejo_usdt_en_bucket": true,
+  "nuevo_usdt_en_bucket": false,
+  "en_tabla_de_22": false
+ }
+}

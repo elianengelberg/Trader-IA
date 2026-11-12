@@ -1,0 +1,2 @@
+{"arbol": "val", "K": 0, "park": 0, "sel": "prueba", "rep": 1, "n": 1, "tag": "001_val_K0_park0_prueba1", "rc": 1, "seg": 0, "carga_antes": [0, 0, 0], "carga_con_quemadores": [0, 0, 0], "carga_despues": [0, 0, 0], "json": true}
+{"arbol": "val", "K": 0, "park": 1, "sel": "prueba", "rep": 1, "n": 2, "tag": "002_val_K0_park1_prueba1", "rc": 1, "seg": 0, "carga_antes": [0, 0, 0], "carga_con_quemadores": [0, 0, 0], "carga_despues": [0, 0, 0], "json": true}

@@ -1,0 +1,6 @@
+tests/integration/test_emergency_controls_protection.py:66: AssertionError: the stop still rests
+tests/integration/test_emergency_controls_protection.py:88: AssertionError: assert 'coid_H53JR10Y4C72G7YHXD2V9CKZ' in set()
+tests/integration/test_emergency_controls_protection.py:102: assert 0 == 1
+tests/integration/test_emergency_controls_protection.py:115: AssertionError: the venue does not pause: the stop closed the position
+tests/integration/test_emergency_controls_protection.py:128: assert 0.080117 == 0.0
+tests/integration/test_emergency_controls_protection.py:144: AssertionError: protected again before any bar is matched

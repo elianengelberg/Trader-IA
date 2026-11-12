@@ -1,0 +1,24 @@
+== 2026-10-22T18:28:39Z · identidad de la entrega candidata v3r2 (extracción nueva)
+COINCIDE  SHA-256 del ZIP: d912c88a59b878520501ff221fd78d2d2eef870ae0b681d2108441ab8cbd5155
+COINCIDE  tamaño del ZIP (bytes): 677262
+COINCIDE  SHA-256 del archivo de suma externa: e62a711b7b4c6aad00eea9033074d433a76639b032b00a12da49a9cdf6eb7b67
+contenido de la suma externa: d912c88a59b878520501ff221fd78d2d2eef870ae0b681d2108441ab8cbd5155  entrega_integracion_D1_D3_v3r2_2026-10-22.zip
+entrega_integracion_D1_D3_v3r2_2026-10-22.zip: OK
+COINCIDE  SHA-256 del registro externo de reproducción: fd9ce645a26e0c9ed3a2ff602c2cabd8525442fd697cab3d61a79e657ca30f8e
+-- extracción en un directorio vacío: /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_revision_D1_D3_2026-10-22/extraccion (0 entradas antes)
+archivos extraídos: 99 · fuera de la carpeta raíz: 0
+-- manifiesto interno
+SHA256SUMS: 98 de 98 verifican
+COINCIDE  entradas del manifiesto: 98
+COINCIDE  archivos presentes = archivos del manifiesto (ni sobran ni faltan)
+duplicados de contenido: 1 hash(es) repetido(s)
+   evidencia/S_comparacion_CI_libre.txt
+   evidencia/S_comparacion_base_vs_completa.txt
+-- parches
+COINCIDE  parche 01: 1944f433334cada2c4fa937080241bf51643c1393f54b4d2530003557b2e60bf
+COINCIDE  parche 02v3: d5c90091b705647cdbdd9044d0406ccc28f12e39c6070deeb5cd8aef03cf6a62
+COINCIDE  parche 03: 0be65ea6a5e7072ff83c25ed1cccec80877ceb7b1e0609e2468a025b5294e33a
+COINCIDE  parche 04: 8d39635635c81a4bf91071a42fb3a348ebf50b819efd92227915be3953306dd5
+COINCIDE  02 original de v2 (no integrar): 32a42a5db19f5cfab11a38a43ec10ad8968dc995286cf1e950c794501ec5ad48
+-- el ZIP frente a la carpeta de entrega publicada junto a él
+COINCIDE  extracción = /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/entrega/entrega_integracion_D1_D3_v3r2_2026-10-22

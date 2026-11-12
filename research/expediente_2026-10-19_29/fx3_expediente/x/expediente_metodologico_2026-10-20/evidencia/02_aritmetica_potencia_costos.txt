@@ -1,0 +1,31 @@
+== Aritmética pura (sin datos de precios). Fórmulas: años = ((z_{1-a}+z_{1-b}) * TE / delta)^2
+z_0.95=1.6449 z_0.975=1.9600 z_0.80=0.8416; suma(α=0,025 unilateral, 80%)=2.8016; suma(α=0,05)=2.4865
+T fuera de muestra: semiancho IC90=15.8449% → EE anual≈9.6330%; años=4.416; TE implícito≈20.24%
+  T: δ=7.05% α=0,025, potencia 80% → 64.7 años
+  T: δ=7.05% α=0,05, potencia 80% → 51.0 años
+  T: δ=10.00% α=0,025, potencia 80% → 32.2 años
+  T: δ=10.00% α=0,05, potencia 80% → 25.3 años
+  T: δ=19.38% α=0,025, potencia 80% → 8.6 años
+  T: δ=19.38% α=0,05, potencia 80% → 6.7 años
+Tabla general: años necesarios según TE/δ (α=0,025 unilateral, potencia 80%; y en paréntesis α=0,05)
+  TE/δ=0.25:    0.5 años (   0.4)
+  TE/δ=0.5:    2.0 años (   1.5)
+  TE/δ=1:    7.8 años (   6.2)
+  TE/δ=1.5:   17.7 años (  13.9)
+  TE/δ=2:   31.4 años (  24.7)
+  TE/δ=3:   70.6 años (  55.6)
+  TE/δ=4:  125.6 años (  98.9)
+Efecto mínimo detectable (80%, α=0,025) en E de 4,416 años: δ_min ≈ 1.333·TE
+Efecto mínimo detectable por operación (80%, α=0,025): δ_op ≈ 2,8016·s_op/√N
+  s_op=5.0%: N=20: 3.13%; N=30: 2.56%; N=50: 1.98%; N=100: 1.40%; N=200: 0.99%
+  s_op=10.0%: N=20: 6.26%; N=30: 5.11%; N=50: 3.96%; N=100: 2.80%; N=200: 1.98%
+  s_op=12.6%: N=20: 7.89%; N=30: 6.44%; N=50: 4.99%; N=100: 3.53%; N=200: 2.50%
+  s_op=1.0%: N=100: 0.280%; N=300: 0.162%; N=500: 0.125%; N=1000: 0.089%
+  s_op=1.7%: N=100: 0.476%; N=300: 0.275%; N=500: 0.213%; N=1000: 0.151%
+  s_op=2.5%: N=100: 0.700%; N=300: 0.404%; N=500: 0.313%; N=1000: 0.221%
+Costo anual aproximado (sin composición) = N_op/año × costo ida y vuelta
+  N=50/año: c=0.20%: 10%; c=0.30%: 15%; c=0.45%: 22%; c=0.60%: 30%
+  N=100/año: c=0.20%: 20%; c=0.30%: 30%; c=0.45%: 45%; c=0.60%: 60%
+  N=200/año: c=0.20%: 40%; c=0.30%: 60%; c=0.45%: 90%; c=0.60%: 120%
+  N=300/año: c=0.20%: 60%; c=0.30%: 90%; c=0.45%: 135%; c=0.60%: 180%
+Miradas repetidas sin corrección (cota de Bonferroni del error tipo I total con K miradas a α_mirada=0,05): K·0,05 → K=2: 0,10; K=3: 0,15; K=5: 0,25 (cota superior, conservadora)

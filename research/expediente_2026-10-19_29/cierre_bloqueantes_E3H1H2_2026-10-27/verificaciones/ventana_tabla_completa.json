@@ -1,0 +1,115 @@
+{
+ "ii_v3": "2023-05-15",
+ "ii_prima": "2023-05-15",
+ "fallas": [
+  [
+   "TRXDOWNUSDT",
+   "2023-05-09",
+   "T"
+  ],
+  [
+   "DOTDOWNUSDT",
+   "2023-05-10",
+   "T"
+  ],
+  [
+   "DOTUPUSDT",
+   "2023-05-10",
+   "T"
+  ],
+  [
+   "LINKUPUSDT",
+   "2023-05-11",
+   "T"
+  ],
+  [
+   "TRXUPUSDT",
+   "2023-05-09",
+   "T"
+  ],
+  [
+   "LINKDOWNUSDT",
+   "2023-05-11",
+   "T"
+  ]
+ ],
+ "fallas_en_alcance": [
+  [
+   "TRXDOWNUSDT",
+   "2023-05-09",
+   "T"
+  ],
+  [
+   "DOTDOWNUSDT",
+   "2023-05-10",
+   "T"
+  ],
+  [
+   "DOTUPUSDT",
+   "2023-05-10",
+   "T"
+  ],
+  [
+   "LINKUPUSDT",
+   "2023-05-11",
+   "T"
+  ],
+  [
+   "TRXUPUSDT",
+   "2023-05-09",
+   "T"
+  ],
+  [
+   "LINKDOWNUSDT",
+   "2023-05-11",
+   "T"
+  ]
+ ],
+ "iv_prima_anio": 2018,
+ "salidas_por_anio_en_alcance_[n,sin_evidencia]": {
+  "2026": [
+   26,
+   0
+  ],
+  "2021": [
+   9,
+   0
+  ],
+  "2023": [
+   18,
+   1
+  ],
+  "2025": [
+   51,
+   0
+  ],
+  "2024": [
+   44,
+   0
+  ],
+  "2022": [
+   31,
+   0
+  ],
+  "2018": [
+   1,
+   0
+  ],
+  "2020": [
+   17,
+   0
+  ],
+  "2019": [
+   2,
+   0
+  ]
+ },
+ "i": "2020-05-11",
+ "inicio": "2023-05-15",
+ "semanas": 158,
+ "evaluables": 158,
+ "min_elegibles": 120,
+ "ultimo_inicio_valido": "2023-05-29",
+ "resoluciones_verificadas": 47,
+ "resoluciones_con_problema": []
+}

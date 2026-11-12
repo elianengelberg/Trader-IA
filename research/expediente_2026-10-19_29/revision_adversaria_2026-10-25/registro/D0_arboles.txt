@@ -1,0 +1,11 @@
+== RA-D.0 árboles de la revisión (desde los parches EXTRAÍDOS del ZIP): 2026-10-25T17:22:45Z
+base: cambios 0 · árbol (add -A + write-tree, objeto git SHA-1) 44850cfcbf53c3f8223d38a92031f4402f8ffb32 · push no-push://revision-adversaria
+A: cambios 8 · árbol (add -A + write-tree, objeto git SHA-1) 5d6a09549a8314f6e6e9386f82a52ca7628510d1 · push no-push://revision-adversaria
+A03: cambios 12 · árbol (add -A + write-tree, objeto git SHA-1) 84f9e349526d061771de74ae799d4ecd6e3732ce · push no-push://revision-adversaria
+final: cambios 16 · árbol (add -A + write-tree, objeto git SHA-1) 0477c6a20c5e3831c2da3bf723948b7baafaa518 · push no-push://revision-adversaria
+solo02: cambios 6 · árbol (add -A + write-tree, objeto git SHA-1) 434db5e216201226a2025321899e73a9af92d62a · push no-push://revision-adversaria
+solo01: cambios 3 · árbol (add -A + write-tree, objeto git SHA-1) 6cf7763ff0a361d0ec06f39c14e3073a6e2f0aed · push no-push://revision-adversaria
+AB: cambios 9 · árbol 4ef14d31d686f4b0521207bd1e011d96e6c74822
+A3: cambios 11 · árbol a94be41a9f5d662f58c8ef82f75ab40f4b1ae373
+ABC: cambios 12 · árbol 84f9e349526d061771de74ae799d4ecd6e3732ce
+nota: ABC = A+B+03 (antes llamado A03 en este registro); A3 = 01+02v3+03 sin B (la suite «completa» de v3r3)

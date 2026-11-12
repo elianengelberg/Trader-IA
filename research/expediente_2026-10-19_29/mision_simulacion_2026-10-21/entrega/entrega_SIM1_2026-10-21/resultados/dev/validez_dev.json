@@ -1,0 +1,8 @@
+{
+ "invariancia_prefijo_DEV_ETH": true,
+ "determinismo_P3_DEV_ETH": true,
+ "m1_respeta_q": true,
+ "problemas": [],
+ "avisos_higiene": [],
+ "todo_ok": true
+}

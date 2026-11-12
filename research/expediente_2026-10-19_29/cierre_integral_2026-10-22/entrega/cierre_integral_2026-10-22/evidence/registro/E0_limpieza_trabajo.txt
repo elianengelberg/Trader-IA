@@ -1,0 +1,11 @@
+== 2026-10-22T23:07:07Z · limpieza de copias de trabajo desechables de ESTA misión (sin evidencia única: sus salidas ya están en evidence/)
+pg/datos: 39M
+pg2/datos: 756M
+mutantes_v1: 156M
+mutantes_v2: 157M
+chk06: 85M
+chk06b: 85M
+gate_arbol: 85M
+validacion_sonda: 85M
+prueba_proteccion: 85M
+disponible después: 6.4G

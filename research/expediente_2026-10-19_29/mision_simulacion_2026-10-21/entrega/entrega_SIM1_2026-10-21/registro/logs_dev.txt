@@ -1,0 +1,41 @@
+2026-10-21 20:51:26 [info     ] backtest_complete              bars=76906 component=backtest.engine final_equity=98194.6 run_id=bt_HSRP57NCY27JFCRS2NE49DF9 trades=958
+2026-10-21 20:51:32 [info     ] backtest_complete              bars=76906 component=backtest.engine final_equity=95838.95 run_id=bt_2HV5DE100R70P35PEZ7KS0AG trades=1214
+2026-10-21 20:51:35 [info     ] backtest_complete              bars=76906 component=backtest.engine final_equity=97414.84 run_id=bt_Z9R4ET0TGYQTG2C6VF4G5QM9 trades=1208
+2026-10-21 20:51:35 [info     ] backtest_complete              bars=76906 component=backtest.engine final_equity=100240.89 run_id=bt_4819GQ0AQSQTES7FE1YWXVC6 trades=1195
+2026-10-21 21:01:21 [info     ] backtest_complete              bars=76906 component=backtest.engine final_equity=97015.02 run_id=bt_PWQWQ8FBGGDEJ1DKETP22HB3 trades=955
+2026-10-21 21:01:28 [info     ] backtest_complete              bars=76906 component=backtest.engine final_equity=98212.73 run_id=bt_5FTWC9QCBHK5BEN7JECS8EXZ trades=210
+2026-10-21 21:01:30 [info     ] backtest_complete              bars=76906 component=backtest.engine final_equity=100253.44 run_id=bt_BMJ000KPZY1DZ8RB75WW6S7Y trades=956
+2026-10-21 21:01:31 [info     ] backtest_complete              bars=76906 component=backtest.engine final_equity=98431.78 run_id=bt_K846FH1XRWAWKSFQPE0J1KRR trades=208
+2026-10-21 21:11:28 [info     ] backtest_complete              bars=76906 component=backtest.engine final_equity=99296.42 run_id=bt_E8RSDHZKYMZVVPKAPEG2BAFG trades=206
+2026-10-21 21:11:29 [info     ] backtest_complete              bars=76906 component=backtest.engine final_equity=99678.28 run_id=bt_8TXY54PW5F6713GM9Y1PDRXQ trades=265
+2026-10-21 21:11:38 [info     ] backtest_complete              bars=76906 component=backtest.engine final_equity=100530.15 run_id=bt_ESRKFRBQYPZYG4HVVXXJRT6C trades=265
+2026-10-21 21:11:40 [info     ] backtest_complete              bars=76906 component=backtest.engine final_equity=99136.64 run_id=bt_DD98VXJ5JF2GWQYDXKWTF36C trades=265
+2026-10-21 21:17:59 [info     ] backtest_complete              bars=46982 component=backtest.engine final_equity=99260.43 run_id=bt_AH6W5B15MDDPXZBFMME2V34X trades=726
+2026-10-21 21:18:04 [info     ] backtest_complete              bars=46982 component=backtest.engine final_equity=98944.23 run_id=bt_SWAM5A8589Z8PGQ14Z561RCK trades=721
+2026-10-21 21:18:13 [info     ] backtest_complete              bars=46982 component=backtest.engine final_equity=99593.58 run_id=bt_AH6W5B15MDDPXZBFMME2V34X trades=620
+2026-10-21 21:18:23 [info     ] backtest_complete              bars=46982 component=backtest.engine final_equity=100007.44 run_id=bt_YPV7JKJEB2X6CX0S5X55WM12 trades=727
+2026-10-21 21:23:03 [info     ] backtest_complete              bars=32887 component=backtest.engine final_equity=99472.38 run_id=bt_AH6W5B15MDDPXZBFMME2V34X trades=489
+2026-10-21 21:24:45 [info     ] backtest_complete              bars=46982 component=backtest.engine final_equity=99311.07 run_id=bt_CX9R58MQY5N9WYNRZD15XS8C trades=719
+2026-10-21 21:24:58 [info     ] backtest_complete              bars=46982 component=backtest.engine final_equity=99395.76 run_id=bt_8E8K97F3EABFF4MZEK0BX16V trades=586
+2026-10-21 21:25:01 [info     ] backtest_complete              bars=46982 component=backtest.engine final_equity=99047.27 run_id=bt_DNV7SCQSCP6EH5ZD4P7A2AQT trades=593
+2026-10-21 21:29:00 [info     ] backtest_complete              bars=46982 component=backtest.engine final_equity=99459.33 run_id=bt_8E8K97F3EABFF4MZEK0BX16V trades=491
+2026-10-21 21:30:39 [info     ] backtest_complete              bars=46982 component=backtest.engine final_equity=100015.89 run_id=bt_J0C00K73CFX0HGP4XV09YNYV trades=595
+2026-10-21 21:30:56 [info     ] backtest_complete              bars=46982 component=backtest.engine final_equity=99713.32 run_id=bt_RRKHT7RGZG1SKVBN37HRX445 trades=124
+2026-10-21 21:30:57 [info     ] backtest_complete              bars=46982 component=backtest.engine final_equity=99356.02 run_id=bt_4QNR05XNEXEGK8QN4Q4MNE7S trades=591
+2026-10-21 21:34:53 [info     ] backtest_complete              bars=46982 component=backtest.engine final_equity=99662.14 run_id=bt_12B8NCH8633K2SYDTH8EC73Z trades=124
+2026-10-21 21:36:38 [info     ] backtest_complete              bars=46982 component=backtest.engine final_equity=99838.14 run_id=bt_RRKHT7RGZG1SKVBN37HRX445 trades=110
+2026-10-21 21:37:00 [info     ] backtest_complete              bars=46982 component=backtest.engine final_equity=100066.75 run_id=bt_Q9QPQ18Y5GD03SEXTB7WEEDE trades=124
+2026-10-21 21:37:06 [info     ] backtest_complete              bars=46982 component=backtest.engine final_equity=99718.97 run_id=bt_D356ZBB7J4KAK3AD6436KPFM trades=124
+2026-10-21 21:40:58 [info     ] backtest_complete              bars=46982 component=backtest.engine final_equity=99596.17 run_id=bt_GPMPXK2C8X6BM7X5GDFCEZ82 trades=201
+2026-10-21 21:42:45 [info     ] backtest_complete              bars=46982 component=backtest.engine final_equity=99472.17 run_id=bt_K7M2QJ26VHB2763T0HQYYADB trades=197
+2026-10-21 21:43:02 [info     ] backtest_complete              bars=46982 component=backtest.engine final_equity=99798.37 run_id=bt_GPMPXK2C8X6BM7X5GDFCEZ82 trades=182
+2026-10-21 21:43:17 [info     ] backtest_complete              bars=46982 component=backtest.engine final_equity=99810.01 run_id=bt_7PT9AARH7ZYNX7340XGVK8Z7 trades=201
+2026-10-21 21:47:07 [info     ] backtest_complete              bars=46982 component=backtest.engine final_equity=99611.1 run_id=bt_415Z42FCAB3HE7SARGFZZ1BM trades=201
+2026-10-21 21:48:45 [info     ] backtest_complete              bars=46982 component=backtest.engine final_equity=99596.17 run_id=bt_GPMPXK2C8X6BM7X5GDFCEZ82 trades=201
+2026-10-21 21:54:31 [info     ] backtest_complete              bars=46982 component=backtest.engine final_equity=99847.84 run_id=bt_HJR05F66ZDSFYJJD04PN8QRY trades=79
+2026-10-21 21:54:34 [info     ] backtest_complete              bars=46982 component=backtest.engine final_equity=99938.85 run_id=bt_7TX484Y2C6QD7S7GP1S1543P trades=79
+2026-10-21 21:54:36 [info     ] backtest_complete              bars=46982 component=backtest.engine final_equity=99799.71 run_id=bt_NA7APBM70RQQZ260D2N23299 trades=79
+2026-10-21 21:58:07 [info     ] backtest_complete              bars=76906 component=backtest.engine final_equity=100263.2 run_id=bt_E8WZ9967MKXFT8V80T8S90KS trades=108
+VALIDEZ DEV: {"invariancia_prefijo_DEV_ETH": true, "determinismo_P3_DEV_ETH": true, "m1_respeta_q": true, "problemas": [], "avisos_higiene": [], "todo_ok": true}
+{"m1": {"q": {"DEV-BTC": 0.795, "DEV-ETH": 0.75}, "medias_netas_M1_pct": {"DEV-BTC": 0.2016103105840229, "DEV-ETH": -0.4990505872056182}, "n": {"DEV-BTC": 88, "DEV-ETH": 65}, "bootstrap_combinado": {"P_media_mayor_0": 0.2527, "ic90": [-0.3294257510551941, 0.13974294806196794], "replicas_validas": 10000}, "promovida": false, "q_para_OOS_ETH": null}}
+rc=0

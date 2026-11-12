@@ -1,0 +1,545 @@
+{
+ "_nota": "Adenda 1, regla 4: mapeos fijados antes de calcular cualquier retorno. r = unidades nuevas por unidad vieja. Fuente: clasificacion_renombres.json (clasificar_candidatos.py). Los cambios de símbolo sin anuncio archivado NO se mapean (regla 3).",
+ "mapeos": [
+  {
+   "regla": 1,
+   "viejo_usdt": "VENUSDT",
+   "nuevo_usdt": "VETUSDT",
+   "r": 100,
+   "E": "2018-07-23",
+   "apertura_segun_texto": "2018-07-25",
+   "cita": "at a ratio of 1 VEN = 100 VET",
+   "cita_fechas": null,
+   "certeza": "alta",
+   "nota": null,
+   "titulo": "Information Regarding the Upcoming VEN/VET Mainnet Swap",
+   "fuente": {
+    "url": "https://support.binance.com/hc/en-us/articles/360007439672",
+    "archivo": "zd_360007439672_d538039394aa.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2018-34/segments/1534221218357.92/warc/CC-MAIN-20180821151743-20180821171743-00711.warc.gz bytes=798585015-798594486",
+    "captura": "20180821152757"
+   },
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2018-07-22",
+    "primer_activo_nuevo": "2018-07-25",
+    "coherente": true
+   }
+  },
+  {
+   "regla": 1,
+   "viejo_usdt": "BCHABCUSDT",
+   "nuevo_usdt": "BCHUSDT",
+   "r": 1,
+   "E": "2019-11-28",
+   "apertura_segun_texto": "2019-11-28",
+   "cita": "at a ratio of 1 BCHABC = 1 BCH",
+   "cita_fechas": null,
+   "certeza": "alta",
+   "nota": null,
+   "titulo": "Binance Will Update the Ticker of BCHABC to BCH",
+   "fuente": {
+    "archivo": "zd_360037219511_27e27ad63185.json"
+   },
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2019-11-27",
+    "primer_activo_nuevo": "2019-11-28",
+    "coherente": true
+   }
+  },
+  {
+   "regla": 1,
+   "viejo_usdt": "STORMUSDT",
+   "nuevo_usdt": "STMXUSDT",
+   "r": 1,
+   "E": "2020-06-08",
+   "apertura_segun_texto": "2020-06-11",
+   "cita": "at a ratio of 1 STORM = 1 STMX",
+   "cita_fechas": null,
+   "certeza": "alta",
+   "nota": null,
+   "titulo": "Storm (STORM) Token Swap to STMX Will Be Supported on Binance",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/360043990532",
+    "archivo": "url_https___www.binance.com_en_support_announcement_360043990532_0dedae609be8.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-49/segments/1637964363336.93/warc/CC-MAIN-20211207045002-20211207075002-00373.warc.gz bytes=729201402-729252447",
+    "captura": "20211207070421"
+   },
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2020-06-07",
+    "primer_activo_nuevo": "2020-06-11",
+    "coherente": true
+   }
+  },
+  {
+   "regla": 1,
+   "viejo_usdt": "ERDUSDT",
+   "nuevo_usdt": "EGLDUSDT",
+   "r": 0.001,
+   "E": "2020-08-31",
+   "apertura_segun_texto": "2020-09-03",
+   "cita": "at a ratio of 1000 ERD = 1 EGLD",
+   "cita_fechas": null,
+   "certeza": "alta",
+   "nota": null,
+   "titulo": "Elrond (ERD) Mainnet & Token Swap to Elrond Gold (EGLD) Will Be Supported on Binance",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/aa864b2d4db24379b606249d0cba87fb",
+    "archivo": "bn_aa864b2d4db24379b606249d0cba87fb_923aec2ca107.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-31/segments/1627046150266.65/warc/CC-MAIN-20210724125655-20210724155655-00338.warc.gz bytes=690575718-690604545",
+    "captura": "20210724153628"
+   },
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2020-08-30",
+    "primer_activo_nuevo": "2020-09-03",
+    "coherente": true
+   }
+  },
+  {
+   "regla": 1,
+   "viejo_usdt": "LENDUSDT",
+   "nuevo_usdt": "AAVEUSDT",
+   "r": 0.01,
+   "E": "2020-10-12",
+   "apertura_segun_texto": "2020-10-15",
+   "cita": "at a ratio of 100 LEND = 1 AAVE",
+   "cita_fechas": null,
+   "certeza": "alta",
+   "nota": null,
+   "titulo": "Aave (LEND) Token Swap to AAVE Will Be Supported on Binance With Various Service Updates & Settlements",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/17595222999545348c8acdd5dc41c00a",
+    "archivo": "bn_17595222999545348c8acdd5dc41c00a_7cbc5104a088.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-50/segments/1606141176049.8/warc/CC-MAIN-20201124082900-20201124112900-00068.warc.gz bytes=614872577-614898862",
+    "captura": "20201124101808"
+   },
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2020-10-11",
+    "primer_activo_nuevo": "2020-10-15",
+    "coherente": true
+   }
+  },
+  {
+   "regla": 1,
+   "viejo_usdt": "STRATUSDT",
+   "nuevo_usdt": "STRAXUSDT",
+   "r": 1,
+   "E": "2020-11-12",
+   "apertura_segun_texto": "2020-11-18",
+   "cita": "at a ratio of 1 STRAT = 1 STRAX",
+   "cita_fechas": null,
+   "certeza": "alta",
+   "nota": null,
+   "titulo": "Stratis (STRAT) Token Swap to STRAX Will Be Supported on Binance",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/1937b7781c5043efa66c07141be3bdc2",
+    "archivo": "bn_1937b7781c5043efa66c07141be3bdc2_e3f3ac372bca.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-50/segments/1606141191692.20/warc/CC-MAIN-20201127103102-20201127133102-00410.warc.gz bytes=557347146-557373277",
+    "captura": "20201127115620"
+   },
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2020-11-11",
+    "primer_activo_nuevo": "2020-11-18",
+    "coherente": true
+   }
+  },
+  {
+   "regla": 2,
+   "viejo_usdt": "COCOSUSDT",
+   "nuevo_usdt": "COCOSUSDT",
+   "r": 0.001,
+   "E": "2021-01-19",
+   "apertura_segun_texto": "2021-01-23",
+   "cita": "begin swapping the old COCOS tokens with the new COCOS tokens at a ratio of 1,000:1",
+   "cita_fechas": null,
+   "certeza": "alta",
+   "nota": null,
+   "titulo": "Binance Will Support the Cocos-BCX (COCOS) 1,000:1 Redenomination Plan",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/f555f8013eff42bc9c91eaa48b9da24b",
+    "archivo": "bn_f555f8013eff42bc9c91eaa48b9da24b_83402e98fdee.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-49/segments/1637964358688.35/warc/CC-MAIN-20211129044311-20211129074311-00167.warc.gz bytes=666764676-666816286",
+    "captura": "20211129065821"
+   },
+   "chequeo_actividad": {
+    "corte_en_datos": [
+     "2021-01-18",
+     "2021-01-23",
+     4
+    ],
+    "coherente": true
+   }
+  },
+  {
+   "regla": 1,
+   "viejo_usdt": "XZCUSDT",
+   "nuevo_usdt": "FIROUSDT",
+   "r": 1,
+   "E": "2021-01-25",
+   "apertura_segun_texto": "2021-01-29",
+   "cita": "at a ratio of 1 XZC = 1 FIRO",
+   "cita_fechas": null,
+   "certeza": "alta",
+   "nota": null,
+   "titulo": "Binance Will Update the Ticker of XZC to FIRO",
+   "fuente": {
+    "archivo": "bn_4a06d6ab6abb4f08b12bb93d6fec30ec_1d51d7029751.json"
+   },
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2021-01-24",
+    "primer_activo_nuevo": "2021-01-29",
+    "coherente": true
+   }
+  },
+  {
+   "regla": 2,
+   "viejo_usdt": "BTCSTUSDT",
+   "nuevo_usdt": "BTCSTUSDT",
+   "r": 10,
+   "E": "2021-03-15",
+   "apertura_segun_texto": "2021-03-19",
+   "cita": "swap the old BTCST tokens with the new BTCST tokens at a ratio of 1:10",
+   "cita_fechas": null,
+   "certeza": "media",
+   "nota": "El texto dice «1:10» sin nombrar qué lado es el viejo; se lee 1 viejo = 10 nuevos por analogía con «COCOS 1,000:1» (1.000 viejos = 1 nuevo). Previo a A: no afecta a A.",
+   "titulo": "Binance Will Support the BTC Standard Hashrate Token (BTCST) 1:10 Redenomination Plan",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/2c08ba9e1a1b409fb6a4a2cb2f5ed58b",
+    "archivo": "bn_2c08ba9e1a1b409fb6a4a2cb2f5ed58b_ca587e4ce636.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-49/segments/1637964362918.89/warc/CC-MAIN-20211203182358-20211203212358-00211.warc.gz bytes=734863414-734915432",
+    "captura": "20211203185133"
+   },
+   "chequeo_actividad": {
+    "corte_en_datos": [
+     "2021-03-14",
+     "2021-03-19",
+     4
+    ],
+    "coherente": true
+   }
+  },
+  {
+   "regla": 2,
+   "viejo_usdt": "DREPUSDT",
+   "nuevo_usdt": "DREPUSDT",
+   "r": 0.01,
+   "E": "2021-03-29",
+   "apertura_segun_texto": "2021-04-02",
+   "cita": "We will swap the old DREP tokens with the new DREP tokens at a ratio of 100:1",
+   "cita_fechas": null,
+   "certeza": "alta",
+   "nota": "Fechas según la actualización del 2021-03-22 (cese 2021-03-29 04:00, apertura 2021-04-02 04:00).",
+   "titulo": "Binance Will Support the DREP (DREP) 100:1 Redenomination Plan",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/binance-will-support-the-drep-drep-100-1-redenomination-plan-51eb4f0351194fab957bb23cc6ee52dd",
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-dre_2a9973d4261d.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2023-40/segments/1695233510528.86/warc/CC-MAIN-20230929190403-20230929220403-00746.warc.gz bytes=729453326-729527762",
+    "captura": "20230929210246"
+   },
+   "chequeo_actividad": {
+    "corte_en_datos": [
+     "2021-03-28",
+     "2021-04-02",
+     4
+    ],
+    "coherente": true
+   }
+  },
+  {
+   "regla": 1,
+   "viejo_usdt": "NPXSUSDT",
+   "nuevo_usdt": "PUNDIXUSDT",
+   "r": 0.001,
+   "E": "2021-04-05",
+   "apertura_segun_texto": "2021-04-09",
+   "cita": "at a ratio of 1,000 NPXS = 1 PUNDIX",
+   "cita_fechas": null,
+   "certeza": "alta",
+   "nota": null,
+   "titulo": "Binance Will Support the Pundi X (NPXS) Token Migration & Redenomination Plan",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/8bdcb060635b491d912247fb00603d4d",
+    "archivo": "bn_8bdcb060635b491d912247fb00603d4d_821867c8b60e.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-21/segments/1620243990449.41/warc/CC-MAIN-20210514091252-20210514121252-00564.warc.gz bytes=655330706-655361861",
+    "captura": "20210514113643"
+   },
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2021-04-04",
+    "primer_activo_nuevo": "2021-04-09",
+    "coherente": true
+   }
+  },
+  {
+   "regla": 2,
+   "viejo_usdt": "SUNUSDT",
+   "nuevo_usdt": "SUNUSDT",
+   "r": 1000,
+   "E": "2021-06-14",
+   "apertura_segun_texto": "2021-06-18",
+   "cita": "at a ratio of 1 SUN (Old) = 1,000 SUN (New)",
+   "cita_fechas": null,
+   "certeza": "alta",
+   "nota": null,
+   "titulo": "Binance Will Support the SUN (SUN) Token Migration & Redenomination Plan",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/f923f2e4056843a9a9b87beb2aaa2f31",
+    "archivo": "bn_f923f2e4056843a9a9b87beb2aaa2f31_e761d45b0dcc.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-31/segments/1627046153854.42/warc/CC-MAIN-20210729074313-20210729104313-00211.warc.gz bytes=678998249-679028256",
+    "captura": "20210729100855"
+   },
+   "chequeo_actividad": {
+    "corte_en_datos": [
+     "2021-06-13",
+     "2021-06-18",
+     4
+    ],
+    "coherente": true
+   }
+  },
+  {
+   "regla": 1,
+   "viejo_usdt": "PAXUSDT",
+   "nuevo_usdt": "USDPUSDT",
+   "r": 1,
+   "E": "2021-09-06",
+   "apertura_segun_texto": "2021-09-10",
+   "cita": "ratio of 1 PAX = 1 USDP",
+   "cita_fechas": null,
+   "certeza": "alta",
+   "nota": "PAX y USDP están en la lista fija de exclusión (§4.5): el mapeo no cambia ningún universo.",
+   "titulo": "Binance Will Support the Paxos Standard (PAX) Rebrand to Pax Dollar (USDP)",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcemenT/c313480177e4457bb1e1b848c88bbf78",
+    "archivo": "bn_c313480177e4457bb1e1b848c88bbf78_5cdfdffc3e32.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-43/segments/1634323585405.74/warc/CC-MAIN-20211021102435-20211021132435-00282.warc.gz bytes=809991858-810022531",
+    "captura": "20211021123240"
+   },
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2021-09-05",
+    "primer_activo_nuevo": "2021-09-10",
+    "coherente": true
+   }
+  },
+  {
+   "regla": 1,
+   "viejo_usdt": "ANYUSDT",
+   "nuevo_usdt": "MULTIUSDT",
+   "r": 1,
+   "E": "2022-03-30",
+   "apertura_segun_texto": "2022-04-06",
+   "cita": "at a ratio of 1 ANY = 1 MULTI",
+   "cita_fechas": null,
+   "certeza": "alta",
+   "nota": null,
+   "titulo": "Binance Will Support the Anyswap (ANY) Token Migration and Renaming Plan",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/binance-will-support-the-anyswap-any-token-migration-and-renaming-plan-d14ebaed2c2d40d591ad377653009151",
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-any_0d963f079737.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2022-49/segments/1669446710765.76/warc/CC-MAIN-20221130160457-20221130190457-00741.warc.gz bytes=711535526-711603595",
+    "captura": "20221130172228"
+   },
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2022-03-29",
+    "primer_activo_nuevo": "2022-04-06",
+    "coherente": true
+   }
+  },
+  {
+   "regla": 1,
+   "viejo_usdt": "POLYUSDT",
+   "nuevo_usdt": "POLYXUSDT",
+   "r": 1,
+   "E": "2022-10-10",
+   "apertura_segun_texto": "2022-10-17",
+   "cita": "at a ratio of 1 POLY = 1 POLYX",
+   "cita_fechas": null,
+   "certeza": "alta",
+   "nota": null,
+   "titulo": "Binance Will Support the Polymath (POLY) Mainnet Swap and Rebranding Plan to Polymesh (POLYX)",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/binance-will-support-the-polymath-poly-mainnet-swap-and-rebranding-plan-to-polymesh-polyx-25556b2e078740f1b1e7357a7aa6a94d",
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-pol_070c8129db69.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2022-49/segments/1669446710918.58/warc/CC-MAIN-20221203011523-20221203041523-00299.warc.gz bytes=729024765-729094018",
+    "captura": "20221203013208"
+   },
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2022-10-09",
+    "primer_activo_nuevo": "2022-10-17",
+    "coherente": true
+   }
+  },
+  {
+   "regla": 1,
+   "viejo_usdt": "COCOSUSDT",
+   "nuevo_usdt": "COMBOUSDT",
+   "r": 1,
+   "E": "2023-06-02",
+   "apertura_segun_texto": null,
+   "cita": "The distribution of COMBO (COMBO) was conducted at a ratio of 1 COCOS = 1 COMBO",
+   "cita_fechas": null,
+   "certeza": "media",
+   "nota": "Solo está archivado el anuncio de finalización (2023-06-02): fija símbolos, relación y fecha de finalización, no la hora de cese del par viejo. El anuncio previo que cita no está archivado. E = fecha del anuncio de finalización.",
+   "titulo": "Binance Has Completed the Cocos-BCX (COCOS) Token Swap & Rebranding Plan to COMBO (COMBO)",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/binance-has-completed-the-cocos-bcx-cocos-token-swap-rebranding-plan-to-combo-combo-18550322a4944094840831c3efe2d223",
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-co_4886d9ba7798.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2023-40/segments/1695233510259.52/warc/CC-MAIN-20230927035329-20230927065329-00348.warc.gz bytes=740774635-740852860",
+    "captura": "20230927051545"
+   },
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2023-05-28",
+    "primer_activo_nuevo": "2023-06-02",
+    "coherente": true
+   }
+  },
+  {
+   "regla": 2,
+   "viejo_usdt": "QUICKUSDT",
+   "nuevo_usdt": "QUICKUSDT",
+   "r": 1000,
+   "E": "2023-07-17",
+   "apertura_segun_texto": "2023-07-21",
+   "cita": "at a ratio of 1 old QUICK = 1,000 new QUICK",
+   "cita_fechas": "At 2023-07-17 03:00 (UTC) , Binance will suspend and delist all existing QUICK spot trading pairs",
+   "certeza": "alta",
+   "nota": null,
+   "titulo": "Binance Will Support the QuickSwap (QUICK) Token Swap and Redenomination Plan",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/binance-will-support-the-quickswap-quick-token-swap-and-redenomination-plan-50b38ae7b25a45a7854c94ab67a1e7d0",
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-qui_8e8c44b03471.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-10/segments/1707947473824.13/warc/CC-MAIN-20240222161802-20240222191802-00832.warc.gz bytes=688398309-688491565",
+    "captura": "20240222171222"
+   },
+   "chequeo_actividad": {
+    "corte_en_datos": [
+     "2023-07-16",
+     "2023-07-21",
+     4
+    ],
+    "coherente": true
+   }
+  },
+  {
+   "regla": 1,
+   "viejo_usdt": "MCUSDT",
+   "nuevo_usdt": "BEAMXUSDT",
+   "r": 100,
+   "E": "2023-11-07",
+   "apertura_segun_texto": "2023-11-14",
+   "cita": "All MC tokens will be swapped for BEAMX at a ratio of 1 MC = 100 BEAMX",
+   "cita_fechas": null,
+   "certeza": "alta",
+   "nota": null,
+   "titulo": "Binance Will Support the Merit Circle (MC) Token Swap, Redenomination and Rebranding to Beam (BEAMX)",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/binance-will-support-the-merit-circle-mc-token-swap-redenomination-and-rebranding-to-beam-beamx-0b171519f1824ee288af7343ec91ce33?ref=blog.nami.exchange",
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-mer_425adfd88510.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-46/segments/1730477027819.53/warc/CC-MAIN-20241104065437-20241104095437-00499.warc.gz bytes=635958656-636045801",
+    "captura": "20241104073422"
+   },
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2023-11-06",
+    "primer_activo_nuevo": "2023-11-14",
+    "coherente": true
+   }
+  },
+  {
+   "regla": 1,
+   "viejo_usdt": "TVKUSDT",
+   "nuevo_usdt": "VANRYUSDT",
+   "r": 1,
+   "E": "2023-12-01",
+   "apertura_segun_texto": null,
+   "cita": "The distribution was conducted at a ratio of 1 TVK = 1 VANRY",
+   "cita_fechas": null,
+   "certeza": "media",
+   "nota": "Solo está archivado el anuncio de finalización (2023-12-01): fija símbolos, relación y fecha de finalización, no la hora de cese del par viejo. E = fecha del anuncio de finalización.",
+   "titulo": "Binance Has Completed the Virtua (TVK) Token Swap and Rebranding to Vanar (VANRY)",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/binance-has-completed-the-virtua-tvk-token-swap-and-rebranding-to-vanar-vanry-4701f3d28a244d1f824aa05f009ddc40",
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-vi_317e63335f04.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-10/segments/1707947474948.91/warc/CC-MAIN-20240301030138-20240301060138-00146.warc.gz bytes=667555086-667637759",
+    "captura": "20240301031625"
+   },
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2023-11-26",
+    "primer_activo_nuevo": "2023-12-01",
+    "coherente": true
+   }
+  },
+  {
+   "regla": 1,
+   "viejo_usdt": "PLAUSDT",
+   "nuevo_usdt": "PDAUSDT",
+   "r": 1,
+   "E": "2024-02-26",
+   "apertura_segun_texto": "2024-03-01",
+   "cita": "PLA tokens will assume the ticker of PDA on Binance",
+   "cita_fechas": "At 2024-03-01 08:00 (UTC) , trading will open for the PDA/BTC and PDA/USDT spot trading pairs",
+   "certeza": "alta",
+   "nota": null,
+   "titulo": "Binance Will Support the PlayDapp (PLA) Token Swap to PlayDapp (PDA)",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/binance-will-support-the-playdapp-pla-token-swap-to-playdapp-pda-f0fafa66fedf4e058aaacb57c206c597",
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-pla_dc497a97c163.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-22/segments/1715971059148.63/warc/CC-MAIN-20240528185253-20240528215253-00125.warc.gz bytes=551773479-551856269",
+    "captura": "20240528192632"
+   },
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2024-02-25",
+    "primer_activo_nuevo": "2024-03-01",
+    "coherente": true
+   }
+  },
+  {
+   "regla": 2,
+   "viejo_usdt": "STRAXUSDT",
+   "nuevo_usdt": "STRAXUSDT",
+   "r": 10,
+   "E": "2024-03-20",
+   "apertura_segun_texto": "2024-03-28",
+   "cita": "at a ratio of 1 old STRAX = 10 new STRAX",
+   "cita_fechas": "At 2024-03-28 08:00 (UTC) , trading will open for the STRAX/BTC, STRAX/USDT and STRAX/TRY spot trading pairs",
+   "certeza": "alta",
+   "nota": null,
+   "titulo": "Binance Will Support the Stratis (STRAX) Token Swap and Redenomination Plan",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/binance-will-support-the-stratis-strax-token-swap-and-redenomination-plan-2e6eb8e644664a6ca7b6659a226c41b0?ref=blog.nami.exchange",
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-str_b8603784a245.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-42/segments/1727944253749.74/warc/CC-MAIN-20241011011611-20241011041611-00691.warc.gz bytes=585963963-586064614",
+    "captura": "20241011023231"
+   },
+   "chequeo_actividad": {
+    "corte_en_datos": [
+     "2024-03-19",
+     "2024-03-28",
+     8
+    ],
+    "coherente": true
+   }
+  },
+  {
+   "regla": 1,
+   "viejo_usdt": "MATICUSDT",
+   "nuevo_usdt": "POLUSDT",
+   "r": 1,
+   "E": "2024-09-10",
+   "apertura_segun_texto": "2024-09-13",
+   "cita": "All MATIC tokens will be swapped to POL at a ratio of 1 MATIC = 1 POL",
+   "cita_fechas": null,
+   "certeza": "alta",
+   "nota": null,
+   "titulo": "Binance Will Support the Polygon (MATIC) Token Swap to Polygon (POL)",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/binance-will-support-the-polygon-matic-token-swap-to-polygon-pol-6a6de383727f4659a3050f7982e1620f?hl=en",
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-pol_6ce597c88773.json",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-42/segments/1727944253634.18/warc/CC-MAIN-20241009115334-20241009145334-00480.warc.gz bytes=616352220-616454261",
+    "captura": "20241009121816"
+   },
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2024-09-09",
+    "primer_activo_nuevo": "2024-09-13",
+    "coherente": true
+   }
+  }
+ ]
+}

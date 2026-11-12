@@ -1,0 +1,2 @@
+60e9ca3c59a2b9502eb4bba6167b53e0fac29c653b98c56d5a80318ca01e81e4  /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_integral_2026-10-22/herramientas/registro_cola_r19.py
+8b198cc49716979edc0f4a2125ac1020406b2564d0915f3ba724882c5a58076e  /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_integral_2026-10-22/herramientas/r19_suplementario.py

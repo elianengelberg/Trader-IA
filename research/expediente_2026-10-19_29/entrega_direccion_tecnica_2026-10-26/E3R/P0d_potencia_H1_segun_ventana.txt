@@ -1,0 +1,7 @@
+Potencia de H1 (supuestos de la v3 §7.1: desvío semanal del IC 0,12–0,16; sin autocorrelación adicional)
+n=160 semanas, umbral 0.025: IC 0.01: 0.12–0.18 · IC 0.02: 0.35–0.56 · IC 0.03: 0.66–0.89 · IC mínimo detectable (80 %): 0.027–0.035
+n=160 semanas, umbral 0.05: IC 0.01: 0.20–0.28 · IC 0.02: 0.47–0.68 · IC 0.03: 0.77–0.94 · IC mínimo detectable (80 %): 0.024–0.031
+n=274 semanas, umbral 0.025: IC 0.01: 0.18–0.28 · IC 0.02: 0.54–0.79 · IC 0.03: 0.87–0.99 · IC mínimo detectable (80 %): 0.020–0.027
+n=274 semanas, umbral 0.05: IC 0.01: 0.27–0.40 · IC 0.02: 0.66–0.87 · IC 0.03: 0.93–0.99 · IC mínimo detectable (80 %): 0.018–0.024
+n=340 semanas, umbral 0.025: IC 0.01: 0.21–0.34 · IC 0.02: 0.63–0.87 · IC 0.03: 0.93–1.00 · IC mínimo detectable (80 %): 0.018–0.024
+n=340 semanas, umbral 0.05: IC 0.01: 0.31–0.46 · IC 0.02: 0.75–0.92 · IC 0.03: 0.97–1.00 · IC mínimo detectable (80 %): 0.016–0.022

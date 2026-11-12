@@ -1,0 +1,78 @@
+{
+ "arbol": "dev",
+ "accion": "flatten_rechazado",
+ "nivel_stop": 49963.27,
+ "antes": {
+  "estado": "running",
+  "posicion": 0.080117,
+  "stops_en_reposo": [
+   {
+    "precio": 49963.27,
+    "cantidad": 0.080117
+   }
+  ],
+  "snapshot_protected": true,
+  "unprotected_positions": 0,
+  "bloqueos": [],
+  "incidentes": null
+ },
+ "resultado": {
+  "state": "cancel_only",
+  "cancelled_orders": 1,
+  "closing_orders": [
+   {
+    "symbol": "BTC-USD",
+    "quantity": 0.080117,
+    "state": "rejected"
+   }
+  ]
+ },
+ "despues": {
+  "estado": "cancel_only",
+  "posicion": 0.080117,
+  "stops_en_reposo": [],
+  "snapshot_protected": false,
+  "unprotected_positions": 0,
+  "bloqueos": [],
+  "incidentes": null
+ },
+ "barras": [
+  {
+   "minimo": 49959.84459376,
+   "cruza_nivel": true,
+   "posicion": 0.080117,
+   "stops": 1,
+   "estado": "cancel_only"
+  },
+  {
+   "minimo": 49980.56460398,
+   "cruza_nivel": false,
+   "posicion": 0.080117,
+   "stops": 1,
+   "estado": "cancel_only"
+  },
+  {
+   "minimo": 49993.70714557,
+   "cruza_nivel": false,
+   "posicion": 0.080117,
+   "stops": 1,
+   "estado": "cancel_only"
+  }
+ ],
+ "primer_cruce": 0,
+ "posicion_tras_el_cruce": 0.080117,
+ "final": {
+  "estado": "cancel_only",
+  "posicion": 0.080117,
+  "stops_en_reposo": [
+   {
+    "precio": 49963.27,
+    "cantidad": 0.080117
+   }
+  ],
+  "snapshot_protected": true,
+  "unprotected_positions": 0,
+  "bloqueos": [],
+  "incidentes": null
+ }
+}

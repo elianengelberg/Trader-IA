@@ -1,0 +1,120 @@
+{
+ "nuevos_revisados": 112,
+ "con_anuncio_de_canje": [
+  {
+   "nuevo": "HIFIUSDT",
+   "primer_activo": "2023-01-12",
+   "mapeado": false,
+   "evidencia": [
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-ma_934dcf237cdb.json",
+     "frag": "Fellow Binancians, Binance has completed the Mainframe (MFT) token swap, redenomination and rebranding plan to Hifi Finance (HIFI) "
+    },
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-ma_934dcf237cdb.json",
+     "frag": " For more information, please refer to the following: Binance Will Support the Mainframe (MFT) Token Swap, Redenomination & Rebranding Plan to Hifi Finance (HIFI) "
+    }
+   ]
+  },
+  {
+   "nuevo": "AMBUSDT",
+   "primer_activo": "2023-03-03",
+   "mapeado": false,
+   "evidencia": [
+    {
+     "archivo": "bn_fc9ec2a0ae394730bc4f471e204fd133_d0c91551883f.json",
+     "frag": "Fellow Binancians, Binance would like to confirm support for the Ambrosus (AMB) mainnet token swap"
+    }
+   ]
+  },
+  {
+   "nuevo": "RDNTUSDT",
+   "primer_activo": "2023-03-30",
+   "mapeado": false,
+   "evidencia": [
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_notice-regarding-the-deposit_52777868507c.json",
+     "frag": " In light of this, Binance will support the token swap for old Radiant Capital (RDNT) tokens to new Radiant Capital (RDNT) tokens"
+    }
+   ]
+  },
+  {
+   "nuevo": "COMBOUSDT",
+   "primer_activo": "2023-06-02",
+   "mapeado": true,
+   "evidencia": [
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-co_4886d9ba7798.json",
+     "frag": "Fellow Binancians, Binance has completed the Cocos-BCX (COCOS) token swap and rebranding plan to COMBO (COMBO) "
+    },
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-co_4886d9ba7798.json",
+     "frag": " For more information, please refer to the following: Binance Will Support the Cocos-BCX (COCOS) Token Swap & Rebranding Plan to COMBO (COMBO) "
+    }
+   ]
+  },
+  {
+   "nuevo": "GFTUSDT",
+   "primer_activo": "2023-09-22",
+   "mapeado": false,
+   "evidencia": [
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-gi_680cabd50dfb.json",
+     "frag": "Fellow Binancians, Binance has completed the Gifto (GTO) token swap to Gifto (GFT)"
+    },
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-gi_680cabd50dfb.json",
+     "frag": " For more information, please refer to the following: Binance Will Support the Gifto (GTO) Token Swap to Gifto (GFT) "
+    }
+   ]
+  },
+  {
+   "nuevo": "BEAMXUSDT",
+   "primer_activo": "2023-11-14",
+   "mapeado": true,
+   "evidencia": [
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-mer_425adfd88510.json",
+     "frag": "Fellow Binancians, Binance will support the Merit Circle (MC) token swap, redenomination and rebranding to Beam (BEAMX)"
+    }
+   ]
+  },
+  {
+   "nuevo": "VANRYUSDT",
+   "primer_activo": "2023-12-01",
+   "mapeado": true,
+   "evidencia": [
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-vi_317e63335f04.json",
+     "frag": "Fellow Binancians, Binance has completed the Virtua (TVK) token swap and rebranding to Vanar (VANRY)"
+    },
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-vi_317e63335f04.json",
+     "frag": " For more information, please refer to the following: Binance Will Support the Virtua (TVK) Token Swap and Rebranding to Vanar (VANRY) "
+    }
+   ]
+  },
+  {
+   "nuevo": "PDAUSDT",
+   "primer_activo": "2024-03-01",
+   "mapeado": true,
+   "evidencia": [
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-pla_dc497a97c163.json",
+     "frag": "Fellow Binancians, Binance will support the PlayDapp (PLA) token swap to PlayDapp (PDA)"
+    }
+   ]
+  },
+  {
+   "nuevo": "POLUSDT",
+   "primer_activo": "2024-09-13",
+   "mapeado": true,
+   "evidencia": [
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-pol_6ce597c88773.json",
+     "frag": "Fellow Binancians, Binance will support the Polygon (MATIC) token swap to Polygon (POL)"
+    }
+   ]
+  }
+ ]
+}

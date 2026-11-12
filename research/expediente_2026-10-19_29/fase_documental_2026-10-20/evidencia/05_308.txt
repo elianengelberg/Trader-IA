@@ -1,0 +1,6 @@
+== 2026-10-20T15:06:11+00:00 verificación de los 308 archivos spot (212 diarios de T + 96 horarios de H-CARRY)
+T BTCUSDT 1d: 106 archivos {'ok': 106}; meses 2017-08 → 2026-05
+T ETHUSDT 1d: 106 archivos {'ok': 106}; meses 2017-08 → 2026-05
+H-CARRY BTCUSDT spot 1h: 96 archivos (80 mensuales + 16 diarios de complemento) {'ok': 96}
+TOTAL spot verificados: 308
+MANIFIESTO_solo_mensual.json (rutas relativas a datos/binance_vision): 388 archivos {'ok': 388}

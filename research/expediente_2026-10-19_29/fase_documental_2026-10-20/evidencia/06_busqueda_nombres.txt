@@ -1,0 +1,12 @@
+== 2026-10-20T15:06:25Z búsqueda por nombre (insensible a mayúsculas): rev[-_ ]?shock|revshock|ema[-_ (]?9|ema9|ema\(9\)|vwap.{0,40}ema|ema.{0,40}vwap
+-- árbol de trabajo (sin .venv ni datos):
+-- todas las versiones de git:
+0
+-- mensajes de commit:
+-- scratchpad (sin datos crudos de E3):
+-- paquetes comprimidos: 25 paquetes, 11614 miembros; coincidencias: []
+  primer mensaje humano con la mención: 2026-10-20T12:01:10.071Z Cierro E3 por ahora como «no evaluable con las fuentes disponibles bajo el protocolo congelado».  No relajes la regla (iv), no recortes la ventana histórica y n
+  primer mensaje humano con la mención: 2026-10-20T14:45:45.809Z Trader-IA — Ejecución coordinada y auditoría de T, H-REV-SHOCK y H-EMA9-VWAP  Objetivo  Completar el trabajo pendiente de forma coordinada, reproducible y audit
+  primer mensaje humano con la mención: 2026-10-20T15:01:00.223Z TRADER-IA — CIERRE DE AUDITORÍA Y PREPARACIÓN INTEGRAL DE EXPERIMENTOS  Objetivo  Completar la fase documental y metodológica de Trader-IA, dejando un estado de
+  primer mensaje humano con la mención: 2026-10-20T15:01:52.528Z TRADER-IA — CIERRE DE AUDITORÍA Y PREPARACIÓN INTEGRAL DE EXPERIMENTOS  Objetivo  Completar la fase documental y metodológica de Trader-IA, dejando un estado de
+-- historial de la sesión (líneas con 'REV-SHOCK' o 'EMA9' por tipo/rol/origen): {'queue-operation/queue-operation/None': 4, 'user/user/human': 4, 'assistant/assistant/None': 26, 'user/user/None': 11, 'last-prompt/last-prompt/None': 14, 'attachment/attachment/None': 1}

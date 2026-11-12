@@ -1,0 +1,154 @@
+[
+{
+"par": "EEEUSDT",
+"E": "2019-01-01",
+"urls": [
+"u/EEEUSDT2019-01-01"
+],
+"titulos": [
+"Binance Will Delist EEE"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": true,
+"tokens": [
+"EEE"
+],
+"url_archivada": "x",
+"sin_fecha": false,
+"clave": "EEEUSDT|2019-01-01",
+"categoria_auto": "B",
+"L": "2018-12-01",
+"nota": null,
+"categoria": "B"
+},
+{
+"par": "AAAUSDT",
+"E": "2019-03-02",
+"urls": [
+"dup",
+"u/AAAUSDT2019-03-02"
+],
+"titulos": [
+"Binance Will Delist AAA"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": true,
+"tokens": [
+"AAA"
+],
+"url_archivada": "x",
+"sin_fecha": false,
+"clave": "AAAUSDT|2019-03-02",
+"categoria_auto": "A",
+"L": "2019-03-01",
+"nota": null,
+"categoria": "A"
+},
+{
+"par": "DDDUSDT",
+"E": "2019-05-01",
+"urls": [
+"u/DDDUSDT2019-05-01"
+],
+"titulos": [
+"Binance Will Delist DDD"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": false,
+"tokens": [
+"DDD"
+],
+"url_archivada": "x",
+"sin_fecha": false,
+"clave": "DDDUSDT|2019-05-01",
+"categoria_auto": "D",
+"L": null,
+"nota": {
+"A3.3": 2,
+"otros_pares_en_bucket": [
+"DDDBTC"
+]
+},
+"categoria": "fuera_sin_par_usdt_documentado"
+},
+{
+"par": "BBBUSDT",
+"E": "2019-06-01",
+"urls": [
+"u/BBBUSDT2019-06-01"
+],
+"titulos": [
+"Binance Will Delist BBB"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": true,
+"tokens": [
+"BBB"
+],
+"url_archivada": "x",
+"sin_fecha": false,
+"clave": "BBBUSDT|2019-06-01",
+"categoria_auto": "T",
+"L": "2019-01-10",
+"nota": null,
+"categoria": "T"
+},
+{
+"par": "FFFUSDT",
+"E": "2019-07-01",
+"urls": [
+"u/FFFUSDT2019-07-01"
+],
+"titulos": [
+"Binance Will Delist FFF"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": false,
+"tokens": [
+"FFF"
+],
+"url_archivada": "x",
+"sin_fecha": false,
+"clave": "FFFUSDT|2019-07-01",
+"categoria_auto": "D",
+"L": null,
+"nota": {
+"A3.3": 3
+},
+"categoria": "D"
+},
+{
+"par": "CCCUSDT",
+"E": "2020-01-01",
+"urls": [
+"u/CCCUSDT2020-01-01"
+],
+"titulos": [
+"Binance Will Delist CCC"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": true,
+"tokens": [
+"CCC"
+],
+"url_archivada": "x",
+"sin_fecha": false,
+"clave": "CCCUSDT|2020-01-01",
+"categoria_auto": "C",
+"L": null,
+"nota": null,
+"categoria": "C_no_explicada"
+}
+]

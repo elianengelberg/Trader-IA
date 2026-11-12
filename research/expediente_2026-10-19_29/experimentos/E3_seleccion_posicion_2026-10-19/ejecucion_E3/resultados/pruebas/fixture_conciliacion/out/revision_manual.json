@@ -1,0 +1,141 @@
+{
+"C": [
+{
+"par": "CCCUSDT",
+"E": "2020-01-01",
+"urls": [
+"u/CCCUSDT2020-01-01"
+],
+"titulos": [
+"Binance Will Delist CCC"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": true,
+"tokens": [
+"CCC"
+],
+"url_archivada": "x",
+"sin_fecha": false,
+"clave": "CCCUSDT|2020-01-01",
+"categoria_auto": "C",
+"L": null,
+"nota": null,
+"categoria": "C_no_explicada",
+"cuerpo": "..."
+}
+],
+"D_sin_evidencia_ni_otro_par": [
+{
+"par": "FFFUSDT",
+"E": "2019-07-01",
+"urls": [
+"u/FFFUSDT2019-07-01"
+],
+"titulos": [
+"Binance Will Delist FFF"
+],
+"subtipos": [
+"exclusion_token"
+],
+"par_en_texto": false,
+"tokens": [
+"FFF"
+],
+"url_archivada": "x",
+"sin_fecha": false,
+"clave": "FFFUSDT|2019-07-01",
+"categoria_auto": "D",
+"L": null,
+"nota": {
+"A3.3": 3
+},
+"categoria": "D",
+"cuerpo": "..."
+}
+],
+"sin_fecha": [],
+"sin_par": [],
+"V_S2_desaciertos": [],
+"V_S3": [
+{
+"clave": "AAAUSDT|2019-03-02",
+"par": "AAAUSDT",
+"E": "2019-03-02",
+"categoria": "A",
+"L": "2019-03-01",
+"urls": [
+"dup",
+"u/AAAUSDT2019-03-02"
+],
+"titulos": [
+"Binance Will Delist AAA"
+],
+"revision": null,
+"cuerpo": "..."
+},
+{
+"clave": "BBBUSDT|2019-06-01",
+"par": "BBBUSDT",
+"E": "2019-06-01",
+"categoria": "T",
+"L": "2019-01-10",
+"urls": [
+"u/BBBUSDT2019-06-01"
+],
+"titulos": [
+"Binance Will Delist BBB"
+],
+"revision": null,
+"cuerpo": "..."
+},
+{
+"clave": "CCCUSDT|2020-01-01",
+"par": "CCCUSDT",
+"E": "2020-01-01",
+"categoria": "C_no_explicada",
+"L": null,
+"urls": [
+"u/CCCUSDT2020-01-01"
+],
+"titulos": [
+"Binance Will Delist CCC"
+],
+"revision": null,
+"cuerpo": "..."
+},
+{
+"clave": "EEEUSDT|2019-01-01",
+"par": "EEEUSDT",
+"E": "2019-01-01",
+"categoria": "B",
+"L": "2018-12-01",
+"urls": [
+"u/EEEUSDT2019-01-01"
+],
+"titulos": [
+"Binance Will Delist EEE"
+],
+"revision": null,
+"cuerpo": "..."
+},
+{
+"clave": "FFFUSDT|2019-07-01",
+"par": "FFFUSDT",
+"E": "2019-07-01",
+"categoria": "D",
+"L": null,
+"urls": [
+"u/FFFUSDT2019-07-01"
+],
+"titulos": [
+"Binance Will Delist FFF"
+],
+"revision": null,
+"cuerpo": "..."
+}
+],
+"renombres_candidatos": [],
+"correcciones": []
+}

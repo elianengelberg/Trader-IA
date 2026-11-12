@@ -1,0 +1,688 @@
+{
+ "version_sonda": 2,
+ "park": false,
+ "cpus": 4,
+ "carga_inicio": [
+  5.69970703125,
+  3.75,
+  1.78076171875
+ ],
+ "fondo": 301799,
+ "manual": 316,
+ "flushes": [
+  {
+   "prueba": "tests/integration/test_account_restore.py::test_a_day_that_hit_the_loss_limit_still_refuses_entries_after_a_restart",
+   "llamador": "stop",
+   "plazo_s": 10.0,
+   "pendientes": 0,
+   "pendientes_por_tipo": {},
+   "bucle_vivo": false,
+   "carga1": 5.7,
+   "seg": 0.0,
+   "ok": true,
+   "ciclos_fondo_durante": 0
+  },
+  {
+   "prueba": "tests/integration/test_account_restore.py::test_an_open_position_is_restored_protected_scorable_and_closable_after_a_restart",
+   "llamador": "settle",
+   "plazo_s": 10.0,
+   "pendientes": 14,
+   "pendientes_por_tipo": {
+    "sin_empezar": 14
+   },
+   "bucle_vivo": true,
+   "carga1": 5.7,
+   "seg": 2.872,
+   "ok": true,
+   "ciclos_fondo_durante": 65923
+  },
+  {
+   "prueba": "tests/integration/test_account_restore.py::test_an_open_position_is_restored_protected_scorable_and_closable_after_a_restart",
+   "llamador": "stop",
+   "plazo_s": 10.0,
+   "pendientes": 0,
+   "pendientes_por_tipo": {},
+   "bucle_vivo": false,
+   "carga1": 5.32,
+   "seg": 0.0,
+   "ok": true,
+   "ciclos_fondo_durante": 0
+  },
+  {
+   "prueba": "tests/integration/test_account_restore.py::test_an_open_position_is_restored_protected_scorable_and_closable_after_a_restart",
+   "llamador": "settle",
+   "plazo_s": 10.0,
+   "pendientes": 0,
+   "pendientes_por_tipo": {},
+   "bucle_vivo": false,
+   "carga1": 5.32,
+   "seg": 0.0,
+   "ok": true,
+   "ciclos_fondo_durante": 0
+  },
+  {
+   "prueba": "tests/integration/test_account_restore.py::test_an_open_position_is_restored_protected_scorable_and_closable_after_a_restart",
+   "llamador": "settle",
+   "plazo_s": 10.0,
+   "pendientes": 10,
+   "pendientes_por_tipo": {
+    "sin_empezar": 10
+   },
+   "bucle_vivo": true,
+   "carga1": 5.32,
+   "seg": 1.091,
+   "ok": true,
+   "ciclos_fondo_durante": 25627
+  },
+  {
+   "prueba": "tests/integration/test_account_restore.py::test_an_open_position_is_restored_protected_scorable_and_closable_after_a_restart",
+   "llamador": "stop",
+   "plazo_s": 10.0,
+   "pendientes": 0,
+   "pendientes_por_tipo": {},
+   "bucle_vivo": false,
+   "carga1": 5.32,
+   "seg": 0.0,
+   "ok": true,
+   "ciclos_fondo_durante": 0
+  },
+  {
+   "prueba": "tests/integration/test_account_restore.py::test_a_resting_entry_left_by_a_dead_session_is_orphaned_not_resurrected",
+   "llamador": "settle",
+   "plazo_s": 10.0,
+   "pendientes": 4,
+   "pendientes_por_tipo": {
+    "sin_empezar": 4
+   },
+   "bucle_vivo": true,
+   "carga1": 5.32,
+   "seg": 0.519,
+   "ok": true,
+   "ciclos_fondo_durante": 12657
+  },
+  {
+   "prueba": "tests/integration/test_account_restore.py::test_a_resting_entry_left_by_a_dead_session_is_orphaned_not_resurrected",
+   "llamador": "settle",
+   "plazo_s": 10.0,
+   "pendientes": 0,
+   "pendientes_por_tipo": {},
+   "bucle_vivo": true,
+   "carga1": 5.32,
+   "seg": 0.0,
+   "ok": true,
+   "ciclos_fondo_durante": 0
+  },
+  {
+   "prueba": "tests/integration/test_account_restore.py::test_a_pending_exit_at_restart_leaves_the_position_open_and_the_new_session_closes_it",
+   "llamador": "settle",
+   "plazo_s": 10.0,
+   "pendientes": 16,
+   "pendientes_por_tipo": {
+    "sin_empezar": 16
+   },
+   "bucle_vivo": true,
+   "carga1": 5.32,
+   "seg": 1.504,
+   "ok": true,
+   "ciclos_fondo_durante": 27315
+  },
+  {
+   "prueba": "tests/integration/test_account_restore.py::test_a_pending_exit_at_restart_leaves_the_position_open_and_the_new_session_closes_it",
+   "llamador": "settle",
+   "plazo_s": 10.0,
+   "pendientes": 0,
+   "pendientes_por_tipo": {},
+   "bucle_vivo": true,
+   "carga1": 4.98,
+   "seg": 0.0,
+   "ok": true,
+   "ciclos_fondo_durante": 0
+  },
+  {
+   "prueba": "tests/integration/test_account_restore.py::test_a_pending_exit_at_restart_leaves_the_position_open_and_the_new_session_closes_it",
+   "llamador": "stop",
+   "plazo_s": 10.0,
+   "pendientes": 6,
+   "pendientes_por_tipo": {
+    "order": 2,
+    "account_event": 1,
+    "run_heartbeat": 1,
+    "fill": 1,
+    "edge_outcome": 1
+   },
+   "bucle_vivo": false,
+   "carga1": 4.98,
+   "seg": 0.008,
+   "ok": true,
+   "ciclos_fondo_durante": 0
+  },
+  {
+   "prueba": "tests/integration/test_account_restore.py::test_partial_fills_and_fees_rebuild_identically_however_often",
+   "llamador": "settle",
+   "plazo_s": 10.0,
+   "pendientes": 31,
+   "pendientes_por_tipo": {
+    "sin_empezar": 31
+   },
+   "bucle_vivo": true,
+   "carga1": 4.98,
+   "seg": 4.991,
+   "ok": true,
+   "ciclos_fondo_durante": 106629
+  },
+  {
+   "prueba": "tests/integration/test_account_restore.py::test_partial_fills_and_fees_rebuild_identically_however_often",
+   "llamador": "stop",
+   "plazo_s": 10.0,
+   "pendientes": 0,
+   "pendientes_por_tipo": {},
+   "bucle_vivo": false,
+   "carga1": 4.66,
+   "seg": 0.0,
+   "ok": true,
+   "ciclos_fondo_durante": 0
+  },
+  {
+   "prueba": "tests/integration/test_account_restore.py::test_partial_fills_and_fees_rebuild_identically_however_often",
+   "llamador": "settle",
+   "plazo_s": 10.0,
+   "pendientes": 0,
+   "pendientes_por_tipo": {},
+   "bucle_vivo": false,
+   "carga1": 4.66,
+   "seg": 0.0,
+   "ok": true,
+   "ciclos_fondo_durante": 0
+  },
+  {
+   "prueba": "tests/integration/test_account_restore.py::test_an_unreadable_store_at_start_blocks_entries_and_never_substitutes_base_capital",
+   "llamador": "stop",
+   "plazo_s": 10.0,
+   "pendientes": 0,
+   "pendientes_por_tipo": {},
+   "bucle_vivo": false,
+   "carga1": 4.66,
+   "seg": 0.0,
+   "ok": true,
+   "ciclos_fondo_durante": 0
+  },
+  {
+   "prueba": "tests/integration/test_account_restore.py::test_a_lost_journal_write_makes_the_rebuild_incomplete_and_the_next_session_blocked",
+   "llamador": "settle",
+   "plazo_s": 10.0,
+   "pendientes": 10,
+   "pendientes_por_tipo": {
+    "sin_empezar": 10
+   },
+   "bucle_vivo": true,
+   "carga1": 4.66,
+   "seg": 1.538,
+   "ok": true,
+   "ciclos_fondo_durante": 35598
+  },
+  {
+   "prueba": "tests/integration/test_account_restore.py::test_a_lost_journal_write_makes_the_rebuild_incomplete_and_the_next_session_blocked",
+   "llamador": "stop",
+   "plazo_s": 10.0,
+   "pendientes": 0,
+   "pendientes_por_tipo": {},
+   "bucle_vivo": false,
+   "carga1": 4.66,
+   "seg": 0.0,
+   "ok": true,
+   "ciclos_fondo_durante": 0
+  },
+  {
+   "prueba": "tests/integration/test_account_restore.py::test_a_lost_journal_write_makes_the_rebuild_incomplete_and_the_next_session_blocked",
+   "llamador": "settle",
+   "plazo_s": 10.0,
+   "pendientes": 0,
+   "pendientes_por_tipo": {},
+   "bucle_vivo": false,
+   "carga1": 4.66,
+   "seg": 0.0,
+   "ok": true,
+   "ciclos_fondo_durante": 0
+  },
+  {
+   "prueba": "tests/integration/test_account_restore.py::test_a_lost_journal_write_makes_the_rebuild_incomplete_and_the_next_session_blocked",
+   "llamador": "stop",
+   "plazo_s": 10.0,
+   "pendientes": 0,
+   "pendientes_por_tipo": {},
+   "bucle_vivo": false,
+   "carga1": 4.66,
+   "seg": 0.0,
+   "ok": true,
+   "ciclos_fondo_durante": 0
+  },
+  {
+   "prueba": "tests/integration/test_account_restore.py::test_a_database_outage_during_a_write_does_not_pretend_the_state_was_saved",
+   "llamador": "settle",
+   "plazo_s": 10.0,
+   "pendientes": 10,
+   "pendientes_por_tipo": {
+    "sin_empezar": 10
+   },
+   "bucle_vivo": true,
+   "carga1": 4.66,
+   "seg": 0.595,
+   "ok": true,
+   "ciclos_fondo_durante": 14217
+  },
+  {
+   "prueba": "tests/integration/test_account_restore.py::test_a_database_outage_during_a_write_does_not_pretend_the_state_was_saved",
+   "llamador": "stop",
+   "plazo_s": 10.0,
+   "pendientes": 0,
+   "pendientes_por_tipo": {},
+   "bucle_vivo": false,
+   "carga1": 4.66,
+   "seg": 0.0,
+   "ok": true,
+   "ciclos_fondo_durante": 0
+  },
+  {
+   "prueba": "tests/integration/test_account_restore.py::test_a_database_outage_during_a_write_does_not_pretend_the_state_was_saved",
+   "llamador": "settle",
+   "plazo_s": 10.0,
+   "pendientes": 0,
+   "pendientes_por_tipo": {},
+   "bucle_vivo": false,
+   "carga1": 4.66,
+   "seg": 0.0,
+   "ok": true,
+   "ciclos_fondo_durante": 0
+  },
+  {
+   "prueba": "tests/integration/test_account_restore.py::test_a_baseline_seeds_a_runtime_flat_at_base_capital_and_lifts_the_block",
+   "llamador": "stop",
+   "plazo_s": 10.0,
+   "pendientes": 0,
+   "pendientes_por_tipo": {},
+   "bucle_vivo": false,
+   "carga1": 4.66,
+   "seg": 0.0,
+   "ok": true,
+   "ciclos_fondo_durante": 0
+  },
+  {
+   "prueba": "tests/integration/test_account_restore.py::test_a_baseline_seeds_a_runtime_flat_at_base_capital_and_lifts_the_block",
+   "llamador": "stop",
+   "plazo_s": 10.0,
+   "pendientes": 0,
+   "pendientes_por_tipo": {},
+   "bucle_vivo": false,
+   "carga1": 4.66,
+   "seg": 0.0,
+   "ok": true,
+   "ciclos_fondo_durante": 0
+  },
+  {
+   "prueba": "tests/integration/test_account_restore.py::test_a_leg_entered_in_two_partial_fills_is_protected_and_closes_flat",
+   "llamador": "stop",
+   "plazo_s": 10.0,
+   "pendientes": 0,
+   "pendientes_por_tipo": {},
+   "bucle_vivo": false,
+   "carga1": 4.66,
+   "seg": 0.0,
+   "ok": true,
+   "ciclos_fondo_durante": 0
+  },
+  {
+   "prueba": "tests/integration/test_account_restore.py::test_the_residue_the_12h_session_left_is_one_whole_lot_and_closes_flat",
+   "llamador": "stop",
+   "plazo_s": 10.0,
+   "pendientes": 0,
+   "pendientes_por_tipo": {},
+   "bucle_vivo": false,
+   "carga1": 4.66,
+   "seg": 0.0,
+   "ok": true,
+   "ciclos_fondo_durante": 0
+  },
+  {
+   "prueba": "tests/integration/test_account_restore.py::test_a_restored_open_leg_starts_at_its_base_capital_and_the_books_agree[short]",
+   "llamador": "stop",
+   "plazo_s": 10.0,
+   "pendientes": 0,
+   "pendientes_por_tipo": {},
+   "bucle_vivo": false,
+   "carga1": 4.66,
+   "seg": 0.0,
+   "ok": true,
+   "ciclos_fondo_durante": 0
+  },
+  {
+   "prueba": "tests/integration/test_account_restore.py::test_a_restored_open_leg_starts_at_its_base_capital_and_the_books_agree[long]",
+   "llamador": "stop",
+   "plazo_s": 10.0,
+   "pendientes": 0,
+   "pendientes_por_tipo": {},
+   "bucle_vivo": false,
+   "carga1": 4.66,
+   "seg": 0.0,
+   "ok": true,
+   "ciclos_fondo_durante": 0
+  },
+  {
+   "prueba": "tests/integration/test_account_restore.py::test_the_12h_session_s_short_residue_with_its_funding_starts_and_closes",
+   "llamador": "stop",
+   "plazo_s": 10.0,
+   "pendientes": 0,
+   "pendientes_por_tipo": {},
+   "bucle_vivo": false,
+   "carga1": 4.66,
+   "seg": 0.0,
+   "ok": true,
+   "ciclos_fondo_durante": 0
+  }
+ ],
+ "errores_escritura": [
+  {
+   "prueba": "tests/integration/test_account_restore.py::test_a_lost_journal_write_makes_the_rebuild_incomplete_and_the_next_session_blocked",
+   "tipo": "account_event",
+   "excepcion": "RuntimeError",
+   "mensaje": "database unavailable during account_event",
+   "inyectada": true
+  },
+  {
+   "prueba": "tests/integration/test_account_restore.py::test_a_database_outage_during_a_write_does_not_pretend_the_state_was_saved",
+   "tipo": "fill",
+   "excepcion": "RuntimeError",
+   "mensaje": "database unavailable during fill",
+   "inyectada": true
+  },
+  {
+   "prueba": "tests/integration/test_account_restore.py::test_a_database_outage_during_a_write_does_not_pretend_the_state_was_saved",
+   "tipo": "account_event",
+   "excepcion": "RuntimeError",
+   "mensaje": "database unavailable during account_event",
+   "inyectada": true
+  },
+  {
+   "prueba": "tests/integration/test_account_restore.py::test_a_database_outage_during_a_write_does_not_pretend_the_state_was_saved",
+   "tipo": "account_event",
+   "excepcion": "RuntimeError",
+   "mensaje": "database unavailable during account_event",
+   "inyectada": true
+  },
+  {
+   "prueba": "tests/integration/test_account_restore.py::test_a_database_outage_during_a_write_does_not_pretend_the_state_was_saved",
+   "tipo": "account_event",
+   "excepcion": "RuntimeError",
+   "mensaje": "database unavailable during account_event",
+   "inyectada": true
+  }
+ ],
+ "pruebas": {
+  "tests/integration/test_account_restore.py::test_a_day_that_hit_the_loss_limit_still_refuses_entries_after_a_restart": {
+   "resultado": "passed",
+   "fases": {
+    "setup": "passed",
+    "call": "passed",
+    "teardown": "passed"
+   },
+   "seg": 0.55
+  },
+  "tests/integration/test_account_restore.py::test_a_drawdown_past_the_breaker_survives_a_restart": {
+   "resultado": "passed",
+   "fases": {
+    "setup": "passed",
+    "call": "passed",
+    "teardown": "passed"
+   },
+   "seg": 0.1
+  },
+  "tests/integration/test_account_restore.py::test_restarting_before_and_after_midnight_utc_keeps_the_peak_and_rolls_the_day_correctly": {
+   "resultado": "passed",
+   "fases": {
+    "setup": "passed",
+    "call": "passed",
+    "teardown": "passed"
+   },
+   "seg": 0.08
+  },
+  "tests/integration/test_account_restore.py::test_an_open_position_is_restored_protected_scorable_and_closable_after_a_restart": {
+   "resultado": "passed",
+   "fases": {
+    "setup": "passed",
+    "call": "passed",
+    "teardown": "passed"
+   },
+   "seg": 4.79
+  },
+  "tests/integration/test_account_restore.py::test_a_resting_entry_left_by_a_dead_session_is_orphaned_not_resurrected": {
+   "resultado": "passed",
+   "fases": {
+    "setup": "passed",
+    "call": "passed",
+    "teardown": "passed"
+   },
+   "seg": 0.65
+  },
+  "tests/integration/test_account_restore.py::test_a_pending_exit_at_restart_leaves_the_position_open_and_the_new_session_closes_it": {
+   "resultado": "passed",
+   "fases": {
+    "setup": "passed",
+    "call": "passed",
+    "teardown": "passed"
+   },
+   "seg": 1.68
+  },
+  "tests/integration/test_account_restore.py::test_partial_fills_and_fees_rebuild_identically_however_often": {
+   "resultado": "passed",
+   "fases": {
+    "setup": "passed",
+    "call": "passed",
+    "teardown": "passed"
+   },
+   "seg": 5.16
+  },
+  "tests/integration/test_account_restore.py::test_an_unreadable_store_at_start_blocks_entries_and_never_substitutes_base_capital": {
+   "resultado": "passed",
+   "fases": {
+    "setup": "passed",
+    "call": "passed",
+    "teardown": "passed"
+   },
+   "seg": 0.2
+  },
+  "tests/integration/test_account_restore.py::test_a_lost_journal_write_makes_the_rebuild_incomplete_and_the_next_session_blocked": {
+   "resultado": "passed",
+   "fases": {
+    "setup": "passed",
+    "call": "passed",
+    "teardown": "passed"
+   },
+   "seg": 1.78
+  },
+  "tests/integration/test_account_restore.py::test_a_database_outage_during_a_write_does_not_pretend_the_state_was_saved": {
+   "resultado": "passed",
+   "fases": {
+    "setup": "passed",
+    "call": "passed",
+    "teardown": "passed"
+   },
+   "seg": 0.73
+  },
+  "tests/integration/test_account_restore.py::test_fill_rows_without_journal_events_are_an_inconsistent_account": {
+   "resultado": "passed",
+   "fases": {
+    "setup": "passed",
+    "call": "passed",
+    "teardown": "passed"
+   },
+   "seg": 0.07
+  },
+  "tests/integration/test_account_restore.py::test_a_restored_position_whose_side_disagrees_with_the_engine_blocks_entries": {
+   "resultado": "passed",
+   "fases": {
+    "setup": "passed",
+    "call": "passed",
+    "teardown": "passed"
+   },
+   "seg": 0.01
+  },
+  "tests/integration/test_account_restore.py::test_legacy_fills_before_an_operator_baseline_are_set_aside_pinned_and_still_in_view": {
+   "resultado": "passed",
+   "fases": {
+    "setup": "passed",
+    "call": "passed",
+    "teardown": "passed"
+   },
+   "seg": 0.11
+  },
+  "tests/integration/test_account_restore.py::test_a_baseline_seeds_a_runtime_flat_at_base_capital_and_lifts_the_block": {
+   "resultado": "passed",
+   "fases": {
+    "setup": "passed",
+    "call": "passed",
+    "teardown": "passed"
+   },
+   "seg": 0.13
+  },
+  "tests/integration/test_account_restore.py::test_a_baseline_pins_the_legacy_set_so_it_cannot_grow_or_shrink_silently": {
+   "resultado": "passed",
+   "fases": {
+    "setup": "passed",
+    "call": "passed",
+    "teardown": "passed"
+   },
+   "seg": 0.12
+  },
+  "tests/integration/test_account_restore.py::test_a_baseline_refuses_to_open_a_journal_that_already_has_a_record": {
+   "resultado": "passed",
+   "fases": {
+    "setup": "passed",
+    "call": "passed",
+    "teardown": "passed"
+   },
+   "seg": 0.09
+  },
+  "tests/integration/test_account_restore.py::test_a_baseline_needs_legacy_fills_a_stopped_session_and_a_time_after_every_fill": {
+   "resultado": "passed",
+   "fases": {
+    "setup": "passed",
+    "call": "passed",
+    "teardown": "passed"
+   },
+   "seg": 0.13
+  },
+  "tests/integration/test_account_restore.py::test_a_session_resumed_after_the_deploy_leaves_marks_that_do_not_block_the_baseline": {
+   "resultado": "passed",
+   "fases": {
+    "setup": "passed",
+    "call": "passed",
+    "teardown": "passed"
+   },
+   "seg": 0.12
+  },
+  "tests/integration/test_account_restore.py::test_a_leg_entered_in_two_partial_fills_is_protected_and_closes_flat": {
+   "resultado": "passed",
+   "fases": {
+    "setup": "passed",
+    "call": "passed",
+    "teardown": "passed"
+   },
+   "seg": 0.1
+  },
+  "tests/integration/test_account_restore.py::test_the_residue_the_12h_session_left_is_one_whole_lot_and_closes_flat": {
+   "resultado": "passed",
+   "fases": {
+    "setup": "passed",
+    "call": "passed",
+    "teardown": "passed"
+   },
+   "seg": 0.15
+  },
+  "tests/integration/test_account_restore.py::test_a_restored_open_leg_starts_at_its_base_capital_and_the_books_agree[short]": {
+   "resultado": "passed",
+   "fases": {
+    "setup": "passed",
+    "call": "passed",
+    "teardown": "passed"
+   },
+   "seg": 0.1
+  },
+  "tests/integration/test_account_restore.py::test_a_restored_open_leg_starts_at_its_base_capital_and_the_books_agree[long]": {
+   "resultado": "passed",
+   "fases": {
+    "setup": "passed",
+    "call": "passed",
+    "teardown": "passed"
+   },
+   "seg": 0.11
+  },
+  "tests/integration/test_account_restore.py::test_the_12h_session_s_short_residue_with_its_funding_starts_and_closes": {
+   "resultado": "passed",
+   "fases": {
+    "setup": "passed",
+    "call": "passed",
+    "teardown": "passed"
+   },
+   "seg": 0.13
+  }
+ },
+ "por_prueba": {
+  "tests/integration/test_account_restore.py::test_a_day_that_hit_the_loss_limit_still_refuses_entries_after_a_restart": {
+   "fondo": 0,
+   "manual": 120
+  },
+  "tests/integration/test_account_restore.py::test_an_open_position_is_restored_protected_scorable_and_closable_after_a_restart": {
+   "fondo": 105383,
+   "manual": 16
+  },
+  "tests/integration/test_account_restore.py::test_a_resting_entry_left_by_a_dead_session_is_orphaned_not_resurrected": {
+   "fondo": 12657,
+   "manual": 12
+  },
+  "tests/integration/test_account_restore.py::test_a_pending_exit_at_restart_leaves_the_position_open_and_the_new_session_closes_it": {
+   "fondo": 27315,
+   "manual": 15
+  },
+  "tests/integration/test_account_restore.py::test_partial_fills_and_fees_rebuild_identically_however_often": {
+   "fondo": 106629,
+   "manual": 22
+  },
+  "tests/integration/test_account_restore.py::test_an_unreadable_store_at_start_blocks_entries_and_never_substitutes_base_capital": {
+   "fondo": 0,
+   "manual": 60
+  },
+  "tests/integration/test_account_restore.py::test_a_lost_journal_write_makes_the_rebuild_incomplete_and_the_next_session_blocked": {
+   "fondo": 35598,
+   "manual": 53
+  },
+  "tests/integration/test_account_restore.py::test_a_database_outage_during_a_write_does_not_pretend_the_state_was_saved": {
+   "fondo": 14217,
+   "manual": 13
+  },
+  "tests/integration/test_account_restore.py::test_a_leg_entered_in_two_partial_fills_is_protected_and_closes_flat": {
+   "fondo": 0,
+   "manual": 1
+  },
+  "tests/integration/test_account_restore.py::test_the_residue_the_12h_session_left_is_one_whole_lot_and_closes_flat": {
+   "fondo": 0,
+   "manual": 1
+  },
+  "tests/integration/test_account_restore.py::test_a_restored_open_leg_starts_at_its_base_capital_and_the_books_agree[short]": {
+   "fondo": 0,
+   "manual": 1
+  },
+  "tests/integration/test_account_restore.py::test_a_restored_open_leg_starts_at_its_base_capital_and_the_books_agree[long]": {
+   "fondo": 0,
+   "manual": 1
+  },
+  "tests/integration/test_account_restore.py::test_the_12h_session_s_short_residue_with_its_funding_starts_and_closes": {
+   "fondo": 0,
+   "manual": 1
+  }
+ },
+ "carga_fin": [
+  4.65771484375,
+  3.61474609375,
+  1.767578125
+ ],
+ "exit": 0
+}

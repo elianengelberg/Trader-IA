@@ -1,0 +1,4 @@
+PASSED tests/integration/test_protective_stop_size.py::test_a_stop_is_resized_when_the_position_it_covers_changes_size[0.5]
+PASSED tests/integration/test_protective_stop_size.py::test_a_stop_is_resized_when_the_position_it_covers_changes_size[0.25]
+PASSED tests/integration/test_protective_stop_size.py::test_the_stop_level_is_rounded_toward_the_position_on_the_venue_grid[True-50000.004-50000.01]
+PASSED tests/integration/test_protective_stop_size.py::test_the_stop_level_is_rounded_toward_the_position_on_the_venue_grid[False-50000.006-50000.0]

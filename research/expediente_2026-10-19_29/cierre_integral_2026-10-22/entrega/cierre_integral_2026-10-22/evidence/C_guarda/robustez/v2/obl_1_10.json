@@ -1,0 +1,1355 @@
+{
+ "arbol": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_integral_2026-10-22/trabajo/robustez/obl_v2",
+ "filas": [
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 1,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 13,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 1,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 12,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 1,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 8,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 1,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 6,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 1,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 10,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 2,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 13,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 2,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 12,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 2,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 9,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 2,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 7,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 2,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 10,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 3,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 13,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 3,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 12,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 3,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 8,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 3,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 7,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 3,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 10,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 4,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 13,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 4,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 12,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 4,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 10,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 4,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 9,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 4,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 11,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 5,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 13,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 5,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 12,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 5,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 8,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 5,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 7,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 5,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 11,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 6,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 13,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 6,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 12,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 6,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 7,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 6,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 7,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 6,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 12,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 7,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 13,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 7,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 12,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 7,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 7,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 7,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 8,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 7,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 10,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 8,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 13,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 8,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 12,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 8,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 7,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 8,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 6,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 8,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 9,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 9,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 13,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 9,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 12,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 9,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 7,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 9,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 6,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 9,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 9,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 10,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 13,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 10,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 12,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 10,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 7,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 10,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 7,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 10,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 10,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 1,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 1,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 1,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 1,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 1,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 2,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 2,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 2,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 2,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 2,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 3,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 3,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 3,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 3,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 3,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 4,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 4,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 4,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 4,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 4,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 5,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 5,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 5,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 5,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 5,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 6,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 6,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 6,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 6,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 6,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 7,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 7,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 7,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 7,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 7,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 8,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 8,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 8,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 8,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 8,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 9,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 9,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 9,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 9,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 9,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 10,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 10,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 10,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 10,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 10,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 1,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 1,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 1,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 1,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 1,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 2,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 2,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 2,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 2,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 2,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 3,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 3,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 3,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 3,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 3,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 4,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 4,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 4,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 4,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 4,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 5,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 5,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 5,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 5,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 5,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 6,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 6,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 6,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 6,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 6,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 7,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 7,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 7,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 7,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 7,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 8,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 8,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 8,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 8,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 8,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 9,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 9,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 9,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 9,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 9,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 10,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 10,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 10,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 10,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 10,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  }
+ ]
+}

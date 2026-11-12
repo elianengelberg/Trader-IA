@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.523" timestamp="2026-10-26T12:00:00.001201+00:00" hostname="vm"><testcase classname="tests.integration.test_risk_state_persistence" name="test_five_restored_entries_for_the_symbol_refuse_the_sixth_after_the_restart" time="0.117"><failure message="assert 1 == 0&#10; +  where 1 = &lt;tests.integration.test_live_runtime.FakeExecution object at 0x7f2819e6d610&gt;.submissions">async def test_five_restored_entries_for_the_symbol_refuse_the_sixth_after_the_restart() -&gt; None:
+        now = datetime.now(UTC)
+        runtime, execution, market = build_runtime_paper_with(
+            prior_risk_state=RiskRestore(
+                complete=True, day=now.date().isoformat(), entries_today=5,
+                entries_today_by_symbol={"BTC-USD": 5},
+                last_entry_at={"BTC-USD": now - timedelta(hours=2)},
+                entry_orders_today=5,
+            )
+        )
+        await runtime.start()
+        try:
+            _seed_every_bucket(runtime)
+            # The engine's checks run in a fixed order and market conditions may refuse a
+            # bar before the frequency check is reached; drive until the cap itself speaks.
+            for _ in range(300):
+                market.advance()
+                await runtime._cycle_once()
+&gt;               assert execution.submissions == 0
+E               assert 1 == 0
+E                +  where 1 = &lt;tests.integration.test_live_runtime.FakeExecution object at 0x7f2819e6d610&gt;.submissions
+
+tests/integration/test_risk_state_persistence.py:294: AssertionError</failure></testcase></testsuite></testsuites>

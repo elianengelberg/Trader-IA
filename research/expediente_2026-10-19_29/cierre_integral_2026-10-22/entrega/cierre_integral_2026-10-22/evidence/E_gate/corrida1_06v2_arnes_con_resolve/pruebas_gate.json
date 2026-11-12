@@ -1,0 +1,190 @@
+[
+ {
+  "caso": "real_final",
+  "esperado": "pass",
+  "veredicto": "pass",
+  "rc": 0,
+  "motivo_esperado": null,
+  "problemas": [],
+  "engine_version": null,
+  "report": {
+   "tests": 1985,
+   "passed": 1985,
+   "failure": 0,
+   "error": 0,
+   "skipped": 0,
+   "guard_ran": 7,
+   "guard_passed": 7
+  },
+  "OK": true,
+  "stderr": ""
+ },
+ {
+  "caso": "guarda_omitida",
+  "esperado": "fail",
+  "veredicto": "pass",
+  "rc": 0,
+  "motivo_esperado": "version guard ran 7 and passed 0 of 7",
+  "problemas": [],
+  "engine_version": null,
+  "report": {
+   "tests": 1985,
+   "passed": 1978,
+   "failure": 0,
+   "error": 0,
+   "skipped": 7,
+   "guard_ran": 7,
+   "guard_passed": 0
+  },
+  "OK": false,
+  "stderr": ""
+ },
+ {
+  "caso": "guarda_quitada",
+  "esperado": "fail",
+  "veredicto": "pass",
+  "rc": 0,
+  "motivo_esperado": "version guard ran 0 and passed 0 of 7",
+  "problemas": [],
+  "engine_version": null,
+  "report": {
+   "tests": 1978,
+   "passed": 1978,
+   "failure": 0,
+   "error": 0,
+   "skipped": 0,
+   "guard_ran": 0,
+   "guard_passed": 0
+  },
+  "OK": false,
+  "stderr": ""
+ },
+ {
+  "caso": "guarda_6_de_7",
+  "esperado": "fail",
+  "veredicto": "pass",
+  "rc": 0,
+  "motivo_esperado": "version guard ran 6 and passed 6 of 7",
+  "problemas": [],
+  "engine_version": null,
+  "report": {
+   "tests": 1984,
+   "passed": 1984,
+   "failure": 0,
+   "error": 0,
+   "skipped": 0,
+   "guard_ran": 6,
+   "guard_passed": 6
+  },
+  "OK": false,
+  "stderr": ""
+ },
+ {
+  "caso": "falla_ajena",
+  "esperado": "fail",
+  "veredicto": "fail",
+  "rc": 1,
+  "motivo_esperado": "1 failed and 0 errored",
+  "problemas": [
+   "1 failed and 0 errored"
+  ],
+  "engine_version": null,
+  "report": {
+   "tests": 1985,
+   "passed": 1984,
+   "failure": 1,
+   "error": 0,
+   "skipped": 0,
+   "guard_ran": 7,
+   "guard_passed": 7
+  },
+  "OK": true,
+  "stderr": ""
+ },
+ {
+  "caso": "falla_en_guarda",
+  "esperado": "fail",
+  "veredicto": "fail",
+  "rc": 1,
+  "motivo_esperado": "passed 6 of 7",
+  "problemas": [
+   "1 failed and 0 errored"
+  ],
+  "engine_version": null,
+  "report": {
+   "tests": 1985,
+   "passed": 1984,
+   "failure": 1,
+   "error": 0,
+   "skipped": 0,
+   "guard_ran": 7,
+   "guard_passed": 6
+  },
+  "OK": false,
+  "stderr": ""
+ },
+ {
+  "caso": "error",
+  "esperado": "fail",
+  "veredicto": "fail",
+  "rc": 1,
+  "motivo_esperado": "0 failed and 1 errored",
+  "problemas": [
+   "0 failed and 1 errored"
+  ],
+  "engine_version": null,
+  "report": {
+   "tests": 1985,
+   "passed": 1984,
+   "failure": 0,
+   "error": 1,
+   "skipped": 0,
+   "guard_ran": 7,
+   "guard_passed": 7
+  },
+  "OK": true,
+  "stderr": ""
+ },
+ {
+  "caso": "junit_vacio",
+  "esperado": "fail",
+  "veredicto": "fail",
+  "rc": 1,
+  "motivo_esperado": "the JUnit report holds no test",
+  "problemas": [
+   "the JUnit report holds no test"
+  ],
+  "engine_version": null,
+  "report": {
+   "tests": 0,
+   "passed": 0,
+   "failure": 0,
+   "error": 0,
+   "skipped": 0,
+   "guard_ran": 0,
+   "guard_passed": 0
+  },
+  "OK": true,
+  "stderr": ""
+ },
+ {
+  "caso": "base_sin_version_sin_guarda",
+  "esperado": "pass",
+  "veredicto": "pass",
+  "rc": 0,
+  "motivo_esperado": null,
+  "problemas": [],
+  "engine_version": null,
+  "report": {
+   "tests": 1978,
+   "passed": 1978,
+   "failure": 0,
+   "error": 0,
+   "skipped": 0,
+   "guard_ran": 0,
+   "guard_passed": 0
+  },
+  "OK": true,
+  "stderr": ""
+ }
+]

@@ -1,0 +1,2441 @@
+{
+ "tabla": [
+  {
+   "id": "T001",
+   "origen": "tabla_22_reparacion",
+   "viejo_usdt": "VENUSDT",
+   "nuevo_usdt": "VETUSDT",
+   "tratamiento": "regla_1",
+   "r": 100,
+   "E": "2018-07-23",
+   "apertura_texto": "2018-07-25",
+   "certeza": "alta",
+   "nota": null,
+   "evidencia": [
+    {
+     "archivo": "zd_360007439672_d538039394aa.json",
+     "captura": "20180821152757",
+     "url": "https://support.binance.com/hc/en-us/articles/360007439672",
+     "cita": "at a ratio of 1 VEN = 100 VET",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2018-07-22",
+    "primer_activo_nuevo": "2018-07-25",
+    "hueco_dias": 2,
+    "viejo_inactivo_desde_E": true,
+    "nuevo_empieza_despues": true,
+    "hueco_menor_30": true,
+    "nuevo_con_menos_de_180_dias_en_A": false
+   }
+  },
+  {
+   "id": "T002",
+   "origen": "tabla_22_reparacion",
+   "viejo_usdt": "BCHABCUSDT",
+   "nuevo_usdt": "BCHUSDT",
+   "tratamiento": "regla_1",
+   "r": 1,
+   "E": "2019-11-28",
+   "apertura_texto": "2019-11-28",
+   "certeza": "alta",
+   "nota": null,
+   "evidencia": [
+    {
+     "archivo": "zd_360037219511_27e27ad63185.json",
+     "captura": "20220119224043",
+     "url": "https://binance.zendesk.com/hc/en-us/articles/360037219511-Binance-Will-Update-the-Ticker-of-BCHABC-to-BCH",
+     "cita": "at a ratio of 1 BCHABC = 1 BCH",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2019-11-27",
+    "primer_activo_nuevo": "2019-11-28",
+    "hueco_dias": 0,
+    "viejo_inactivo_desde_E": true,
+    "nuevo_empieza_despues": true,
+    "hueco_menor_30": true,
+    "nuevo_con_menos_de_180_dias_en_A": false
+   }
+  },
+  {
+   "id": "T003",
+   "origen": "tabla_22_reparacion",
+   "viejo_usdt": "STORMUSDT",
+   "nuevo_usdt": "STMXUSDT",
+   "tratamiento": "regla_1",
+   "r": 1,
+   "E": "2020-06-08",
+   "apertura_texto": "2020-06-11",
+   "certeza": "alta",
+   "nota": null,
+   "evidencia": [
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_360043990532_0dedae609be8.json",
+     "captura": "20211207070421",
+     "url": "https://www.binance.com/en/support/announcement/360043990532",
+     "cita": "at a ratio of 1 STORM = 1 STMX",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2020-06-07",
+    "primer_activo_nuevo": "2020-06-11",
+    "hueco_dias": 3,
+    "viejo_inactivo_desde_E": true,
+    "nuevo_empieza_despues": true,
+    "hueco_menor_30": true,
+    "nuevo_con_menos_de_180_dias_en_A": false
+   }
+  },
+  {
+   "id": "T004",
+   "origen": "tabla_22_reparacion",
+   "viejo_usdt": "ERDUSDT",
+   "nuevo_usdt": "EGLDUSDT",
+   "tratamiento": "regla_1",
+   "r": 0.001,
+   "E": "2020-08-31",
+   "apertura_texto": "2020-09-03",
+   "certeza": "alta",
+   "nota": null,
+   "evidencia": [
+    {
+     "archivo": "bn_aa864b2d4db24379b606249d0cba87fb_923aec2ca107.json",
+     "captura": "20210724153628",
+     "url": "https://www.binance.com/en/support/announcement/aa864b2d4db24379b606249d0cba87fb",
+     "cita": "at a ratio of 1000 ERD = 1 EGLD",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2020-08-30",
+    "primer_activo_nuevo": "2020-09-03",
+    "hueco_dias": 3,
+    "viejo_inactivo_desde_E": true,
+    "nuevo_empieza_despues": true,
+    "hueco_menor_30": true,
+    "nuevo_con_menos_de_180_dias_en_A": false
+   }
+  },
+  {
+   "id": "T005",
+   "origen": "tabla_22_reparacion",
+   "viejo_usdt": "LENDUSDT",
+   "nuevo_usdt": "AAVEUSDT",
+   "tratamiento": "regla_1",
+   "r": 0.01,
+   "E": "2020-10-12",
+   "apertura_texto": "2020-10-15",
+   "certeza": "alta",
+   "nota": null,
+   "evidencia": [
+    {
+     "archivo": "bn_17595222999545348c8acdd5dc41c00a_7cbc5104a088.json",
+     "captura": "20201124101808",
+     "url": "https://www.binance.com/en/support/announcement/17595222999545348c8acdd5dc41c00a",
+     "cita": "at a ratio of 100 LEND = 1 AAVE",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2020-10-11",
+    "primer_activo_nuevo": "2020-10-15",
+    "hueco_dias": 3,
+    "viejo_inactivo_desde_E": true,
+    "nuevo_empieza_despues": true,
+    "hueco_menor_30": true,
+    "nuevo_con_menos_de_180_dias_en_A": false
+   }
+  },
+  {
+   "id": "T006",
+   "origen": "tabla_22_reparacion",
+   "viejo_usdt": "STRATUSDT",
+   "nuevo_usdt": "STRAXUSDT",
+   "tratamiento": "regla_1",
+   "r": 1,
+   "E": "2020-11-12",
+   "apertura_texto": "2020-11-18",
+   "certeza": "alta",
+   "nota": null,
+   "evidencia": [
+    {
+     "archivo": "bn_1937b7781c5043efa66c07141be3bdc2_e3f3ac372bca.json",
+     "captura": "20201127115620",
+     "url": "https://www.binance.com/en/support/announcement/1937b7781c5043efa66c07141be3bdc2",
+     "cita": "at a ratio of 1 STRAT = 1 STRAX",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2020-11-11",
+    "primer_activo_nuevo": "2020-11-18",
+    "hueco_dias": 6,
+    "viejo_inactivo_desde_E": true,
+    "nuevo_empieza_despues": true,
+    "hueco_menor_30": true,
+    "nuevo_con_menos_de_180_dias_en_A": false
+   }
+  },
+  {
+   "id": "T007",
+   "origen": "tabla_22_reparacion",
+   "viejo_usdt": "COCOSUSDT",
+   "nuevo_usdt": "COCOSUSDT",
+   "tratamiento": "regla_2",
+   "r": 0.001,
+   "E": "2021-01-19",
+   "apertura_texto": "2021-01-23",
+   "certeza": "alta",
+   "nota": null,
+   "evidencia": [
+    {
+     "archivo": "bn_f555f8013eff42bc9c91eaa48b9da24b_83402e98fdee.json",
+     "captura": "20211129065821",
+     "url": "https://www.binance.com/en/support/announcement/f555f8013eff42bc9c91eaa48b9da24b",
+     "cita": "begin swapping the old COCOS tokens with the new COCOS tokens at a ratio of 1,000:1",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "corte": [
+     "2021-01-18",
+     "2021-01-23",
+     4
+    ],
+    "reapertura_coincide": true
+   }
+  },
+  {
+   "id": "T008",
+   "origen": "tabla_22_reparacion",
+   "viejo_usdt": "XZCUSDT",
+   "nuevo_usdt": "FIROUSDT",
+   "tratamiento": "regla_1",
+   "r": 1,
+   "E": "2021-01-25",
+   "apertura_texto": "2021-01-29",
+   "certeza": "alta",
+   "nota": null,
+   "evidencia": [
+    {
+     "archivo": "bn_4a06d6ab6abb4f08b12bb93d6fec30ec_1d51d7029751.json",
+     "captura": "20210302170906",
+     "url": "https://www.binance.com/en/support/announcement/4a06d6ab6abb4f08b12bb93d6fec30ec",
+     "cita": "at a ratio of 1 XZC = 1 FIRO",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2021-01-24",
+    "primer_activo_nuevo": "2021-01-29",
+    "hueco_dias": 4,
+    "viejo_inactivo_desde_E": true,
+    "nuevo_empieza_despues": true,
+    "hueco_menor_30": true,
+    "nuevo_con_menos_de_180_dias_en_A": false
+   }
+  },
+  {
+   "id": "T010",
+   "origen": "tabla_22_reparacion",
+   "viejo_usdt": "BTCSTUSDT",
+   "nuevo_usdt": "BTCSTUSDT",
+   "tratamiento": "regla_2",
+   "r": 10,
+   "E": "2021-03-15",
+   "apertura_texto": "2021-03-19",
+   "certeza": "media",
+   "nota": "El texto dice «1:10» sin nombrar qué lado es el viejo; se lee 1 viejo = 10 nuevos por analogía con «COCOS 1,000:1» (1.000 viejos = 1 nuevo). Previo a A: no afecta a A.",
+   "evidencia": [
+    {
+     "archivo": "bn_2c08ba9e1a1b409fb6a4a2cb2f5ed58b_ca587e4ce636.json",
+     "captura": "20211203185133",
+     "url": "https://www.binance.com/en/support/announcement/2c08ba9e1a1b409fb6a4a2cb2f5ed58b",
+     "cita": "swap the old BTCST tokens with the new BTCST tokens at a ratio of 1:10",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "corte": [
+     "2021-03-14",
+     "2021-03-19",
+     4
+    ],
+    "reapertura_coincide": true
+   }
+  },
+  {
+   "id": "T012",
+   "origen": "tabla_22_reparacion",
+   "viejo_usdt": "DREPUSDT",
+   "nuevo_usdt": "DREPUSDT",
+   "tratamiento": "regla_2",
+   "r": 0.01,
+   "E": "2021-03-29",
+   "apertura_texto": "2021-04-02",
+   "certeza": "alta",
+   "nota": "Fechas según la actualización del 2021-03-22 (cese 2021-03-29 04:00, apertura 2021-04-02 04:00).",
+   "evidencia": [
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-dre_2a9973d4261d.json",
+     "captura": "20230929210246",
+     "url": "https://www.binance.com/en/support/announcement/binance-will-support-the-drep-drep-100-1-redenomination-plan-51eb4f0351194fab957bb23cc6ee52dd",
+     "cita": "We will swap the old DREP tokens with the new DREP tokens at a ratio of 100:1",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "corte": [
+     "2021-03-28",
+     "2021-04-02",
+     4
+    ],
+    "reapertura_coincide": true
+   }
+  },
+  {
+   "id": "T013",
+   "origen": "tabla_22_reparacion",
+   "viejo_usdt": "NPXSUSDT",
+   "nuevo_usdt": "PUNDIXUSDT",
+   "tratamiento": "regla_1",
+   "r": 0.001,
+   "E": "2021-04-05",
+   "apertura_texto": "2021-04-09",
+   "certeza": "alta",
+   "nota": null,
+   "evidencia": [
+    {
+     "archivo": "bn_8bdcb060635b491d912247fb00603d4d_821867c8b60e.json",
+     "captura": "20210514113643",
+     "url": "https://www.binance.com/en/support/announcement/8bdcb060635b491d912247fb00603d4d",
+     "cita": "at a ratio of 1,000 NPXS = 1 PUNDIX",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2021-04-04",
+    "primer_activo_nuevo": "2021-04-09",
+    "hueco_dias": 4,
+    "viejo_inactivo_desde_E": true,
+    "nuevo_empieza_despues": true,
+    "hueco_menor_30": true,
+    "nuevo_con_menos_de_180_dias_en_A": false
+   }
+  },
+  {
+   "id": "T022",
+   "origen": "tabla_22_reparacion",
+   "viejo_usdt": "SUNUSDT",
+   "nuevo_usdt": "SUNUSDT",
+   "tratamiento": "regla_2",
+   "r": 1000,
+   "E": "2021-06-14",
+   "apertura_texto": "2021-06-18",
+   "certeza": "alta",
+   "nota": null,
+   "evidencia": [
+    {
+     "archivo": "bn_f923f2e4056843a9a9b87beb2aaa2f31_e761d45b0dcc.json",
+     "captura": "20210729100855",
+     "url": "https://www.binance.com/en/support/announcement/f923f2e4056843a9a9b87beb2aaa2f31",
+     "cita": "at a ratio of 1 SUN (Old) = 1,000 SUN (New)",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "corte": [
+     "2021-06-13",
+     "2021-06-18",
+     4
+    ],
+    "reapertura_coincide": true
+   }
+  },
+  {
+   "id": "T027",
+   "origen": "tabla_22_reparacion",
+   "viejo_usdt": "PAXUSDT",
+   "nuevo_usdt": "USDPUSDT",
+   "tratamiento": "regla_1",
+   "r": 1,
+   "E": "2021-09-06",
+   "apertura_texto": "2021-09-10",
+   "certeza": "alta",
+   "nota": "PAX y USDP están en la lista fija de exclusión (§4.5): el mapeo no cambia ningún universo.",
+   "evidencia": [
+    {
+     "archivo": "bn_c313480177e4457bb1e1b848c88bbf78_5cdfdffc3e32.json",
+     "captura": "20211021123240",
+     "url": "https://www.binance.com/en/support/announcemenT/c313480177e4457bb1e1b848c88bbf78",
+     "cita": "ratio of 1 PAX = 1 USDP",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2021-09-05",
+    "primer_activo_nuevo": "2021-09-10",
+    "hueco_dias": 4,
+    "viejo_inactivo_desde_E": true,
+    "nuevo_empieza_despues": true,
+    "hueco_menor_30": true,
+    "nuevo_con_menos_de_180_dias_en_A": false
+   }
+  },
+  {
+   "id": "T035",
+   "origen": "tabla_22_reparacion",
+   "viejo_usdt": "ANYUSDT",
+   "nuevo_usdt": "MULTIUSDT",
+   "tratamiento": "regla_1",
+   "r": 1,
+   "E": "2022-03-30",
+   "apertura_texto": "2022-04-06",
+   "certeza": "alta",
+   "nota": null,
+   "evidencia": [
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-any_0d963f079737.json",
+     "captura": "20221130172228",
+     "url": "https://www.binance.com/en/support/announcement/binance-will-support-the-anyswap-any-token-migration-and-renaming-plan-d14ebaed2c2d40d591ad377653009151",
+     "cita": "at a ratio of 1 ANY = 1 MULTI",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2022-03-29",
+    "primer_activo_nuevo": "2022-04-06",
+    "hueco_dias": 7,
+    "viejo_inactivo_desde_E": true,
+    "nuevo_empieza_despues": true,
+    "hueco_menor_30": true,
+    "nuevo_con_menos_de_180_dias_en_A": false
+   }
+  },
+  {
+   "id": "T040",
+   "origen": "tabla_22_reparacion",
+   "viejo_usdt": "POLYUSDT",
+   "nuevo_usdt": "POLYXUSDT",
+   "tratamiento": "regla_1",
+   "r": 1,
+   "E": "2022-10-10",
+   "apertura_texto": "2022-10-17",
+   "certeza": "alta",
+   "nota": null,
+   "evidencia": [
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-pol_070c8129db69.json",
+     "captura": "20221203013208",
+     "url": "https://www.binance.com/en/support/announcement/binance-will-support-the-polymath-poly-mainnet-swap-and-rebranding-plan-to-polymesh-polyx-25556b2e078740f1b1e7357a7aa6a94d",
+     "cita": "at a ratio of 1 POLY = 1 POLYX",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2022-10-09",
+    "primer_activo_nuevo": "2022-10-17",
+    "hueco_dias": 7,
+    "viejo_inactivo_desde_E": true,
+    "nuevo_empieza_despues": true,
+    "hueco_menor_30": true,
+    "nuevo_con_menos_de_180_dias_en_A": false
+   }
+  },
+  {
+   "id": "T044",
+   "origen": "tabla_22_reparacion",
+   "viejo_usdt": "COCOSUSDT",
+   "nuevo_usdt": "COMBOUSDT",
+   "tratamiento": "regla_1",
+   "r": 1,
+   "E": "2023-06-02",
+   "apertura_texto": null,
+   "certeza": "media",
+   "nota": "Solo está archivado el anuncio de finalización (2023-06-02): fija símbolos, relación y fecha de finalización, no la hora de cese del par viejo. El anuncio previo que cita no está archivado. E = fecha del anuncio de finalización.",
+   "evidencia": [
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-co_4886d9ba7798.json",
+     "captura": "20230927051545",
+     "url": "https://www.binance.com/en/support/announcement/binance-has-completed-the-cocos-bcx-cocos-token-swap-rebranding-plan-to-combo-combo-18550322a4944094840831c3efe2d223",
+     "cita": "The distribution of COMBO (COMBO) was conducted at a ratio of 1 COCOS = 1 COMBO",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2023-05-28",
+    "primer_activo_nuevo": "2023-06-02",
+    "hueco_dias": 4,
+    "viejo_inactivo_desde_E": true,
+    "nuevo_empieza_despues": true,
+    "hueco_menor_30": true,
+    "nuevo_con_menos_de_180_dias_en_A": true
+   }
+  },
+  {
+   "id": "T045",
+   "origen": "tabla_22_reparacion",
+   "viejo_usdt": "QUICKUSDT",
+   "nuevo_usdt": "QUICKUSDT",
+   "tratamiento": "regla_2",
+   "r": 1000,
+   "E": "2023-07-17",
+   "apertura_texto": "2023-07-21",
+   "certeza": "alta",
+   "nota": null,
+   "evidencia": [
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-qui_8e8c44b03471.json",
+     "captura": "20240222171222",
+     "url": "https://www.binance.com/en/support/announcement/binance-will-support-the-quickswap-quick-token-swap-and-redenomination-plan-50b38ae7b25a45a7854c94ab67a1e7d0",
+     "cita": "at a ratio of 1 old QUICK = 1,000 new QUICK",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-qui_8e8c44b03471.json",
+     "captura": "20240222171222",
+     "url": "https://www.binance.com/en/support/announcement/binance-will-support-the-quickswap-quick-token-swap-and-redenomination-plan-50b38ae7b25a45a7854c94ab67a1e7d0",
+     "cita": "At 2023-07-17 03:00 (UTC) , Binance will suspend and delist all existing QUICK spot trading pairs",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "corte": [
+     "2023-07-16",
+     "2023-07-21",
+     4
+    ],
+    "reapertura_coincide": true
+   }
+  },
+  {
+   "id": "T046",
+   "origen": "tabla_22_reparacion",
+   "viejo_usdt": "MCUSDT",
+   "nuevo_usdt": "BEAMXUSDT",
+   "tratamiento": "regla_1",
+   "r": 100,
+   "E": "2023-11-07",
+   "apertura_texto": "2023-11-14",
+   "certeza": "alta",
+   "nota": null,
+   "evidencia": [
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-mer_425adfd88510.json",
+     "captura": "20241104073422",
+     "url": "https://www.binance.com/en/support/announcement/binance-will-support-the-merit-circle-mc-token-swap-redenomination-and-rebranding-to-beam-beamx-0b171519f1824ee288af7343ec91ce33?ref=blog.nami.exchange",
+     "cita": "All MC tokens will be swapped for BEAMX at a ratio of 1 MC = 100 BEAMX",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2023-11-06",
+    "primer_activo_nuevo": "2023-11-14",
+    "hueco_dias": 7,
+    "viejo_inactivo_desde_E": true,
+    "nuevo_empieza_despues": true,
+    "hueco_menor_30": true,
+    "nuevo_con_menos_de_180_dias_en_A": true
+   }
+  },
+  {
+   "id": "T047",
+   "origen": "tabla_22_reparacion",
+   "viejo_usdt": "TVKUSDT",
+   "nuevo_usdt": "VANRYUSDT",
+   "tratamiento": "regla_1",
+   "r": 1,
+   "E": "2023-12-01",
+   "apertura_texto": null,
+   "certeza": "media",
+   "nota": "Solo está archivado el anuncio de finalización (2023-12-01): fija símbolos, relación y fecha de finalización, no la hora de cese del par viejo. E = fecha del anuncio de finalización.",
+   "evidencia": [
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-vi_317e63335f04.json",
+     "captura": "20240301031625",
+     "url": "https://www.binance.com/en/support/announcement/binance-has-completed-the-virtua-tvk-token-swap-and-rebranding-to-vanar-vanry-4701f3d28a244d1f824aa05f009ddc40",
+     "cita": "The distribution was conducted at a ratio of 1 TVK = 1 VANRY",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2023-11-26",
+    "primer_activo_nuevo": "2023-12-01",
+    "hueco_dias": 4,
+    "viejo_inactivo_desde_E": true,
+    "nuevo_empieza_despues": true,
+    "hueco_menor_30": true,
+    "nuevo_con_menos_de_180_dias_en_A": true
+   }
+  },
+  {
+   "id": "T048",
+   "origen": "tabla_22_reparacion",
+   "viejo_usdt": "PLAUSDT",
+   "nuevo_usdt": "PDAUSDT",
+   "tratamiento": "regla_1",
+   "r": 1,
+   "E": "2024-02-26",
+   "apertura_texto": "2024-03-01",
+   "certeza": "alta",
+   "nota": null,
+   "evidencia": [
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-pla_dc497a97c163.json",
+     "captura": "20240528192632",
+     "url": "https://www.binance.com/en/support/announcement/binance-will-support-the-playdapp-pla-token-swap-to-playdapp-pda-f0fafa66fedf4e058aaacb57c206c597",
+     "cita": "PLA tokens will assume the ticker of PDA on Binance",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-pla_dc497a97c163.json",
+     "captura": "20240528192632",
+     "url": "https://www.binance.com/en/support/announcement/binance-will-support-the-playdapp-pla-token-swap-to-playdapp-pda-f0fafa66fedf4e058aaacb57c206c597",
+     "cita": "At 2024-03-01 08:00 (UTC) , trading will open for the PDA/BTC and PDA/USDT spot trading pairs",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2024-02-25",
+    "primer_activo_nuevo": "2024-03-01",
+    "hueco_dias": 4,
+    "viejo_inactivo_desde_E": true,
+    "nuevo_empieza_despues": true,
+    "hueco_menor_30": true,
+    "nuevo_con_menos_de_180_dias_en_A": true
+   }
+  },
+  {
+   "id": "T049",
+   "origen": "tabla_22_reparacion",
+   "viejo_usdt": "STRAXUSDT",
+   "nuevo_usdt": "STRAXUSDT",
+   "tratamiento": "regla_2",
+   "r": 10,
+   "E": "2024-03-20",
+   "apertura_texto": "2024-03-28",
+   "certeza": "alta",
+   "nota": null,
+   "evidencia": [
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-str_b8603784a245.json",
+     "captura": "20241011023231",
+     "url": "https://www.binance.com/en/support/announcement/binance-will-support-the-stratis-strax-token-swap-and-redenomination-plan-2e6eb8e644664a6ca7b6659a226c41b0?ref=blog.nami.exchange",
+     "cita": "at a ratio of 1 old STRAX = 10 new STRAX",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-str_b8603784a245.json",
+     "captura": "20241011023231",
+     "url": "https://www.binance.com/en/support/announcement/binance-will-support-the-stratis-strax-token-swap-and-redenomination-plan-2e6eb8e644664a6ca7b6659a226c41b0?ref=blog.nami.exchange",
+     "cita": "At 2024-03-28 08:00 (UTC) , trading will open for the STRAX/BTC, STRAX/USDT and STRAX/TRY spot trading pairs",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "corte": [
+     "2024-03-19",
+     "2024-03-28",
+     8
+    ],
+    "reapertura_coincide": true
+   }
+  },
+  {
+   "id": "T050",
+   "origen": "tabla_22_reparacion",
+   "viejo_usdt": "MATICUSDT",
+   "nuevo_usdt": "POLUSDT",
+   "tratamiento": "regla_1",
+   "r": 1,
+   "E": "2024-09-10",
+   "apertura_texto": "2024-09-13",
+   "certeza": "alta",
+   "nota": null,
+   "evidencia": [
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-pol_6ce597c88773.json",
+     "captura": "20241009121816",
+     "url": "https://www.binance.com/en/support/announcement/binance-will-support-the-polygon-matic-token-swap-to-polygon-pol-6a6de383727f4659a3050f7982e1620f?hl=en",
+     "cita": "All MATIC tokens will be swapped to POL at a ratio of 1 MATIC = 1 POL",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2024-09-09",
+    "primer_activo_nuevo": "2024-09-13",
+    "hueco_dias": 3,
+    "viejo_inactivo_desde_E": true,
+    "nuevo_empieza_despues": true,
+    "hueco_menor_30": true,
+    "nuevo_con_menos_de_180_dias_en_A": true
+   }
+  },
+  {
+   "id": "T042",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "MFTUSDT",
+   "nuevo_usdt": "HIFIUSDT",
+   "tratamiento": "regla_1",
+   "r": 0.01,
+   "E": "2023-01-12",
+   "apertura_texto": null,
+   "certeza": "media",
+   "nota": "Solo está archivado el anuncio de finalización (fechado 2023-01-12); fija símbolos, relación y fecha de finalización, no la hora de cese del par viejo. E = fecha del anuncio de finalización (mismo criterio que COCOS→COMBO y TVK→VANRY en la tabla de 22).",
+   "evidencia": [
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-ma_934dcf237cdb.json",
+     "captura": "20230322004714",
+     "url": "https://www.binance.com/en/support/announcement/binance-has-completed-the-mainframe-mft-token-swap-redenomination-rebranding-plan-to-hifi-finance-hifi-0e5b302a17014b7aa0af476731588e8b",
+     "cita": "Binance has completed the Mainframe (MFT) token swap, redenomination and rebranding plan to Hifi Finance (HIFI)",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-ma_934dcf237cdb.json",
+     "captura": "20230322004714",
+     "url": "https://www.binance.com/en/support/announcement/binance-has-completed-the-mainframe-mft-token-swap-redenomination-rebranding-plan-to-hifi-finance-hifi-0e5b302a17014b7aa0af476731588e8b",
+     "cita": "The distribution of Hifi Finance ( HIFI) was conducted at a ratio of 1 MFT = 0.01 HIFI",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-ma_934dcf237cdb.json",
+     "captura": "20230322004714",
+     "url": "https://www.binance.com/en/support/announcement/binance-has-completed-the-mainframe-mft-token-swap-redenomination-rebranding-plan-to-hifi-finance-hifi-0e5b302a17014b7aa0af476731588e8b",
+     "cita": "Binance Team 2023-01-12",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2023-01-02",
+    "primer_activo_nuevo": "2023-01-12",
+    "hueco_dias": 9,
+    "viejo_inactivo_desde_E": true,
+    "nuevo_empieza_despues": true,
+    "hueco_menor_30": true,
+    "nuevo_con_menos_de_180_dias_en_A": true
+   }
+  },
+  {
+   "id": "T033",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "BTTUSDT",
+   "nuevo_usdt": "BTTCUSDT",
+   "tratamiento": "regla_1",
+   "r": 1000,
+   "E": "2022-01-17",
+   "apertura_texto": "2022-01-25",
+   "certeza": "alta",
+   "nota": null,
+   "evidencia": [
+    {
+     "archivo": "bn_2722e6da4f5141dd9b2fb07b5b1f3f75_372793e0ce0b.json",
+     "captura": "20220120203321",
+     "url": "https://www.binance.com/en/support/announcement/2722e6da4f5141dd9b2fb07b5b1f3f75",
+     "cita": "at a ratio of 1 BTT (Old) = 1,000 BTTC",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "bn_2722e6da4f5141dd9b2fb07b5b1f3f75_372793e0ce0b.json",
+     "captura": "20220120203321",
+     "url": "https://www.binance.com/en/support/announcement/2722e6da4f5141dd9b2fb07b5b1f3f75",
+     "cita": "the old BTT tokens will be renamed as BTTOLD, and the new tokens’ ticker will be BTTC",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "bn_2722e6da4f5141dd9b2fb07b5b1f3f75_372793e0ce0b.json",
+     "captura": "20220120203321",
+     "url": "https://www.binance.com/en/support/announcement/2722e6da4f5141dd9b2fb07b5b1f3f75",
+     "cita": "Binance will delist all existing BTT spot trading pairs (BTT/USDT, BTT/BUSD, BTT/USDC, BTT/BNB, BTT/TRX, BTT/TUSD, BTT/TRY, BTT/EUR, BTT/BRL) at 2022-01-17 04:00 (UTC)",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "bn_2722e6da4f5141dd9b2fb07b5b1f3f75_372793e0ce0b.json",
+     "captura": "20220120203321",
+     "url": "https://www.binance.com/en/support/announcement/2722e6da4f5141dd9b2fb07b5b1f3f75",
+     "cita": "Trading will then open for BTTC/USDT, BTTC/USDC and BTTC/TRY spot trading pairs at 2022-01-25 04:00 (UTC)",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2022-01-16",
+    "primer_activo_nuevo": "2022-01-25",
+    "hueco_dias": 8,
+    "viejo_inactivo_desde_E": true,
+    "nuevo_empieza_despues": true,
+    "hueco_menor_30": true,
+    "nuevo_con_menos_de_180_dias_en_A": false
+   }
+  },
+  {
+   "id": "T034",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "NANOUSDT",
+   "nuevo_usdt": "XNOUSDT",
+   "tratamiento": "regla_1",
+   "r": 1,
+   "E": "2022-01-24",
+   "apertura_texto": "2022-01-28",
+   "certeza": "alta",
+   "nota": null,
+   "evidencia": [
+    {
+     "archivo": "bn_3dc8f6de281f4781a246a1658a21cb80_e7bc3f27677f.json",
+     "captura": "20220701050431",
+     "url": "https://www.binance.com/en/support/announcement/3dc8f6de281f4781a246a1658a21cb80",
+     "cita": "Binance will update the ticker of NANO to XNO",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "bn_3dc8f6de281f4781a246a1658a21cb80_e7bc3f27677f.json",
+     "captura": "20220701050431",
+     "url": "https://www.binance.com/en/support/announcement/3dc8f6de281f4781a246a1658a21cb80",
+     "cita": "At 2022-01-24 04:00 AM (UTC), Binance will halt trading for all NANO spot trading pairs",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "bn_3dc8f6de281f4781a246a1658a21cb80_e7bc3f27677f.json",
+     "captura": "20220701050431",
+     "url": "https://www.binance.com/en/support/announcement/3dc8f6de281f4781a246a1658a21cb80",
+     "cita": "at a ratio of 1 NANO = 1 XNO",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "bn_3dc8f6de281f4781a246a1658a21cb80_e7bc3f27677f.json",
+     "captura": "20220701050431",
+     "url": "https://www.binance.com/en/support/announcement/3dc8f6de281f4781a246a1658a21cb80",
+     "cita": "At 2022-01-28 04:00 AM (UTC), Binance will open trading for the new XNO/USDT",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2022-01-23",
+    "primer_activo_nuevo": "2022-01-28",
+    "hueco_dias": 4,
+    "viejo_inactivo_desde_E": true,
+    "nuevo_empieza_despues": true,
+    "hueco_menor_30": true,
+    "nuevo_con_menos_de_180_dias_en_A": false
+   }
+  },
+  {
+   "id": "T032",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "BZRXUSDT",
+   "nuevo_usdt": "OOKIUSDT",
+   "tratamiento": "regla_1",
+   "r": 10,
+   "E": "2021-12-20",
+   "apertura_texto": "2021-12-24",
+   "certeza": "alta",
+   "nota": null,
+   "evidencia": [
+    {
+     "archivo": "bn_dff27dc6bcbb432c902bcbea5e24ddfa_117538216109.json",
+     "captura": "20220529094702",
+     "url": "https://www.binance.com/en/support/announcement/dff27dc6bcbb432c902bcbea5e24ddfa",
+     "cita": "Binance will support the bZx Protocol Token (BZRX) token swap and redenomination plan to OokiDAO Token (OOKI)",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "bn_dff27dc6bcbb432c902bcbea5e24ddfa_117538216109.json",
+     "captura": "20220529094702",
+     "url": "https://www.binance.com/en/support/announcement/dff27dc6bcbb432c902bcbea5e24ddfa",
+     "cita": "Binance will delist all existing BZRX spot trading pairs (BZRX/BTC, BZRX/USDT, and BZRX/BUSD) and cancel all pending BZRX spot orders at 2021-12-20 04:00 (UTC)",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "bn_dff27dc6bcbb432c902bcbea5e24ddfa_117538216109.json",
+     "captura": "20220529094702",
+     "url": "https://www.binance.com/en/support/announcement/dff27dc6bcbb432c902bcbea5e24ddfa",
+     "cita": "at a ratio of 1 BZRX = 10 OOKI",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "bn_dff27dc6bcbb432c902bcbea5e24ddfa_117538216109.json",
+     "captura": "20220529094702",
+     "url": "https://www.binance.com/en/support/announcement/dff27dc6bcbb432c902bcbea5e24ddfa",
+     "cita": "Trading will then open for OOKI/USDT and OOKI/BUSD spot trading pairs at 2021-12-24 04:00 (UTC)",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2021-12-19",
+    "primer_activo_nuevo": "2021-12-24",
+    "hueco_dias": 4,
+    "viejo_inactivo_desde_E": true,
+    "nuevo_empieza_despues": true,
+    "hueco_menor_30": true,
+    "nuevo_con_menos_de_180_dias_en_A": false
+   }
+  },
+  {
+   "id": "T039",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "RAMPUSDT",
+   "nuevo_usdt": "LEVERUSDT",
+   "tratamiento": "regla_1",
+   "r": 35,
+   "E": "2022-07-04",
+   "apertura_texto": "2022-07-13",
+   "certeza": "alta",
+   "nota": null,
+   "evidencia": [
+    {
+     "archivo": "bn_0a445bbdac634512886df1bdce74f3da_3631af0d9289.json",
+     "captura": "20220819111324",
+     "url": "https://www.binance.com/en/support/announcement/0a445bbdac634512886df1bdce74f3da",
+     "cita": "Binance will support the RAMP (RAMP) token swap, redenomination and rebranding plan to LeverFi (LEVER)",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "bn_0a445bbdac634512886df1bdce74f3da_3631af0d9289.json",
+     "captura": "20220819111324",
+     "url": "https://www.binance.com/en/support/announcement/0a445bbdac634512886df1bdce74f3da",
+     "cita": "At 2022-07-04 04:00 (UTC), Binance will delist all existing RAMP spot trading pairs (RAMP/USDT, RAMP/BUSD, and RAMP/BTC)",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "bn_0a445bbdac634512886df1bdce74f3da_3631af0d9289.json",
+     "captura": "20220819111324",
+     "url": "https://www.binance.com/en/support/announcement/0a445bbdac634512886df1bdce74f3da",
+     "cita": "At 2022-07-13 04:00 (UTC), trading will open for LEVER/USDT and LEVER/BUSD spot trading pairs",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "bn_0a445bbdac634512886df1bdce74f3da_3631af0d9289.json",
+     "captura": "20220819111324",
+     "url": "https://www.binance.com/en/support/announcement/0a445bbdac634512886df1bdce74f3da",
+     "cita": "at a ratio of 1 RAMP = 35 LEVER",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2022-07-03",
+    "primer_activo_nuevo": "2022-07-13",
+    "hueco_dias": 9,
+    "viejo_inactivo_desde_E": true,
+    "nuevo_empieza_despues": true,
+    "hueco_menor_30": true,
+    "nuevo_con_menos_de_180_dias_en_A": false
+   }
+  },
+  {
+   "id": "T037",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "EPSUSDT",
+   "nuevo_usdt": "EPXUSDT",
+   "tratamiento": "regla_1",
+   "r": 88,
+   "E": "2022-05-09",
+   "apertura_texto": "2022-05-18",
+   "certeza": "alta",
+   "nota": "El texto anuncia la apertura de EPX/USDT para el 2022-05-18; un anuncio posterior archivado informa una demora («Binance will require additional time…»). La actividad muestra el primer día de EPXUSDT el 2022-05-23 (hueco de 14 días, < 30).",
+   "evidencia": [
+    {
+     "archivo": "bn_cf9526489aa041508f4cd57612f34119_c6ec648a669e.json",
+     "captura": "20220819031239",
+     "url": "https://www.binance.com/en/support/announcement/cf9526489aa041508f4cd57612f34119",
+     "cita": "The ticker of EPS will be updated to EPX",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "bn_cf9526489aa041508f4cd57612f34119_c6ec648a669e.json",
+     "captura": "20220819031239",
+     "url": "https://www.binance.com/en/support/announcement/cf9526489aa041508f4cd57612f34119",
+     "cita": "Binance will delist all existing EPS spot trading pairs (EPS/USDT, EPS/BUSD and EPS/BTC) and cancel all pending EPS spot orders at 2022-05-09 04:00 (UTC)",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "bn_cf9526489aa041508f4cd57612f34119_c6ec648a669e.json",
+     "captura": "20220819031239",
+     "url": "https://www.binance.com/en/support/announcement/cf9526489aa041508f4cd57612f34119",
+     "cita": "at a ratio of 1 EPS = 88 EPX",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "bn_bab533fdba1e4b2ba21053a7668c2865_ce3a108df373.json",
+     "captura": "20220707023257",
+     "url": "https://www.binance.com/en/support/announcement/bab533fdba1e4b2ba21053a7668c2865",
+     "cita": "The distribution of EPX was conducted at a ratio of 1 EPS = 88 EPX",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "bn_4e21b7d402a840928c652e1f74812547_7d7dc741f0af.json",
+     "captura": "20220706074334",
+     "url": "https://www.binance.com/en/support/announcement/4e21b7d402a840928c652e1f74812547",
+     "cita": "Binance will require additional time to complete the Ellipsis (EPS) token migration, redenomination and ticker change to EPX",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2022-05-08",
+    "primer_activo_nuevo": "2022-05-23",
+    "hueco_dias": 14,
+    "viejo_inactivo_desde_E": true,
+    "nuevo_empieza_despues": true,
+    "hueco_menor_30": true,
+    "nuevo_con_menos_de_180_dias_en_A": false
+   }
+  },
+  {
+   "id": "T036",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "GXSUSDT",
+   "nuevo_usdt": "REIUSDT",
+   "tratamiento": "regla_1",
+   "r": 10,
+   "E": "2022-04-25",
+   "apertura_texto": "2022-05-04",
+   "certeza": "alta",
+   "nota": null,
+   "evidencia": [
+    {
+     "archivo": "bn_bdfb52830f2f4bfcba496f3f92876b5c_ccba14b6e687.json",
+     "captura": "20220809133048",
+     "url": "https://www.binance.com/en/support/announcement/bdfb52830f2f4bfcba496f3f92876b5c",
+     "cita": "Binance will support the GXChain (GXS) mainnet token swap and redenomination plan to REI Network (REI)",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "bn_bdfb52830f2f4bfcba496f3f92876b5c_ccba14b6e687.json",
+     "captura": "20220809133048",
+     "url": "https://www.binance.com/en/support/announcement/bdfb52830f2f4bfcba496f3f92876b5c",
+     "cita": "Binance will delist all existing GXS spot trading pairs (GXS/BTC, GXS/USDT, GXS/BNB and GXS/ETH) and cancel all pending GXS spot orders at 2022-04-25 04:00 (UTC)",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "bn_bdfb52830f2f4bfcba496f3f92876b5c_ccba14b6e687.json",
+     "captura": "20220809133048",
+     "url": "https://www.binance.com/en/support/announcement/bdfb52830f2f4bfcba496f3f92876b5c",
+     "cita": "at a ratio of 1 GXS = 10 REI",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "bn_bdfb52830f2f4bfcba496f3f92876b5c_ccba14b6e687.json",
+     "captura": "20220809133048",
+     "url": "https://www.binance.com/en/support/announcement/bdfb52830f2f4bfcba496f3f92876b5c",
+     "cita": "Trading will then open for REI/USDT, REI/BNB and REI/ETH spot trading pairs at 2022-05-04 04:00 (UTC)",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2022-04-24",
+    "primer_activo_nuevo": "2022-05-04",
+    "hueco_dias": 9,
+    "viejo_inactivo_desde_E": true,
+    "nuevo_empieza_despues": true,
+    "hueco_menor_30": true,
+    "nuevo_con_menos_de_180_dias_en_A": false
+   }
+  },
+  {
+   "id": "T043",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "BNXUSDT",
+   "nuevo_usdt": "BNXUSDT",
+   "tratamiento": "regla_2",
+   "r": 100,
+   "E": "2023-02-16",
+   "apertura_texto": "2023-02-22",
+   "certeza": "alta",
+   "nota": "El anuncio previo fija la reapertura para el 2023-02-24; un anuncio posterior archivado la adelanta al 2023-02-22, que coincide con la actividad.",
+   "evidencia": [
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-bin_8c6a897856c8.json",
+     "captura": "20230609004108",
+     "url": "https://www.binance.com/en/support/announcement/binance-will-support-the-binaryx-bnx-token-swap-and-redenomination-plan-4d23ada51a2e4fa182835c77d51ba1a9",
+     "cita": "at a ratio of 1 old BNX = 100 new BNX",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-bin_8c6a897856c8.json",
+     "captura": "20230609004108",
+     "url": "https://www.binance.com/en/support/announcement/binance-will-support-the-binaryx-bnx-token-swap-and-redenomination-plan-4d23ada51a2e4fa182835c77d51ba1a9",
+     "cita": "At 2023-02-16 03:00 (UTC), Binance will suspend and delist all existing BNX spot trading pairs",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-bi_cb114013aaba.json",
+     "captura": "20230603150210",
+     "url": "https://www.binance.com/en/support/announcement/binance-has-completed-the-binaryx-bnx-token-swap-and-redenomination-plan-a29c5916cc9f460dbf00ccefa28e19e5",
+     "cita": "The distribution of BNX was conducted at a ratio of 1 BNXOLD = 100 BNX",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_updates-to-listing-time-for-_c4e094937856.json",
+     "captura": "20230602212319",
+     "url": "https://www.binance.com/en/support/announcement/updates-to-listing-time-for-bnx-spot-trading-pairs-candlestick-charts-fb6c6a1c6a9947b0bd30d58314ab862c",
+     "cita": "Binance will update the trading start time for the BNX/BTC, BNX/BNB, BNX/BUSD and BNX/USDT spot trading pairs from 2023-02-24 08:00 (UTC) to 2023-02-22 08:00 (UTC)",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "corte": [
+     "2023-02-15",
+     "2023-02-22",
+     6
+    ],
+    "reapertura_coincide": true
+   }
+  },
+  {
+   "id": "T041",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "VIDTUSDT",
+   "nuevo_usdt": "VIDTUSDT",
+   "tratamiento": "regla_2",
+   "r": 10,
+   "E": "2022-10-31",
+   "apertura_texto": "2022-11-09",
+   "certeza": "alta",
+   "nota": null,
+   "evidencia": [
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-vid_5d4ce6e224e4.json",
+     "captura": "20230204145134",
+     "url": "https://www.binance.com/en/support/announcement/binance-will-support-the-vidt-datalink-vidt-token-swap-redenomination-rebranding-plan-to-vidt-dao-vidt-ef40b40af1944bc9b399ad9c52861a04",
+     "cita": "at a ratio of 1 old VIDT = 10 new VIDT",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-vid_5d4ce6e224e4.json",
+     "captura": "20230204145134",
+     "url": "https://www.binance.com/en/support/announcement/binance-will-support-the-vidt-datalink-vidt-token-swap-redenomination-rebranding-plan-to-vidt-dao-vidt-ef40b40af1944bc9b399ad9c52861a04",
+     "cita": "At 2022-10-31 03:00 (UTC), Binance will delist all existing VIDT spot trading pairs (VIDT/USDT, VIDT/BUSD, and VIDT/BTC)",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-vid_5d4ce6e224e4.json",
+     "captura": "20230204145134",
+     "url": "https://www.binance.com/en/support/announcement/binance-will-support-the-vidt-datalink-vidt-token-swap-redenomination-rebranding-plan-to-vidt-dao-vidt-ef40b40af1944bc9b399ad9c52861a04",
+     "cita": "At 2022-11-09 08:00 (UTC), trading will open for VIDT/USDT, VIDT/BUSD, and VIDT/BTC spot trading pairs",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "corte": [
+     "2022-10-30",
+     "2022-11-09",
+     9
+    ],
+    "reapertura_coincide": true
+   }
+  },
+  {
+   "id": "T014",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "AAVEDOWNUSDT",
+   "nuevo_usdt": "AAVEDOWNUSDT",
+   "tratamiento": "regla_2",
+   "r": 0.0001,
+   "E": "2021-04-06",
+   "apertura_texto": "2021-04-07",
+   "certeza": "alta",
+   "nota": "Token apalancado: excluido de todo universo (v3 §4.5); la regla 2 se aplica por literalidad y no altera ningún cálculo.",
+   "evidencia": [
+    {
+     "archivo": "bn_c72f436a7847451eb403bfbdaf617984_1d0bcb863df7.json",
+     "captura": "20210413231903",
+     "url": "https://www.binance.com/en/support/announcement/c72f436a7847451eb403bfbdaf617984",
+     "cita": "10,000-for-1 reverse token split",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "bn_c72f436a7847451eb403bfbdaf617984_1d0bcb863df7.json",
+     "captura": "20210413231903",
+     "url": "https://www.binance.com/en/support/announcement/c72f436a7847451eb403bfbdaf617984",
+     "cita": "resume trading activity for AAVEDOWN/USDT and DOTDOWN/USDT at 2021-04-07",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "corte": [
+     "2021-04-05",
+     "2021-04-07",
+     1
+    ],
+    "reapertura_coincide": true
+   }
+  },
+  {
+   "id": "T016",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "ADADOWNUSDT",
+   "nuevo_usdt": "ADADOWNUSDT",
+   "tratamiento": "regla_2",
+   "r": 0.0001,
+   "E": "2021-04-07",
+   "apertura_texto": "2021-04-08",
+   "certeza": "alta",
+   "nota": "Token apalancado: excluido de todo universo (v3 §4.5); la regla 2 se aplica por literalidad y no altera ningún cálculo.",
+   "evidencia": [
+    {
+     "archivo": "bn_c72f436a7847451eb403bfbdaf617984_1d0bcb863df7.json",
+     "captura": "20210413231903",
+     "url": "https://www.binance.com/en/support/announcement/c72f436a7847451eb403bfbdaf617984",
+     "cita": "10,000-for-1 reverse token split",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "bn_3c8f883affd64fe183485b2634992dda_0f606a3213eb.json",
+     "captura": "20210419065135",
+     "url": "https://www.binance.com/en/support/announcement/3c8f883affd64fe183485b2634992dda",
+     "cita": "resume trading activity for ADADOWN/USDT, XRPDOWN/USDT, and LINKDOWN/USDT at 2021-04-08",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "corte": [
+     "2021-04-06",
+     "2021-04-08",
+     1
+    ],
+    "reapertura_coincide": true
+   }
+  },
+  {
+   "id": "T019",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "BNBDOWNUSDT",
+   "nuevo_usdt": "BNBDOWNUSDT",
+   "tratamiento": "regla_2",
+   "r": 1e-05,
+   "E": "2021-04-13",
+   "apertura_texto": "2021-04-14",
+   "certeza": "alta",
+   "nota": "Token apalancado: excluido de todo universo (v3 §4.5); la regla 2 se aplica por literalidad y no altera ningún cálculo.",
+   "evidencia": [
+    {
+     "archivo": "bn_8587ebb4c3c94f92a4fa7ecb23781f20_9b3b1796ccc5.json",
+     "captura": "20210513034542",
+     "url": "https://www.binance.com/en/support/announcement/8587ebb4c3c94f92a4fa7ecb23781f20",
+     "cita": "100,000-for-1 reverse token split",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "bn_89a6fc26c4314749abcd714ba8c0b171_2223fd5ff42c.json",
+     "captura": "20210518214247",
+     "url": "https://www.binance.com/en/support/announcement/89a6fc26c4314749abcd714ba8c0b171",
+     "cita": "resume trading activity for BNBDOWN/USDT and SXPDOWN/USDT at 2021-04-14",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "corte": [
+     "2021-04-12",
+     "2021-04-14",
+     1
+    ],
+    "reapertura_coincide": true
+   }
+  },
+  {
+   "id": "T015",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "DOTDOWNUSDT",
+   "nuevo_usdt": "DOTDOWNUSDT",
+   "tratamiento": "regla_2",
+   "r": 0.0001,
+   "E": "2021-04-06",
+   "apertura_texto": "2021-04-07",
+   "certeza": "alta",
+   "nota": "Token apalancado: excluido de todo universo (v3 §4.5); la regla 2 se aplica por literalidad y no altera ningún cálculo.",
+   "evidencia": [
+    {
+     "archivo": "bn_c72f436a7847451eb403bfbdaf617984_1d0bcb863df7.json",
+     "captura": "20210413231903",
+     "url": "https://www.binance.com/en/support/announcement/c72f436a7847451eb403bfbdaf617984",
+     "cita": "10,000-for-1 reverse token split",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "bn_c72f436a7847451eb403bfbdaf617984_1d0bcb863df7.json",
+     "captura": "20210413231903",
+     "url": "https://www.binance.com/en/support/announcement/c72f436a7847451eb403bfbdaf617984",
+     "cita": "resume trading activity for AAVEDOWN/USDT and DOTDOWN/USDT at 2021-04-07",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "corte": [
+     "2021-04-05",
+     "2021-04-07",
+     1
+    ],
+    "reapertura_coincide": true
+   }
+  },
+  {
+   "id": "T031",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "DOTDOWNUSDT",
+   "nuevo_usdt": "DOTDOWNUSDT",
+   "tratamiento": "regla_2",
+   "r": 1e-05,
+   "E": "2021-10-21",
+   "apertura_texto": "2021-10-22",
+   "certeza": "alta",
+   "nota": "Token apalancado: excluido de todo universo (v3 §4.5); la regla 2 se aplica por literalidad y no altera ningún cálculo.",
+   "evidencia": [
+    {
+     "archivo": "bn_e5b1ce92490b490480d3f4cbac923d12_a84a9353fdd3.json",
+     "captura": "20211024200957",
+     "url": "https://www.binance.com/en/support/announcement/e5b1ce92490b490480d3f4cbac923d12",
+     "cita": "100,000-for-1 reverse token split, starting at 2021-10-21",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "bn_ff6a85a9ab844d47bff798a605c9d5c3_83a65377dddc.json",
+     "captura": "20211128075143",
+     "url": "https://www.binance.com/en/support/announcemenT/ff6a85a9ab844d47bff798a605c9d5c3",
+     "cita": "resume trading activity for DOTDOWN/USDT at 2021-10-22",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "corte": [
+     "2021-10-20",
+     "2021-10-22",
+     1
+    ],
+    "reapertura_coincide": true
+   }
+  },
+  {
+   "id": "T023",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "ETHDOWNUSDT",
+   "nuevo_usdt": "ETHDOWNUSDT",
+   "tratamiento": "regla_2",
+   "r": 1e-05,
+   "E": "2021-07-08",
+   "apertura_texto": "2021-07-09",
+   "certeza": "alta",
+   "nota": "Token apalancado: excluido de todo universo (v3 §4.5); la regla 2 se aplica por literalidad y no altera ningún cálculo.",
+   "evidencia": [
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_important-updates-to-ethdown_d00a74849e3f.json",
+     "captura": "20230324134634",
+     "url": "https://www.binance.com/en/support/announcement/important-updates-to-ethdown-binance-leveraged-token-2021-07-01-5dabdbfaacfd40d0895525ca836f0f3e",
+     "cita": "100,000-for-1 reverse token split, starting at 2021-07-08",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "bn_5e01a75cbbc141f5aa057d67c701d30c_df2440526f5c.json",
+     "captura": "20210729123526",
+     "url": "https://www.binance.com/en/support/announcement/5e01a75cbbc141f5aa057d67c701d30c",
+     "cita": "resume trading activity for ETHDOWN/USDT at 2021-07-09",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "corte": [
+     "2021-07-07",
+     "2021-07-09",
+     1
+    ],
+    "reapertura_coincide": true
+   }
+  },
+  {
+   "id": "T017",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "LINKDOWNUSDT",
+   "nuevo_usdt": "LINKDOWNUSDT",
+   "tratamiento": "regla_2",
+   "r": 0.0001,
+   "E": "2021-04-07",
+   "apertura_texto": "2021-04-08",
+   "certeza": "alta",
+   "nota": "Token apalancado: excluido de todo universo (v3 §4.5); la regla 2 se aplica por literalidad y no altera ningún cálculo.",
+   "evidencia": [
+    {
+     "archivo": "bn_c72f436a7847451eb403bfbdaf617984_1d0bcb863df7.json",
+     "captura": "20210413231903",
+     "url": "https://www.binance.com/en/support/announcement/c72f436a7847451eb403bfbdaf617984",
+     "cita": "10,000-for-1 reverse token split",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "bn_3c8f883affd64fe183485b2634992dda_0f606a3213eb.json",
+     "captura": "20210419065135",
+     "url": "https://www.binance.com/en/support/announcement/3c8f883affd64fe183485b2634992dda",
+     "cita": "resume trading activity for ADADOWN/USDT, XRPDOWN/USDT, and LINKDOWN/USDT at 2021-04-08",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "corte": [
+     "2021-04-06",
+     "2021-04-08",
+     1
+    ],
+    "reapertura_coincide": true
+   }
+  },
+  {
+   "id": "T024",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "LTCDOWNUSDT",
+   "nuevo_usdt": "LTCDOWNUSDT",
+   "tratamiento": "regla_2",
+   "r": 1e-05,
+   "E": "2021-08-17",
+   "apertura_texto": "2021-08-18",
+   "certeza": "alta",
+   "nota": "Token apalancado: excluido de todo universo (v3 §4.5); la regla 2 se aplica por literalidad y no altera ningún cálculo.",
+   "evidencia": [
+    {
+     "archivo": "bn_1b9392b259744884b342dc9708aa9b90_d55d5ecd0667.json",
+     "captura": "20211205055109",
+     "url": "https://www.binance.com/en/support/announcement/1b9392b259744884b342dc9708aa9b90",
+     "cita": "100,000-for-1 reverse token split",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "bn_b8cd16f2c71c4883a7b400b566e2b007_dc693b8fc52d.json",
+     "captura": "20211128235529",
+     "url": "https://www.binance.com/en/support/announcement/b8cd16f2c71c4883a7b400b566e2b007",
+     "cita": "resume trading activity for UNIDOWN/USDT and LTCDOWN/USDT at 2021-08-18",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "corte": [
+     "2021-08-16",
+     "2021-08-18",
+     1
+    ],
+    "reapertura_coincide": true
+   }
+  },
+  {
+   "id": "T011",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "SUSHIDOWNUSDT",
+   "nuevo_usdt": "SUSHIDOWNUSDT",
+   "tratamiento": "regla_2",
+   "r": 0.0001,
+   "E": "2021-03-23",
+   "apertura_texto": null,
+   "certeza": "media",
+   "nota": "Token apalancado: excluido de todo universo (v3 §4.5); la regla 2 se aplica por literalidad y no altera ningún cálculo. No está archivado el aviso de finalización; la fecha de inicio del anuncio coincide con el corte.",
+   "evidencia": [
+    {
+     "archivo": "bn_a00da142c1c549faaa7c1f78817930b7_58f2001193e3.json",
+     "captura": "20210801213124",
+     "url": "https://www.binance.com/en/support/announcement/a00da142c1c549faaa7c1f78817930b7",
+     "cita": "10,000-for-1 reverse token split, starting at 2021-03-23",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "corte": [
+     "2021-03-22",
+     "2021-03-24",
+     1
+    ],
+    "reapertura_coincide": true
+   }
+  },
+  {
+   "id": "T030",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "SUSHIDOWNUSDT",
+   "nuevo_usdt": "SUSHIDOWNUSDT",
+   "tratamiento": "regla_2",
+   "r": 1e-05,
+   "E": "2021-09-23",
+   "apertura_texto": "2021-09-24",
+   "certeza": "alta",
+   "nota": "Token apalancado: excluido de todo universo (v3 §4.5); la regla 2 se aplica por literalidad y no altera ningún cálculo.",
+   "evidencia": [
+    {
+     "archivo": "bn_2e762fb338374b17adde728059708ff2_4583557ade82.json",
+     "captura": "20211017202359",
+     "url": "https://www.binance.com/en/support/announcement/2e762fb338374b17adde728059708ff2",
+     "cita": "100,000-for-1 reverse token split, starting at 2021-09-23",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "bn_407e5d6a193a4f62a4bab80c6b55688d_4f931a6a8c80.json",
+     "captura": "20211027173352",
+     "url": "https://www.binance.com/en/support/announcement/407e5d6a193a4f62a4bab80c6b55688d",
+     "cita": "resume trading activity for SUSHIDOWN/USDT at 2021-09-24",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "corte": [
+     "2021-09-22",
+     "2021-09-24",
+     1
+    ],
+    "reapertura_coincide": true
+   }
+  },
+  {
+   "id": "T009",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "SXPDOWNUSDT",
+   "nuevo_usdt": "SXPDOWNUSDT",
+   "tratamiento": "regla_2",
+   "r": 0.0001,
+   "E": "2021-03-10",
+   "apertura_texto": null,
+   "certeza": "media",
+   "nota": "Token apalancado: excluido de todo universo (v3 §4.5); la regla 2 se aplica por literalidad y no altera ningún cálculo. No está archivado el aviso de finalización; la fecha de inicio del anuncio coincide con el corte.",
+   "evidencia": [
+    {
+     "archivo": "bn_a43a407fd48f44d29ecc59bb86772c25_d91c65379177.json",
+     "captura": "20210412074605",
+     "url": "https://www.binance.com/en/support/announcement/a43a407fd48f44d29ecc59bb86772c25",
+     "cita": "10,000-for-1 reverse token split, starting at 2021-03-10",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "corte": [
+     "2021-03-09",
+     "2021-03-11",
+     1
+    ],
+    "reapertura_coincide": true
+   }
+  },
+  {
+   "id": "T020",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "SXPDOWNUSDT",
+   "nuevo_usdt": "SXPDOWNUSDT",
+   "tratamiento": "regla_2",
+   "r": 1e-05,
+   "E": "2021-04-13",
+   "apertura_texto": "2021-04-14",
+   "certeza": "alta",
+   "nota": "Token apalancado: excluido de todo universo (v3 §4.5); la regla 2 se aplica por literalidad y no altera ningún cálculo.",
+   "evidencia": [
+    {
+     "archivo": "bn_8587ebb4c3c94f92a4fa7ecb23781f20_9b3b1796ccc5.json",
+     "captura": "20210513034542",
+     "url": "https://www.binance.com/en/support/announcement/8587ebb4c3c94f92a4fa7ecb23781f20",
+     "cita": "100,000-for-1 reverse token split",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "bn_89a6fc26c4314749abcd714ba8c0b171_2223fd5ff42c.json",
+     "captura": "20210518214247",
+     "url": "https://www.binance.com/en/support/announcement/89a6fc26c4314749abcd714ba8c0b171",
+     "cita": "resume trading activity for BNBDOWN/USDT and SXPDOWN/USDT at 2021-04-14",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "corte": [
+     "2021-04-12",
+     "2021-04-14",
+     1
+    ],
+    "reapertura_coincide": true
+   }
+  },
+  {
+   "id": "T029",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "TRXDOWNUSDT",
+   "nuevo_usdt": "TRXDOWNUSDT",
+   "tratamiento": "regla_2",
+   "r": 1e-05,
+   "E": "2021-09-13",
+   "apertura_texto": "2021-09-14",
+   "certeza": "alta",
+   "nota": "Token apalancado: excluido de todo universo (v3 §4.5); la regla 2 se aplica por literalidad y no altera ningún cálculo.",
+   "evidencia": [
+    {
+     "archivo": "bn_c057c3e6e3c644d7b087ab1d6e2446b7_3db55726a5fa.json",
+     "captura": "20211205234717",
+     "url": "https://www.binance.com/en/support/announcement/c057c3e6e3c644d7b087ab1d6e2446b7",
+     "cita": "100,000-for-1 reverse token split, starting at 2021-09-13",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "bn_babc78610f694537a223b6f5384c080d_a5668982c8a6.json",
+     "captura": "20211026131312",
+     "url": "https://www.binance.com/en/support/announcement/babc78610f694537a223b6f5384c080d",
+     "cita": "resume trading activity for TRXDOWN/USDT at 2021-09-14",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "corte": [
+     "2021-09-12",
+     "2021-09-14",
+     1
+    ],
+    "reapertura_coincide": true
+   }
+  },
+  {
+   "id": "T025",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "UNIDOWNUSDT",
+   "nuevo_usdt": "UNIDOWNUSDT",
+   "tratamiento": "regla_2",
+   "r": 1e-05,
+   "E": "2021-08-17",
+   "apertura_texto": "2021-08-18",
+   "certeza": "alta",
+   "nota": "Token apalancado: excluido de todo universo (v3 §4.5); la regla 2 se aplica por literalidad y no altera ningún cálculo.",
+   "evidencia": [
+    {
+     "archivo": "bn_1b9392b259744884b342dc9708aa9b90_d55d5ecd0667.json",
+     "captura": "20211205055109",
+     "url": "https://www.binance.com/en/support/announcement/1b9392b259744884b342dc9708aa9b90",
+     "cita": "100,000-for-1 reverse token split",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "bn_b8cd16f2c71c4883a7b400b566e2b007_dc693b8fc52d.json",
+     "captura": "20211128235529",
+     "url": "https://www.binance.com/en/support/announcement/b8cd16f2c71c4883a7b400b566e2b007",
+     "cita": "resume trading activity for UNIDOWN/USDT and LTCDOWN/USDT at 2021-08-18",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "corte": [
+     "2021-08-16",
+     "2021-08-18",
+     1
+    ],
+    "reapertura_coincide": true
+   }
+  },
+  {
+   "id": "T026",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "XLMDOWNUSDT",
+   "nuevo_usdt": "XLMDOWNUSDT",
+   "tratamiento": "regla_2",
+   "r": 1e-05,
+   "E": "2021-08-26",
+   "apertura_texto": null,
+   "certeza": "media",
+   "nota": "Token apalancado: excluido de todo universo (v3 §4.5); la regla 2 se aplica por literalidad y no altera ningún cálculo. No está archivado el aviso de finalización; la fecha de inicio del anuncio coincide con el corte.",
+   "evidencia": [
+    {
+     "archivo": "bn_3c970877a4d446b1a7f42b8b731a773f_bf2e5f6cdab3.json",
+     "captura": "20211027153120",
+     "url": "https://www.binance.com/en/support/announcement/3c970877a4d446b1a7f42b8b731a773f",
+     "cita": "100,000-for-1 reverse token split, starting at 2021-08-26",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "corte": [
+     "2021-08-25",
+     "2021-08-27",
+     1
+    ],
+    "reapertura_coincide": true
+   }
+  },
+  {
+   "id": "T018",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "XRPDOWNUSDT",
+   "nuevo_usdt": "XRPDOWNUSDT",
+   "tratamiento": "regla_2",
+   "r": 0.0001,
+   "E": "2021-04-07",
+   "apertura_texto": "2021-04-08",
+   "certeza": "alta",
+   "nota": "Token apalancado: excluido de todo universo (v3 §4.5); la regla 2 se aplica por literalidad y no altera ningún cálculo.",
+   "evidencia": [
+    {
+     "archivo": "bn_c72f436a7847451eb403bfbdaf617984_1d0bcb863df7.json",
+     "captura": "20210413231903",
+     "url": "https://www.binance.com/en/support/announcement/c72f436a7847451eb403bfbdaf617984",
+     "cita": "10,000-for-1 reverse token split",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "bn_3c8f883affd64fe183485b2634992dda_0f606a3213eb.json",
+     "captura": "20210419065135",
+     "url": "https://www.binance.com/en/support/announcement/3c8f883affd64fe183485b2634992dda",
+     "cita": "resume trading activity for ADADOWN/USDT, XRPDOWN/USDT, and LINKDOWN/USDT at 2021-04-08",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "corte": [
+     "2021-04-06",
+     "2021-04-08",
+     1
+    ],
+    "reapertura_coincide": true
+   }
+  },
+  {
+   "id": "T028",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "XTZDOWNUSDT",
+   "nuevo_usdt": "XTZDOWNUSDT",
+   "tratamiento": "regla_2",
+   "r": 1e-05,
+   "E": "2021-09-08",
+   "apertura_texto": "2021-09-09",
+   "certeza": "alta",
+   "nota": "Token apalancado: excluido de todo universo (v3 §4.5); la regla 2 se aplica por literalidad y no altera ningún cálculo.",
+   "evidencia": [
+    {
+     "archivo": "bn_e48368c945b84bf89cea20339ec345bf_f761bfa56466.json",
+     "captura": "20211018023056",
+     "url": "https://www.binance.com/en/support/announcement/e48368c945b84bf89cea20339ec345bf",
+     "cita": "100,000-for-1 reverse token split, starting at 2021-09-08",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "bn_9e7dde521b1547e490c0d5d3d6140b34_b632e67d2ab6.json",
+     "captura": "20211019193550",
+     "url": "https://www.binance.com/en/support/announcemenT/9e7dde521b1547e490c0d5d3d6140b34",
+     "cita": "resume trading activity for XTZDOWN/USDT at 2021-09-09",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "corte": [
+     "2021-09-07",
+     "2021-09-09",
+     1
+    ],
+    "reapertura_coincide": true
+   }
+  },
+  {
+   "id": "T021",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "YFIDOWNUSDT",
+   "nuevo_usdt": "YFIDOWNUSDT",
+   "tratamiento": "regla_2",
+   "r": 1e-05,
+   "E": "2021-05-31",
+   "apertura_texto": null,
+   "certeza": "media",
+   "nota": "Token apalancado: excluido de todo universo (v3 §4.5); la regla 2 se aplica por literalidad y no altera ningún cálculo. No está archivado el aviso de finalización; la fecha de inicio del anuncio coincide con el corte.",
+   "evidencia": [
+    {
+     "archivo": "bn_23d1357993cd43749a5f682ab2e8c739_5be41422d523.json",
+     "captura": "20211129232351",
+     "url": "https://www.binance.com/en/support/announcement/23d1357993cd43749a5f682ab2e8c739",
+     "cita": "100,000-for-1 reverse token split, starting at 2021-05-31",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "corte": [
+     "2021-05-30",
+     "2021-06-01",
+     1
+    ],
+    "reapertura_coincide": true
+   }
+  },
+  {
+   "id": "T038",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "LUNAUSDT",
+   "nuevo_usdt": null,
+   "tratamiento": "regla_1_reutilizacion",
+   "r": null,
+   "E": null,
+   "reutilizacion_desde": "2022-05-31",
+   "apertura_texto": "2022-05-31",
+   "certeza": "alta",
+   "nota": "Adenda 1, regla 1: «Si después X vuelve a negociarse, ese tramo es un listado nuevo (otro activo), aunque el corte haya durado menos de 30 días». LUNAUSDT desde el 2022-05-31 es Terra 2.0: listado nuevo. La fecha exacta del cambio de ticker no está archivada («has since been renamed»); el corte de actividad (2022-05-12 → 2022-05-31) y la apertura de Terra 2.0 sí. La continuación del LUNA viejo por LUNCUSDT (primer día 2022-09-09, 120 días después) es la decisión D-1.",
+   "evidencia": [
+    {
+     "archivo": "bn_9c8abd90df5d4890822e6988f7dc8f0c_da2dc145761b.json",
+     "captura": "20220812121437",
+     "url": "https://www.binance.com/en/support/announcement/9c8abd90df5d4890822e6988f7dc8f0c?ref=AZTKZ9XS&utm_source=BinanceTwitter&utm_medium=GlobalSocial&utm_campaign=GlobalSocial",
+     "cita": "LUNA (old) was renamed as LUNC while LUNA (new) assumes the ticker LUNA",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "bn_d044a6742e484b77a170111460b0eed3_a6996a0ba9ba.json",
+     "captura": "20220707125731",
+     "url": "https://www.binance.com/en/support/announcement/d044a6742e484b77a170111460b0eed3",
+     "cita": "Binance will list Terra 2.0 (LUNA) in the Innovation Zone and will open trading for LUNA/USDT and LUNA/BUSD trading pairs at 2022-05-31 06:00 (UTC)",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "bn_d044a6742e484b77a170111460b0eed3_a6996a0ba9ba.json",
+     "captura": "20220707125731",
+     "url": "https://www.binance.com/en/support/announcement/d044a6742e484b77a170111460b0eed3",
+     "cita": "The ticker for Terra Classic, or the LUNA (old) token, has since been renamed as LUNC",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "corte": [
+     "2022-05-12",
+     "2022-05-31",
+     18
+    ]
+   }
+  },
+  {
+   "id": "T062",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "GTOUSDT",
+   "nuevo_usdt": "GFTUSDT",
+   "tratamiento": "D1_sin_continuidad_lectura_literal",
+   "r": 1,
+   "E": null,
+   "apertura_texto": "2023-09-22",
+   "certeza": "alta",
+   "nota": "El par GTO/USDT se retiró por anuncio el 2022-11-28 (último día activo 2022-11-27), antes del canje (anunciado con calendario desde el 2023-01-18; completado con 1 GTO = 1 GFT). GFT/USDT abrió el 2023-09-22 (299 días después). En la fecha efectiva del canje no había «listado vigente» de X en USDT.",
+   "evidencia": [
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_notice-of-removal-of-trading_e69561bf9f77.json",
+     "captura": "20230202160055",
+     "url": "https://www.binance.com/en/support/announcement/notice-of-removal-of-trading-pairs-2022-11-28-f88299165488493cba3e53208c19080d",
+     "cita": "Binance will remove and cease trading on the following trading pairs at 2022-11-28 03:00 (UTC) : Spot Pairs : ARK/BTC, BEAM/BTC, BTCST/BTC, BTCST/USDT, GTO/BTC, GTO/USDT",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-gif_a146802a7fbd.json",
+     "captura": "20230207140404",
+     "url": "https://www.binance.com/en/support/announcement/binance-will-support-the-gifto-gto-token-swap-to-gifto-gft-2300adb470e54d4ba8db292e54e85a93?utm_source=https%3A%2F%2Fkingdata.com",
+     "cita": "Binance will support the Gifto (GTO) token swap to Gifto (GFT)",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_binance-has-completed-the-gi_680cabd50dfb.json",
+     "captura": "20230321172712",
+     "url": "https://www.binance.com/en/support/announcement/binance-has-completed-the-gifto-gto-token-swap-to-gifto-gft-2a92791d93ab436aaad29fbacbf991d4",
+     "cita": "The distribution of Gifto (GFT) was conducted at a ratio of 1 GTO = 1 GFT",
+     "cita_en_pagina": true
+    },
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_notice-of-addition-removal-o_de27e21c5438.json",
+     "captura": "20231204155528",
+     "url": "https://www.binance.com/en/support/announcement/notice-of-addition-removal-of-trading-pairs-2023-09-22-fe93095a80944d31b42fa7eb2afdb12c?ref=AZTKZ9XS&utm_source=BinanceTwitter&utm_medium=GlobalSocial&utm_campaign=GlobalSocial",
+     "cita": "Binance will open trading for the ARK/USDT, CREAM/USDT, FTT/USDT, GFT/USDT, IQ/USDT",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2022-11-27",
+    "primer_activo_nuevo": "2023-09-22",
+    "hueco_dias": 298
+   }
+  },
+  {
+   "id": "T065",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "LUNAUSDT",
+   "nuevo_usdt": "LUNCUSDT",
+   "tratamiento": "D1_sin_continuidad_lectura_literal",
+   "r": 1,
+   "E": null,
+   "apertura_texto": null,
+   "certeza": "alta",
+   "nota": "Continuación del LUNA viejo (último día en LUNAUSDT 2022-05-12) por LUNCUSDT (primer día 2022-09-09). La reutilización del ticker sí está resuelta (entrada regla_1_reutilizacion).",
+   "evidencia": [
+    {
+     "archivo": "bn_9c8abd90df5d4890822e6988f7dc8f0c_da2dc145761b.json",
+     "captura": "20220812121437",
+     "url": "https://www.binance.com/en/support/announcement/9c8abd90df5d4890822e6988f7dc8f0c?ref=AZTKZ9XS&utm_source=BinanceTwitter&utm_medium=GlobalSocial&utm_campaign=GlobalSocial",
+     "cita": "LUNA (old) was renamed as LUNC while LUNA (new) assumes the ticker LUNA",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2022-05-12",
+    "primer_activo_nuevo": "2022-09-09",
+    "hueco_dias": 119
+   }
+  },
+  {
+   "id": "T075",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "USTUSDT",
+   "nuevo_usdt": "USTCUSDT",
+   "tratamiento": "D1_sin_continuidad_lectura_literal",
+   "r": 1,
+   "E": null,
+   "apertura_texto": null,
+   "certeza": "alta",
+   "nota": "USTUSDT termina el 2022-05-12; USTCUSDT empieza el 2023-03-10. UST y USTC están en la lista fija (§4.5): sin efecto con cualquier lectura.",
+   "evidencia": [
+    {
+     "archivo": "bn_9c8abd90df5d4890822e6988f7dc8f0c_da2dc145761b.json",
+     "captura": "20220812121437",
+     "url": "https://www.binance.com/en/support/announcement/9c8abd90df5d4890822e6988f7dc8f0c?ref=AZTKZ9XS&utm_source=BinanceTwitter&utm_medium=GlobalSocial&utm_campaign=GlobalSocial",
+     "cita": "UST (old) was renamed as USTC",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {
+    "ultimo_activo_viejo": "2022-05-12",
+    "primer_activo_nuevo": "2023-03-10",
+    "hueco_dias": 301
+   }
+  },
+  {
+   "id": "T055",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "BCCUSDT",
+   "nuevo_usdt": "BCHABCUSDT",
+   "tratamiento": "bifurcacion_un_X_dos_Y",
+   "r": null,
+   "E": null,
+   "apertura_texto": null,
+   "certeza": "alta",
+   "nota": "Bifurcación: BCC se reemplazó por dos activos (BCHABC y BCHSV, 1:1 cada uno). La regla 1 presupone un único Y que hereda posiciones; aquí no hay uno. Salida de BCC y dos listados nuevos. Sin efecto en A (2018).",
+   "evidencia": [
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_360019875411_1a77d5c2148e.json",
+     "captura": "20210517190330",
+     "url": "https://www.binance.com/en/support/announcement/360019875411",
+     "cita": "BCHABC and BCHSV balances were each distributed to users in a ratio of 1 BCC = 1 BCHABC and 1 BCC = 1 BCHSV",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {}
+  },
+  {
+   "id": "T070",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "RGTUSDT",
+   "nuevo_usdt": "TRIBEUSDT",
+   "tratamiento": "fusion_en_par_existente",
+   "r": null,
+   "E": null,
+   "apertura_texto": null,
+   "certeza": "alta",
+   "nota": "Canje de RGT por TRIBE (1 RGT : 26,7 TRIBE). TRIBEUSDT ya cotizaba desde 2021-08-24, antes del fin de RGTUSDT (2022-03-13): Y no puede «continuar» a X. Salida de RGT. Sin efecto en A.",
+   "evidencia": [
+    {
+     "archivo": "bn_260d553938db4d568d7d58414fa317fa_7e314ae2c509.json",
+     "captura": "20220808230542",
+     "url": "https://www.binance.com/en/support/announcement/260d553938db4d568d7d58414fa317fa",
+     "cita": "1 RGT : 26.7 TRIBE",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {}
+  },
+  {
+   "id": "T056",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "BETHUSDT",
+   "nuevo_usdt": "WBETHUSDT",
+   "tratamiento": "conversion_con_solapamiento",
+   "r": null,
+   "E": null,
+   "apertura_texto": null,
+   "certeza": "alta",
+   "nota": "WBETHUSDT cotiza desde 2023-07-19 y BETHUSDT hasta 2023-10-10: se solapan; no hay continuación posible. Salida de BETH (2023, con evidencia en (iv′)).",
+   "evidencia": [
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_binance-introduces-wrapped-b_296d1552616a.json",
+     "captura": "20230930100151",
+     "url": "https://www.binance.com/en/support/announcement/binance-introduces-wrapped-beacon-eth-wbeth-on-eth-staking-a1197f34d832445db41654ad01f56b4d",
+     "cita": "1 WBETH = 1 BETH",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {}
+  },
+  {
+   "id": "T074",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "USDSBUSDT",
+   "nuevo_usdt": "USDSUSDT",
+   "tratamiento": "conversion_con_solapamiento",
+   "r": null,
+   "E": null,
+   "apertura_texto": null,
+   "certeza": "alta",
+   "nota": "USDSUSDT ya cotizaba desde 2019-02-14. Ambos en la lista fija (§4.5): sin efecto.",
+   "evidencia": [
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_360034156752_302a31dcd79b.json",
+     "captura": "20220120032201",
+     "url": "https://www.binance.com/en/support/announcement/360034156752",
+     "cita": "1 USDSB = 1 USDS",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {}
+  },
+  {
+   "id": "T073",
+   "origen": "reparacion_reverificado",
+   "viejo_usdt": "TOMOUSDT",
+   "nuevo_usdt": "VICUSDT",
+   "tratamiento": "regla_3_sin_anuncio_archivado",
+   "r": null,
+   "E": null,
+   "apertura_texto": null,
+   "certeza": null,
+   "nota": "Sin cuerpo archivado que lo anuncie (barridos por cuerpo, sin saludo y por actividad). Salida con liquidación contable (§4.10) y listado nuevo; se informa como limitación.",
+   "evidencia": [],
+   "actividad_viejo": [
+    [
+     "2019-08-24",
+     "2023-11-19"
+    ]
+   ],
+   "actividad_nuevo": [
+    [
+     "2023-11-24",
+     "2026-05-31"
+    ]
+   ],
+   "chequeo_actividad": {}
+  },
+  {
+   "id": "T061",
+   "origen": "reparacion_reverificado",
+   "viejo_usdt": "GALUSDT",
+   "nuevo_usdt": "GUSDT",
+   "tratamiento": "regla_3_sin_anuncio_archivado",
+   "r": null,
+   "E": null,
+   "apertura_texto": null,
+   "certeza": null,
+   "nota": "Sin cuerpo archivado que lo anuncie (barridos por cuerpo, sin saludo y por actividad). Salida con liquidación contable (§4.10) y listado nuevo; se informa como limitación.",
+   "evidencia": [],
+   "actividad_viejo": [
+    [
+     "2022-05-05",
+     "2024-07-14"
+    ]
+   ],
+   "actividad_nuevo": [
+    [
+     "2024-07-19",
+     "2026-05-31"
+    ]
+   ],
+   "chequeo_actividad": {}
+  },
+  {
+   "id": "T071",
+   "origen": "reparacion_reverificado",
+   "viejo_usdt": "RNDRUSDT",
+   "nuevo_usdt": "RENDERUSDT",
+   "tratamiento": "regla_3_sin_anuncio_archivado",
+   "r": null,
+   "E": null,
+   "apertura_texto": null,
+   "certeza": null,
+   "nota": "Sin cuerpo archivado que lo anuncie (barridos por cuerpo, sin saludo y por actividad). Salida con liquidación contable (§4.10) y listado nuevo; se informa como limitación.",
+   "evidencia": [],
+   "actividad_viejo": [
+    [
+     "2021-11-27",
+     "2024-07-21"
+    ]
+   ],
+   "actividad_nuevo": [
+    [
+     "2024-07-26",
+     "2026-05-31"
+    ]
+   ],
+   "chequeo_actividad": {}
+  },
+  {
+   "id": "T064",
+   "origen": "reparacion_reverificado",
+   "viejo_usdt": "KLAYUSDT",
+   "nuevo_usdt": "KAIAUSDT",
+   "tratamiento": "regla_3_sin_anuncio_archivado",
+   "r": null,
+   "E": null,
+   "apertura_texto": null,
+   "certeza": null,
+   "nota": "Sin cuerpo archivado que lo anuncie (barridos por cuerpo, sin saludo y por actividad). Salida con liquidación contable (§4.10) y listado nuevo; se informa como limitación.",
+   "evidencia": [],
+   "actividad_viejo": [
+    [
+     "2021-06-24",
+     "2024-10-27"
+    ]
+   ],
+   "actividad_nuevo": [
+    [
+     "2024-10-31",
+     "2026-05-31"
+    ]
+   ],
+   "chequeo_actividad": {}
+  },
+  {
+   "id": "T052",
+   "origen": "reparacion_reverificado",
+   "viejo_usdt": "AGIXUSDT",
+   "nuevo_usdt": "FETUSDT",
+   "tratamiento": "regla_3_sin_anuncio_archivado",
+   "r": null,
+   "E": null,
+   "apertura_texto": null,
+   "certeza": null,
+   "nota": "Sin cuerpo archivado que lo anuncie (barridos por cuerpo, sin saludo y por actividad). Salida con liquidación contable (§4.10) y listado nuevo; se informa como limitación.",
+   "evidencia": [],
+   "actividad_viejo": [
+    [
+     "2023-02-17",
+     "2024-06-30"
+    ]
+   ],
+   "actividad_nuevo": [
+    [
+     "2019-02-28",
+     "2026-05-31"
+    ]
+   ],
+   "chequeo_actividad": {}
+  },
+  {
+   "id": "T068",
+   "origen": "reparacion_reverificado",
+   "viejo_usdt": "OCEANUSDT",
+   "nuevo_usdt": "FETUSDT",
+   "tratamiento": "regla_3_sin_anuncio_archivado",
+   "r": null,
+   "E": null,
+   "apertura_texto": null,
+   "certeza": null,
+   "nota": "Sin cuerpo archivado que lo anuncie (barridos por cuerpo, sin saludo y por actividad). Salida con liquidación contable (§4.10) y listado nuevo; se informa como limitación.",
+   "evidencia": [],
+   "actividad_viejo": [
+    [
+     "2020-08-19",
+     "2024-06-30"
+    ]
+   ],
+   "actividad_nuevo": [
+    [
+     "2019-02-28",
+     "2026-05-31"
+    ]
+   ],
+   "chequeo_actividad": {}
+  },
+  {
+   "id": "T057",
+   "origen": "reparacion_reverificado",
+   "viejo_usdt": "DARUSDT",
+   "nuevo_usdt": "DUSDT",
+   "tratamiento": "regla_3_sin_anuncio_archivado",
+   "r": null,
+   "E": null,
+   "apertura_texto": null,
+   "certeza": null,
+   "nota": "Sin cuerpo archivado que lo anuncie (barridos por cuerpo, sin saludo y por actividad). Salida con liquidación contable (§4.10) y listado nuevo; se informa como limitación.",
+   "evidencia": [],
+   "actividad_viejo": [
+    [
+     "2021-11-04",
+     "2025-01-05"
+    ]
+   ],
+   "actividad_nuevo": [
+    [
+     "2025-01-09",
+     "2026-05-31"
+    ]
+   ],
+   "chequeo_actividad": {}
+  },
+  {
+   "id": "T059",
+   "origen": "reparacion_reverificado",
+   "viejo_usdt": "FTMUSDT",
+   "nuevo_usdt": "SUSDT",
+   "tratamiento": "regla_3_sin_anuncio_archivado",
+   "r": null,
+   "E": null,
+   "apertura_texto": null,
+   "certeza": null,
+   "nota": "Sin cuerpo archivado que lo anuncie (barridos por cuerpo, sin saludo y por actividad). Salida con liquidación contable (§4.10) y listado nuevo; se informa como limitación.",
+   "evidencia": [],
+   "actividad_viejo": [
+    [
+     "2019-06-11",
+     "2025-01-12"
+    ]
+   ],
+   "actividad_nuevo": [
+    [
+     "2025-01-16",
+     "2026-05-31"
+    ]
+   ],
+   "chequeo_actividad": {}
+  },
+  {
+   "id": "T058",
+   "origen": "reparacion_reverificado",
+   "viejo_usdt": "EOSUSDT",
+   "nuevo_usdt": "AUSDT",
+   "tratamiento": "regla_3_sin_anuncio_archivado",
+   "r": null,
+   "E": null,
+   "apertura_texto": null,
+   "certeza": null,
+   "nota": "Sin cuerpo archivado que lo anuncie (barridos por cuerpo, sin saludo y por actividad). Salida con liquidación contable (§4.10) y listado nuevo; se informa como limitación.",
+   "evidencia": [],
+   "actividad_viejo": [
+    [
+     "2018-05-28",
+     "2025-05-25"
+    ]
+   ],
+   "actividad_nuevo": [
+    [
+     "2025-05-28",
+     "2026-05-31"
+    ]
+   ],
+   "chequeo_actividad": {}
+  },
+  {
+   "id": "T066",
+   "origen": "reparacion_reverificado",
+   "viejo_usdt": "MKRUSDT",
+   "nuevo_usdt": "SKYUSDT",
+   "tratamiento": "regla_3_sin_anuncio_archivado",
+   "r": null,
+   "E": null,
+   "apertura_texto": null,
+   "certeza": null,
+   "nota": "Sin cuerpo archivado que lo anuncie (barridos por cuerpo, sin saludo y por actividad). Salida con liquidación contable (§4.10) y listado nuevo; se informa como limitación.",
+   "evidencia": [],
+   "actividad_viejo": [
+    [
+     "2020-07-23",
+     "2025-09-14"
+    ]
+   ],
+   "actividad_nuevo": [
+    [
+     "2025-09-17",
+     "2026-05-31"
+    ]
+   ],
+   "chequeo_actividad": {}
+  },
+  {
+   "id": "T060",
+   "origen": "reparacion_reverificado",
+   "viejo_usdt": "FXSUSDT",
+   "nuevo_usdt": "FRAXUSDT",
+   "tratamiento": "regla_3_sin_anuncio_archivado",
+   "r": null,
+   "E": null,
+   "apertura_texto": null,
+   "certeza": null,
+   "nota": "Sin cuerpo archivado que lo anuncie (barridos por cuerpo, sin saludo y por actividad). Salida con liquidación contable (§4.10) y listado nuevo; se informa como limitación.",
+   "evidencia": [],
+   "actividad_viejo": [
+    [
+     "2021-12-10",
+     "2026-01-12"
+    ]
+   ],
+   "actividad_nuevo": [
+    [
+     "2026-01-15",
+     "2026-05-31"
+    ]
+   ],
+   "chequeo_actividad": {}
+  },
+  {
+   "id": "T069",
+   "origen": "reparacion_reverificado",
+   "viejo_usdt": "OMUSDT",
+   "nuevo_usdt": "MANTRAUSDT",
+   "tratamiento": "regla_3_sin_anuncio_archivado",
+   "r": null,
+   "E": null,
+   "apertura_texto": null,
+   "certeza": null,
+   "nota": "Sin cuerpo archivado que lo anuncie (barridos por cuerpo, sin saludo y por actividad). Salida con liquidación contable (§4.10) y listado nuevo; se informa como limitación.",
+   "evidencia": [],
+   "actividad_viejo": [
+    [
+     "2021-03-08",
+     "2026-03-01"
+    ]
+   ],
+   "actividad_nuevo": [
+    [
+     "2026-03-04",
+     "2026-05-31"
+    ]
+   ],
+   "chequeo_actividad": {}
+  },
+  {
+   "id": "T051",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "AEURUSDT",
+   "nuevo_usdt": "AEURUSDT",
+   "tratamiento": "regla_3_corte_sin_anuncio",
+   "r": null,
+   "E": null,
+   "corte": [
+    "2023-12-04",
+    "2023-12-08",
+    3
+   ],
+   "apertura_texto": null,
+   "certeza": null,
+   "nota": "Corte con reanudación sin anuncio archivado de canje o redenominación: mismo listado (corte < 30 días, v3 §2.2.3).",
+   "evidencia": [],
+   "chequeo_actividad": {}
+  },
+  {
+   "id": "T053",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "AUDUSDT",
+   "nuevo_usdt": "AUDUSDT",
+   "tratamiento": "regla_3_corte_sin_anuncio",
+   "r": null,
+   "E": null,
+   "corte": [
+    "2020-11-12",
+    "2020-11-14",
+    1
+   ],
+   "apertura_texto": null,
+   "certeza": null,
+   "nota": "Corte con reanudación sin anuncio archivado de canje o redenominación: mismo listado (corte < 30 días, v3 §2.2.3).",
+   "evidencia": [],
+   "chequeo_actividad": {}
+  },
+  {
+   "id": "T054",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "AXSUSDT",
+   "nuevo_usdt": "AXSUSDT",
+   "tratamiento": "regla_3_corte_sin_anuncio",
+   "r": null,
+   "E": null,
+   "corte": [
+    "2026-02-09",
+    "2026-02-11",
+    1
+   ],
+   "apertura_texto": null,
+   "certeza": null,
+   "nota": "Corte con reanudación sin anuncio archivado de canje o redenominación: mismo listado (corte < 30 días, v3 §2.2.3).",
+   "evidencia": [],
+   "chequeo_actividad": {}
+  },
+  {
+   "id": "T063",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "KEYUSDT",
+   "nuevo_usdt": "KEYUSDT",
+   "tratamiento": "regla_3_corte_sin_anuncio",
+   "r": null,
+   "E": null,
+   "corte": [
+    "2023-02-09",
+    "2023-03-10",
+    28
+   ],
+   "apertura_texto": null,
+   "certeza": null,
+   "nota": "Retiro del par KEY/USDT el 2023-02-10 (anuncio archivado: «Binance will remove and cease trading on the following spot trading pairs: At 2023-02-10 03:00 (UTC) : … KEY/USDT») y reanudación el 2023-03-10, 28 días después. No es canje ni redenominación: mismo listado por la regla de 30 días (v3 §2.2.3). Previo a A.",
+   "evidencia": [
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_notice-of-removal-of-trading_6bd297194a12.json",
+     "captura": "20230321171030",
+     "url": "https://www.binance.com/en/support/announcement/notice-of-removal-of-trading-pairs-2023-02-10-7ec33a2d62974c3490b92ff0780ba461",
+     "cita": "Binance will remove and cease trading on the following spot trading pairs: At 2023-02-10 03:00 (UTC) : BOND/ETH, BSW/ETH, C98/BNB, C98/BRL, ERN/BNB, ENJ/GBP, KEY/USDT",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {}
+  },
+  {
+   "id": "T067",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "NBTUSDT",
+   "nuevo_usdt": "NBTUSDT",
+   "tratamiento": "regla_3_corte_sin_anuncio",
+   "r": null,
+   "E": null,
+   "corte": [
+    "2022-09-11",
+    "2022-10-01",
+    19
+   ],
+   "apertura_texto": null,
+   "certeza": null,
+   "nota": "Corte con reanudación sin anuncio archivado de canje o redenominación: mismo listado (corte < 30 días, v3 §2.2.3).",
+   "evidencia": [],
+   "chequeo_actividad": {}
+  },
+  {
+   "id": "T072",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "SCRUSDT",
+   "nuevo_usdt": "SCRUSDT",
+   "tratamiento": "regla_3_corte_sin_anuncio",
+   "r": null,
+   "E": null,
+   "corte": [
+    "2024-10-20",
+    "2024-10-22",
+    1
+   ],
+   "apertura_texto": null,
+   "certeza": null,
+   "nota": "Fin del pre-mercado y apertura spot (anuncio archivado: «end the Scroll (SCR) Pre-Market at 2024-10-21 09:00 (UTC) and open spot trading … at 2024-10-22 08:00 (UTC)»). No es canje. Mismo listado (corte de 1 día).",
+   "evidencia": [
+    {
+     "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-end-the-scroll-_3831fc868ecd.json",
+     "captura": "20241210141004",
+     "url": "https://www.binance.com/en/support/announcement/binance-will-end-the-scroll-scr-pre-market-and-list-scroll-scr-with-seed-tag-applied-765ca1b5b58848fd88c9ee3684b91201?hl=en",
+     "cita": "Binance will end the Scroll (SCR) Pre-Market at 2024-10-21 09:00 (UTC) and open spot trading for the following pairs at 2024-10-22 08:00 (UTC)",
+     "cita_en_pagina": true
+    }
+   ],
+   "chequeo_actividad": {}
+  },
+  {
+   "id": "T076",
+   "origen": "nuevo_cierre",
+   "viejo_usdt": "USUALUSDT",
+   "nuevo_usdt": "USUALUSDT",
+   "tratamiento": "regla_3_corte_sin_anuncio",
+   "r": null,
+   "E": null,
+   "corte": [
+    "2024-12-16",
+    "2024-12-18",
+    1
+   ],
+   "apertura_texto": null,
+   "certeza": null,
+   "nota": "Corte con reanudación sin anuncio archivado de canje o redenominación: mismo listado (corte < 30 días, v3 §2.2.3).",
+   "evidencia": [],
+   "chequeo_actividad": {}
+  }
+ ],
+ "problemas": []
+}

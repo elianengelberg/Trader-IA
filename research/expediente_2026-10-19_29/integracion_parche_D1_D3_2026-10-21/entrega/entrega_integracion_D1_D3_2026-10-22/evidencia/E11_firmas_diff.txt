@@ -1,0 +1,2 @@
+45a46
+>   resting_orders(self, symbol: 'str | None' = None) -> 'list[Order]'

@@ -1,0 +1,7 @@
+== 2026-10-22T12:26:37Z · prueba de persistencia (base 72ffae5, venv_A) · disco vs tmpfs
+-- ext4 (/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_D1_D3_2026-10-22/tmp_disco) #1: 1 failed in 29.32s
+-- ext4 (/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_D1_D3_2026-10-22/tmp_disco) #2: 1 failed in 27.17s
+-- ext4 (/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_D1_D3_2026-10-22/tmp_disco) #3: 1 failed in 27.25s
+-- tmpfs (/dev/shm/tmp_ram_cierre) #1: 1 passed in 24.94s
+-- tmpfs (/dev/shm/tmp_ram_cierre) #2: 1 failed in 27.49s
+-- tmpfs (/dev/shm/tmp_ram_cierre) #3: 1 failed in 28.44s

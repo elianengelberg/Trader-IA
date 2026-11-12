@@ -1,0 +1,727 @@
+{
+ "resumen": {
+  "items": 47,
+  "concordantes": 47,
+  "discrepantes": [],
+  "pendientes_sin_resolver": []
+ },
+ "filas": [
+  {
+   "id": "L01",
+   "clave": "ANTUSDT|2024-02-20",
+   "categoria_pasada1": "A",
+   "L2": {
+    "accion": "confirmar"
+   },
+   "pasada2": {
+    "accion": "confirmar"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "confirmar"
+   }
+  },
+  {
+   "id": "L02",
+   "clave": "ARKUSDT|2023-09-22",
+   "categoria_pasada1": "C_no_explicada",
+   "L2": {
+    "accion": "C_explicada"
+   },
+   "pasada2": {
+    "accion": "C_explicada"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "C_explicada"
+   }
+  },
+  {
+   "id": "L03",
+   "clave": "AUDUSDT|2023-06-01",
+   "categoria_pasada1": "A",
+   "L2": {
+    "accion": "confirmar"
+   },
+   "pasada2": {
+    "accion": "confirmar"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "confirmar"
+   }
+  },
+  {
+   "id": "L04",
+   "clave": "AUTOUSDT|2023-04-18",
+   "categoria_pasada1": "A",
+   "L2": {
+    "accion": "confirmar"
+   },
+   "pasada2": {
+    "accion": "confirmar"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "confirmar"
+   }
+  },
+  {
+   "id": "L05",
+   "clave": "BCHSVUSDT|2019-04-22",
+   "categoria_pasada1": "A",
+   "L2": {
+    "accion": "confirmar"
+   },
+   "pasada2": {
+    "accion": "confirmar"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "confirmar"
+   }
+  },
+  {
+   "id": "L06",
+   "clave": "BEARUSDT|2020-03-31",
+   "categoria_pasada1": "A",
+   "L2": {
+    "accion": "confirmar"
+   },
+   "pasada2": {
+    "accion": "confirmar"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "confirmar"
+   }
+  },
+  {
+   "id": "L07",
+   "clave": "BKRWUSDT|2021-02-19",
+   "categoria_pasada1": "T",
+   "L2": {
+    "accion": "descartar"
+   },
+   "pasada2": {
+    "accion": "descartar"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "descartar"
+   }
+  },
+  {
+   "id": "L08",
+   "clave": "BNBBEARUSDT|2020-03-31",
+   "categoria_pasada1": "A",
+   "L2": {
+    "accion": "confirmar"
+   },
+   "pasada2": {
+    "accion": "confirmar"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "confirmar"
+   }
+  },
+  {
+   "id": "L09",
+   "clave": "BNBBULLUSDT|2020-03-31",
+   "categoria_pasada1": "A",
+   "L2": {
+    "accion": "confirmar"
+   },
+   "pasada2": {
+    "accion": "confirmar"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "confirmar"
+   }
+  },
+  {
+   "id": "L10",
+   "clave": "BONDUSDT|2024-07-22",
+   "categoria_pasada1": "A",
+   "L2": {
+    "accion": "confirmar"
+   },
+   "pasada2": {
+    "accion": "confirmar"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "confirmar"
+   }
+  },
+  {
+   "id": "L11",
+   "clave": "BTSUSDT|2023-12-07",
+   "categoria_pasada1": "A",
+   "L2": {
+    "accion": "confirmar"
+   },
+   "pasada2": {
+    "accion": "confirmar"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "confirmar"
+   }
+  },
+  {
+   "id": "L12",
+   "clave": "BULLUSDT|2020-03-31",
+   "categoria_pasada1": "A",
+   "L2": {
+    "accion": "confirmar"
+   },
+   "pasada2": {
+    "accion": "confirmar"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "confirmar"
+   }
+  },
+  {
+   "id": "L13",
+   "clave": "CLOAKUSDT|2019-02-22",
+   "categoria_pasada1": "fuera_sin_par_usdt_documentado",
+   "L2": {
+    "accion": "confirmar"
+   },
+   "pasada2": {
+    "accion": "confirmar"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "confirmar"
+   }
+  },
+  {
+   "id": "L14",
+   "clave": "CREAMUSDT|2023-09-22",
+   "categoria_pasada1": "C_no_explicada",
+   "L2": {
+    "accion": "C_explicada"
+   },
+   "pasada2": {
+    "accion": "C_explicada"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "C_explicada"
+   }
+  },
+  {
+   "id": "L15",
+   "clave": "DOCKUSDT|2024-07-22",
+   "categoria_pasada1": "A",
+   "L2": {
+    "accion": "confirmar"
+   },
+   "pasada2": {
+    "accion": "confirmar"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "confirmar"
+   }
+  },
+  {
+   "id": "L16",
+   "clave": "DOTDOWNUSDT|2023-04-27",
+   "categoria_pasada1": "T",
+   "L2": {
+    "accion": "fecha_corregida",
+    "E": "2023-05-10"
+   },
+   "pasada2": {
+    "accion": "fecha_corregida",
+    "E": "2023-05-10"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "fecha_corregida",
+    "E": "2023-05-10"
+   }
+  },
+  {
+   "id": "L17",
+   "clave": "DOTUPUSDT|2023-04-27",
+   "categoria_pasada1": "T",
+   "L2": {
+    "accion": "fecha_corregida",
+    "E": "2023-05-10"
+   },
+   "pasada2": {
+    "accion": "fecha_corregida",
+    "E": "2023-05-10"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "fecha_corregida",
+    "E": "2023-05-10"
+   }
+  },
+  {
+   "id": "L18",
+   "clave": "EOSBEARUSDT|2020-03-31",
+   "categoria_pasada1": "A",
+   "L2": {
+    "accion": "confirmar"
+   },
+   "pasada2": {
+    "accion": "confirmar"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "confirmar"
+   }
+  },
+  {
+   "id": "L19",
+   "clave": "EOSBULLUSDT|2020-03-31",
+   "categoria_pasada1": "A",
+   "L2": {
+    "accion": "confirmar"
+   },
+   "pasada2": {
+    "accion": "confirmar"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "confirmar"
+   }
+  },
+  {
+   "id": "L20",
+   "clave": "ETHBEARUSDT|2020-03-31",
+   "categoria_pasada1": "A",
+   "L2": {
+    "accion": "confirmar"
+   },
+   "pasada2": {
+    "accion": "confirmar"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "confirmar"
+   }
+  },
+  {
+   "id": "L21",
+   "clave": "ETHBULLUSDT|2020-03-31",
+   "categoria_pasada1": "A",
+   "L2": {
+    "accion": "confirmar"
+   },
+   "pasada2": {
+    "accion": "confirmar"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "confirmar"
+   }
+  },
+  {
+   "id": "L22",
+   "clave": "FTTUSDT|2023-09-22",
+   "categoria_pasada1": "C_no_explicada",
+   "L2": {
+    "accion": "C_explicada"
+   },
+   "pasada2": {
+    "accion": "C_explicada"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "C_explicada"
+   }
+  },
+  {
+   "id": "L23",
+   "clave": "FTTUSDT|2022-11-15",
+   "categoria_pasada1": "A",
+   "L2": {
+    "accion": "confirmar"
+   },
+   "pasada2": {
+    "accion": "confirmar"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "confirmar"
+   }
+  },
+  {
+   "id": "L24",
+   "clave": "GFTUSDT|2023-09-22",
+   "categoria_pasada1": "C_no_explicada",
+   "L2": {
+    "accion": "C_explicada"
+   },
+   "pasada2": {
+    "accion": "C_explicada"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "C_explicada"
+   }
+  },
+  {
+   "id": "L25",
+   "clave": "HCUSDT|2020-11-10",
+   "categoria_pasada1": "A",
+   "L2": {
+    "accion": "confirmar"
+   },
+   "pasada2": {
+    "accion": "confirmar"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "confirmar"
+   }
+  },
+  {
+   "id": "L26",
+   "clave": "HNTUSDT|2022-10-14",
+   "categoria_pasada1": "A",
+   "L2": {
+    "accion": "confirmar"
+   },
+   "pasada2": {
+    "accion": "confirmar"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "confirmar"
+   }
+  },
+  {
+   "id": "L27",
+   "clave": "IQUSDT|2023-09-22",
+   "categoria_pasada1": "C_no_explicada",
+   "L2": {
+    "accion": "C_explicada"
+   },
+   "pasada2": {
+    "accion": "C_explicada"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "C_explicada"
+   }
+  },
+  {
+   "id": "L28",
+   "clave": "KP3RUSDT|2024-11-06",
+   "categoria_pasada1": "A",
+   "L2": {
+    "accion": "confirmar"
+   },
+   "pasada2": {
+    "accion": "confirmar"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "confirmar"
+   }
+  },
+  {
+   "id": "L29",
+   "clave": "LINKUPUSDT|2023-04-27",
+   "categoria_pasada1": "B",
+   "L2": {
+    "accion": "fecha_corregida",
+    "E": "2023-05-11"
+   },
+   "pasada2": {
+    "accion": "fecha_corregida",
+    "E": "2023-05-11"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "fecha_corregida",
+    "E": "2023-05-11"
+   }
+  },
+  {
+   "id": "L30",
+   "clave": "MCOUSDT|2020-10-23",
+   "categoria_pasada1": "A",
+   "L2": {
+    "accion": "confirmar"
+   },
+   "pasada2": {
+    "accion": "confirmar"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "confirmar"
+   }
+  },
+  {
+   "id": "L31",
+   "clave": "MDXUSDT|2024-07-22",
+   "categoria_pasada1": "A",
+   "L2": {
+    "accion": "confirmar"
+   },
+   "pasada2": {
+    "accion": "confirmar"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "confirmar"
+   }
+  },
+  {
+   "id": "L32",
+   "clave": "MODUSDT|2019-02-22",
+   "categoria_pasada1": "fuera_sin_par_usdt_documentado",
+   "L2": {
+    "accion": "confirmar"
+   },
+   "pasada2": {
+    "accion": "confirmar"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "confirmar"
+   }
+  },
+  {
+   "id": "L33",
+   "clave": "MULTIUSDT|2024-02-20",
+   "categoria_pasada1": "A",
+   "L2": {
+    "accion": "confirmar"
+   },
+   "pasada2": {
+    "accion": "confirmar"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "confirmar"
+   }
+  },
+  {
+   "id": "L34",
+   "clave": "NEBLUSDT|2023-04-18",
+   "categoria_pasada1": "A",
+   "L2": {
+    "accion": "confirmar"
+   },
+   "pasada2": {
+    "accion": "confirmar"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "confirmar"
+   }
+  },
+  {
+   "id": "L35",
+   "clave": "OOKIUSDT|2024-11-06",
+   "categoria_pasada1": "A",
+   "L2": {
+    "accion": "confirmar"
+   },
+   "pasada2": {
+    "accion": "confirmar"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "confirmar"
+   }
+  },
+  {
+   "id": "L36",
+   "clave": "PERLUSDT|2023-12-07",
+   "categoria_pasada1": "A",
+   "L2": {
+    "accion": "confirmar"
+   },
+   "pasada2": {
+    "accion": "confirmar"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "confirmar"
+   }
+  },
+  {
+   "id": "L37",
+   "clave": "POLSUSDT|2024-07-22",
+   "categoria_pasada1": "A",
+   "L2": {
+    "accion": "confirmar"
+   },
+   "pasada2": {
+    "accion": "confirmar"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "confirmar"
+   }
+  },
+  {
+   "id": "L38",
+   "clave": "SALTUSDT|2019-02-22",
+   "categoria_pasada1": "fuera_sin_par_usdt_documentado",
+   "L2": {
+    "accion": "confirmar"
+   },
+   "pasada2": {
+    "accion": "confirmar"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "confirmar"
+   }
+  },
+  {
+   "id": "L39",
+   "clave": "SUBUSDT|2019-02-22",
+   "categoria_pasada1": "fuera_sin_par_usdt_documentado",
+   "L2": {
+    "accion": "confirmar"
+   },
+   "pasada2": {
+    "accion": "confirmar"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "confirmar"
+   }
+  },
+  {
+   "id": "L40",
+   "clave": "TRXDOWNUSDT|2023-04-27",
+   "categoria_pasada1": "T",
+   "L2": {
+    "accion": "fecha_corregida",
+    "E": "2023-05-09"
+   },
+   "pasada2": {
+    "accion": "fecha_corregida",
+    "E": "2023-05-09"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "fecha_corregida",
+    "E": "2023-05-09"
+   }
+  },
+  {
+   "id": "L41",
+   "clave": "UNFIUSDT|2024-11-06",
+   "categoria_pasada1": "A",
+   "L2": {
+    "accion": "confirmar"
+   },
+   "pasada2": {
+    "accion": "confirmar"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "confirmar"
+   }
+  },
+  {
+   "id": "L42",
+   "clave": "WINGSUSDT|2019-02-22",
+   "categoria_pasada1": "fuera_sin_par_usdt_documentado",
+   "L2": {
+    "accion": "confirmar"
+   },
+   "pasada2": {
+    "accion": "confirmar"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "confirmar"
+   }
+  },
+  {
+   "id": "L43",
+   "clave": "WTCUSDT|2023-12-07",
+   "categoria_pasada1": "A",
+   "L2": {
+    "accion": "confirmar"
+   },
+   "pasada2": {
+    "accion": "confirmar"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "confirmar"
+   }
+  },
+  {
+   "id": "L44",
+   "clave": "XMRUSDT|2024-02-20",
+   "categoria_pasada1": "A",
+   "L2": {
+    "accion": "confirmar"
+   },
+   "pasada2": {
+    "accion": "confirmar"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "confirmar"
+   }
+  },
+  {
+   "id": "L45",
+   "clave": "XRPBEARUSDT|2020-03-31",
+   "categoria_pasada1": "A",
+   "L2": {
+    "accion": "confirmar"
+   },
+   "pasada2": {
+    "accion": "confirmar"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "confirmar"
+   }
+  },
+  {
+   "id": "L46",
+   "clave": "XRPBULLUSDT|2020-03-31",
+   "categoria_pasada1": "A",
+   "L2": {
+    "accion": "confirmar"
+   },
+   "pasada2": {
+    "accion": "confirmar"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "confirmar"
+   }
+  },
+  {
+   "id": "L47",
+   "clave": "YFIIUSDT|2023-08-22",
+   "categoria_pasada1": "A",
+   "L2": {
+    "accion": "confirmar"
+   },
+   "pasada2": {
+    "accion": "confirmar"
+   },
+   "concordante": true,
+   "final": {
+    "accion": "confirmar"
+   }
+  }
+ ]
+}

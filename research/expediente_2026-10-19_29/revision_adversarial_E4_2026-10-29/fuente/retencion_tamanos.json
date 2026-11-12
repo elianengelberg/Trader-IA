@@ -1,0 +1,58 @@
+{
+ "BTCUSDT_1d": {
+  "n_zip": 3360,
+  "primero": [
+   "data/spot/daily/klines/BTCUSDT/1d/BTCUSDT-1d-2017-08-17.zip",
+   230,
+   "2023-08-07T03:46:13.000Z"
+  ],
+  "ultimo": [
+   "data/spot/daily/klines/BTCUSDT/1d/BTCUSDT-1d-2026-10-28.zip",
+   239,
+   "2026-10-29T02:18:32.000Z"
+  ],
+  "tamano_medio_ultimos_30": 238.5
+ },
+ "BTCUSDT_1h": {
+  "n_zip": 3360,
+  "primero": [
+   "data/spot/daily/klines/BTCUSDT/1h/BTCUSDT-1h-2017-08-17.zip",
+   1218,
+   "2023-07-27T06:53:30.000Z"
+  ],
+  "ultimo": [
+   "data/spot/daily/klines/BTCUSDT/1h/BTCUSDT-1h-2026-10-28.zip",
+   1585,
+   "2026-10-29T02:18:35.000Z"
+  ],
+  "tamano_medio_ultimos_30": 1577.9
+ },
+ "ETHUSDT_1h": {
+  "n_zip": 3360,
+  "primero": [
+   "data/spot/daily/klines/ETHUSDT/1h/ETHUSDT-1h-2017-08-17.zip",
+   1155,
+   "2023-07-26T04:47:47.000Z"
+  ],
+  "ultimo": [
+   "data/spot/daily/klines/ETHUSDT/1h/ETHUSDT-1h-2026-10-28.zip",
+   1504,
+   "2026-10-29T02:18:40.000Z"
+  ],
+  "tamano_medio_ultimos_30": 1518.1333333333334
+ },
+ "PEPEUSDT_1d": {
+  "n_zip": 1273,
+  "primero": [
+   "data/spot/daily/klines/PEPEUSDT/1d/PEPEUSDT-1d-2023-05-05.zip",
+   236,
+   "2023-05-06T06:08:36.000Z"
+  ],
+  "ultimo": [
+   "data/spot/daily/klines/PEPEUSDT/1d/PEPEUSDT-1d-2026-10-28.zip",
+   236,
+   "2026-10-29T02:31:55.000Z"
+  ],
+  "tamano_medio_ultimos_30": 234.6
+ }
+}

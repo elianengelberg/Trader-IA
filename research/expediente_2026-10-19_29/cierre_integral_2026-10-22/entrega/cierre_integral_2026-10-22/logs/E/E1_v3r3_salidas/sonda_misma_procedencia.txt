@@ -1,0 +1,8 @@
+2026-10-22 23:09:49 [info     ] backtest_complete              bars=400 component=backtest.engine final_equity=99883.91 run_id=bt_111WYX71MFPWFVE30Z1CNBYH trades=9
+2026-10-22 23:09:50 [info     ] backtest_complete              bars=400 component=backtest.engine final_equity=99911.24 run_id=bt_111WYX71MFPWFVE30Z1CNBYH trades=8
+run_id A: bt_111WYX71MFPWFVE30Z1CNBYH · operaciones 9 · retorno -0.116093
+run_id B: bt_111WYX71MFPWFVE30Z1CNBYH · operaciones 8 · retorno -0.088758
+misma procedencia registrada: {'engine_version': True, 'engine_fingerprint': True, 'data_fingerprint': True, 'universe_digest': True}
+2026-10-22 23:09:50 [info     ] schema_created                 component=persistence.database dialect=sqlite version=7
+segundo guardado: RECHAZADO: backtest bt_111WYX71MFPWFVE30Z1CNBYH is already stored with the same provenance and other results (trades, total_return_pct, max_drawdown_pct, sharpe, equity_curve): something the provenance does not record changed (the environment, or a substituted part of the engine); refusing to replace it
+filas: [('bt_111WYX71MFPWFVE30Z1CNBYH', 9, -0.116093)]

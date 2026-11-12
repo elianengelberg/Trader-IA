@@ -1,0 +1,17 @@
+-    market: FakeMarketData | None = None, **live_overrides: Any,
+-        start=datetime.now(UTC) - timedelta(minutes=scenario.total_bars + 5), seed=9,
+-        now = datetime.now(UTC)
+-        assert t0.date() == now.date() or True
+-        if restore.current_day != t0.date().isoformat():
+-            pytest.skip("the UTC day rolled during the test; the day scenario is covered by the unit tests")
+-        runtime, engine, market, clock = build(account=restore)
+-        if clock.now().date().isoformat() != restore.current_day:
+-            pytest.skip("the UTC day rolled during the test; the day scenario is covered by the unit tests")
+-    *, persist=None, prior_risk_state: RiskRestore | None = None, **live_overrides: Any
+-        start=datetime.now(UTC) - timedelta(minutes=scenario.total_bars + 5), seed=9,
+-    now = datetime.now(UTC)
+-        )
++        assert restore.current_day == t0.date().isoformat(), "the fills and the rebuild share one day"
++        assert clock.now() == now, "the restarted session reads the same clock"
++            assert runtime.counters["cycles"] == 500, "the test's cycles were the only ones"
++        assert runtime._clock.now().date() == now.date(), "the drive stayed inside the restored day"

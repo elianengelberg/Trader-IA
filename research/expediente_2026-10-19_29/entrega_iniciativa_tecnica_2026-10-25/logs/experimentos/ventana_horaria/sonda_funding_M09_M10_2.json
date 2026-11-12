@@ -1,0 +1,46 @@
+{
+ "pruebas": [
+  "tests/integration/test_funding_recovery.py",
+  "tests/integration/test_funding_restore.py",
+  "tests/integration/test_funding_runtime_policy.py",
+  "tests/integration/test_funding_settlement.py"
+ ],
+ "mutantes": [
+  {
+   "id": "M07",
+   "archivo": "packages/tia/src/tia/runtime/live.py",
+   "descripcion": "stop protector sin reduce_only",
+   "rc": 0,
+   "resultado": "VIVO",
+   "primera_falla": "",
+   "segundos": 42.8
+  },
+  {
+   "id": "M09",
+   "archivo": "packages/tia/src/tia/runtime/live.py",
+   "descripcion": "redondeo del nivel hacia el lado que agranda la pérdida",
+   "rc": 0,
+   "resultado": "VIVO",
+   "primera_falla": "",
+   "segundos": 47.9
+  },
+  {
+   "id": "M10",
+   "archivo": "packages/tia/src/tia/runtime/live.py",
+   "descripcion": "re-protección sin mirar si el estado admite órdenes reductoras",
+   "rc": 0,
+   "resultado": "VIVO",
+   "primera_falla": "",
+   "segundos": 43.1
+  },
+  {
+   "id": "M11",
+   "archivo": "packages/tia/src/tia/runtime/live.py",
+   "descripcion": "sin re-protección tras un cierre que no trabaja (R18)",
+   "rc": 0,
+   "resultado": "VIVO",
+   "primera_falla": "",
+   "segundos": 45.9
+  }
+ ]
+}

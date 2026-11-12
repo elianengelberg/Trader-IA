@@ -1,0 +1,21 @@
+== 2026-10-22T18:29:15Z · ¿01+02v3 inseparables? ¿03 reversible por separado? (git apply / git apply -R sobre clones nuevos; sin commits)
+-- A. 02v3 sin 01 sobre la base
+   código: 0
+-- B. 01 sin 02v3 sobre la base
+   aplica (código 0): técnicamente posible
+-- C. integración completa (01+02v3+03) y reversión parcial
+   completa = registrada
+   C1. revertir SOLO 01 dejando 02v3:
+   código: 0
+   C2. revertir SOLO 02v3 dejando 01:
+   código: 0
+   C3. revertir SOLO 03:
+   código 0
+   resultado = obligatoria v3 registrada (01+02v3), byte a byte; cambios: 8
+   C4. revertir la unidad 01+02v3 en orden inverso (02v3, luego 01) dejando 03:
+   código 0 · cambios restantes: 3 (solo los 3 archivos de 03)
+       M tests/integration/test_account_restore.py
+       M tests/integration/test_adverse_recovery.py
+       M tests/integration/test_risk_state_persistence.py
+-- D. 03 sin 01 ni 02v3 sobre la base
+   aplica (código 0): 03 no depende de 01 ni de 02v3

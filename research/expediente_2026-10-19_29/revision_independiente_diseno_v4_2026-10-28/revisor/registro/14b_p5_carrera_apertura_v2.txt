@@ -1,0 +1,54 @@
+# comando: /usr/bin/python3 -I -B prototipos/p5_carrera_apertura.py prototipos/tmp_p5   (VERSIÓN 2: añade el escenario de dos fases; la versión 1 está en 14_p5_carrera_apertura.txt)
+# fecha: 2026-10-28T19:51:11Z
+{
+ "8_procesos_simultaneos_con_cas": {
+  "resultados": [
+   "ABIERTO",
+   "RECHAZO_BLOQUEADO",
+   "RECHAZO_BLOQUEADO",
+   "RECHAZO_BLOQUEADO",
+   "RECHAZO_BLOQUEADO",
+   "RECHAZO_BLOQUEADO",
+   "RECHAZO_BLOQUEADO",
+   "RECHAZO_BLOQUEADO"
+  ],
+  "lineas_ABIERTO_en_registro": 1,
+  "nonces_abiertos": [
+   "nonce-07"
+  ]
+ },
+ "8_procesos_simultaneos_sin_cas": {
+  "resultados": [
+   "ABIERTO",
+   "RECHAZO_BLOQUEADO",
+   "RECHAZO_BLOQUEADO",
+   "RECHAZO_BLOQUEADO",
+   "RECHAZO_BLOQUEADO",
+   "RECHAZO_BLOQUEADO",
+   "RECHAZO_BLOQUEADO",
+   "RECHAZO_BLOQUEADO"
+  ],
+  "lineas_ABIERTO_en_registro": 1,
+  "nonces_abiertos": [
+   "nonce-06"
+  ]
+ },
+ "dos_fases_con_cas": {
+  "A": "ABIERTO",
+  "B": "RECHAZO_CABEZA_DISTINTA",
+  "lineas_ABIERTO_en_registro": 1,
+  "nonces_abiertos": [
+   "nonce-A"
+  ]
+ },
+ "dos_fases_sin_cas": {
+  "A": "ABIERTO",
+  "B": "ABIERTO",
+  "lineas_ABIERTO_en_registro": 2,
+  "nonces_abiertos": [
+   "nonce-A",
+   "nonce-B"
+  ]
+ }
+}
+# exit=0

@@ -1,0 +1,30 @@
+base: 1956 pruebas · 1956 pasan · 0 fallan · 0 errores · 0 omitidas
+integrado: 1978 pruebas · 1978 pasan · 0 fallan · 0 errores · 0 omitidas
+pruebas de la base que faltan en el integrado: ninguna
+pruebas nuevas: 22 · todas pasan: True
+   pasa    tests.integration.test_backtest_provenance::test_a_fingerprint_that_cannot_be_read_says_so
+   pasa    tests.integration.test_backtest_provenance::test_a_rerun_of_the_same_engine_over_the_same_bars_replaces_only_itself
+   pasa    tests.integration.test_backtest_provenance::test_a_result_records_its_engine_its_bars_and_its_instruments
+   pasa    tests.integration.test_backtest_provenance::test_a_result_stored_before_the_engine_was_recorded_stays_beside_the_new_one
+   pasa    tests.integration.test_backtest_provenance::test_an_engine_change_nobody_versioned_is_another_run
+   pasa    tests.integration.test_backtest_provenance::test_an_undefined_ratio_does_not_make_a_rerun_look_different
+   pasa    tests.integration.test_backtest_provenance::test_another_engine_version_is_another_run
+   pasa    tests.integration.test_backtest_provenance::test_another_strategy_set_is_another_run
+   pasa    tests.integration.test_backtest_provenance::test_one_dataset_name_over_other_bars_is_another_run
+   pasa    tests.integration.test_backtest_provenance::test_other_numbers_under_the_same_provenance_are_refused_not_kept_as_the_last_run
+   pasa    tests.integration.test_backtest_provenance::test_the_api_lists_the_engine_of_each_result_and_unknown_for_the_old_ones
+   pasa    tests.integration.test_backtest_provenance::test_the_fingerprint_follows_the_engine_source_and_nothing_else
+   pasa    tests.integration.test_backtest_provenance::test_the_same_engine_on_the_same_bars_is_the_same_run
+   pasa    tests.integration.test_backtest_provenance::test_the_store_refuses_to_replace_a_result_of_another_provenance
+   pasa    tests.unit.test_backtest_order_hygiene::test_a_close_that_leaves_position_is_released_and_retried
+   pasa    tests.unit.test_backtest_order_hygiene::test_a_leg_without_a_stop_level_is_reported
+   pasa    tests.unit.test_backtest_order_hygiene::test_a_rejected_close_is_sent_again_and_closes
+   pasa    tests.unit.test_backtest_order_hygiene::test_every_invariant_holds_under_repeated_rejections_partials_and_reversals
+   pasa    tests.unit.test_backtest_order_hygiene::test_partial_fills_leave_no_untracked_or_stuck_position
+   pasa    tests.unit.test_backtest_order_hygiene::test_stops_and_exits_survive_rejections
+   pasa    tests.unit.test_backtest_order_hygiene::test_the_stop_in_the_book_follows_the_leg
+   pasa    tests.unit.test_backtest_order_hygiene::test_the_stop_is_replaced_only_when_its_size_or_level_moved
+pruebas de la base con otro resultado en el integrado: ninguna
+pruebas de la base que no pasan en el árbol base: ninguna
+pruebas de la base que no pasan en el árbol integrado: ninguna
+SIN REGRESIONES FRENTE A LA BASE

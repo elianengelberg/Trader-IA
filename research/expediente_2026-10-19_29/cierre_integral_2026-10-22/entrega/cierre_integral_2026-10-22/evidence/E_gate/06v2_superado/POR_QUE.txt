@@ -1,0 +1,8 @@
+06v2 (f454add65ff3af29340cf2dba0ff9d99537dc871c316f1c76d9759f87e2554b9) queda SUPERADO por 06v3.
+06v2 corrigió el lint de 06 v1 (ruff limpio), pero el gate seguía FALLANDO ABIERTO: leía ENGINE_VERSION importando
+tia.backtest.engine y, ante cualquier ImportError (otro intérprete, una dependencia faltante), devolvía None = «el motor no
+promete D1–D3» y dejaba de exigir la guarda. Demostrado en evidence/E_gate/corrida2_06v2_ANTES/: con un intérprete sin las
+dependencias del proyecto, el gate APRUEBA un JUnit con las 7 pruebas de la guarda omitidas (caso otro_interprete_guarda_omitida).
+06v3 cambia solo scripts/ci_gate.py: lee ENGINE_VERSION de la fuente del motor del checkout (ast, sin importar), y si no puede
+leerla (archivo ausente, valor que no es un literal, número con puntos inválido) lo trata como una promesa: exige la guarda y
+agrega el problema. ci.yml y .gitignore no cambian. Ninguna comprobación se debilita.

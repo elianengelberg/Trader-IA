@@ -1,0 +1,8 @@
+$ cmp metodologia/alcance_pasada_N5.json verificacion_matriz/registro/alcance_N5_reejecutado.json
+IDENTICOS (byte a byte)
+e1fbfa72217dd24d0f0b0075  metodologia/alcance_pasada_N5.json
+e1fbfa72217dd24d0f0b0075  verificacion_matriz/registro/alcance_N5_reejecutado.json
+$ cmp metodologia/potencia_analitica.txt verificacion_matriz/registro/salida_potencia_reejecutada.txt
+IDENTICOS (byte a byte)
+$ sha256sum de la matriz (final)
+825f141e9a392ad6c659493a60dcc20fd9d956d70dbd52a9e9e2f0d9c44ed207  metodologia/MATRIZ_METODOLOGICA.md

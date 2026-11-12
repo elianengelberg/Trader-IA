@@ -1,0 +1,9 @@
+x...x..............x.x.x.x........                                       [100%]
+=========================== short test summary info ============================
+XFAIL copia_aislada/reparacion_E3H1H2_2026-10-26/orquestador_v2/pruebas/test_orquestador_v2.py::test_r4_mide_el_aporte_contra_el_ew_bruto[v1] - defecto del v1 que corrige el v2
+XFAIL copia_aislada/reparacion_E3H1H2_2026-10-26/orquestador_v2/pruebas/test_orquestador_v2.py::test_serie_alterada_se_rechaza_sin_leer_precios[v1] - defecto del v1 que corrige el v2
+XFAIL copia_aislada/reparacion_E3H1H2_2026-10-26/orquestador_v2/pruebas/test_orquestador_v2.py::test_ventana_invalida_deja_resultado_explicito[v1] - defecto del v1 que corrige el v2
+XFAIL copia_aislada/reparacion_E3H1H2_2026-10-26/orquestador_v2/pruebas/test_orquestador_v2.py::test_regla2_redenominacion_conserva_edad_y_continuidad[v1] - defecto del v1 que corrige el v2
+XFAIL copia_aislada/reparacion_E3H1H2_2026-10-26/orquestador_v2/pruebas/test_orquestador_v2.py::test_regla1_renombre_hereda_edad_y_fila[v1] - defecto del v1 que corrige el v2
+XFAIL copia_aislada/reparacion_E3H1H2_2026-10-26/orquestador_v2/pruebas/test_orquestador_v2.py::test_corte_sin_anuncio_sigue_la_regla_3[v1] - defecto del v1 que corrige el v2
+28 passed, 6 xfailed in 2.78s

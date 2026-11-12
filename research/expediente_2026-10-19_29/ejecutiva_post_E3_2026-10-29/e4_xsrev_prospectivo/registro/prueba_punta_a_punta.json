@@ -1,0 +1,58 @@
+{
+ "aviso": "DATOS SINTÉTICOS; fechas ficticias (2030–2031)",
+ "recoleccion": {
+  "lineas_registro": 286,
+  "cadena_ok": true,
+  "checksum_distinto_registrado": 1,
+  "archivo_malo_no_guardado": true,
+  "reejecucion": {
+   "dia": "2030-12-01",
+   "simbolos": 35,
+   "guardado": 0,
+   "ya_estaba": 34,
+   "ausente": 0,
+   "checksum_distinto": 1
+  },
+  "destino_protegido_rechazado": true
+ },
+ "evaluacion": {
+  "antes_de_tiempo_rechazada": true,
+  "modo_real_sobre_sinteticos_rechazado": true,
+  "unica_corrida": {
+   "experimento": "E4 H-XS-REV-1 prospectivo",
+   "sintetico": true,
+   "t0": "2031-01-01",
+   "dias_pedidos": 253,
+   "prerregistro_sha256": "f1e4425793e869dd7d463bca6a08946ead60c8414d8d538dce88340e45d44b0c",
+   "clasificacion": "RESPALDADA_INFORMACION",
+   "ic_medio": 0.053148215808062366,
+   "ee_nw": 0.010862870498642723,
+   "t": 4.892649306157433,
+   "cota_superior_975": 0.0744394419854021,
+   "n_dias": 253,
+   "frac_no_evaluable": 0.0,
+   "bruto_diario_medio": 0.0029842048825281255,
+   "costo_diario_medio": 0.00199322416713721,
+   "descarte_rapido_economico": true,
+   "neto_diario_medio": 0.0009909807153909158,
+   "t_neto": 1.162865329821701,
+   "sensibilidad_costos": {
+    "medio_spread_10.0bps": {
+     "costo_diario_medio": 0.002790513833992094,
+     "descarte_rapido_economico": true,
+     "neto_diario_medio": 0.00019369104853603181,
+     "t_neto": 0.22716215178211122
+    },
+    "medio_spread_20.0bps": {
+     "costo_diario_medio": 0.004385093167701862,
+     "descarte_rapido_economico": true,
+     "neto_diario_medio": -0.001400888285173736,
+     "t_neto": -1.6407674114347448
+    }
+   }
+  },
+  "segunda_rechazada": true,
+  "prerregistro_alterado_rechazado": true
+ },
+ "ok": true
+}

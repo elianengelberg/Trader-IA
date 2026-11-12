@@ -1,0 +1,1182 @@
+[
+{
+"simbolo": "1INCHDOWNUSDT",
+"ultimo_activo": "2021-12-01",
+"motivo": null
+},
+{
+"simbolo": "1INCHUPUSDT",
+"ultimo_activo": "2021-12-01",
+"motivo": null
+},
+{
+"simbolo": "A2ZUSDT",
+"ultimo_activo": "2026-03-31",
+"motivo": null
+},
+{
+"simbolo": "AAVEDOWNUSDT",
+"ultimo_activo": "2021-11-10",
+"motivo": null
+},
+{
+"simbolo": "AAVEUPUSDT",
+"ultimo_activo": "2021-11-10",
+"motivo": null
+},
+{
+"simbolo": "ACAUSDT",
+"ultimo_activo": "2026-02-12",
+"motivo": null
+},
+{
+"simbolo": "ADADOWNUSDT",
+"ultimo_activo": "2023-08-15",
+"motivo": null
+},
+{
+"simbolo": "ADAUPUSDT",
+"ultimo_activo": "2023-08-15",
+"motivo": null
+},
+{
+"simbolo": "AERGOUSDT",
+"ultimo_activo": "2025-03-27",
+"motivo": null
+},
+{
+"simbolo": "AGIXUSDT",
+"ultimo_activo": "2024-06-30",
+"motivo": null
+},
+{
+"simbolo": "AIONUSDT",
+"ultimo_activo": "2023-02-26",
+"motivo": null
+},
+{
+"simbolo": "AKROUSDT",
+"ultimo_activo": "2024-12-24",
+"motivo": null
+},
+{
+"simbolo": "ALPACAUSDT",
+"ultimo_activo": "2025-05-01",
+"motivo": null
+},
+{
+"simbolo": "ALPHAUSDT",
+"ultimo_activo": "2025-07-03",
+"motivo": null
+},
+{
+"simbolo": "AMBUSDT",
+"ultimo_activo": "2025-02-23",
+"motivo": null
+},
+{
+"simbolo": "ANCUSDT",
+"ultimo_activo": "2022-12-26",
+"motivo": null
+},
+{
+"simbolo": "ANTUSDT",
+"ultimo_activo": "2024-02-19",
+"motivo": "evento_del_par"
+},
+{
+"simbolo": "ANYUSDT",
+"ultimo_activo": "2022-03-29",
+"motivo": null
+},
+{
+"simbolo": "ASTUSDT",
+"ultimo_activo": "2025-03-27",
+"motivo": null
+},
+{
+"simbolo": "AUDUSDT",
+"ultimo_activo": "2023-05-31",
+"motivo": "evento_del_par"
+},
+{
+"simbolo": "AUTOUSDT",
+"ultimo_activo": "2023-04-17",
+"motivo": "evento_del_par"
+},
+{
+"simbolo": "BADGERUSDT",
+"ultimo_activo": "2025-04-15",
+"motivo": null
+},
+{
+"simbolo": "BAKEUSDT",
+"ultimo_activo": "2025-09-16",
+"motivo": null
+},
+{
+"simbolo": "BALUSDT",
+"ultimo_activo": "2025-04-15",
+"motivo": null
+},
+{
+"simbolo": "BCCUSDT",
+"ultimo_activo": "2018-11-14",
+"motivo": null
+},
+{
+"simbolo": "BCHABCUSDT",
+"ultimo_activo": "2019-11-27",
+"motivo": null
+},
+{
+"simbolo": "BCHDOWNUSDT",
+"ultimo_activo": "2020-11-08",
+"motivo": null
+},
+{
+"simbolo": "BCHDOWNUSDT",
+"ultimo_activo": "2022-01-03",
+"motivo": null
+},
+{
+"simbolo": "BCHSVUSDT",
+"ultimo_activo": "2019-04-21",
+"motivo": "evento_del_par"
+},
+{
+"simbolo": "BCHUPUSDT",
+"ultimo_activo": "2020-11-08",
+"motivo": null
+},
+{
+"simbolo": "BCHUPUSDT",
+"ultimo_activo": "2022-01-03",
+"motivo": null
+},
+{
+"simbolo": "BEAMUSDT",
+"ultimo_activo": "2023-01-25",
+"motivo": null
+},
+{
+"simbolo": "BEARUSDT",
+"ultimo_activo": "2020-03-30",
+"motivo": "evento_del_par"
+},
+{
+"simbolo": "BETAUSDT",
+"ultimo_activo": "2025-04-15",
+"motivo": null
+},
+{
+"simbolo": "BETHUSDT",
+"ultimo_activo": "2023-10-10",
+"motivo": null
+},
+{
+"simbolo": "BIFIUSDT",
+"ultimo_activo": "2026-04-22",
+"motivo": null
+},
+{
+"simbolo": "BKRWUSDT",
+"ultimo_activo": "2020-08-06",
+"motivo": "evento_del_par"
+},
+{
+"simbolo": "BLZUSDT",
+"ultimo_activo": "2024-12-24",
+"motivo": null
+},
+{
+"simbolo": "BNBBEARUSDT",
+"ultimo_activo": "2020-03-30",
+"motivo": "evento_del_par"
+},
+{
+"simbolo": "BNBBULLUSDT",
+"ultimo_activo": "2020-03-30",
+"motivo": "evento_del_par"
+},
+{
+"simbolo": "BNBDOWNUSDT",
+"ultimo_activo": "2024-02-27",
+"motivo": null
+},
+{
+"simbolo": "BNBUPUSDT",
+"ultimo_activo": "2024-02-27",
+"motivo": null
+},
+{
+"simbolo": "BNXUSDT",
+"ultimo_activo": "2025-03-17",
+"motivo": null
+},
+{
+"simbolo": "BONDUSDT",
+"ultimo_activo": "2024-07-21",
+"motivo": "evento_del_par"
+},
+{
+"simbolo": "BSWUSDT",
+"ultimo_activo": "2025-07-03",
+"motivo": null
+},
+{
+"simbolo": "BTCDOWNUSDT",
+"ultimo_activo": "2024-02-27",
+"motivo": null
+},
+{
+"simbolo": "BTCSTUSDT",
+"ultimo_activo": "2022-11-27",
+"motivo": null
+},
+{
+"simbolo": "BTCUPUSDT",
+"ultimo_activo": "2024-02-27",
+"motivo": null
+},
+{
+"simbolo": "BTGUSDT",
+"ultimo_activo": "2022-10-23",
+"motivo": null
+},
+{
+"simbolo": "BTSUSDT",
+"ultimo_activo": "2023-12-06",
+"motivo": "evento_del_par"
+},
+{
+"simbolo": "BTTUSDT",
+"ultimo_activo": "2022-01-16",
+"motivo": null
+},
+{
+"simbolo": "BULLUSDT",
+"ultimo_activo": "2020-03-30",
+"motivo": "evento_del_par"
+},
+{
+"simbolo": "BURGERUSDT",
+"ultimo_activo": "2025-03-27",
+"motivo": null
+},
+{
+"simbolo": "BUSDUSDT",
+"ultimo_activo": "2023-12-14",
+"motivo": null
+},
+{
+"simbolo": "BZRXUSDT",
+"ultimo_activo": "2021-12-19",
+"motivo": null
+},
+{
+"simbolo": "CHESSUSDT",
+"ultimo_activo": "2026-02-12",
+"motivo": null
+},
+{
+"simbolo": "CLVUSDT",
+"ultimo_activo": "2025-02-23",
+"motivo": null
+},
+{
+"simbolo": "COCOSUSDT",
+"ultimo_activo": "2023-05-28",
+"motivo": null
+},
+{
+"simbolo": "COMBOUSDT",
+"ultimo_activo": "2025-03-27",
+"motivo": null
+},
+{
+"simbolo": "CREAMUSDT",
+"ultimo_activo": "2025-04-15",
+"motivo": null
+},
+{
+"simbolo": "CTXCUSDT",
+"ultimo_activo": "2025-04-15",
+"motivo": null
+},
+{
+"simbolo": "CVCUSDT",
+"ultimo_activo": "2022-12-08",
+"motivo": null
+},
+{
+"simbolo": "CVPUSDT",
+"ultimo_activo": "2024-08-25",
+"motivo": null
+},
+{
+"simbolo": "DAIUSDT",
+"ultimo_activo": "2020-08-11",
+"motivo": null
+},
+{
+"simbolo": "DARUSDT",
+"ultimo_activo": "2025-01-05",
+"motivo": null
+},
+{
+"simbolo": "DATAUSDT",
+"ultimo_activo": "2026-02-12",
+"motivo": null
+},
+{
+"simbolo": "DEGOUSDT",
+"ultimo_activo": "2026-04-27",
+"motivo": null
+},
+{
+"simbolo": "DENTUSDT",
+"ultimo_activo": "2026-04-27",
+"motivo": null
+},
+{
+"simbolo": "DFUSDT",
+"ultimo_activo": "2026-02-12",
+"motivo": null
+},
+{
+"simbolo": "DNTUSDT",
+"ultimo_activo": "2022-10-23",
+"motivo": null
+},
+{
+"simbolo": "DOCKUSDT",
+"ultimo_activo": "2024-07-21",
+"motivo": "evento_del_par"
+},
+{
+"simbolo": "DOTDOWNUSDT",
+"ultimo_activo": "2022-11-28",
+"motivo": "evento_del_par"
+},
+{
+"simbolo": "DOTUPUSDT",
+"ultimo_activo": "2022-11-28",
+"motivo": "evento_del_par"
+},
+{
+"simbolo": "DREPUSDT",
+"ultimo_activo": "2024-04-02",
+"motivo": null
+},
+{
+"simbolo": "ELFUSDT",
+"ultimo_activo": "2025-04-15",
+"motivo": null
+},
+{
+"simbolo": "EOSBEARUSDT",
+"ultimo_activo": "2020-03-30",
+"motivo": "evento_del_par"
+},
+{
+"simbolo": "EOSBULLUSDT",
+"ultimo_activo": "2020-03-30",
+"motivo": "evento_del_par"
+},
+{
+"simbolo": "EOSDOWNUSDT",
+"ultimo_activo": "2021-12-22",
+"motivo": null
+},
+{
+"simbolo": "EOSUPUSDT",
+"ultimo_activo": "2021-12-22",
+"motivo": null
+},
+{
+"simbolo": "EOSUSDT",
+"ultimo_activo": "2025-05-25",
+"motivo": null
+},
+{
+"simbolo": "EPSUSDT",
+"ultimo_activo": "2022-05-08",
+"motivo": null
+},
+{
+"simbolo": "EPXUSDT",
+"ultimo_activo": "2024-08-25",
+"motivo": null
+},
+{
+"simbolo": "ERDUSDT",
+"ultimo_activo": "2020-08-30",
+"motivo": null
+},
+{
+"simbolo": "ERNUSDT",
+"ultimo_activo": "2025-03-09",
+"motivo": null
+},
+{
+"simbolo": "ETHBEARUSDT",
+"ultimo_activo": "2020-03-30",
+"motivo": "evento_del_par"
+},
+{
+"simbolo": "ETHBULLUSDT",
+"ultimo_activo": "2020-03-30",
+"motivo": "evento_del_par"
+},
+{
+"simbolo": "ETHDOWNUSDT",
+"ultimo_activo": "2024-02-27",
+"motivo": null
+},
+{
+"simbolo": "ETHUPUSDT",
+"ultimo_activo": "2024-02-27",
+"motivo": null
+},
+{
+"simbolo": "FILDOWNUSDT",
+"ultimo_activo": "2022-01-03",
+"motivo": null
+},
+{
+"simbolo": "FILUPUSDT",
+"ultimo_activo": "2022-01-03",
+"motivo": null
+},
+{
+"simbolo": "FIOUSDT",
+"ultimo_activo": "2026-04-22",
+"motivo": null
+},
+{
+"simbolo": "FIROUSDT",
+"ultimo_activo": "2025-04-15",
+"motivo": null
+},
+{
+"simbolo": "FISUSDT",
+"ultimo_activo": "2025-12-16",
+"motivo": null
+},
+{
+"simbolo": "FLMUSDT",
+"ultimo_activo": "2025-11-11",
+"motivo": null
+},
+{
+"simbolo": "FORTHUSDT",
+"ultimo_activo": "2026-03-31",
+"motivo": null
+},
+{
+"simbolo": "FORUSDT",
+"ultimo_activo": "2024-08-25",
+"motivo": null
+},
+{
+"simbolo": "FRONTUSDT",
+"ultimo_activo": "2024-08-26",
+"motivo": null
+},
+{
+"simbolo": "FTMUSDT",
+"ultimo_activo": "2025-01-12",
+"motivo": null
+},
+{
+"simbolo": "FTTUSDT",
+"ultimo_activo": "2022-11-14",
+"motivo": "evento_del_par"
+},
+{
+"simbolo": "FUNUSDT",
+"ultimo_activo": "2026-04-22",
+"motivo": null
+},
+{
+"simbolo": "FXSUSDT",
+"ultimo_activo": "2026-01-12",
+"motivo": null
+},
+{
+"simbolo": "GALUSDT",
+"ultimo_activo": "2024-07-14",
+"motivo": null
+},
+{
+"simbolo": "GBPUSDT",
+"ultimo_activo": "2023-12-28",
+"motivo": null
+},
+{
+"simbolo": "GFTUSDT",
+"ultimo_activo": "2024-12-02",
+"motivo": null
+},
+{
+"simbolo": "GHSTUSDT",
+"ultimo_activo": "2026-02-12",
+"motivo": null
+},
+{
+"simbolo": "GTOUSDT",
+"ultimo_activo": "2022-11-27",
+"motivo": null
+},
+{
+"simbolo": "GXSUSDT",
+"ultimo_activo": "2022-04-24",
+"motivo": null
+},
+{
+"simbolo": "HARDUSDT",
+"ultimo_activo": "2025-04-15",
+"motivo": null
+},
+{
+"simbolo": "HCUSDT",
+"ultimo_activo": "2020-11-09",
+"motivo": "evento_del_par"
+},
+{
+"simbolo": "HIFIUSDT",
+"ultimo_activo": "2025-09-16",
+"motivo": null
+},
+{
+"simbolo": "HNTUSDT",
+"ultimo_activo": "2022-10-13",
+"motivo": "evento_del_par"
+},
+{
+"simbolo": "HOOKUSDT",
+"ultimo_activo": "2026-03-31",
+"motivo": null
+},
+{
+"simbolo": "IDEXUSDT",
+"ultimo_activo": "2026-03-31",
+"motivo": null
+},
+{
+"simbolo": "IRISUSDT",
+"ultimo_activo": "2024-12-09",
+"motivo": null
+},
+{
+"simbolo": "KDAUSDT",
+"ultimo_activo": "2025-11-11",
+"motivo": null
+},
+{
+"simbolo": "KEEPUSDT",
+"ultimo_activo": "2022-02-15",
+"motivo": null
+},
+{
+"simbolo": "KEYUSDT",
+"ultimo_activo": "2024-12-09",
+"motivo": null
+},
+{
+"simbolo": "KLAYUSDT",
+"ultimo_activo": "2024-10-27",
+"motivo": null
+},
+{
+"simbolo": "KMDUSDT",
+"ultimo_activo": "2025-07-03",
+"motivo": null
+},
+{
+"simbolo": "KP3RUSDT",
+"ultimo_activo": "2024-11-05",
+"motivo": "evento_del_par"
+},
+{
+"simbolo": "LENDUSDT",
+"ultimo_activo": "2020-10-11",
+"motivo": null
+},
+{
+"simbolo": "LEVERUSDT",
+"ultimo_activo": "2025-07-03",
+"motivo": null
+},
+{
+"simbolo": "LINAUSDT",
+"ultimo_activo": "2025-03-27",
+"motivo": null
+},
+{
+"simbolo": "LINKDOWNUSDT",
+"ultimo_activo": "2023-04-05",
+"motivo": null
+},
+{
+"simbolo": "LINKUPUSDT",
+"ultimo_activo": "2023-04-05",
+"motivo": "evento_del_par"
+},
+{
+"simbolo": "LITUSDT",
+"ultimo_activo": "2025-02-09",
+"motivo": null
+},
+{
+"simbolo": "LOKAUSDT",
+"ultimo_activo": "2025-07-27",
+"motivo": null
+},
+{
+"simbolo": "LOOMUSDT",
+"ultimo_activo": "2024-08-25",
+"motivo": null
+},
+{
+"simbolo": "LRCUSDT",
+"ultimo_activo": "2026-03-31",
+"motivo": null
+},
+{
+"simbolo": "LTCDOWNUSDT",
+"ultimo_activo": "2022-01-26",
+"motivo": null
+},
+{
+"simbolo": "LTCUPUSDT",
+"ultimo_activo": "2022-01-26",
+"motivo": null
+},
+{
+"simbolo": "LTOUSDT",
+"ultimo_activo": "2025-07-03",
+"motivo": null
+},
+{
+"simbolo": "MATICUSDT",
+"ultimo_activo": "2024-09-09",
+"motivo": null
+},
+{
+"simbolo": "MCOUSDT",
+"ultimo_activo": "2020-10-22",
+"motivo": "evento_del_par"
+},
+{
+"simbolo": "MCUSDT",
+"ultimo_activo": "2023-11-06",
+"motivo": null
+},
+{
+"simbolo": "MDTUSDT",
+"ultimo_activo": "2026-04-22",
+"motivo": null
+},
+{
+"simbolo": "MDXUSDT",
+"ultimo_activo": "2024-07-21",
+"motivo": "evento_del_par"
+},
+{
+"simbolo": "MFTUSDT",
+"ultimo_activo": "2023-01-02",
+"motivo": null
+},
+{
+"simbolo": "MIRUSDT",
+"ultimo_activo": "2022-12-26",
+"motivo": null
+},
+{
+"simbolo": "MITHUSDT",
+"ultimo_activo": "2022-12-21",
+"motivo": null
+},
+{
+"simbolo": "MKRUSDT",
+"ultimo_activo": "2025-09-14",
+"motivo": null
+},
+{
+"simbolo": "MOBUSDT",
+"ultimo_activo": "2024-04-02",
+"motivo": null
+},
+{
+"simbolo": "MULTIUSDT",
+"ultimo_activo": "2024-02-19",
+"motivo": "evento_del_par"
+},
+{
+"simbolo": "NANOUSDT",
+"ultimo_activo": "2022-01-23",
+"motivo": null
+},
+{
+"simbolo": "NBSUSDT",
+"ultimo_activo": "2022-10-23",
+"motivo": null
+},
+{
+"simbolo": "NBTUSDT",
+"ultimo_activo": "2023-02-28",
+"motivo": null
+},
+{
+"simbolo": "NEBLUSDT",
+"ultimo_activo": "2023-04-17",
+"motivo": "evento_del_par"
+},
+{
+"simbolo": "NKNUSDT",
+"ultimo_activo": "2026-02-12",
+"motivo": null
+},
+{
+"simbolo": "NPXSUSDT",
+"ultimo_activo": "2021-04-04",
+"motivo": null
+},
+{
+"simbolo": "NTRNUSDT",
+"ultimo_activo": "2026-03-31",
+"motivo": null
+},
+{
+"simbolo": "NULSUSDT",
+"ultimo_activo": "2025-04-15",
+"motivo": null
+},
+{
+"simbolo": "NUUSDT",
+"ultimo_activo": "2022-02-15",
+"motivo": null
+},
+{
+"simbolo": "OAXUSDT",
+"ultimo_activo": "2024-12-09",
+"motivo": null
+},
+{
+"simbolo": "OCEANUSDT",
+"ultimo_activo": "2024-06-30",
+"motivo": null
+},
+{
+"simbolo": "OMGUSDT",
+"ultimo_activo": "2024-06-16",
+"motivo": null
+},
+{
+"simbolo": "OMNIUSDT",
+"ultimo_activo": "2025-09-28",
+"motivo": null
+},
+{
+"simbolo": "OMUSDT",
+"ultimo_activo": "2026-03-01",
+"motivo": null
+},
+{
+"simbolo": "OOKIUSDT",
+"ultimo_activo": "2024-11-05",
+"motivo": "evento_del_par"
+},
+{
+"simbolo": "ORNUSDT",
+"ultimo_activo": "2024-10-14",
+"motivo": null
+},
+{
+"simbolo": "OXTUSDT",
+"ultimo_activo": "2026-04-22",
+"motivo": null
+},
+{
+"simbolo": "PAXUSDT",
+"ultimo_activo": "2021-09-05",
+"motivo": null
+},
+{
+"simbolo": "PDAUSDT",
+"ultimo_activo": "2025-05-01",
+"motivo": null
+},
+{
+"simbolo": "PERLUSDT",
+"ultimo_activo": "2023-12-06",
+"motivo": "evento_del_par"
+},
+{
+"simbolo": "PERPUSDT",
+"ultimo_activo": "2025-11-11",
+"motivo": null
+},
+{
+"simbolo": "PLAUSDT",
+"ultimo_activo": "2024-02-25",
+"motivo": null
+},
+{
+"simbolo": "PNTUSDT",
+"ultimo_activo": "2024-04-02",
+"motivo": null
+},
+{
+"simbolo": "POLSUSDT",
+"ultimo_activo": "2024-07-21",
+"motivo": "evento_del_par"
+},
+{
+"simbolo": "POLYUSDT",
+"ultimo_activo": "2022-10-09",
+"motivo": null
+},
+{
+"simbolo": "PROSUSDT",
+"ultimo_activo": "2025-04-15",
+"motivo": null
+},
+{
+"simbolo": "RAMPUSDT",
+"ultimo_activo": "2022-07-03",
+"motivo": null
+},
+{
+"simbolo": "RDNTUSDT",
+"ultimo_activo": "2026-03-31",
+"motivo": null
+},
+{
+"simbolo": "REEFUSDT",
+"ultimo_activo": "2024-08-25",
+"motivo": null
+},
+{
+"simbolo": "REIUSDT",
+"ultimo_activo": "2025-12-16",
+"motivo": null
+},
+{
+"simbolo": "RENUSDT",
+"ultimo_activo": "2024-12-09",
+"motivo": null
+},
+{
+"simbolo": "REPUSDT",
+"ultimo_activo": "2022-12-21",
+"motivo": null
+},
+{
+"simbolo": "RGTUSDT",
+"ultimo_activo": "2022-03-13",
+"motivo": null
+},
+{
+"simbolo": "RNDRUSDT",
+"ultimo_activo": "2024-07-21",
+"motivo": null
+},
+{
+"simbolo": "SLFUSDT",
+"ultimo_activo": "2025-09-16",
+"motivo": null
+},
+{
+"simbolo": "SNTUSDT",
+"ultimo_activo": "2025-04-15",
+"motivo": null
+},
+{
+"simbolo": "SRMUSDT",
+"ultimo_activo": "2022-11-27",
+"motivo": "exclusion_del_token"
+},
+{
+"simbolo": "STMXUSDT",
+"ultimo_activo": "2025-02-23",
+"motivo": null
+},
+{
+"simbolo": "STORMUSDT",
+"ultimo_activo": "2020-06-07",
+"motivo": null
+},
+{
+"simbolo": "STPTUSDT",
+"ultimo_activo": "2025-05-18",
+"motivo": null
+},
+{
+"simbolo": "STRATUSDT",
+"ultimo_activo": "2020-11-11",
+"motivo": null
+},
+{
+"simbolo": "SUSDUSDT",
+"ultimo_activo": "2022-04-10",
+"motivo": null
+},
+{
+"simbolo": "SUSHIDOWNUSDT",
+"ultimo_activo": "2021-12-13",
+"motivo": null
+},
+{
+"simbolo": "SUSHIUPUSDT",
+"ultimo_activo": "2021-12-13",
+"motivo": null
+},
+{
+"simbolo": "SXPDOWNUSDT",
+"ultimo_activo": "2021-11-24",
+"motivo": null
+},
+{
+"simbolo": "SXPUPUSDT",
+"ultimo_activo": "2021-11-24",
+"motivo": null
+},
+{
+"simbolo": "SXPUSDT",
+"ultimo_activo": "2026-03-31",
+"motivo": null
+},
+{
+"simbolo": "TCTUSDT",
+"ultimo_activo": "2022-10-23",
+"motivo": null
+},
+{
+"simbolo": "TOMOUSDT",
+"ultimo_activo": "2023-11-19",
+"motivo": null
+},
+{
+"simbolo": "TORNUSDT",
+"ultimo_activo": "2022-12-26",
+"motivo": "exclusion_del_token"
+},
+{
+"simbolo": "TRIBEUSDT",
+"ultimo_activo": "2022-11-27",
+"motivo": null
+},
+{
+"simbolo": "TROYUSDT",
+"ultimo_activo": "2025-04-15",
+"motivo": null
+},
+{
+"simbolo": "TRUUSDT",
+"ultimo_activo": "2026-04-27",
+"motivo": null
+},
+{
+"simbolo": "TRXDOWNUSDT",
+"ultimo_activo": "2022-11-28",
+"motivo": "evento_del_par"
+},
+{
+"simbolo": "TRXUPUSDT",
+"ultimo_activo": "2022-11-28",
+"motivo": null
+},
+{
+"simbolo": "TUSDUSDT",
+"ultimo_activo": "2022-09-25",
+"motivo": null
+},
+{
+"simbolo": "TVKUSDT",
+"ultimo_activo": "2023-11-26",
+"motivo": null
+},
+{
+"simbolo": "UFTUSDT",
+"ultimo_activo": "2025-04-15",
+"motivo": null
+},
+{
+"simbolo": "UNFIUSDT",
+"ultimo_activo": "2024-11-05",
+"motivo": "evento_del_par"
+},
+{
+"simbolo": "UNIDOWNUSDT",
+"ultimo_activo": "2021-12-22",
+"motivo": null
+},
+{
+"simbolo": "UNIUPUSDT",
+"ultimo_activo": "2021-12-22",
+"motivo": null
+},
+{
+"simbolo": "USDCUSDT",
+"ultimo_activo": "2022-09-25",
+"motivo": null
+},
+{
+"simbolo": "USDPUSDT",
+"ultimo_activo": "2022-09-25",
+"motivo": null
+},
+{
+"simbolo": "USDSBUSDT",
+"ultimo_activo": "2019-09-26",
+"motivo": null
+},
+{
+"simbolo": "USDSUSDT",
+"ultimo_activo": "2020-06-23",
+"motivo": null
+},
+{
+"simbolo": "USTUSDT",
+"ultimo_activo": "2022-05-12",
+"motivo": null
+},
+{
+"simbolo": "UTKUSDT",
+"ultimo_activo": "2026-04-13",
+"motivo": null
+},
+{
+"simbolo": "VENUSDT",
+"ultimo_activo": "2018-07-22",
+"motivo": null
+},
+{
+"simbolo": "VGXUSDT",
+"ultimo_activo": "2024-08-25",
+"motivo": null
+},
+{
+"simbolo": "VIBUSDT",
+"ultimo_activo": "2025-05-01",
+"motivo": null
+},
+{
+"simbolo": "VIDTUSDT",
+"ultimo_activo": "2025-04-15",
+"motivo": null
+},
+{
+"simbolo": "VITEUSDT",
+"ultimo_activo": "2025-02-23",
+"motivo": null
+},
+{
+"simbolo": "VOXELUSDT",
+"ultimo_activo": "2025-12-16",
+"motivo": null
+},
+{
+"simbolo": "WANUSDT",
+"ultimo_activo": "2026-04-22",
+"motivo": null
+},
+{
+"simbolo": "WAVESUSDT",
+"ultimo_activo": "2024-06-16",
+"motivo": null
+},
+{
+"simbolo": "WINGUSDT",
+"ultimo_activo": "2025-05-01",
+"motivo": null
+},
+{
+"simbolo": "WNXMUSDT",
+"ultimo_activo": "2024-06-16",
+"motivo": null
+},
+{
+"simbolo": "WRXUSDT",
+"ultimo_activo": "2024-12-24",
+"motivo": null
+},
+{
+"simbolo": "WTCUSDT",
+"ultimo_activo": "2023-12-06",
+"motivo": "evento_del_par"
+},
+{
+"simbolo": "XEMUSDT",
+"ultimo_activo": "2024-06-16",
+"motivo": null
+},
+{
+"simbolo": "XLMDOWNUSDT",
+"ultimo_activo": "2021-12-13",
+"motivo": null
+},
+{
+"simbolo": "XLMUPUSDT",
+"ultimo_activo": "2021-12-13",
+"motivo": null
+},
+{
+"simbolo": "XMRUSDT",
+"ultimo_activo": "2024-02-19",
+"motivo": "evento_del_par"
+},
+{
+"simbolo": "XRPBEARUSDT",
+"ultimo_activo": "2020-03-30",
+"motivo": "evento_del_par"
+},
+{
+"simbolo": "XRPBULLUSDT",
+"ultimo_activo": "2020-03-30",
+"motivo": "evento_del_par"
+},
+{
+"simbolo": "XRPDOWNUSDT",
+"ultimo_activo": "2023-05-11",
+"motivo": null
+},
+{
+"simbolo": "XRPUPUSDT",
+"ultimo_activo": "2023-05-11",
+"motivo": null
+},
+{
+"simbolo": "XTZDOWNUSDT",
+"ultimo_activo": "2022-01-26",
+"motivo": null
+},
+{
+"simbolo": "XTZUPUSDT",
+"ultimo_activo": "2022-01-26",
+"motivo": null
+},
+{
+"simbolo": "XZCUSDT",
+"ultimo_activo": "2021-01-24",
+"motivo": null
+},
+{
+"simbolo": "YFIDOWNUSDT",
+"ultimo_activo": "2021-12-01",
+"motivo": null
+},
+{
+"simbolo": "YFIIUSDT",
+"ultimo_activo": "2023-08-21",
+"motivo": "evento_del_par"
+},
+{
+"simbolo": "YFIUPUSDT",
+"ultimo_activo": "2021-12-01",
+"motivo": null
+}
+]

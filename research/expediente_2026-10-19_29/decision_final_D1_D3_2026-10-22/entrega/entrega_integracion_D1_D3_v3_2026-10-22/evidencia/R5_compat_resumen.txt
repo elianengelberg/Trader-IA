@@ -1,0 +1,8 @@
+1. API de 72ffae5 corre y guarda: 200 bt_PDMZGZN4MJ3CW73211EY1WM8 · filas: 1 · 'engine_version' en la respuesta: False
+2. API corregida lee la fila vieja: engine_version = None · resto igual: True
+3. API corregida corre el MISMO pedido: 200 bt_8MMYDECSX2NQVNY7RVXR7BBH · distinto id: True · filas: 2
+   nueva engine_version: 1.1.0 · vieja intacta: True
+   números: vieja (motor 72ffae5) trades 13 ret -0.1347578857368248 · nueva (motor 1.1.0) trades 12 ret -0.07854193950361799
+4. API corregida re-corre lo mismo: 200 bt_8MMYDECSX2NQVNY7RVXR7BBH · mismo id que 3: True · filas: 2
+   se reemplazó solo a sí misma; números iguales: True
+5. API de 72ffae5 lee la base después: 2 filas; la vieja intacta: True

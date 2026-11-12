@@ -1,0 +1,10 @@
+== Adenda 1 fijada 2026-10-20T01:44:08Z (después del listado S3, antes de leer precios)
+187111a00a2451628c1695c741594a889ff7000271bdf276174e27e04a9d61ff  ADENDA_1_reutilizacion_de_tickers.md
+== Enmienda 2 fijada 2026-10-20T02:01:27Z (antes de compilar anuncios y antes de usar precios para evaluar)
+6b20490103f29acb1730cf40c77163efd504e704fd7b0089a3a486a464528926  ENMIENDA_2_fuente_archivada_inferencia_motor.md
+87742867c9786e4016e721f51586be20c21d6563a7834a59a47dbc21e7f4669a  calibracion_regla_maximo.json
+de75b2f02bcfb8b4daabb9f827c477d797da8f96b7929f876dc38e88286d1f5c  cc_indice.py
+ea654d39672847a65bccc4cbcdb79a8b12661475afa20adbdc51488cd42ec1c1  calibracion_max.py
+cadb805d2d882fcf909e0309cff85203ee383c6b8ed0ac08b89f4028ee999b2e  motor.py
+2af45115238d0065d54f0c6230b16c71831293b235b72627e62d1d7c7d7491f7  universo.py
+7b28038621c1d366655d726bb885ca0105f1a25cfcdb9615e86a7fe39e85f3e1  inferencia.py

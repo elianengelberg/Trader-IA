@@ -1,0 +1,477 @@
+{
+ "paginas_titulo_roto": 929,
+ "frases": [
+  {
+   "archivo": "bn_0a445bbdac634512886df1bdce74f3da_3631af0d9289.json",
+   "url": "https://www.binance.com/en/support/announcement/0a445bbdac634512886df1bdce74f3da",
+   "captura": "20220819111324",
+   "frase": "At 2022-07-04 04:00 (UTC), Binance will delist all existing RAMP spot trading pairs (RAMP/USDT, RAMP/BUSD, and RAMP/BTC) and cancel all pending RAMP spot trade orders.",
+   "pares_usdt": [
+    "RAMP"
+   ],
+   "fechas": [
+    "2022-07-04"
+   ],
+   "no_spot": false
+  },
+  {
+   "archivo": "bn_105793a7dd7b4b3dae049f1e670f3c25_6fc05d6e562c.json",
+   "url": "https://www.binance.com/en/support/announcement/105793a7dd7b4b3dae049f1e670f3c25",
+   "captura": "20220815041006",
+   "frase": "Fellow Binancians , Binance will remove and cease trading on the following trading pairs at 2022-03-10 03:00 AM (UTC): IQ/BNB, RLC/BUSD Please note: Users can still trade the above assets on other trading pairs that are available on Binance.",
+   "pares_usdt": [],
+   "fechas": [
+    "2022-03-10"
+   ],
+   "no_spot": false
+  },
+  {
+   "archivo": "bn_23ee02fabc294a838c612d583d221dec_9dbf2baef20d.json",
+   "url": "https://www.binance.com/en/support/announcement/23ee02fabc294a838c612d583d221dec",
+   "captura": "20220124012407",
+   "frase": "Fellow Binancians , Binance will remove and cease trading on the following trading pairs at 2021-12-17 03:00 AM (UTC): ALGO/BIDR, BOND/BNB, ETC/BRL, ETC/GBP, LTC/TUSD Please note: Users can still trade the above assets on other trading pairs that are available on Binance.",
+   "pares_usdt": [],
+   "fechas": [
+    "2021-12-17"
+   ],
+   "no_spot": false
+  },
+  {
+   "archivo": "bn_24e25a86a7c44ac49f4a7efb3c28d56a_b3092106b2b6.json",
+   "url": "https://www.binance.com/en/support/announcement/24e25a86a7c44ac49f4a7efb3c28d56a",
+   "captura": "20220629140422",
+   "frase": "Contribution to a healthy and sustainable crypto ecosystem Based on our most recent reviews, we have decided to delist and cease trading on all trading pairs for the following tokens at 2020/07/20 10:00 AM (UTC): Aeron (ARN) Etherparty (FUEL) Lunyr (LUN) Please note: The exact trading pairs being removed are: ARN/BTC, ARN/ETH, FUEL/BTC, LUN/BTC.",
+   "pares_usdt": [],
+   "fechas": [
+    "2020-07-20"
+   ],
+   "no_spot": false
+  },
+  {
+   "archivo": "bn_2722e6da4f5141dd9b2fb07b5b1f3f75_372793e0ce0b.json",
+   "url": "https://www.binance.com/en/support/announcement/2722e6da4f5141dd9b2fb07b5b1f3f75",
+   "captura": "20220120203321",
+   "frase": "Binance will delist all existing BTT spot trading pairs (BTT/USDT, BTT/BUSD, BTT/USDC, BTT/BNB, BTT/TRX, BTT/TUSD, BTT/TRY, BTT/EUR, BTT/BRL) at 2022-01-17 04:00 (UTC) and all pending spot trade orders will be cancelled.",
+   "pares_usdt": [
+    "BTT"
+   ],
+   "fechas": [
+    "2022-01-17"
+   ],
+   "no_spot": false
+  },
+  {
+   "archivo": "bn_3c83d5627b494c5db5c0c23f572f0503_ff45dce545b1.json",
+   "url": "https://www.binance.com/en/support/announcement/3c83d5627b494c5db5c0c23f572f0503",
+   "captura": "20220815043736",
+   "frase": "Fellow Binancians , Binance will remove and cease trading on the following trading pairs at 2022-03-16 03:00 (UTC) : Margin Pairs : GNO/BUSD, WNXM/BTC Binance will remove and cease trading on the following trading pairs at 2022-03-18 03:00 (UTC) : Spot Pairs : GNO/BUSD, WABI/BNB, WNXM/BTC Please note: Users can still trade the above assets on other trading pairs that are available on Binance.",
+   "pares_usdt": [],
+   "fechas": [
+    "2022-03-16",
+    "2022-03-18"
+   ],
+   "no_spot": true
+  },
+  {
+   "archivo": "bn_3dc8f6de281f4781a246a1658a21cb80_e7bc3f27677f.json",
+   "url": "https://www.binance.com/en/support/announcement/3dc8f6de281f4781a246a1658a21cb80",
+   "captura": "20220701050431",
+   "frase": "At 2022-01-24 04:00 AM (UTC), Binance will halt trading for all NANO spot trading pairs, and the trading pairs will subsequently be delisted from the exchange.",
+   "pares_usdt": [],
+   "fechas": [
+    "2022-01-24"
+   ],
+   "no_spot": false
+  },
+  {
+   "archivo": "bn_3ff40fefd7b54cfc9f745cce0d9dbd37_ac4f79013fc3.json",
+   "url": "https://www.binance.com/en/support/announcement/3ff40fefd7b54cfc9f745cce0d9dbd37",
+   "captura": "20220519080722",
+   "frase": "Binance will delist all existing PHB spot trading pairs (PHB/BTC and PHB/TUSD) at 2021-11-01 04:00 (UTC) and pending trade orders will be cancelled.",
+   "pares_usdt": [],
+   "fechas": [
+    "2021-11-01"
+   ],
+   "no_spot": false
+  },
+  {
+   "archivo": "bn_42310c7ed5364eab93e370ab1830162a_8a900583a6aa.json",
+   "url": "https://www.binance.com/en/support/announcement/42310c7ed5364eab93e370ab1830162a",
+   "captura": "20220119054104",
+   "frase": "Fellow Binancians, Binance P2P will remove and cease trading on the DAI/AUD trading pair at 2021-12-13 12:00 PM (UTC) .",
+   "pares_usdt": [],
+   "fechas": [
+    "2021-12-13"
+   ],
+   "no_spot": true
+  },
+  {
+   "archivo": "bn_514e0ba636e843bda47d5d740b7dadf4_5c82beaac2b0.json",
+   "url": "https://www.binance.com/en/support/announcement/514e0ba636e843bda47d5d740b7dadf4",
+   "captura": "20220516105710",
+   "frase": "Fellow Binancians , Binance will remove and cease trading, close users’ positions, conduct an automatic settlement and cancel all pending orders on the following margin trading pairs at 2022-05-13 00:40 (UTC) : Cross Margin Pairs： LUNA/BUSD, LUNA/USDT, LUNA/BTC Isolated Margin Pairs： LUNA/BUSD, LUNA/USDT, LUNA/BTC, LUNA/ETH, LUNA/UST Binance will remove and cease trading on the following trading pairs at 2022-05-13 00:40 (UTC) : Spot Pairs : LUNA/BTC, LUNA/BIDR, LUNA/AUD, LUNA/BNB, LUNA/ETH, LUNA/USDT, LUNA/GBP, LUNA/BRL, LUNA/TRY and LUNA/EUR Binance will remove and cease trading on the follo",
+   "pares_usdt": [
+    "LUNA",
+    "UST"
+   ],
+   "fechas": [
+    "2022-05-13",
+    "2022-05-13",
+    "2022-05-13",
+    "2022-05-13",
+    "2022-05-13"
+   ],
+   "no_spot": true
+  },
+  {
+   "archivo": "bn_52e0db956218405b8b5eda03012a0798_8f554e84d309.json",
+   "url": "https://www.binance.com/en/support/announcement/52e0db956218405b8b5eda03012a0798",
+   "captura": "20220628114939",
+   "frase": "Fellow Binancians, Binance will delist and cease trading on all trading pairs of StableUSD (USDS) at 2020/06/24 7:00 AM (UTC).",
+   "pares_usdt": [],
+   "fechas": [
+    "2020-06-24"
+   ],
+   "no_spot": false
+  },
+  {
+   "archivo": "bn_52e0db956218405b8b5eda03012a0798_8f554e84d309.json",
+   "url": "https://www.binance.com/en/support/announcement/52e0db956218405b8b5eda03012a0798",
+   "captura": "20220628114939",
+   "frase": "From now until the above cease trading time, users will can either: Continue holding their USDS tokens until the trading pairs are delisted.",
+   "pares_usdt": [],
+   "fechas": [],
+   "no_spot": false
+  },
+  {
+   "archivo": "bn_5ebb76d7d7394bf180100a9b3e243f4e_503e5bf87fa4.json",
+   "url": "https://www.binance.com/en/support/announcement/5ebb76d7d7394bf180100a9b3e243f4e",
+   "captura": "20220520131122",
+   "frase": "Fellow Binancians , Binance will remove and cease trading on the following trading pairs at 2022-05-14 03:00 (UTC) : Margin Pairs : AKRO/BTC, CKB/BTC, RSR/BTC Binance will remove and cease trading on the following trading pairs at 2022-05-14 04:00 (UTC) : Spot Pairs : AKRO/BTC, CKB/BTC, RSR/BTC Please note: Users can still trade the above assets on other trading pairs that are available on Binance.",
+   "pares_usdt": [],
+   "fechas": [
+    "2022-05-14",
+    "2022-05-14"
+   ],
+   "no_spot": true
+  },
+  {
+   "archivo": "bn_665d875ded974f97a719642040dac31a_43c72c348fd4.json",
+   "url": "https://www.binance.com/en/support/announcement/665d875ded974f97a719642040dac31a",
+   "captura": "20220701051122",
+   "frase": "Fellow Binancians , Binance will remove and cease trading on the following trading pair at 2022-05-25 03:00 (UTC) : Margin Pair : REEF/BTC Binance will remove and cease trading on the following trading pairs at 2022-05-26 03:00 (UTC) : Spot Pairs : AVA/BNB, FARM/BNB, REEF/BTC Please note: Users can still trade the above assets on other trading pairs that are available on Binance.",
+   "pares_usdt": [],
+   "fechas": [
+    "2022-05-25",
+    "2022-05-26"
+   ],
+   "no_spot": true
+  },
+  {
+   "archivo": "bn_670a4bc8c72b46edbddf53fbb05acefd_7a5ec92f4ca6.json",
+   "url": "https://www.binance.com/en/support/announcement/670a4bc8c72b46edbddf53fbb05acefd",
+   "captura": "20220815044713",
+   "frase": "Fellow Binancians , Binance will remove and cease trading on the following trading pairs at 2022-06-09 03:00 AM (UTC): HOT/BNB, PERL/BNB, SPELL/BNB Please note: Users can still trade the above assets on other trading pairs that are available on Binance.",
+   "pares_usdt": [],
+   "fechas": [
+    "2022-06-09"
+   ],
+   "no_spot": false
+  },
+  {
+   "archivo": "bn_6735c87dbf4b4ddb87781d5b2ad1dbd2_6ef4bbf9da62.json",
+   "url": "https://www.binance.com/en/support/announcement/6735c87dbf4b4ddb87781d5b2ad1dbd2",
+   "captura": "20220124181742",
+   "frase": "Fellow Binancians, At 2021-12-14 03:00 AM (UTC), Binance will cease trading and subscription of SUSHIUP/USDT, SUSHIDOWN/USDT, XLMUP/USDT and XLMDOWN/USDT leveraged tokens trading pairs.",
+   "pares_usdt": [
+    "SUSHIDOWN",
+    "SUSHIUP",
+    "XLMDOWN",
+    "XLMUP"
+   ],
+   "fechas": [
+    "2021-12-14"
+   ],
+   "no_spot": false
+  },
+  {
+   "archivo": "bn_6c2dee9fecc24988bdfb401f28abb875_741e2d05b03b.json",
+   "url": "https://www.binance.com/en/support/announcement/6c2dee9fecc24988bdfb401f28abb875",
+   "captura": "20220816172242",
+   "frase": "Fellow Binancians , Binance will remove and cease trading on the following trading pairs at 2022-01-21 03:00 AM (UTC): DGB/BNB, IOST/BNB, NEBL/ETH, NMR/BNB, PIVX/ETH, REP/ETH, RVN/BNB, SC/BNB, STMX/BNB, SUSHI/BIDR Please note: Users can still trade the above assets on other trading pairs that are available on Binance.",
+   "pares_usdt": [],
+   "fechas": [
+    "2022-01-21"
+   ],
+   "no_spot": false
+  },
+  {
+   "archivo": "bn_92eea3f48aa04210a454511151f3d362_2721d9e2fe03.json",
+   "url": "https://www.binance.com/en/support/announcement/92eea3f48aa04210a454511151f3d362",
+   "captura": "20220707110112",
+   "frase": "Contribution to a healthy and sustainable crypto ecosystem Based on our most recent reviews, we have decided to delist and cease trading on all trading pairs for the following tokens at 2022-03-08 09:00 AM (UTC): Bitcoin Diamond (BCD) Cindicator (CND) Monetha (MTH) Nitro Network (NCASH) YOYOW (YOYO) Please note: The exact trading pairs being removed are: BCD/BTC, CND/BTC, MTH/BTC, NCASH/ETH and YOYO/BTC.",
+   "pares_usdt": [],
+   "fechas": [
+    "2022-03-08"
+   ],
+   "no_spot": false
+  },
+  {
+   "archivo": "bn_ae54e4f7d5014608be2fa60e8d673445_8d01c08653ab.json",
+   "url": "https://www.binance.com/en/support/announcement/ae54e4f7d5014608be2fa60e8d673445",
+   "captura": "20220521053941",
+   "frase": "Fellow Binancians, At 2022-01-27 03:00 AM (UTC), Binance will cease trading and subscription of XTZUP, XTZDOWN, LTCUP and LTCDOWN leveraged tokens trading pairs.",
+   "pares_usdt": [],
+   "fechas": [
+    "2022-01-27"
+   ],
+   "no_spot": false
+  },
+  {
+   "archivo": "bn_bdfb52830f2f4bfcba496f3f92876b5c_ccba14b6e687.json",
+   "url": "https://www.binance.com/en/support/announcement/bdfb52830f2f4bfcba496f3f92876b5c",
+   "captura": "20220809133048",
+   "frase": "Binance will delist all existing GXS spot trading pairs (GXS/BTC, GXS/USDT, GXS/BNB and GXS/ETH) and cancel all pending GXS spot orders at 2022-04-25 04:00 (UTC).",
+   "pares_usdt": [
+    "GXS"
+   ],
+   "fechas": [
+    "2022-04-25"
+   ],
+   "no_spot": false
+  },
+  {
+   "archivo": "bn_c99bd249484f4bbaa7f8489ae2bc860a_602e8efabd6c.json",
+   "url": "https://www.binance.com/en/support/announcement/c99bd249484f4bbaa7f8489ae2bc860a",
+   "captura": "20220809144719",
+   "frase": "Fellow Binancians , Binance will remove and cease trading on the following trading pair at 2022-07-06 03:00 (UTC) : Margin Pair : TRIBE/BTC Binance will remove and cease trading on the following trading pairs at 2022-07-07 03:00 (UTC) : Spot Pairs : AION/ETH, TRIBE/BTC Please note: Users can still trade the above assets on other trading pairs that are available on Binance.",
+   "pares_usdt": [],
+   "fechas": [
+    "2022-07-06",
+    "2022-07-07"
+   ],
+   "no_spot": true
+  },
+  {
+   "archivo": "bn_cdc1fccd42164ef0a11a7cf45b802845_9b4e6ee30a0f.json",
+   "url": "https://www.binance.com/en/support/announcement/cdc1fccd42164ef0a11a7cf45b802845",
+   "captura": "20220119055856",
+   "frase": "Fellow Binancians , Binance will remove and cease trading on the following trading pairs at 2021-12-10 03:00 AM (UTC): FUN/BTC, GTC/BNB, NEO/USDC Please note: Users can still trade the above assets on other trading pairs that are available on Binance.",
+   "pares_usdt": [],
+   "fechas": [
+    "2021-12-10"
+   ],
+   "no_spot": false
+  },
+  {
+   "archivo": "bn_cf9526489aa041508f4cd57612f34119_c6ec648a669e.json",
+   "url": "https://www.binance.com/en/support/announcement/cf9526489aa041508f4cd57612f34119",
+   "captura": "20220819031239",
+   "frase": "Binance will delist all existing EPS spot trading pairs (EPS/USDT, EPS/BUSD and EPS/BTC) and cancel all pending EPS spot orders at 2022-05-09 04:00 (UTC).",
+   "pares_usdt": [
+    "EPS"
+   ],
+   "fechas": [
+    "2022-05-09"
+   ],
+   "no_spot": false
+  },
+  {
+   "archivo": "bn_d5f079935fda4abfb4a5636f01984ec2_c1584f023295.json",
+   "url": "https://www.binance.com/en/support/announcement/d5f079935fda4abfb4a5636f01984ec2",
+   "captura": "20220811232455",
+   "frase": "Contribution to a healthy and sustainable crypto ecosystem Based on our most recent reviews, we have decided to delist and cease trading on all trading pairs for the following tokens at 2022-08-11 09:00 (UTC): EasyFi (EZ) Quantstamp (QSP) Bread (BRD) Nexus (NXS) Navcoin (NAV) Moeda Loyalty Points (MDA) Spartan Protocol (SPARTA) Please note: The exact trading pairs being removed are: EZ/BTC, EZ/ETH, QSP/BTC, BRD/BTC, BRD/ETH, NXS/BTC, NAV/BTC, MDA/BTC and SPARTA/BNB.",
+   "pares_usdt": [],
+   "fechas": [
+    "2022-08-11"
+   ],
+   "no_spot": false
+  },
+  {
+   "archivo": "bn_d7d37bc2f94f4e45bc57571421bc16d1_f9e84ee79002.json",
+   "url": "https://www.binance.com/en/support/announcement/d7d37bc2f94f4e45bc57571421bc16d1",
+   "captura": "20220518035010",
+   "frase": "Fellow Binancians , Binance will remove and cease trading on the following trading pairs at 2022-01-28 03:00 AM (UTC): HEGIC/ETH, KSM/AUD, MFT/BNB, SXP/AUD, XEM/BUSD Please note: Users can still trade the above assets on other trading pairs that are available on Binance.",
+   "pares_usdt": [],
+   "fechas": [
+    "2022-01-28"
+   ],
+   "no_spot": false
+  },
+  {
+   "archivo": "bn_d8f6cf77d58b4571a2c4c1ed77572256_3eb7719de8d2.json",
+   "url": "https://www.binance.com/en/support/announcement/d8f6cf77d58b4571a2c4c1ed77572256",
+   "captura": "20220809100349",
+   "frase": "Here are some that drive whether we decide to delist a digital asset: Commitment of team to project Level and quality of development activity Trading volume and liquidity Stability and safety of network from attacks Network / smart contract stability Level of public communication Responsiveness to our periodic due diligence requests Evidence of unethical/fraudulent conduct or negligence Contribution to a healthy and sustainable crypto ecosystem Based on our most recent reviews, we have decided to delist and cease trading on all trading pairs for the following tokens at 2022-07-08 09:00 AM (UTC",
+   "pares_usdt": [],
+   "fechas": [
+    "2022-07-08"
+   ],
+   "no_spot": false
+  },
+  {
+   "archivo": "bn_da14a6dce7a64283b8d536ca1c97c026_c13b93ac8bd2.json",
+   "url": "https://www.binance.com/en/support/announcement/da14a6dce7a64283b8d536ca1c97c026",
+   "captura": "20220516115100",
+   "frase": "Contribution to a healthy and sustainable crypto ecosystem Based on our most recent reviews, we have decided to delist and cease trading on all trading pairs for the following tokens at 2022-04-11 09:00 AM (UTC): Hegic (HEGIC) renBTC (RENBTC) sUSD (SUSD) Please note: The exact trading pairs being removed are: HEGIC/BUSD, RENBTC/BTC and SUSD/USDT.",
+   "pares_usdt": [
+    "SUSD"
+   ],
+   "fechas": [
+    "2022-04-11"
+   ],
+   "no_spot": false
+  },
+  {
+   "archivo": "bn_dff27dc6bcbb432c902bcbea5e24ddfa_117538216109.json",
+   "url": "https://www.binance.com/en/support/announcement/dff27dc6bcbb432c902bcbea5e24ddfa",
+   "captura": "20220529094702",
+   "frase": "Binance will delist all existing BZRX spot trading pairs (BZRX/BTC, BZRX/USDT, and BZRX/BUSD) and cancel all pending BZRX spot orders at 2021-12-20 04:00 (UTC).",
+   "pares_usdt": [
+    "BZRX"
+   ],
+   "fechas": [
+    "2021-12-20"
+   ],
+   "no_spot": false
+  },
+  {
+   "archivo": "bn_e62f703604a94538a1f1bc803b2d579f_b16b06eb5261.json",
+   "url": "https://www.binance.com/en/support/announcement/e62f703604a94538a1f1bc803b2d579f",
+   "captura": "20220929145614",
+   "frase": "Spot: Binance will remove and cease trading on the following spot trading pairs at 2022-09-26 03:00 (UTC): USDC/BUSD, USDC/USDT, USDP/BUSD, USDP/USDT, TUSD/BUSD, TUSD/USDT.",
+   "pares_usdt": [
+    "TUSD",
+    "USDC",
+    "USDP"
+   ],
+   "fechas": [
+    "2022-09-26"
+   ],
+   "no_spot": false
+  },
+  {
+   "archivo": "bn_e62f703604a94538a1f1bc803b2d579f_b16b06eb5261.json",
+   "url": "https://www.binance.com/en/support/announcement/e62f703604a94538a1f1bc803b2d579f",
+   "captura": "20220929145614",
+   "frase": "Binance will remove and cease trading on the following spot trading pairs at 2022-09-29 03:00 (UTC): ADA/USDC, ATOM/USDC, AUD/USDC, BCH/USDC, BNB/USDC, BTC/USDC, BTTC/USDC, EOS/USDC, ETH/USDC, LINK/USDC, LTC/USDC, SOL/USDC, TRX/USDC, WIN/USDC, XRP/USDC, ZEC/USDC, BNB/USDP, BTC/USDP, ETH/USDP, ADA/TUSD, BNB/TUSD, BTC/TUSD, ETH/TUSD, TRX/TUSD, XRP/TUSD.",
+   "pares_usdt": [],
+   "fechas": [
+    "2022-09-29"
+   ],
+   "no_spot": false
+  },
+  {
+   "archivo": "bn_e62f703604a94538a1f1bc803b2d579f_b16b06eb5261.json",
+   "url": "https://www.binance.com/en/support/announcement/e62f703604a94538a1f1bc803b2d579f",
+   "captura": "20220929145614",
+   "frase": "Binance Convert will remove all other related USDC, USDP and TUSD pairs at 2022-09-26 02:00 (UTC).",
+   "pares_usdt": [],
+   "fechas": [
+    "2022-09-26"
+   ],
+   "no_spot": true
+  },
+  {
+   "archivo": "bn_e62f703604a94538a1f1bc803b2d579f_b16b06eb5261.json",
+   "url": "https://www.binance.com/en/support/announcement/e62f703604a94538a1f1bc803b2d579f",
+   "captura": "20220929145614",
+   "frase": "Crypto Loans: Binance Crypto Loans will remove USDC as a borrowable asset and as a collateral asset, at 2022-09-07 03:00 (UTC).",
+   "pares_usdt": [],
+   "fechas": [
+    "2022-09-07"
+   ],
+   "no_spot": true
+  },
+  {
+   "archivo": "bn_e8d08f8cda764f089664e0a2d91d577e_bb2d53215bb2.json",
+   "url": "https://www.binance.com/en/support/announcement/e8d08f8cda764f089664e0a2d91d577e?ref=AZTKZ9XS&utm_source=BinanceTwitter&utm_medium=GlobalSocial&utm_campaign=GlobalSocial",
+   "captura": "20220519012536",
+   "frase": "Fellow Binancians , Binance will remove and cease trading on the following trading pairs at 2021-12-24 03:00 AM (UTC): AXS/BIDR, CAKE/BRL, SUSHI/BIDR, WAVES/RUB Please note: Users can still trade the above assets on other trading pairs that are available on Binance.",
+   "pares_usdt": [],
+   "fechas": [
+    "2021-12-24"
+   ],
+   "no_spot": false
+  },
+  {
+   "archivo": "bn_ea22aba58a1f470d9aff6aa80c4ac52f_17bb6f62c8ec.json",
+   "url": "https://www.binance.com/en/support/announcement/ea22aba58a1f470d9aff6aa80c4ac52f",
+   "captura": "20220815031148",
+   "frase": "Fellow Binancians , Binance will remove and cease trading on the following trading pairs at 2022-06-15 03:00 (UTC) : Margin Pairs : GNO/BTC, SC/BTC, XVG/BTC Binance will remove and cease trading on the following trading pairs at 2022-06-16 03:00 (UTC) : Spot Pairs : GNO/BTC, MBL/BNB, SC/BTC, VTHO/BNB, XVG/BTC Please note: Users can still trade the above assets on other trading pairs that are available on Binance.",
+   "pares_usdt": [],
+   "fechas": [
+    "2022-06-15",
+    "2022-06-16"
+   ],
+   "no_spot": true
+  },
+  {
+   "archivo": "bn_fc0d84c3b19d4069aceb6a7e47262242_a679ab2781af.json",
+   "url": "https://www.binance.com/en/support/announcement/fc0d84c3b19d4069aceb6a7e47262242",
+   "captura": "20220812140637",
+   "frase": "KRW trading pairs KRW payment options P2P merchant applications Korean language website support Binance P2P will remove KRW trading pairs on Friday, 2021-08-13 at 11:00 UTC (20:00 UTC+9).",
+   "pares_usdt": [],
+   "fechas": [
+    "2021-08-13"
+   ],
+   "no_spot": true
+  },
+  {
+   "archivo": "bn_feb78d8d93f54540a5ade2a970da87b3_d6e0c19b3075.json",
+   "url": "https://www.binance.com/en/support/announcement/feb78d8d93f54540a5ade2a970da87b3",
+   "captura": "20220528020746",
+   "frase": "Contribution to a healthy and sustainable crypto ecosystem Based on our most recent reviews, we have decided to delist and cease trading on all trading pairs for the following tokens at 2021-12-27 09:00 AM (UTC): AppCoins (APPC) Everex (EVX) Raiden Network (RDN) Please note: The exact trading pairs being removed are: APPC/BTC, EVX/BTC and RDN/BTC.",
+   "pares_usdt": [],
+   "fechas": [
+    "2021-12-27"
+   ],
+   "no_spot": false
+  },
+  {
+   "archivo": "url_https___www.binance.com_en_support_announcement_360034156752_302a31dcd79b.json",
+   "url": "https://www.binance.com/en/support/announcement/360034156752",
+   "captura": "20220120032201",
+   "frase": "2019 / 09 / 27 11:00 AM (UTC) : BTCB/BTC , USDSB/USDS , USDSB/USDT and TUSDB/TUSD trading pairs will cease trading and be delisted.",
+   "pares_usdt": [
+    "USDSB"
+   ],
+   "fechas": [],
+   "no_spot": false
+  },
+  {
+   "archivo": "url_https___www.binance.com_en_support_announcement_360035737211_7251061d850b.json",
+   "url": "https://www.binance.com/en/support/announcement/360035737211",
+   "captura": "20220122171412",
+   "frase": "Fellow Binancians, To improve liquidity and user trading experience among our wide range of available assets, Binance will remove and cease trading on the following trading pairs at 2019/11/01 8:00 AM (UTC): ATOM/PAX, BTS/BNB, CVC/BNB, ETC/PAX, REP/BNB ",
+   "pares_usdt": [],
+   "fechas": [
+    "2019-11-01"
+   ],
+   "no_spot": false
+  },
+  {
+   "archivo": "url_https___www.binance.com_en_support_announcement_360038551032__36ec37e738a9.json",
+   "url": "https://www.binance.com/en/support/announcement/360038551032/",
+   "captura": "20220702135155",
+   "frase": "Fellow Binancians, Due to a technical issue, Binance will temporarily halt trading in the ETHBULL/USDT, ETHBULL/BUSD, ETHBEAR/USDT and ETHBEAR/BUSD trading pairs.",
+   "pares_usdt": [
+    "ETHBEAR",
+    "ETHBULL"
+   ],
+   "fechas": [],
+   "no_spot": false
+  },
+  {
+   "archivo": "url_https___www.binance.com_en_support_announcement_360039565412_2565054a9b77.json",
+   "url": "https://www.binance.com/en/support/announcement/360039565412",
+   "captura": "20220517091111",
+   "frase": "Fellow Binancians, Binance will remove and cease trading on the following trading pairs at 2020/02/20 8:00 AM (UTC): BAT/PAX, BNB/USDS, BTC/USDS, ONT/PAX, VIA/BNB Please note that users can still trade the above assets in other trading pairs that are available on Binance.",
+   "pares_usdt": [],
+   "fechas": [
+    "2020-02-20"
+   ],
+   "no_spot": false
+  }
+ ]
+}

@@ -1,0 +1,29 @@
+== ruff check packages tests scripts · base (72ffae5 + 0 cambios)
+All checks passed!
+== ruff check packages tests scripts · integracion (72ffae5 + 3 cambios)
+All checks passed!
+
+== mypy (informativo; la CI no lo corre) · base
+      4 packages/tia/src/tia/execution/paper.py:L: error: Item "None" of "Clock | None" has no attribute "now"  [union-attr]
+      3 packages/tia/src/tia/backtest/engine.py:L: error: Argument 3 to "log" has incompatible type "**dict[str, float]"; expected "dict[str, Any]"  [arg-type]
+      1 packages/tia/src/tia/execution/paper.py:L: error: Unsupported operand types for > ("float" and "Position")  [operator]
+      1 packages/tia/src/tia/execution/paper.py:L: error: Unsupported operand types for > ("float" and "None")  [operator]
+      1 packages/tia/src/tia/execution/paper.py:L: error: Incompatible types in assignment (expression has type "float", variable has type "Position | None")  [assignment]
+      1 packages/tia/src/tia/data/quality.py:L: error: Returning Any from function declared to return "float"  [no-any-return]
+      1 packages/tia/src/tia/backtest/engine.py:L: error: Incompatible types in assignment (expression has type "BacktestConditions", variable has type "MarketConditions")  [assignment]
+      1 packages/tia/src/tia/backtest/engine.py:L: error: Argument 4 to "log" has incompatible type "**dict[str, float]"; expected "dict[str, Any]"  [arg-type]
+      1 packages/tia/src/tia/backtest/engine.py:L: error: Argument 1 to "cancel_order" of "PaperExecutionProvider" has incompatible type "str | None"; expected "str"  [arg-type]
+      1 packages/tia/src/tia/backtest/engine.py:L: error: "MarketConditions" has no attribute "run_id"  [attr-defined]
+      1 Found 15 errors in 3 files (checked 2 source files)
+== mypy (informativo; la CI no lo corre) · integracion
+      4 packages/tia/src/tia/execution/paper.py:L: error: Item "None" of "Clock | None" has no attribute "now"  [union-attr]
+      3 packages/tia/src/tia/backtest/engine.py:L: error: Argument 3 to "log" has incompatible type "**dict[str, float]"; expected "dict[str, Any]"  [arg-type]
+      1 packages/tia/src/tia/execution/paper.py:L: error: Unsupported operand types for > ("float" and "Position")  [operator]
+      1 packages/tia/src/tia/execution/paper.py:L: error: Unsupported operand types for > ("float" and "None")  [operator]
+      1 packages/tia/src/tia/execution/paper.py:L: error: Incompatible types in assignment (expression has type "float", variable has type "Position | None")  [assignment]
+      1 packages/tia/src/tia/data/quality.py:L: error: Returning Any from function declared to return "float"  [no-any-return]
+      1 packages/tia/src/tia/backtest/engine.py:L: error: Incompatible types in assignment (expression has type "BacktestConditions", variable has type "MarketConditions")  [assignment]
+      1 packages/tia/src/tia/backtest/engine.py:L: error: Argument 4 to "log" has incompatible type "**dict[str, float]"; expected "dict[str, Any]"  [arg-type]
+      1 packages/tia/src/tia/backtest/engine.py:L: error: Argument 1 to "cancel_order" of "PaperExecutionProvider" has incompatible type "str | None"; expected "str"  [arg-type]
+      1 packages/tia/src/tia/backtest/engine.py:L: error: "MarketConditions" has no attribute "run_id"  [attr-defined]
+      1 Found 15 errors in 3 files (checked 2 source files)

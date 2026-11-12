@@ -1,0 +1,10 @@
+== entorno e1: Python 3.11.17 · pydantic 2.13.5 numpy 2.4.6
+2026-10-22 00:04:48 [info     ] backtest_complete              bars=58402 component=backtest.engine final_equity=98651.46 run_id=bt_ZDCA4CZ4XRY2PA9FX8MA17KZ trades=171
+2026-10-22 00:04:49 [info     ] backtest_complete              bars=58402 component=backtest.engine final_equity=99714.95 run_id=bt_25WM367RTW4B81SRJ3S4FB6C trades=218
+2026-10-22 00:04:52 [info     ] backtest_complete              bars=58402 component=backtest.engine final_equity=98833.09 run_id=bt_QP4FR0XJADSPQ916TJ38RCQ5 trades=744
+2026-10-22 00:04:53 [info     ] backtest_complete              bars=58402 component=backtest.engine final_equity=97838.8 run_id=bt_7ZHD00KRYYHT4HA2EYD7N32M trades=959
+P1 True 629 629 1418ebccb21c 0ebbe7234446 568ad0f3185f
+P2 True 139 139 075c89b57b43 d03f117df87a 74a2dc8b4c69
+P3 True 185 185 60583835ba17 46c01be279da ea61c6b7b66b
+S1 True 795 795 8b153452ef81 ad1013dcc713 fca2fa53eb76
+rc=0

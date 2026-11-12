@@ -1,0 +1,30 @@
+{"colas": "normal", "sigma_bps": 50.0, "costo_bps": 10.0, "n": 30, "P_aprobado_H0": 0.0024, "P_aprobado_H1": 0.4624, "P_al_menos_1_de_10_H0": 0.02374245193272928}
+{"colas": "normal", "sigma_bps": 50.0, "costo_bps": 10.0, "n": 60, "P_aprobado_H0": 0.0, "P_aprobado_H1": 0.6074, "P_al_menos_1_de_10_H0": 0.0}
+{"colas": "normal", "sigma_bps": 50.0, "costo_bps": 10.0, "n": 120, "P_aprobado_H0": 0.0, "P_aprobado_H1": 0.7902, "P_al_menos_1_de_10_H0": 0.0}
+{"colas": "normal", "sigma_bps": 50.0, "costo_bps": 20.0, "n": 30, "P_aprobado_H0": 0.0, "P_aprobado_H1": 0.2028, "P_al_menos_1_de_10_H0": 0.0}
+{"colas": "normal", "sigma_bps": 50.0, "costo_bps": 20.0, "n": 60, "P_aprobado_H0": 0.0, "P_aprobado_H1": 0.2236, "P_al_menos_1_de_10_H0": 0.0}
+{"colas": "normal", "sigma_bps": 50.0, "costo_bps": 20.0, "n": 120, "P_aprobado_H0": 0.0, "P_aprobado_H1": 0.2624, "P_al_menos_1_de_10_H0": 0.0}
+{"colas": "normal", "sigma_bps": 100.0, "costo_bps": 10.0, "n": 30, "P_aprobado_H0": 0.0282, "P_aprobado_H1": 0.3002, "P_al_menos_1_de_10_H0": 0.24877687696839068}
+{"colas": "normal", "sigma_bps": 100.0, "costo_bps": 10.0, "n": 60, "P_aprobado_H0": 0.0148, "P_aprobado_H1": 0.3488, "P_al_menos_1_de_10_H0": 0.13852231630278433}
+{"colas": "normal", "sigma_bps": 100.0, "costo_bps": 10.0, "n": 120, "P_aprobado_H0": 0.0026, "P_aprobado_H1": 0.4656, "P_al_menos_1_de_10_H0": 0.025697899553380754}
+{"colas": "normal", "sigma_bps": 100.0, "costo_bps": 20.0, "n": 30, "P_aprobado_H0": 0.003, "P_aprobado_H1": 0.175, "P_al_menos_1_de_10_H0": 0.029598223051083172}
+{"colas": "normal", "sigma_bps": 100.0, "costo_bps": 20.0, "n": 60, "P_aprobado_H0": 0.0002, "P_aprobado_H1": 0.1846, "P_al_menos_1_de_10_H0": 0.001998200959663854}
+{"colas": "normal", "sigma_bps": 100.0, "costo_bps": 20.0, "n": 120, "P_aprobado_H0": 0.0, "P_aprobado_H1": 0.1898, "P_al_menos_1_de_10_H0": 0.0}
+{"colas": "normal", "sigma_bps": 200.0, "costo_bps": 10.0, "n": 30, "P_aprobado_H0": 0.0706, "P_aprobado_H1": 0.2252, "P_al_menos_1_de_10_H0": 0.5191311096718129}
+{"colas": "normal", "sigma_bps": 200.0, "costo_bps": 10.0, "n": 60, "P_aprobado_H0": 0.0474, "P_aprobado_H1": 0.2558, "P_al_menos_1_de_10_H0": 0.3846732836588981}
+{"colas": "normal", "sigma_bps": 200.0, "costo_bps": 10.0, "n": 120, "P_aprobado_H0": 0.026, "P_aprobado_H1": 0.3008, "P_al_menos_1_de_10_H0": 0.2315960852289134}
+{"colas": "normal", "sigma_bps": 200.0, "costo_bps": 20.0, "n": 30, "P_aprobado_H0": 0.029, "P_aprobado_H1": 0.1856, "P_al_menos_1_de_10_H0": 0.25493819693426956}
+{"colas": "normal", "sigma_bps": 200.0, "costo_bps": 20.0, "n": 60, "P_aprobado_H0": 0.0116, "P_aprobado_H1": 0.1786, "P_al_menos_1_de_10_H0": 0.1101283575976878}
+{"colas": "normal", "sigma_bps": 200.0, "costo_bps": 20.0, "n": 120, "P_aprobado_H0": 0.003, "P_aprobado_H1": 0.1766, "P_al_menos_1_de_10_H0": 0.029598223051083172}
+{"colas": "t3", "sigma_bps": 100.0, "costo_bps": 10.0, "n": 30, "P_aprobado_H0": 0.018, "P_aprobado_H1": 0.3264, "P_al_menos_1_de_10_H0": 0.1660982641415416}
+{"colas": "t3", "sigma_bps": 100.0, "costo_bps": 10.0, "n": 60, "P_aprobado_H0": 0.0074, "P_aprobado_H1": 0.393, "P_al_menos_1_de_10_H0": 0.07158380271946241}
+{"colas": "t3", "sigma_bps": 100.0, "costo_bps": 10.0, "n": 120, "P_aprobado_H0": 0.0024, "P_aprobado_H1": 0.496, "P_al_menos_1_de_10_H0": 0.02374245193272928}
+{"colas": "t3", "sigma_bps": 100.0, "costo_bps": 20.0, "n": 30, "P_aprobado_H0": 0.0016, "P_aprobado_H1": 0.195, "P_al_menos_1_de_10_H0": 0.01588529014638329}
+{"colas": "t3", "sigma_bps": 100.0, "costo_bps": 20.0, "n": 60, "P_aprobado_H0": 0.0, "P_aprobado_H1": 0.1986, "P_al_menos_1_de_10_H0": 0.0}
+{"colas": "t3", "sigma_bps": 100.0, "costo_bps": 20.0, "n": 120, "P_aprobado_H0": 0.0, "P_aprobado_H1": 0.2092, "P_al_menos_1_de_10_H0": 0.0}
+{"hipotesis": "H0", "regla": "repo_1EE", "replicas": 1000, "frac_que_opera": 0.005, "operaciones_medias": 0.026, "neto_medio_bps_por_replica": -0.7573037170665302, "neto_p05_bps": 0.0, "neto_p50_bps": 0.0}
+{"hipotesis": "H0", "regla": "z_2.33", "replicas": 1000, "frac_que_opera": 0.0, "operaciones_medias": 0.0, "neto_medio_bps_por_replica": 0.0, "neto_p05_bps": 0.0, "neto_p50_bps": 0.0}
+{"hipotesis": "H0", "regla": "z_2.58_bonferroni_K10", "replicas": 1000, "frac_que_opera": 0.0, "operaciones_medias": 0.0, "neto_medio_bps_por_replica": 0.0, "neto_p05_bps": 0.0, "neto_p50_bps": 0.0}
+{"hipotesis": "H1", "regla": "repo_1EE", "replicas": 1000, "frac_que_opera": 0.179, "operaciones_medias": 6.529, "neto_medio_bps_por_replica": 82.97355273277705, "neto_p05_bps": -171.72683372409983, "neto_p50_bps": 0.0}
+{"hipotesis": "H1", "regla": "z_2.33", "replicas": 1000, "frac_que_opera": 0.022, "operaciones_medias": 0.279, "neto_medio_bps_por_replica": 3.605081035767764, "neto_p05_bps": 0.0, "neto_p50_bps": 0.0}
+{"hipotesis": "H1", "regla": "z_2.58_bonferroni_K10", "replicas": 1000, "frac_que_opera": 0.012, "operaciones_medias": 0.063, "neto_medio_bps_por_replica": -0.26953209813997614, "neto_p05_bps": 0.0, "neto_p50_bps": 0.0}

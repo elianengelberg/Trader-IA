@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="9" time="2.790" timestamp="2026-10-26T05:50:00.001175+00:00" hostname="vm"><testcase classname="tests.integration.test_risk_state_persistence" name="test_a_restart_rebuilds_todays_entries_from_the_store_and_the_cap_still_binds" time="0.368" /><testcase classname="tests.integration.test_risk_state_persistence" name="test_a_replayed_fill_and_a_replayed_order_do_not_double_count" time="0.270" /><testcase classname="tests.integration.test_risk_state_persistence" name="test_the_rebuild_sees_yesterday_as_zero_entries_but_keeps_the_cooldown_anchor" time="0.251" /><testcase classname="tests.integration.test_risk_state_persistence" name="test_sessions_of_other_accounts_do_not_count" time="0.238" /><testcase classname="tests.integration.test_risk_state_persistence" name="test_an_unreadable_store_refuses_new_entries_until_a_rebuild_succeeds" time="0.305" /><testcase classname="tests.integration.test_risk_state_persistence" name="test_a_still_incomplete_rebuild_keeps_entries_refused" time="0.012" /><testcase classname="tests.integration.test_risk_state_persistence" name="test_five_restored_entries_for_the_symbol_refuse_the_sixth_after_the_restart" time="0.786"><failure message="assert 1 == 0&#10; +  where 1 = &lt;tests.integration.test_live_runtime.FakeExecution object at 0x7f14ccd8e010&gt;.submissions">async def test_five_restored_entries_for_the_symbol_refuse_the_sixth_after_the_restart() -&gt; None:
+        now = datetime.now(UTC)
+        runtime, execution, market = build_runtime_paper_with(
+            prior_risk_state=RiskRestore(
+                complete=True, day=now.date().isoformat(), entries_today=5,
+                entries_today_by_symbol={"BTC-USD": 5},
+                last_entry_at={"BTC-USD": now - timedelta(hours=2)},
+                entry_orders_today=5,
+            )
+        )
+        await runtime.start()
+        try:
+            _seed_every_bucket(runtime)
+            # The engine's checks run in a fixed order and market conditions may refuse a
+            # bar before the frequency check is reached; drive until the cap itself speaks.
+            for _ in range(300):
+                market.advance()
+                await runtime._cycle_once()
+&gt;               assert execution.submissions == 0
+E               assert 1 == 0
+E                +  where 1 = &lt;tests.integration.test_live_runtime.FakeExecution object at 0x7f14ccd8e010&gt;.submissions
+
+tests/integration/test_risk_state_persistence.py:294: AssertionError</failure></testcase><testcase classname="tests.integration.test_risk_state_persistence" name="test_a_cooldown_restored_from_the_store_is_still_active" time="0.043" /><testcase classname="tests.integration.test_risk_state_persistence" name="test_a_runtime_without_a_store_has_nothing_to_restore_and_is_complete[None]" time="0.059" /></testsuite></testsuites>

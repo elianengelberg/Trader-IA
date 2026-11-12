@@ -1,0 +1,5 @@
+UTC 2026-10-29T02:32:55Z
+Se quitaron 2 enlaces simbólicos de prueba (tmp_guarda/atajo_series y atajo_calidad) que apuntaban a R1; unlink solo borra el enlace.
+R1 conjunto antes 6506fb03c211def710abe61a2493799000b80996c63000fcfc98da624cbaba79
+R1 conjunto después 6506fb03c211def710abe61a2493799000b80996c63000fcfc98da624cbaba79
+enlaces simbólicos restantes en la carpeta: 0

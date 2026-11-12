@@ -1,0 +1,1 @@
+{"paginas_escaneadas": 535, "candidatos": 169, "candidatos_sin_etiqueta": 23}

@@ -1,0 +1,12 @@
+sin R1 (todas las salidas): año → salidas, sin evidencia, %
+2018 2 0 0.0
+2019 3 0 0.0
+2020 21 0 0.0
+2021 20 0 0.0
+2022 43 0 0.0
+2023 24 1 4.2
+2024 46 0 0.0
+2025 51 0 0.0
+2026 26 0 0.0
+sin evidencia: [('NBTUSDT', '2023-02-28', True)]
+fallas §2.3: [{'par': 'BKRWUSDT', 'E': '2021-02-19', 'categoria': 'T', 'en_alcance': True}, {'par': 'DOTDOWNUSDT', 'E': '2023-04-27', 'categoria': 'T', 'en_alcance': True}, {'par': 'DOTUPUSDT', 'E': '2023-04-27', 'categoria': 'T', 'en_alcance': True}, {'par': 'TRXDOWNUSDT', 'E': '2023-04-27', 'categoria': 'T', 'en_alcance': True}]

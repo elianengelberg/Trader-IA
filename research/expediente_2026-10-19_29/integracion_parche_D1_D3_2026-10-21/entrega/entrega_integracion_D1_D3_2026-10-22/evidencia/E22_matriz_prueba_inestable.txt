@@ -1,0 +1,5 @@
+== 2026-10-22T02:25:45Z · matriz entorno × árbol (3 corridas c/u): estado (duración de pytest)
+-- venv_CI_1 · base: [1 failed in 19.32s] [1 failed in 42.27s] [1 failed in 29.15s]
+-- venv_CI_1 · integracion: [1 failed in 16.55s] [1 passed in 56.64s] [1 failed in 41.87s]
+-- venv_repro_2 · base: [1 failed in 19.77s] [1 failed in 19.11s] [1 failed in 24.13s]
+-- venv_repro_2 · integracion: [1 failed in 25.64s] [1 failed in 18.77s] [1 failed in 26.96s]

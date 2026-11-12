@@ -1,0 +1,2260 @@
+2026-10-26T19:26:05.325Z CMD Bash 
+ S=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad; ls $S | head -80; du -sh $S 2>/dev/null | tail -1 
+----
+2026-10-26T19:28:09.379Z OUT  
+ Command did not complete within its 120s timeout and was moved to the background (ID: btmt0k827). Output is being written to: /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/tasks/btmt0k827.output. You will be notified when it completes. If it is still running after 30m in the background, it will be stopped and you will be notified. To check interim output, use Read on that file path. 
+----
+2026-10-26T19:28:11.825Z CMD Bash 
+ cat /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/tasks/btmt0k827.output | head -90 
+----
+2026-10-26T19:28:12.723Z OUT  
+ ADENDA_CIERRE_PEC-1.1_2026-10-21.zip
+AUDITORIA_PARALELA_P1_P2_P4_2026-10-20.zip
+CALIBRACION_AS1_PEC-1.0_2026-10-21.zip
+CIERRE_AUDITORIA_v0.5_Y_PLAN_CUANTITATIVO_r1_2026-10-21.zip
+CIERRE_FINAL_P1_P2_P4_2026-10-20.zip
+DECISIONES_METODOLOGICAS_Y_PEC-1.1_2026-10-21.zip
+HOJA_DE_RUTA_CONFIRMATORIA_2026-10-21.zip
+SHA256SUMS_DEL_ZIP.txt
+SHA256SUMS_DEL_ZIP_ADENDA.txt
+SHA256SUMS_DEL_ZIP_CALIBRACION.txt
+SHA256SUMS_DEL_ZIP_DECISIONES.txt
+SHA256SUMS_DEL_ZIP_HOJA.txt
+SOLUCION_FINAL_TRADER_IA_v0.5_2026-10-20.zip
+SOLUCION_VERIFICADA_P1_P2_P4_2026-10-20.zip
+auditoria_T_REV_EMA9
+auditoria_paralela_P1_P2_P4_2026-10-20
+auditoria_preservacion
+bv
+c10_mut
+c7_antes
+c7_cli
+c7_diff.patch
+c7_mut
+c7_mypy
+c8_antes
+c8_carrera
+c8_cli
+c8_diff.patch
+c8_mut
+calculo_h1ooz42y
+calculo_lv_t08h0
+calculo_mwm98qxu
+calculo_p99i8qz0
+calculo_va_bt2h3
+calibracion_AS1_2026-10-21
+caracteristicas
+chart_57647093-2868-4e65-97ab-9cae8ec74e7d.json
+chart_f981a304-bb6c-45b8-b0c5-fd2f515ad23a.json
+cierre_D1_D2_R19_2026-10-22
+cierre_D1_D3_2026-10-22
+cierre_final_P1_P2_P4_2026-10-20
+cierre_integral_2026-10-22
+cierre_revision_D1_D3_2026-10-22
+construir_zip.py
+decision_final_D1_D3_2026-10-22
+decisiones_metodologicas_2026-10-21
+deps.txt
+diarios
+ensayo2
+ensayo_hist
+entrega_final
+entrega_iniciativa_tecnica_2026-10-25
+entrega_iniciativa_tecnica_2026-10-25.verificacion_zip.txt
+entrega_iniciativa_tecnica_2026-10-25.zip
+entrega_integracion_controlada_2026-10-25
+entrega_integracion_controlada_2026-10-25.zip
+entrega_integracion_controlada_202 
+----
+2026-10-26T19:28:14.996Z CMD Bash 
+ sed -n 91,250p /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/tasks/btmt0k827.output 
+----
+2026-10-26T19:28:15.546Z OUT  
+ (Bash completed with no output) 
+----
+2026-10-26T19:28:18.531Z CMD Bash 
+ ls -1 /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad | tail -n +81 
+----
+2026-10-26T19:28:19.284Z OUT  
+ fx4_pruebas_diff_previo.diff
+fx4_zip_A
+fx4_zip_B
+hcarry_next_final.zip
+hcarry_next_historico_2026-10-16.zip
+hcarry_next_snapshot1.zip
+hcarry_next_snapshot2.zip
+hcarry_next_validacion_historica.zip
+hcarry_test_historico_2026-10-16.zip
+hoja_de_ruta_confirmatoria_2026-10-21
+inmutable
+inmutable2
+integracion_controlada_2026-10-25
+integracion_parche_D1_D3_2026-10-21
+mision_cierre_2026-10-21
+mision_simulacion_2026-10-21
+mypy_ahora.txt
+mypy_antes.txt
+oos_ensayo
+oos_hashes_antes.txt
+pools.json
+preservacion
+proto1
+pytest-of-root
+recuperacion
+red
+reproduccion_015xh_9_
+reproduccion_0ijez8l1
+reproduccion_0sx1wpz6
+reproduccion_17tg72i9
+reproduccion_1jt24ftq
+reproduccion_1v9kb_6h
+reproduccion_26st8c26
+reproduccion_2s92n9h3
+reproduccion_33dl7y6e
+reproduccion_3o5rx3yf
+reproduccion_3o5u5f74
+reproduccion_4ne3dp9_
+reproduccion_4o2yu1gx
+reproduccion_4s0ox3ah
+reproduccion_54_idi4n
+reproduccion_5j295e20
+reproduccion_6_b91qjt
+reproduccion_6v7u77r5
+reproduccion_7hdk8p98
+reproduccion_7qstnt0g
+reproduccion_7wk3ycnq
+reproduccion_8su8h37e
+reproduccion_993vq3_g
+reproduccion__4p5xmfx
+reproduccion_amqs9em3
+reproduccion_axrrfnt0
+reproduccion_b588nxmr
+reproduccion_b_1vqtg2
+reproduccion_bppxopt9
+reproduccion_d4spu60d
+reproduccion_dhygr96b
+reproduccion_di_1agiz
+reproduccion_diiej4he
+reproduccion_eptnf9k7
+reproduccion_evwpf1a9
+reproduccion_g17vxhpm
+reproduccion_gwfs9jcp
+reproduccion_hpzv3lhj
+reproduccion_i9g7gjbr
+reproduccion_ibdmz85p
+reproduccion_ifpf8ip1
+reproduccion_igwjmo87
+reproduccion_ihmnt28b
+reproduccion 
+----
+2026-10-26T19:28:22.957Z CMD Bash 
+ H=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/hoja_de_ruta_confirmatoria_2026-10-21; find $H -maxdepth 2 | head -60;  
+----
+2026-10-26T19:28:24.517Z OUT  
+ /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/hoja_de_ruta_confirmatoria_2026-10-21
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/hoja_de_ruta_confirmatoria_2026-10-21/SHA256SUMS.txt
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/hoja_de_ruta_confirmatoria_2026-10-21/evidencia
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/hoja_de_ruta_confirmatoria_2026-10-21/evidencia/H2_valor_informativo.json
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/hoja_de_ruta_confirmatoria_2026-10-21/evidencia/H1_potencia_y_delta.json
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/hoja_de_ruta_confirmatoria_2026-10-21/codigo
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/hoja_de_ruta_confirmatoria_2026-10-21/codigo/valor_informativo.py
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/hoja_de_ruta_confirmatoria_2026-10-21/codigo/potencia_y_delta.py
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/hoja_de_ruta_confirmatoria_2026-10-21/00_HOJA_DE_RUTA.md 
+----
+2026-10-26T19:28:26.702Z CMD Read 
+ /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/hoja_de_ruta_confirmatoria_2026-10-21/00_HOJA_DE_RUTA.md 
+----
+2026-10-26T19:28:26.895Z OUT  
+ 1	# Hoja de ruta hacia una primera hipótesis confirmatoria defendible (2026-10-21)
+2	
+3	**Alcance.** Análisis sin datos de mercado, sin commits, push, anclajes ni operaciones reales.
+4	- Usa el registro del programa (39 hipótesis), los documentos de E1–E3 y de r1, y el diseño calibrado de PEC-1.1.
+5	- Toda cifra viene de un documento citado o de `evidencia/H1–H2`, calculadas con `codigo/`.
+6	- La literatura es la revisión de E3 (`INFORME_E3.md` §2–3, con sus fuentes). No se volvió a consultar.
+7	
+8	## 0. Recomendación priorizada
+9	| # | Qué | Por qué | Quién decide |
+10	|---|---|---|---|
+11	| **1** | **Desbloquear la única prueba histórica pendiente que puede producir evidencia útil ya: E3-H1, momentum transversal (información), con su protocolo v3 congelado (`279a865f…`)** | Es la de mayor valor informativo por unidad de tiempo (§3). Ya está diseñada, congelada y calibrada; **nadie miró sus resultados**. Su único bloqueo es un dato | **Vos**: reapertura acotada de E3, fuente de la lista de exclusiones, B-4 acotado |
+12	| **2** | **D-G4 y R-5:** rama `registros` protegida más OpenTimestamps (§5), **antes** de la ejecución de E3 y antes del 2027-04-18 | Sin ancla externa, ningún «fijado antes» es verificable desde fuera, ni el de E3 ni los cortes de T-papel | **Vos** |
+13	| **3** | **D-G1: no iniciar** H-REV-SHOCK v0.2, H-EMA9-VWAP v0.2 ni H-E1-BC | Con su IR plausible, la confirmación económica es improbable (3–7 %); además reabren familias descartadas o vienen de lecturas se 
+----
+2026-10-26T19:28:34.157Z CMD ToolSearch 
+  
+----
+2026-10-26T19:28:34.172Z OUT  
+  
+----
+2026-10-26T19:28:36.771Z CMD TaskCreate 
+  
+----
+2026-10-26T19:28:36.786Z OUT  
+ Task #120 created successfully: DT-1: Reconstruir el estado y verificar los antecedentes 
+----
+2026-10-26T19:28:37.986Z CMD TaskCreate 
+  
+----
+2026-10-26T19:28:38.103Z OUT  
+ Task #121 created successfully: DT-2: Seguridad operativa: cerrar riesgos críticos abiertos 
+----
+2026-10-26T19:28:39.620Z CMD TaskCreate 
+  
+----
+2026-10-26T19:28:39.632Z OUT  
+ Task #122 created successfully: DT-3: Clasificar las hipótesis y decidir E3-H1 
+----
+2026-10-26T19:28:40.801Z CMD TaskCreate 
+  
+----
+2026-10-26T19:28:40.815Z OUT  
+ Task #123 created successfully: DT-4: Experimento que cambie decisiones (prerregistro y, si es seguro, ejecución) 
+----
+2026-10-26T19:28:42.144Z CMD TaskCreate 
+  
+----
+2026-10-26T19:28:42.277Z OUT  
+ Task #124 created successfully: DT-5: Propuestas, informe final y paquete verificado 
+----
+2026-10-26T19:28:43.644Z CMD TaskUpdate 
+  
+----
+2026-10-26T19:28:43.704Z OUT  
+ Updated task #120 status 
+----
+2026-10-26T19:28:45.987Z CMD Bash 
+ S=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad; timeout 100 find $S -maxdepth 4 \( -iname '*E3*' -o -iname '*registro*hipot*' -o -iname '*REGISTRO_PROGRAMA*' -o -iname '*INVENTARIO*' \) -not -path '*/reproduccion_*' -not -path '*/tmp*' 2>/dev/null | head -40 
+----
+2026-10-26T19:29:24.107Z OUT  
+ (Bash completed with no output) 
+----
+2026-10-26T19:29:26.621Z CMD Bash 
+ ls /home/user/Trader-IA; ls /home/user/Trader-IA/research 2>/dev/null | head -40 
+----
+2026-10-26T19:29:27.337Z OUT  
+ AUDIT_REPORT.md
+Dockerfile
+Makefile
+README.md
+SECURITY_AUDIT.md
+SYSTEM_STATUS.md
+alembic.ini
+data
+docker-compose.local.yml
+docker-compose.prod.yml
+docker-compose.yml
+docs
+frontend
+infra
+packages
+pyproject.toml
+research
+scripts
+tests
+README.md
+entregas_hcarry
+hcarry_next
+tendencia_btc 
+----
+2026-10-26T19:29:29.535Z CMD Bash 
+ R=/home/user/Trader-IA/research; ls $R/tendencia_btc | head -50; git --no-optional-locks -C /home/user/Trader-IA log --oneline -15; git --no-optional-locks -C /home/user/Trader-IA branch -a 
+----
+2026-10-26T19:29:31.238Z OUT  
+ ARTEFACTOS_SHA256.txt
+ESTADO_FINAL_2026-10-18.md
+EVIDENCIA_T_MULTI.json
+FAMILIAS_ESTRATEGIA.md
+INFORME_FUERA_DE_MUESTRA_T.md
+INFORME_NUEVA_LINEA.md
+INFORME_T_MULTI.md
+PRERREGISTRO_FUERA_DE_MUESTRA_T.md
+PRERREGISTRO_T_MULTI.md
+README.md
+REVISION_CRITICA_FUERA_DE_MUESTRA_T.md
+datos
+datos_multi
+datos_papel
+experimentos
+papel
+pyproject.toml
+src
+tests
+72ffae5 Keep third-party raw market data for T-MULTI out of version control
+848e36f Record T-papel operating addendum and cut executor (written 2026-10-17)
+692f2b2 Close T-MULTI evidence package and record final research state
+f518ac1 Freeze T-MULTI preregistration and code before any data access
+c6339e3 Paper evaluation: record branch A decision and initial state
+89278f7 Freeze paper (prospective) evaluation rules for the trend line
+5120d4c H-CARRY closed on official data; causal diagnosis; new-line screening
+c91dff4 H-CARRY Next: research lab, historical-validation pipeline and data requirements
+c25bbd8 Paper start: allocate the base capital, carry the record as realised
+81c935e Quantization: a float's rounding of a whole number of lots is that number of lots
+ae3c3b9 Account baseline: marks and plans before it are skipped, not refused
+f25d485 Account journal: operator baseline over a pre-journal record, pinned and still cross-checked
+1c914c5 Hardening 1.3-1.8: transactional funding accounting, clock-driven settlement, cost semantics, lifecycle and test isolation
+ab68d1c Learning: record each closed trade's provenance and let the sc 
+----
+2026-10-26T19:29:37.309Z CMD Bash 
+ S=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad; timeout 110 find $S \( -path "$S/reproduccion_*" -o -path "$S/tmp*" -o -path "$S/integracion_controlada_2026-10-25/trabajo" -o -name venv -o -name .git -o -name node_modules \) -prune -o -type f \( -name 'INFORME_E3*' -o -name '*PROTOCOLO*E3*' -o -name '*E3*v3*' -o -name 'E3_*' -o -name '*REGISTRO*' -o -name '*supervivencia*' -o -name '*exclusion*' \) -print 2>/dev/null | head -40 
+----
+2026-10-26T19:29:38.835Z OUT  
+ /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E2_descubrimiento_2026-10-19/REGISTRO_HIPOTESIS.md
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E2_descubrimiento_2026-10-19/ronda_E2/prerregistro/PRERREGISTRO_E2.md
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E2_descubrimiento_2026-10-19/ronda_E2/informe/REGISTRO_HIPOTESIS_tras_E2.md
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E1_bot_datos_reales_2026-10-19/prerregistro/PRERREGISTRO_E1.md
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3/REGISTRO_EJECUCIONES.jsonl
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3/resultados/pruebas/fixture_conciliacion/anu/exclusiones_usdt.json
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3/datos_anuncios/prueba_extraccion/clasif/exclusiones_usdt.json
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3/datos_anuncios/commoncrawl/exclusiones_usdt.json
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/e 
+----
+2026-10-26T19:29:43.783Z CMD Bash 
+ E=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19; ls -la $E | cut -c30-; ls $E/ejecucion_E3 | head -40; du -sh $E/ejecucion_E3/* 2>/dev/null | sort -h | tail -12 
+----
+2026-10-26T19:29:44.995Z OUT  
+ Oct 20 12:05 .
+Oct 19 23:51 ..
+Oct 20 00:50 CAMBIOS_PROPUESTOS_v3.md
+Oct 20 12:04 CIERRE_E3.md
+Oct 20 12:05 CIERRE_E3_MANIFIESTO.sha256
+Oct 20 01:07 DECISIONES_FINALES_E3.md
+Oct 19 23:55 INFORME_E3.md
+Oct 19 23:55 PROTOCOLO_E3_BORRADOR.md
+Oct 20 00:10 PROTOCOLO_E3_v2_BORRADOR.md
+Oct 20 01:26 PROTOCOLO_E3_v3_PROPUESTO.md
+Oct 19 23:56 REGISTRO_HIPOTESIS_tras_E3_investigacion.md
+Oct 20 00:10 REGISTRO_HIPOTESIS_tras_E3_revision.md
+Oct 20 04:42 REGISTRO_HIPOTESIS_tras_E3_v3_A1_A3.md
+Oct 20 12:05 REGISTRO_HIPOTESIS_tras_cierre_E3.md
+Oct 20 01:26 SHA256SUMS
+Oct 20 04:45 ejecucion_E3
+ESTADO_A3_BLOQUEADO.md
+INFORME_EJECUCION_E3.md
+MANIFIESTO_F3.sha256
+REGISTRO_EJECUCIONES.jsonl
+codigo
+datos_anuncios
+datos_exchangeinfo
+datos_vision
+logs
+protocolo
+resultados
+4.0K	/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3/ESTADO_A3_BLOQUEADO.md
+8.0K	/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3/MANIFIESTO_F3.sha256
+8.0K	/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3/REGISTRO_EJECUCIONES.jsonl
+12K	/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3/datos_exchangeinfo
+20K	/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-24 
+----
+2026-10-26T19:29:47.504Z CMD Bash 
+ E=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19; cat $E/ejecucion_E3/ESTADO_A3_BLOQUEADO.md; echo ======; cat $E/CIERRE_E3.md 
+----
+2026-10-26T19:29:49.249Z OUT  
+ # E3 · A3 (anuncios oficiales y supervivencia): BLOQUEADO
+
+**Fecha:** 2026-10-20, a partir de las 01:44 UTC.
+
+## Fuentes evaluadas
+| Fuente | Resultado | Decisión |
+|---|---|---|
+| binance.com: categorías Delisting (161), Listing (48) y News (49) | robots.txt permite `/` a cualquier agente y prohíbe `/bapi/` y `/api/`. Las **condiciones de uso no se pudieron leer**: `/en/terms` devuelve HTTP 202 sin contenido (desafío anti-bots). Una referencia de terceros indica que las de Binance.US prohíben el scraping automatizado | **No** se automatiza (v3 §9, nota N8: «si no lo permiten, la compilación es manual») |
+| Internet Archive (web.archive.org: CDX y capturas) | **Bloqueado por la política de red del entorno.** La conexión se corta a los 7–9 s en cada intento (`ws_closed_mid_exchange`, registrado por el proxy). La herramienta de lectura web tampoco puede acceder («unable to fetch from web.archive.org»). Solo responde `archive.org/wayback/available` (metadatos); la captura más cercana de la lista 161 es un HTTP 202, el desafío anti-bots | No disponible |
+| Canal oficial de Telegram «Binance Announcements» (t.me/s/binance_announcements) | Accesible: ≈ 9066 publicaciones. **Las condiciones de Telegram prohíben expresamente el scraping de datos** («Telegram additionally prohibits data scraping…») | **No** se usa |
+| Fuentes no oficiales (agregadores, datasets de terceros) | Fuera de la v3 (§2.3: «anuncios oficiales») | **No** se usan |
+
+## Consecuencia según la v3 (sin interpretacio 
+----
+2026-10-26T19:30:28.887Z CMD Bash 
+ E=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19; cat $E/ejecucion_E3/INFORME_EJECUCION_E3.md 
+----
+2026-10-26T19:30:29.335Z OUT  
+ # E3: informe consolidado de A1, A2 y A3, y decisión de habilitación
+
+**Fecha:** 2026-10-20 (UTC). **Protocolo:** `PROTOCOLO_E3_v3_PROPUESTO.md` (`279a865f…`), congelado sin cambios. **Directorio:** `scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3/`.
+
+---
+
+## 0. Decisión
+
+**E3 NO está habilitado para una evaluación confirmatoria.**
+
+- **Motivo:** con las fuentes públicas y utilizables, la v3 declara la ventana histórica H **INVÁLIDA con Vision**.
+  - La regla de inicio §4.11 (iv) no tiene solución: **en todos los años**, de 2018 a 2026, las salidas sin anuncio archivado superan el 10 %.
+  - En 2025 y 2026 son el **100 %** (51 y 26 salidas), y eso no lo cambia ninguna lectura manual: la última fecha efectiva de un anuncio archivado es el 2024-11-06 (§4).
+- **El backtest confirmatorio no se ejecutó.** No se calculó ningún retorno de estrategia, ningún IC de H1, ningún exceso de H2 o H3 ni el diagnóstico de §5.4 con datos reales.
+- **El único uso confirmatorio de la historia sigue disponible**, por si se resuelve A3 (§8).
+
+## 1. Estado de A1, A2 y A3
+
+| | Estado | Detalle |
+|---|---|---|
+| **A1** Congelar la v3 | **Hecho** | La v3 quedó congelada sin cambios el 2026-10-20 a las 01:34:04Z (`protocolo/CONGELACION_v3.txt`). La v2 y los documentos anteriores siguen intactos y sus hashes coinciden con `SHA256SUMS`. Las desviaciones e interpretaciones quedan en documentos aparte, con fecha y hash (§6) |
+| **A2** Datos de Binance Vision | **Hecho y verificado.** V 
+----
+2026-10-26T19:31:11.205Z CMD Bash 
+ E=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19; wc -l $E/PROTOCOLO_E3_v3_PROPUESTO.md; grep -n '^#' $E/PROTOCOLO_E3_v3_PROPUESTO.md | head -80 
+----
+2026-10-26T19:31:11.814Z OUT  
+ 664 /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/PROTOCOLO_E3_v3_PROPUESTO.md
+1:# Prerregistro E3, versión 3 (PROPUESTA; NO CONGELADA; NO EJECUTAR)
+2:## Momentum transversal long-only en Binance spot: experimento de investigación
+17:## 0. Correcciones y jerarquía de documentos
+19:### 0.1 Las seis correcciones indispensables y dónde quedan
+31:### 0.2 Jerarquía de documentos (regla de precedencia)
+47:## 1. Uso previo de los datos y períodos (resumen sin cambios de contenido; el detalle completo está en el §1.1 de la v2)
+79:## 2. Universo histórico y supervivencia
+81:### 2.1 Fuentes [Doc]
+94:### 2.2 Reconstrucción
+105:### 2.3 Conciliación (en F3, antes de calcular cualquier retorno de estrategia)
+139:## 3. Hipótesis y multiplicidad
+141:### 3.1 Hipótesis confirmatorias (definidas sin condiciones, antes de los datos)
+148:### 3.2 Procedimiento (corrección 1)
+172:### 3.3 Registro de ejecuciones
+186:### 3.4 Decisiones que podrían generar pruebas adicionales (todas fijadas)
+211:## 4. Especificación reproducible
+213:### 4.1 Calendario
+218:### 4.2 Día activo: §2.2.
+220:### 4.3 Precios
+226:### 4.4 Elegibilidad en t (todas las condiciones)
+232:### 4.5 Exclusiones
+241:### 4.6 Universos y señal
+248:### 4.7 Selección
+252:### 4.8 Pesos y rebalanceo
+263:### 4.9 Ejecución y costos
+273:### 4.10 Aperturas faltantes y liquidaciones (corrección 3)
+283:### 4.11 Semanas evaluables e inicio de H
+294:### 4.12 Referencia 
+----
+2026-10-26T19:31:14.384Z CMD Bash 
+ E=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19; sed -n 47,330p $E/PROTOCOLO_E3_v3_PROPUESTO.md 
+----
+2026-10-26T19:31:15.038Z OUT  
+ ## 1. Uso previo de los datos y períodos (resumen sin cambios de contenido; el detalle completo está en el §1.1 de la v2)
+
+| Línea | Activos | Datos | Período | Uso |
+|---|---|---|---|---|
+| T, desarrollo (con los cribados V y R) | BTC (y ETH) | Spot 1d | 2017-08-17 → 2021-12-31 | Diseño, cribado y sensibilidad |
+| T, fuera de muestra | BTC, ETH | Spot 1d | 2022-01-01 → 2026-05-31 | **Evaluado** |
+| T-MULTI | 12 ETF | Diario más dividendos | 2011-01-03 → 2026-09-30 | **Evaluado** |
+| T-papel | BTC, ETH | Spot 1d diario | 2026-04-20 → 2026-10-16 | Historia de la señal, no evaluada; se registraron el último cierre y la exposición |
+| Monitor del carry | BTC | Funding | 2026-07-03 → 2026-09-30 | Agregado consultado (6,5 %/año) |
+| H-CARRY | BTC spot y perpetuo 1h | 1h | 2020-01 → 2026-05 (test 2024-02 → 2026-05, consumido) | **Evaluado** |
+| H-CARRY, exploratorio posterior | ETH y SOL (funding), DTB3, Aave | Varios | → 2026-05 | Exploratorio |
+| E1 | BTC | Spot 1h | 2019-10-01 → 2026-05-31 | **Evaluado** |
+| E2 | BTC, ETH, funding, prima, Wikipedia | Varios | → 2026-05 | **Evaluado** |
+| **Altcoins** | — | — | — | **Nunca usadas** por el proyecto |
+
+**Conocimiento de quienes diseñan:**
+- el asistente, en términos generales, hasta ≈ junio de 2026;
+- el usuario y los revisores vivieron el período;
+- la literatura cubre 2013–2023.
+
+**Ningún período anterior a junio de 2026 está intacto.**
+
+**Capas de evaluación:**
+
+| Capa | Ventana | Qué puede concluir |
+|---|---|---|
+| **H: histór 
+----
+2026-10-26T19:31:51.201Z CMD Bash 
+ E=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3; find $E/resultados -maxdepth 3 -type f -printf '%s\t%p\n' | sed "s|$E/||" | sort -k2 | head -50; ls $E/codigo 
+----
+2026-10-26T19:31:51.669Z OUT  
+ 755	resultados/calibracion/DECISION_CALIBRACION.txt
+246	resultados/calibracion/HUELLAS_codigo.txt
+2076	resultados/calibracion/calibracion.json
+3044	resultados/calibracion/calibracion_regla_maximo.json
+794060	resultados/calidad/auditoria_por_simbolo.json
+1130	resultados/calidad/resumen_calidad.json
+9062	resultados/calidad/series/0GUSDT.npz
+19103	resultados/calidad/series/1000CATUSDT.npz
+19137	resultados/calidad/series/1000CHEEMSUSDT.npz
+36375	resultados/calidad/series/1000SATSUSDT.npz
+10557	resultados/calidad/series/1INCHDOWNUSDT.npz
+11392	resultados/calidad/series/1INCHUPUSDT.npz
+53105	resultados/calidad/series/1INCHUSDT.npz
+27279	resultados/calidad/series/1MBABYDOGEUSDT.npz
+11884	resultados/calidad/series/2ZUSDT.npz
+12061	resultados/calidad/series/A2ZUSDT.npz
+1912	resultados/calidad/series/AAOIBUSDT.npz
+1912	resultados/calidad/series/AAPLBUSDT.npz
+15534	resultados/calidad/series/AAVEDOWNUSDT.npz
+13581	resultados/calidad/series/AAVEUPUSDT.npz
+49919	resultados/calidad/series/AAVEUSDT.npz
+39281	resultados/calidad/series/ACAUSDT.npz
+24687	resultados/calidad/series/ACEUSDT.npz
+51523	resultados/calidad/series/ACHUSDT.npz
+43241	resultados/calidad/series/ACMUSDT.npz
+18379	resultados/calidad/series/ACTUSDT.npz
+18546	resultados/calidad/series/ACXUSDT.npz
+42622	resultados/calidad/series/ADADOWNUSDT.npz
+30352	resultados/calidad/series/ADAUPUSDT.npz
+86948	resultados/calidad/series/ADAUSDT.npz
+1909	resultados/calidad/series/ADBEBUSDT.npz
+42645	resultados/calidad/series/ADXUSDT.npz
+21316	r 
+----
+2026-10-26T19:31:56.909Z CMD Bash 
+ E=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3; python3 -I -c "
+import json
+d=json.load(open('$E/resultados/calidad/auditoria_por_simbolo.json'))
+print(type(d), len(d))
+k = list(d)[:3] if isinstance(d, dict) else None
+print(k)
+x = d['FTMUSDT'] if isinstance(d, dict) and 'FTMUSDT' in d else (d[0] if isinstance(d, list) else d[k[0]])
+print(json.dumps(x, indent=1)[:2500])
+"; cat $E/resultados/calidad/resumen_calidad.json | head -50 
+----
+2026-10-26T19:31:58.410Z OUT  
+ <class 'list'> 757
+None
+{
+ "simbolo": "0GUSDT",
+ "zips_mensuales": 9,
+ "checksum_ok": 9,
+ "checksum_falla": [],
+ "filas_descartadas": 0,
+ "fechas_repetidas": 0,
+ "filas_invalidas": 0,
+ "fuera_de_rango": 0,
+ "conflictos_mensual_diario": 0,
+ "meses_con_archivo": [
+  "2025-09",
+  "2025-10",
+  "2025-11",
+  "2025-12",
+  "2026-01",
+  "2026-02",
+  "2026-03",
+  "2026-04",
+  "2026-05"
+ ],
+ "dias_reparados_con_diarios": 0,
+ "fallos_descarga": [],
+ "episodios": [
+  [
+   "2025-09-22",
+   "2026-05-31"
+  ]
+ ],
+ "cortes_con_reanudacion": [],
+ "cola_tras_ultimo_activo": {
+  "dias": 0,
+  "filas_cero_operaciones": 0,
+  "sin_fila": 0
+ },
+ "dias_no_activos_dentro_de_la_vida": {
+  "sin_archivo_mensual": 0,
+  "fila_ausente_en_archivo": 0,
+  "cero_operaciones": 0,
+  "invalida_o_conflicto": 0,
+  "fallo_descarga": 0
+ },
+ "primer_activo": "2025-09-22",
+ "ultimo_activo": "2026-05-31",
+ "dias_activos": 252
+}
+{
+ "simbolos_usdt": 757,
+ "con_algun_dia_activo": 663,
+ "totales": {
+  "zips_mensuales": 26317,
+  "checksum_ok": 26317,
+  "checksum_falla": 0,
+  "filas_descartadas": 0,
+  "fechas_repetidas": 2,
+  "filas_invalidas": 279,
+  "conflictos_mensual_diario": 0,
+  "dias_reparados_con_diarios": 0,
+  "fuera_de_rango": 0
+ },
+ "dias_no_activos_dentro_de_la_vida": {
+  "sin_archivo_mensual": 3189,
+  "fila_ausente_en_archivo": 293,
+  "cero_operaciones": 0,
+  "invalida_o_conflicto": 43,
+  "fallo_descarga": 0
+ },
+ "simbolos_con_cortes_reanudados": 31,
+ "simbolos_con_mas_de_un_episodio": 8,
+ "colas_con_velas_cero_oper 
+----
+2026-10-26T19:32:08.431Z CMD Bash 
+ E=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3; ls -la $E/logs | cut -c30- | head -30; grep -rl 'invalid\|invalida\|duracion' $E/logs 2>/dev/null | head; grep -n 'invalid\|duracion\|borde' $E/codigo/calidad.py | head -30 
+----
+2026-10-26T19:32:10.794Z OUT  
+  Oct 20 04:40 .
+ Oct 20 04:45 ..
+ Oct 20 01:42 01_listado.txt
+ Oct 20 03:43 02_descarga_mensual.txt
+ Oct 20 04:37 02b_descarga_mensual_reanudacion.txt
+ Oct 20 01:50 03_calibracion.txt
+ Oct 20 01:59 04_calibracion_maximo.txt
+ Oct 20 02:44 05_cc_indice.txt
+ Oct 20 03:51 06_cc_paginas.txt
+ Oct 20 03:53 06b_cc_paginas_colisiones.txt
+ Oct 20 03:53 07_cc_clasificar.txt
+ Oct 20 04:39 08_reparar.txt
+ Oct 20 04:39 09_calidad.txt
+ Oct 20 04:40 10_estructural.txt
+ Oct 20 04:40 11_conciliacion_pasada1.txt
+ Oct 20 03:51 cc_anuncios_v1_congelado.py.txt
+ Oct 20 01:39 registro_listado_intento1.jsonl
+ Oct 20 03:51 resultado_paginas_intento1.json
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3/logs/09_calidad.txt
+72:           "fechas_repetidas": 0, "filas_invalidas": 0, "fuera_de_rango": 0, "conflictos_mensual_diario": 0,
+100:                aud["filas_invalidas"] += 1
+179:            clase = {"sin_archivo_mensual": 0, "fila_ausente_en_archivo": 0, "cero_operaciones": 0, "invalida_o_conflicto": 0,
+190:                    clase["invalida_o_conflicto"] += 1
+208:           for k in ("zips_mensuales", "checksum_ok", "checksum_falla", "filas_descartadas", "fechas_repetidas", "filas_invalidas", 
+----
+2026-10-26T19:32:14.137Z CMD Bash 
+ E=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3; grep -n -i 'invalid\|borde' $E/logs/09_calidad.txt | head -20; sed -n 80,130p $E/codigo/calidad.py; ls $E/datos_vision | head; ls $E/datos_vision/* | head -5 
+----
+2026-10-26T19:32:15.466Z OUT  
+ 10:  "filas_invalidas": 279,
+19:  "invalida_o_conflicto": 43,
+        for f in filas:
+            cuenta[f[0]] = cuenta.get(f[0], 0) + 1
+        for f in filas:
+            d = f[0]
+            if not (INICIO <= d <= FIN):
+                aud["fuera_de_rango"] += 1
+                continue
+            i = idx(d)
+            if cuenta[d] > 1:
+                aud["fechas_repetidas"] += 1
+                estado[i] = 3
+                continue
+            if (i, "m") in vistos and origen == "d":
+                prev = vistos[(i, "m")]
+                if prev[1:7] != f[1:7]:
+                    aud["conflictos_mensual_diario"] += 1
+                    estado[i] = 4
+                continue
+            vistos[(i, origen[0])] = f
+            if not f[7]:
+                aud["filas_invalidas"] += 1
+                estado[i] = 3
+                continue
+            for k, v in zip(("O", "H", "L", "C", "QV"), f[1:6]):
+                a[k][i] = v
+            nt[i] = f[6]
+            estado[i] = 1 if f[6] > 0 else 2
+            if origen == "d":
+                aud["dias_reparados_con_diarios"] += 1
+
+    for z in sorted(dirs_mensual.glob(f"{s}-1d-*.zip")):
+        chk = z.with_name(z.name + ".CHECKSUM")
+        ok = chk.exists() and chk.read_text().split()[0].strip().lower() == sha(z)
+        aud["zips_mensuales"] += 1
+        aud["meses_con_archivo"].append(z.name.split("-1d-")[1][:7])
+        if ok:
+            aud["checksum_ok"] += 1
+            cargar(z, "m")
+        else:
+           
+----
+2026-10-26T19:32:24.952Z CMD Bash 
+ S=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad; ls $S/decisiones_metodologicas_2026-10-21 $S/calibracion_AS1_2026-10-21 2>/dev/null | head -40; timeout 60 grep -rl --include=*.md -e '39 hipótesis' -e 'REGISTRO DEL PROGRAMA' -e 'Registro del programa' $S/decisiones_metodologicas_2026-10-21 $S/hoja_de_ruta_confirmatoria_2026-10-21 $S/expediente_metodologico_2026-10-20 $S/mision_cierre_2026-10-21 2>/dev/null | head 
+----
+2026-10-26T19:32:29.149Z OUT  
+ /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/calibracion_AS1_2026-10-21:
+00_RESUMEN_CALIBRACION.md
+codigo_r1
+entrega
+orquestador
+prueba_extremo_a_extremo
+prueba_extremo_a_extremo_2
+registro
+salida
+verif_zip
+verificacion
+
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decisiones_metodologicas_2026-10-21:
+00_INFORME_FINAL.md
+adenda_cierre
+cierre
+codigo
+copia_tendencia
+entrega
+evidencia
+f1
+f3_analisis
+f3_confirmatoria
+f3_desarrollo
+informe
+pec11
+registro
+venv_pruebas
+verif_adenda
+verificacion_final
+verificar.sh
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decisiones_metodologicas_2026-10-21/verificacion_final/trabajo/r1/cierre_auditoria_v0.5_y_plan_cuantitativo_r1_2026-10-21/05_PLAN_CUANTITATIVO.md
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decisiones_metodologicas_2026-10-21/verificacion_final/trabajo/r1/cierre_auditoria_v0.5_y_plan_cuantitativo_r1_2026-10-21/protocolo_cuantitativo/README.md
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decisiones_metodologicas_2026-10-21/verificacion_final/trabajo/r1/cierre_auditoria_v0.5_y_plan_cuantitativo_r1_2026-10-21/02_EXPEDIENTE_DECISIONES.md
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decisiones_metodologicas_2026-10-21/verificacion_final/trabajo/pec11_pruebas/README.md
+/tmp/claude-0/-home-user-Trader-IA/adb2788 
+----
+2026-10-26T19:32:32.741Z CMD Bash 
+ D=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decisiones_metodologicas_2026-10-21/f1/r1/cierre_auditoria_v0.5_y_plan_cuantitativo_r1_2026-10-21; ls $D; grep -n '39\|18 con\|0 de 18\|respaldad' $D/05_PLAN_CUANTITATIVO.md | head -20 
+----
+2026-10-26T19:32:34.052Z OUT  
+ 00_RESUMEN_EJECUTIVO.md
+01_RESULTADOS_AUDITORIA.md
+02_EXPEDIENTE_DECISIONES.md
+03_CADENA_DE_CONFIANZA.md
+04_MATRIZ_DE_AMENAZAS.md
+05_PLAN_CUANTITATIVO.md
+06_AUTORIZACIONES_PENDIENTES.md
+07_MANIFIESTO_EVIDENCIA.md
+SHA256SUMS.txt
+auditoria
+correcciones_propuestas_v0.5.1
+documentos_para_autorizar
+ejecutar_verificacion.sh
+evidencia
+protocolo_cuantitativo
+39:| `pec/programa.py` + `registro_programa/` | Registro de las 39 hipótesis del programa; bloquea iniciar las cerradas o no aprobadas | Pruebas |
+115:- 39 entradas;
+116:- 18 con un resultado registrado;
+117:- **ninguna respaldada**. 
+----
+2026-10-26T19:32:37.321Z CMD Bash 
+ D=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decisiones_metodologicas_2026-10-21/f1/r1/cierre_auditoria_v0.5_y_plan_cuantitativo_r1_2026-10-21; sed -n 100,175p $D/05_PLAN_CUANTITATIVO.md; find $D/protocolo_cuantitativo -path '*registro_programa*' | head 
+----
+2026-10-26T19:32:38.505Z OUT  
+ | 3 años | **1,64** |
+| 5 años | 1,27 |
+| 10 años | 0,90 |
+| T, como referencia | Su IR ≈ 0,35 necesitaría unos 66 años |
+
+**Consecuencia:**
+- Una hipótesis cuya razón de información neta plausible sea, como las de tendencia en un solo activo, del orden de
+  0,3–0,5 **no puede confirmarse** en ningún horizonte útil: el resultado esperable es «no concluyente».
+- Esto no es un defecto del protocolo: es el límite de la información disponible. Ya lo decía el dictamen («el problema
+  no es de implementación sino de información»).
+- El programa debe **filtrar por detectabilidad antes de gastar datos**, no después.
+
+## 6. Priorización de hipótesis
+
+**Estado del programa** (registro del programa):
+- 39 entradas;
+- 18 con un resultado registrado;
+- **ninguna respaldada**.
+
+**Líneas cerradas que se respetan:**
+- H-CARRY: detenida;
+- T: fuera de muestra consumido;
+- T-MULTI: no se reabre;
+- E1, E2 y E3: cerradas o descartadas, con sus variantes prohibidas.
+
+| Línea | Estado | Criba (con las cifras de su propia propuesta) | Recomendación |
+|---|---|---|---|
+| **T-papel** | Prospectiva en curso, congelada | No aplica: protocolo propio; detecta solo un efecto grande o un fracaso grueso (D-T3) | **Seguir sin cambios.** Antes del corte del **2027-04-18** hace falta D-G4/D-T1 (dónde se escribe) |
+| **H-REV-SHOCK v0.2** | Propuesta, no aprobada; reabre la familia descartada C10 | Para confirmar en 3 años: **≥ 7,9 % neto por evento** (≈ 6,8 eventos/año) o ≥ 4,6 % con 20 eventos/año. Señal/ruido 
+----
+2026-10-26T19:32:43.444Z CMD Bash 
+ F=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decisiones_metodologicas_2026-10-21/f1/r1/cierre_auditoria_v0.5_y_plan_cuantitativo_r1_2026-10-21/protocolo_cuantitativo/registro_programa/HIPOTESIS_PROGRAMA.json; python3 -I -c "
+import json
+d=json.load(open('$F'))
+hs = d['hipotesis'] if isinstance(d, dict) and 'hipotesis' in d else d
+print(type(d), (list(d.keys()) if isinstance(d, dict) else ''))
+print(len(hs)); print(json.dumps(hs[0], ensure_ascii=False)[:600])
+from collections import Counter
+print(Counter(h.get('estado') for h in hs))
+print(Counter(h.get('resultado') for h in hs))
+for h in hs:
+    if h.get('resultado'):
+        print(h.get('id'), '|', h.get('estado'), '|', h.get('resultado'), '|', str(h.get('familia',''))[:30], '|', str(h.get('descripcion', h.get('nombre','')))[:90])
+" 
+----
+2026-10-26T19:32:44.212Z OUT  
+ <class 'dict'> ['fuente', 'regla_reapertura', 'respaldadas', 'hipotesis']
+39
+{"id": "H-CARRY", "grupo": "carry", "estado": "CERRADA", "resultado": "INSUFICIENTE", "reapertura": "solo por su monitor (> 12 %); la misión 2026-10-21 ordena respetar su detención"}
+Counter({'DESCARTADA': 22, 'CERRADA': 9, 'EXPLORATORIA': 3, 'ORIGINAL_NO_RECUPERADO': 2, 'PROPUESTA_NO_APROBADA': 2, 'PROSPECTIVA_EN_CURSO': 1})
+Counter({None: 21, 'EN_CONTRA': 7, 'INSUFICIENTE': 5, 'NO_EVALUABLE': 3, 'DESCARTADA': 1, 'SIN_BASE': 1, 'SIN_VALOR_PRACTICO': 1})
+H-CARRY | CERRADA | INSUFICIENTE |  | 
+F3-V | DESCARTADA | DESCARTADA |  | 
+F3-R | DESCARTADA | SIN_BASE |  | 
+T | CERRADA | INSUFICIENTE |  | 
+T-MULTI | CERRADA | INSUFICIENTE |  | 
+E1-P1 | DESCARTADA | EN_CONTRA |  | 
+E1-P2 | DESCARTADA | EN_CONTRA |  | 
+E1-P3 | DESCARTADA | EN_CONTRA |  | 
+E1-S1 | DESCARTADA | EN_CONTRA |  | 
+E1-S5 | DESCARTADA | EN_CONTRA |  | 
+E1-CONF | DESCARTADA | EN_CONTRA |  | 
+E1-MR-RETRASO | EXPLORATORIA | SIN_VALOR_PRACTICO |  | 
+E2-A | CERRADA | INSUFICIENTE |  | 
+E2-B | CERRADA | INSUFICIENTE |  | 
+E2-C | CERRADA | EN_CONTRA |  | 
+E3-H1 | CERRADA | NO_EVALUABLE |  | 
+E3-H2 | CERRADA | NO_EVALUABLE |  | 
+E3-H3 | CERRADA | NO_EVALUABLE |  | 
+----
+2026-10-26T19:32:56.640Z CMD Bash 
+ E=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19; wc -l $E/REGISTRO_HIPOTESIS_tras_cierre_E3.md; grep -n '^|' $E/REGISTRO_HIPOTESIS_tras_cierre_E3.md | cut -c1-330 | head -60 
+----
+2026-10-26T19:32:58.212Z OUT  
+ 82 /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/REGISTRO_HIPOTESIS_tras_cierre_E3.md
+18:| ID | Hipótesis | Estado | Evidencia [TIA] | Artefactos |
+19:|---|---|---|---|---|
+20:| H-CARRY | Carry de funding delta neutral (BTC) con ventaja neta | CERRADA (insuficiente) | Test: +3,76 % frente a un comparador del 5 % | `research/hcarry_next/INFORME_CIERRE_HCARRY.md` |
+21:| V | Volatilidad gestionada en BTC diario | DESCARTADA | Persistencia de 0,32 (< 0,5); Sharpe 0,92 frente a 0,96; P = 0,38 | `research/tendencia_btc/INFORME_NUEVA_LINEA.md` |
+22:| R | Reversión diaria en BTC | DESCARTADA (sin base) | Autocorrelación de retardo 1 de −0,06 (la regla exigía < −0,10) | ídem |
+23:| T | Tendencia long/flat 1/3/6 meses (BTC y ETH), histórica | INSUFICIENTE · historia CERRADA | Fuera de muestra +7,0 %/año, IC90 −8,8 / +22,9, P = 0,755 | `INFORME_FUERA_DE_MUESTRA_T.md` |
+24:| T-papel | T sin cambios, prospectiva | PROSPECTIVA (en curso) | Inicio el 2026-10-18; revisiones el 2027-04-18, el 2027-10-19 y el 2028-10-18 | `papel/PRERREGISTRO_PAPEL.md` |
+25:| T-MULTI | T sin cambios en 11 ETF | INSUFICIENTE (excluida una ventaja neta ≥ 0,65 %/año) | E = −0,48 %, IC90 −1,55 / +0,65, P = 0,24 | `INFORME_T_MULTI.md`, paquete v2 |
+26:| E1-P1 | trend_following del bot (BTC 1 h, solo largos) | DESCARTADA (en contra) | −0,237 %/op., IC90 −0,341 / −0,135; p_nulo 0,45 | `experimentos/E1_bot_datos_reales_2026-10-19/` |
+27: 
+----
+2026-10-26T19:33:46.034Z CMD Bash 
+ D=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/packages/tia/src/tia; grep -rn -i 'advisory\|pg_try_advisory\|single.instance\|instance lock\|fcntl\|flock\|lease\|another session\|already running\|concurrent' $D --include=*.py | grep -v '^.*#' | head -30 
+----
+2026-10-26T19:33:47.953Z OUT  
+ /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/packages/tia/src/tia/backtest/holdout.py:187:        other's once it holds the lock. The lock is advisory and POSIX; where it is not
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/packages/tia/src/tia/backtest/holdout.py:193:                import fcntl
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/packages/tia/src/tia/backtest/holdout.py:195:                fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/packages/tia/src/tia/backtest/holdout.py:205:                    import fcntl
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/packages/tia/src/tia/backtest/holdout.py:207:                    fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/packages/tia/src/tia/backtest/engine.py:24:portfolio-level interactions between concurrent positions are out of scope here. Every
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_co 
+----
+2026-10-26T19:33:51.655Z CMD Bash 
+ D=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/packages/tia/src/tia; sed -n 100,180p $D/runtime/session_limits.py; grep -rn 'resume_decision\|lease_is_held\|def resume_interrupted\|resumes on boot' $D/api/state.py | head 
+----
+2026-10-26T19:33:52.373Z OUT  
+     raw = payload.get(HEARTBEAT_KEY)
+    if not raw:
+        return None
+    try:
+        value = datetime.fromisoformat(str(raw).replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if value.tzinfo is None:
+        value = value.replace(tzinfo=UTC)
+    return value.astimezone(UTC)
+
+
+def lease_age_seconds(notes: str | None, *, now: datetime) -> float | None:
+    """Seconds since the run's last heartbeat, or ``None`` when it never had one."""
+    beat = decode_heartbeat(notes)
+    if beat is None:
+        return None
+    return (ensure_utc(now) - beat).total_seconds()
+
+
+def lease_is_held(notes: str | None, *, now: datetime, lease_seconds: float = LEASE_SECONDS) -> bool:
+    """Whether another process is, by its heartbeat, still running this run. A heartbeat
+    from the future (a clock ahead of ours) also counts as held: it was written recently."""
+    age = lease_age_seconds(notes, now=now)
+    return age is not None and age < lease_seconds
+
+
+@dataclass(frozen=True)
+class ResumeDecision:
+    resume: bool
+    reason: str
+    deadline: datetime | None = None
+    #: True when the run is not resumed because another process is still running it
+    #: (its heartbeat is fresh). The caller must then leave the row unstamped.
+    held_by_other: bool = False
+
+    def as_dict(self) -> dict[str, Any]:
+        return {
+            "resume": self.resume,
+            "reason": self.reason,
+            "deadline": self.deadline.isoformat() if self.deadline else None,
+        
+----
+2026-10-26T19:33:56.565Z CMD Bash 
+ D=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/packages/tia/src/tia; sed -n 2585,2640p $D/api/state.py 
+----
+2026-10-26T19:33:57.267Z OUT  
+             await runtime.start()
+        except Exception as exc:
+            await close_feed()
+            with contextlib.suppress(Exception):
+                async with self.database.session() as session:
+                    await RunRepository(session).stop(runtime.run_id, datetime.now(UTC))
+                    await RunRepository(session).annotate(
+                        runtime.run_id, f"start_failed: {str(exc)[:300]}"
+                    )
+            raise
+        return orphaned
+
+    async def _foreign_session_lease(self, *, mode: str) -> tuple[str, float] | None:
+        """``(run_id, heartbeat age)`` of an open run of ``mode`` another process is still
+        running — its heartbeat is younger than the lease — or ``None`` (Phase 1.3, G9).
+        The session this process runs, if any, is not foreign."""
+        from tia.runtime.session_limits import lease_age_seconds, lease_is_held
+
+        own = self.live_runtime.run_id if self.live_runtime is not None else None
+        now = datetime.now(UTC)
+        try:
+            async with self.database.session() as session:
+                rows = await RunRepository(session).open_sessions(mode=mode)
+        except Exception as exc:
+            _log.warning("session_lease_check_failed", error=str(exc)[:300])
+            return None
+        for run_id, notes in rows:
+            if run_id == own:
+                continue
+            if lease_is_held(notes, now=now):
+                return run_id, float(lease_age_seconds(no 
+----
+2026-10-26T19:34:05.302Z CMD Bash 
+ D=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/packages/tia/src/tia; grep -n '_foreign_session_lease' $D/api/state.py; for n in $(grep -n '_foreign_session_lease(' $D/api/state.py | grep -v 'async def' | cut -d: -f1); do sed -n "$((n-12)),$((n+14))p" $D/api/state.py; echo -----; done 
+----
+2026-10-26T19:34:06.003Z OUT  
+ 2417:        held = await self._foreign_session_lease(mode="paper-live")
+2597:    async def _foreign_session_lease(self, *, mode: str) -> tuple[str, float] | None:
+        from tia.domain.instruments import DEFAULT_UNIVERSE
+        from tia.execution.paper import PaperExecutionProvider
+        from tia.runtime.live import LiveRuntime
+        from tia.runtime.session_limits import encode_session_notes
+
+        if self.live_runtime is not None and self.live_runtime.is_running:
+            raise LiveActivationError(
+                "a realtime session is already active; stop it before starting another"
+            )
+        # Another *process* over the same store (a second container, a stale deploy): its
+        # run row carries a fresh heartbeat. Two sessions over one account is the F5 race
+        # across processes, and the lock above cannot see it (Phase 1.3, G9).
+        held = await self._foreign_session_lease(mode="paper-live")
+        if held is not None:
+            run_id, age = held
+            raise LiveActivationError(
+                f"another process holds an active paper session (run {run_id}, heartbeat "
+                f"{age:.0f}s ago); stop it before starting another"
+            )
+
+        clock = SystemClock()
+        # Mainnet public data on purpose, whatever use_testnet says: paper's execution
+        # is simulated, and a track record needs real spreads, not testnet's thin market.
+        rest = BinancePublicProvider(base_url=self.settings.live.public_d 
+----
+2026-10-26T19:34:10.177Z CMD Bash 
+ D=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/packages/tia/src/tia; grep -n 'already active\|async def start_live\|async def start_paper\|async def start_realtime\|async def arm_live\|def _start_live\|mode="live"\|mode=.live' $D/api/state.py | head -20 
+----
+2026-10-26T19:34:10.883Z OUT  
+ 94:        #: both pass the "already active" check and build two runtimes over one account.
+262:        Two concurrent requests cannot both pass the "already active" check: the second
+269:            raise ValueError("a run is already active; stop it before starting another")
+1802:            raise ValueError("a training run is already active")
+2165:    async def arm_live(self, *, operator: str, confirmation: str) -> dict[str, Any]:
+2191:                "a live session is already active; stop it before arming another"
+2245:                mode="live",
+2364:    async def start_paper_realtime(
+2373:        "already active" check: the second waits and is refused."""
+2412:                "a realtime session is already active; stop it before starting another" 
+----
+2026-10-26T19:34:13.572Z CMD Bash 
+ D=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/packages/tia/src/tia; sed -n 2165,2260p $D/api/state.py 
+----
+2026-10-26T19:34:14.258Z OUT  
+     async def arm_live(self, *, operator: str, confirmation: str) -> dict[str, Any]:
+        """Arm under the session lock — see :meth:`_arm_live_locked`."""
+        async with self._session_lock:
+            return await self._arm_live_locked(operator=operator, confirmation=confirmation)
+
+    async def _arm_live_locked(self, *, operator: str, confirmation: str) -> dict[str, Any]:
+        """Arm, then actually start the live runtime — and report only what happened.
+
+        Every attempt is persisted, pass or fail, with the report that decided it. On a
+        passed gate the runtime is constructed and started; LIVE is reported active only
+        if the state machine reached RUNNING. A minted token whose runtime failed to
+        start is recorded as exactly that and discarded.
+        """
+        from tia.api.gate_probes import build_probes
+        from tia.core.clock import SystemClock
+        from tia.core.errors import LiveActivationError
+        from tia.core.ids import new_ulid
+        from tia.live.gate import LiveActivationGate, configuration_fingerprint
+
+        if not self.settings.live.enabled:
+            raise PermissionError(
+                "the live path is disabled in configuration. Enable it deliberately with "
+                "TIA_LIVE__ENABLED=true after every activation check passes."
+            )
+        if self.live_runtime is not None and self.live_runtime.is_running:
+            raise LiveActivationError(
+                "a live session is already a 
+----
+2026-10-26T19:34:20.174Z CMD Bash 
+ D=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/packages/tia/src/tia; grep -n 'open_sessions\|lease\|heartbeat\|SINGLE\|another process\|foreign' $D/api/gate_probes.py $D/live/gate.py | head -20; grep -n 'class CheckName' -A40 $D/live/gate.py | grep '=' | head -40 
+----
+2026-10-26T19:34:20.866Z OUT  
+ /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/packages/tia/src/tia/api/gate_probes.py:418:                "resolve the cause and release the halt deliberately",
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/packages/tia/src/tia/api/gate_probes.py:434:            "resolve the cause and release the halt deliberately",
+79-    TESTS_PASS = "tests_pass"  # noqa: S105 - a check name, not a credential
+80-    MIGRATIONS_CURRENT = "migrations_current"
+81-    MARKET_DATA_HEALTHY = "market_data_healthy"
+82-    VENUE_CONNECTED = "venue_connected"
+83-    VENUE_VALIDATION = "venue_validation"
+84-    VALIDATION_FRESH = "validation_fresh"
+85-    CLOCK_SKEW_OK = "clock_skew_ok"
+86-    USER_DATA_STREAM = "user_data_stream"
+87-    DATABASE_HEALTHY = "database_healthy"
+88-    EXECUTION_HEALTHY = "execution_healthy"
+89-    ORDER_IDEMPOTENCY = "order_idempotency"
+90-    RISK_ENGINE_HEALTHY = "risk_engine_healthy"
+91-    RECONCILIATION_HEALTHY = "reconciliation_healthy"
+92-    CAPITAL_LEDGER_READY = "capital_ledger_ready"
+93-    EDGE_PERSISTENCE = "edge_persistence"
+94-    EV_ENFORCEMENT = "ev_enforcement"
+95-    SECURITY_REVIEW = "security_review"
+96-    CONFIGURATION_COHERENT = "configuration_coherent"
+97-    OBSERVABILITY = "observability"
+98-    FEES_VERIFIED_AT_SOURCE = "fees_verified_at_source"
+99-    CAPITAL_POLICY_SET = "capita 
+----
+2026-10-26T19:34:35.245Z CMD Bash 
+ D=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev; grep -rln 'another process holds\|_foreign_session_lease\|held_by_other\|heartbeat .*ago' $D/tests | head; grep -rn 'def test.*arm_live\|arm_live(' $D/tests --include=*.py | head -10 
+----
+2026-10-26T19:34:37.813Z OUT  
+ /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/tests/integration/test_run_lifecycle.py
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/tests/integration/__pycache__/test_session_lease.cpython-311-pytest-9.1.1.pyc
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/tests/integration/__pycache__/test_run_lifecycle.cpython-311-pytest-9.1.1.pyc
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/tests/integration/test_session_lease.py
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/tests/unit/test_session_lease.py
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/tests/integration/test_mandatory_contracts.py:390:            await state.arm_live(operator="elian", confirmation=CONFIRMATION_PHRASE)
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/tests/integration/test_mandatory_contracts.py:411:        result = await state.arm_live(operator="elian", confirmation=CONFIRMATION_PHRASE)
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a 
+----
+2026-10-26T19:34:40.726Z CMD Bash 
+ D=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev; sed -n 1,80p $D/tests/integration/test_session_lease.py; sed -n 380,470p $D/tests/integration/test_mandatory_contracts.py 
+----
+2026-10-26T19:34:41.584Z OUT  
+ """One session per account across *processes* (Phase 1.3, G9).
+
+The application lock closes the F5 race inside one process. A second container over the
+same store, or a stale deploy still running, is invisible to it; what makes it visible is
+the heartbeat the running session stamps into its run row. These tests drive ``AppState``
+over a temporary store and write the "other process" heartbeat by hand.
+"""
+
+from __future__ import annotations
+
+import asyncio
+from datetime import UTC, datetime, timedelta
+from pathlib import Path
+from typing import Any
+
+import pytest
+from sqlalchemy import text
+
+from tests.integration.test_live_api import _FakePublicFeed, _settings
+from tia.api.state import AppState
+from tia.core.errors import LiveActivationError
+from tia.persistence import RunRepository
+from tia.runtime.session_limits import LEASE_SECONDS, decode_heartbeat, encode_heartbeat
+
+
+@pytest.fixture(autouse=True)
+def _feed(monkeypatch: pytest.MonkeyPatch) -> None:
+    import tia.data.providers.binance_public as binance_public
+
+    monkeypatch.setattr(binance_public, "BinancePublicProvider", _FakePublicFeed)
+
+
+async def _state(tmp_path: Path, *, probe_seconds: float = 0.05) -> AppState:
+    state = AppState(_settings(tmp_path))
+    state._lease_probe_seconds = probe_seconds
+    alerts: list[dict[str, Any]] = []
+    state._dispatch_alert = alerts.append  # type: ignore[method-assign]
+    state._alerts = alerts  # type: ignore[attr-defined]
+    return state
+
+
+async def _other_process_row(st 
+----
+2026-10-26T19:34:44.394Z CMD Bash 
+ D=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev; grep -n 'async def _armed_state' -A45 $D/tests/integration/test_mandatory_contracts.py | head -60 
+----
+2026-10-26T19:34:45.145Z OUT  
+ 328:async def _armed_state(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, *, start_ok: bool):  # type: ignore[no-untyped-def]
+329-    """An AppState whose gate passes and whose runtime start is scripted.
+330-
+331-    The gate itself is exercised for real elsewhere; what this fixture isolates is the
+332-    *arm flow*: persistence of the attempt, the runtime start requirement, and the audit
+333-    row — which need a passing gate to be reachable at all.
+334-    """
+335-    from tia.api.state import AppState
+336-    from tia.live.gate import REQUIRED_CHECKS, passing
+337-
+338-    settings = settings_for_env(Environment.TESTING).model_copy(
+339-        update={
+340-            "database_url": f"sqlite+aiosqlite:///{tmp_path / 'arm.db'}",
+341-            "live": LiveConfig(enabled=True, max_live_capital=100.0),
+342-        }
+343-    )
+344-    state = AppState(settings)
+345-    await state.startup()
+346-
+347-    import tia.api.gate_probes as probes
+348-
+349-    monkeypatch.setattr(
+350-        probes,
+351-        "build_probes",
+352-        lambda *_a, **_k: {n: passing(n, "scripted green") for n in REQUIRED_CHECKS},
+353-    )
+354-    import tia.api.state as state_module
+355-
+356-    monkeypatch.setattr(
+357-        state_module.AppState,
+358-        "_build_live_runtime",
+359-        lambda self, token: _fake_builder(start_ok),
+360-    )
+361-    return state
+362-
+363-
+364-async def _fake_builder(start_ok: bool):  # type: ignore[no-untyped-def]
+365-    if not start_ok:
+366-       
+----
+2026-10-26T19:35:04.454Z CMD Write 
+ """One live session per account across processes — and no session on an unverifiable store.
+
+The paper path refuses to start while another process heartbeats an open paper run
+(Phase 1.3, G9). The live path had no such check: ``arm_live`` only asked whether *this*
+process already ran a session, so a second container over the same store and the same
+exchange account could arm a second live session — two runtimes sending entries and
+stops for one account. And the check itself failed open: when the store could not be
+read it answered "no other process", and the start went ahead.
+
+Expected outcomes, fixed before running: with another process's open live run carrying a
+fresh heartbeat, arming is refused and nothing is started; a stale heartbeat does not
+block; and when the store cannot be read, a paper start is refused rather than assumed
+alone.
+"""
+
+from __future__ import annotations
+
+from datetime import UTC, datetime, timedelta
+from pathlib import Path
+
+import pytest
+
+from tests.integration.test_mandatory_contracts import _armed_state
+from tia.core.errors import LiveActivationError
+from tia.persistence import RunRepository
+from tia.runtime.session_limits import LEASE_SECONDS, encode_heartbeat
+
+
+async def _other_process_live_run(state, *, beat_age_seconds: float) -> None:  # type: ignore[no-untyped-def]
+    now = datetime.now(UTC)
+    async with state.database.session() as session:
+        await RunRepository(session).create(
+            run_id="run_other_live", mode="live", sce 
+----
+2026-10-26T19:35:04.475Z OUT  
+ File created successfully at: /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/tests/integration/test_live_session_lease.py (file state is current in your context — no need to Read it back) 
+----
+2026-10-26T19:35:07.121Z CMD Bash 
+ D=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev; grep -n 'async def start_paper_realtime' -A8 $D/packages/tia/src/tia/api/state.py | head -10; cd $D && PYTHONPATH=packages/tia/src timeout 600 ../../venv/bin/python -m pytest -q -p no:cacheprovider -rA tests/integration/test_live_session_lease.py 2>&1 | grep -E '^(PASSED|FAILED|ERROR)|^E  ' | head -12 
+----
+2026-10-26T19:35:20.462Z OUT  
+ 2364:    async def start_paper_realtime(
+2365-        self,
+2366-        *,
+2367-        actor: str,
+2368-        max_duration_hours: float | None = None,
+2369-        session_deadline: datetime | None = None,
+2370-    ) -> dict[str, Any]:
+2371-        """Start a 24/7 paper-realtime session under the session lock — see
+2372-        :meth:`_start_paper_realtime_locked`. Two concurrent requests cannot both pass the
+E           Failed: DID NOT RAISE LiveActivationError
+E       AssertionError: a test tried a real HTTP request to https://api.binance.com/api/v3/time; use httpx.MockTransport, httpx.ASGITransport or a fake provider
+PASSED tests/integration/test_live_session_lease.py::test_a_stale_live_heartbeat_does_not_block_arming
+FAILED tests/integration/test_live_session_lease.py::test_arming_is_refused_while_another_process_heartbeats_a_live_session
+FAILED tests/integration/test_live_session_lease.py::test_a_store_that_cannot_be_read_refuses_the_start_instead_of_assuming_it_is_alone
+Shell cwd was reset to /home/user/Trader-IA 
+----
+2026-10-26T19:35:29.834Z CMD Bash 
+ D=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev; python3 - $D/tests/integration/test_live_session_lease.py <<'EOF'
+import sys
+from pathlib import Path
+p = Path(sys.argv[1]); s = p.read_text()
+s = s.replace('''from tests.integration.test_mandatory_contracts import _armed_state
+''', '''from tests.integration.test_live_api import _FakePublicFeed
+from tests.integration.test_mandatory_contracts import _armed_state
+''')
+s = s.replace('''async def _other_process_live_run(''', '''@pytest.fixture(autouse=True)
+def _feed(monkeypatch: pytest.MonkeyPatch) -> None:
+    import tia.data.providers.binance_public as binance_public
+
+    monkeypatch.setattr(binance_public, "BinancePublicProvider", _FakePublicFeed)
+
+
+async def _other_process_live_run(''')
+p.write_text(s)
+EOF
+cd $D && PYTHONPATH=packages/tia/src timeout 600 ../../venv/bin/python -m pytest -q -p no:cacheprovider -rA tests/integration/test_live_session_lease.py 2>&1 | grep -E '^(PASSED|FAILED|ERROR)|^E  ' | head -12 | tee /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/logs/TI/B1_SIN_correccion_lease_vivo.txt 
+----
+2026-10-26T19:35:34.032Z OUT  
+ E           Failed: DID NOT RAISE LiveActivationError
+E           Failed: DID NOT RAISE LiveActivationError
+PASSED tests/integration/test_live_session_lease.py::test_a_stale_live_heartbeat_does_not_block_arming
+FAILED tests/integration/test_live_session_lease.py::test_arming_is_refused_while_another_process_heartbeats_a_live_session
+FAILED tests/integration/test_live_session_lease.py::test_a_store_that_cannot_be_read_refuses_the_start_instead_of_assuming_it_is_alone
+Shell cwd was reset to /home/user/Trader-IA 
+----
+2026-10-26T19:35:40.122Z CMD Edit 
+ /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/packages/tia/src/tia/api/state.py 
+----
+2026-10-26T19:35:40.166Z OUT  
+ The file /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/packages/tia/src/tia/api/state.py has been updated successfully. 
+----
+2026-10-26T19:35:45.289Z CMD Edit 
+ /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/packages/tia/src/tia/api/state.py 
+----
+2026-10-26T19:35:45.315Z OUT  
+ The file /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/packages/tia/src/tia/api/state.py has been updated successfully. 
+----
+2026-10-26T19:35:53.381Z CMD Bash 
+ D=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev; cd $D && PYTHONPATH=packages/tia/src timeout 900 ../../venv/bin/python -m pytest -q -p no:cacheprovider tests/integration/test_live_session_lease.py tests/integration/test_session_lease.py tests/unit/test_session_lease.py tests/integration/test_mandatory_contracts.py tests/integration/test_run_lifecycle.py tests/integration/test_live_api.py 2>&1 | tail -3 | tee /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/logs/TI/B1_CON_correccion.txt; PATH=$D/../../venv/bin:/usr/bin:/bin ruff check packages tests --no-cache | tail -1 
+----
+2026-10-26T19:36:37.206Z OUT  
+ ........................................................................ [ 80%]
+..................                                                       [100%]
+All checks passed!
+Shell cwd was reset to /home/user/Trader-IA 
+----
+2026-10-26T19:36:43.048Z CMD Bash 
+ D=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/packages/tia/src/tia; grep -n 'async def get_portfolio\|async def get_positions\|commissionAsset\|commission\|free\b\|"free"\|locked' $D/data/providers/binance_live.py | head -40 
+----
+2026-10-26T19:36:44.347Z OUT  
+ 168:                    "documentation and never exercised — every Binance host was blocked in "
+521:                return float(entry.get("free", 0.0))
+524:    async def get_positions(self) -> dict[str, Position]:
+537:            quantity = float(entry.get("free", 0.0)) + float(entry.get("locked", 0.0))
+575:    async def get_portfolio(self) -> PortfolioState:
+608:        """Every asset with a free or locked amount, as the venue reports it.
+618:            free = float(entry.get("free", 0.0) or 0.0)
+619:            locked = float(entry.get("locked", 0.0) or 0.0)
+620:            if asset and (free > 0 or locked > 0):
+621:                out[asset] = AccountBalance(asset=asset, free=free, locked=locked)
+714:            order.fees_paid += float(row.get("commission", 0.0) or 0.0)
+734:            fee=float(row.get("commission", 0.0) or 0.0),
+735:            fee_asset=str(row.get("commissionAsset", "") or ""),
+749:            fee=float(row.get("commission", 0.0) or 0.0),
+750:            fee_asset=str(row.get("commissionAsset", "") or ""), 
+----
+2026-10-26T19:36:46.837Z CMD Bash 
+ D=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/packages/tia/src/tia; sed -n 524,606p $D/data/providers/binance_live.py 
+----
+2026-10-26T19:36:47.612Z OUT  
+     async def get_positions(self) -> dict[str, Position]:
+        """Spot holdings, expressed as positions.
+
+        Spot has no position concept — it has balances — so a non-zero base-asset balance
+        is reported as a long. There is no short: this adapter does not touch margin, and
+        the risk engine's sizing assumes it cannot.
+        """
+        payload = await self._signed_get(_ACCOUNT_PATH, {})
+        positions: dict[str, Position] = {}
+        for entry in payload.get("balances", []):
+            asset = entry.get("asset", "")
+            if asset == self._quote_asset:
+                continue
+            quantity = float(entry.get("free", 0.0)) + float(entry.get("locked", 0.0))
+            if quantity <= 0:
+                continue
+            symbol = f"{asset}-USD" if self._quote_asset == "USDT" else f"{asset}-{self._quote_asset}"
+            positions[symbol] = Position(symbol=symbol, quantity=quantity, average_price=0.0)
+        return positions
+
+    async def get_trades(self, *, limit: int = 100, symbol: str | None = None) -> list[Fill]:
+        """Executed trades, read back from the venue rather than remembered.
+
+        REQUIRES VALIDATION: ``myTrades`` requires a symbol, so this returns trades for the
+        symbols this adapter has orders for, or for ``symbol`` alone when one is named (a
+        consumer that must see trades *before* it has placed anything, such as a
+        reconciliation at start, names the symbol it is about to trade). A symbol  
+----
+2026-10-26T19:37:00.055Z CMD Bash 
+ D=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/packages/tia/src/tia; grep -n -i 'dust\|pre-existing\|preexisting\|baseline\|dedicated\|sub-account\|subaccount\|not the session.s\|foreign holding\|holdings the session' $D/runtime/live.py $D/api/gate_probes.py $D/live/gate.py | head -20 
+----
+2026-10-26T19:37:00.790Z OUT  
+ /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/packages/tia/src/tia/runtime/live.py:2054:        # Throttled on wall time, not the session's clock: a replayed or simulated clock
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/packages/tia/src/tia/runtime/live.py:2836:            # Filled to within one lot. What is left is dust no venue can fill; the order
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/packages/tia/src/tia/runtime/live.py:2839:            if await self._cancel(order.client_order_id or order.order_id, purpose="dust residue") is None: 
+----
+2026-10-26T19:37:04.410Z CMD Bash 
+ D=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/packages/tia/src/tia; grep -n 'CREDENTIALS_SCOPED\|CAPITAL_LEDGER_READY\|RESTART_RECOVERY' -A3 $D/live/gate.py | grep -v '^--' | head -24; grep -n 'def _capital_ledger\|def _credentials\|def _reconciliation' -A30 $D/api/gate_probes.py | grep -i 'position\|holding\|balance\|flat\|account' | head -20 
+----
+2026-10-26T19:37:05.123Z OUT  
+ 92:    CAPITAL_LEDGER_READY = "capital_ledger_ready"
+93-    EDGE_PERSISTENCE = "edge_persistence"
+94-    EV_ENFORCEMENT = "ev_enforcement"
+95-    SECURITY_REVIEW = "security_review"
+102:    RESTART_RECOVERY = "restart_recovery"
+103:    CREDENTIALS_SCOPED = "credentials_scoped"
+104-    EDGE_EVIDENCE = "edge_evidence"
+105-    PAPER_TRACK_RECORD = "paper_track_record"
+106-
+155:    CheckName.CREDENTIALS_SCOPED: (
+156-        "The API key must have trading permission and must NOT have withdrawal or transfer "
+157-        "permission. This is checked against the venue, not assumed from configuration."
+158-    ),
+194:    CheckName.CAPITAL_LEDGER_READY: (
+195-        "The capital ledger is what keeps a deposit from being booked as profit and an "
+196-        "unexplained balance from being traded against. Live cannot start without it "
+197-        "wired and unhalted."
+221:    CheckName.RESTART_RECOVERY: (
+222-        "A crash mid-session must be recoverable: state reloaded, orders deduplicated, "
+223-        "books reconciled. Proven by the restart-recovery test having passed, not by "
+224-        "intention."
+503-        "ledger wired into the live runtime; balance drift is classified, never absorbed",
+697-            "run `python scripts/validate_binance.py --account`; until then the system "
+714-            "re-run `python scripts/validate_binance.py --account` (current versions " 
+----
+2026-10-26T19:37:14.053Z CMD Bash 
+ D=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/packages/tia/src/tia; sed -n 1255,1300p $D/runtime/live.py 
+----
+2026-10-26T19:37:15.069Z OUT  
+                 note = (
+                    f"paper-realtime start: simulated balance {balance}"
+                    + (
+                        f" (of which {self._prior_realised:+.2f} is realised P&L carried "
+                        "from the record)"
+                        if self._prior_realised
+                        else ""
+                    )
+                )
+            if allocation <= 0 or wiped:
+                raise LiveActivationError(
+                    f"venue balance {balance} funds no allocation under the ceiling "
+                    f"{self._settings.live.max_live_capital}; nothing to trade with"
+                    + (
+                        " — the simulated account is wiped out; reset it to continue"
+                        if not self._execution.is_live and wiped
+                        else ""
+                    )
+                )
+            self._ledger.allocate(allocation, at=self._clock.now(), note=note)
+            if abs(carried) > 1e-12:
+                self._ledger.record_realised_pnl(carried, at=self._clock.now())
+            self._peak_equity = allocation + carried
+        except Exception as exc:
+            self.last_error = str(exc)[:500]
+            self.machine.transition(LiveState.STOPPING, reason=f"startup failed: {exc}")
+            self.machine.transition(LiveState.ERROR, reason="startup validation failed")
+            self._incident("startup_failed", reason=str(exc)[:500])
+            raise
+
+        if self._session_deadl 
+----
+2026-10-26T19:37:22.036Z CMD Bash 
+ D=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev; grep -n 'class FakeExecution' -A60 $D/tests/integration/test_live_runtime.py | grep -n 'def \|self.positions\|self._positions\|portfolio' | head -20 
+----
+2026-10-26T19:37:22.767Z OUT  
+ 4:84-    def __init__(
+22:102-        self.positions: dict[str, Position] = {}
+37:117-    async def submit_order(self, intent: OrderIntent) -> Order: 
+----
+2026-10-26T19:37:29.383Z CMD Bash 
+ M=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25; mkdir -p $M/trabajo/sonda && cat > $M/trabajo/sonda/sonda_saldo_ajeno.py <<'EOF'
+"""Sonda: una cuenta que ya tiene BTC que la sesión no compró. ¿Qué hace la sesión?"""
+import asyncio
+import sys
+from pathlib import Path
+
+arbol = Path(sys.argv[1])
+sys.path[:0] = [str(arbol / "packages/tia/src"), str(arbol)]
+from tests.integration.test_live_runtime import FakeExecution, build_runtime  # noqa: E402
+from tia.domain.portfolio import Position  # noqa: E402
+
+
+async def main():
+    execution = FakeExecution()
+    runtime, _, market = build_runtime(execution=execution)
+    execution.positions["BTC-USD"] = Position(symbol="BTC-USD", quantity=0.5, average_price=0.0)
+    await runtime.start()
+    for _ in range(5):
+        market.advance()
+        await runtime._cycle_once()
+    orders = [(o.side.value, o.order_type.value, o.quantity) for o in execution._orders.values()] if hasattr(execution, "_orders") else "n/a"
+    print("estado", runtime.machine.state.value, "| bloqueos", dict(runtime.entry_blocks), "| incidentes/errores", runtime.last_error[:200])
+    print("órdenes enviadas", orders, "| envíos", execution.submissions)
+    print("posición vista por la sesión", runtime._open_trade)
+    await runtime.stop()
+
+asyncio.run(main())
+EOF
+grep -n 'class Position' $M/trabajo/dev/packages/tia/src/tia/domain/*.py | head -3 
+----
+2026-10-26T19:37:30.714Z OUT  
+ /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/packages/tia/src/tia/domain/portfolio.py:31:class Position(BaseModel):
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/packages/tia/src/tia/domain/risk.py:37:class PositionSizing(BaseModel): 
+----
+2026-10-26T19:37:33.567Z CMD Bash 
+ M=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25; cd $M/trabajo/sonda && timeout 300 $M/venv/bin/python -I sonda_saldo_ajeno.py $M/trabajo/dev 2>&1 | grep -v '^\s*$' | tail -8 
+----
+2026-10-26T19:37:34.912Z OUT  
+ 2026-10-26 19:37:34 [warning  ] entries_blocked                cause=position_unverified component=runtime.live reason='the venue holds 0.5 BTC-USD this session is not tracking'
+estado halt_new_orders | bloqueos {'position_unverified': 'the venue holds 0.5 BTC-USD this session is not tracking'} | incidentes/errores 
+órdenes enviadas n/a | envíos 0
+posición vista por la sesión None
+Shell cwd was reset to /home/user/Trader-IA 
+----
+2026-10-26T19:37:43.391Z CMD Bash 
+ M=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25; cd $M/trabajo/sonda && sed 's/quantity=0.5, average_price/quantity=0.0000004, average_price/' sonda_saldo_ajeno.py > sonda_dust.py && timeout 300 $M/venv/bin/python -I sonda_dust.py $M/trabajo/dev 2>&1 | grep -v '^\s*$' | tail -4; grep -n 'this session is not tracking' -B25 $M/trabajo/dev/packages/tia/src/tia/runtime/live.py | grep -n 'lot\|dust\|min_qty\|step\|tolerance\|abs(' | head 
+----
+2026-10-26T19:37:45.522Z OUT  
+ 2026-10-26 19:37:45 [warning  ] entries_blocked                cause=position_unverified component=runtime.live reason='the venue holds 4e-07 BTC-USD this session is not tracking'
+estado halt_new_orders | bloqueos {'position_unverified': 'the venue holds 4e-07 BTC-USD this session is not tracking'} | incidentes/errores 
+órdenes enviadas n/a | envíos 0
+posición vista por la sesión None
+Shell cwd was reset to /home/user/Trader-IA 
+----
+2026-10-26T19:38:02.377Z CMD Bash 
+ D=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/packages/tia/src/tia; grep -n 'this session is not tracking' $D/runtime/live.py; n=$(grep -n 'this session is not tracking' $D/runtime/live.py | head -1 | cut -d: -f1); sed -n "$((n-45)),$((n+12))p" $D/runtime/live.py; grep -n 'def is_flat' -A4 $D/domain/portfolio.py 
+----
+2026-10-26T19:38:03.140Z OUT  
+ 3452:                f"the venue holds {position.quantity} {self._symbol} this session is not tracking",
+            best_price=self._best_price or candle.close,
+            last_close=candle.close,
+            atr=self._last_atr,
+            breakeven_after_r=cfg.breakeven_after_r,
+            trail_atr_multiple=cfg.trail_atr_multiple,
+            fee_buffer_bps=self._costs.fees.round_trip_bps(entry_maker=self.entry_is_limit),
+        )
+        if update is None:
+            return
+        self._planned_exit["stop"] = update.stop_price
+        self._planned_exit["kind"] = update.kind
+        self.counters["stops_tightened"] += 1
+        self._emit(
+            "live.stop_tightened",
+            {
+                "stop_price": update.stop_price,
+                "kind": update.kind,
+                "reason": update.reason,
+                "best_price": self._best_price,
+            },
+        )
+
+    async def _manage_position(self, candle: Candle) -> None:
+        """Every bar, for the open position: target, time stop, and exactly one stop.
+
+        The paper engine that produces the evidence protects every position with a stop
+        and closes on a reversal. A session that learned from those trades and then ran
+        without stops would be applying evidence from one game to a different one —
+        every loss unbounded where the estimator had seen them capped. So this mirrors
+        that discipline, in the same order the engine applies it.
+        """
+        await self 
+----
+2026-10-26T19:38:14.602Z CMD Bash 
+ D=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/packages/tia/src/tia; grep -n '_filters\[\|_filters.get\|self._filters =' $D/runtime/live.py | head -20; sed -n 2825,2845p $D/runtime/live.py; grep -n 'def filters_for' -A30 $D/execution/filters.py | head -40 
+----
+2026-10-26T19:38:15.310Z OUT  
+ 336:        self._filters = symbol_filters or {}
+761:        step = self._filters.get("step_size")
+2581:        tick = self._filters.get("tick_size")
+2616:        price_hint = float(self._filters.get("last_price", 0.0) or 0.0)
+3702:        tick = self._filters.get("tick_size")
+        signal priced has passed. If it was an *exit*, a market order follows at once:
+        a missed entry costs nothing, a missed exit is an open position nobody chose.
+        """
+        order = await self._poll_resting()
+        if order is None:
+            return
+        resting = self._resting
+        if resting is None:  # given up as lost while polling
+            return
+        lot = self._lot_size(order.symbol)
+        if order.filled_quantity > 0 and lot > 0 and order.remaining_quantity < lot:
+            # Filled to within one lot. What is left is dust no venue can fill; the order
+            # is done, not resting, and must not be counted as expired. It is still
+            # cancelled, and still tracked until the venue confirms the cancel.
+            if await self._cancel(order.client_order_id or order.order_id, purpose="dust residue") is None:
+                return
+            self._resting = None
+            return
+
+        waited = self.counters["bars"] - int(resting["placed_bar"])
+        if waited < self._settings.live.entry_limit_timeout_bars:
+99:def filters_for(
+100-    symbol: str,
+101-    universe: InstrumentUniverse,
+102-    venue: dict[str, Any] | None = None,
+103-) -> Ins 
+----
+2026-10-26T19:38:24.947Z CMD Bash 
+ D=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/packages/tia/src/tia; grep -n 'is_flat' $D/runtime/live.py; grep -n 'def _lot_size' -A12 $D/runtime/live.py 
+----
+2026-10-26T19:38:25.685Z OUT  
+ 1240:                flat = all(position.is_flat for position in portfolio.positions.values())
+1310:        if position is None or position.is_flat:
+1494:        flat = position is None or position.is_flat
+1726:            if position.is_flat:
+1814:        return 0.0 if position is None or position.is_flat else float(position.quantity)
+2199:        if position is not None and not position.is_flat:
+2931:        holding = position is not None and not position.is_flat
+3445:        holding = position is not None and not position.is_flat
+4070:        if position is None or position.is_flat:
+4095:        if position is None or position.is_flat:
+4119:        if position is None or position.is_flat:
+758:    def _lot_size(self, symbol: str) -> float:
+759-        """The smallest whole quantity for ``symbol``: the venue's step when filters are
+760-        loaded, the instrument's own lot otherwise, zero when neither is known."""
+761-        step = self._filters.get("step_size")
+762-        if step:
+763-            return float(step)
+764-        instrument = DEFAULT_UNIVERSE.get(symbol)
+765-        return float(instrument.lot_size) if instrument is not None else 0.0
+766-
+767-    def _apply_risk_restore(self, restore: RiskRestore) -> None:
+768-        self._risk_restore = restore
+769-        if not restore.complete:
+770-            self._blocks["risk_state"] = ( 
+----
+2026-10-26T19:38:30.780Z CMD Bash 
+ D=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/packages/tia/src/tia; for n in 1240 1310 1494 1726 1814 2199 2931 3445 4070 4095 4119; do echo "== $n: $(awk -v n=$n 'NR>=n-30 && NR<=n && /    (async )?def /{l=$0} END{print l}' $D/runtime/live.py)"; sed -n "$((n-2)),$((n+1))p" $D/runtime/live.py; done 2>/dev/null | cut -c1-150 
+----
+2026-10-26T19:38:31.558Z OUT  
+ == 1240: 
+                )
+                carried = book_value - allocation
+                flat = all(position.is_flat for position in portfolio.positions.values())
+                wiped = book_value <= 0 or (flat and float(balance) <= 0)
+== 1310:     async def _protect_restored_position(self) -> None:
+            return
+        position = portfolio.positions.get(self._symbol)
+        if position is None or position.is_flat:
+            return
+== 1494: 
+            return
+        position = portfolio.positions.get(self._symbol)
+        flat = position is None or position.is_flat
+
+== 1726:     async def emergency_flatten(self, *, reason: str, actor: str) -> dict[str, Any]:
+        closed: list[dict[str, Any]] = []
+        for symbol, position in positions.items():
+            if position.is_flat:
+                continue
+== 1814:     async def _held_quantity(self) -> float | None:
+            return None
+        position = portfolio.positions.get(self._symbol)
+        return 0.0 if position is None or position.is_flat else float(position.quantity)
+
+== 2199: 
+
+        position = portfolio.positions.get(self._symbol)
+        if position is not None and not position.is_flat:
+            # A position already open plus an approved signal the OTHER way is the system
+== 2931:     async def _settle_funding_locked(self, now: datetime) -> None:
+            return
+        position = portfolio.positions.get(self._symbol)
+        holding = position is not None and not position.is_flat
+  
+----
+2026-10-26T19:38:39.678Z CMD Bash 
+ D=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/packages/tia/src/tia; sed -n 1470,1520p $D/runtime/live.py; sed -n 2190,2215p $D/runtime/live.py 
+----
+2026-10-26T19:38:40.378Z OUT  
+         if self.machine.state is LiveState.RUNNING:
+            # Lifted by an operator or the watchdog after the deadline: put back. The
+            # deadline is not a halt a person may undo; ending the session is.
+            self.machine.transition(
+                LiveState.HALT_NEW_ORDERS, reason="session deadline stands", actor="session-deadline",
+            )
+        if self._resting is not None and not self._resting.get("reducing") and (
+            await self._cancel(
+                self._resting["client_order_id"] or self._resting["order_id"], purpose="deadline"
+            ) is not None
+        ):
+            # A resting entry the earlier cancel could not confirm, cancelled now.
+            self._resting = None
+            self.counters["deadline_cancelled"] += 1
+
+        try:
+            portfolio = await self._execution.get_portfolio()
+        except Exception as exc:
+            # The venue cannot be read: whether a position is open is unknown, and an
+            # unknown position is not abandoned. The halt stands; the loop keeps asking.
+            self.last_error = f"deadline: venue unreadable: {exc}"[:500]
+            return
+        position = portfolio.positions.get(self._symbol)
+        flat = position is None or position.is_flat
+
+        await self._poll_pending_exit()
+        if flat and self._open_trade is None and self._pending_exit is None:
+            await self._finish_session("session deadline reached; flat")
+            return
+
+        # The gr 
+----
+2026-10-26T19:39:00.328Z CMD Write 
+ """A remainder below one lot is dust, not a position the session must answer for.
+
+A spot venue that takes the buy commission in the base asset leaves the account holding
+less than the fill; the exit sells what the lot grid allows, and a remainder smaller than
+one lot stays behind — after almost every round trip. The session treated that remainder
+as a position nobody tracked: entries blocked and the session halted for new orders, an
+approved entry suppressed as "position already open", and a deadline that never found
+the session flat. No order can sell, protect or close a quantity below one lot, so nothing
+the session could do would ever clear it. (The paper engine charges fees in the quote
+asset, which is why no paper run ever showed this.)
+
+Expected outcomes, fixed before running: with a sub-lot remainder at the venue the session
+stays RUNNING with no entry block, takes an approved entry, and a deadline finds it flat;
+a holding of one lot or more that the session does not track still blocks and halts.
+"""
+
+from __future__ import annotations
+
+from datetime import timedelta
+
+from tia.domain.enums import Direction, MarketRegime
+from tia.domain.instruments import DEFAULT_UNIVERSE
+from tia.domain.portfolio import Position
+from tia.economics.expected_value import Outcome
+from tia.runtime.states import LiveState
+
+from .test_live_runtime import FakeExecution, build_runtime
+
+SYMBOL = "BTC-USD"
+LOT = float(DEFAULT_UNIVERSE.get(SYMBOL).lot_size)
+
+
+def _session_over(quantity: float):  
+----
+2026-10-26T19:39:00.354Z OUT  
+ File created successfully at: /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/tests/integration/test_dust_is_not_a_position.py (file state is current in your context — no need to Read it back) 
+----
+2026-10-26T19:39:04.199Z CMD Bash 
+ D=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev; cd $D && PYTHONPATH=packages/tia/src timeout 600 ../../venv/bin/python -m pytest -q -p no:cacheprovider -rA tests/integration/test_dust_is_not_a_position.py 2>&1 | grep -E '^(PASSED|FAILED|ERROR)|^E  ' | head -12 | tee /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/logs/TI/B2_SIN_correccion_dust.txt 
+----
+2026-10-26T19:39:09.019Z OUT  
+ E           AssertionError: assert 'position_unverified' not in {'position_unverified': 'the venue holds 2.5e-07 BTC-USD this session is not tracking'}
+E            +  where {'position_unverified': 'the venue holds 2.5e-07 BTC-USD this session is not tracking'} = <tia.runtime.live.LiveRuntime object at 0x7f20633758d0>.entry_blocks
+E           AssertionError: flat at the deadline: finished
+E           assert <LiveState.HALT_NEW_ORDERS: 'halt_new_orders'> in {<LiveState.STOPPED: 'stopped'>, <LiveState.STOPPING: 'stopping'>}
+E            +  where <LiveState.HALT_NEW_ORDERS: 'halt_new_orders'> = LiveStateMachine(clock=<tia.core.clock.SimulatedClock object at 0x7f2063627610>, state=<LiveState.HALT_NEW_ORDERS: 'ha...>, to_state=<LiveState.HALT_NEW_ORDERS: 'halt_new_orders'>, reason='untracked position at the venue', actor='system')]).state
+E            +    where LiveStateMachine(clock=<tia.core.clock.SimulatedClock object at 0x7f2063627610>, state=<LiveState.HALT_NEW_ORDERS: 'ha...>, to_state=<LiveState.HALT_NEW_ORDERS: 'halt_new_orders'>, reason='untracked position at the venue', actor='system')]) = <tia.runtime.live.LiveRuntime object at 0x7f20633a7390>.machine
+PASSED tests/integration/test_dust_is_not_a_position.py::test_an_untracked_holding_of_a_lot_or_more_still_blocks_and_halts
+FAILED tests/integration/test_dust_is_not_a_position.py::test_a_sub_lot_remainder_neither_blocks_nor_halts_and_an_entry_still_happens
+FAILED tests/integration/test_dust_is_not_a_position.py::test_a_de 
+----
+2026-10-26T19:39:20.550Z CMD Bash 
+ D=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/packages/tia/src/tia/runtime/live.py; cp $D /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/cadena_TI/live.py.L3_antes_dust; python3 - $D <<'EOF'
+import sys
+from pathlib import Path
+p = Path(sys.argv[1]); s = p.read_text()
+def rep(old, new, count=1):
+    global s
+    assert s.count(old) == count, (s.count(old), old[:80])
+    s = s.replace(old, new)
+rep('''        instrument = DEFAULT_UNIVERSE.get(symbol)
+        return float(instrument.lot_size) if instrument is not None else 0.0
+''', '''        instrument = DEFAULT_UNIVERSE.get(symbol)
+        return float(instrument.lot_size) if instrument is not None else 0.0
+
+    def _holds(self, position: Any) -> bool:
+        """Whether ``position`` is something the session must answer for: at least one lot.
+        Below that it is dust — a remainder no order can sell, protect or close, which a
+        spot venue that takes the buy commission in the base asset leaves behind almost
+        every round trip. Treated as a position, it blocked entries and halted the session
+        with nothing anyone could send to clear it."""
+        if position is None or position.is_flat:
+            return False
+        lot = self._lot_size(position.symbol)
+        return lot <= 0 or abs(position.quantity) >= lot - 1e-12
+''')
+# _protect_restored_p 
+----
+2026-10-26T19:39:21.327Z OUT  
+ 773:        if position is None or position.is_flat:
+1251:                flat = all(position.is_flat for position in portfolio.positions.values())
+2942:        holding = position is not None and not position.is_flat
+4081:        if position is None or position.is_flat:
+4106:        if position is None or position.is_flat:
+4130:        if position is None or position.is_flat: 
+----
+2026-10-26T19:39:25.895Z CMD Bash 
+ D=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/packages/tia/src/tia/runtime/live.py; sed -n 4070,4135p $D 
+----
+2026-10-26T19:39:27.001Z OUT  
+         Market on purpose: a close is the one order whose fill matters more than its
+        price. The reason travels with the round trip into the record. Returns whether
+        an exit was sent; nothing is sent while another exit is in flight, and nothing
+        is sent while the protective stop could not be confirmed cancelled — a market
+        close on top of a live stop is the same double fill by another route.
+        """
+        try:
+            portfolio = await self._execution.get_portfolio()
+        except Exception:
+            return False
+        position = portfolio.positions.get(self._symbol)
+        if position is None or position.is_flat:
+            return False
+        await self._poll_pending_exit()
+        if self._pending_exit is not None:
+            self.counters["exits_skipped_pending"] += 1
+            return False
+        if self._resting is not None:
+            cancelled = await self._cancel(
+                self._resting["client_order_id"] or self._resting["order_id"], purpose="close"
+            )
+            if cancelled is None:
+                return False
+            self._resting = None
+        if not await self._cancel_protective():
+            return False
+        # The cancels may have found the stop (or the resting entry) already filled, and
+        # those fills are booked by now: the position is read again, and the close is
+        # sized to what is held *after* them. A close sized to the earlier read would be
+        # the positi 
+----
+2026-10-26T19:39:34.291Z CMD Bash 
+ D=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/packages/tia/src/tia/runtime/live.py; python3 - $D <<'EOF'
+import sys
+from pathlib import Path
+p = Path(sys.argv[1]); s = p.read_text()
+old = '''        position = portfolio.positions.get(self._symbol)
+        if position is None or position.is_flat:
+            return False'''
+assert s.count(old) == 2
+s = s.replace(old, '''        position = portfolio.positions.get(self._symbol)
+        if not self._holds(position):
+            return False''')
+old = '''        position = portfolio.positions.get(self._symbol)
+        if position is None or position.is_flat:
+            return
+        if not self.machine.state.accepts_reducing_orders:'''
+assert s.count(old) == 1
+s = s.replace(old, '''        position = portfolio.positions.get(self._symbol)
+        if not self._holds(position):
+            return
+        if not self.machine.state.accepts_reducing_orders:''')
+p.write_text(s)
+EOF
+grep -n 'is_flat\|_holds(' $D | head -20; sed -n 768,778p $D 
+----
+2026-10-26T19:39:35.134Z OUT  
+ 767:    def _holds(self, position: Any) -> bool:
+773:        if position is None or position.is_flat:
+1251:                flat = all(position.is_flat for position in portfolio.positions.values())
+1321:        if not self._holds(position):
+1505:        flat = not self._holds(position)
+1737:            if not self._holds(position):
+1825:        return float(position.quantity) if self._holds(position) else 0.0
+2210:        if self._holds(position):
+2942:        holding = position is not None and not position.is_flat
+3456:        holding = self._holds(position)
+4081:        if not self._holds(position):
+4106:        if not self._holds(position):
+4130:        if not self._holds(position):
+        """Whether ``position`` is something the session must answer for: at least one lot.
+        Below that it is dust — a remainder no order can sell, protect or close, which a
+        spot venue that takes the buy commission in the base asset leaves behind almost
+        every round trip. Treated as a position, it blocked entries and halted the session
+        with nothing anyone could send to clear it."""
+        if position is None or position.is_flat:
+            return False
+        lot = self._lot_size(position.symbol)
+        return lot <= 0 or abs(position.quantity) >= lot - 1e-12
+
+    def _apply_risk_restore(self, restore: RiskRestore) -> None: 
+----
+2026-10-26T19:39:40.140Z CMD Bash 
+ D=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev; cd $D && PYTHONPATH=packages/tia/src timeout 600 ../../venv/bin/python -m pytest -q -p no:cacheprovider -rA tests/integration/test_dust_is_not_a_position.py 2>&1 | grep -E '^(PASSED|FAILED|ERROR)|^E  ' | head -8 | tee /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/logs/TI/B2_CON_correccion_dust.txt; PATH=$D/../../venv/bin:/usr/bin:/bin ruff check packages tests --no-cache | tail -1 
+----
+2026-10-26T19:39:42.691Z OUT  
+ PASSED tests/integration/test_dust_is_not_a_position.py::test_a_sub_lot_remainder_neither_blocks_nor_halts_and_an_entry_still_happens
+PASSED tests/integration/test_dust_is_not_a_position.py::test_a_deadline_finds_a_session_with_only_dust_flat
+PASSED tests/integration/test_dust_is_not_a_position.py::test_an_untracked_holding_of_a_lot_or_more_still_blocks_and_halts
+1 unsafe fix available with `--fix --unsafe-fixes`.
+Shell cwd was reset to /home/user/Trader-IA 
+----
+2026-10-26T19:39:45.487Z CMD Bash 
+ D=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev; cd $D && PATH=$D/../../venv/bin:/usr/bin:/bin ruff check packages tests --no-cache 2>&1 | head -20 
+----
+2026-10-26T19:39:46.289Z OUT  
+ RUF059 Unpacked variable `execution` is never used
+  --> tests/integration/test_dust_is_not_a_position.py:66:14
+   |
+65 | async def test_a_deadline_finds_a_session_with_only_dust_flat() -> None:
+66 |     runtime, execution, market = _session_over(LOT / 4)
+   |              ^^^^^^^^^
+67 |     await runtime.start()
+68 |     try:
+   |
+help: Prefix it with an underscore or any other dummy variable pattern
+   |
+65 | async def test_a_deadline_finds_a_session_with_only_dust_flat() -> None:
+   -     runtime, execution, market = _session_over(LOT / 4)
+66 +     runtime, _execution, market = _session_over(LOT / 4)
+67 |     await runtime.start()
+   |
+note: This is an unsafe fix and may change runtime behavior
+
+Found 1 error.
+1 unsafe fix available with `--fix --unsafe-fixes`.
+Shell cwd was reset to /home/user/Trader-IA 
+----
+2026-10-26T19:39:53.054Z CMD Bash 
+ D=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev; sed -i 's/^    runtime, execution, market = _session_over(LOT \/ 4)\n    await runtime.start()\n    try:\n        market.advance()/X/' $D/tests/integration/test_dust_is_not_a_position.py; python3 - $D/tests/integration/test_dust_is_not_a_position.py <<'EOF'
+import sys
+from pathlib import Path
+p = Path(sys.argv[1]); s = p.read_text()
+old = '''async def test_a_deadline_finds_a_session_with_only_dust_flat() -> None:
+    runtime, execution, market = _session_over(LOT / 4)'''
+assert s.count(old) == 1
+p.write_text(s.replace(old, '''async def test_a_deadline_finds_a_session_with_only_dust_flat() -> None:
+    runtime, _, market = _session_over(LOT / 4)'''))
+EOF
+cd $D && PATH=$D/../../venv/bin:/usr/bin:/bin ruff check packages tests --no-cache | tail -1; PYTHONPATH=packages/tia/src timeout 1500 ../../venv/bin/python -m pytest -q -p no:cacheprovider -x tests/integration/test_dust_is_not_a_position.py tests/integration/test_live_runtime.py tests/integration/test_live_position_protection.py tests/integration/test_order_integrity.py tests/integration/test_emergency_controls_protection.py tests/integration/test_protective_stop_contract.py tests/integration/test_session_deadline.py tests/integration/test_deadline_hardening.py tests/integration/test_runtime_invariants.py tests/integration/test_account_restore.py tests/integration/test_adverse_recovery.py tests/i 
+----
+2026-10-26T19:40:37.954Z OUT  
+ All checks passed!
+........................................................................ [ 80%]
+....................................                                     [100%]
+Shell cwd was reset to /home/user/Trader-IA
+[This command modified 1 file you've previously read: ../../../tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/dev/tests/integration/test_dust_is_not_a_position.py. Call Read before editing.] 
+----
+2026-10-26T19:40:43.766Z CMD TaskUpdate 
+  
+----
+2026-10-26T19:40:43.779Z OUT  
+ Updated task #121 status 
+----
+2026-10-26T19:40:44.478Z CMD Bash 
+ E=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3; ls $E/resultados/conciliacion_pasada1 $E/resultados/estructural; ls $E/datos_vision/data | head; ls $E/datos_vision/data/* | head -3; ls $E/protocolo 
+----
+2026-10-26T19:40:45.724Z OUT  
+ /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3/resultados/conciliacion_pasada1:
+conciliacion.json
+eventos.json
+fuera_del_universo.json
+revision_manual.json
+salidas.json
+
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3/resultados/estructural:
+estructural.json
+listas_fijas_por_lunes.json
+spot
+monthly
+ADENDA_1_reutilizacion_de_tickers.md
+ADENDA_3_reglas_conciliacion.md
+CONGELACION_ADENDAS.txt
+CONGELACION_ADENDA_3.txt
+CONGELACION_v3.txt
+CORRECCION_1_cc_anuncios_nombres.txt
+DIFF_v2_a_v3.diff
+ENMIENDA_2_fuente_archivada_inferencia_motor.md
+LIMITACIONES_REGISTRADAS.md
+NOTAS_IMPLEMENTACION_v3.md 
+----
+2026-10-26T19:41:11.682Z CMD Bash 
+ E=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3; python3 -I -c "
+import json, numpy as np
+z = np.load('$E/resultados/calidad/series/FTMUSDT.npz')
+print('claves', z.files)
+print({k: (z[k].dtype, z[k].shape) for k in z.files if k in ('estado','nt','fechas','dias','inicio')})
+s = json.load(open('$E/resultados/conciliacion_pasada1/salidas.json'))
+print(type(s), len(s) if hasattr(s,'__len__') else '')
+print(json.dumps(s[:2] if isinstance(s, list) else {k: s[k] for k in list(s)[:3]}, ensure_ascii=False)[:1200])
+" 2>&1 | head -30; grep -n 'estado\[' $E/codigo/calidad.py | head; grep -n 'INICIO\s*=\|FIN\s*=' $E/codigo/calidad.py 
+----
+2026-10-26T19:41:12.479Z OUT  
+ Traceback (most recent call last):
+  File "<string>", line 2, in <module>
+ModuleNotFoundError: No module named 'numpy'
+90:                estado[i] = 3
+96:                    estado[i] = 4
+101:                estado[i] = 3
+106:            estado[i] = 1 if f[6] > 0 else 2
+173:            cola = estado[ult + 1:]
+182:                if estado[i] == 1:
+187:                elif estado[i] == 2:
+189:                elif estado[i] in (3, 4):
+24:INICIO = dt.date(2017, 7, 1)
+25:FIN = dt.date(2026, 5, 31) 
+----
+2026-10-26T19:41:17.107Z CMD Bash 
+ M=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25; E=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3; $M/venv/bin/python -I -c "
+import json, numpy as np
+z = np.load('$E/resultados/calidad/series/FTMUSDT.npz')
+print('claves', z.files)
+for k in z.files:
+    if k not in ('O','H','L','C','QV'): print(k, z[k].dtype, z[k].shape)
+s = json.load(open('$E/resultados/conciliacion_pasada1/salidas.json'))
+print(type(s), len(s))
+print(json.dumps(s[:2] if isinstance(s, list) else {k: s[k] for k in list(s)[:2]}, ensure_ascii=False)[:1500])
+" 
+----
+2026-10-26T19:41:19.366Z OUT  
+ claves ['simbolo', 'O', 'H', 'L', 'C', 'QV', 'NT', 'estado']
+simbolo <U7 ()
+NT int64 (3257,)
+estado int8 (3257,)
+<class 'list'> 236
+[{"simbolo": "1INCHDOWNUSDT", "ultimo_activo": "2021-12-01", "motivo": null}, {"simbolo": "1INCHUPUSDT", "ultimo_activo": "2021-12-01", "motivo": null}] 
+----
+2026-10-26T19:41:57.758Z CMD Bash 
+ E=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3; for f in $E/codigo/*.py; do echo "== $(basename $f) ($(wc -l < $f) líneas)"; sed -n 1,6p $f | cut -c1-160; done 2>/dev/null | head -90 
+----
+2026-10-26T19:41:59.134Z OUT  
+ == analisis_estructural.py (107 líneas)
+"""E3 · F3 estructural (después de calidad.py). Sin rendimientos de estrategia: no importa motor.py ni calcula retornos futuros.
+
+Uso: python -I analisis_estructural.py <dir_calidad> <salida.json>
+"""
+import collections
+import datetime as dt
+== calibracion.py (108 líneas)
+"""E3 · calibración sintética (v3 §5.3; N9–N10). No usa datos reales.
+
+Uso: python -I calibracion.py <salida.json>
+"""
+import json
+import sys
+== calibracion_max.py (59 líneas)
+"""E3 · calibración COMPLEMENTARIA de la regla prerregistrada p = máx(p_boot13, p_boot26, p_NW13) (v3 §5.3).
+
+Solo datos sintéticos (procesos G1–G5 de la v3 §5.3 y N10). Los tres valores p se calculan sobre la MISMA serie, para medir
+el tamaño de la regla del máximo. No usa datos reales ni cambia ninguna decisión ya registrada.
+Semilla 20261028 (distinta de la calibración original, que se conserva intacta). 2000 simulaciones por proceso.
+
+== calidad.py (225 líneas)
+"""E3 · F3 (calidad de datos y reconstrucción estructural). NO calcula retornos de estrategia (N22: no importa motor.py).
+
+Uso:  python -I calidad.py <dir_datos_vision> <dir_btc_eth_locales> <dir_salida>
+
+Produce:
+  - series diarias por símbolo (npz) con estado por día: 0 sin fila · 1 activo · 2 fila con 0 operaciones · 3 fila inválida
+== cc_anuncios.py (140 líneas)
+"""E3 · A3 con Common Crawl (Enmienda 2, E2.1). Etapas:
+  indice   <dir>   índice de todas las capturas 2017-06…2026-06 para los tres prefijos SURT
+  paginas  <dir>   selec 
+----
+2026-10-26T19:42:12.967Z CMD Bash 
+ M=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25; E=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3; $M/venv/bin/python -I -c "
+import json
+L = json.load(open('$E/resultados/estructural/listas_fijas_por_lunes.json'))
+print(type(L), list(L)[:6] if isinstance(L, dict) else len(L))
+for k in list(L)[:6]:
+    v = L[k]; print(k, type(v).__name__, (list(v)[:4] if isinstance(v, dict) else (v[:5] if isinstance(v, list) else v)))
+C = json.load(open('$E/resultados/conciliacion_pasada1/conciliacion.json'))
+print('conciliacion', type(C), list(C)[:10] if isinstance(C, dict) else len(C))
+EV = json.load(open('$E/resultados/conciliacion_pasada1/eventos.json'))
+print('eventos', type(EV), len(EV)); print(json.dumps(EV[0], ensure_ascii=False)[:600])
+" 
+----
+2026-10-26T19:42:13.748Z OUT  
+ Exit code 1
+Traceback (most recent call last):
+  File "<string>", line 6, in <module>
+TypeError: list indices must be integers or slices, not dict
+<class 'list'> 439 
+----
+2026-10-26T19:42:18.576Z CMD Bash 
+ M=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25; E=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3; $M/venv/bin/python -I -c "
+import json
+L = json.load(open('$E/resultados/estructural/listas_fijas_por_lunes.json'))
+x = L[200]; print({k: (v if not isinstance(v, list) else (len(v), v[:6])) for k, v in x.items()})
+C = json.load(open('$E/resultados/conciliacion_pasada1/conciliacion.json'))
+print('conciliacion', type(C).__name__, list(C)[:12] if isinstance(C, dict) else len(C))
+EV = json.load(open('$E/resultados/conciliacion_pasada1/eventos.json'))
+print('eventos', type(EV).__name__, len(EV)); print(json.dumps(EV[0], ensure_ascii=False)[:700])
+" 
+----
+2026-10-26T19:42:19.343Z OUT  
+ {'lunes': '2021-11-01', 'lista_fija': (7, ['AUDUSDT', 'BUSDUSDT', 'EURUSDT', 'GBPUSDT', 'PAXGUSDT', 'TUSDUSDT']), 'apalancados': (24, ['1INCHDOWNUSDT', '1INCHUPUSDT', 'AAVEDOWNUSDT', 'AAVEUPUSDT', 'ADAUPUSDT', 'BNBDOWNUSDT']), 'baja_volatilidad_o_duplicado': (0, []), 'elegibles': (210, ['1INCHUSDT', 'AAVEUSDT', 'ACMUSDT', 'ADAUSDT', 'AIONUSDT', 'AKROUSDT'])}
+conciliacion dict ['eventos_total', 'eventos_en_universo', 'fuera_por_texto_sin_usdt', 'fuera_sin_par_usdt_documentado', 'descartados', 'por_anio', 'salidas_por_anio', 'salidas_renombre_mapeado', 'primer_evento', 'ultima_falla', 'componentes_inicio', 'inicio_H']
+eventos list 55
+{"par": "BCNUSDT", "E": "2018-10-09", "urls": ["https://www.binance.com/en/support/announcement/360017720731"], "titulos": ["Binance Will Delist BCN, CHAT, ICN, TRIG"], "subtipos": ["exclusion_token"], "par_en_texto": false, "tokens": ["BCN", "CHAT", "ICN", "TRIG"], "url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-31/segments/1627046153854.42/warc/CC-MAIN-20210729074313-20210729104313-00472.warc.gz bytes=685846057-685874657", "sin_fecha": true, "clave": "BCNUSDT|2018-10-09|sin_fecha", "categoria_auto": "D", "L": null, "nota": {"A3.3": 2, "otros_pares_en_bucket": ["BCNBNB", "BCNBTC", "BCNETH"]}, "categoria": "fuera_sin_par_usdt_documentado"} 
+----
+2026-10-26T19:42:39.146Z CMD Bash 
+ E=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19; sed -n 283,293p $E/PROTOCOLO_E3_v3_PROPUESTO.md; grep -n 'N7' $E/ejecucion_E3/protocolo/NOTAS_IMPLEMENTACION_v3.md | head -3; grep -n '^- \*\*N7' -A6 $E/ejecucion_E3/protocolo/NOTAS_IMPLEMENTACION_v3.md | head -10; sed -n 555,567p $E/PROTOCOLO_E3_v3_PROPUESTO.md 
+----
+2026-10-26T19:42:40.563Z OUT  
+ ### 4.11 Semanas evaluables e inicio de H
+- **Semana evaluable:** ≥ 30 elegibles en t.
+  - En una semana no evaluable no hay entradas, salidas por la banda ni vuelta a pesos iguales; solo liquidaciones.
+  - Esa semana queda fuera de las pruebas y dentro de lo descriptivo.
+- **Inicio de H:** el **más tardío** de:
+  - (i) el primer lunes con 13 semanas seguidas evaluables;
+  - (ii) la semana siguiente a la fecha efectiva de la última **falla** de §2.3;
+  - (iii) el 1 de enero del primer año con anuncios en el archivo web;
+  - (iv) el 1 de enero del primer año desde el cual, en todos los años de la ventana, las salidas sin anuncio son ≤ 10 % de las observadas.
+- **INVÁLIDO** si más del 20 % de las semanas de H no son evaluables, o si H tiene < 156 semanas evaluables.
+
+25:- **N7.** **«Salida observada»** = fin de un listado vigente: último día activo L seguido de ≥ 30 días inactivos, con L ≤ 2026-05-01, para que los 30 días sean observables.
+25:- **N7.** **«Salida observada»** = fin de un listado vigente: último día activo L seguido de ≥ 30 días inactivos, con L ≤ 2026-05-01, para que los 30 días sean observables.
+26-  - La salida es **«con anuncio»** si algún anuncio compilado (exclusión del par, exclusión completa del token base o renombre de ese símbolo) tiene su E en [L − 1, L + 365].
+27-  - Si no, es **«sin anuncio»**.
+28-  - Las salidas por renombre mapeado no cuentan como salidas.
+29-- **N8.** **Fuente de anuncios.**
+30-  - Las condiciones de uso de Binance no se pudieron  
+----
+2026-10-26T19:43:09.924Z CMD Write 
+ # E3 · Adenda R: auditoría de supervivencia con evidencia interna del venue
+
+**Estado:** PROPUESTA, congelada antes de calcular la auditoría (P0). **No autoriza ninguna ejecución confirmatoria.**
+**Fecha de redacción:** 2026-10-26 (UTC).
+**Protocolo de base:** `PROTOCOLO_E3_v3_PROPUESTO.md` (`279a865f…`), sus notas, adendas 1 y 3 y la enmienda 2. **Ninguno de esos documentos se modifica.**
+
+## 1. Por qué existe esta adenda
+
+- La v3 calcula las salidas **sin leer anuncios**:
+  - liquidación contable al último precio negociado (§4.10);
+  - en H1, último precio negociado (§4.13).
+- Los anuncios cumplen dos funciones. Mapean renombres; un renombre no mapeado se trata como salida más listado nuevo, que es conservador. Y **auditan** que Vision no tenga salidas truncadas (§2.3; §4.11 ii–iv).
+- La regla §4.11 (iv) («salidas sin anuncio ≤ 10 % por año») falló porque **el archivo web no tiene anuncios**: en Common Crawl no hay ninguno con fecha efectiva posterior al 2024-11-06. No falló porque Vision esté incompleto.
+- Evidencia ya registrada en E3, sin retornos:
+  - el bucket conserva pares retirados (228 dejan de tener archivos antes de 2026-05);
+  - de las exclusiones anunciadas y archivadas, **ninguna** quedó en la categoría D (par ausente en Vision);
+  - las 4 en la categoría T son tokens apalancados (DOTUP, DOTDOWN, TRXDOWN) y BKRW. Por las listas fijas de §4.5, ninguno puede entrar en un universo.
+- **Lo que la auditoría tiene que garantizar** es que cada salida de un par que el 
+----
+2026-10-26T19:43:09.955Z OUT  
+ File created successfully at: /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3R_desbloqueo_2026-10-26/ADENDA_R_auditoria_de_supervivencia_interna.md (file state is current in your context — no need to Read it back) 
+----
+2026-10-26T19:43:12.624Z CMD Bash 
+ R=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3R_desbloqueo_2026-10-26; { echo "ADENDA R congelada antes de calcular P0"; echo "UTC: $(date -u +%FT%T.%3NZ)"; sha256sum $R/ADENDA_R_auditoria_de_supervivencia_interna.md | sed "s|$R/||"; } > $R/CONGELACION_ADENDA_R.txt; cat $R/CONGELACION_ADENDA_R.txt 
+----
+2026-10-26T19:43:13.975Z OUT  
+ ADENDA R congelada antes de calcular P0
+UTC: 2026-10-26T19:43:13.957Z
+87f60413725a8f0360f39b9b6343027cbda4233c1cd2d3bd1d94080f0bf6936a  ADENDA_R_auditoria_de_supervivencia_interna.md 
+----
+2026-10-26T19:43:22.440Z CMD Bash 
+ M=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25; E=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3; $M/venv/bin/python -I -c "
+import json
+EV = json.load(open('$E/resultados/conciliacion_pasada1/eventos.json'))
+from collections import Counter
+print(Counter(e.get('categoria') for e in EV))
+for e in EV:
+    if e.get('categoria','').startswith('C') or e['par'][:-4] in ('ARK','CREAM','FTT','GFT','IQ'):
+        print(e['par'], e['E'], e.get('categoria'), e.get('L'), e['titulos'][0][:90], e['urls'][0])
+C = json.load(open('$E/resultados/conciliacion_pasada1/conciliacion.json'))
+print('ultima_falla', C.get('ultima_falla')); print('componentes', C.get('componentes_inicio')); print('inicio_H', C.get('inicio_H'))
+"; ls $E/datos_anuncios | head 
+----
+2026-10-26T19:43:24.062Z OUT  
+ Counter({'A': 32, 'fuera_sin_par_usdt_documentado': 13, 'C_no_explicada': 5, 'T': 4, 'B': 1})
+FTTUSDT 2022-11-15 A 2022-11-14 Notice of Removal of Trading Pairs - 2022-11-15 https://www.binance.com/en/support/announcement/notice-of-removal-of-trading-pairs-2022-11-15-47642955ae7f4a3688133df8067ac3c2
+ARKUSDT 2023-09-22 C_no_explicada None Notice of Addition & Removal of Trading Pairs - 2023-09-22 https://www.binance.com/en/support/announcement/notice-of-addition-removal-of-trading-pairs-2023-09-22-fe93095a80944d31b42fa7eb2afdb12c?ref=AZTKZ9XS&utm_source=BinanceTwitter&utm_medium=GlobalSocial&utm_campaign=GlobalSocial
+CREAMUSDT 2023-09-22 C_no_explicada None Notice of Addition & Removal of Trading Pairs - 2023-09-22 https://www.binance.com/en/support/announcement/notice-of-addition-removal-of-trading-pairs-2023-09-22-fe93095a80944d31b42fa7eb2afdb12c?ref=AZTKZ9XS&utm_source=BinanceTwitter&utm_medium=GlobalSocial&utm_campaign=GlobalSocial
+FTTUSDT 2023-09-22 C_no_explicada None Notice of Addition & Removal of Trading Pairs - 2023-09-22 https://www.binance.com/en/support/announcement/notice-of-addition-removal-of-trading-pairs-2023-09-22-fe93095a80944d31b42fa7eb2afdb12c?ref=AZTKZ9XS&utm_source=BinanceTwitter&utm_medium=GlobalSocial&utm_campaign=GlobalSocial
+GFTUSDT 2023-09-22 C_no_explicada None Notice of Addition & Removal of Trading Pairs - 2023-09-22 https://www.binance.com/en/support/announcement/notice-of-addition-removal-of-trading-pairs-2023-09-22-fe93095a80944d31b42fa7eb2af 
+----
+2026-10-26T19:43:27.877Z CMD Bash 
+ A=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3/datos_anuncios/commoncrawl; ls $A | head; timeout 60 grep -rl 'fe93095a80944d31b42fa7eb2afdb12c' $A 2>/dev/null | head -5 
+----
+2026-10-26T19:43:33.472Z OUT  
+ anuncios_clasificados.json
+cluster_head.txt
+correcciones.json
+crawl_data_index.html
+crawls.txt
+exclusiones_usdt.json
+indice
+listados_usdt.json
+paginas
+registro_cc.jsonl
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3/datos_anuncios/commoncrawl/indice/CC-MAIN-2023-50.json
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3/datos_anuncios/commoncrawl/urls_unicas.json
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3/datos_anuncios/commoncrawl/anuncios_clasificados.json
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3/datos_anuncios/commoncrawl/resultado_paginas.json
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3/datos_anuncios/commoncrawl/paginas/url_https___www.binance.com_en_support_announcement_notice-of-addition-removal-o_de27e21c5438.json 
+----
+2026-10-26T19:43:38.125Z CMD Bash 
+ M=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25; P=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3/datos_anuncios/commoncrawl/paginas/url_https___www.binance.com_en_support_announcement_notice-of-addition-removal-o_de27e21c5438.json; sha256sum $P | cut -c1-16; $M/venv/bin/python -I -c "
+import json, re
+d = json.load(open('$P'))
+print(list(d.keys()))
+t = d.get('texto') or d.get('text') or ''
+i = t.find('Fellow Binancians'); i = i if i >= 0 else 0
+body = t[i:i+2600]
+print(body)
+" 
+----
+2026-10-26T19:43:38.931Z OUT  
+ c34150128ea70f7e
+['titulo', 'publicado_ms', 'time_datetime', 'texto', 'url', 'captura', 'warc', 'offset', 'length', 'url_archivada']
+Fellow Binancians , Binance will be adding and delisting selected spot trading pairs, as per the timeline below. Timeline: At 2023-09-22 08:00 (UTC) , Binance will open trading for the ARK/USDT, CREAM/USDT, FTT/USDT, GFT/USDT, IQ/USDT and USDT/VAI spot trading pairs. At 2023-09-29 03:00 (UTC) , Binance will remove and cease trading on the ARK/BUSD, CREAM/BUSD, FTT/BUSD, GFT/BUSD, IQ/BUSD and BUSD/VAI spot trading pairs. Please note: The delisting of a spot trading pair does not affect the availability of the tokens on Binance Spot. Users can still trade the spot trading pair’s base and quote assets on other trading pair(s) that are available on Binance. At 2023-09-29 03:00 (UTC) , Binance will terminate Spot Trading Bots services for the spot trading pairs that are to be delisted, where applicable. Users are strongly advised to update and/or cancel their Spot Trading Bots prior to the cessation of Spot Trading Bots services to avoid any potential losses. Users are encouraged to convert their BUSD assets into other available assets on Binance prior to February 2024 . Users may trade their BUSD balances for FDUSD at zero trading fees, or convert their BUSD balances to FDUSD at 1:1 using the convert portal. Where any discrepancy arises between the translated versions and the original English version, the English version shall prevail. For More Info 
+----
+2026-10-26T19:43:54.272Z CMD Bash 
+ M=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25; E=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3; $M/venv/bin/python -I -c "
+import json
+from collections import Counter
+s = json.load(open('$E/resultados/conciliacion_pasada1/salidas.json'))
+print(Counter(x.get('motivo') for x in s))
+st = json.load(open('$E/resultados/estructural/estructural.json'))
+print(type(st).__name__, list(st)[:15] if isinstance(st, dict) else len(st))
+for k in list(st)[:15]:
+    v = st[k]; print(k, type(v).__name__, (str(v)[:200]))
+" 
+----
+2026-10-26T19:43:56.107Z OUT  
+ Counter({None: 197, 'evento_del_par': 37, 'exclusion_del_token': 2})
+dict ['universo_por_anio', 'inicio_componente_i_13_semanas_evaluables', 'ventana_desde_componente_i', 'componentes_ii_iii_iv', 'salidas_observadas_por_anio', 'colas_tras_ultimo_activo', 'cortes_con_reanudacion', 'relistados_tras_30_dias', 'semanas']
+universo_por_anio dict {'2018': {'semanas': 53, 'evaluables': 0, 'elegibles_mediana': 6.0}, '2019': {'semanas': 52, 'evaluables': 0, 'elegibles_mediana': 16.5}, '2020': {'semanas': 52, 'evaluables': 39, 'elegibles_mediana':
+inicio_componente_i_13_semanas_evaluables str 2020-05-11
+ventana_desde_componente_i dict {'desde_componente_i': '2020-05-11', 'semanas': 315, 'evaluables': 315, 'no_evaluables_pct': 0.0}
+componentes_ii_iii_iv str ver conciliacion.json (conciliacion.py, Adenda 3)
+salidas_observadas_por_anio dict {'2018': 2, '2019': 3, '2020': 21, '2021': 20, '2022': 43, '2023': 24, '2024': 46, '2025': 51, '2026': 26}
+colas_tras_ultimo_activo dict {'con_velas_cero_operaciones': 1, 'sin_velas': 227}
+cortes_con_reanudacion dict {'total': 34, 'dias_mediana': 1.0, 'con_salto_de_precio_x10': 26, 'lista_saltos': [{'simbolo': 'AAVEDOWNUSDT', 'ultimo_activo': '2021-04-05', 'reanuda': '2021-04-07', 'dias': 1, 'ratio_precio': 19480.
+relistados_tras_30_dias dict {'total': 8, 'lista': [{'simbolo': 'BCHDOWNUSDT', 'fin_episodio': '2020-11-08', 'nuevo_episodio': '2021-04-15', 'ratio_precio': 1.3740038472107723}, {'simbolo': 'BCHUPUSDT', 'fin_episodio': '2020-11-0
+semanas list  
+----
+2026-10-26T19:44:22.828Z CMD Write 
+ """E3 · P0 de la Adenda R: auditoría de supervivencia con evidencia interna del venue. SIN RETORNOS.
+
+Lee, de los resultados de E3 (solo lectura, sha256 antes y después):
+  - el vector `estado` de cada serie de calidad (nunca O, H, L, C ni QV);
+  - las listas fijas por lunes, las semanas evaluables, las salidas observadas y los eventos de la conciliación;
+  - la resolución de los casos C (lectura manual del texto archivado, Adenda R §R4), pasada como argumento.
+Aplica las reglas R1–R5 de `ADENDA_R_auditoria_de_supervivencia_interna.md` tal como quedaron congeladas.
+Uso: python -I p0_auditoria_interna.py <dir_ejecucion_E3> <resoluciones_C.json> <salida.json>
+"""
+import datetime as dt
+import hashlib
+import json
+import sys
+from collections import defaultdict
+from pathlib import Path
+
+import numpy as np
+
+E3, RES, SALIDA = Path(sys.argv[1]), Path(sys.argv[2]), Path(sys.argv[3])
+INICIO = dt.date(2017, 7, 1)
+ULTIMO_LUNES = dt.date(2026, 5, 18)
+CAL = E3 / "resultados" / "calidad" / "series"
+ESTR = E3 / "resultados" / "estructural"
+CON = E3 / "resultados" / "conciliacion_pasada1"
+INSUMOS = [ESTR / "listas_fijas_por_lunes.json", ESTR / "estructural.json", CON / "salidas.json", CON / "eventos.json"]
+
+
+def sha(p: Path) -> str:
+    return hashlib.sha256(p.read_bytes()).hexdigest()
+
+
+def d(s: str) -> dt.date:
+    return dt.date.fromisoformat(s)
+
+
+def huellas(series: list[Path]) -> dict[str, str]:
+    return {str(p.relative_to(E3)): sha(p) for p in [*INSUMOS, *series]}
+
+
+salidas = json.load 
+----
+2026-10-26T19:44:22.859Z OUT  
+ File created successfully at: /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3R_desbloqueo_2026-10-26/p0_auditoria_interna.py (file state is current in your context — no need to Read it back) 
+----
+2026-10-26T19:44:27.898Z CMD Write 
+ {
+ "ARKUSDT": {"resolucion": "agregado", "cita": "At 2023-09-22 08:00 (UTC), Binance will open trading for the ARK/USDT, CREAM/USDT, FTT/USDT, GFT/USDT, IQ/USDT and USDT/VAI spot trading pairs. At 2023-09-29 03:00 (UTC), Binance will remove and cease trading on the ARK/BUSD, CREAM/BUSD, FTT/BUSD, GFT/BUSD, IQ/BUSD and BUSD/VAI spot trading pairs.", "fuente": "datos_anuncios/commoncrawl/paginas/url_https___www.binance.com_en_support_announcement_notice-of-addition-removal-o_de27e21c5438.json (sha256 c34150128ea70f7e…), captura CC-MAIN-2023-50"},
+ "CREAMUSDT": {"resolucion": "agregado", "cita": "ídem ARKUSDT", "fuente": "ídem ARKUSDT"},
+ "FTTUSDT": {"resolucion": "agregado", "cita": "ídem ARKUSDT", "fuente": "ídem ARKUSDT"},
+ "GFTUSDT": {"resolucion": "agregado", "cita": "ídem ARKUSDT", "fuente": "ídem ARKUSDT"},
+ "IQUSDT": {"resolucion": "agregado", "cita": "ídem ARKUSDT", "fuente": "ídem ARKUSDT"}
+}
+ 
+----
+2026-10-26T19:44:27.918Z OUT  
+ File created successfully at: /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3R_desbloqueo_2026-10-26/resoluciones_C.json (file state is current in your context — no need to Read it back) 
+----
+2026-10-26T19:44:38.628Z CMD Bash 
+ R=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3R_desbloqueo_2026-10-26; python3 - $R/p0_auditoria_interna.py <<'EOF'
+import sys
+from pathlib import Path
+p = Path(sys.argv[1]); s = p.read_text()
+old = s[s.index('lunes = [(d(x["lunes"])'):s.index('lunes.sort()')]
+s = s.replace(old, 'lunes = [(d(x["lunes"]), set(x["lista_fija"]), set(x["apalancados"])) for x in listas]\n')
+p.write_text(s)
+EOF
+grep -n 'lunes = \[' $R/p0_auditoria_interna.py; M=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25; E=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19; (cd $E && sha256sum -c --quiet CIERRE_E3_MANIFIESTO.sha256 2>&1 | tail -2; echo "manifiesto de cierre de E3 rc=$?"); { echo "P0 ejecutado"; echo "UTC: $(date -u +%FT%T.%3NZ)"; sha256sum $R/p0_auditoria_interna.py $R/resoluciones_C.json $R/ADENDA_R_auditoria_de_supervivencia_interna.md | sed "s|$R/||"; } > $R/REGISTRO_P0.txt; cd $R && $M/venv/bin/python -I $R/p0_auditoria_interna.py $E/ejecucion_E3 $R/resoluciones_C.json $R/P0_resultado.json 
+----
+2026-10-26T19:44:41.679Z OUT  
+ 48:lunes = [(d(x["lunes"]), set(x["lista_fija"]), set(x["apalancados"])) for x in listas]
+manifiesto de cierre de E3 rc=0
+{
+ "por_anio": {
+  "2018": {
+   "salidas": 2,
+   "en_alcance": 2,
+   "ANUNCIO": 0,
+   "SUSPENSION": 2,
+   "COLA_CERO": 0,
+   "sin_evidencia": 0,
+   "pct_sin_evidencia": 0.0
+  },
+  "2019": {
+   "salidas": 3,
+   "en_alcance": 3,
+   "ANUNCIO": 1,
+   "SUSPENSION": 3,
+   "COLA_CERO": 0,
+   "sin_evidencia": 0,
+   "pct_sin_evidencia": 0.0
+  },
+  "2020": {
+   "salidas": 21,
+   "en_alcance": 21,
+   "ANUNCIO": 12,
+   "SUSPENSION": 21,
+   "COLA_CERO": 0,
+   "sin_evidencia": 0,
+   "pct_sin_evidencia": 0.0
+  },
+  "2021": {
+   "salidas": 20,
+   "en_alcance": 12,
+   "ANUNCIO": 0,
+   "SUSPENSION": 12,
+   "COLA_CERO": 0,
+   "sin_evidencia": 0,
+   "pct_sin_evidencia": 0.0
+  },
+  "2022": {
+   "salidas": 43,
+   "en_alcance": 37,
+   "ANUNCIO": 2,
+   "SUSPENSION": 37,
+   "COLA_CERO": 0,
+   "sin_evidencia": 0,
+   "pct_sin_evidencia": 0.0
+  },
+  "2023": {
+   "salidas": 24,
+   "en_alcance": 22,
+   "ANUNCIO": 7,
+   "SUSPENSION": 21,
+   "COLA_CERO": 0,
+   "sin_evidencia": 1,
+   "pct_sin_evidencia": 4.5
+  },
+  "2024": {
+   "salidas": 46,
+   "en_alcance": 46,
+   "ANUNCIO": 10,
+   "SUSPENSION": 46,
+   "COLA_CERO": 1,
+   "sin_evidencia": 0,
+   "pct_sin_evidencia": 0.0
+  },
+  "2025": {
+   "salidas": 51,
+   "en_alcance": 51,
+   "ANUNCIO": 0,
+   "SUSPENSION": 51,
+   "COLA_CERO": 0,
+   "sin_evidencia": 0,
+   "pct_sin_evidencia": 0.0
+  },
+  "2026": {
+   "salidas": 26,
+   "en_alcance": 26,
+   
+----

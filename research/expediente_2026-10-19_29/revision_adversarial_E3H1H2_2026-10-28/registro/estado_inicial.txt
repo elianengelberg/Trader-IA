@@ -1,0 +1,12 @@
+UTC 2026-10-28T13:49:07Z
+git HEAD 72ffae5d2698440c8f1afaff12e07bd8adde66fb rama claude/algo-trading-simulation-platform-ngf7xo cambios 0 indice 37490035d6706739fd7c9add42ad62c4e0c9260089e8e2e77a486f55e3bdcd1b
+refs locales:
+  refs/heads/claude/algo-trading-simulation-platform-ngf7xo 72ffae5
+  refs/remotes/origin/claude/algo-trading-simulation-platform-ngf7xo 72ffae5
+tarballs:
+83b565d7ce5ad27df67f2f23d7aaddd7f1811e6cc20915f99262da02675f47e3  /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/entrega_revision_independiente_2026-10-28/paquete_revision_independiente_E3H1H2_2026-10-28.tar.gz
+0562b919b7e318abd34e753e04247bb6305c1405ad7ca5894858e320c69f8d1d  /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/entrega_revision_independiente_2026-10-28/paquete_revision_independiente_E3H1H2_2026-10-28_DATOS.tar.gz
+SHA256SUMS del autor:
+83b565d7ce5ad27df67f2f23d7aaddd7f1811e6cc20915f99262da02675f47e3  paquete_revision_independiente_E3H1H2_2026-10-28.tar.gz
+0562b919b7e318abd34e753e04247bb6305c1405ad7ca5894858e320c69f8d1d  paquete_revision_independiente_E3H1H2_2026-10-28_DATOS.tar.gz
+directorios del scratchpad: 240

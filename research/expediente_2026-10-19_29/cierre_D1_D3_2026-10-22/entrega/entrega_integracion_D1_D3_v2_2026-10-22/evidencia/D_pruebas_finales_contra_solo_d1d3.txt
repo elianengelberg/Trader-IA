@@ -1,0 +1,38 @@
+........                                                                 [100%]
+==================================== PASSES ====================================
+___________________ test_stops_and_exits_survive_rejections ____________________
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 13:01:42 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=99909.67 run_id=bt_2DKVZGZHC2H6JAV2TBAWM89D trades=12
+________________ test_a_rejected_close_is_sent_again_and_closes ________________
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 13:01:44 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=99891.51 run_id=bt_BQF3HPF8CER0RBD2A0VW3MMY trades=13
+__________________ test_the_stop_in_the_book_follows_the_leg ___________________
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 13:01:47 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=99901.95 run_id=bt_7H5F9YX42K2VV8WVD3BRGQGF trades=12
+_________ test_the_stop_is_replaced_only_when_its_size_or_level_moved __________
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 13:01:49 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=99901.95 run_id=bt_7H5F9YX42K2VV8WVD3BRGQGF trades=12
+2026-10-22 13:01:52 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=99934.88 run_id=bt_KEHW9BVAYFFY27B753XG0ENH trades=16
+___________ test_partial_fills_leave_no_untracked_or_stuck_position ____________
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 13:01:54 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=99938.94 run_id=bt_QTXM4VZCEVQ2YFGW2JA6C2TW trades=72
+__________ test_a_close_that_leaves_position_is_released_and_retried ___________
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 13:01:57 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=99932.07 run_id=bt_HE094J84GD4A7JV9Q11MM1DX trades=65
+_________________ test_a_leg_without_a_stop_level_is_reported __________________
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 13:01:59 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=100001.71 run_id=bt_7H5F9YX42K2VV8WVD3BRGQGF trades=9
+_ test_every_invariant_holds_under_repeated_rejections_partials_and_reversals __
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 13:02:02 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=99982.38 run_id=bt_78KP178Y873XRVY4070GN1WT trades=36
+2026-10-22 13:02:05 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=100195.57 run_id=bt_2C520RGPHMP3VDA6N1MGVZ42 trades=10
+=========================== short test summary info ============================
+PASSED tests/unit/test_backtest_order_hygiene.py::test_stops_and_exits_survive_rejections
+PASSED tests/unit/test_backtest_order_hygiene.py::test_a_rejected_close_is_sent_again_and_closes
+PASSED tests/unit/test_backtest_order_hygiene.py::test_the_stop_in_the_book_follows_the_leg
+PASSED tests/unit/test_backtest_order_hygiene.py::test_the_stop_is_replaced_only_when_its_size_or_level_moved
+PASSED tests/unit/test_backtest_order_hygiene.py::test_partial_fills_leave_no_untracked_or_stuck_position
+PASSED tests/unit/test_backtest_order_hygiene.py::test_a_close_that_leaves_position_is_released_and_retried
+PASSED tests/unit/test_backtest_order_hygiene.py::test_a_leg_without_a_stop_level_is_reported
+PASSED tests/unit/test_backtest_order_hygiene.py::test_every_invariant_holds_under_repeated_rejections_partials_and_reversals
+8 passed in 26.73s

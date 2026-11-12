@@ -1,0 +1,2367 @@
+{
+ "arbol": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_integral_2026-10-22/trabajo/robustez/solo02_v2",
+ "filas": [
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 1,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 7,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 179: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead",
+     "bar 180: market ord_6DC5932ADBDEYZK1Q7J0TBJV sent again after it was dead"
+    ],
+    "positions_held_too_long": [
+     "bar 184: position open since bar 174",
+     "bar 196: position open since bar 186"
+    ],
+    "uncovered_streaks": [
+     "bar 181: -0.112051 held, uncovered for 2 bars",
+     "bar 182: -0.112051 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 1,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 10,
+   "precondicion": true,
+   "saltan": {
+    "stop_moves_none": [
+     "ningún stop se movió"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 1,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 6,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 1,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 2,
+   "precondicion": true,
+   "saltan": {
+    "uncovered_streaks": [
+     "bar 190: -0.02115099999999999 held, uncovered for 2 bars",
+     "bar 191: -0.02115099999999999 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 1,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 1,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 182: stop ord_CTBN2JC52BEHNXGSMMGDNXRZ sent again after it was dead",
+     "bar 183: stop ord_CTBN2JC52BEHNXGSMMGDNXRZ sent again after it was dead"
+    ],
+    "growth_after_close": [
+     "bar 278: grew from 0.09364299999999999 to 0.10208699999999998 after the close at bar 182",
+     "bar 279: grew from 0.09364299999999999 to 0.10920199999999998 after the close at bar 182"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 2,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 7,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 179: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead",
+     "bar 180: market ord_6DC5932ADBDEYZK1Q7J0TBJV sent again after it was dead"
+    ],
+    "positions_held_too_long": [
+     "bar 184: position open since bar 174",
+     "bar 196: position open since bar 186"
+    ],
+    "uncovered_streaks": [
+     "bar 181: -0.112051 held, uncovered for 2 bars",
+     "bar 182: -0.112051 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 2,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 10,
+   "precondicion": true,
+   "saltan": {
+    "stop_moves_none": [
+     "ningún stop se movió"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 2,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 9,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 2,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 1,
+   "precondicion": true,
+   "saltan": {
+    "uncovered_streaks": [
+     "bar 182: -0.03936099999999998 held, uncovered for 2 bars",
+     "bar 183: -0.03936099999999998 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 2,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 4,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 182: stop ord_YBKBH5N39P16S63S6ZG3CRG6 sent again after it was dead",
+     "bar 183: stop ord_YBKBH5N39P16S63S6ZG3CRG6 sent again after it was dead"
+    ],
+    "growth_after_close": [
+     "bar 278: grew from 0.078131 to 0.11211000000000002 after the close at bar 182"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 3,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 7,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 179: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead",
+     "bar 180: market ord_6DC5932ADBDEYZK1Q7J0TBJV sent again after it was dead"
+    ],
+    "positions_held_too_long": [
+     "bar 184: position open since bar 174",
+     "bar 196: position open since bar 186"
+    ],
+    "uncovered_streaks": [
+     "bar 181: -0.112051 held, uncovered for 2 bars",
+     "bar 182: -0.112051 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 3,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 10,
+   "precondicion": true,
+   "saltan": {
+    "stop_moves_none": [
+     "ningún stop se movió"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 3,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 1,
+   "precondicion": true,
+   "saltan": {
+    "growth_after_close": [
+     "bar 184: grew from 0.11204599999999999 to 0.112051 after the close at bar 183"
+    ],
+    "uncovered_streaks": [
+     "bar 228: -5.000000000004462e-06 held, uncovered for 2 bars",
+     "bar 229: -5.000000000004462e-06 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 3,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 1,
+   "precondicion": true,
+   "saltan": {
+    "uncovered_streaks": [
+     "bar 182: -0.024165000000000002 held, uncovered for 2 bars",
+     "bar 183: -0.024182000000000002 held, uncovered for 3 bars"
+    ],
+    "growth_after_close": [
+     "bar 180: grew from 0.111924 to 0.111969 after the close at bar 179"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 3,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 2,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 178: stop ord_VFVYYMT1N21G6Y23S5RCFX54 sent again after it was dead",
+     "bar 179: stop ord_VFVYYMT1N21G6Y23S5RCFX54 sent again after it was dead"
+    ],
+    "growth_after_close": [
+     "bar 278: grew from 0.014970999999999996 to 0.016450999999999997 after the close at bar 195",
+     "bar 279: grew from 0.014970999999999996 to 0.018555999999999996 after the close at bar 195"
+    ],
+    "entries_filling_a_later_position": [
+     "bar 278: entry ord_GERVQ5EVJDFSY88Y6Q7Q8J14 of position 1 filled into position 2",
+     "bar 279: entry ord_GERVQ5EVJDFSY88Y6Q7Q8J14 of position 1 filled into position 2"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 4,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 7,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 179: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead",
+     "bar 180: market ord_6DC5932ADBDEYZK1Q7J0TBJV sent again after it was dead"
+    ],
+    "positions_held_too_long": [
+     "bar 184: position open since bar 174",
+     "bar 196: position open since bar 186"
+    ],
+    "uncovered_streaks": [
+     "bar 181: -0.112051 held, uncovered for 2 bars",
+     "bar 182: -0.112051 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 4,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 10,
+   "precondicion": true,
+   "saltan": {
+    "stop_moves_none": [
+     "ningún stop se movió"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 4,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 3,
+   "precondicion": true,
+   "saltan": {
+    "growth_after_close": [
+     "bar 507: grew from 0.017642999999999978 to 0.017708999999999978 after the close at bar 506"
+    ],
+    "uncovered_streaks": [
+     "bar 514: 9.799999999997956e-05 held, uncovered for 2 bars",
+     "bar 515: 9.799999999997956e-05 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 4,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 1,
+   "precondicion": true,
+   "saltan": {
+    "uncovered_streaks": [
+     "bar 182: -0.050366000000000015 held, uncovered for 2 bars",
+     "bar 183: -0.050366000000000015 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 4,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 178: stop ord_C40V1KR4DW4H605BWH3249M1 sent again after it was dead",
+     "bar 179: stop ord_C40V1KR4DW4H605BWH3249M1 sent again after it was dead"
+    ],
+    "growth_after_close": [
+     "bar 536: grew from 0.0011219999999999945 to 0.0012119999999999945 after the close at bar 535",
+     "bar 537: grew from 0.0011219999999999945 to 0.0012189999999999946 after the close at bar 535"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 5,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 7,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 179: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead",
+     "bar 180: market ord_6DC5932ADBDEYZK1Q7J0TBJV sent again after it was dead"
+    ],
+    "positions_held_too_long": [
+     "bar 184: position open since bar 174",
+     "bar 196: position open since bar 186"
+    ],
+    "uncovered_streaks": [
+     "bar 181: -0.112051 held, uncovered for 2 bars",
+     "bar 182: -0.112051 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 5,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 10,
+   "precondicion": true,
+   "saltan": {
+    "stop_moves_none": [
+     "ningún stop se movió"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 5,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 6,
+   "precondicion": true,
+   "saltan": {
+    "growth_after_close": [
+     "bar 650: grew from 0.024147000000000002 to 0.024159000000000003 after the close at bar 649"
+    ],
+    "uncovered_streaks": [
+     "bar 658: 3.400000000000284e-05 held, uncovered for 2 bars",
+     "bar 659: 3.400000000000284e-05 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 5,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 1,
+   "precondicion": true,
+   "saltan": {
+    "uncovered_streaks": [
+     "bar 182: -0.03762699999999998 held, uncovered for 2 bars",
+     "bar 183: -0.03762699999999998 held, uncovered for 3 bars"
+    ],
+    "growth_after_close": [
+     "bar 180: grew from 0.11192599999999998 to 0.11205099999999998 after the close at bar 179"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 5,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 179: stop ord_41Y5GCPS53F53B8GNPW3V0PM sent again after it was dead",
+     "bar 180: stop ord_41Y5GCPS53F53B8GNPW3V0PM sent again after it was dead"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 6,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 7,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 179: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead",
+     "bar 180: market ord_6DC5932ADBDEYZK1Q7J0TBJV sent again after it was dead"
+    ],
+    "positions_held_too_long": [
+     "bar 184: position open since bar 174",
+     "bar 196: position open since bar 186"
+    ],
+    "uncovered_streaks": [
+     "bar 181: -0.112051 held, uncovered for 2 bars",
+     "bar 182: -0.112051 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 6,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 10,
+   "precondicion": true,
+   "saltan": {
+    "stop_moves_none": [
+     "ningún stop se movió"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 6,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 3,
+   "precondicion": true,
+   "saltan": {
+    "growth_after_close": [
+     "bar 507: grew from 0.02673400000000001 to 0.02675500000000001 after the close at bar 506"
+    ],
+    "uncovered_streaks": [
+     "bar 523: 4.100000000001268e-05 held, uncovered for 2 bars",
+     "bar 524: 4.100000000001268e-05 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 6,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 1,
+   "precondicion": true,
+   "saltan": {
+    "uncovered_streaks": [
+     "bar 182: -0.057756999999999996 held, uncovered for 2 bars",
+     "bar 183: -0.057756999999999996 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 6,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 1,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 178: stop ord_78XX2SNZ8THW5X4EEY61A2QN sent again after it was dead",
+     "bar 179: stop ord_78XX2SNZ8THW5X4EEY61A2QN sent again after it was dead"
+    ],
+    "growth_after_close": [
+     "bar 278: grew from 0.083995 to 0.100461 after the close at bar 182",
+     "bar 279: grew from 0.083995 to 0.11210999999999999 after the close at bar 182"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 7,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 7,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 179: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead",
+     "bar 180: market ord_6DC5932ADBDEYZK1Q7J0TBJV sent again after it was dead"
+    ],
+    "positions_held_too_long": [
+     "bar 184: position open since bar 174",
+     "bar 196: position open since bar 186"
+    ],
+    "uncovered_streaks": [
+     "bar 181: -0.112051 held, uncovered for 2 bars",
+     "bar 182: -0.112051 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 7,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 10,
+   "precondicion": true,
+   "saltan": {
+    "stop_moves_none": [
+     "ningún stop se movió"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 7,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 7,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 7,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 1,
+   "precondicion": true,
+   "saltan": {
+    "uncovered_streaks": [
+     "bar 182: -0.029592999999999994 held, uncovered for 2 bars",
+     "bar 183: -0.029592999999999994 held, uncovered for 3 bars"
+    ],
+    "growth_after_close": [
+     "bar 180: grew from 0.112035 to 0.112051 after the close at bar 179"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 7,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 1,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 182: stop ord_P9KRB6VC96C0JTBP6ZRH9DFZ sent again after it was dead",
+     "bar 183: stop ord_P9KRB6VC96C0JTBP6ZRH9DFZ sent again after it was dead"
+    ],
+    "growth_after_close": [
+     "bar 278: grew from 0.099427 to 0.109203 after the close at bar 182",
+     "bar 279: grew from 0.099427 to 0.11038099999999999 after the close at bar 182"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 8,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 7,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 179: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead",
+     "bar 180: market ord_6DC5932ADBDEYZK1Q7J0TBJV sent again after it was dead"
+    ],
+    "positions_held_too_long": [
+     "bar 184: position open since bar 174",
+     "bar 196: position open since bar 186"
+    ],
+    "uncovered_streaks": [
+     "bar 181: -0.112051 held, uncovered for 2 bars",
+     "bar 182: -0.112051 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 8,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 10,
+   "precondicion": true,
+   "saltan": {
+    "stop_moves_none": [
+     "ningún stop se movió"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 8,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "growth_after_close": [
+     "bar 650: grew from 0.024269000000000002 to 0.024274000000000004 after the close at bar 649"
+    ],
+    "uncovered_streaks": [
+     "bar 657: 1.3000000000003352e-05 held, uncovered for 2 bars",
+     "bar 658: 1.4000000000003352e-05 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 8,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 1,
+   "precondicion": true,
+   "saltan": {
+    "uncovered_streaks": [
+     "bar 182: -0.027209999999999998 held, uncovered for 2 bars",
+     "bar 183: -0.027209999999999998 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 8,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 2,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 181: stop ord_SAWNTZQFCNJA0T7YRV16YZQH sent again after it was dead",
+     "bar 182: stop ord_SAWNTZQFCNJA0T7YRV16YZQH sent again after it was dead"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 9,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 7,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 179: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead",
+     "bar 180: market ord_6DC5932ADBDEYZK1Q7J0TBJV sent again after it was dead"
+    ],
+    "positions_held_too_long": [
+     "bar 184: position open since bar 174",
+     "bar 196: position open since bar 186"
+    ],
+    "uncovered_streaks": [
+     "bar 181: -0.112051 held, uncovered for 2 bars",
+     "bar 182: -0.112051 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 9,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 10,
+   "precondicion": true,
+   "saltan": {
+    "stop_moves_none": [
+     "ningún stop se movió"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 9,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 7,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 9,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 1,
+   "precondicion": true,
+   "saltan": {
+    "uncovered_streaks": [
+     "bar 182: -0.024968000000000018 held, uncovered for 2 bars",
+     "bar 183: -0.024968000000000018 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 9,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 6,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 182: stop ord_A6S59CR29RW7PY664JGN9Y5D sent again after it was dead",
+     "bar 188: stop ord_NRQPSZZPDEQ0W14PVYMM3R5R sent again after it was dead"
+    ],
+    "growth_after_close": [
+     "bar 286: grew from 0.012374 to 0.013975 after the close at bar 284",
+     "bar 288: grew from 0.012374 to 0.014274 after the close at bar 284"
+    ],
+    "entries_filling_a_later_position": [
+     "bar 278: entry ord_GERVQ5EVJDFSY88Y6Q7Q8J14 of position 1 filled into position 3",
+     "bar 279: entry ord_GERVQ5EVJDFSY88Y6Q7Q8J14 of position 1 filled into position 3"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 10,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 7,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 179: stop ord_F0XZM7BBVS9GNEWE496CS62Q sent again after it was dead",
+     "bar 180: market ord_6DC5932ADBDEYZK1Q7J0TBJV sent again after it was dead"
+    ],
+    "positions_held_too_long": [
+     "bar 184: position open since bar 174",
+     "bar 196: position open since bar 186"
+    ],
+    "uncovered_streaks": [
+     "bar 181: -0.112051 held, uncovered for 2 bars",
+     "bar 182: -0.112051 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 10,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 10,
+   "precondicion": true,
+   "saltan": {
+    "stop_moves_none": [
+     "ningún stop se movió"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 10,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 7,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 10,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 1,
+   "precondicion": true,
+   "saltan": {
+    "uncovered_streaks": [
+     "bar 182: -0.070218 held, uncovered for 2 bars",
+     "bar 183: -0.070218 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1h",
+   "semilla": 10,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 3,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 182: stop ord_N1FVJJGN6TG33HH3B8T0ZAMH sent again after it was dead",
+     "bar 183: stop ord_N1FVJJGN6TG33HH3B8T0ZAMH sent again after it was dead"
+    ],
+    "growth_after_close": [
+     "bar 278: grew from 0.09303399999999999 to 0.11210999999999999 after the close at bar 182",
+     "bar 535: grew from 0.0003889999999999973 to 0.0004309999999999973 after the close at bar 534"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 1,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 193: stop ord_3PRJHRMP8GH4JW9RSDDQ3RSA sent again after it was dead",
+     "bar 194: market ord_RNJ8MS4CZ728FGHTBW07MS4F sent again after it was dead"
+    ],
+    "positions_held_too_long": [
+     "bar 198: position open since bar 188",
+     "bar 209: position open since bar 199"
+    ],
+    "uncovered_streaks": [
+     "bar 195: 0.064499 held, uncovered for 2 bars",
+     "bar 196: 0.064499 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 1,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "stop_moves_none": [
+     "ningún stop se movió"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 1,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 1,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 2,
+   "precondicion": false,
+   "saltan": {
+    "uncovered_streaks": [
+     "bar 147: -3.200000000000018e-05 held, uncovered for 2 bars",
+     "bar 148: -3.900000000000018e-05 held, uncovered for 3 bars"
+    ],
+    "growth_after_close": [
+     "bar 145: grew from 0.015668 to 0.015689 after the close at bar 144"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 1,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 1,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 135: market ord_KND471QYQ3NE9M78WN604WHK sent again after it was dead",
+     "bar 135: stop ord_4NH32RSNDKW32VKDZ7D35630 sent again after it was dead"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 2,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 193: stop ord_3PRJHRMP8GH4JW9RSDDQ3RSA sent again after it was dead",
+     "bar 194: market ord_RNJ8MS4CZ728FGHTBW07MS4F sent again after it was dead"
+    ],
+    "positions_held_too_long": [
+     "bar 198: position open since bar 188",
+     "bar 209: position open since bar 199"
+    ],
+    "uncovered_streaks": [
+     "bar 195: 0.064499 held, uncovered for 2 bars",
+     "bar 196: 0.064499 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 2,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "stop_moves_none": [
+     "ningún stop se movió"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 2,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 2,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 1,
+   "precondicion": true,
+   "saltan": {
+    "uncovered_streaks": [
+     "bar 137: -0.007076000000000008 held, uncovered for 2 bars",
+     "bar 138: -0.007076000000000008 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 2,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 3,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 135: market ord_2K9SSD7DF1QSD3W5JC0BFPZ0 sent again after it was dead",
+     "bar 135: stop ord_9T8ZSEPJR3D1MS7AM2F8WA7K sent again after it was dead"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 3,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 193: stop ord_3PRJHRMP8GH4JW9RSDDQ3RSA sent again after it was dead",
+     "bar 194: market ord_RNJ8MS4CZ728FGHTBW07MS4F sent again after it was dead"
+    ],
+    "positions_held_too_long": [
+     "bar 198: position open since bar 188",
+     "bar 209: position open since bar 199"
+    ],
+    "uncovered_streaks": [
+     "bar 195: 0.064499 held, uncovered for 2 bars",
+     "bar 196: 0.064499 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 3,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "stop_moves_none": [
+     "ningún stop se movió"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 3,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 3,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 1,
+   "precondicion": true,
+   "saltan": {
+    "uncovered_streaks": [
+     "bar 137: -0.014421999999999985 held, uncovered for 2 bars",
+     "bar 138: -0.014421999999999985 held, uncovered for 3 bars"
+    ],
+    "growth_after_close": [
+     "bar 135: grew from 0.026784999999999986 to 0.026819999999999986 after the close at bar 134"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 3,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 1,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 133: stop ord_189MQQH7TWKYTD9B9GG0CP1A sent again after it was dead",
+     "bar 134: stop ord_189MQQH7TWKYTD9B9GG0CP1A sent again after it was dead"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 4,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 193: stop ord_3PRJHRMP8GH4JW9RSDDQ3RSA sent again after it was dead",
+     "bar 194: market ord_RNJ8MS4CZ728FGHTBW07MS4F sent again after it was dead"
+    ],
+    "positions_held_too_long": [
+     "bar 198: position open since bar 188",
+     "bar 209: position open since bar 199"
+    ],
+    "uncovered_streaks": [
+     "bar 195: 0.064499 held, uncovered for 2 bars",
+     "bar 196: 0.064499 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 4,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "stop_moves_none": [
+     "ningún stop se movió"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 4,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 2,
+   "precondicion": true,
+   "saltan": {
+    "growth_after_close": [
+     "bar 187: grew from 5.399999999999943e-05 to 5.4999999999999426e-05 after the close at bar 186"
+    ],
+    "uncovered_streaks": [
+     "bar 191: -9.99999999999428e-07 held, uncovered for 2 bars",
+     "bar 192: -9.99999999999428e-07 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 4,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 1,
+   "precondicion": true,
+   "saltan": {
+    "uncovered_streaks": [
+     "bar 137: -0.00048200000000000006 held, uncovered for 2 bars",
+     "bar 138: -0.00048200000000000006 held, uncovered for 3 bars"
+    ],
+    "growth_after_close": [
+     "bar 135: grew from 0.001567 to 0.001667 after the close at bar 134"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 4,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 129: stop ord_PAV2VZERWR56Z4P1ETSRPJKD sent again after it was dead",
+     "bar 130: stop ord_PAV2VZERWR56Z4P1ETSRPJKD sent again after it was dead"
+    ],
+    "growth_after_close": [
+     "bar 314: grew from 0.067451 to 0.090086 after the close at bar 313",
+     "bar 324: grew from 0.0019159999999999971 to 0.002105999999999997 after the close at bar 323"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 5,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 193: stop ord_3PRJHRMP8GH4JW9RSDDQ3RSA sent again after it was dead",
+     "bar 194: market ord_RNJ8MS4CZ728FGHTBW07MS4F sent again after it was dead"
+    ],
+    "positions_held_too_long": [
+     "bar 198: position open since bar 188",
+     "bar 209: position open since bar 199"
+    ],
+    "uncovered_streaks": [
+     "bar 195: 0.064499 held, uncovered for 2 bars",
+     "bar 196: 0.064499 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 5,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "stop_moves_none": [
+     "ningún stop se movió"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 5,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 139: stop ord_JP7QY5HGW1C0BHSBF5QTEV8M sent again after it was dead",
+     "bar 154: stop ord_JP7QY5HGW1C0BHSBF5QTEV8M sent again after it was dead"
+    ],
+    "uncovered_streaks": [
+     "bar 156: -1.999999999987472e-06 held, uncovered for 2 bars",
+     "bar 157: -1.999999999987472e-06 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 5,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 1,
+   "precondicion": true,
+   "saltan": {
+    "uncovered_streaks": [
+     "bar 137: -0.0003209999999999874 held, uncovered for 2 bars",
+     "bar 138: -0.0003249999999999874 held, uncovered for 3 bars"
+    ],
+    "growth_after_close": [
+     "bar 135: grew from 0.0006109999999999874 to 0.0006339999999999874 after the close at bar 134"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 5,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 1,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 129: stop ord_PAV2VZERWR56Z4P1ETSRPJKD sent again after it was dead",
+     "bar 130: stop ord_PAV2VZERWR56Z4P1ETSRPJKD sent again after it was dead"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 6,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 193: stop ord_3PRJHRMP8GH4JW9RSDDQ3RSA sent again after it was dead",
+     "bar 194: market ord_RNJ8MS4CZ728FGHTBW07MS4F sent again after it was dead"
+    ],
+    "positions_held_too_long": [
+     "bar 198: position open since bar 188",
+     "bar 209: position open since bar 199"
+    ],
+    "uncovered_streaks": [
+     "bar 195: 0.064499 held, uncovered for 2 bars",
+     "bar 196: 0.064499 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 6,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "stop_moves_none": [
+     "ningún stop se movió"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 6,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "entries_filling_a_later_position": [
+     "bar 208: entry ord_MPN26TR5R8AHDAR81B0TYT29 of position 2 filled into position 3"
+    ],
+    "dead_orders_sent_again": [
+     "bar 259: stop ord_E682EKGFAX7H9A2GAMNQZ8WH sent again after it was dead",
+     "bar 260: stop ord_E682EKGFAX7H9A2GAMNQZ8WH sent again after it was dead"
+    ],
+    "uncovered_streaks": [
+     "bar 261: 2.0000000000002655e-06 held, uncovered for 2 bars",
+     "bar 262: 2.0000000000002655e-06 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 6,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 1,
+   "precondicion": true,
+   "saltan": {
+    "uncovered_streaks": [
+     "bar 137: -0.009498999999999997 held, uncovered for 2 bars",
+     "bar 138: -0.009498999999999997 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 6,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 132: stop ord_PAV2VZERWR56Z4P1ETSRPJKD sent again after it was dead",
+     "bar 133: stop ord_PAV2VZERWR56Z4P1ETSRPJKD sent again after it was dead"
+    ],
+    "entries_filling_a_later_position": [
+     "bar 539: entry ord_FQ8DB0JA6EYNF04YJXF6YEET of position 3 filled into position 5"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 7,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 193: stop ord_3PRJHRMP8GH4JW9RSDDQ3RSA sent again after it was dead",
+     "bar 194: market ord_RNJ8MS4CZ728FGHTBW07MS4F sent again after it was dead"
+    ],
+    "positions_held_too_long": [
+     "bar 198: position open since bar 188",
+     "bar 209: position open since bar 199"
+    ],
+    "uncovered_streaks": [
+     "bar 195: 0.064499 held, uncovered for 2 bars",
+     "bar 196: 0.064499 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 7,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "stop_moves_none": [
+     "ningún stop se movió"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 7,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 7,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 1,
+   "precondicion": true,
+   "saltan": {
+    "uncovered_streaks": [
+     "bar 137: -0.00016399999999999596 held, uncovered for 2 bars",
+     "bar 138: -0.00016399999999999596 held, uncovered for 3 bars"
+    ],
+    "growth_after_close": [
+     "bar 135: grew from 0.000246999999999996 to 0.00025799999999999597 after the close at bar 134"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 7,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 2,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 135: market ord_1TNXJAKSJQB68MVJ3F9PD9RP sent again after it was dead",
+     "bar 135: stop ord_KDN490ERQ8YFJXFKPRET0ZV7 sent again after it was dead"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 8,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 193: stop ord_3PRJHRMP8GH4JW9RSDDQ3RSA sent again after it was dead",
+     "bar 194: market ord_RNJ8MS4CZ728FGHTBW07MS4F sent again after it was dead"
+    ],
+    "positions_held_too_long": [
+     "bar 198: position open since bar 188",
+     "bar 209: position open since bar 199"
+    ],
+    "uncovered_streaks": [
+     "bar 195: 0.064499 held, uncovered for 2 bars",
+     "bar 196: 0.064499 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 8,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "stop_moves_none": [
+     "ningún stop se movió"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 8,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "entries_filling_a_later_position": [
+     "bar 334: entry ord_4Q3YGEBGGSXT5PZ9BCEPMH6N of position 4 filled into position 5"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 8,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 1,
+   "precondicion": true,
+   "saltan": {
+    "uncovered_streaks": [
+     "bar 137: -0.009499999999999993 held, uncovered for 2 bars",
+     "bar 138: -0.009499999999999993 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 8,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 1,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 129: stop ord_PAV2VZERWR56Z4P1ETSRPJKD sent again after it was dead",
+     "bar 130: stop ord_PAV2VZERWR56Z4P1ETSRPJKD sent again after it was dead"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 9,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 193: stop ord_3PRJHRMP8GH4JW9RSDDQ3RSA sent again after it was dead",
+     "bar 194: market ord_RNJ8MS4CZ728FGHTBW07MS4F sent again after it was dead"
+    ],
+    "positions_held_too_long": [
+     "bar 198: position open since bar 188",
+     "bar 209: position open since bar 199"
+    ],
+    "uncovered_streaks": [
+     "bar 195: 0.064499 held, uncovered for 2 bars",
+     "bar 196: 0.064499 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 9,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "stop_moves_none": [
+     "ningún stop se movió"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 9,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 9,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 1,
+   "precondicion": true,
+   "saltan": {
+    "uncovered_streaks": [
+     "bar 137: -0.0025389999999999944 held, uncovered for 2 bars",
+     "bar 138: -0.0025389999999999944 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 9,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 3,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 187: stop ord_HWRFR5TZZ0MP87SZ4AD91G51 sent again after it was dead",
+     "bar 242: stop ord_A2TH4144CG9H9W6ZBA6BVS12 sent again after it was dead"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 10,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 193: stop ord_3PRJHRMP8GH4JW9RSDDQ3RSA sent again after it was dead",
+     "bar 194: market ord_RNJ8MS4CZ728FGHTBW07MS4F sent again after it was dead"
+    ],
+    "positions_held_too_long": [
+     "bar 198: position open since bar 188",
+     "bar 209: position open since bar 199"
+    ],
+    "uncovered_streaks": [
+     "bar 195: 0.064499 held, uncovered for 2 bars",
+     "bar 196: 0.064499 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 10,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "stop_moves_none": [
+     "ningún stop se movió"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 10,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 10,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 1,
+   "precondicion": true,
+   "saltan": {
+    "uncovered_streaks": [
+     "bar 137: -0.004912 held, uncovered for 2 bars",
+     "bar 138: -0.004912 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "BTC-USD_1m",
+   "semilla": 10,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 3,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 193: stop ord_3W59EJF6WMX01JH0AH8V067C sent again after it was dead",
+     "bar 194: market ord_NG335AQJS0P2BSQW9NHTASPF sent again after it was dead"
+    ],
+    "growth_after_close": [
+     "bar 196: grew from 0.015673 to 0.015986999999999998 after the close at bar 193",
+     "bar 197: grew from 0.015673 to 0.016109 after the close at bar 193"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 1,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 182: stop ord_8Y3DS3XRR9EAB9EB52AKWJ67 sent again after it was dead",
+     "bar 183: market ord_N6N85BTHAXX32RSGHMSVF0BV sent again after it was dead"
+    ],
+    "positions_held_too_long": [
+     "bar 187: position open since bar 177",
+     "bar 198: position open since bar 188"
+    ],
+    "uncovered_streaks": [
+     "bar 184: 1.22778 held, uncovered for 2 bars",
+     "bar 185: 1.22778 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 1,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "stop_moves_none": [
+     "ningún stop se movió"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 1,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 1,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 1,
+   "precondicion": true,
+   "saltan": {
+    "uncovered_streaks": [
+     "bar 185: 0.4935900000000001 held, uncovered for 2 bars",
+     "bar 186: 0.4935900000000001 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 1,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 4,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 182: stop ord_T2WJCPR3N3PBXDN6WR9R0X6W sent again after it was dead",
+     "bar 183: market ord_9JYBCSZNBB7B5YKGRWSTM9KN sent again after it was dead"
+    ],
+    "growth_after_close": [
+     "bar 185: grew from 0.84822 to 1.22778 after the close at bar 182"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 2,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 182: stop ord_8Y3DS3XRR9EAB9EB52AKWJ67 sent again after it was dead",
+     "bar 183: market ord_N6N85BTHAXX32RSGHMSVF0BV sent again after it was dead"
+    ],
+    "positions_held_too_long": [
+     "bar 187: position open since bar 177",
+     "bar 198: position open since bar 188"
+    ],
+    "uncovered_streaks": [
+     "bar 184: 1.22778 held, uncovered for 2 bars",
+     "bar 185: 1.22778 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 2,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "stop_moves_none": [
+     "ningún stop se movió"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 2,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 6,
+   "precondicion": true,
+   "saltan": {
+    "entries_filling_a_later_position": [
+     "bar 205: entry ord_C31GX7P75T8TC54255G3H9B3 of position 1 filled into position 2"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 2,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 1,
+   "precondicion": true,
+   "saltan": {
+    "uncovered_streaks": [
+     "bar 185: 0.6434299999999998 held, uncovered for 2 bars",
+     "bar 186: 0.6436399999999999 held, uncovered for 3 bars"
+    ],
+    "growth_after_close": [
+     "bar 183: grew from 1.2256799999999999 to 1.2271999999999998 after the close at bar 182"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 2,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 182: stop ord_8Y3DS3XRR9EAB9EB52AKWJ67 sent again after it was dead",
+     "bar 183: market ord_N6N85BTHAXX32RSGHMSVF0BV sent again after it was dead"
+    ],
+    "growth_after_close": [
+     "bar 219: grew from 1.3809699999999998 to 1.3877699999999997 after the close at bar 218",
+     "bar 220: grew from 1.3809699999999998 to 1.3945199999999998 after the close at bar 218"
+    ],
+    "entries_filling_a_later_position": [
+     "bar 222: entry ord_WPMN9NB3T7852XPDR66R8N5Z of position 2 filled into position 3"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 3,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 182: stop ord_8Y3DS3XRR9EAB9EB52AKWJ67 sent again after it was dead",
+     "bar 183: market ord_N6N85BTHAXX32RSGHMSVF0BV sent again after it was dead"
+    ],
+    "positions_held_too_long": [
+     "bar 187: position open since bar 177",
+     "bar 198: position open since bar 188"
+    ],
+    "uncovered_streaks": [
+     "bar 184: 1.22778 held, uncovered for 2 bars",
+     "bar 185: 1.22778 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 3,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "stop_moves_none": [
+     "ningún stop se movió"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 3,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 3,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 1,
+   "precondicion": true,
+   "saltan": {
+    "uncovered_streaks": [
+     "bar 185: 0.23632999999999982 held, uncovered for 2 bars",
+     "bar 186: 0.23632999999999982 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 3,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 182: stop ord_VMD7EZ9S1S400J9BBRJX0ZCK sent again after it was dead",
+     "bar 183: market ord_FAHWB7TX920570B1K8B6N26N sent again after it was dead"
+    ],
+    "growth_after_close": [
+     "bar 185: grew from 0.9194500000000001 to 1.22778 after the close at bar 182"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 4,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 182: stop ord_8Y3DS3XRR9EAB9EB52AKWJ67 sent again after it was dead",
+     "bar 183: market ord_N6N85BTHAXX32RSGHMSVF0BV sent again after it was dead"
+    ],
+    "positions_held_too_long": [
+     "bar 187: position open since bar 177",
+     "bar 198: position open since bar 188"
+    ],
+    "uncovered_streaks": [
+     "bar 184: 1.22778 held, uncovered for 2 bars",
+     "bar 185: 1.22778 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 4,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "stop_moves_none": [
+     "ningún stop se movió"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 4,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 4,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 1,
+   "precondicion": true,
+   "saltan": {
+    "uncovered_streaks": [
+     "bar 185: 0.7713500000000002 held, uncovered for 2 bars",
+     "bar 186: 0.7721000000000002 held, uncovered for 3 bars"
+    ],
+    "growth_after_close": [
+     "bar 183: grew from 1.22245 to 1.2246700000000001 after the close at bar 182"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 4,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 1,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 180: stop ord_N803YGV4GHGJ0JH0YV40XB0Q sent again after it was dead",
+     "bar 182: stop ord_AEMGXFFH8KA847A9BYB6APJ2 sent again after it was dead"
+    ],
+    "growth_after_close": [
+     "bar 184: grew from 1.2050200000000002 to 1.2577000000000003 after the close at bar 183",
+     "bar 185: grew from 1.2050200000000002 to 1.2730800000000002 after the close at bar 183"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 5,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 182: stop ord_8Y3DS3XRR9EAB9EB52AKWJ67 sent again after it was dead",
+     "bar 183: market ord_N6N85BTHAXX32RSGHMSVF0BV sent again after it was dead"
+    ],
+    "positions_held_too_long": [
+     "bar 187: position open since bar 177",
+     "bar 198: position open since bar 188"
+    ],
+    "uncovered_streaks": [
+     "bar 184: 1.22778 held, uncovered for 2 bars",
+     "bar 185: 1.22778 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 5,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "stop_moves_none": [
+     "ningún stop se movió"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 5,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "entries_filling_a_later_position": [
+     "bar 214: entry ord_C31GX7P75T8TC54255G3H9B3 of position 1 filled into position 2"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 5,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 1,
+   "precondicion": true,
+   "saltan": {
+    "uncovered_streaks": [
+     "bar 185: 0.5431599999999999 held, uncovered for 2 bars",
+     "bar 186: 0.5431899999999998 held, uncovered for 3 bars"
+    ],
+    "growth_after_close": [
+     "bar 183: grew from 1.2273699999999999 to 1.2275699999999998 after the close at bar 182"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 5,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 2,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 182: stop ord_8Y3DS3XRR9EAB9EB52AKWJ67 sent again after it was dead",
+     "bar 183: market ord_N6N85BTHAXX32RSGHMSVF0BV sent again after it was dead"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 6,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 182: stop ord_8Y3DS3XRR9EAB9EB52AKWJ67 sent again after it was dead",
+     "bar 183: market ord_N6N85BTHAXX32RSGHMSVF0BV sent again after it was dead"
+    ],
+    "positions_held_too_long": [
+     "bar 187: position open since bar 177",
+     "bar 198: position open since bar 188"
+    ],
+    "uncovered_streaks": [
+     "bar 184: 1.22778 held, uncovered for 2 bars",
+     "bar 185: 1.22778 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 6,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "stop_moves_none": [
+     "ningún stop se movió"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 6,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 6,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 1,
+   "precondicion": true,
+   "saltan": {
+    "uncovered_streaks": [
+     "bar 185: 0.70692 held, uncovered for 2 bars",
+     "bar 186: 0.7069799999999999 held, uncovered for 3 bars"
+    ],
+    "growth_after_close": [
+     "bar 183: grew from 1.2264599999999999 to 1.22722 after the close at bar 182"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 6,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 180: stop ord_YJMQMW282Y3BEMG72T4K858F sent again after it was dead",
+     "bar 184: market ord_NA4C4D3DS6HE9P1CRCMSKQH3 sent again after it was dead"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 7,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 182: stop ord_8Y3DS3XRR9EAB9EB52AKWJ67 sent again after it was dead",
+     "bar 183: market ord_N6N85BTHAXX32RSGHMSVF0BV sent again after it was dead"
+    ],
+    "positions_held_too_long": [
+     "bar 187: position open since bar 177",
+     "bar 198: position open since bar 188"
+    ],
+    "uncovered_streaks": [
+     "bar 184: 1.22778 held, uncovered for 2 bars",
+     "bar 185: 1.22778 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 7,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "stop_moves_none": [
+     "ningún stop se movió"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 7,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "entries_filling_a_later_position": [
+     "bar 211: entry ord_C31GX7P75T8TC54255G3H9B3 of position 1 filled into position 2"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 7,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 1,
+   "precondicion": true,
+   "saltan": {
+    "uncovered_streaks": [
+     "bar 185: 0.36079 held, uncovered for 2 bars",
+     "bar 186: 0.36088 held, uncovered for 3 bars"
+    ],
+    "growth_after_close": [
+     "bar 183: grew from 1.22305 to 1.22689 after the close at bar 182"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 7,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 2,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 182: stop ord_8Y3DS3XRR9EAB9EB52AKWJ67 sent again after it was dead",
+     "bar 183: market ord_N6N85BTHAXX32RSGHMSVF0BV sent again after it was dead"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 8,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 182: stop ord_8Y3DS3XRR9EAB9EB52AKWJ67 sent again after it was dead",
+     "bar 183: market ord_N6N85BTHAXX32RSGHMSVF0BV sent again after it was dead"
+    ],
+    "positions_held_too_long": [
+     "bar 187: position open since bar 177",
+     "bar 198: position open since bar 188"
+    ],
+    "uncovered_streaks": [
+     "bar 184: 1.22778 held, uncovered for 2 bars",
+     "bar 185: 1.22778 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 8,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "stop_moves_none": [
+     "ningún stop se movió"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 8,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 8,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 1,
+   "precondicion": true,
+   "saltan": {
+    "uncovered_streaks": [
+     "bar 185: 0.43168000000000006 held, uncovered for 2 bars",
+     "bar 186: 0.43168000000000006 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 8,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 183: stop ord_EFNC36D2S2WYNQ24TZJ4JH49 sent again after it was dead",
+     "bar 184: market ord_NA4C4D3DS6HE9P1CRCMSKQH3 sent again after it was dead"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 9,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 182: stop ord_8Y3DS3XRR9EAB9EB52AKWJ67 sent again after it was dead",
+     "bar 183: market ord_N6N85BTHAXX32RSGHMSVF0BV sent again after it was dead"
+    ],
+    "positions_held_too_long": [
+     "bar 187: position open since bar 177",
+     "bar 198: position open since bar 188"
+    ],
+    "uncovered_streaks": [
+     "bar 184: 1.22778 held, uncovered for 2 bars",
+     "bar 185: 1.22778 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 9,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "stop_moves_none": [
+     "ningún stop se movió"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 9,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 6,
+   "precondicion": true,
+   "saltan": {
+    "entries_filling_a_later_position": [
+     "bar 200: entry ord_C31GX7P75T8TC54255G3H9B3 of position 1 filled into position 2"
+    ],
+    "uncovered_streaks": [
+     "bar 202: 1e-05 held, uncovered for 2 bars",
+     "bar 203: 1e-05 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 9,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 1,
+   "precondicion": true,
+   "saltan": {
+    "uncovered_streaks": [
+     "bar 185: 0.3481 held, uncovered for 2 bars",
+     "bar 186: 0.34815 held, uncovered for 3 bars"
+    ],
+    "growth_after_close": [
+     "bar 183: grew from 1.22698 to 1.22763 after the close at bar 182"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 9,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 183: stop ord_EFNC36D2S2WYNQ24TZJ4JH49 sent again after it was dead",
+     "bar 184: market ord_NA4C4D3DS6HE9P1CRCMSKQH3 sent again after it was dead"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 10,
+   "escenario": "d1_cierre_rechazado",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 182: stop ord_8Y3DS3XRR9EAB9EB52AKWJ67 sent again after it was dead",
+     "bar 183: market ord_N6N85BTHAXX32RSGHMSVF0BV sent again after it was dead"
+    ],
+    "positions_held_too_long": [
+     "bar 187: position open since bar 177",
+     "bar 198: position open since bar 188"
+    ],
+    "uncovered_streaks": [
+     "bar 184: 1.22778 held, uncovered for 2 bars",
+     "bar 185: 1.22778 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 10,
+   "escenario": "d2_stop_sigue",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {
+    "stop_moves_none": [
+     "ningún stop se movió"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 10,
+   "escenario": "d3_parciales",
+   "version": "1.1.0",
+   "posiciones": 5,
+   "precondicion": true,
+   "saltan": {}
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 10,
+   "escenario": "d3_ioc",
+   "version": "1.1.0",
+   "posiciones": 1,
+   "precondicion": true,
+   "saltan": {
+    "uncovered_streaks": [
+     "bar 185: 0.5606000000000001 held, uncovered for 2 bars",
+     "bar 186: 0.5606000000000001 held, uncovered for 3 bars"
+    ]
+   }
+  },
+  {
+   "datos": "ETH-USD_1m",
+   "semilla": 10,
+   "escenario": "todo_junto",
+   "version": "1.1.0",
+   "posiciones": 1,
+   "precondicion": true,
+   "saltan": {
+    "dead_orders_sent_again": [
+     "bar 182: stop ord_8Y3DS3XRR9EAB9EB52AKWJ67 sent again after it was dead",
+     "bar 183: market ord_N6N85BTHAXX32RSGHMSVF0BV sent again after it was dead"
+    ]
+   }
+  }
+ ]
+}

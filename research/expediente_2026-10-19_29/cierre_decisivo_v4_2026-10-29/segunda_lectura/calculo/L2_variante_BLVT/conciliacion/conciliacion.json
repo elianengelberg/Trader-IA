@@ -1,0 +1,247 @@
+{
+ "eventos_total": 51,
+ "eventos_en_universo": 41,
+ "fuera_por_texto_sin_usdt": 79,
+ "fuera_sin_par_usdt_documentado": 9,
+ "descartados": 1,
+ "por_anio": {
+  "2018": {
+   "total": 0,
+   "A": 0,
+   "B": 0,
+   "T": 0,
+   "C_explicada": 0,
+   "C_no_explicada": 0,
+   "D": 0,
+   "E_sin_fecha": 0,
+   "cobertura_conservadora_AB": null,
+   "fallas": 0
+  },
+  "2019": {
+   "total": 1,
+   "A": 1,
+   "B": 0,
+   "T": 0,
+   "C_explicada": 0,
+   "C_no_explicada": 0,
+   "D": 0,
+   "E_sin_fecha": 0,
+   "cobertura_conservadora_AB": 1.0,
+   "fallas": 0
+  },
+  "2020": {
+   "total": 12,
+   "A": 12,
+   "B": 0,
+   "T": 0,
+   "C_explicada": 0,
+   "C_no_explicada": 0,
+   "D": 0,
+   "E_sin_fecha": 0,
+   "cobertura_conservadora_AB": 1.0,
+   "fallas": 0
+  },
+  "2021": {
+   "total": 0,
+   "A": 0,
+   "B": 0,
+   "T": 0,
+   "C_explicada": 0,
+   "C_no_explicada": 0,
+   "D": 0,
+   "E_sin_fecha": 0,
+   "cobertura_conservadora_AB": null,
+   "fallas": 0
+  },
+  "2022": {
+   "total": 2,
+   "A": 2,
+   "B": 0,
+   "T": 0,
+   "C_explicada": 0,
+   "C_no_explicada": 0,
+   "D": 0,
+   "E_sin_fecha": 0,
+   "cobertura_conservadora_AB": 1.0,
+   "fallas": 0
+  },
+  "2023": {
+   "total": 16,
+   "A": 7,
+   "B": 0,
+   "T": 4,
+   "C_explicada": 5,
+   "C_no_explicada": 0,
+   "D": 0,
+   "E_sin_fecha": 0,
+   "cobertura_conservadora_AB": 0.4375,
+   "fallas": 4
+  },
+  "2024": {
+   "total": 10,
+   "A": 10,
+   "B": 0,
+   "T": 0,
+   "C_explicada": 0,
+   "C_no_explicada": 0,
+   "D": 0,
+   "E_sin_fecha": 0,
+   "cobertura_conservadora_AB": 1.0,
+   "fallas": 0
+  },
+  "2025": {
+   "total": 0,
+   "A": 0,
+   "B": 0,
+   "T": 0,
+   "C_explicada": 0,
+   "C_no_explicada": 0,
+   "D": 0,
+   "E_sin_fecha": 0,
+   "cobertura_conservadora_AB": null,
+   "fallas": 0
+  },
+  "2026": {
+   "total": 0,
+   "A": 0,
+   "B": 0,
+   "T": 0,
+   "C_explicada": 0,
+   "C_no_explicada": 0,
+   "D": 0,
+   "E_sin_fecha": 0,
+   "cobertura_conservadora_AB": null,
+   "fallas": 0
+  }
+ },
+ "salidas_por_anio": {
+  "2017": {
+   "observadas": 0,
+   "con_anuncio": 0,
+   "sin_anuncio": 0,
+   "frac_sin_anuncio": null
+  },
+  "2018": {
+   "observadas": 1,
+   "con_anuncio": 0,
+   "sin_anuncio": 1,
+   "frac_sin_anuncio": 1.0
+  },
+  "2019": {
+   "observadas": 2,
+   "con_anuncio": 1,
+   "sin_anuncio": 1,
+   "frac_sin_anuncio": 0.5
+  },
+  "2020": {
+   "observadas": 17,
+   "con_anuncio": 13,
+   "sin_anuncio": 4,
+   "frac_sin_anuncio": 0.23529411764705882
+  },
+  "2021": {
+   "observadas": 17,
+   "con_anuncio": 0,
+   "sin_anuncio": 17,
+   "frac_sin_anuncio": 1.0
+  },
+  "2022": {
+   "observadas": 41,
+   "con_anuncio": 7,
+   "sin_anuncio": 34,
+   "frac_sin_anuncio": 0.8292682926829268
+  },
+  "2023": {
+   "observadas": 21,
+   "con_anuncio": 8,
+   "sin_anuncio": 13,
+   "frac_sin_anuncio": 0.6190476190476191
+  },
+  "2024": {
+   "observadas": 44,
+   "con_anuncio": 10,
+   "sin_anuncio": 34,
+   "frac_sin_anuncio": 0.7727272727272727
+  },
+  "2025": {
+   "observadas": 51,
+   "con_anuncio": 0,
+   "sin_anuncio": 51,
+   "frac_sin_anuncio": 1.0
+  },
+  "2026": {
+   "observadas": 26,
+   "con_anuncio": 0,
+   "sin_anuncio": 26,
+   "frac_sin_anuncio": 1.0
+  }
+ },
+ "salidas_renombre_mapeado": 16,
+ "primer_evento": "2019-04-22",
+ "ultima_falla": {
+  "par": "LINKUPUSDT",
+  "E": "2023-05-11",
+  "urls": [
+   "https://www.binance.com/en/support/announcement/binance-to-delist-and-cease-redemption-for-trxup-trxdown-dotup-dotdown-linkup-linkdown-leveraged-tokens-2023-04-27-f9ed8900260141bbb2af4bb71741839a"
+  ],
+  "titulos": [
+   "Binance to Delist and Cease Redemption for TRXUP, TRXDOWN, DOTUP, DOTDOWN, LINKUP & LINKDOWN Leveraged Tokens (2023-04-27)"
+  ],
+  "subtipos": [
+   "exclusion_token"
+  ],
+  "par_en_texto": false,
+  "tokens": [
+   "DOTDOWN",
+   "DOTUP",
+   "LINKUP",
+   "TRXDOWN"
+  ],
+  "url_archivada": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-33/segments/1722640822309.61/warc/CC-MAIN-20240810190707-20240810220707-00558.warc.gz bytes=533876796-533951524",
+  "sin_fecha": false,
+  "clave": "LINKUPUSDT|2023-04-27",
+  "categoria_auto": "B",
+  "L": "2023-04-05",
+  "nota": null,
+  "manual": {
+   "accion": "fecha_corregida",
+   "E": "2023-05-11",
+   "cita": "Binance will delist and cease redemption for the TRXUP, TRXDOWN, DOTUP, DOTDOWN, LINKUP and LINKDOWN leveraged tokens at the following timings: At 2023-05-09 06:00 (UTC) : TRXUP, TRXDOWN At 2023-05-10 06:00 (UTC) : DOTUP, DOTDOWN At 2023-05-11 06:00 (UTC) : LINKUP, LINKDOWN",
+   "fuente_paginas": [
+    "url_https___www.binance.com_en_support_announcement_binance-to-delist-and-cease-_6079c69de2a3.json"
+   ],
+   "categoria_pasada1": "B",
+   "lector": "segunda lectura SL-v1",
+   "certeza": "alta"
+  },
+  "E_original": "2023-04-27",
+  "categoria": "T"
+ },
+ "componentes_inicio": {
+  "i": "2020-05-11",
+  "ii": "2023-05-12",
+  "iii": "2019-01-01",
+  "iv": null
+ },
+ "inicio_H": null,
+ "semanas_H": 0,
+ "evaluables_H": 0,
+ "pct_no_evaluables_H": null,
+ "INVALIDO": true,
+ "V_S2": {
+  "n": 50,
+  "aciertos": 49,
+  "tasa": 0.98,
+  "cumple": true
+ },
+ "V_S3_revisados": 10,
+ "V_S4": "NO EJECUTADO (HTTP 451; Adenda 3, A3.9)",
+ "V_S5_dias_activos_con_0_operaciones": 0,
+ "pendiente_revision_manual": {
+  "C": 0,
+  "D_sin_evidencia_ni_otro_par": 0,
+  "sin_fecha": 0,
+  "sin_par": 12
+ },
+ "resoluciones_manuales_usadas": true
+}

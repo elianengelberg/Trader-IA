@@ -1,0 +1,3 @@
+{"id": "M24", "archivo": "packages/tia/src/tia/risk/engine.py", "descripcion": "el freno de drawdown rechaza la señal pero no pone el sistema en modo seguro", "rc": 1, "resultado": "MUERTO", "primera_falla": "FAILED tests/unit/test_risk_engine.py::TestCircuitBreakers::test_drawdown_breach_halts_the_system_not_just_the_signal", "segundos": 409.7}
+{"id": "M32b", "archivo": "packages/tia/src/tia/runtime/states.py", "descripcion": "HALT_NEW_ORDERS no admite órdenes que reducen (corregido: cadena única)", "rc": 1, "resultado": "MUERTO", "primera_falla": "FAILED tests/integration/test_exit_guard.py::test_deadline_and_time_stop_in_the_same_cycle_send_one_exit_and_the_book_ends_flat", "segundos": 111.2}
+RESULTADO: 2 muertos, 0 vivos [], 0 no aplican

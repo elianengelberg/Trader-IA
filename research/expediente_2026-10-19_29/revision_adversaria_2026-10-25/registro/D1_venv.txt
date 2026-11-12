@@ -1,0 +1,6 @@
+== RA-D.1 venv NUEVO desde PyPI con config/ci-py311.txt del paquete: 2026-10-25T17:24:22Z
+rc pip=0
+paquetes: 74 · sha256 freeze: a1a96cac94471aac46ac7e5374846d0e3ffe93f046df198b71c95fec6869766e
+diferencias con config/pip_freeze_entorno_local.txt del paquete:
+   ninguna
+fin 2026-10-25T17:25:17Z

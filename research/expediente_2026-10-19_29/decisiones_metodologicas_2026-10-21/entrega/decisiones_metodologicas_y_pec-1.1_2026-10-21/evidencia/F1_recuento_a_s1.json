@@ -1,0 +1,26 @@
+{
+ "fallas": [],
+ "hechos": {
+  "ejecuciones_registradas": 1,
+  "celdas_pendientes_al_inicio": 48,
+  "archivos_de_codigo_correspondientes": 15,
+  "replicas_totales": 96000,
+  "filas_resultado": 48,
+  "filas_recontadas": 48,
+  "por_regla": {
+   "bootstrap_t_l20": {
+    "celdas": 24,
+    "comprobaciones": 48,
+    "cumplen": 33
+   },
+   "respaldo_max": {
+    "celdas": 24,
+    "comprobaciones": 48,
+    "cumplen": 48
+   }
+  },
+  "semilla": 20261103,
+  "B": 1999,
+  "replicas_por_celda": 2000
+ }
+}

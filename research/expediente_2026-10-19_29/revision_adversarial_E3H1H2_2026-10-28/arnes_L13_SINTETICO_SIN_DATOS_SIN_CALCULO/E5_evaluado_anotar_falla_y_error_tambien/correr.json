@@ -1,0 +1,4 @@
+{
+ "escenario": "E5_evaluado_anotar_falla_y_error_tambien",
+ "termino": "EXCEPCIÓN NO CONTROLADA OSError: [Errno 28] fallo inyectado al anotar ERROR (antes de escribir)"
+}

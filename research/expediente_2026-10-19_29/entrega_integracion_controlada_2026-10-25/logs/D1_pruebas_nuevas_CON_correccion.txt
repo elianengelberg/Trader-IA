@@ -1,0 +1,88 @@
+.........................                                                [100%]
+==================================== PASSES ====================================
+_____ test_a_stop_is_sent_as_stop_loss_with_a_stop_price_and_nothing_else ______
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 18:45:28 [info     ] binance_submit                 client_order_id=coid_XC6H7MHP8GGYDY84PDT12MW1 component=execution.binance key=key:d5c821f8 quantity=0.01 side=sell symbol=BTC-USD
+_ test_a_stop_the_venue_refuses_is_an_error_not_an_order[-1013-Filter failure: PRICE_FILTER] _
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 18:45:28 [info     ] binance_submit                 client_order_id=coid_XC6H7MHP8GGYDY84PDT12MW1 component=execution.binance key=key:d5c821f8 quantity=0.01 side=sell symbol=BTC-USD
+_ test_a_stop_the_venue_refuses_is_an_error_not_an_order[-2010-Account has insufficient balance for requested action.] _
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 18:45:28 [info     ] binance_submit                 client_order_id=coid_XC6H7MHP8GGYDY84PDT12MW1 component=execution.binance key=key:d5c821f8 quantity=0.01 side=sell symbol=BTC-USD
+_ test_a_stop_the_venue_refuses_is_an_error_not_an_order[-1106-Parameter 'timeInForce' sent when not required.] _
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 18:45:28 [info     ] binance_submit                 client_order_id=coid_XC6H7MHP8GGYDY84PDT12MW1 component=execution.binance key=key:d5c821f8 quantity=0.01 side=sell symbol=BTC-USD
+____________ test_a_stop_whose_answer_is_lost_is_unknown_not_absent ____________
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 18:45:28 [info     ] binance_submit                 client_order_id=coid_XC6H7MHP8GGYDY84PDT12MW1 component=execution.binance key=key:d5c821f8 quantity=0.01 side=sell symbol=BTC-USD
+_____________ test_a_stop_adopted_from_the_venue_is_read_as_a_stop _____________
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 18:45:28 [info     ] order_resolved_present         client_order_id=coid_XC6H7MHP8GGYDY84PDT12MW1 component=execution.binance detail='the venue holds this order; adopted into the local mirror, never resent' state=acknowledged
+_ test_every_bar_boundary_finds_the_position_protected_while_closes_are_rejected _
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 18:45:29 [error    ] safe_mode_entered              component=risk.engine reason='max drawdown 39.92% >= 10.00%'
+__ test_a_close_that_raises_or_times_out_puts_the_stop_back_in_the_same_call ___
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 18:45:29 [warning  ] close_position_failed          component=runtime.live error='[EXECUTION_ERROR] close refused by the venue (scripted)' reason='time stop'
+__ test_a_venue_that_refuses_every_stop_blocks_entries_halts_and_keeps_asking __
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 18:45:29 [warning  ] protective_stop_failed         component=runtime.live error='[EXECUTION_ERROR] order type stop is not supported by this adapter'
+2026-10-25 18:45:29 [warning  ] entries_blocked                cause=position_unprotected component=runtime.live reason='protective stop refused: [EXECUTION_ERROR] order type stop is not supported by this adapter'
+2026-10-25 18:45:29 [warning  ] protective_stop_failed         component=runtime.live error='[EXECUTION_ERROR] order type stop is not supported by this adapter'
+2026-10-25 18:45:29 [warning  ] protective_stop_failed         component=runtime.live error='[EXECUTION_ERROR] order type stop is not supported by this adapter'
+2026-10-25 18:45:29 [warning  ] protective_stop_failed         component=runtime.live error='[EXECUTION_ERROR] order type stop is not supported by this adapter'
+2026-10-25 18:45:29 [warning  ] protective_stop_failed         component=runtime.live error='[EXECUTION_ERROR] order type stop is not supported by this adapter'
+2026-10-25 18:45:29 [warning  ] protective_stop_failed         component=runtime.live error='[EXECUTION_ERROR] order type stop is not supported by this adapter'
+2026-10-25 18:45:29 [info     ] entries_unblocked              cause=position_unprotected component=runtime.live
+________ test_a_stop_rejected_as_an_order_is_handled_like_a_refused_one ________
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 18:45:29 [warning  ] protective_stop_rejected       component=runtime.live reason='scripted venue rejection'
+2026-10-25 18:45:29 [warning  ] entries_blocked                cause=position_unprotected component=runtime.live reason='protective stop rejected: scripted venue rejection'
+2026-10-25 18:45:29 [info     ] entries_unblocked              cause=position_unprotected component=runtime.live
+____ test_a_stop_the_venue_says_never_arrived_is_sent_again_on_the_next_bar ____
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 18:45:29 [warning  ] entries_blocked                cause=position_unprotected component=runtime.live reason='protective stop submission unanswered; the venue says it is not working'
+2026-10-25 18:45:29 [info     ] entries_unblocked              cause=position_unprotected component=runtime.live
+___ test_no_second_stop_while_the_venue_cannot_say_whether_the_first_arrived ___
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 18:45:29 [warning  ] entries_blocked                cause=position_unprotected component=runtime.live reason='protective stop coid_SE56Y0C71JGKFH8B604BSK75 unanswered and the venue cannot say whether it exists: [RECONCILIATION_ERROR] the venue cannot say (scripted)'
+2026-10-25 18:45:29 [info     ] entries_unblocked              cause=position_unprotected component=runtime.live
+___________ test_a_rejected_time_stop_close_leaves_no_bar_uncovered ____________
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 18:45:32 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=99891.51 run_id=bt_NNWBQD8YQSZTSA6130MD4P7A trades=13
+____________ test_a_rejected_reversal_close_leaves_no_bar_uncovered ____________
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 18:45:34 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=100233.73 run_id=bt_QXHC0FW258EKEQZGDWMRYCYY trades=4
+________ test_closes_rejected_twice_with_random_rejections_and_partials ________
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 18:45:37 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=99990.11 run_id=bt_0Y8RB6PMF37K4GCNAE1MD33F trades=32
+____________ test_immediate_or_cancel_closes_leave_no_bar_uncovered ____________
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 18:45:39 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=99932.07 run_id=bt_RVPHBTCYVD2FQY7D81BAH14N trades=65
+=========================== short test summary info ============================
+PASSED tests/unit/test_binance_protective_stop.py::test_a_stop_is_sent_as_stop_loss_with_a_stop_price_and_nothing_else
+PASSED tests/unit/test_binance_protective_stop.py::test_a_stop_without_a_positive_level_is_not_an_intent[None]
+PASSED tests/unit/test_binance_protective_stop.py::test_a_stop_without_a_positive_level_is_not_an_intent[0.0]
+PASSED tests/unit/test_binance_protective_stop.py::test_a_stop_without_a_positive_level_is_not_an_intent[-1.0]
+PASSED tests/unit/test_binance_protective_stop.py::test_a_malformed_stop_is_refused_before_any_request[48000.0-47900.0]
+PASSED tests/unit/test_binance_protective_stop.py::test_a_malformed_stop_is_refused_before_any_request[None-None]
+PASSED tests/unit/test_binance_protective_stop.py::test_a_stop_the_venue_refuses_is_an_error_not_an_order[-1013-Filter failure: PRICE_FILTER]
+PASSED tests/unit/test_binance_protective_stop.py::test_a_stop_the_venue_refuses_is_an_error_not_an_order[-2010-Account has insufficient balance for requested action.]
+PASSED tests/unit/test_binance_protective_stop.py::test_a_stop_the_venue_refuses_is_an_error_not_an_order[-1106-Parameter 'timeInForce' sent when not required.]
+PASSED tests/unit/test_binance_protective_stop.py::test_a_stop_whose_answer_is_lost_is_unknown_not_absent
+PASSED tests/unit/test_binance_protective_stop.py::test_a_stop_adopted_from_the_venue_is_read_as_a_stop
+PASSED tests/unit/test_binance_protective_stop.py::test_live_activation_needs_a_venue_that_accepted_the_protective_stop
+PASSED tests/integration/test_live_position_protection.py::test_every_bar_boundary_finds_the_position_protected_while_closes_are_rejected
+PASSED tests/integration/test_live_position_protection.py::test_a_close_that_raises_or_times_out_puts_the_stop_back_in_the_same_call
+PASSED tests/integration/test_live_position_protection.py::test_an_entry_that_fills_at_once_is_protected_before_the_cycle_ends
+PASSED tests/integration/test_live_position_protection.py::test_a_venue_that_refuses_every_stop_blocks_entries_halts_and_keeps_asking
+PASSED tests/integration/test_live_position_protection.py::test_a_stop_rejected_as_an_order_is_handled_like_a_refused_one
+PASSED tests/integration/test_live_position_protection.py::test_a_stop_whose_answer_was_lost_but_rests_at_the_venue_is_adopted_not_duplicated
+PASSED tests/integration/test_live_position_protection.py::test_a_stop_the_venue_says_never_arrived_is_sent_again_on_the_next_bar
+PASSED tests/integration/test_live_position_protection.py::test_no_second_stop_while_the_venue_cannot_say_whether_the_first_arrived
+PASSED tests/unit/test_backtest_protection_window.py::test_a_rejected_time_stop_close_leaves_no_bar_uncovered
+PASSED tests/unit/test_backtest_protection_window.py::test_a_rejected_reversal_close_leaves_no_bar_uncovered
+PASSED tests/unit/test_backtest_protection_window.py::test_closes_rejected_twice_with_random_rejections_and_partials
+PASSED tests/unit/test_backtest_protection_window.py::test_immediate_or_cancel_closes_leave_no_bar_uncovered
+PASSED tests/unit/test_backtest_protection_window.py::test_the_check_catches_an_uncovered_bar_and_excuses_only_a_rejected_stop
+25 passed in 12.96s

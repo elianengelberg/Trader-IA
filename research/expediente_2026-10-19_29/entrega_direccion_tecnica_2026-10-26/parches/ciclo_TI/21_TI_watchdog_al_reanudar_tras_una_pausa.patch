@@ -1,0 +1,107 @@
+diff --git a/packages/tia/src/tia/runtime/live.py b/packages/tia/src/tia/runtime/live.py
+index c279ac1..e0b39fa 100644
+--- a/packages/tia/src/tia/runtime/live.py
++++ b/packages/tia/src/tia/runtime/live.py
+@@ -1782,7 +1782,9 @@ class LiveRuntime:
+         safe-moded session used to stop its venue too: a resting stop never fired however
+         far the price went. While the session stands still, each new closed bar is still
+         matched against the resting orders, and nothing else — no decision, no order, no
+-        bar counted. A venue that matches by itself (no ``on_bar``) is left alone."""
++        bar counted. The bar is also a bar the feed produced, so the market-data watchdog
++        hears of it: a session resumed after a long pause is not halted as stale while bars
++        kept coming. A venue that matches by itself (no ``on_bar``) is left alone."""
+         on_bar = getattr(self._execution, "on_bar", None)
+         if not callable(on_bar):
+             return
+@@ -1797,6 +1799,7 @@ class LiveRuntime:
+         if self._last_close is not None and latest.close_time <= self._last_close:
+             return
+         self._last_close = latest.close_time  # matched once: not again when the session resumes
++        self._last_bar_wall = self._clock.now()
+         for fill in on_bar(latest):
+             self._on_fill(fill)
+ 
+diff --git a/tests/integration/test_watchdog_after_standing.py b/tests/integration/test_watchdog_after_standing.py
+new file mode 100644
+index 0000000..cc14f36
+--- /dev/null
++++ b/tests/integration/test_watchdog_after_standing.py
+@@ -0,0 +1,78 @@
++"""A session that stood still while bars kept coming is not resumed into a stale-data halt.
++
++The market-data watchdog measures the wall time since the last new bar it saw, and only a
++running session's cycle used to see bars. A paper session paused for longer than the TTL
++came back to RUNNING and, on its very next cycle, halted for "market data stale" — with an
++incident and an operator alert — while the feed had been producing bars all along. Since
++the standing session matches each new bar against its resting orders (so that bar is not
++matched twice), the halt lasted until the next bar instead of healing in the same cycle.
++
++Expected outcomes, fixed before running: after a pause longer than the TTL with bars
++flowing, the resumed session stays RUNNING, records no stale-data halt, and decides on the
++next new bar as usual; a feed that did stop while the session stood still is still caught on
++the first cycle after the resume.
++"""
++
++from __future__ import annotations
++
++from datetime import timedelta
++from typing import Any
++
++from tia.runtime.states import LiveState
++
++from .test_account_restore import build
++
++
++async def test_a_session_resumed_after_a_long_pause_with_bars_flowing_is_not_halted_as_stale() -> None:
++    saved: list[tuple[str, dict[str, Any]]] = []
++
++    async def record(kind: str, payload: dict[str, Any]) -> None:
++        saved.append((kind, payload))
++
++    runtime, _, market, clock = build(persist=record)
++    await runtime.start()
++    try:
++        market.advance()
++        await runtime._cycle_once()
++        runtime.pause(actor="operator")
++        paused_at = clock.now()
++        while (clock.now() - paused_at).total_seconds() <= 2 * runtime.market_data_ttl_seconds:
++            market.advance()
++            await runtime._cycle_once()
++        runtime.resume(actor="operator")
++        bars = runtime.counters["bars"]
++
++        await runtime._cycle_once()  # the next cycle, before the next bar closes
++
++        await runtime.flush_persistence(timeout_seconds=5)
++        halts = [h["reason"] for h in runtime.machine.as_dict()["history"] if "market data stale" in h["reason"]]
++        incidents = [p["reason"] for k, p in saved if k == "incident" and "market data stale" in p.get("reason", "")]
++        assert halts == [] and incidents == [], "the feed never stopped: no stale-data halt, no incident"
++        assert runtime.machine.state is LiveState.RUNNING
++
++        market.advance()
++        await runtime._cycle_once()
++        assert runtime.counters["bars"] == bars + 1, "the next new bar is decided on as usual"
++        assert runtime.machine.state is LiveState.RUNNING
++    finally:
++        await runtime.stop(reason="end")
++
++
++async def test_a_feed_that_stopped_during_the_pause_is_still_caught_after_the_resume() -> None:
++    runtime, _, market, clock = build()
++    await runtime.start()
++    try:
++        market.advance()
++        await runtime._cycle_once()
++        runtime.pause(actor="operator")
++        for _ in range(4):  # the clock runs, the feed produces nothing
++            clock.advance_to(clock.now() + timedelta(seconds=runtime.market_data_ttl_seconds / 2))
++            await runtime._cycle_once()
++        runtime.resume(actor="operator")
++
++        await runtime._cycle_once()
++
++        assert runtime.machine.state is LiveState.HALT_NEW_ORDERS
++        assert "market data stale" in runtime.machine.as_dict()["history"][-1]["reason"]
++    finally:
++        await runtime.stop(reason="end")

@@ -1,0 +1,377 @@
+{
+ "decision": "H-SINC",
+ "criterios_H_ENT": {
+  "a_todas_con_bucle_activo": false,
+  "b_tasa_crece_con_K": false,
+  "c_ninguna_trabada": false,
+  "d_aparcado_sin_fallas": false
+ },
+ "fallas_R19_por_K_bucle_activo": {
+  "0": 2
+ },
+ "fallas_R19_aparcado": 2,
+ "trabadas": [
+  [
+   "001_val_K0_park0_prueba1",
+   "tests/integration/test_validacion_sonda_r19.py::test_trabada"
+  ],
+  [
+   "002_val_K0_park1_prueba1",
+   "tests/integration/test_validacion_sonda_r19.py::test_trabada"
+  ]
+ ],
+ "errores_escritura_no_inyectados": [
+  {
+   "prueba": "tests/integration/test_validacion_sonda_r19.py::test_errores_inyectado_y_no_inyectado",
+   "tipo": "order",
+   "excepcion": "ValueError",
+   "mensaje": "boom",
+   "inyectada": false,
+   "tag": "001_val_K0_park0_prueba1"
+  },
+  {
+   "prueba": "tests/integration/test_validacion_sonda_r19.py::test_errores_inyectado_y_no_inyectado",
+   "tipo": "order",
+   "excepcion": "ValueError",
+   "mensaje": "boom",
+   "inyectada": false,
+   "tag": "002_val_K0_park1_prueba1"
+  }
+ ],
+ "corridas_con_FK_en_registro": [],
+ "otras_fallas": [],
+ "comparacion_cand_base": null,
+ "celdas": {
+  "val|K0|park0|prueba": {
+   "corridas": 1,
+   "sin_sonda": 0,
+   "rc_distinto_de_0": 1,
+   "fallas_por_clase": {
+    "lenta_con_productor": 1,
+    "trabada": 1
+   },
+   "pruebas_que_fallan": {
+    "test_lenta_con_productor": 1,
+    "test_trabada": 1
+   },
+   "vaciado_settle": {
+    "n": 1,
+    "mediana": 0.451,
+    "max": 0.451,
+    ">=8s": 0
+   },
+   "carga_con_quemadores_mediana": 0,
+   "ejecutables_mediana": null,
+   "fraccion_cpu_pytest_mediana": null
+  },
+  "val|K0|park1|prueba": {
+   "corridas": 1,
+   "sin_sonda": 0,
+   "rc_distinto_de_0": 1,
+   "fallas_por_clase": {
+    "lenta_sin_productor": 1,
+    "trabada": 1
+   },
+   "pruebas_que_fallan": {
+    "test_lenta_con_productor": 1,
+    "test_trabada": 1
+   },
+   "vaciado_settle": {
+    "n": 1,
+    "mediana": 0.451,
+    "max": 0.451,
+    ">=8s": 0
+   },
+   "carga_con_quemadores_mediana": 0,
+   "ejecutables_mediana": null,
+   "fraccion_cpu_pytest_mediana": null
+  }
+ },
+ "corridas": [
+  {
+   "arbol": "val",
+   "K": 0,
+   "park": 0,
+   "sel": "prueba",
+   "rep": 1,
+   "n": 1,
+   "tag": "001_val_K0_park0_prueba1",
+   "rc": 1,
+   "seg": 0,
+   "carga_antes": [
+    0,
+    0,
+    0
+   ],
+   "carga_con_quemadores": [
+    0,
+    0,
+    0
+   ],
+   "carga_despues": [
+    0,
+    0,
+    0
+   ],
+   "json": true,
+   "sonda": true,
+   "exit_pytest": 1,
+   "fallas": [
+    {
+     "prueba": "tests/integration/test_validacion_sonda_r19.py::test_lenta_con_productor",
+     "clase": "lenta_con_productor",
+     "mensajes": [
+      "call: AssertionError: persistence writes still in flight\nassert False"
+     ],
+     "vaciado": {
+      "prueba": "tests/integration/test_validacion_sonda_r19.py::test_lenta_con_productor",
+      "llamador": "settle",
+      "plazo_s": 0.3,
+      "pendientes": 10,
+      "pendientes_por_tipo": {
+       "sin_empezar": 10
+      },
+      "bucle_vivo": true,
+      "carga1": 0.81,
+      "seg": 0.301,
+      "ok": false,
+      "ciclos_fondo_durante": 9578,
+      "foto_al_vencer": 808,
+      "foto_por_tipo": {
+       "reconciliation": 798,
+       "fill": 9,
+       "run_heartbeat": 1
+      },
+      "bucle_vivo_al_vencer": true,
+      "carga1_al_vencer": 0.81,
+      "terminaron_despues": 14,
+      "no_terminaron": 794,
+      "seg_hasta_terminar": 3.001,
+      "ciclos_fondo_en_espera": 174888,
+      "cabeza_tras_espera": {
+       "n": 16,
+       "tipo": "reconciliation",
+       "pila": [
+        "sonda_r19_v2.py:143 sequenced",
+        "live.py:4254 _sequenced",
+        "test_validacion_sonda_r19.py:18 persist",
+        "tasks.py:649 sleep"
+       ]
+      },
+      "productor_detenido": true,
+      "terminaron_sin_productor": 10,
+      "no_terminaron_sin_productor": 784,
+      "tipos_sin_terminar": {
+       "reconciliation": 784
+      },
+      "cabeza_final": {
+       "n": 26,
+       "tipo": "reconciliation",
+       "pila": [
+        "sonda_r19_v2.py:143 sequenced",
+        "live.py:4254 _sequenced",
+        "test_validacion_sonda_r19.py:18 persist",
+        "tasks.py:649 sleep"
+       ]
+      }
+     },
+     "fraccion_foto_del_bucle": 0.989
+    },
+    {
+     "prueba": "tests/integration/test_validacion_sonda_r19.py::test_trabada",
+     "clase": "trabada",
+     "mensajes": [
+      "call: AssertionError: persistence writes still in flight\nassert False"
+     ],
+     "vaciado": {
+      "prueba": "tests/integration/test_validacion_sonda_r19.py::test_trabada",
+      "llamador": "settle",
+      "plazo_s": 0.2,
+      "pendientes": 1,
+      "pendientes_por_tipo": {
+       "sin_empezar": 1
+      },
+      "bucle_vivo": true,
+      "carga1": 0.84,
+      "seg": 0.201,
+      "ok": false,
+      "ciclos_fondo_durante": 12842,
+      "foto_al_vencer": 1072,
+      "foto_por_tipo": {
+       "reconciliation": 1070,
+       "order": 1,
+       "run_heartbeat": 1
+      },
+      "bucle_vivo_al_vencer": true,
+      "carga1_al_vencer": 0.84,
+      "terminaron_despues": 0,
+      "no_terminaron": 1072,
+      "seg_hasta_terminar": 3.002,
+      "ciclos_fondo_en_espera": 183668,
+      "cabeza_tras_espera": {
+       "n": 15384,
+       "tipo": "order",
+       "pila": [
+        "sonda_r19_v2.py:143 sequenced",
+        "live.py:4254 _sequenced",
+        "test_validacion_sonda_r19.py:30 persist",
+        "locks.py:213 wait"
+       ]
+      },
+      "productor_detenido": true,
+      "terminaron_sin_productor": 0,
+      "no_terminaron_sin_productor": 1072,
+      "tipos_sin_terminar": {
+       "reconciliation": 1070,
+       "order": 1,
+       "run_heartbeat": 1
+      },
+      "cabeza_final": {
+       "n": 15384,
+       "tipo": "order",
+       "pila": [
+        "sonda_r19_v2.py:143 sequenced",
+        "live.py:4254 _sequenced",
+        "test_validacion_sonda_r19.py:30 persist",
+        "locks.py:213 wait"
+       ]
+      }
+     },
+     "fraccion_foto_del_bucle": 0.999
+    }
+   ],
+   "ciclos_fondo": 380976,
+   "vaciado_settle_max_s": 0.451,
+   "vaciado_settle_bucle_vivo_max_s": 0.301,
+   "pendientes_max": 10,
+   "errores_inyectados": 1
+  },
+  {
+   "arbol": "val",
+   "K": 0,
+   "park": 1,
+   "sel": "prueba",
+   "rep": 1,
+   "n": 2,
+   "tag": "002_val_K0_park1_prueba1",
+   "rc": 1,
+   "seg": 0,
+   "carga_antes": [
+    0,
+    0,
+    0
+   ],
+   "carga_con_quemadores": [
+    0,
+    0,
+    0
+   ],
+   "carga_despues": [
+    0,
+    0,
+    0
+   ],
+   "json": true,
+   "sonda": true,
+   "exit_pytest": 1,
+   "fallas": [
+    {
+     "prueba": "tests/integration/test_validacion_sonda_r19.py::test_lenta_con_productor",
+     "clase": "lenta_sin_productor",
+     "mensajes": [
+      "call: AssertionError: persistence writes still in flight\nassert False"
+     ],
+     "vaciado": {
+      "prueba": "tests/integration/test_validacion_sonda_r19.py::test_lenta_con_productor",
+      "llamador": "settle",
+      "plazo_s": 0.3,
+      "pendientes": 10,
+      "pendientes_por_tipo": {
+       "sin_empezar": 10
+      },
+      "bucle_vivo": false,
+      "carga1": 0.79,
+      "seg": 0.301,
+      "ok": false,
+      "ciclos_fondo_durante": 0,
+      "foto_al_vencer": 9,
+      "foto_por_tipo": {
+       "fill": 9
+      },
+      "bucle_vivo_al_vencer": false,
+      "carga1_al_vencer": 0.79,
+      "terminaron_despues": 9,
+      "no_terminaron": 0,
+      "seg_hasta_terminar": 1.704,
+      "ciclos_fondo_en_espera": 0,
+      "cabeza_tras_espera": null
+     },
+     "fraccion_foto_del_bucle": 0.0
+    },
+    {
+     "prueba": "tests/integration/test_validacion_sonda_r19.py::test_trabada",
+     "clase": "trabada",
+     "mensajes": [
+      "call: AssertionError: persistence writes still in flight\nassert False"
+     ],
+     "vaciado": {
+      "prueba": "tests/integration/test_validacion_sonda_r19.py::test_trabada",
+      "llamador": "settle",
+      "plazo_s": 0.2,
+      "pendientes": 1,
+      "pendientes_por_tipo": {
+       "sin_empezar": 1
+      },
+      "bucle_vivo": false,
+      "carga1": 0.79,
+      "seg": 0.201,
+      "ok": false,
+      "ciclos_fondo_durante": 0,
+      "foto_al_vencer": 1,
+      "foto_por_tipo": {
+       "order": 1
+      },
+      "bucle_vivo_al_vencer": false,
+      "carga1_al_vencer": 0.79,
+      "terminaron_despues": 0,
+      "no_terminaron": 1,
+      "seg_hasta_terminar": 3.0,
+      "ciclos_fondo_en_espera": 0,
+      "cabeza_tras_espera": {
+       "n": 11,
+       "tipo": "order",
+       "pila": [
+        "sonda_r19_v2.py:143 sequenced",
+        "live.py:4254 _sequenced",
+        "test_validacion_sonda_r19.py:30 persist",
+        "locks.py:213 wait"
+       ]
+      },
+      "productor_detenido": false,
+      "terminaron_sin_productor": 0,
+      "no_terminaron_sin_productor": 1,
+      "tipos_sin_terminar": {
+       "order": 1
+      },
+      "cabeza_final": {
+       "n": 11,
+       "tipo": "order",
+       "pila": [
+        "sonda_r19_v2.py:143 sequenced",
+        "live.py:4254 _sequenced",
+        "test_validacion_sonda_r19.py:30 persist",
+        "locks.py:213 wait"
+       ]
+      }
+     },
+     "fraccion_foto_del_bucle": 0.0
+    }
+   ],
+   "ciclos_fondo": 0,
+   "vaciado_settle_max_s": 0.451,
+   "vaciado_settle_bucle_vivo_max_s": null,
+   "pendientes_max": 10,
+   "errores_inyectados": 1
+  }
+ ]
+}

@@ -1,0 +1,20 @@
+== IC-A.0 estado inicial: 2026-10-25T18:12:14Z · host vm · uptime up 2 minutes · kernel 6.18.44-fc-v153
+python Python 3.11.17 · git 2.43.0 · psql 16.15 · disco libre 2.1G
+/home/tia/Trader-IA: NO EXISTE · repositorio: /home/user/Trader-IA · remoto: https://github.com/elianengelberg/Trader-IA
+sha256 .git/index ANTES: 37490035d6706739fd7c9add42ad62c4e0c9260089e8e2e77a486f55e3bdcd1b
+HEAD 72ffae5d2698440c8f1afaff12e07bd8adde66fb · rama claude/algo-trading-simulation-platform-ngf7xo · árbol 44850cfcbf53c3f8223d38a92031f4402f8ffb32 · formato sha1
+refs:
+   refs/heads/claude/algo-trading-simulation-platform-ngf7xo 72ffae5d2698440c8f1afaff12e07bd8adde66fb
+   refs/remotes/origin/claude/algo-trading-simulation-platform-ngf7xo 72ffae5d2698440c8f1afaff12e07bd8adde66fb
+tags 0 · stash 0 · índice ls-files sha256 07e0c86bb1c04ba22975582d17d1a729c500ceafe51b1615b1149fca4afac7e2 · cambios 0 · ignorados 18
+reflog 6d55854cfe1e43f71e488c6c841dbfa9fa60b6d1ff00f8b679705367ccb21138 · entradas 13
+historia reciente:
+   72ffae5 Keep third-party raw market data for T-MULTI out of version control
+   848e36f Record T-papel operating addendum and cut executor (written 2026-10-17)
+   692f2b2 Close T-MULTI evidence package and record final research state
+   f518ac1 Freeze T-MULTI preregistration and code before any data access
+c6339e3: c6339e3fcd6041cb6c4ad7f5545f0ff306a4fd2f · ¿ancestro de HEAD? sí · ¿padre directo de HEAD? no
+diferencia c6339e3..72ffae5:  22 files changed, 9579 insertions(+), 3 deletions(-)
+huella inicial del estado relevante (HEAD+árbol+refs+índice+reflog+ignorados): bc9bd9683211e6a6e84ec5c1ed240bec57310ae1f6a4fa0e25527fd469c4a9e9
+sha256 .git/index DESPUÉS: 37490035d6706739fd7c9add42ad62c4e0c9260089e8e2e77a486f55e3bdcd1b
+procesos de pruebas/bases previos: 0

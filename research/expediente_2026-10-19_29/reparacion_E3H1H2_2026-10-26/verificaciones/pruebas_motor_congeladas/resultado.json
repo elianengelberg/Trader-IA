@@ -1,0 +1,85 @@
+{
+ "costos": {
+  "rango1": 0.0015,
+  "rango5": 0.002,
+  "rango20": 0.003,
+  "fuera": 0.004,
+  "x2_rango5": 0.004
+ },
+ "exclusiones": {
+  "fijo": [
+   "USDCUSDT"
+  ],
+  "apalancado": [
+   "C01UPUSDT"
+  ]
+ },
+ "invariancia": [
+  {
+   "corte": 570,
+   "universos_y_senal": true,
+   "objetivos": true,
+   "pesos": true
+  },
+  {
+   "corte": 655,
+   "universos_y_senal": true,
+   "objetivos": true,
+   "pesos": true
+  },
+  {
+   "corte": 659,
+   "universos_y_senal": true,
+   "objetivos": true,
+   "pesos": true
+  },
+  {
+   "corte": 839,
+   "universos_y_senal": true,
+   "objetivos": true,
+   "pesos": true
+  },
+  {
+   "corte": 1010,
+   "universos_y_senal": true,
+   "objetivos": true,
+   "pesos": true
+  }
+ ],
+ "H1_nulo": {
+  "semanas": 120,
+  "IC_media": 0.01449691869128915,
+  "p": 0.12236562398420803
+ },
+ "H1_momentum_plantado": {
+  "semanas": 120,
+  "IC_media": 0.18388596386730527,
+  "p": 0.0
+ },
+ "eventos_ew": {
+  "liquidaciones": 3,
+  "ventas_diferidas": 2,
+  "compras_omitidas": 1
+ },
+ "nulo_aleatorio_vs_ew_bruto": {
+  "media_anual_promedio": -0.05022867385110415,
+  "desvio_entre_replicas": 0.1963557336711882,
+  "error_estandar_del_promedio": 0.03104656750171852
+ },
+ "separacion_etapas": {
+  "imports_calidad": [
+   "csv",
+   "datetime",
+   "hashlib",
+   "io",
+   "json",
+   "numpy",
+   "pathlib",
+   "sys",
+   "zipfile"
+  ],
+  "importa_motor": false
+ },
+ "H1_S_independiente_del_futuro": true,
+ "todo_ok": true
+}

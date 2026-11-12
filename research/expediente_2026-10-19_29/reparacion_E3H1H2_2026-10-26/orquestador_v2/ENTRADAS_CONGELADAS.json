@@ -1,0 +1,112 @@
+{
+ "_nota": "Insumos del orquestador v2 con su sha256. El modo real los verifica todos antes de leer cualquier precio.",
+ "inicio_H_esperado": "2023-05-15",
+ "mapeos": "renombres/mapeos_adenda1.json",
+ "entradas": [
+  {
+   "nombre": "series_calidad_757",
+   "base": "E3",
+   "ruta": "resultados/calidad/series",
+   "tipo": "conjunto",
+   "sha256": "6506fb03c211def710abe61a2493799000b80996c63000fcfc98da624cbaba79"
+  },
+  {
+   "nombre": "estructural",
+   "base": "E3",
+   "ruta": "resultados/estructural/estructural.json",
+   "tipo": "archivo",
+   "sha256": "14838dadec428483c91bf57abd1db6916d473bffe4e789ecbdd394de6351ec55"
+  },
+  {
+   "nombre": "listas_fijas_por_lunes",
+   "base": "E3",
+   "ruta": "resultados/estructural/listas_fijas_por_lunes.json",
+   "tipo": "archivo",
+   "sha256": "de6cca7735016e2734bfc53cab27eea89e765a763ab240789b609ba55a24a620"
+  },
+  {
+   "nombre": "universo.py",
+   "base": "E3",
+   "ruta": "codigo/universo.py",
+   "tipo": "archivo",
+   "sha256": "2af45115238d0065d54f0c6230b16c71831293b235b72627e62d1d7c7d7491f7"
+  },
+  {
+   "nombre": "motor.py",
+   "base": "E3",
+   "ruta": "codigo/motor.py",
+   "tipo": "archivo",
+   "sha256": "cadb805d2d882fcf909e0309cff85203ee383c6b8ed0ac08b89f4028ee999b2e"
+  },
+  {
+   "nombre": "inferencia.py",
+   "base": "E3",
+   "ruta": "codigo/inferencia.py",
+   "tipo": "archivo",
+   "sha256": "7b28038621c1d366655d726bb885ca0105f1a25cfcdb9615e86a7fe39e85f3e1"
+  },
+  {
+   "nombre": "pruebas_motor.py",
+   "base": "E3",
+   "ruta": "codigo/pruebas_motor.py",
+   "tipo": "archivo",
+   "sha256": "54f832d39422379f14bf5d0ad2f42bba9e8f0b4d40915ea72bcef0c968da04e5"
+  },
+  {
+   "nombre": "conciliacion.py",
+   "base": "E3",
+   "ruta": "codigo/conciliacion.py",
+   "tipo": "archivo",
+   "sha256": "6f764845598b4ecf6c3cffbc6c7b584f21e493403c7bcd14339f5f582c9273ad"
+  },
+  {
+   "nombre": "resoluciones_manuales",
+   "base": "reparacion",
+   "ruta": "segunda_pasada/resoluciones_manuales.json",
+   "tipo": "archivo",
+   "sha256": "41a13221dea70023126ce3fb6c311c9f41e2aef063820207c1f7e871d2873863"
+  },
+  {
+   "nombre": "pasada2_conciliacion",
+   "base": "reparacion",
+   "ruta": "segunda_pasada/salida_pasada2/conciliacion.json",
+   "tipo": "archivo",
+   "sha256": "7a0778e8c0ac55697cca3d0fd81da1a055e3a6700c06ca1d6867e905971e6456"
+  },
+  {
+   "nombre": "pasada2_eventos",
+   "base": "reparacion",
+   "ruta": "segunda_pasada/salida_pasada2/eventos.json",
+   "tipo": "archivo",
+   "sha256": "dbd5a85dd265e84e94d678636c4714ae0189d1800faf9c13c52f15ccda3808c6"
+  },
+  {
+   "nombre": "pasada2_salidas",
+   "base": "reparacion",
+   "ruta": "segunda_pasada/salida_pasada2/salidas.json",
+   "tipo": "archivo",
+   "sha256": "9c6fd418b3fee0236e63865c126228201654d46dff19a438007eea6354a0ec2e"
+  },
+  {
+   "nombre": "eventos_omitidos",
+   "base": "reparacion",
+   "ruta": "segunda_pasada/eventos_omitidos.json",
+   "tipo": "archivo",
+   "sha256": "823b30965a273f3e367c6d03abb45ed1b1b890fc90b2a7c5feb34f46b7562e12"
+  },
+  {
+   "nombre": "mapeos_adenda1",
+   "base": "reparacion",
+   "ruta": "renombres/mapeos_adenda1.json",
+   "tipo": "archivo",
+   "sha256": "aeb8b5f2b33938717eb2acbe4b68fa581d92caa71841ed748384599aefbdf917"
+  },
+  {
+   "nombre": "ventana_A",
+   "base": "ventana",
+   "ruta": null,
+   "tipo": "archivo",
+   "sha256": "dcbd80abf5b0d4a2373d411c3db37cf4a2089dc8fcbcb193dce085b838d57e24"
+  }
+ ]
+}

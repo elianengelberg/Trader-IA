@@ -1,0 +1,8 @@
+== IC-A.1 c6339e3 frente a 72ffae5 (base real de los parches)
+commits entre ambos: 4 · rutas tocadas fuera de research/: 0
+lectura: c6339e3 es un ANCESTRO de la base (no la base). Todos los parches aplican sobre 72ffae5; entre ambos solo cambia research/.
+== IC-A.2 artefactos previos
+ZIP cierre integral: ea670f911da39ff6cb03a1ff6878dee956ae437e40e09450f7d622449fc9c91b (declarado ea670f911da39ff6cb03a1ff6878dee956ae437e40e09450f7d622449fc9c91b) · .sha256: cierre_integral_2026-10-22.zip: OK
+manifiesto en el ZIP: ce2612a9c6ba17b1b8f464c88f4fd1eda11643cea861542893c55082e304984c (declarado ce2612a9c6ba17b1b8f464c88f4fd1eda11643cea861542893c55082e304984c)
+revisión adversaria: MANIFEST_REVISION.sha256 a521d386384ca26691e4e599174778185e6581b561cb704e15810c5e72028362 · verifican 126 de 126 · fallan: 
+INFORME_REVISION_ADVERSARIA.md actual: 7538d6c77acde3b323382041dc23c8e93225c21115d78485ed5965c7164dc670

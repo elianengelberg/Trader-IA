@@ -1,0 +1,37 @@
+# comando: /usr/bin/python3 -I -B prototipos/p5_carrera_apertura.py prototipos/tmp_p5
+# fecha: 2026-10-28T19:49:31Z
+{
+ "con_cas_dentro_del_bloqueo": {
+  "resultados": [
+   "ABIERTO",
+   "RECHAZO_BLOQUEADO",
+   "RECHAZO_BLOQUEADO",
+   "RECHAZO_BLOQUEADO",
+   "RECHAZO_BLOQUEADO",
+   "RECHAZO_BLOQUEADO",
+   "RECHAZO_BLOQUEADO",
+   "RECHAZO_BLOQUEADO"
+  ],
+  "lineas_ABIERTO_en_registro": 1,
+  "nonces_abiertos": [
+   "nonce-05"
+  ]
+ },
+ "sin_cas_(lee_cabeza_antes_de_bloquear)": {
+  "resultados": [
+   "ABIERTO",
+   "RECHAZO_BLOQUEADO",
+   "RECHAZO_BLOQUEADO",
+   "RECHAZO_BLOQUEADO",
+   "RECHAZO_BLOQUEADO",
+   "RECHAZO_BLOQUEADO",
+   "RECHAZO_BLOQUEADO",
+   "RECHAZO_BLOQUEADO"
+  ],
+  "lineas_ABIERTO_en_registro": 1,
+  "nonces_abiertos": [
+   "nonce-02"
+  ]
+ }
+}
+# exit=0

@@ -1,0 +1,347 @@
+{
+ "diseno_v4_1": {
+  "casos": 722,
+  "con_fallas": 14,
+  "invariantes_violadas": [
+   "INV-1(sin canal)",
+   "INV-3"
+  ],
+  "limite_INV1_sin_canal": 15,
+  "ejemplo_limite": [
+   {
+    "escenario": "EVALUADO",
+    "fallo": [
+     "fsync_miente",
+     1,
+     null
+    ],
+    "post": "corte_canal_perdido",
+    "retorno": "EVALUADO",
+    "clase": "VACIO",
+    "detalle": null,
+    "decision_calculada": "EVALUADO",
+    "decision_en_disco": null,
+    "reabre": true,
+    "fallas": [
+     "INV-1(sin canal)",
+     "INV-3"
+    ]
+   }
+  ],
+  "por_clase": {
+   "VACIO": 120,
+   "INCIERTO": 97,
+   "EVALUADO": 58,
+   "NO_DECIDIDO": 277,
+   "DECISION_ANUNCIADA_NO_PERSISTIDA": 36,
+   "TERMINAL_SIN_OBJETO": 78,
+   "INVALIDO": 56
+  },
+  "ejemplos_fallas": [
+   {
+    "escenario": "EVALUADO",
+    "fallo": [
+     "fsync_miente",
+     1,
+     null
+    ],
+    "post": "corte_canal_perdido",
+    "retorno": "EVALUADO",
+    "clase": "VACIO",
+    "detalle": null,
+    "decision_calculada": "EVALUADO",
+    "decision_en_disco": null,
+    "reabre": true,
+    "fallas": [
+     "INV-1(sin canal)",
+     "INV-3"
+    ]
+   },
+   {
+    "escenario": "EVALUADO",
+    "fallo": [
+     "fsync_miente",
+     2,
+     null
+    ],
+    "post": "corte_canal_perdido",
+    "retorno": "EVALUADO",
+    "clase": "VACIO",
+    "detalle": null,
+    "decision_calculada": "EVALUADO",
+    "decision_en_disco": null,
+    "reabre": true,
+    "fallas": [
+     "INV-1(sin canal)",
+     "INV-3"
+    ]
+   },
+   {
+    "escenario": "EVALUADO",
+    "fallo": [
+     "fsync_miente",
+     3,
+     null
+    ],
+    "post": "corte_canal_perdido",
+    "retorno": "EVALUADO",
+    "clase": "VACIO",
+    "detalle": null,
+    "decision_calculada": "EVALUADO",
+    "decision_en_disco": null,
+    "reabre": true,
+    "fallas": [
+     "INV-1(sin canal)",
+     "INV-3"
+    ]
+   },
+   {
+    "escenario": "EVALUADO",
+    "fallo": [
+     "fsync_miente",
+     4,
+     null
+    ],
+    "post": "corte_canal_perdido",
+    "retorno": "EVALUADO",
+    "clase": "NO_DECIDIDO",
+    "detalle": "última etapa durable: None",
+    "decision_calculada": "EVALUADO",
+    "decision_en_disco": null,
+    "reabre": false,
+    "fallas": [
+     "INV-3"
+    ]
+   },
+   {
+    "escenario": "EVALUADO",
+    "fallo": [
+     "fsync_miente",
+     5,
+     null
+    ],
+    "post": "corte_canal_perdido",
+    "retorno": "EVALUADO",
+    "clase": "NO_DECIDIDO",
+    "detalle": "última etapa durable: None",
+    "decision_calculada": "EVALUADO",
+    "decision_en_disco": null,
+    "reabre": false,
+    "fallas": [
+     "INV-3"
+    ]
+   }
+  ]
+ },
+ "corrupciones": {
+  "byte_cambiado_en_el_medio": {
+   "estado_lector": "CADENA_ROTA",
+   "clase": "BLOQUEADO",
+   "detalle": "cadena rota"
+  },
+  "linea_del_medio_borrada": {
+   "estado_lector": "CADENA_ROTA",
+   "clase": "BLOQUEADO",
+   "detalle": "cadena rota"
+  },
+  "hueco_de_ceros_pegado_a_linea_valida": {
+   "estado_lector": "CADENA_ROTA",
+   "clase": "BLOQUEADO",
+   "detalle": "cadena rota"
+  },
+  "ultima_linea_cortada": {
+   "estado_lector": "COLA_CORTADA",
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado"
+  },
+  "hueco_de_ceros_antes_del_ERROR": {
+   "estado_lector": "CADENA_ROTA",
+   "clase": "BLOQUEADO",
+   "detalle": "cadena rota"
+  },
+  "cola_partida_de_la_reconciliacion": {
+   "estado_lector_final": "OK",
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado"
+  }
+ },
+ "mutantes": {
+  "M1_abandonado": {
+   "casos": 722,
+   "con_fallas": 32,
+   "invariantes_violadas": [
+    "INV-1(sin canal)",
+    "INV-3"
+   ],
+   "detectado": true,
+   "corrupciones": null,
+   "ejemplo": {
+    "escenario": "EVALUADO",
+    "fallo": [
+     "fsync_miente",
+     1,
+     null
+    ],
+    "post": "corte_canal_perdido",
+    "retorno": "EVALUADO",
+    "clase": "VACIO",
+    "detalle": null,
+    "decision_calculada": "EVALUADO",
+    "decision_en_disco": null,
+    "reabre": true,
+    "fallas": [
+     "INV-1(sin canal)",
+     "INV-3"
+    ]
+   }
+  },
+  "M2_anuncio_tardio": {
+   "casos": 722,
+   "con_fallas": 22,
+   "invariantes_violadas": [
+    "INV-1(sin canal)",
+    "INV-3"
+   ],
+   "detectado": true,
+   "corrupciones": null,
+   "ejemplo": {
+    "escenario": "EVALUADO",
+    "fallo": [
+     "fsync_miente",
+     1,
+     null
+    ],
+    "post": "corte_canal_perdido",
+    "retorno": "EVALUADO",
+    "clase": "VACIO",
+    "detalle": null,
+    "decision_calculada": "EVALUADO",
+    "decision_en_disco": null,
+    "reabre": true,
+    "fallas": [
+     "INV-1(sin canal)",
+     "INV-3"
+    ]
+   }
+  },
+  "M4_puerta_sin_canal": {
+   "casos": 722,
+   "con_fallas": 29,
+   "invariantes_violadas": [
+    "INV-1",
+    "INV-1(sin canal)",
+    "INV-3"
+   ],
+   "detectado": true,
+   "corrupciones": null,
+   "ejemplo": {
+    "escenario": "EVALUADO",
+    "fallo": [
+     "fsync_miente",
+     1,
+     null
+    ],
+    "post": "corte",
+    "retorno": "EVALUADO",
+    "clase": "VACIO",
+    "detalle": null,
+    "decision_calculada": "EVALUADO",
+    "decision_en_disco": null,
+    "reabre": true,
+    "fallas": [
+     "INV-1",
+     "INV-3"
+    ]
+   }
+  },
+  "M5_cola_sin_marcador": {
+   "casos": 722,
+   "con_fallas": 14,
+   "invariantes_violadas": [
+    "INV-1(sin canal)",
+    "INV-3"
+   ],
+   "detectado": true,
+   "corrupciones": {
+    "byte_cambiado_en_el_medio": {
+     "estado_lector": "CADENA_ROTA",
+     "clase": "BLOQUEADO",
+     "detalle": "cadena rota"
+    },
+    "linea_del_medio_borrada": {
+     "estado_lector": "CADENA_ROTA",
+     "clase": "BLOQUEADO",
+     "detalle": "cadena rota"
+    },
+    "hueco_de_ceros_pegado_a_linea_valida": {
+     "estado_lector": "COLA_CORTADA",
+     "clase": "BLOQUEADO",
+     "detalle": "objeto sin DECISION que lo cite"
+    },
+    "ultima_linea_cortada": {
+     "estado_lector": "COLA_CORTADA",
+     "clase": "EVALUADO",
+     "detalle": "objeto verificado"
+    },
+    "hueco_de_ceros_antes_del_ERROR": {
+     "estado_lector": "COLA_CORTADA",
+     "clase": "NO_DECIDIDO",
+     "detalle": "última etapa durable: panel"
+    },
+    "cola_partida_de_la_reconciliacion": {
+     "estado_lector_final": "OK",
+     "clase": "EVALUADO",
+     "detalle": "objeto verificado"
+    }
+   },
+   "ejemplo": {
+    "escenario": "EVALUADO",
+    "fallo": [
+     "fsync_miente",
+     1,
+     null
+    ],
+    "post": "corte_canal_perdido",
+    "retorno": "EVALUADO",
+    "clase": "VACIO",
+    "detalle": null,
+    "decision_calculada": "EVALUADO",
+    "decision_en_disco": null,
+    "reabre": true,
+    "fallas": [
+     "INV-1(sin canal)",
+     "INV-3"
+    ]
+   }
+  },
+  "M8_reintento_tras_error": {
+   "casos": 722,
+   "con_fallas": 402,
+   "invariantes_violadas": [
+    "INV-1",
+    "INV-1(sin canal)",
+    "INV-3"
+   ],
+   "detectado": true,
+   "corrupciones": null,
+   "ejemplo": {
+    "escenario": "EVALUADO",
+    "fallo": [
+     "fsync_miente",
+     1,
+     null
+    ],
+    "post": "sin_corte",
+    "retorno": "EVALUADO",
+    "clase": "EVALUADO",
+    "detalle": "objeto verificado",
+    "decision_calculada": "EVALUADO",
+    "decision_en_disco": "EVALUADO",
+    "reabre": true,
+    "fallas": [
+     "INV-1"
+    ]
+   }
+  }
+ }
+}

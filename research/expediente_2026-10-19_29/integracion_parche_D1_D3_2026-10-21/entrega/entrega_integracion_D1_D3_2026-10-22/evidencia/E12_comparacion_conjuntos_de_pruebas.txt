@@ -1,0 +1,10 @@
+== base (n=1956) frente a parcheado+SIM1 (n=1960)
+  pruebas de la base que faltan: []
+  pruebas nuevas: ['test_a_leg_without_a_stop_level_is_reported', 'test_partial_fills_leave_no_untracked_or_stuck_position', 'test_stops_and_exits_survive_rejections', 'test_the_stop_in_the_book_follows_the_leg']
+  pruebas de la base con otro resultado: []
+  resultados: {'pass': 1960, 'fail': 0, 'skip': 0}
+== base (n=1956) frente a integración+v2 (n=1962)
+  pruebas de la base que faltan: []
+  pruebas nuevas: ['test_a_close_that_leaves_position_is_released_and_retried', 'test_a_leg_without_a_stop_level_is_reported', 'test_a_rejected_close_is_sent_again_and_closes', 'test_partial_fills_leave_no_untracked_or_stuck_position', 'test_stops_and_exits_survive_rejections', 'test_the_stop_in_the_book_follows_the_leg']
+  pruebas de la base con otro resultado: []
+  resultados: {'pass': 1962, 'fail': 0, 'skip': 0}

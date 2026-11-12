@@ -1,0 +1,32 @@
+[
+ {
+  "caso": "N04b_modulo_sustituido_por_sitecustomize_REAL",
+  "tipo": "nuevo",
+  "esperado": "fail",
+  "razon_esperada": "not this checkout's",
+  "rc": 1,
+  "veredicto": "fail",
+  "provenance_json": true,
+  "problemas": [
+   "the suite ran ['tests/integration/test_engine_version_contract.py'], not ['tests']",
+   "7 tests ran; the policy requires at least 2031",
+   "5 tests skipped or xfailed outside the allow-list: ['tests.integration.test_engine_version_contract::test_a_close_that_ends_with_position_left_is_followed_by_another', 'tests.integration.test_engine_version_contract::test_a_rejected_close_is_sent_again_as_a_new_order_and_closes', 'tests.integration.test_engine_version_contract::test_partial_fills_never_add_to_a_closing_position_or_reopen_one']",
+   "the tests ran engine_version '1.0.0'; the source declares '1.2.0'",
+   "the tests imported the engine from '/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/logs/C_gate_v4_N04b/sombra_sc/tia/backtest/engine.py', not this checkout's packages/tia/src/tia/backtest/engine.py",
+   "the engine file the tests imported is not the one in the checkout now",
+   "engine claims 1.2.0 but the guard defines 7 tests, the report has 7, the session 7, 2 passed"
+  ],
+  "OK": true
+ },
+ {
+  "caso": "N20_control_corrida_honesta",
+  "tipo": "nuevo",
+  "esperado": "pass",
+  "razon_esperada": "",
+  "rc": 0,
+  "veredicto": "pass",
+  "provenance_json": true,
+  "problemas": [],
+  "OK": true
+ }
+]

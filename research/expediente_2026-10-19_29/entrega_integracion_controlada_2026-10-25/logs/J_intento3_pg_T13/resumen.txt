@@ -1,0 +1,13 @@
+== ci_local pg (pg) · árbol c7688384d8005be4f95b378f8699b38a5b81dfe7 · nonce local-pg-79d30150e0133522 · inicio 2026-10-25T19:34:49Z · carga 0.32 1.06 1.11
+ruff rc=0 · All checks passed!
+pytest rc=0 · 378 s · -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+gate rc=0
+commit `72ffae5d2698440c8f1afaff12e07bd8adde66fb` · working tree `c7688384d8005be4f95b378f8699b38a5b81dfe7`
+tests 2032 · passed 2032 · failed 0 · errors 0 · skipped 0 · guard {'defined': 7, 'ran': 7, 'passed': 7}
+engine_version 1.2.0 · Python 3.11.17 · distributions `4541005a29772a2f…`
+**gate: pass**
+alembic sqlite upgrade head rc=0
+alembic pg upgrade head rc=0
+alembic pg downgrade base rc=0
+alembic pg upgrade head rc=0
+fin 2026-10-25T19:41:16Z · estado del árbol: 35 entradas (.github/workflows/ci.yml docs/ARCHITECTURE.md packages/tia/src/tia/api/gate_probes.py packages/tia/src/tia/api/state.py packages/tia/src/tia/backtest/engine.py packages/tia/src/tia/backtest/result.py )

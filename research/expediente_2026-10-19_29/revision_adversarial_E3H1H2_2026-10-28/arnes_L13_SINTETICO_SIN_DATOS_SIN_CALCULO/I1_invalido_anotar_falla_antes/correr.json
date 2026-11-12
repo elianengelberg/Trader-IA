@@ -1,0 +1,4 @@
+{
+ "escenario": "I1_invalido_anotar_falla_antes",
+ "termino": "FinTerminal: ERROR en la etapa «validez_previa»: OSError: [Errno 28] fallo inyectado al anotar INVALIDO (antes de escribir). Ver /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/arnes_L13_SINTETICO_SIN_DATOS_SIN_CALCULO/I1_invalido_anotar_f"
+}

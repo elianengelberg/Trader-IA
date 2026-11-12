@@ -1,0 +1,3 @@
+rechazo=0.0 parcial=0.0: colocaciones de stop=51 · cambios de (pierna, tamaño, nivel)=51 · stops ajustados=46 · operaciones=12 · rechazadas=0
+rechazo=0.2 parcial=0.0: colocaciones de stop=59 · cambios de (pierna, tamaño, nivel)=52 · stops ajustados=47 · operaciones=12 · rechazadas=2
+rechazo=0.0 parcial=0.9: colocaciones de stop=67 · cambios de (pierna, tamaño, nivel)=88 · stops ajustados=36 · operaciones=72 · rechazadas=0

@@ -1,0 +1,507 @@
+{
+ "prueba": "tests/integration/test_backtest_provenance.py",
+ "arbol_sin_mutar": {
+  "rc": 0,
+  "resultados": {
+   "test_a_result_records_its_engine_its_bars_and_its_instruments": "PASSED",
+   "test_another_engine_version_is_another_run": "PASSED",
+   "test_an_engine_change_nobody_versioned_is_another_run": "PASSED",
+   "test_the_fingerprint_follows_the_engine_source_and_nothing_else": "PASSED",
+   "test_a_fingerprint_that_cannot_be_read_says_so": "PASSED",
+   "test_one_dataset_name_over_other_bars_is_another_run": "PASSED",
+   "test_another_strategy_set_is_another_run": "PASSED",
+   "test_the_same_engine_on_the_same_bars_is_the_same_run": "PASSED",
+   "test_a_result_stored_before_the_engine_was_recorded_stays_beside_the_new_one": "PASSED",
+   "test_the_store_refuses_to_replace_a_result_of_another_provenance": "PASSED",
+   "test_a_rerun_of_the_same_engine_over_the_same_bars_replaces_only_itself": "PASSED",
+   "test_other_numbers_under_the_same_provenance_are_refused_not_kept_as_the_last_run": "PASSED",
+   "test_an_undefined_ratio_does_not_make_a_rerun_look_different": "PASSED",
+   "test_the_api_lists_the_engine_of_each_result_and_unknown_for_the_old_ones": "PASSED"
+  },
+  "motivos": [],
+  "resumen": [
+   "14 passed in 24.87s"
+  ]
+ },
+ "vivos": [],
+ "equivalentes": {
+  "T10_legado_rellenado_con_version": "_provenance se aplica a ambos lados y compara las cuatro huellas: rellenar solo la versión de una fila antigua da ('1.1.0','','','') frente a un resultado nuevo con las cuatro llenas (siguen distintas) o frente a otra fila antigua rellenada igual (siguen iguales). El riesgo real —lo desconocido como comodín— es T11."
+ },
+ "mutantes": {
+  "T1_run_id_con_la_formula_de_72ffae5": {
+   "cambios": [
+    [
+     "packages/tia/src/tia/backtest/engine.py",
+     "            run_id=deterministic_id(\n                \"bt\", cfg.dataset, resolved, cfg.digest(),\n                {\n                    **provenance,\n                    \"strategies\": strategy_versions,\n                    \"liquidate_at_end\": cfg.liquidate_at_end,\n                    \"out_of_sample\": cfg.is_out_of_sample,\n                },\n            ),",
+     "            run_id=deterministic_id(\"bt\", cfg.dataset, resolved, cfg.digest()),"
+    ]
+   ],
+   "rc": 1,
+   "resultados": {
+    "test_a_result_records_its_engine_its_bars_and_its_instruments": "PASSED",
+    "test_the_fingerprint_follows_the_engine_source_and_nothing_else": "PASSED",
+    "test_a_fingerprint_that_cannot_be_read_says_so": "PASSED",
+    "test_the_same_engine_on_the_same_bars_is_the_same_run": "PASSED",
+    "test_a_rerun_of_the_same_engine_over_the_same_bars_replaces_only_itself": "PASSED",
+    "test_other_numbers_under_the_same_provenance_are_refused_not_kept_as_the_last_run": "PASSED",
+    "test_an_undefined_ratio_does_not_make_a_rerun_look_different": "PASSED",
+    "test_another_engine_version_is_another_run": "FAILED",
+    "test_an_engine_change_nobody_versioned_is_another_run": "FAILED",
+    "test_one_dataset_name_over_other_bars_is_another_run": "FAILED",
+    "test_another_strategy_set_is_another_run": "FAILED",
+    "test_a_result_stored_before_the_engine_was_recorded_stays_beside_the_new_one": "FAILED",
+    "test_the_store_refuses_to_replace_a_result_of_another_provenance": "FAILED",
+    "test_the_api_lists_the_engine_of_each_result_and_unknown_for_the_old_ones": "FAILED"
+   },
+   "motivos": [
+    "E   AssertionError: assert 'bt_DJZPATCEBZ0B0DP393XP3W1D' != 'bt_DJZPATCEBZ0B0DP393XP3W1D'",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_traza/T1_run_id_con_la_formula_de_72ffae5/tests/integration/test_backtest_provenance.py:129: AssertionError: assert 'bt_DJZPATCEBZ0B0DP393XP3W1D' != 'bt_DJZPATCEBZ0B0DP393XP3W1D'",
+    "E   AssertionError: assert 'bt_DJZPATCEBZ0B0DP393XP3W1D' != 'bt_DJZPATCEBZ0B0DP393XP3W1D'",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_traza/T1_run_id_con_la_formula_de_72ffae5/tests/integration/test_backtest_provenance.py:137: AssertionError: assert 'bt_DJZPATCEBZ0B0DP393XP3W1D' != 'bt_DJZPATCEBZ0B0DP393XP3W1D'",
+    "E   AssertionError: assert 1 == 3",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_traza/T1_run_id_con_la_formula_de_72ffae5/tests/integration/test_backtest_provenance.py:166: AssertionError: assert 1 == 3",
+    "E   AssertionError: assert 'bt_DJZPATCEBZ0B0DP393XP3W1D' != 'bt_DJZPATCEBZ0B0DP393XP3W1D'",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_traza/T1_run_id_con_la_formula_de_72ffae5/tests/integration/test_backtest_provenance.py:172: AssertionError: assert 'bt_DJZPATCEBZ0B0DP393XP3W1D' != 'bt_DJZPATCEBZ0B0DP393XP3W1D'",
+    "E   ValueError: backtest bt_DJZPATCEBZ0B0DP393XP3W1D is already stored with another provenance (engine_version=unknown, engine_fingerprint=unknown, data_fingerprint=unknown, universe_digest=unknown); refusing to replace it",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_traza/T1_run_id_con_la_formula_de_72ffae5/packages/tia/src/tia/persistence/repositories.py:513: ValueError: backtest bt_DJZPATCEBZ0B0DP393XP3W1D is already stored with another provenance (engine_version=unknown, engine_fingerprint=unknown, data_fingerprint=unknown, universe_digest=unknown); refusing to replace it",
+    "E   ValueError: backtest bt_DJZPATCEBZ0B0DP393XP3W1D is already stored with another provenance (engine_version=unknown, engine_fingerprint=unknown, data_fingerprint=unknown, universe_digest=unknown); refusing to replace it",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_traza/T1_run_id_con_la_formula_de_72ffae5/packages/tia/src/tia/persistence/repositories.py:513: ValueError: backtest bt_DJZPATCEBZ0B0DP393XP3W1D is already stored with another provenance (engine_version=unknown, engine_fingerprint=unknown, data_fingerprint=unknown, universe_digest=unknown); refusing to replace it"
+   ],
+   "resumen": [
+    "7 failed, 7 passed in 24.73s"
+   ]
+  },
+  "T2_guardar_sin_guarda_upsert_ciego": {
+   "cambios": [
+    [
+     "packages/tia/src/tia/persistence/repositories.py",
+     "if stored is not None and stored != _provenance(values.get(\"conditions\")):",
+     "if False:"
+    ]
+   ],
+   "rc": 1,
+   "resultados": {
+    "test_a_result_records_its_engine_its_bars_and_its_instruments": "PASSED",
+    "test_another_engine_version_is_another_run": "PASSED",
+    "test_an_engine_change_nobody_versioned_is_another_run": "PASSED",
+    "test_the_fingerprint_follows_the_engine_source_and_nothing_else": "PASSED",
+    "test_a_fingerprint_that_cannot_be_read_says_so": "PASSED",
+    "test_one_dataset_name_over_other_bars_is_another_run": "PASSED",
+    "test_another_strategy_set_is_another_run": "PASSED",
+    "test_the_same_engine_on_the_same_bars_is_the_same_run": "PASSED",
+    "test_a_result_stored_before_the_engine_was_recorded_stays_beside_the_new_one": "PASSED",
+    "test_a_rerun_of_the_same_engine_over_the_same_bars_replaces_only_itself": "PASSED",
+    "test_other_numbers_under_the_same_provenance_are_refused_not_kept_as_the_last_run": "PASSED",
+    "test_an_undefined_ratio_does_not_make_a_rerun_look_different": "PASSED",
+    "test_the_api_lists_the_engine_of_each_result_and_unknown_for_the_old_ones": "PASSED",
+    "test_the_store_refuses_to_replace_a_result_of_another_provenance": "FAILED"
+   },
+   "motivos": [
+    "E   AssertionError: Regex pattern did not match.",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_traza/T2_guardar_sin_guarda_upsert_ciego/tests/integration/test_backtest_provenance.py:212: AssertionError: Regex pattern did not match."
+   ],
+   "resumen": [
+    "1 failed, 13 passed in 24.87s"
+   ]
+  },
+  "T3_datos_fuera_del_id": {
+   "cambios": [
+    [
+     "packages/tia/src/tia/backtest/engine.py",
+     "\"data_fingerprint\": data_fingerprint(bars),",
+     "\"data_fingerprint\": cfg.dataset,"
+    ]
+   ],
+   "rc": 1,
+   "resultados": {
+    "test_another_engine_version_is_another_run": "PASSED",
+    "test_an_engine_change_nobody_versioned_is_another_run": "PASSED",
+    "test_the_fingerprint_follows_the_engine_source_and_nothing_else": "PASSED",
+    "test_a_fingerprint_that_cannot_be_read_says_so": "PASSED",
+    "test_another_strategy_set_is_another_run": "PASSED",
+    "test_the_same_engine_on_the_same_bars_is_the_same_run": "PASSED",
+    "test_a_result_stored_before_the_engine_was_recorded_stays_beside_the_new_one": "PASSED",
+    "test_the_store_refuses_to_replace_a_result_of_another_provenance": "PASSED",
+    "test_a_rerun_of_the_same_engine_over_the_same_bars_replaces_only_itself": "PASSED",
+    "test_other_numbers_under_the_same_provenance_are_refused_not_kept_as_the_last_run": "PASSED",
+    "test_an_undefined_ratio_does_not_make_a_rerun_look_different": "PASSED",
+    "test_the_api_lists_the_engine_of_each_result_and_unknown_for_the_old_ones": "PASSED",
+    "test_a_result_records_its_engine_its_bars_and_its_instruments": "FAILED",
+    "test_one_dataset_name_over_other_bars_is_another_run": "FAILED"
+   },
+   "motivos": [
+    "E   AssertionError: assert 19 == 32",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_traza/T3_datos_fuera_del_id/tests/integration/test_backtest_provenance.py:120: AssertionError: assert 19 == 32",
+    "E   AssertionError: assert 1 == 3",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_traza/T3_datos_fuera_del_id/tests/integration/test_backtest_provenance.py:166: AssertionError: assert 1 == 3"
+   ],
+   "resumen": [
+    "2 failed, 12 passed in 25.50s"
+   ]
+  },
+  "T4_huella_sin_execution": {
+   "cambios": [
+    [
+     "packages/tia/src/tia/backtest/engine.py",
+     "    \"backtest\", \"core\", \"data\", \"domain\", \"economics\", \"execution\", \"quant\", \"regime\", \"risk\",",
+     "    \"backtest\", \"core\", \"data\", \"domain\", \"economics\", \"quant\", \"regime\", \"risk\","
+    ]
+   ],
+   "rc": 1,
+   "resultados": {
+    "test_a_result_records_its_engine_its_bars_and_its_instruments": "PASSED",
+    "test_another_engine_version_is_another_run": "PASSED",
+    "test_an_engine_change_nobody_versioned_is_another_run": "PASSED",
+    "test_a_fingerprint_that_cannot_be_read_says_so": "PASSED",
+    "test_one_dataset_name_over_other_bars_is_another_run": "PASSED",
+    "test_another_strategy_set_is_another_run": "PASSED",
+    "test_the_same_engine_on_the_same_bars_is_the_same_run": "PASSED",
+    "test_a_result_stored_before_the_engine_was_recorded_stays_beside_the_new_one": "PASSED",
+    "test_the_store_refuses_to_replace_a_result_of_another_provenance": "PASSED",
+    "test_a_rerun_of_the_same_engine_over_the_same_bars_replaces_only_itself": "PASSED",
+    "test_other_numbers_under_the_same_provenance_are_refused_not_kept_as_the_last_run": "PASSED",
+    "test_an_undefined_ratio_does_not_make_a_rerun_look_different": "PASSED",
+    "test_the_api_lists_the_engine_of_each_result_and_unknown_for_the_old_ones": "PASSED",
+    "test_the_fingerprint_follows_the_engine_source_and_nothing_else": "FAILED"
+   },
+   "motivos": [
+    "E   AssertionError: assert 'a6d5b687f3e1b6b6a7601010b1a50102' != 'a6d5b687f3e1b6b6a7601010b1a50102'",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_traza/T4_huella_sin_execution/tests/integration/test_backtest_provenance.py:153: AssertionError: assert 'a6d5b687f3e1b6b6a7601010b1a50102' != 'a6d5b687f3e1b6b6a7601010b1a50102'"
+   ],
+   "resumen": [
+    "1 failed, 13 passed in 24.50s"
+   ]
+  },
+  "T5_api_sin_version": {
+   "cambios": [
+    [
+     "packages/tia/src/tia/api/state.py",
+     "                    \"engine_version\": (row.conditions or {}).get(\"engine_version\") or None,\n",
+     ""
+    ]
+   ],
+   "rc": 1,
+   "resultados": {
+    "test_a_result_records_its_engine_its_bars_and_its_instruments": "PASSED",
+    "test_another_engine_version_is_another_run": "PASSED",
+    "test_an_engine_change_nobody_versioned_is_another_run": "PASSED",
+    "test_the_fingerprint_follows_the_engine_source_and_nothing_else": "PASSED",
+    "test_a_fingerprint_that_cannot_be_read_says_so": "PASSED",
+    "test_one_dataset_name_over_other_bars_is_another_run": "PASSED",
+    "test_another_strategy_set_is_another_run": "PASSED",
+    "test_the_same_engine_on_the_same_bars_is_the_same_run": "PASSED",
+    "test_a_result_stored_before_the_engine_was_recorded_stays_beside_the_new_one": "PASSED",
+    "test_the_store_refuses_to_replace_a_result_of_another_provenance": "PASSED",
+    "test_a_rerun_of_the_same_engine_over_the_same_bars_replaces_only_itself": "PASSED",
+    "test_other_numbers_under_the_same_provenance_are_refused_not_kept_as_the_last_run": "PASSED",
+    "test_an_undefined_ratio_does_not_make_a_rerun_look_different": "PASSED",
+    "test_the_api_lists_the_engine_of_each_result_and_unknown_for_the_old_ones": "FAILED"
+   },
+   "motivos": [
+    "E   KeyError: 'engine_version'",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_traza/T5_api_sin_version/tests/integration/test_backtest_provenance.py:300: KeyError: 'engine_version'"
+   ],
+   "resumen": [
+    "1 failed, 13 passed in 25.10s"
+   ]
+  },
+  "T6_version_fija_no_la_constante": {
+   "cambios": [
+    [
+     "packages/tia/src/tia/backtest/engine.py",
+     "\"engine_version\": ENGINE_VERSION,",
+     "\"engine_version\": \"1.1.0\","
+    ]
+   ],
+   "rc": 1,
+   "resultados": {
+    "test_a_result_records_its_engine_its_bars_and_its_instruments": "PASSED",
+    "test_an_engine_change_nobody_versioned_is_another_run": "PASSED",
+    "test_the_fingerprint_follows_the_engine_source_and_nothing_else": "PASSED",
+    "test_a_fingerprint_that_cannot_be_read_says_so": "PASSED",
+    "test_one_dataset_name_over_other_bars_is_another_run": "PASSED",
+    "test_another_strategy_set_is_another_run": "PASSED",
+    "test_the_same_engine_on_the_same_bars_is_the_same_run": "PASSED",
+    "test_a_result_stored_before_the_engine_was_recorded_stays_beside_the_new_one": "PASSED",
+    "test_a_rerun_of_the_same_engine_over_the_same_bars_replaces_only_itself": "PASSED",
+    "test_other_numbers_under_the_same_provenance_are_refused_not_kept_as_the_last_run": "PASSED",
+    "test_an_undefined_ratio_does_not_make_a_rerun_look_different": "PASSED",
+    "test_the_api_lists_the_engine_of_each_result_and_unknown_for_the_old_ones": "PASSED",
+    "test_another_engine_version_is_another_run": "FAILED",
+    "test_the_store_refuses_to_replace_a_result_of_another_provenance": "FAILED"
+   },
+   "motivos": [
+    "E   AssertionError: assert '1.1.0' == '9.9.9'",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_traza/T6_version_fija_no_la_constante/tests/integration/test_backtest_provenance.py:128: AssertionError: assert '1.1.0' == '9.9.9'",
+    "E   Failed: DID NOT RAISE ValueError",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_traza/T6_version_fija_no_la_constante/tests/integration/test_backtest_provenance.py:217: Failed: DID NOT RAISE ValueError"
+   ],
+   "resumen": [
+    "2 failed, 12 passed in 24.25s"
+   ]
+  },
+  "T7_estrategias_fuera_del_id": {
+   "cambios": [
+    [
+     "packages/tia/src/tia/backtest/engine.py",
+     "\"strategies\": strategy_versions,",
+     "\"strategies\": {},"
+    ]
+   ],
+   "rc": 1,
+   "resultados": {
+    "test_a_result_records_its_engine_its_bars_and_its_instruments": "PASSED",
+    "test_another_engine_version_is_another_run": "PASSED",
+    "test_an_engine_change_nobody_versioned_is_another_run": "PASSED",
+    "test_the_fingerprint_follows_the_engine_source_and_nothing_else": "PASSED",
+    "test_a_fingerprint_that_cannot_be_read_says_so": "PASSED",
+    "test_one_dataset_name_over_other_bars_is_another_run": "PASSED",
+    "test_the_same_engine_on_the_same_bars_is_the_same_run": "PASSED",
+    "test_a_result_stored_before_the_engine_was_recorded_stays_beside_the_new_one": "PASSED",
+    "test_the_store_refuses_to_replace_a_result_of_another_provenance": "PASSED",
+    "test_a_rerun_of_the_same_engine_over_the_same_bars_replaces_only_itself": "PASSED",
+    "test_other_numbers_under_the_same_provenance_are_refused_not_kept_as_the_last_run": "PASSED",
+    "test_an_undefined_ratio_does_not_make_a_rerun_look_different": "PASSED",
+    "test_the_api_lists_the_engine_of_each_result_and_unknown_for_the_old_ones": "PASSED",
+    "test_another_strategy_set_is_another_run": "FAILED"
+   },
+   "motivos": [
+    "E   AssertionError: assert 'bt_EHFKV7N00F2Q44DG0DCYM373' != 'bt_EHFKV7N00F2Q44DG0DCYM373'",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_traza/T7_estrategias_fuera_del_id/tests/integration/test_backtest_provenance.py:172: AssertionError: assert 'bt_EHFKV7N00F2Q44DG0DCYM373' != 'bt_EHFKV7N00F2Q44DG0DCYM373'"
+   ],
+   "resumen": [
+    "1 failed, 13 passed in 24.88s"
+   ]
+  },
+  "T8_huella_inventada_sin_fuente": {
+   "cambios": [
+    [
+     "packages/tia/src/tia/backtest/engine.py",
+     "return digest.hexdigest()[:32] if files else \"unavailable\"",
+     "return digest.hexdigest()[:32]"
+    ]
+   ],
+   "rc": 1,
+   "resultados": {
+    "test_a_result_records_its_engine_its_bars_and_its_instruments": "PASSED",
+    "test_another_engine_version_is_another_run": "PASSED",
+    "test_an_engine_change_nobody_versioned_is_another_run": "PASSED",
+    "test_the_fingerprint_follows_the_engine_source_and_nothing_else": "PASSED",
+    "test_one_dataset_name_over_other_bars_is_another_run": "PASSED",
+    "test_another_strategy_set_is_another_run": "PASSED",
+    "test_the_same_engine_on_the_same_bars_is_the_same_run": "PASSED",
+    "test_a_result_stored_before_the_engine_was_recorded_stays_beside_the_new_one": "PASSED",
+    "test_the_store_refuses_to_replace_a_result_of_another_provenance": "PASSED",
+    "test_a_rerun_of_the_same_engine_over_the_same_bars_replaces_only_itself": "PASSED",
+    "test_other_numbers_under_the_same_provenance_are_refused_not_kept_as_the_last_run": "PASSED",
+    "test_an_undefined_ratio_does_not_make_a_rerun_look_different": "PASSED",
+    "test_the_api_lists_the_engine_of_each_result_and_unknown_for_the_old_ones": "PASSED",
+    "test_a_fingerprint_that_cannot_be_read_says_so": "FAILED"
+   },
+   "motivos": [
+    "E   AssertionError: assert 'e3b0c44298fc...bf4c8996fb924' == 'unavailable'",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_traza/T8_huella_inventada_sin_fuente/tests/integration/test_backtest_provenance.py:157: AssertionError: assert 'e3b0c44298fc...bf4c8996fb924' == 'unavailable'"
+   ],
+   "resumen": [
+    "1 failed, 13 passed in 25.08s"
+   ]
+  },
+  "T9_huella_del_motor_fuera_del_id": {
+   "cambios": [
+    [
+     "packages/tia/src/tia/backtest/engine.py",
+     "\"engine_fingerprint\": engine_fingerprint(),",
+     "\"engine_fingerprint\": \"\","
+    ]
+   ],
+   "rc": 1,
+   "resultados": {
+    "test_another_engine_version_is_another_run": "PASSED",
+    "test_the_fingerprint_follows_the_engine_source_and_nothing_else": "PASSED",
+    "test_a_fingerprint_that_cannot_be_read_says_so": "PASSED",
+    "test_one_dataset_name_over_other_bars_is_another_run": "PASSED",
+    "test_another_strategy_set_is_another_run": "PASSED",
+    "test_the_same_engine_on_the_same_bars_is_the_same_run": "PASSED",
+    "test_a_result_stored_before_the_engine_was_recorded_stays_beside_the_new_one": "PASSED",
+    "test_the_store_refuses_to_replace_a_result_of_another_provenance": "PASSED",
+    "test_a_rerun_of_the_same_engine_over_the_same_bars_replaces_only_itself": "PASSED",
+    "test_other_numbers_under_the_same_provenance_are_refused_not_kept_as_the_last_run": "PASSED",
+    "test_an_undefined_ratio_does_not_make_a_rerun_look_different": "PASSED",
+    "test_the_api_lists_the_engine_of_each_result_and_unknown_for_the_old_ones": "PASSED",
+    "test_a_result_records_its_engine_its_bars_and_its_instruments": "FAILED",
+    "test_an_engine_change_nobody_versioned_is_another_run": "FAILED"
+   },
+   "motivos": [
+    "E   AssertionError: assert '' == 'd9a4ee834c20...99017062f3056'",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_traza/T9_huella_del_motor_fuera_del_id/tests/integration/test_backtest_provenance.py:118: AssertionError: assert '' == 'd9a4ee834c20...99017062f3056'",
+    "E   AssertionError: assert 'bt_AYYNW10V3XAJ45DSKPSWE25D' != 'bt_AYYNW10V3XAJ45DSKPSWE25D'",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_traza/T9_huella_del_motor_fuera_del_id/tests/integration/test_backtest_provenance.py:137: AssertionError: assert 'bt_AYYNW10V3XAJ45DSKPSWE25D' != 'bt_AYYNW10V3XAJ45DSKPSWE25D'"
+   ],
+   "resumen": [
+    "2 failed, 12 passed in 25.22s"
+   ]
+  },
+  "T10_legado_rellenado_con_version": {
+   "cambios": [
+    [
+     "packages/tia/src/tia/persistence/repositories.py",
+     "return tuple(str((conditions or {}).get(key) or \"\") for key in _BACKTEST_PROVENANCE)",
+     "return tuple(str((conditions or {}).get(key) or (\"1.1.0\" if key == \"engine_version\" else \"\")) for key in _BACKTEST_PROVENANCE)"
+    ]
+   ],
+   "rc": 0,
+   "resultados": {
+    "test_a_result_records_its_engine_its_bars_and_its_instruments": "PASSED",
+    "test_another_engine_version_is_another_run": "PASSED",
+    "test_an_engine_change_nobody_versioned_is_another_run": "PASSED",
+    "test_the_fingerprint_follows_the_engine_source_and_nothing_else": "PASSED",
+    "test_a_fingerprint_that_cannot_be_read_says_so": "PASSED",
+    "test_one_dataset_name_over_other_bars_is_another_run": "PASSED",
+    "test_another_strategy_set_is_another_run": "PASSED",
+    "test_the_same_engine_on_the_same_bars_is_the_same_run": "PASSED",
+    "test_a_result_stored_before_the_engine_was_recorded_stays_beside_the_new_one": "PASSED",
+    "test_the_store_refuses_to_replace_a_result_of_another_provenance": "PASSED",
+    "test_a_rerun_of_the_same_engine_over_the_same_bars_replaces_only_itself": "PASSED",
+    "test_other_numbers_under_the_same_provenance_are_refused_not_kept_as_the_last_run": "PASSED",
+    "test_an_undefined_ratio_does_not_make_a_rerun_look_different": "PASSED",
+    "test_the_api_lists_the_engine_of_each_result_and_unknown_for_the_old_ones": "PASSED"
+   },
+   "motivos": [],
+   "resumen": [
+    "14 passed in 24.03s"
+   ]
+  },
+  "T11_legado_como_comodin": {
+   "cambios": [
+    [
+     "packages/tia/src/tia/persistence/repositories.py",
+     "if stored is not None and stored != _provenance(values.get(\"conditions\")):",
+     "if stored is not None and any(stored) and stored != _provenance(values.get(\"conditions\")):"
+    ]
+   ],
+   "rc": 1,
+   "resultados": {
+    "test_a_result_records_its_engine_its_bars_and_its_instruments": "PASSED",
+    "test_another_engine_version_is_another_run": "PASSED",
+    "test_an_engine_change_nobody_versioned_is_another_run": "PASSED",
+    "test_the_fingerprint_follows_the_engine_source_and_nothing_else": "PASSED",
+    "test_a_fingerprint_that_cannot_be_read_says_so": "PASSED",
+    "test_one_dataset_name_over_other_bars_is_another_run": "PASSED",
+    "test_another_strategy_set_is_another_run": "PASSED",
+    "test_the_same_engine_on_the_same_bars_is_the_same_run": "PASSED",
+    "test_a_result_stored_before_the_engine_was_recorded_stays_beside_the_new_one": "PASSED",
+    "test_a_rerun_of_the_same_engine_over_the_same_bars_replaces_only_itself": "PASSED",
+    "test_other_numbers_under_the_same_provenance_are_refused_not_kept_as_the_last_run": "PASSED",
+    "test_an_undefined_ratio_does_not_make_a_rerun_look_different": "PASSED",
+    "test_the_api_lists_the_engine_of_each_result_and_unknown_for_the_old_ones": "PASSED",
+    "test_the_store_refuses_to_replace_a_result_of_another_provenance": "FAILED"
+   },
+   "motivos": [
+    "E   AssertionError: Regex pattern did not match.",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_traza/T11_legado_como_comodin/tests/integration/test_backtest_provenance.py:212: AssertionError: Regex pattern did not match."
+   ],
+   "resumen": [
+    "1 failed, 13 passed in 22.99s"
+   ]
+  },
+  "T12_api_rellena_la_version_del_legado": {
+   "cambios": [
+    [
+     "packages/tia/src/tia/api/state.py",
+     "(row.conditions or {}).get(\"engine_version\") or None,",
+     "(row.conditions or {}).get(\"engine_version\") or \"1.1.0\","
+    ]
+   ],
+   "rc": 1,
+   "resultados": {
+    "test_a_result_records_its_engine_its_bars_and_its_instruments": "PASSED",
+    "test_another_engine_version_is_another_run": "PASSED",
+    "test_an_engine_change_nobody_versioned_is_another_run": "PASSED",
+    "test_the_fingerprint_follows_the_engine_source_and_nothing_else": "PASSED",
+    "test_a_fingerprint_that_cannot_be_read_says_so": "PASSED",
+    "test_one_dataset_name_over_other_bars_is_another_run": "PASSED",
+    "test_another_strategy_set_is_another_run": "PASSED",
+    "test_the_same_engine_on_the_same_bars_is_the_same_run": "PASSED",
+    "test_a_result_stored_before_the_engine_was_recorded_stays_beside_the_new_one": "PASSED",
+    "test_the_store_refuses_to_replace_a_result_of_another_provenance": "PASSED",
+    "test_a_rerun_of_the_same_engine_over_the_same_bars_replaces_only_itself": "PASSED",
+    "test_other_numbers_under_the_same_provenance_are_refused_not_kept_as_the_last_run": "PASSED",
+    "test_an_undefined_ratio_does_not_make_a_rerun_look_different": "PASSED",
+    "test_the_api_lists_the_engine_of_each_result_and_unknown_for_the_old_ones": "FAILED"
+   },
+   "motivos": [
+    "E   AssertionError: assert '1.1.0' is None",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_traza/T12_api_rellena_la_version_del_legado/tests/integration/test_backtest_provenance.py:300: AssertionError: assert '1.1.0' is None"
+   ],
+   "resumen": [
+    "1 failed, 13 passed in 23.99s"
+   ]
+  },
+  "T13_sin_control_de_numeros_misma_procedencia": {
+   "cambios": [
+    [
+     "packages/tia/src/tia/persistence/repositories.py",
+     "            if differ:\n",
+     "            if False:\n"
+    ]
+   ],
+   "rc": 1,
+   "resultados": {
+    "test_a_result_records_its_engine_its_bars_and_its_instruments": "PASSED",
+    "test_another_engine_version_is_another_run": "PASSED",
+    "test_an_engine_change_nobody_versioned_is_another_run": "PASSED",
+    "test_the_fingerprint_follows_the_engine_source_and_nothing_else": "PASSED",
+    "test_a_fingerprint_that_cannot_be_read_says_so": "PASSED",
+    "test_one_dataset_name_over_other_bars_is_another_run": "PASSED",
+    "test_another_strategy_set_is_another_run": "PASSED",
+    "test_the_same_engine_on_the_same_bars_is_the_same_run": "PASSED",
+    "test_a_result_stored_before_the_engine_was_recorded_stays_beside_the_new_one": "PASSED",
+    "test_the_store_refuses_to_replace_a_result_of_another_provenance": "PASSED",
+    "test_a_rerun_of_the_same_engine_over_the_same_bars_replaces_only_itself": "PASSED",
+    "test_an_undefined_ratio_does_not_make_a_rerun_look_different": "PASSED",
+    "test_the_api_lists_the_engine_of_each_result_and_unknown_for_the_old_ones": "PASSED",
+    "test_other_numbers_under_the_same_provenance_are_refused_not_kept_as_the_last_run": "FAILED"
+   },
+   "motivos": [
+    "E   Failed: DID NOT RAISE ValueError",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_traza/T13_sin_control_de_numeros_misma_procedencia/tests/integration/test_backtest_provenance.py:257: Failed: DID NOT RAISE ValueError"
+   ],
+   "resumen": [
+    "1 failed, 13 passed in 23.77s"
+   ]
+  },
+  "T14_nan_no_se_normaliza": {
+   "cambios": [
+    [
+     "packages/tia/src/tia/persistence/repositories.py",
+     "    if isinstance(value, float) and math.isnan(value):\n        return None\n",
+     ""
+    ]
+   ],
+   "rc": 1,
+   "resultados": {
+    "test_a_result_records_its_engine_its_bars_and_its_instruments": "PASSED",
+    "test_another_engine_version_is_another_run": "PASSED",
+    "test_an_engine_change_nobody_versioned_is_another_run": "PASSED",
+    "test_the_fingerprint_follows_the_engine_source_and_nothing_else": "PASSED",
+    "test_a_fingerprint_that_cannot_be_read_says_so": "PASSED",
+    "test_one_dataset_name_over_other_bars_is_another_run": "PASSED",
+    "test_another_strategy_set_is_another_run": "PASSED",
+    "test_the_same_engine_on_the_same_bars_is_the_same_run": "PASSED",
+    "test_a_result_stored_before_the_engine_was_recorded_stays_beside_the_new_one": "PASSED",
+    "test_the_store_refuses_to_replace_a_result_of_another_provenance": "PASSED",
+    "test_a_rerun_of_the_same_engine_over_the_same_bars_replaces_only_itself": "PASSED",
+    "test_other_numbers_under_the_same_provenance_are_refused_not_kept_as_the_last_run": "PASSED",
+    "test_the_api_lists_the_engine_of_each_result_and_unknown_for_the_old_ones": "PASSED",
+    "test_an_undefined_ratio_does_not_make_a_rerun_look_different": "FAILED"
+   },
+   "motivos": [
+    "E   ValueError: backtest bt_111WYX71MFPWFVE30Z1CNBYH is already stored with the same provenance and other results (sharpe): something the provenance does not record changed (the environment, or a substituted part of the engine); refusing to replace it",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_traza/T14_nan_no_se_normaliza/packages/tia/src/tia/persistence/repositories.py:521: ValueError: backtest bt_111WYX71MFPWFVE30Z1CNBYH is already stored with the same provenance and other results (sharpe): something the provenance does not record changed (the environment, or a substituted part of the engine); refusing to replace it"
+   ],
+   "resumen": [
+    "1 failed, 13 passed in 23.89s"
+   ]
+  }
+ }
+}

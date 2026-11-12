@@ -1,0 +1,21 @@
+== 2026-10-22T16:16:30Z · trabajo 'frontend' de ci.yml reproducido localmente (Node v22.22.0, npm 10.9.4), árbol 72ffae5 (los parches no tocan frontend/)
+-- npm ci --no-fund --no-audit
+real	0m6.121s
+user	0m2.236s
+sys	0m2.023s
+-- npm run typecheck
+
+> trader-ia-dashboard@0.1.0 typecheck
+> tsc --noEmit
+
+rc=0
+-- npm run build
+transforming...
+✓ 63 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   1.30 kB │ gzip:   0.59 kB
+dist/assets/index-Ddeaqs4D.css   17.45 kB │ gzip:   4.54 kB
+dist/assets/index-B9Taggrv.js   477.79 kB │ gzip: 145.25 kB
+✓ built in 3.24s
+rc=0

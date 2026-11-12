@@ -1,0 +1,227 @@
+entrada_del_scratchpad	archivos	bytes	parcialmente_incluida
+ADENDA_CIERRE_PEC-1.1_2026-10-21.zip	1	17509	sí (sus entregables están en el expediente)
+AUDITORIA_PARALELA_P1_P2_P4_2026-10-20.zip	1	1299979	sí (sus entregables están en el expediente)
+CALIBRACION_AS1_PEC-1.0_2026-10-21.zip	1	406467	sí (sus entregables están en el expediente)
+CIERRE_AUDITORIA_v0.5_Y_PLAN_CUANTITATIVO_r1_2026-10-21.zip	1	167895	sí (sus entregables están en el expediente)
+CIERRE_FINAL_P1_P2_P4_2026-10-20.zip	1	2089824	sí (sus entregables están en el expediente)
+DECISIONES_METODOLOGICAS_Y_PEC-1.1_2026-10-21.zip	1	2483365	sí (sus entregables están en el expediente)
+HOJA_DE_RUTA_CONFIRMATORIA_2026-10-21.zip	1	10978	sí (sus entregables están en el expediente)
+SHA256SUMS_DEL_ZIP.txt	1	126	sí (sus entregables están en el expediente)
+SHA256SUMS_DEL_ZIP_ADENDA.txt	1	103	sí (sus entregables están en el expediente)
+SHA256SUMS_DEL_ZIP_CALIBRACION.txt	1	105	sí (sus entregables están en el expediente)
+SHA256SUMS_DEL_ZIP_DECISIONES.txt	1	116	sí (sus entregables están en el expediente)
+SHA256SUMS_DEL_ZIP_HOJA.txt	1	108	sí (sus entregables están en el expediente)
+SOLUCION_FINAL_TRADER_IA_v0.5_2026-10-20.zip	1	5586897	sí (sus entregables están en el expediente)
+SOLUCION_VERIFICADA_P1_P2_P4_2026-10-20.zip	1	2621639	sí (sus entregables están en el expediente)
+auditoria_T_REV_EMA9	13	74728	no
+auditoria_paralela_P1_P2_P4_2026-10-20	230	2772541	no
+auditoria_preservacion	2390	102824087	no
+c10_mut	2	55494	no
+c7_antes	4	29665	no
+c7_cli	1040	574617	no
+c7_diff.patch	1	26233	no
+c7_mut	15	211251	no
+c7_mypy	2	19093	no
+c8_antes	4	45643	no
+c8_carrera	1	1507	no
+c8_cli	1039	408886	no
+c8_diff.patch	1	63408	no
+c8_mut	33	880691	no
+calibracion_AS1_2026-10-21	558	6861895	sí (sus entregables están en el expediente)
+chart_57647093-2868-4e65-97ab-9cae8ec74e7d.json	1	262613	no
+chart_f981a304-bb6c-45b8-b0c5-fd2f515ad23a.json	1	213149	no
+cierre_D1_D2_R19_2026-10-22	44210	2201898549	sí (sus entregables están en el expediente)
+cierre_D1_D3_2026-10-22	35129	1996044296	sí (sus entregables están en el expediente)
+cierre_bloqueantes_E3H1H2_2026-10-27	49	902298	sí (sus entregables están en el expediente)
+cierre_decisivo_v4_2026-10-29	526	3986813	sí (sus entregables están en el expediente)
+cierre_final_P1_P2_P4_2026-10-20	69	3207885	no
+cierre_integral_2026-10-22	35665	2221832881	sí (sus entregables están en el expediente)
+cierre_revision_D1_D3_2026-10-22	6749	438849105	sí (sus entregables están en el expediente)
+construir_zip.py	1	1036	no
+decision_E3H1H2_2026-10-26	15	2568199	sí (sus entregables están en el expediente)
+decision_final_D1_D3_2026-10-22	46438	2656718060	sí (sus entregables están en el expediente)
+decisiones_metodologicas_2026-10-21	1091	70824998	sí (sus entregables están en el expediente)
+deps.txt	1	863	no
+diarios	12	6576	no
+ejecutiva_post_E3_2026-10-29	40	117487	sí (sus entregables están en el expediente)
+ensayo2	1604	44974232	no
+ensayo_hist	1604	44974016	no
+entrega_direccion_tecnica_2026-10-26	105	1805418	sí (sus entregables están en el expediente)
+entrega_direccion_tecnica_2026-10-26.zip	1	446326	no
+entrega_final	14879	574247614	no
+entrega_iniciativa_tecnica_2026-10-25	164	1775574	sí (sus entregables están en el expediente)
+entrega_iniciativa_tecnica_2026-10-25.verificacion_zip.txt	1	3645	no
+entrega_iniciativa_tecnica_2026-10-25.zip	1	451183	no
+entrega_integracion_controlada_2026-10-25	311	7253445	sí (sus entregables están en el expediente)
+entrega_integracion_controlada_2026-10-25.zip	1	1883772	no
+entrega_integracion_controlada_2026-10-25.zip.sha256	1	112	no
+entrega_integracion_controlada_2026-10-25.zip.verificacion.txt	1	1953	no
+entrega_revision_independiente_2026-10-28	3	37589921	sí (sus entregables están en el expediente)
+entregables_P1_P2_P4_2026-10-20	123	1425451	no
+estado_a.txt	1	3297	no
+expediente_metodologico_2026-10-20	14	93058	sí (sus entregables están en el expediente)
+extraer.py	1	4852	no
+fase_documental_2026-10-20	19	471129	sí (sus entregables están en el expediente)
+fx0	24838	25717124	no
+fx1_corte	6	47922	no
+fx1_sondas	6	13285	no
+fx3_expediente	15	97218	sí (sus entregables están en el expediente)
+fx4_95.txt	1	10503	no
+fx4_95_B.txt	1	13396	no
+fx4_95_desde_final.txt	1	13396	no
+fx4_ejecutar_todo.log	1	7152	no
+fx4_evidencia_A	62	684213	no
+fx4_evidencia_zipB	63	706874	no
+fx4_final_ext	206	20999807	no
+fx4_limpio	51045	36078434	no
+fx4_limpio_B	51048	36109834	no
+fx4_limpio_B_ejecutar_todo.log	1	7428	no
+fx4_limpio_ejecutar_todo.log	1	7174	no
+fx4_prueba13	206	26551345	no
+fx4_pruebas_diff_previo.diff	1	173326	no
+fx4_zip_A	1	5572204	no
+fx4_zip_B	1	5583398	no
+hcarry_next_final.zip	1	3876056	no
+hcarry_next_historico_2026-10-16.zip	1	14994084	no
+hcarry_next_snapshot1.zip	1	134482	no
+hcarry_next_snapshot2.zip	1	1229073	no
+hcarry_next_validacion_historica.zip	1	4876382	no
+hcarry_test_historico_2026-10-16.zip	1	93974	no
+hoja_de_ruta_confirmatoria_2026-10-21	6	26303	sí (sus entregables están en el expediente)
+inmutable	1037	354267	no
+inmutable2	1037	354040	no
+integracion_controlada_2026-10-25	28185	1798340554	no
+integracion_parche_D1_D3_2026-10-21	36516	1513429319	sí (sus entregables están en el expediente)
+mision_cierre_2026-10-21	69779	83388541	sí (sus entregables están en el expediente)
+mision_simulacion_2026-10-21	6087	345053870	sí (sus entregables están en el expediente)
+mypy_ahora.txt	1	1792	no
+mypy_antes.txt	1	1792	no
+oos_ensayo	2	21495	no
+oos_hashes_antes.txt	1	202	no
+paquete_revision_independiente_E3H1H2_2026-10-28	401	28039895	sí (sus entregables están en el expediente)
+paquete_revision_independiente_E3H1H2_2026-10-28_DATOS	8787	79387458	no
+pools.json	1	11401079	no
+preservacion	44	10638174	no
+proto1	3	232703	no
+pytest-of-root	51117	14260834	no
+recuperacion	11	2501570	no
+red	3	1490	no
+reparacion_E3H1H2_2026-10-26	93	3212901	sí (sus entregables están en el expediente)
+reproduccion_015xh_9_	1	937	no
+reproduccion_0ijez8l1	1	937	no
+reproduccion_0sx1wpz6	1	937	no
+reproduccion_17tg72i9	1	937	no
+reproduccion_1jt24ftq	1	937	no
+reproduccion_1v9kb_6h	1	949	no
+reproduccion_26st8c26	1	937	no
+reproduccion_2s92n9h3	1	949	no
+reproduccion_33dl7y6e	1	937	no
+reproduccion_3o5rx3yf	1	941	no
+reproduccion_3o5u5f74	1	941	no
+reproduccion_4ne3dp9_	1	949	no
+reproduccion_4o2yu1gx	1	937	no
+reproduccion_4s0ox3ah	1	937	no
+reproduccion_54_idi4n	1	949	no
+reproduccion_5j295e20	1	941	no
+reproduccion_6_b91qjt	1	937	no
+reproduccion_6v7u77r5	1	949	no
+reproduccion_7hdk8p98	1	937	no
+reproduccion_7qstnt0g	1	937	no
+reproduccion_7wk3ycnq	1	941	no
+reproduccion_8su8h37e	1	937	no
+reproduccion_993vq3_g	1	949	no
+reproduccion__4p5xmfx	1	937	no
+reproduccion_amqs9em3	1	949	no
+reproduccion_axrrfnt0	1	941	no
+reproduccion_b588nxmr	1	941	no
+reproduccion_b_1vqtg2	1	941	no
+reproduccion_bppxopt9	1	941	no
+reproduccion_d4spu60d	1	937	no
+reproduccion_dhygr96b	1	937	no
+reproduccion_di_1agiz	1	937	no
+reproduccion_diiej4he	1	941	no
+reproduccion_eptnf9k7	1	949	no
+reproduccion_evwpf1a9	1	937	no
+reproduccion_g17vxhpm	1	937	no
+reproduccion_gwfs9jcp	1	937	no
+reproduccion_hpzv3lhj	1	941	no
+reproduccion_i9g7gjbr	1	937	no
+reproduccion_ibdmz85p	1	937	no
+reproduccion_ifpf8ip1	1	937	no
+reproduccion_igwjmo87	1	937	no
+reproduccion_ihmnt28b	1	937	no
+reproduccion_ipokds5w	1	937	no
+reproduccion_jdxyljmc	1	941	no
+reproduccion_jwbt4c6w	1	949	no
+reproduccion_knh5c1j4	1	937	no
+reproduccion_ko3ljelq	1	949	no
+reproduccion_l5zq64uh	1	941	no
+reproduccion_lirnzq9a	1	937	no
+reproduccion_ljk7xrdu	1	937	no
+reproduccion_lz1dl043	1	949	no
+reproduccion_m2r0oz4l	1	937	no
+reproduccion_mizx22c9	1	937	no
+reproduccion_mrjsz9i0	1	937	no
+reproduccion_msvhmiwi	1	949	no
+reproduccion_mzilcsp9	1	937	no
+reproduccion_n6fe9ll8	1	937	no
+reproduccion_nlj5ldd6	1	937	no
+reproduccion_nx0dx2s_	1	937	no
+reproduccion_p8ntpk1c	1	937	no
+reproduccion_peutu0hb	1	937	no
+reproduccion_qteremu9	1	949	no
+reproduccion_r4v6hy4e	1	937	no
+reproduccion_rkfoyaep	1	937	no
+reproduccion_smnqpaas	1	941	no
+reproduccion_suxzwa87	1	949	no
+reproduccion_t7o_f3q1	1	937	no
+reproduccion_tf_h0axe	1	937	no
+reproduccion_u83jk_10	1	937	no
+reproduccion_uwdjp96y	1	941	no
+reproduccion_v1_ycnxd	1	941	no
+reproduccion_vbon1esr	1	937	no
+reproduccion_vfibq9uk	1	937	no
+reproduccion_w7zi0dzj	1	949	no
+reproduccion_wn_y5ino	1	937	no
+reproduccion_wvuoeexk	1	937	no
+reproduccion_xxm7w550	1	937	no
+reproduccion_y2x61ocf	1	937	no
+reproduccion_yh7t3qd9	1	937	no
+reproduccion_yqzqy_89	1	937	no
+reproduccion_yxd3a1hx	1	941	no
+reproduccion_z0eerbu1	1	937	no
+reproduccion_z5pqtkbl	1	937	no
+reproduccion_z79ld78k	1	937	no
+reproduccion_zntf1sp5	1	949	no
+reproduccion_zqz7unxh	1	937	no
+reproduccion_zzl83n_z	1	937	no
+revision_6_archivos.diff	1	32700	no
+revision_adversaria_2026-10-25	953	30384753	sí (sus entregables están en el expediente)
+revision_adversarial_E3H1H2_2026-10-28	7461	180627448	sí (sus entregables están en el expediente)
+revision_adversarial_E4_2026-10-29	24	270868	sí (sus entregables están en el expediente)
+revision_independiente_E3H1H2_2026-10-26	141	4633000	sí (sus entregables están en el expediente)
+revision_independiente_diseno_v4_2026-10-28	105	1239017	sí (sus entregables están en el expediente)
+revision_salida.txt	1	9106	no
+scripts_preservacion	10	33227	no
+scripts_verif_independiente	5	36407	no
+solucion_final_trader_ia_v0.5_2026-10-20	206	20999807	no
+solucion_verificada_P1_P2_P4_2026-10-20	149	16915128	no
+tmp90oq8rie	21	10919	no
+tmp9pxwyvtj	3	405022	no
+tmpcjpuobuk	42	6377	no
+tmpevo_6lpl	21	11713	no
+tmpfa9igr8q	5	1284	no
+tmpfh_e5hiy	3	405022	no
+tmpjuf1f536	42	6377	no
+tmpm0rbaqst	5	991	no
+tmpxt_ot_c7	558	225821	no
+tmpy1ucsuw7	569	228632	no
+tmulti_ensayo	503	87245168	no
+trader_ia_research_2026-10-17.zip	1	15719497	no
+verif_cierre_integral_20261025T170555Z	4083	237375096	no
+verif_cierre_integral_20261025T170824Z	4083	237375125	no
+verif_entrega_ic_20261025T201138Z	310	9126371	no
+verif_independiente_2026-10-18T1441Z	6865	261655676	no
+verif_papel	1473	663104	no
+verif_zip_final_20261025T202024Z	311	7253445	no
+verificar_zip_v04.py	1	1791	no

@@ -1,0 +1,141 @@
+{
+ "elementos": {
+  "sha_v1": "3b64a04dcb6b39d20cb218ff5f5ef0bd03c1dd45cd75e475b0640fb1ecfd8dce",
+  "sha_v2": "01fc934459b791fd5fbd451aa1c6931fc9e6764b9361e5caea46314cc5ee6f68",
+  "sha_v3": "c089cc6aad32f92a7899ec169c87216a7213c1f6393aeb9f6c9d32b52cb3e07e",
+  "sha_P0": {
+   "P0_resultado.json": "a73c9755b0dc3ae02e5fcfad68e4512abb8a1e98b11666078fb2e737eb457d0f",
+   "P0_resultado_R1prima.json": "6d3f563275b5d251ffa87ec3b199b46d76712610a8ea9ea72b8b1b34d7fbe5d8"
+  },
+  "adenda_de_cada_P0": {
+   "P0_resultado.json": "ADENDA_R_auditoria_de_supervivencia_interna.md",
+   "P0_resultado_R1prima.json": "ADENDA_R_auditoria_de_supervivencia_interna.md + CORRECCION_R1prima_alcance_por_clase.md"
+  }
+ },
+ "documentos_aceptados_tal_cual": [
+  {
+   "archivo": "evidencia/reparacion_E3H1H2_2026-10-26/INFORME_REPARACION_E3H1H2.md",
+   "orquestador": "v2",
+   "cumple": 3,
+   "de": 3,
+   "faltan_o_sobran": []
+  },
+  {
+   "archivo": "evidencia/revision_independiente_E3H1H2_2026-10-26/copia_aislada/reparacion_E3H1H2_2026-10-26/INFORME_REPARACION_E3H1H2.md",
+   "orquestador": "v2",
+   "cumple": 3,
+   "de": 3,
+   "faltan_o_sobran": []
+  }
+ ],
+ "documentos_a_un_elemento": [
+  {
+   "archivo": "evidencia/experimentos/E3R_desbloqueo_2026-10-26/PLAN_EJECUCION_UNICA_E3R.md",
+   "orquestador": "v1 con P0_resultado.json",
+   "cumple": 5,
+   "de": 5,
+   "faltan_o_sobran": [
+    "una_sola_opcion"
+   ]
+  },
+  {
+   "archivo": "evidencia/experimentos/E3R_desbloqueo_2026-10-26/PLAN_EJECUCION_UNICA_E3R.md",
+   "orquestador": "v1 con P0_resultado_R1prima.json",
+   "cumple": 6,
+   "de": 6,
+   "faltan_o_sobran": [
+    "una_sola_opcion"
+   ]
+  },
+  {
+   "archivo": "evidencia/reparacion_E3H1H2_2026-10-26/INFORME_REPARACION_E3H1H2.md",
+   "orquestador": "v2",
+   "cumple": 3,
+   "de": 3,
+   "faltan_o_sobran": []
+  },
+  {
+   "archivo": "evidencia/reparacion_E3H1H2_2026-10-26/MANIFEST.sha256",
+   "orquestador": "v2",
+   "cumple": 2,
+   "de": 3,
+   "faltan_o_sobran": [
+    "FRASE"
+   ]
+  },
+  {
+   "archivo": "evidencia/revision_independiente_E3H1H2_2026-10-26/copia_aislada/reparacion_E3H1H2_2026-10-26/INFORME_REPARACION_E3H1H2.md",
+   "orquestador": "v2",
+   "cumple": 3,
+   "de": 3,
+   "faltan_o_sobran": []
+  },
+  {
+   "archivo": "evidencia/revision_independiente_E3H1H2_2026-10-26/copia_aislada/reparacion_E3H1H2_2026-10-26/MANIFEST.sha256",
+   "orquestador": "v2",
+   "cumple": 2,
+   "de": 3,
+   "faltan_o_sobran": [
+    "FRASE"
+   ]
+  },
+  {
+   "archivo": "MANIFEST_PAQUETE.sha256",
+   "orquestador": "v1 con P0_resultado.json",
+   "cumple": 4,
+   "de": 5,
+   "faltan_o_sobran": [
+    "FRASE",
+    "una_sola_opcion"
+   ]
+  },
+  {
+   "archivo": "MANIFEST_PAQUETE.sha256",
+   "orquestador": "v1 con P0_resultado_R1prima.json",
+   "cumple": 5,
+   "de": 6,
+   "faltan_o_sobran": [
+    "FRASE",
+    "una_sola_opcion"
+   ]
+  },
+  {
+   "archivo": "MANIFEST_PAQUETE.sha256",
+   "orquestador": "v2",
+   "cumple": 2,
+   "de": 3,
+   "faltan_o_sobran": [
+    "FRASE"
+   ]
+  },
+  {
+   "archivo": "registro/INVENTARIO_ORIGEN_A.tsv",
+   "orquestador": "v1 con P0_resultado.json",
+   "cumple": 4,
+   "de": 5,
+   "faltan_o_sobran": [
+    "FRASE",
+    "una_sola_opcion"
+   ]
+  },
+  {
+   "archivo": "registro/INVENTARIO_ORIGEN_A.tsv",
+   "orquestador": "v1 con P0_resultado_R1prima.json",
+   "cumple": 5,
+   "de": 6,
+   "faltan_o_sobran": [
+    "FRASE",
+    "una_sola_opcion"
+   ]
+  },
+  {
+   "archivo": "registro/INVENTARIO_ORIGEN_A.tsv",
+   "orquestador": "v2",
+   "cumple": 2,
+   "de": 3,
+   "faltan_o_sobran": [
+    "FRASE"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,37 @@
+## 1. reglas de precedencia/prevalencia en PROT (md y txt)
+ADENDA_1_reutilizacion_de_tickers.md:10:3. **Si no hay anuncio**, rigen las reglas de la v3 §2.2.3 tal cual (30 días). En F3 se hace un control de calidad, solo con datos de actividad: se listan **t
+NOTAS_IMPLEMENTACION_v3.md:3:**Qué son:** concreciones técnicas de puntos que la v3 deja sin fijar. **No cambian** ningún umbral, ventana, universo, horizonte, costo ni criterio de decisión. Si un
+## 2. términos de reintento / ejecución única en v3, protocolo, Adenda R y plan
+experimentos/E3_seleccion_posicion_2026-10-19/PROTOCOLO_E3_v3_PROPUESTO.md:73:| **H: histórica** (una sola ejecución) | Desde el inicio fijado en §4.11 hasta el **lunes 2026-05-18** | «Evidencia histórica con contaminación d
+experimentos/E3_seleccion_posicion_2026-10-19/PROTOCOLO_E3_v3_PROPUESTO.md:277:| Venta sin P_exe(s, t) | Se reintenta en cada apertura activa siguiente. Mientras tanto se valúa a P_val. Lo cobrado queda en efectivo hasta la forma
+experimentos/E3R_desbloqueo_2026-10-26/ADENDA_R_auditoria_de_supervivencia_interna.md:61:- **VÁLIDO:** se recomienda autorizar **una** ejecución confirmatoria de la v3 con esta adenda (H1 y H2 con Holm, H3 subordinada). Antes de
+experimentos/E3R_desbloqueo_2026-10-26/PLAN_EJECUCION_UNICA_E3R.md:35:**Sin repeticiones.** Cualquiera sea el resultado, no se corren variantes sobre estos datos. Toda corrida no planificada es exploratoria y no cambia ninguna cla
+experimentos/E3R_desbloqueo_2026-10-26/PLAN_EJECUCION_UNICA_E3R.md:50:| Órdenes fallidas y datos faltantes | v3 §4.10, §6.4, N21 | Compra sin apertura: el lugar queda en efectivo. Venta sin apertura: se reintenta. 30 días inac
+experimentos/E3R_desbloqueo_2026-10-26/PLAN_EJECUCION_UNICA_E3R.md:94:**Frase:** `AUTORIZO LA EJECUCION UNICA DE E3 (H1 Y H2) CON LA V3 MAS LA ADENDA R Y LA ADENDA R2`
+## 3. CIERRE §4 remite al §8 del informe de ejecución: opciones y recomendación
+## 8. Qué haría falta para habilitar E3 (decisión tuya; nada de esto se hizo)
+
+Haría falta una lista completa de las exclusiones y renombres de pares USDT entre 2020-05 y 2026-05, con su fecha efectiva y una fuente verificable. Opciones:
+
+| Opción | Qué implica | Comentario |
+|---|---|---|
+| a) Compilación manual tuya de la categoría Delisting (161) de binance.com, en un navegador | La v3 §9 prevé la compilación manual. Se fija con hash antes de cualquier retorno | Es la más directa. Hay que cubrir **todos** los años desde 2020, no solo 2024–2026 |
+| b) Habilitar `web.archive.org` en la red del entorno | Aplicaría la N8 original | Incierta: las capturas recientes de binance.com también pueden ser el HTTP 202 anti-bots (ya observado en la lista 161) |
+| c) Confirmar que las condiciones de Binance permiten la lectura automatizada | Habilitaría automatizar binance.com | Requiere tu verificación y una adenda |
+| d) Fuente no oficial o licenciada | Fuera de la v3; requiere adenda y autorización (§2.3) | Menos verificable |
+| e) Aceptar el resultado y cerrar la historia de E3 | Queda «no evaluable con Vision»; se conserva el uso confirmatorio | Se podría prerregistrar una evaluación prospectiva aparte |
+
+**Mi recomendación:** la (a) solo si podés obtener la lista completa a un costo razonable. Si no, la (e). No recomiendo relajar la regla (iv) ni recortar la ventana para «hacerla válida»: sería cambiar el protocolo después de ver la cobertura.
+## 4. PLAN_EJECUCION_UNICA_E3R: recomendación B y observación sobre BKRW
+77:**Por qué recomiendo B:**
+84:**Observación sin cambios:** BKRW es un estable atado al won y probablemente quedaría excluido por el filtro de volatilidad. R1′ no lo cubre, y **no** extiendo la regla. El inicio de B es, si acaso, conservador.
+## 5. Informe de reparación: R2 abandonada, C6 (solo ventana A), BKRW descartado
+37:| Eventos (claves con fecha) | 47 | **37 confirmados.** **4 fechas corregidas** por N5: DOTUP y DOTDOWN 2023-04-27 → 2023-05-10; TRXDOWN → 2023-05-09; LINKUP → 2023-05-11 (cita: «At 2023-05-09 06:00 (UTC) : TRXUP, TRXDOWN At 2023-05-10 06:00 (UTC) : 
+48:- 51 eventos; 41 en el universo; 9 fuera por falta de par USDT documentado; 1 descartado.
+135:**R2 queda abandonada** [J]. Contradice la regla 3 de la Adenda 1 («no se corrigen con reglas inventadas»), y los cortes que importaban dentro de A tienen anuncio.
+162:| **C6 · Solo la ventana A** | Sin opción B, sin R1′ y sin elegir entre varios P0. La autorización debe contener la frase nueva, el sha256 del v2 y el del manifiesto, que fija la ventana |
+## 6. Remociones archivadas del 2022-11-28 (GTO, BTCST, SRM, TRIBE) y KEY 2023-02-10 en el texto archivado
+url_https___www.binance.com_en_support_announcement_notice-of-removal-of-trading
+   tice of Removal of Trading Pairs - 2022-11-28 2022-11-25 05:00 Fellow Binancians , Binance will remove and cease trading on the following trading pairs at 2022-11-28 03:00 (UTC) : Spot Pairs : ARK/BTC, BEAM/BTC, BTCST/BTC, BTCST/USDT, GTO/BTC, GTO/USDT, MITH/BTC, MITH/BNB, PERL/BTC, PNT/BTC, REP/BTC, SRM/BNB, SRM/BTC, SRM/USDT, TRIBE/USDT, XEM/BTC Please note: Users c
+url_https___www.binance.com_en_support_announcement_notice-of-removal-of-trading
+   inancians , Binance will remove and cease trading on the following spot trading pairs: At 2023-02-10 03:00 (UTC) : BOND/ETH, BSW/ETH, C98/BNB, C98/BRL, ERN/BNB, ENJ/GBP, KEY/USDT, TRU/RUB At 2023-02-10 08:00 (UTC): ASR/BTC, JUV/BT

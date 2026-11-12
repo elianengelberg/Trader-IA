@@ -1,0 +1,15 @@
+# comando: sha256sum -c revision_independiente_diseno_v4_2026-10-28/INSUMOS.sha256
+# fecha: 2026-10-28T19:29:58Z
+# cwd: /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad
+revision_independiente_diseno_v4_2026-10-28/fuente/DISENO_E3_v4_extraido.md: OK
+cierre_bloqueantes_E3H1H2_2026-10-27/orquestador_v3/ejecutar_E3_v3.py: OK
+cierre_bloqueantes_E3H1H2_2026-10-27/orquestador_v3/ENTRADAS_CONGELADAS_V3.json: OK
+cierre_bloqueantes_E3H1H2_2026-10-27/pruebas/test_orquestador_v3.py: OK
+reparacion_E3H1H2_2026-10-26/orquestador_v2/ejecutar_E3_v2.py: OK
+reparacion_E3H1H2_2026-10-26/orquestador_v2/ENTRADAS_CONGELADAS.json: OK
+experimentos/E3R_desbloqueo_2026-10-26/ejecutar_E3R.py: OK
+experimentos/E3_seleccion_posicion_2026-10-19/PROTOCOLO_E3_v3_PROPUESTO.md: OK
+experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3/codigo/universo.py: OK
+experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3/codigo/motor.py: OK
+experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3/codigo/inferencia.py: OK
+# exit=0

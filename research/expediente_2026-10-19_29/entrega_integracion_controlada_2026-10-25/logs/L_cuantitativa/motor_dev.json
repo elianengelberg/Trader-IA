@@ -1,0 +1,363 @@
+{
+ "arbol": "dev",
+ "engine_version": "1.2.0",
+ "datos": {
+  "archivo": "data/fixtures/BTC-USD_1h.csv",
+  "sha256": "404801b2dc24b28b903a598424493a302da99dd8ce371e55cbe7c8bfa9cb0d05",
+  "barras": 700,
+  "naturaleza": "sintética (generate_fixtures.py, semilla fija)"
+ },
+ "corridas": [
+  {
+   "reject_probability": 0.0,
+   "semilla": 1,
+   "run_id": "bt_SYSYZX345Y9R8",
+   "trades": 17,
+   "total_return_pct": -0.0961,
+   "max_drawdown_pct": 0.1108,
+   "sharpe": -7.1551,
+   "salidas": {
+    "protective stop": 1,
+    "target reached": 7,
+    "trailing stop": 9
+   },
+   "higiene": {
+    "entry_remainders_cancelled_on_exit": 0,
+    "stale_entry_remainders_cancelled_flat": 0,
+    "exits_done_with_position_left": 0,
+    "bars_with_leg_and_no_stop": 0
+   },
+   "advertencias": 2,
+   "veredicto_evaluador": "insufficient_evidence",
+   "referencias": {
+    "buy_and_hold": -0.5212,
+    "sma_cross": -0.7232,
+    "volatility_targeted": -0.3682,
+    "random_entry": -4.0019,
+    "always_flat": 0.0
+   }
+  },
+  {
+   "reject_probability": 0.0,
+   "semilla": 2,
+   "run_id": "bt_Q4TGMQH9QWDRP",
+   "trades": 14,
+   "total_return_pct": -0.1014,
+   "max_drawdown_pct": 0.1161,
+   "sharpe": -7.2485,
+   "salidas": {
+    "protective stop": 1,
+    "target reached": 5,
+    "trailing stop": 8
+   },
+   "higiene": {
+    "entry_remainders_cancelled_on_exit": 0,
+    "stale_entry_remainders_cancelled_flat": 0,
+    "exits_done_with_position_left": 0,
+    "bars_with_leg_and_no_stop": 0
+   },
+   "advertencias": 2,
+   "veredicto_evaluador": "insufficient_evidence",
+   "referencias": {
+    "buy_and_hold": -0.5212,
+    "sma_cross": -0.7232,
+    "volatility_targeted": -0.3682,
+    "random_entry": -1.3148,
+    "always_flat": 0.0
+   }
+  },
+  {
+   "reject_probability": 0.0,
+   "semilla": 3,
+   "run_id": "bt_DJXF508CQHS57",
+   "trades": 14,
+   "total_return_pct": -0.0634,
+   "max_drawdown_pct": 0.0778,
+   "sharpe": -5.2309,
+   "salidas": {
+    "break-even stop": 1,
+    "protective stop": 1,
+    "target reached": 5,
+    "trailing stop": 7
+   },
+   "higiene": {
+    "entry_remainders_cancelled_on_exit": 0,
+    "stale_entry_remainders_cancelled_flat": 0,
+    "exits_done_with_position_left": 0,
+    "bars_with_leg_and_no_stop": 0
+   },
+   "advertencias": 2,
+   "veredicto_evaluador": "insufficient_evidence",
+   "referencias": {
+    "buy_and_hold": -0.5212,
+    "sma_cross": -0.7232,
+    "volatility_targeted": -0.3682,
+    "random_entry": -2.5356,
+    "always_flat": 0.0
+   }
+  },
+  {
+   "reject_probability": 0.01,
+   "semilla": 1,
+   "run_id": "bt_SWGSS417QN8MZ",
+   "trades": 17,
+   "total_return_pct": -0.0961,
+   "max_drawdown_pct": 0.1108,
+   "sharpe": -7.1551,
+   "salidas": {
+    "protective stop": 1,
+    "target reached": 7,
+    "trailing stop": 9
+   },
+   "higiene": {
+    "entry_remainders_cancelled_on_exit": 0,
+    "stale_entry_remainders_cancelled_flat": 0,
+    "exits_done_with_position_left": 0,
+    "bars_with_leg_and_no_stop": 0
+   },
+   "advertencias": 2,
+   "veredicto_evaluador": "insufficient_evidence",
+   "referencias": {
+    "buy_and_hold": -0.5212,
+    "sma_cross": -0.7232,
+    "volatility_targeted": -0.3682,
+    "random_entry": -4.0019,
+    "always_flat": 0.0
+   }
+  },
+  {
+   "reject_probability": 0.01,
+   "semilla": 2,
+   "run_id": "bt_TQ5MVP5C8727R",
+   "trades": 14,
+   "total_return_pct": -0.1014,
+   "max_drawdown_pct": 0.1161,
+   "sharpe": -7.2485,
+   "salidas": {
+    "protective stop": 1,
+    "target reached": 5,
+    "trailing stop": 8
+   },
+   "higiene": {
+    "entry_remainders_cancelled_on_exit": 0,
+    "stale_entry_remainders_cancelled_flat": 0,
+    "exits_done_with_position_left": 0,
+    "bars_with_leg_and_no_stop": 0
+   },
+   "advertencias": 2,
+   "veredicto_evaluador": "insufficient_evidence",
+   "referencias": {
+    "buy_and_hold": -0.5212,
+    "sma_cross": -0.7232,
+    "volatility_targeted": -0.3682,
+    "random_entry": -1.3148,
+    "always_flat": 0.0
+   }
+  },
+  {
+   "reject_probability": 0.01,
+   "semilla": 3,
+   "run_id": "bt_JSNVRDGX1W61E",
+   "trades": 14,
+   "total_return_pct": -0.0634,
+   "max_drawdown_pct": 0.0778,
+   "sharpe": -5.2309,
+   "salidas": {
+    "break-even stop": 1,
+    "protective stop": 1,
+    "target reached": 5,
+    "trailing stop": 7
+   },
+   "higiene": {
+    "entry_remainders_cancelled_on_exit": 0,
+    "stale_entry_remainders_cancelled_flat": 0,
+    "exits_done_with_position_left": 0,
+    "bars_with_leg_and_no_stop": 0
+   },
+   "advertencias": 2,
+   "veredicto_evaluador": "insufficient_evidence",
+   "referencias": {
+    "buy_and_hold": -0.5212,
+    "sma_cross": -0.7232,
+    "volatility_targeted": -0.3682,
+    "random_entry": -2.5356,
+    "always_flat": 0.0
+   }
+  },
+  {
+   "reject_probability": 0.05,
+   "semilla": 1,
+   "run_id": "bt_03M49S54CJ22F",
+   "trades": 17,
+   "total_return_pct": -0.0961,
+   "max_drawdown_pct": 0.1108,
+   "sharpe": -7.1551,
+   "salidas": {
+    "protective stop": 1,
+    "target reached": 7,
+    "trailing stop": 9
+   },
+   "higiene": {
+    "entry_remainders_cancelled_on_exit": 0,
+    "stale_entry_remainders_cancelled_flat": 0,
+    "exits_done_with_position_left": 0,
+    "bars_with_leg_and_no_stop": 0
+   },
+   "advertencias": 2,
+   "veredicto_evaluador": "insufficient_evidence",
+   "referencias": {
+    "buy_and_hold": -0.5212,
+    "sma_cross": -0.7232,
+    "volatility_targeted": -0.3682,
+    "random_entry": -4.0019,
+    "always_flat": 0.0
+   }
+  },
+  {
+   "reject_probability": 0.05,
+   "semilla": 2,
+   "run_id": "bt_CHQ4117TRTVGX",
+   "trades": 13,
+   "total_return_pct": -0.1066,
+   "max_drawdown_pct": 0.129,
+   "sharpe": -6.6759,
+   "salidas": {
+    "protective stop": 1,
+    "target reached": 5,
+    "trailing stop": 7
+   },
+   "higiene": {
+    "entry_remainders_cancelled_on_exit": 0,
+    "stale_entry_remainders_cancelled_flat": 0,
+    "exits_done_with_position_left": 0,
+    "bars_with_leg_and_no_stop": 0
+   },
+   "advertencias": 2,
+   "veredicto_evaluador": "insufficient_evidence",
+   "referencias": {
+    "buy_and_hold": -0.5212,
+    "sma_cross": -0.7232,
+    "volatility_targeted": -0.3682,
+    "random_entry": -1.2038,
+    "always_flat": 0.0
+   }
+  },
+  {
+   "reject_probability": 0.05,
+   "semilla": 3,
+   "run_id": "bt_Y72FN6AE5MQMA",
+   "trades": 14,
+   "total_return_pct": -0.0634,
+   "max_drawdown_pct": 0.0778,
+   "sharpe": -5.2309,
+   "salidas": {
+    "break-even stop": 1,
+    "protective stop": 1,
+    "target reached": 5,
+    "trailing stop": 7
+   },
+   "higiene": {
+    "entry_remainders_cancelled_on_exit": 0,
+    "stale_entry_remainders_cancelled_flat": 0,
+    "exits_done_with_position_left": 0,
+    "bars_with_leg_and_no_stop": 0
+   },
+   "advertencias": 2,
+   "veredicto_evaluador": "insufficient_evidence",
+   "referencias": {
+    "buy_and_hold": -0.5212,
+    "sma_cross": -0.7232,
+    "volatility_targeted": -0.3682,
+    "random_entry": -2.5356,
+    "always_flat": 0.0
+   }
+  },
+  {
+   "reject_probability": 0.2,
+   "semilla": 1,
+   "run_id": "bt_76X77H587A4FB",
+   "trades": 17,
+   "total_return_pct": -0.0961,
+   "max_drawdown_pct": 0.1108,
+   "sharpe": -7.1551,
+   "salidas": {
+    "protective stop": 1,
+    "target reached": 7,
+    "trailing stop": 9
+   },
+   "higiene": {
+    "entry_remainders_cancelled_on_exit": 0,
+    "stale_entry_remainders_cancelled_flat": 0,
+    "exits_done_with_position_left": 0,
+    "bars_with_leg_and_no_stop": 0
+   },
+   "advertencias": 2,
+   "veredicto_evaluador": "insufficient_evidence",
+   "referencias": {
+    "buy_and_hold": -0.5212,
+    "sma_cross": -0.7232,
+    "volatility_targeted": -0.3682,
+    "random_entry": -4.0019,
+    "always_flat": 0.0
+   }
+  },
+  {
+   "reject_probability": 0.2,
+   "semilla": 2,
+   "run_id": "bt_GZDNSK54K4YPC",
+   "trades": 13,
+   "total_return_pct": -0.1067,
+   "max_drawdown_pct": 0.1291,
+   "sharpe": -6.6794,
+   "salidas": {
+    "protective stop": 1,
+    "target reached": 5,
+    "trailing stop": 7
+   },
+   "higiene": {
+    "entry_remainders_cancelled_on_exit": 0,
+    "stale_entry_remainders_cancelled_flat": 0,
+    "exits_done_with_position_left": 0,
+    "bars_with_leg_and_no_stop": 0
+   },
+   "advertencias": 2,
+   "veredicto_evaluador": "insufficient_evidence",
+   "referencias": {
+    "buy_and_hold": -0.5212,
+    "sma_cross": -0.7232,
+    "volatility_targeted": -0.3682,
+    "random_entry": -1.2038,
+    "always_flat": 0.0
+   }
+  },
+  {
+   "reject_probability": 0.2,
+   "semilla": 3,
+   "run_id": "bt_TG3MBR23TMCRA",
+   "trades": 14,
+   "total_return_pct": -0.0899,
+   "max_drawdown_pct": 0.1043,
+   "sharpe": -6.164,
+   "salidas": {
+    "break-even stop": 1,
+    "target reached": 5,
+    "trailing stop": 8
+   },
+   "higiene": {
+    "entry_remainders_cancelled_on_exit": 0,
+    "stale_entry_remainders_cancelled_flat": 0,
+    "exits_done_with_position_left": 0,
+    "bars_with_leg_and_no_stop": 0
+   },
+   "advertencias": 2,
+   "veredicto_evaluador": "insufficient_evidence",
+   "referencias": {
+    "buy_and_hold": -0.5212,
+    "sma_cross": -0.7232,
+    "volatility_targeted": -0.3682,
+    "random_entry": -2.3042,
+    "always_flat": 0.0
+   }
+  }
+ ]
+}

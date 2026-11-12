@@ -1,0 +1,1089 @@
+--- /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/PROTOCOLO_E3_v2_BORRADOR.md	2026-10-20 00:10:09.407598555 +0000
++++ /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/experimentos/E3_seleccion_posicion_2026-10-19/PROTOCOLO_E3_v3_PROPUESTO.md	2026-10-20 01:26:23.793147313 +0000
+@@ -1,513 +1,664 @@
+-# Prerregistro E3, versión 2: momentum transversal long-only (borrador para revisión; NO EJECUTAR, NO CONGELADO)
++# Prerregistro E3, versión 3 (PROPUESTA; NO CONGELADA; NO EJECUTAR)
++## Momentum transversal long-only en Binance spot: experimento de investigación
+ 
+ **Estado (2026-10-20):**
+-- No se descargó ningún dato, no se ejecutó ninguna prueba, no se instaló nada y no se modificó el repositorio.
+-- Esta versión **reemplaza** a `PROTOCOLO_E3_BORRADOR.md` (v1), que queda sin cambios como registro.
+-- Las afirmaciones de `INFORME_E3.md` sobre el período reservado (§2.8 y §4.3) quedan **corregidas** por el §1 de este documento.
++- Es una propuesta para decidir la congelación. No se descargó ningún dato, no se ejecutó ninguna prueba, no se instaló nada y no se modificó el repositorio.
++- Si la aprobás, se congela **este** documento con su SHA-256 antes de descargar cualquier archivo de altcoins.
+ 
+-**Etiquetas:** [Hip] supuesto o estimación mía · [Doc] verificado en documentación oficial o pública · [TIA] hecho del proyecto · [Pub] literatura.
++**Propósito y alcance de decisión:**
++- E3 es un **experimento de investigación**, no la evaluación de una candidata a inversión.
++- **Ninguna** clasificación de este protocolo autoriza capital.
++- Los resultados solo informan decisiones de investigación: seguir en papel, cerrar la familia o diseñar una hipótesis nueva prospectiva.
+ 
+-## Cambios respecto de v1
+-| Punto de la revisión | v1 | v2 |
++**Etiquetas:** [Hip] supuesto o estimación sin datos · [Doc] verificado en documentación · [TIA] hecho del proyecto · [Pub] literatura (\* = citado de memoria).
++
++---
++
++## 0. Correcciones y jerarquía de documentos
++
++### 0.1 Las seis correcciones indispensables y dónde quedan
++| # | Corrección | Sección |
+ |---|---|---|
+-| 1. Período reservado | Trataba [2025-01-01, 2026-06-01) como reserva fuera de muestra | **Retiro esa afirmación.** No es fuera de muestra. Propongo tres capas honestas: histórica (con contaminación declarada), ventana ciega corta (opcional, con autorización) y prospectiva (la única confirmación independiente) |
+-| 2. Supervivencia | 10 anuncios como control de validez | Reconstrucción desde los propios datos de negociación (operaciones > 0), conciliación con **todas** las exclusiones oficiales de pares USDT, más una muestra de listados y 10 controles en profundidad. Fuentes alternativas y sus límites |
+-| 3. Multiplicidad | Holm m = 3 con el filtro dentro | Tres hipótesis exactas: H1 y H2 en la familia base (Holm) y H3 subordinada (gatekeeping serial). Inventario de las 30 decisiones que podrían generar pruebas y registro obligatorio de ejecuciones |
+-| 4. Especificación | Reglas resumidas | Fórmulas y algoritmo completos, incluidos huecos, velas sin operaciones, exclusiones y renombres |
+-| 5. Criterios | Mezclados | Predictivo, económico y robustez por separado. Justificación del 0,01 y del 90 %. Potencia y límites |
+-| 6. Filtro de tendencia | Hipótesis H3 en paralelo | **Fuera de la base.** Prueba incremental posterior, habilitada solo si la base es «respaldada» |
+-| 7. Datos | Estimación general | Archivos, rutas, pares, períodos, tamaños, número de solicitudes y fuentes de los anuncios |
++| 1 | Multiplicidad: Holm (m = 2) para H1 y H2, y H3 solo si las dos rechazan. **Demostración** del control del error de familia y su alcance | §3.2 y Anexo A |
++| 2 | Distinción entre la **evidencia predictiva** de H1 (IC > 0) y la **relevancia económica** (margen δ_IC = 0,01) | §6.1 |
++| 3 | Tratamiento contable de las liquidaciones (no son precios ejecutables), estrés del −30 % y etiqueta de dependencia | §4.10 y §6.4 |
++| 4 | Especificación reproducible del bootstrap: centrado, studentizado, bloques completos, divisor k − 1 y cuantiles por estadístico de orden | §5.2–5.3 |
++| 5 | Supuestos de potencia, sensibilidad, cota conjunta y **limitación para decisiones de inversión** | §7 |
++| 6 | Jerarquía de versiones y documentos | §0.2 |
++
++**Ningún umbral, ventana, universo, horizonte ni criterio cambió** respecto de la v2 y de las propuestas revisadas. Los cambios corrigen la validez, cierran ambigüedades o son más estrictos.
++
++### 0.2 Jerarquía de documentos (regla de precedencia)
++**Si hay conflicto, prevalece este documento sobre cualquier otro de E3.** Los documentos anteriores se conservan sin cambios, como registro.
++
++| Documento | SHA-256 (inicio) | Estado | Qué conserva su valor |
++|---|---|---|---|
++| **`PROTOCOLO_E3_v3_PROPUESTO.md`** (este) | Se fija al congelar | **Vigente** si se aprueba | Todo el protocolo |
++| `DECISIONES_FINALES_E3.md` | `757f8a16…` | Integrado aquí | Registro de la revisión |
++| `CAMBIOS_PROPUESTOS_v3.md` | `502938d9…` | Integrado aquí | Registro de la revisión |
++| `PROTOCOLO_E3_v2_BORRADOR.md` | `2131e676…` | **Reemplazado** | El §1.1 (uso previo de datos, con su detalle completo) sigue siendo el registro; aquí se resume sin cambios de contenido |
++| `PROTOCOLO_E3_BORRADOR.md` (v1) | `074b99a5…` | **Reemplazado** | Nada normativo |
++| `INFORME_E3.md` | `e07fc2b7…` | Informe de investigación | **Siguen valiendo:** §1 (punto de partida), §2.1–2.4 (literatura y lectura crítica), §3 (otras familias), §4.1–4.2 (inventario), §7 (largo plazo) y las fuentes. **Quedan reemplazados por este documento:** §0 (potencia económica 35–45 %/año; capa de efectivo como candidata paralela), §2.5–2.8 (especificación, comparaciones y evaluación), §4.3 (períodos reservados: la reserva 2025–2026 **no** es fuera de muestra), §5 filas 1–2 (experimento mínimo con el período 2019–2024), §6 (dos candidatas en paralelo) y §8 (fases y criterios) |
++| `REGISTRO_HIPOTESIS_tras_E3_revision.md` | `068873f5…` | Vigente hasta la congelación | Al congelar se crea una versión nueva que remite a este documento |
++| E1, E2, T, T-MULTI y sus artefactos | (sus manifiestos) | **Congelados, intactos** | — |
+ 
+ ---
+ 
+-## 1. Uso previo de los datos y períodos (punto 1)
++## 1. Uso previo de los datos y períodos (resumen sin cambios de contenido; el detalle completo está en el §1.1 de la v2)
+ 
+-### 1.1 Qué se consultó o se usó, por línea
+ | Línea | Activos | Datos | Período | Uso |
+ |---|---|---|---|---|
+-| T, desarrollo (con los cribados V y R) | BTC (y ETH en desarrollo) | Spot 1d | 2017-08-17 → 2021-12-31 (métricas desde 2018-02-14) | Diseño, cribado y sensibilidad |
++| T, desarrollo (con los cribados V y R) | BTC (y ETH) | Spot 1d | 2017-08-17 → 2021-12-31 | Diseño, cribado y sensibilidad |
+ | T, fuera de muestra | BTC, ETH | Spot 1d | 2022-01-01 → 2026-05-31 | **Evaluado** |
+-| T-MULTI | 12 ETF (11 evaluados) | Diario más dividendos | 2011-01-03 → 2026-09-30 (evaluación desde 2013-01-02) | **Evaluado** |
+-| T-papel | BTC, ETH | Spot 1d diario | 2026-04-20 → 2026-10-16 | Historia de la señal: **no evaluada**, pero descargada; se registraron el último cierre y la exposición de T. Sin observaciones prospectivas al 2026-10-18 |
+-| Monitor del carry (T-papel) | BTC | Funding | 2026-07-03 → 2026-09-30 | Consultado como **agregado** (6,5 %/año), dentro del reservado de H-CARRY |
+-| H-CARRY | BTC (spot y perpetuo 1h: velas, mark, prima, funding) | 1h | 2020-01 → 2026-05: desarrollo 2020-01 → 2022-12; validación 2023-01 → 2024-01; **test 2024-02 → 2026-05 (consumido)** | **Evaluado** |
+-| H-CARRY, exploratorio posterior | ETH y SOL (funding), DTB3, Aave | Varios | 2019-12/2020-01 → 2026-05 | Exploratorio |
++| T-MULTI | 12 ETF | Diario más dividendos | 2011-01-03 → 2026-09-30 | **Evaluado** |
++| T-papel | BTC, ETH | Spot 1d diario | 2026-04-20 → 2026-10-16 | Historia de la señal, no evaluada; se registraron el último cierre y la exposición |
++| Monitor del carry | BTC | Funding | 2026-07-03 → 2026-09-30 | Agregado consultado (6,5 %/año) |
++| H-CARRY | BTC spot y perpetuo 1h | 1h | 2020-01 → 2026-05 (test 2024-02 → 2026-05, consumido) | **Evaluado** |
++| H-CARRY, exploratorio posterior | ETH y SOL (funding), DTB3, Aave | Varios | → 2026-05 | Exploratorio |
+ | E1 | BTC | Spot 1h | 2019-10-01 → 2026-05-31 | **Evaluado** |
+-| E2 | BTC, ETH; funding de BTC y ETH; prima de BTC; Wikipedia | Spot 1d; funding; 1h | Precios 2017-08 → 2026-05; funding y prima 2020-01 → 2026-05; vistas 2015-07 → 2026-05 | **Evaluado** |
+-| E3, diseño | — | Ninguno: solo literatura e inventario de archivos locales (nombres, fechas y tamaños; ningún precio) | — | — |
+-| **Altcoins (todo menos BTC y ETH)** | — | — | — | **Nunca descargadas ni usadas** por el proyecto |
+-
+-### 1.2 Conocimiento de quienes diseñan
+-- **El asistente** tiene conocimiento general del mercado cripto hasta aproximadamente **junio de 2026** (su fecha de corte declarada). Eso incluye qué narrativas y monedas subieron o cayeron en 2017–2025, aunque no series semanales precisas.
+-- **El usuario y los revisores** vivieron el período completo.
+-- **La literatura** que motiva la hipótesis cubre 2013–2023.
+-
+-### 1.3 ¿Es [2025-01-01, 2026-06-01) fuera de muestra? **No.**
+-1. BTC y ETH ya se **evaluaron** en ese tramo: T fuera de muestra, test de H-CARRY (BTC), E1 (BTC 1h) y E2.
+-2. Quienes diseñan conocen el período cualitativamente: qué monedas y narrativas ganaron.
+-3. Que el proyecto no haya bajado las altcoins es real, pero **no basta** para llamarlo fuera de muestra.
++| E2 | BTC, ETH, funding, prima, Wikipedia | Varios | → 2026-05 | **Evaluado** |
++| **Altcoins** | — | — | — | **Nunca usadas** por el proyecto |
+ 
+-v1 lo presentaba como reserva fuera de muestra: **esa afirmación se retira.** En sentido estricto, **ningún período anterior a junio de 2026 está intacto.**
++**Conocimiento de quienes diseñan:**
++- el asistente, en términos generales, hasta ≈ junio de 2026;
++- el usuario y los revisores vivieron el período;
++- la literatura cubre 2013–2023.
+ 
+-### 1.4 Alternativa honesta: tres capas
+-| Capa | Ventana | Qué es | Qué puede concluir |
+-|---|---|---|---|
+-| **H: histórica** (una sola ejecución) | Desde el primer lunes evaluable (§4.9; estimo 2019-H2 [Hip]) hasta el **lunes 2026-05-18**, con el último retorno terminando en la apertura del 2026-05-25. ≈ 330–360 semanas | Datos de altcoins nunca usados por el proyecto, con reglas fijadas por la literatura antes de verlos. **Contaminación declarada:** conocimiento cualitativo del período; BTC y ETH reutilizados | «Evidencia histórica»: nunca «confirmación independiente» |
+-| **C: ventana ciega corta** (opcional; se abre solo si H da «respaldada») | [2026-06-01, último lunes antes de la congelación). Unas 20 semanas | **Altcoins nunca vistas**, posterior al corte de conocimiento del asistente. Coincide con el reservado de H-CARRY, cuyo cierre lo dejó «intacto para una hipótesis nueva, con autorización». BTC y ETH: precios ya descargados para T-papel como historia, sin evaluar | Solo detecta **contradicciones groseras** (efecto mínimo de la correlación ≈ 0,08). No confirma. El usuario y los revisores sí vivieron ese período |
+-| **P: prospectiva** | Desde la congelación, con reglas idénticas | **La única evaluación independiente** | Con una correlación verdadera de 0,03 hacen falta ≈ 2–3,5 años para confirmarla; con 0,02, ≈ 4–8 años [Hip] |
+-
+-**Por qué no propongo una pseudo-reserva interna:**
+-- Por ejemplo, reservar 2025-01 → 2026-05.
+-- Costaría ≈ 20–25 % de las semanas de H, con una pérdida de potencia de ≈ 10 puntos.
+-- No compraría independencia, porque el tramo también es conocido.
+-- Su único valor sería protegernos de iterar sobre H; eso ya lo garantiza esta regla: **una ejecución, todo registrado y cualquier variante posterior es exploratoria.**
++**Ningún período anterior a junio de 2026 está intacto.**
+ 
+-**Para C hacen falta dos autorizaciones tuyas:**
+-1. usar el reservado de H-CARRY para esta hipótesis;
+-2. descargar esos datos.
++**Capas de evaluación:**
+ 
+-Si no las das, se pasa directo de H a P.
++| Capa | Ventana | Qué puede concluir |
++|---|---|---|
++| **H: histórica** (una sola ejecución) | Desde el inicio fijado en §4.11 hasta el **lunes 2026-05-18** | «Evidencia histórica con contaminación declarada», **nunca** confirmación independiente |
++| **C: ventana ciega** (opcional) | [2026-06-01, lunes previo a la congelación), unas 20 semanas. Requiere tu autorización (coincide con el reservado de H-CARRY) y que H dé «respaldada» | Solo contradicciones groseras |
++| **P: prospectiva** | Desde la congelación, con reglas idénticas | Es la **única** evaluación independiente |
+ 
+ ---
+ 
+-## 2. Universo histórico y supervivencia (punto 2)
+-
+-### 2.1 Principio
+-El universo de cada fecha se reconstruye **desde los propios registros de negociación** (velas diarias con operaciones), **no** desde listas actuales de símbolos. Los anuncios oficiales sirven para **verificar** esa reconstrucción y para **mapear renombres**. No reemplazan los datos.
++## 2. Universo histórico y supervivencia
+ 
+-### 2.2 Fuentes oficiales
+-| Fuente | Para qué | Notas [Doc] |
+-|---|---|---|
+-| **data.binance.vision**, klines 1d mensuales de spot y su `.CHECKSUM` | Precios, volumen en USDT y **número de operaciones** por día | Ruta `data/spot/monthly/klines/{SÍMBOLO}/1d/{SÍMBOLO}-1d-{AAAA-MM}.zip`. Columnas: open time, OHLC, volume, close time, **quote asset volume**, **number of trades**, taker volumes. **Desde 2025-01-01 las marcas de tiempo del spot están en microsegundos** |
+-| Listado del bucket (prefijos por símbolo) | Conjunto de símbolos con archivos | El README dice «all symbols are supported». **No** dice si conserva los excluidos: **por verificar** (§2.4) |
+-| Anuncios oficiales de Binance: Delisting (`binance.com/en/support/announcement/list/161`), New Cryptocurrency Listing (`…/list/48`), Latest Binance News (`…/list/49`, renombres y canjes) | Conciliación de exclusiones, listados y renombres | La categoría Delisting mezcla exclusiones de tokens, «Notice of Removal of Spot Trading Pairs» (pares sueltos; el token puede seguir en otros pares), futuros, margen y Alpha. Solo cuentan las de **pares spot contra USDT** |
+-| `GET /api/v3/exchangeInfo` (instantánea actual) | Separar el activo base del de cotización en símbolos vigentes; estados TRADING, HALT y BREAK | No es histórica. Solo sirve para interpretar símbolos, nunca para el universo |
+-
+-**Hallazgo que cambia la regla** [Doc: issue #201 de binance-public-data, respuesta del mantenedor, 2022-12-16]:
+-- tras la exclusión de un símbolo, Vision puede seguir publicando velas **con el último precio arrastrado y 0 operaciones**;
+-- **que exista un archivo no prueba que el par cotizara.** La reconstrucción exige **número de operaciones > 0**.
+-
+-### 2.3 Reglas de reconstrucción (fijadas ahora)
+-1. **Conjunto de símbolos:** todos los prefijos del bucket bajo `data/spot/monthly/klines/` cuyo nombre termina en `USDT`.
+-   - Base = nombre menos «USDT».
+-   - Si exchangeInfo da otro par base/cotización para ese símbolo, manda exchangeInfo.
+-2. **Día activo** del par s en d: existe la vela 1d de d, con **operaciones > 0**, precios > 0 y OHLC coherente (L ≤ O, C ≤ H).
+-   - Una vela con 0 operaciones = **día inactivo** (precio arrastrado), igual que un día sin vela.
+-3. **Primer día activo** = listado efectivo del par.
+-   - **Fin de cotización** = último día activo antes de 30 días seguidos inactivos, o antes del final de los datos.
+-   - Si vuelve a estar activo después, es un **listado nuevo**: la edad se reinicia, salvo que un anuncio documente una suspensión temporal.
+-4. **Renombres y canjes:** se mapean solo con un anuncio oficial que dé el símbolo viejo, el nuevo, la fecha y la relación de canje.
+-   - Un renombre mapeado conserva la edad y la posición (unidades × relación).
+-   - Uno no mapeado se trata como exclusión al último día activo, más un listado nuevo.
+-5. **Exclusión de un par USDT con el token vigente en otros pares:** para este universo es una **salida** (solo se opera contra USDT).
+-6. **Archivos:**
+-   - si falta un archivo mensual, o su checksum falla, se usan los diarios oficiales de ese mes (con su `.CHECKSUM`);
+-   - si para un mismo día el mensual y el diario discrepan en OHLC u operaciones, ese día se trata como **inactivo** (misma regla que la adenda 1 de E1).
+-7. **Unidades de tiempo:** se detectan ms o µs por magnitud (cambio del 2025-01-01). Toda vela debe durar 1 día exacto; si no, el día es inactivo.
++### 2.1 Fuentes [Doc]
++- **data.binance.vision**, klines 1d mensuales de spot con `.CHECKSUM`.
++  - Ruta: `data/spot/monthly/klines/{S}/1d/{S}-1d-{AAAA-MM}.zip`.
++  - Columnas: OHLC, `quote asset volume` y `number of trades`.
++  - Desde 2025-01-01 las marcas de tiempo están en µs.
++- **Listado del bucket**, como conjunto de símbolos. No está documentado que conserve los pares excluidos.
++- **Anuncios oficiales de Binance:**
++  - Delisting `…/announcement/list/161`;
++  - New Cryptocurrency Listing `…/list/48`;
++  - Latest Binance News `…/list/49`.
++- **exchangeInfo**, instantánea actual. Solo para separar el activo base de la cotización.
++- **Hallazgo** (issue #201): tras una exclusión puede haber velas con el precio arrastrado y **0 operaciones**. **Que exista un archivo no prueba que el par cotizara.**
++
++### 2.2 Reconstrucción
++1. **Símbolos:** los prefijos terminados en `USDT`. Base = símbolo − «USDT», salvo que exchangeInfo indique otra cosa.
++2. **Día activo:** vela 1d existente, con operaciones > 0, precios > 0, OHLC coherente, duración de 1 día y sin discrepancia entre el archivo mensual y el diario.
++3. **Listado vigente:**
++   - empieza en el primer día activo;
++   - termina tras 30 días seguidos inactivos, salvo una suspensión documentada en un anuncio;
++   - si vuelve a cotizar, es un listado nuevo.
++4. **Renombres:** solo con un anuncio oficial (símbolo viejo, símbolo nuevo, fecha y relación de canje). El nuevo hereda la edad y las posiciones.
++5. **Par USDT removido con el token vigente en otros pares:** cuenta como salida.
++6. **Archivos:** si falta un mensual o su checksum falla, se usan los diarios oficiales. Si para un mismo día discrepan, ese día es inactivo.
++
++### 2.3 Conciliación (en F3, antes de calcular cualquier retorno de estrategia)
++**Universo de anuncios:**
++- todas las exclusiones o remociones que afectan un **par spot contra USDT**, con fecha efectiva entre 2018-01-01 y 2026-05-31;
++- también las exclusiones de token completo, salvo que el texto liste los pares y USDT no esté.
+ 
+-### 2.4 Verificación de la reconstrucción (una comprobación, no una prueba de completitud)
+-Se hace en la etapa de calidad (F3), **antes** de calcular cualquier retorno de estrategia. Todo se guarda con hash.
++**Categorías** (todas se informan; **todas en el denominador**):
+ 
+-| Control | Qué | Criterio |
++| Cat. | Definición | ¿Falla? |
+ |---|---|---|
+-| **V-S1: conciliación de exclusiones (todas)** | Cada anuncio oficial de exclusión de token o de remoción de un par **spot contra USDT**, con fecha efectiva entre 2018-01-01 y 2026-05-31 | ≥ 95 % del total y ≥ 90 % en cada año calendario deben tener el par en los datos, con su último día activo entre 7 días antes y 1 día después de la fecha efectiva |
+-| **V-S2: listados (muestra)** | 50 anuncios de listados nuevos con par USDT, elegidos al azar con semilla fija **antes** de mirar precios | ≥ 95 % con el primer día activo dentro de ±3 días del inicio anunciado |
+-| **V-S3: 10 controles en profundidad** | 10 exclusiones al azar de V-S1, revisadas a mano: continuidad de precios, días inactivos y que no haya velas activas tras la fecha efectiva | 10 de 10 coherentes, o una explicación documentada para cada desvío |
+-| **V-S4: vigentes** | Símbolos USDT con estado TRADING en exchangeInfo | 100 % presentes en el listado del bucket |
+-| **V-S5: precios arrastrados** | Velas con 0 operaciones tras el fin de cotización | Se cuentan y se confirma que **ninguna** entra en el universo ni en los retornos |
+-| **V-S6: estructura** | Pares activos por mes; altas y bajas por año | Se informan. Las bajas por año deben ser > 0 en todos los años con exclusiones anunciadas |
+-
+-**Decisiones fijadas ahora:**
+-- Si V-S1 falla **solo** en los primeros años, el inicio de H pasa al primer año calendario desde el que se cumplen ≥ 95 % acumulado y ≥ 90 % en cada año. Esto reduce la potencia, y se informa cuánto.
+-- Si V-S1 falla en general (< 95 % del total), la prueba queda **INVÁLIDA con Vision**, sin interpretar.
+-- Los anuncios con fechas ambiguas o sin el par USDT explícito se informan como «no conciliables» y quedan fuera del denominador (y se cuentan).
+-
+-### 2.5 Si Binance Vision no conserva los pares excluidos
+-- **Hasta donde pude verificar, no hay otra fuente oficial de Binance con velas de pares excluidos.**
+-  - La API REST de velas sirve símbolos vigentes; que rechace los excluidos es [Hip, no lo probé para no hacer consultas de datos].
+-  - exchangeInfo no es histórico.
+-- **Alternativas, todas no oficiales:**
++| A | Último día activo entre la fecha efectiva − 7 días y + 1 día | No |
++| B | Último día activo antes de la fecha efectiva − 7 días, con todos los archivos mensuales presentes hasta la fecha efectiva | No |
++| T | Igual que B, pero falta algún archivo entre el último día activo y la fecha efectiva (truncado) | **Sí** |
++| C | Días activos después de la fecha efectiva + 1 día | **Sí**, salvo un relisting o una corrección documentados |
++| D | El par no aparece en el listado o no tiene archivos | **Sí** |
++| E | Ambiguo | Se resuelve con la mejor lectura documentada y se clasifica en A–D. Si no tiene datos, es D |
++
++**Informe por año calendario:**
++- totales y cada categoría (C, separada en explicada y no explicada);
++- cobertura conservadora (A + B) / total;
++- salidas sin anuncio;
++- fecha del primer anuncio disponible en el archivo web.
++
++**Controles adicionales:**
++- **V-S2:** 50 listados USDT al azar (semilla 20261025), con ≥ 95 % de primeros días activos dentro de ±3 días del anuncio;
++- **V-S3:** 10 exclusiones al azar (semilla 20261026), revisadas a mano;
++- **V-S4:** todos los USDT con estado TRADING presentes en el listado;
++- **V-S5:** ninguna vela con 0 operaciones en el universo ni en los retornos.
+ 
+-| Fuente | Qué es | Limitaciones |
+-|---|---|---|
+-| **Tardis.dev** [Doc] | Captura por un tercero del feed WebSocket **oficial** de Binance | Pares de alta capitalización desde 2019-03-30 y **todos los pares desde 2021-03-05**: un universo completo solo desde 2021-03, ≈ 270 semanas y menos potencia. Pago (salvo el primer día de cada mes). Habría que construir las velas diarias desde trades (gran volumen) y no son idénticas a las de Binance. Hay que verificar si incluye los pares excluidos |
+-| Kaiko, CoinAPI, CryptoCompare | Proveedores comerciales | Costo, licencias que restringen la redistribución, metodologías propias |
+-| CoinMarketCap o CoinGecko (instantáneas históricas) | Agregados de varios exchanges | No son precios de Binance; condiciones de uso y raspado; servirían para verificar, no para operar |
++**Regla de validez:** dentro de la ventana H **no puede haber ninguna falla** (T, D o C no explicada). El inicio de H se fija en §4.11. Si la ventana resultante tiene < 156 semanas evaluables, el resultado es **INVÁLIDO con Vision**.
+ 
+-- Cualquier alternativa exige **una adenda nueva y tu autorización**, con costo y licencia evaluados antes.
++**Si Vision no alcanza:** no hay otra fuente oficial de Binance. Las alternativas no oficiales (Tardis.dev, con todos los pares solo desde 2021-03-05; Kaiko; CoinAPI; agregadores) requieren una adenda y tu autorización.
+ 
+ ---
+ 
+-## 3. Hipótesis y multiplicidad (punto 3)
++## 3. Hipótesis y multiplicidad
+ 
+-### 3.1 Las tres hipótesis confirmatorias y sus métricas primarias
+-| | Hipótesis exacta | Métrica primaria | Prueba |
+-|---|---|---|---|
+-| **H1 (predictiva)** | En U100, la señal S (§4.5) tiene una correlación de rangos media **positiva** con el retorno de la semana siguiente | IC̄ = media de los IC_t de Spearman en las semanas evaluables de H | t con Newey–West de 4 rezagos; p₁ unilateral |
+-| **H2 (selección neta)** | La cartera base de 6 monedas de U30 (§4.6–4.8) rinde, **neta de costos**, más que EW-U30 con la misma mecánica y costos | Media anualizada (× 52) del exceso semanal neto | Bootstrap circular por bloques de 13 semanas, 10 000 réplicas, semilla 20261020; p₂ = 1 − P(media > 0) |
+-| **H3 (incremental, subordinada)** | Agregar el filtro de momentum absoluto (§6) a la cartera base aumenta el rendimiento más allá de su menor exposición | Media anualizada del exceso de timing frente a la base escalada a la misma exposición media | Igual que H2; p₃ |
+-
+-**Control del error de familia (5 %):**
+-- **Familia base {H1, H2}: Holm al 5 %.** Se compara el p menor con 0,025 y el otro con 0,05.
+-- **H3: gatekeeping serial.** Se prueba al 5 % **solo si H1 y H2 rechazan** y la base pasa la robustez (§5.3).
+-  - Este procedimiento controla el error de familia en las tres hipótesis ([Pub\*] Dmitrienko et al., gatekeeping serial).
+-  - Exigir robustez para abrir la compuerta solo la vuelve más estricta.
+-- **Por qué no Holm m = 3 sobre todo:** H3 está lógicamente subordinada; no tiene sentido sin una base válida. Con el gatekeeping, H1 y H2 conservan los umbrales 0,025 y 0,05 sin aumentar el error de familia.
+-  - Si preferís Holm m = 3 (con H3 = 1 cuando no se habilita), el procedimiento también es válido y más conservador. **Decidilo antes de congelar.**
+-
+-**No son hipótesis, y no tienen p ni decisión:**
+-- las comparaciones con BTC buy and hold, con el efectivo y con la exposición equivalente (§5.2);
+-- la sensibilidad (§3.3, ítem 29).
+-
+-**La robustez** (§5.3) son condiciones que **solo endurecen** la conclusión: no pueden rescatar una hipótesis que no rechazó.
+-
+-### 3.2 Registro de ejecuciones (obligatorio)
+-- Cada cálculo de cualquier métrica de **rendimiento o predicción** sobre datos reales se anota en `REGISTRO_EJECUCIONES.jsonl`, que solo admite añadidos. Cada entrada lleva:
+-  - fecha;
+-  - hash del código, de la configuración y del manifiesto de datos;
+-  - propósito: confirmatoria, robustez, sensibilidad o exploratoria.
++### 3.1 Hipótesis confirmatorias (definidas sin condiciones, antes de los datos)
++| | H₀ (nula) | Alternativa | Métrica primaria | Valor p |
++|---|---|---|---|---|
++| **H1** (predictiva) | E[IC_t] ≤ 0 en U100 | > 0 | IC̄ (§4.13) | p₁: Newey–West (§5.1) |
++| **H2** (selección neta) | E[e_t] ≤ 0, siendo e_t el exceso semanal neto frente a EW-U30 | > 0 | 52 · ē | p₂: bootstrap-t bajo H₀ (§5.2) |
++| **H3** (filtro incremental) | E[x_t] ≤ 0, siendo x_t el exceso de timing (§8) | > 0 | 52 · x̄ | p₃: igual que p₂ |
++
++### 3.2 Procedimiento (corrección 1)
++α = 0,05. Se ordenan p₁ y p₂ (p₍₁₎ ≤ p₍₂₎):
++1. **Holm sobre {H1, H2}:**
++   - si p₍₁₎ ≤ 0,025, se rechaza la hipótesis correspondiente, y la otra se rechaza si su p ≤ 0,05;
++   - si p₍₁₎ > 0,025, no se rechaza ninguna.
++2. **H3**, solo si se rechazan **H1 y H2** y además la base es **ROBUSTA** (§6.3). En ese caso se rechaza si p₃ ≤ 0,05. Si no, H3 queda **NO HABILITADA** y no se calcula.
++
++**Control del error de familia:**
++- **Teorema** (Anexo A): si cada p_i es un valor p válido bajo su nula (P(p_i ≤ u) ≤ u para u ∈ {0,025; 0,05}), entonces P(rechazar al menos una nula verdadera entre H1, H2 y H3) ≤ 0,05, en **las 8 configuraciones** de nulas verdaderas o falsas y con **cualquier** dependencia entre las pruebas.
++  - El procedimiento coincide exactamente con unas **pruebas cerradas**, con pruebas locales de Bonferroni.
++  - La exigencia de robustez solo quita rechazos.
++- **Alcance:** la familia son **solo los rechazos de H1, H2 y H3**. Quedan **fuera**, sin afirmación controlada por familia:
++  - las etiquetas «en contra» y «relevancia demostrada» (§6.1);
++  - las condiciones de robustez, incluido el nulo aleatorio R5 (§6.3);
++  - la sensibilidad y lo descriptivo;
++  - la ventana C y la evaluación P (etapas posteriores, cada una con sus reglas).
++- **Aproximación:** p₁, p₂ y p₃ son asintóticos o de bootstrap. El error de familia es ≤ 0,05 más su distorsión de tamaño, que la calibración (§5.3) acota en procesos sintéticos y la regla conservadora protege.
++
++**Por qué este procedimiento:**
++- es el mismo de la v2; no se eligió por favorecer resultados;
++- la secuencia fija H1 → H2 → H3, también válida, daría **más** potencia a H1 y H2 (umbral 0,05) y no se adopta;
++- Holm m = 3 es válido pero está **dominado**: castiga a H1 y H2 por una H3 que solo puede probarse si las dos rechazaron.
++- **Orden:** H1 y H2 forman la familia base, y Holm las ordena por su p. La lectura es jerárquica: «H2 sin H1» cierra la familia (§6.5). H3 va última, porque solo tiene sentido con la base respaldada.
++
++### 3.3 Registro de ejecuciones
++- `REGISTRO_EJECUCIONES.jsonl` solo admite añadidos. Cada entrada lleva fecha, hashes del código, la configuración y los datos, y su propósito.
+ - **Lo planificado:**
+-  - 1 ejecución confirmatoria (H1, H2 y el nulo aleatorio);
+-  - 6 de robustez;
+-  - 1 de H3 (solo si se habilita);
+-  - 1 de sensibilidad (la grilla fija del ítem 29).
+-- **Toda otra ejecución es exploratoria:**
+-  - se cuenta y se informa;
+-  - **no puede cambiar ninguna clasificación**;
+-  - solo puede motivar una hipótesis **nueva**, que se prueba en datos prospectivos.
+-- Los Sharpe que se informen van con su versión deflactada ([Pub\*] Bailey y López de Prado), usando como número de intentos el total del registro.
++  - 1 ejecución confirmatoria (H1 y H2);
++  - 4 re-simulaciones de robustez (R1, R2, R4, R6);
++  - 1 lote del nulo aleatorio (R5, 2000 réplicas, y el diagnóstico de §5.4);
++  - 1 grilla de sensibilidad (15 configuraciones);
++  - 1 de H3 (solo si se habilita).
++- **Cualquier otra ejecución es exploratoria:**
++  - se cuenta;
++  - no cambia ninguna clasificación;
++  - solo puede motivar una hipótesis nueva prospectiva.
++- **Sharpe deflactado:** número de intentos = configuraciones evaluadas, 20 (21 con H3). Las réplicas del nulo no cuentan.
+ 
+-### 3.3 Decisiones que podrían generar pruebas adicionales (todas fijadas ahora)
+-| # | Decisión | Valor fijado | Alternativas que **no** se prueban (salvo el ítem 29) |
+-|---|---|---|---|
+-| 1 | Mercado y cotización | Binance spot, pares USDT | Otros exchanges; pares BTC, BUSD o FDUSD |
+-| 2 | Inicio de H | Regla del §4.9 y del §2.4 | Fechas elegidas a mano |
+-| 3 | Fin de H | Lunes 2026-05-18 (retorno hasta el 2026-05-25) | — |
+-| 4 | Día activo | Operaciones > 0 y OHLC válido | Volumen > 0 sin mirar operaciones |
+-| 5 | Edad mínima | 180 días activos desde el primer día activo | 90 o 365 |
+-| 6 | Huecos en la formación | 30 días activos seguidos hasta t | Tolerancias |
+-| 7 | Liquidez | Mediana de 30 días de `quote asset volume` | Media; 60 o 90 días; volumen en base |
+-| 8 | Piso de liquidez | ≥ 1 000 000 USDT | Otros pisos |
+-| 9 | Universo invertible | Top 30 | 20, 50 (solo en el ítem 29) |
+-| 10 | Universo predictivo | Top 100 | U30 o todo |
+-| 11 | Stablecoins, fiat y materias primas | Lista del §4.4 más volatilidad < 10 % anual | Otras listas o umbrales |
+-| 12 | Tokens apalancados | Sufijos UP, DOWN, BULL, BEAR sobre una base existente | — |
+-| 13 | Duplicados | Correlación de 90 días > 0,98: queda el más líquido | Otros umbrales |
+-| 14 | Renombres | Solo con anuncio oficial | Detección automática |
+-| 15 | Horizontes de la señal | 7, 14, 21 y 28 días | Uno solo; > 4 semanas (solo en el ítem 29) |
+-| 16 | Combinación | Media de rangos percentiles | Media de retornos; z-scores |
+-| 17 | Período de salto | Ninguno | Saltar 1 día o 1 semana |
+-| 18 | Formación y ejecución | Domingo 23:59:59.999, ejecución en la **apertura del lunes** | Otro día de la semana (solo en el ítem 29: miércoles) |
+-| 19 | k | 6 | 4, 10 (ítem 29) |
+-| 20 | Banda de permanencia | Rango ≤ 12 | Sin banda (ítem 29) |
+-| 21 | Pesos y rebalanceo | Lugares fijos; reposición con lo vendido; vuelta a 1/6 el primer lunes de cada mes o si algún peso > 1/3 | Rebalanceo semanal completo |
+-| 22 | Costos | 10 pb más tramo de spread y slippage (§4.8) | Otros supuestos (solo ×2 en R1) |
+-| 23 | Precio de ejecución | Apertura oficial del día | Cierre; VWAP |
+-| 24 | Fin de cotización con posición abierta | Salida al último cierre activo | Recorte (solo en R6) |
+-| 25 | Referencia principal | EW-U30 con la **misma mecánica y costos** | EW sin costos; ponderada por capitalización |
+-| 26 | Métrica de H1 | Spearman semanal, retorno de apertura a apertura | Pearson; retorno de cierre a cierre |
+-| 27 | Inferencia | Newey–West con 4 rezagos; bootstrap circular de 13 semanas, 10 000 réplicas; semillas fijas | Otros rezagos o bloques |
+-| 28 | Umbrales de decisión | §5 | Cualquier otro |
+-| 29 | **Grilla de sensibilidad (única, descriptiva, posterior)** | k ∈ {4, 6, 10} × N ∈ {20, 30, 50}; cada horizonte por separado; sin banda; formación el miércoles | Nada fuera de esta grilla |
+-| 30 | Tratamiento de BTC y ETH | Dentro del universo como cualquier moneda | Excluirlos |
++### 3.4 Decisiones que podrían generar pruebas adicionales (todas fijadas)
++| # | Decisión | Valor fijado |
++|---|---|---|
++| 1 | Mercado | Binance spot, pares USDT |
++| 2–3 | Ventana H | Inicio según §4.11; última formación el lunes 2026-05-18 |
++| 4 | Día activo | Operaciones > 0 y OHLC válido (§2.2) |
++| 5 | Edad mínima | **180 días calendario** desde el primer día activo del listado vigente |
++| 6 | Huecos en la formación | 30 días activos seguidos (t−30 … t−1) |
++| 7–8 | Liquidez | Mediana de 30 días de `quote asset volume` ≥ 1 000 000 USDT |
++| 9–10 | Universos | U30 (invertible) y U100 (predictivo), por liquidez |
++| 11–14 | Exclusiones | §4.5 |
++| 15–17 | Señal | Horizontes de 7, 14, 21 y 28 días; media de rangos percentiles en U100; sin período de salto |
++| 18 | Calendario | Formación con datos hasta el domingo; ejecución en la apertura del lunes |
++| 19–21 | Cartera | k = 6; permanencia con rango ≤ 12; lugares fijos con reposición; vuelta mensual a pesos iguales o con un peso > 1/3 |
++| 22–23 | Costos y ejecución | §4.9; precio ejecutable = apertura de un día activo |
++| 24 | Fin de cotización | **Liquidación contable** al último precio negociado (§4.10) |
++| 25 | Referencia | EW-U30 con la misma mecánica y costos |
++| 26 | Métrica de H1 | Spearman semanal; retorno **calendario fijo de 7 días, de cierre a cierre** |
++| 27 | Inferencia | §5 (Newey–West de 4 rezagos; bootstrap-t por bloques de 13, B = 9999) |
++| 28 | Umbrales | §6 |
++| 29 | **Sensibilidad (única, descriptiva)** | k ∈ {4, 6, 10} × N ∈ {20, 30, 50}; cada horizonte por separado; sin banda; formación el miércoles |
++| 30 | BTC y ETH | Dentro del universo |
+ 
+ ---
+ 
+-## 4. Especificación reproducible (punto 4)
+-
+-### 4.1 Notación y calendario
+-- **d:** día UTC.
+-- **Vela de d:** apertura O_d a las 00:00 y cierre C_d a las 23:59:59.999.
+-- **Formación:** cada **lunes t** a las 00:00 UTC, con datos de días ≤ t − 1 (hasta el domingo).
+-- **Ejecución:** en **O_t**, la apertura del lunes.
+-- **Semana de tenencia:** de O_t a O_{t+7}.
+-
+-### 4.2 Precios de valuación
+-- **P_val(s, d)** = C_d si d es activo; si no, el último C de un día activo anterior.
+-- Las velas con 0 operaciones **nunca** aportan precios nuevos.
+-
+-### 4.3 Elegibilidad en t
+-Un par s es elegible en t si cumple todo lo siguiente:
+-- (a) sus días t−30 … t−1 están **todos activos**;
+-- (b) su primer día activo (o el del predecesor mapeado) es ≤ t − 180;
+-- (c) no está excluido por el §4.4;
+-- (d) **V(s, t)** = mediana de `quote asset volume` de los días t−30 … t−1 es ≥ 1 000 000 USDT.
++## 4. Especificación reproducible
++
++### 4.1 Calendario
++- **Formación:** lunes t a las 00:00 UTC, con días ≤ t − 1.
++- **Ejecución:** apertura del lunes.
++- **Semana de tenencia:** de la apertura de t a la apertura de t + 7.
++
++### 4.2 Día activo: §2.2.
++
++### 4.3 Precios
++| | Definición | Uso |
++|---|---|---|
++| **P_val(s, τ)** | Último precio negociado ≤ τ: el cierre del último día activo ≤ τ | Valuación, pesos, el tope de 1/3, H1 y las curvas. **Nunca** es un precio de transacción |
++| **P_exe(s, d)** | Apertura O_d de un **día activo** d | **Única** base de las compras y ventas |
++
++### 4.4 Elegibilidad en t (todas las condiciones)
++- (a) t−30 … t−1, todos días activos;
++- (b) t − (primer día activo del listado vigente) ≥ **180 días calendario**;
++- (c) no excluida (§4.5);
++- (d) V(s, t) = mediana de `quote asset volume` en t−30 … t−1 ≥ 1 000 000 USDT.
+ 
+-### 4.4 Exclusiones (en t, sin mirar al futuro)
+-- **Base en la lista fija:**
++### 4.5 Exclusiones
++- **Lista fija:**
+   - USDC, BUSD, TUSD, USDP, PAX, DAI, FDUSD, USDS, USDSB, UST, USTC, SUSD, PAXG, XAUT, AEUR, EURI, USD1;
+-  - cualquier código ISO-4217 de moneda fiat (EUR, GBP, AUD, BRL, TRY, RUB, NGN, UAH, ZAR, IDR, VND, etc.);
++  - los códigos ISO-4217 de moneda fiat;
+   - BIDR, IDRT, BVND.
+-- **Volatilidad anual** de los retornos logarítmicos diarios de los días activos de [t−90, t−1] < 10 %, calculada con ≥ 60 días activos (con menos, no se aplica esta regla; la (b) ya exige edad).
+-- **Tokens apalancados:** base = X + sufijo ∈ {UP, DOWN, BULL, BEAR}, donde X es la base de otro par USDT del conjunto de símbolos.
+-  - La lista resultante se congela en F3, con hash, antes de calcular retornos.
+-- **Duplicados:** si dos candidatos tienen una correlación de Pearson de los retornos diarios en [t−90, t−1] > 0,98 (con ≥ 60 días activos en común), se excluye el de **menor** V.
+-  - Se aplica en orden de V descendente.
+-
+-### 4.5 Universos y señal
+-- **Orden de liquidez:** los elegibles se ordenan por V descendente; los empates, por símbolo ascendente.
+-  - **U30** = los 30 primeros; **U100** = los 100 primeros (o todos, si hay menos).
+-- **Retornos de formación:** para h ∈ {7, 14, 21, 28}, R_{s,h} = ln(C_{t−1} / C_{t−1−h}). Por la regla (a) y la (b), ambos cierres son de días activos.
+-- **Rango percentil dentro del universo U** (U100 para H1 y U30 para la cartera), con n = |U|:
+-  - p_{s,h} = (rango ascendente de R_{s,h} − 1) / (n − 1), con rangos promedio en los empates.
+-- **Señal:** S_s = (p_{s,7} + p_{s,14} + p_{s,21} + p_{s,28}) / 4.
+-- **Orden de la señal:** por S descendente; empates por V descendente y después por símbolo.
+-  - **rk(s)** = posición en U30 (1 = la mejor).
+-
+-### 4.6 Selección de 6 entre 30, con permanencia entre los 12 primeros
+-- **Conjunto objetivo T_t:**
+-  1. **Se quedan:** las que están en cartera, siguen en U30_t y tienen rk ≤ 12.
+-  2. **Entran:** recorriendo U30_t por rk ascendente, las que no están en cartera, hasta completar 6.
+-- **Salen:** las de la cartera que no están en T_t, incluidas las que dejaron U30 por cualquier motivo.
++- **Volatilidad anual** de los días activos de [t−90, t−1] < 10 %, con ≥ 60 días activos.
++- **Tokens apalancados:** X + {UP, DOWN, BULL, BEAR}, con X la base de otro par USDT. La lista se congela en F3.
++- **Duplicados:** correlación de 90 días > 0,98 con ≥ 60 días en común. Se excluye el de menor V, en orden de V descendente.
++
++### 4.6 Universos y señal
++- **U100 y U30:** las elegibles ordenadas por V descendente (empates por símbolo). U100 = las primeras 100 (o todas); U30 = las primeras 30.
++- **Retornos de formación:** R_{s,h} = ln(C_{s,t−1} / C_{s,t−1−h}), con h ∈ {7, 14, 21, 28}.
++- **Rangos dentro de U100:** p_{s,h} = (rango ascendente − 1) / (n₁₀₀ − 1), con rangos promedio en los empates.
++- **Señal:** S_s = media de los cuatro p_{s,h}. **Una sola S para H1 y H2.**
++- **rk(s):** posición de s dentro de U30 según S descendente (empates por V descendente y después por símbolo).
++
++### 4.7 Selección
++- **T_t:** las de la cartera que siguen en U30_t con rk ≤ 12, más las mejores rk de U30_t no tenidas, hasta completar 6.
++- **Salen:** las demás.
+ 
+-### 4.7 Pesos y rebalanceo
+-- **Valor de la cartera en la ejecución:** W = efectivo + Σ unidades × O_t (o P_val si s no tiene apertura activa).
++### 4.8 Pesos y rebalanceo
++- **W_t:** Σ unidades × (P_exe(s, t) si existe; si no, P_val(s, t)) + efectivo.
+ - **Caso general:**
+-  - lo obtenido de las ventas, neto de costos, se reparte **en partes iguales** entre las entradas;
+-  - las que se quedan **no** se tocan.
+-- **Vuelta a pesos iguales** (todas las de T_t a W/6, neto de costos de cada operación) en dos casos:
+-  - el **primer lunes de formación de cada mes calendario**;
+-  - si en la ejecución algún peso es > 1/3.
+-- **Sin apalancamiento.** El efectivo residual (redondeo o falta de apertura) queda en USDT, al 0 %.
+-- **Lugar vacante:** si una entrada no tiene apertura activa en t, su parte queda en efectivo hasta la formación siguiente.
+-
+-### 4.8 Ejecución y costos
+-- Precio de ejecución: **O_t** (apertura oficial del lunes).
+-- **Costo por lado** sobre el valor negociado:
+-  - comisión de 10 pb (Binance VIP 0 sin descuento BNB; la tabla de Binance global se confirma antes de congelar);
+-  - más spread y slippage según el orden de liquidez en t: posiciones 1–2: 5 pb; 3–10: 10 pb; 11–30: 20 pb;
+-  - las monedas fuera de U30 que se venden usan 30 pb.
+-- **Compras:** unidades = asignación / (O_t × (1 + c)). **Ventas:** se cobra unidades × O_t × (1 − c).
+-
+-### 4.9 Datos faltantes, exclusiones y semanas no evaluables
+-- **Venta sin apertura activa en t:** se vende en la primera apertura activa posterior. Si no la hay en 30 días, se vende al último cierre activo (fin de cotización).
+-  - Lo obtenido se reasigna en la formación siguiente.
+-- **Fin de cotización con posición abierta:** se vende al **último cierre activo** con el costo de su tramo; el dinero queda en efectivo hasta la formación siguiente.
+-  - Estrés en R6: −30 % sobre ese valor.
+-- **Renombres mapeados:** la posición continúa con la relación de canje, sin costo.
+-- **Semana evaluable:** en t hay ≥ 30 elegibles.
+-  - En una semana no evaluable no hay entradas, salidas por la banda ni vuelta a pesos iguales: solo salidas por fin de cotización.
+-  - Esa semana no entra en ninguna prueba; sí en la curva descriptiva.
+-- **Inicio de H:** el primer lunes t₀ con 13 semanas seguidas evaluables, en un año que cumpla V-S1.
+-  - Si más del 20 % de las semanas entre t₀ y el fin no son evaluables, el resultado es **INVÁLIDO**.
+-
+-### 4.10 Referencias
+-- **EW-U30:** el mismo motor con T_t = U30_t.
+-  - Entran y salen al cambiar la composición; lo vendido se reparte entre las que entran.
+-  - Vuelve a 1/30 el primer lunes de cada mes, o si algún peso es > 2/30.
+-  - Mismos costos.
+-- **BTC buy and hold:** BTCUSDT comprada en O_{t₀}, una sola operación.
++  - lo cobrado de las ventas, neto de costos, se reparte en partes iguales entre las entradas;
++  - las que se quedan no se tocan.
++- **Vuelta a pesos iguales:** el primer lunes de formación de cada mes, o si algún peso es > 1/3.
++  - Primero se venden las sobreponderadas hasta W/6.
++  - Después se compran las subponderadas con el efectivo disponible.
++  - Si falta efectivo por los costos, las compras se escalan en la misma proporción.
++- **Sin apalancamiento.** El efectivo queda en USDT al 0 %.
++
++### 4.9 Ejecución y costos
++- **Costo por lado:** c = 10 pb de comisión + tramo según la posición de **liquidez V** en t:
++  - posiciones 1–2: 5 pb;
++  - 3–10: 10 pb;
++  - 11–30: 20 pb;
++  - fuera de U30 o no elegible: 30 pb.
++- **Compras:** unidades = asignación / (P_exe · (1 + c)).
++- **Ventas:** cobro = unidades · P_exe · (1 − c).
++- Las ventas diferidas usan el tramo de t.
++
++### 4.10 Aperturas faltantes y liquidaciones (corrección 3)
++| Caso | Regla |
++|---|---|
++| Compra sin P_exe(s, t) | No se ejecuta. El lugar queda en efectivo hasta la formación siguiente |
++| Venta sin P_exe(s, t) | Se reintenta en cada apertura activa siguiente. Mientras tanto se valúa a P_val. Lo cobrado queda en efectivo hasta la formación siguiente |
++| **Par inactivo 30 días seguidos** (o fin de la ventana) | **Liquidación contable**, registrada **ese día**: unidades · P_val · (1 − c_tramo de t). **No es un precio ejecutable:** representa vender en las últimas operaciones y es un **supuesto** declarado. El lugar queda ocupado por la posición congelada hasta ese día, sin mirar al futuro (las reglas no leen anuncios) |
++| Par USDT removido con el token vigente en otros pares | Igual que el caso anterior |
++| Renombre mapeado | La posición continúa con la relación de canje, sin costo |
++| **Estrés R6** | El mismo cálculo, con el valor de cada liquidación contable × 0,70 (−30 %) |
++
++### 4.11 Semanas evaluables e inicio de H
++- **Semana evaluable:** ≥ 30 elegibles en t.
++  - En una semana no evaluable no hay entradas, salidas por la banda ni vuelta a pesos iguales; solo liquidaciones.
++  - Esa semana queda fuera de las pruebas y dentro de lo descriptivo.
++- **Inicio de H:** el **más tardío** de:
++  - (i) el primer lunes con 13 semanas seguidas evaluables;
++  - (ii) la semana siguiente a la fecha efectiva de la última **falla** de §2.3;
++  - (iii) el 1 de enero del primer año con anuncios en el archivo web;
++  - (iv) el 1 de enero del primer año desde el cual, en todos los años de la ventana, las salidas sin anuncio son ≤ 10 % de las observadas.
++- **INVÁLIDO** si más del 20 % de las semanas de H no son evaluables, o si H tiene < 156 semanas evaluables.
++
++### 4.12 Referencias
++- **EW-U30:** el mismo motor con T_t = U30_t. Vuelve a pesos iguales el primer lunes de cada mes, o si algún peso es > 2/30. Mismos costos.
++- **BTC buy and hold:** una compra en O_{t₀} con 15 pb.
+ - **Efectivo:** 0 %.
+-- **Exposición equivalente:** la base está siempre invertida, así que su exposición equivalente es EW-U30. Para H3, ver §6.
+ 
+-### 4.11 Cálculo de las métricas
+-- **H1:** IC_t = Spearman(S_s, y_s) entre las s de U100_t con O_t activa.
+-  - y_s = ln(O_{s,t+7} / O_{s,t}), con O_{s,t+7} = la primera apertura activa en [t+7, t+14].
+-  - Si s deja de cotizar antes, se usa su último cierre activo. Si sigue listada pero no tiene apertura activa en [t+7, t+14], se usa P_val(s, t+6), su último cierre activo anterior a t+7.
+-  - IC̄ es la media de las semanas evaluables; se informa también el número medio de monedas por semana.
+-- **H2:** r_t = W_{t+7} / W_t − 1 para la cartera y para EW-U30, ambas netas. W_t es el valor en O_t **antes** de operar, así que los costos de t quedan dentro de r_t. El exceso semanal es e_t = r_cartera − r_EW. La métrica es 52 × media(e_t).
+-- **Nulo aleatorio (para R5):**
+-  - cada semana, S se reemplaza por una permutación aleatoria (semilla 20261021, 2000 réplicas), con la misma mecánica;
+-  - se compara el exceso **bruto**, sin costos, para que la mayor rotación del azar no sesgue la comparación;
+-  - p_nulo = fracción de réplicas con exceso bruto ≥ el de la estrategia.
++### 4.13 Métricas
++- **H1:** IC_t = Spearman(S_s, y_s) entre s ∈ U100_t, con y_s = ln( P_val(s, cierre del domingo t+6) / C_{s,t−1} ).
++  - Es un horizonte **calendario fijo de 7 días, idéntico para todas**. C_{s,t−1} siempre existe por la regla (a).
++  - **Casos especiales:**
++    - par suspendido el domingo t+6: marca obsoleta (último precio negociado);
++    - par que deja de cotizar en la semana: último precio negociado y después efectivo;
++    - renombre: precio del símbolo nuevo × relación de canje.
++  - Las marcas obsoletas y las salidas se cuentan y se informan; **ninguna se excluye**.
++  - Sesgo conocido: el rebote entre compra y venta en C_{t−1} juega **en contra** de H1.
++  - IC̄ = media de las semanas evaluables.
++- **H2:** r_t = W_{t+7} / W_t − 1 (valores en la apertura **antes** de operar, netos) para la cartera y para EW-U30. e_t = r_cartera − r_EW.
++- **Nulo aleatorio (R5):**
++  - S se reemplaza por una permutación aleatoria cada semana (semilla 20261021, 2000 réplicas), con la misma mecánica;
++  - se compara el exceso **bruto**;
++  - p_nulo = (1 + #{réplicas con exceso bruto ≥ el de la estrategia}) / 2001.
+ 
+ ---
+ 
+-## 5. Criterios separados (punto 5)
++## 5. Inferencia (corrección 4)
+ 
+-### 5.1 Predictivo (H1)
+-| Resultado | Condición |
++### 5.1 H1
++- **Estadístico:** z = IC̄ / EE_NW.
++  - EE²_NW = [γ̂₀ + 2 Σ_{h=1}^{L} (1 − h/(L+1)) γ̂_h] / n, con núcleo de Bartlett, **L = 4** y sin preblanqueo.
++  - p₁ = 1 − Φ(z).
++- **IC90** = IC̄ ± 1,645 · EE_NW, con el **mismo** EE que el contraste.
++- Si la calibración (§5.3) exige L = 8 o la regla del máximo, el IC90 usa el **mayor** de los EE.
++
++### 5.2 H2 y H3: bootstrap-t por bloques circulares bajo H₀
++Serie e_1 … e_n (el exceso semanal; para H3, x_t). Se fija ℓ = 13, k = ⌈n/ℓ⌉, n* = k·ℓ y B = 9999. Semillas: 20261020 para H2 y 20261024 para H3.
++
++1. **Estadístico observado:** T = √n · ē / σ̂_C.
++   - σ̂²_C = (ℓ/n) · Σ_{i=1}^{n} (B̄_i − ē)²;
++   - B̄_i es la media de e_i … e_{i+ℓ−1}, con índices circulares (todas las posiciones de inicio).
++   - σ̂²_C es exactamente la varianza bootstrap de √n*·ē*.
++2. **Serie bajo H₀:** ẽ_t = e_t − ē, con media exactamente 0.
++3. **Réplica b:**
++   - k bloques **completos** de ẽ, con inicio uniforme en {1, …, n} y lectura circular;
++   - ē*_b = media de los n* valores;
++   - σ̂*²_b = ℓ/(k−1) · Σ_{j=1}^{k} (B̄*_{b,j} − ē*_b)², con divisor **k − 1** para que E*[σ̂*²] = σ̂²_C;
++   - T*_b = √n* · ē*_b / σ̂*_b.
++4. **Valor p:** p = (1 + #{b : T*_b ≥ T}) / (B + 1).
++5. **Intervalo percentil-t**, con estadísticos de orden T*₍₁₎ ≤ … ≤ T*₍₉₉₉₉₎:
++   - IC90 = [ē − T*₍₉₅₀₀₎ · σ̂_C/√n , ē − T*₍₅₀₀₎ · σ̂_C/√n];
++   - IC95 = [ē − T*₍₉₇₅₀₎ · σ̂_C/√n , ē − T*₍₂₅₀₎ · σ̂_C/√n].
++6. **Coherencia exacta:**
++   - p ≤ 0,05 ⇔ T > T*₍₉₅₀₀₎ ⇔ el extremo inferior del IC90 es > 0;
++   - p ≤ 0,025 ⇔ T > T*₍₉₇₅₀₎ ⇔ el extremo inferior del IC95 es > 0;
++   - centrar no cambia σ̂* y desplaza ē* exactamente en ē, así que el contraste y el intervalo salen de **la misma** distribución.
++- **Lo descriptivo** (frente a BTC y al efectivo) usa el mismo intervalo, sin valor p.
++
++### 5.3 Calibración (control de validez, antes de los datos reales)
++**Procesos sintéticos:** n = 340, media 0, desvío semanal 5 %, 1000 simulaciones con B = 1999 y semilla 20261023.
++
++| Proceso | Descripción |
+ |---|---|
+-| **INFORMACIÓN CONFIRMADA (histórica)** | H1 rechaza con Holm |
+-| **EN CONTRA (sin información relevante)** | Límite superior del IC90 bilateral de IC̄ (= límite unilateral del 95 %) < **0,01** |
+-| **INSUFICIENTE** | Cualquier otro caso |
++| G1 | t de Student con 3 grados de libertad |
++| G2 | AR(1) con φ = 0,2 e innovaciones t(3) |
++| G3 | GARCH(1,1) con α = 0,10, β = 0,85 e innovaciones t(4) |
++| G4 | Mezcla 90 % N(−0,6 %, 3,5 %) + 10 % N(+5,4 %, 10 %) |
++| G5 | Espejo de G4 |
++
++**H1:** proceso AR(1) con φ = 0,1, desvío 0,14 y n = 340.
++
++**Bandas de aceptación** (±2 errores de Monte Carlo):
++- rechazo al 5 % en **[3,6 %, 6,4 %]**;
++- rechazo al 2,5 % en **[1,5 %, 3,5 %]**.
++
++**Si la calibración falla:**
++- **Rechaza menos que la banda:** se acepta y se informa.
++- **Rechaza más en H2 o H3:** se repite con ℓ = 26. Si persiste, p = máx(p_ℓ₁₃, p_ℓ₂₆, p_NW), con p_NW el t de Bartlett con 13 rezagos.
++- **Rechaza más en H1:** L = 8. Si persiste, p₁ = máx(p_{L4}, p_{L8}).
++- **Validez de la regla del máximo:** si al menos uno de los componentes es un valor p válido, P(máx ≤ u) ≤ P(componente válido ≤ u) ≤ u. La regla solo puede subir el p.
++
++**Qué demuestra la calibración:**
++- que el código es correcto;
++- que el tamaño es cercano al nominal en esos procesos, con este n y estos bloques.
++
++**Qué no demuestra:**
++- que el tamaño sea correcto para el proceso **real** (regímenes, caídas agrupadas, dependencia larga);
++- nada sobre potencia realista, supervivencia, costos, liquidaciones ni mirada al futuro.
++
++### 5.4 Diagnóstico con datos reales (antes de calcular el exceso de la estrategia)
++- Se aplica el contraste de H2 al **exceso bruto** de las 2000 carteras aleatorias de R5 frente a EW-U30 bruto (B = 999).
++- Por simetría, su media esperada es ≈ 0.
++- Se informa la tasa de rechazo al 5 %. Si supera el **9 %**, se aplica la regla del máximo de §5.3.
++
++---
+ 
+-**Por qué 0,01:** es el menor efecto **económicamente relevante** [Hip].
+-- Para una cartera del quintil superior, la ganancia bruta esperada frente al universo es ≈ IC × σ_cs × E[z | quintil superior] × 52 (aproximación lineal de la «ley fundamental»).
+-- Con σ_cs (dispersión transversal semanal) de 8–12 % y E[z] = 1,40, **IC 0,01 ≈ 6–9 %/año bruto**.
+-- El lastre relativo de costos frente a EW-U30 es ≈ 3,5–5 %/año [Hip].
+-- Por lo tanto:
+-  - **IC ≈ 0,005–0,007 es el punto de equilibrio**;
+-  - **0,01 es el menor valor con ganancia neta plausible**;
+-  - debajo de 0,01 el efecto no compensaría la incertidumbre de los costos.
+-
+-**Por qué el IC90:**
+-- Su límite superior es el límite unilateral del 95 %. «En contra» es entonces una **prueba de equivalencia (TOST) al 5 %**: si la correlación verdadera fuera 0,01, la probabilidad de descartarla por error es ≤ 5 %.
+-- Es simétrica con el 5 % de error al confirmar.
+-- Un intervalo del 80 % descartaría más a menudo, pero con 10 % de descartes erróneos de efectos relevantes.
+-- El 0,01 y el 90 % quedan fijos. Si los revisores proponen otros valores, se cambian **antes** de congelar.
+-
+-**Consecuencia honesta** (§5.5):
+-- aun si la correlación verdadera es 0, «en contra» saldría solo ≈ 28–40 % de las veces;
+-- lo más probable sería «insuficiente».
++## 6. Criterios
+ 
+-**Regla de decisión, separada de la estadística:** si H1 no queda **confirmada**, no se sigue con la familia (ni ventana ciega, ni papel, ni variantes). Se registra como insuficiente o en contra.
++### 6.1 H1: evidencia predictiva frente a relevancia económica (corrección 2)
++**δ_IC = 0,01** es el **margen de relevancia económica**, en unidades de IC̄ (correlación de rangos media semanal).
++- **No es** un nivel de significación (α = 5 % en todo el protocolo).
++- **No es** el umbral para confirmar H1.
++- **Justificación** [Hip]:
++  - ganancia bruta del quintil superior ≈ IC · σ_cs · 1,40 · 52, con σ_cs = 8–12 % semanal;
++  - IC 0,01 ≈ 6–9 %/año bruto, frente a un lastre de costos relativo de ≈ 3,5–5 %/año;
++  - 0,01 es el menor IC con ganancia neta plausible.
+ 
+-### 5.2 Rentabilidad neta frente a referencias
+-| Resultado | Condición |
+-|---|---|
+-| **VENTAJA NETA DE SELECCIÓN (histórica)** | H2 rechaza con Holm |
+-| **EN CONTRA (económico)** | Límite superior del IC90 de 52 × media(e_t) < 0 |
+-| **INSUFICIENTE** | Cualquier otro caso |
++| Afirmación | Condición | ¿Control de familia? | Consecuencia |
++|---|---|---|---|
++| **Información confirmada** | H1 (IC ≤ 0) rechazada por el procedimiento de §3.2 | **Sí** | Habilita las etapas según §6.5 |
++| **Relevancia económica demostrada** | Además, extremo inferior del IC90 ≥ δ_IC | **No** (descriptiva) | Ninguna adicional. Solo cambia la redacción: «relevancia demostrada» o «información detectable, relevancia no demostrada» |
++| **En contra** (no relevancia) | Extremo superior del IC90 < δ_IC, una prueba **unilateral** de no relevancia al 5 % (no es TOST) | **No** | Cierre: el mismo destino que «insuficiente» |
++| **Insuficiente** | Cualquier otro caso | — | Cierre |
++
++**Con los errores esperados** (≈ 0,007–0,0095):
++- confirmar H1 implica un IC̄ puntual ≳ 0,012–0,019, pero no garantiza un extremo inferior ≥ 0,01;
++- con IC verdadero = 0, «en contra» saldría ≈ 28–40 % de las veces, y lo más probable es «insuficiente».
+ 
+-**Comparaciones descriptivas, sin decisión, con IC90 por el mismo bootstrap:**
+-- **frente a BTC buy and hold:** exceso neto. Está dominado por el beta de las altcoins frente a BTC, no por el mecanismo; su potencia es casi nula (tracking error ≈ 50–60 %/año [Hip]);
+-- **frente al efectivo:** retorno absoluto;
+-- **para todas:** CAGR, volatilidad, Sharpe (y su versión deflactada), Sortino, caída máxima, CVaR del 5 % semanal, peor semana, tiempo bajo el agua y beta frente a BTC;
+-- **independencia:** correlación del exceso de selección e_t con BTC y con el exceso de timing de T (reglas congeladas).
++### 6.2 H2: rentabilidad neta frente a la referencia
++| Afirmación | Condición |
++|---|---|
++| **Ventaja neta de selección** | H2 rechazada por §3.2 |
++| **En contra (económico)** | Extremo superior del IC90 < 0 (fuera de la familia) |
++| **Insuficiente** | Cualquier otro caso |
++
++**Descriptivo, sin decisión:**
++- frente a BTC (exceso dominado por el beta de las altcoins);
++- frente al efectivo;
++- CAGR, volatilidad, Sharpe y su versión deflactada, Sortino, caída máxima, CVaR del 5 % semanal, peor semana, tiempo bajo el agua y beta;
++- correlación de e_t con BTC y con el exceso de timing de T.
+ 
+-### 5.3 Robustez de la base (solo endurece; se evalúa si H2 rechaza y se informa siempre)
++### 6.3 Robustez de la base (siempre se calcula y se informa; solo afecta la clasificación si H1 y H2 rechazan)
+ | | Condición |
+ |---|---|
+-| R1 | Exceso neto > 0 con **costos ×2** |
+-| R2 | Exceso neto > 0 con **ejecución un día después** (apertura del martes), aplicada igual a la cartera y a EW-U30 |
+-| R3 | IC̄ > 0 y exceso neto > 0 en **al menos 2 de 3 tercios** consecutivos de las semanas evaluables |
+-| R4 | Sin la moneda que más aporta al exceso acumulado (re-simulado con ella no elegible), el exceso neto sigue > 0 |
+-| R5 | p_nulo ≤ 0,05 (selección aleatoria, exceso bruto) |
+-| R6 | Exceso neto > 0 con −30 % en las salidas por fin de cotización |
++| R1 | Exceso neto > 0 con costos ×2 |
++| R2 | Exceso neto > 0 con ejecución un día después, igual para la cartera y para EW-U30 |
++| R3 | IC̄ > 0 en ≥ 2 de 3 tercios consecutivos de las semanas evaluables, y por separado exceso neto > 0 en ≥ 2 de 3 tercios |
++| R4 | Exceso neto > 0 al re-simular con la moneda de mayor aporte no elegible para todo (universos, cartera y EW-U30). Aporte = Σ_t w_{c,t} · (r_{c,t} − r_{EW,t}), bruto |
++| R5 | p_nulo ≤ 0,05 (es una condición, no una afirmación) |
++| R6 | Exceso neto > 0 con las liquidaciones contables al −30 % |
++
++**ROBUSTA** si se cumplen las seis.
++
++### 6.4 Liquidaciones y precios obsoletos: cómo se informan (corrección 3)
++- **Escenario principal**, siempre rotulado: «liquidación contable al último precio negociado (supuesto; no es un precio ejecutable)».
++- **Estrés:** R6 (−30 %), con su exceso y su intervalo.
++- **Diagnóstico** (descriptivo, sin criterio nuevo):
++  1. cantidad de liquidaciones, en la estrategia y en EW-U30, y de marcas obsoletas, en H1 y H2;
++  2. aporte de esos eventos al exceso acumulado de H2 y a IC̄;
++  3. etiqueta **«resultado dependiente de liquidaciones o marcas obsoletas»** si, al anular esos aportes, cambia el signo de la estimación puntual de H2 o de IC̄.
++- La defensa prerregistrada es R6. La etiqueta no cambia la clasificación, pero debe figurar junto a ella.
+ 
+-**ROBUSTA** si se cumplen las seis. Si no, **NO ROBUSTA** y se informa cuál falla.
+-
+-### 5.4 Clasificación conjunta y qué permite
+-| Clasificación | Condición | Qué permite |
++### 6.5 Clasificación de la base
++| Clasificación | Condición | Qué habilita |
+ |---|---|---|
+-| **INVÁLIDO** | Falla la validez (§8) | Nada. Se documenta |
+-| **RESPALDADA HISTÓRICAMENTE** | H1 confirmada, H2 con ventaja neta y ROBUSTA | Habilita H3 (§6), la ventana C (con autorización) y P |
+-| **INFORMACIÓN SIN VENTAJA OPERABLE** | H1 confirmada, pero no la fila anterior | Solo P de la **base** como seguimiento de información (decisión tuya). Sin capital |
+-| **INSUFICIENTE / EN CONTRA** | H1 no confirmada | Cierre de la familia con estas reglas |
++| **INVÁLIDO** | Falla la validez (§10) | Nada |
++| **RESPALDADA HISTÓRICAMENTE** | H1 y H2 rechazadas y ROBUSTA | H3; la ventana C (con autorización); P |
++| **VENTAJA NO ROBUSTA** | H1 y H2 rechazadas, pero no ROBUSTA | Solo P informativo de la base (decisión tuya) |
++| **INFORMACIÓN SIN VENTAJA OPERABLE** | H1 rechazada; H2 no | Solo P informativo de la base (decisión tuya) |
++| **NO CONCLUYENTE (H2 sin H1)** | H2 rechazada; H1 no | **Cierre** |
++| **EN CONTRA** | Según §6.1 | **Cierre** |
++| **INSUFICIENTE** | Cualquier otro caso | **Cierre** |
+ 
+ **Ninguna clasificación autoriza capital.**
+ 
+-### 5.5 Potencia y lo que no podrá concluir
+-**H1**, con ≈ 330–360 semanas, un desvío de IC_t de 0,12–0,16 [Hip] y Newey–West, da un error estándar de IC̄ ≈ 0,007–0,0095:
++---
++
++## 7. Potencia, límites y cierre (corrección 5)
+ 
+-| IC verdadero | Potencia (umbral 0,025) | Potencia (umbral 0,05) | P(«en contra») |
+-|---|---|---|---|
+-| 0 | — | — | 0,28–0,40 |
+-| 0,005 | — | — | 0,13–0,17 |
+-| 0,01 | 0,18–0,28 | 0,28–0,40 | ≤ 0,05 |
+-| 0,02 | 0,56–0,79 | 0,68–0,87 | ≈ 0 |
+-| 0,03 | 0,88–0,99 | 0,93–0,99 | ≈ 0 |
+-
+-El efecto mínimo detectable con 80 % es **IC ≈ 0,020–0,027**, es decir ≈ 12–23 %/año bruto según σ_cs.
+-
+-**H2:** con un tracking error de ≈ 25–35 %/año [Hip] y ≈ 6,5–7 años, el error estándar es ≈ 10–14 %/año y el **efecto mínimo detectable ≈ 28–39 %/año**. Potencia para un exceso neto verdadero de 10 %/año: 0,11–0,17; de 20 %/año: 0,30–0,52.
+-
+-**No podrá concluir:**
+-1. que una ventaja neta **realista** (5–20 %/año) exista o no exista: H2 casi seguro dará «insuficiente» en ese rango;
+-2. nada sobre la comparación con BTC;
+-3. que un resultado favorable sea **independiente** del conocimiento del período;
+-4. la capacidad, la ejecución real y el decaimiento futuro;
+-5. si la correlación verdadera está entre 0 y 0,02: en ese rango, lo más probable es «insuficiente».
++### 7.1 Supuestos [Hip, ninguno medido]
++1. **Desvío del IC semanal:** 0,12–0,16 con ~100 monedas; con ≈ 330–360 semanas, el EE de IC̄ es ≈ 0,007–0,0095.
++2. **Tracking error** de la cartera frente a EW-U30: 25–35 %/año (volatilidad idiosincrática semanal ≈ 10–12 % frente a la canasta, dividida por √6).
++3. **Duración:** 6,5–7 años, con EE de H2 ≈ 9,4–13,7 %/año.
++4. Aproximación normal, sin autocorrelación adicional.
++5. Umbral según el paso de Holm: 0,025 o 0,05.
++
++### 7.2 Cifras
++| | Umbral 0,025 | Umbral 0,05 |
++|---|---|---|
++| H1, IC verdadero 0,02 | 0,56–0,79 | 0,68–0,87 |
++| H1, IC 0,03 | 0,88–0,99 | 0,93–0,99 |
++| H2, neto 10 %/año | **0,11–0,17** | 0,18–0,26 |
++| H2, neto 20 %/año | 0,30–0,52 | 0,41–0,64 |
++
++**Efecto mínimo detectable con 80 %:** IC ≈ 0,020–0,027; H2 ≈ 28–39 %/año.
++
++**Sensibilidad:**
++- si la volatilidad idiosincrática semanal real fuera 14–20 %, el tracking error sería ≈ 41–59 %/año y la potencia de H2 para un 10 %/año, **0,06–0,09**;
++- si la regla de supervivencia acorta H, todas las potencias bajan, y se informa cuánto.
++
++**Cota conjunta:** con una ventaja real del 10 %/año (y un IC de ≈ 0,02), P(RESPALDADA) ≤ la menor de las potencias de H1 y H2, es decir **≤ 0,11–0,26**, y menos con la robustez.
++
++### 7.3 Limitación para decisiones de inversión
++**Este experimento no puede producir evidencia suficiente para comprometer capital:**
++- una ventaja neta realista (5–20 %/año) quedará casi seguro en «insuficiente»;
++- la historia está contaminada por el conocimiento del período;
++- no se observa la ejecución real;
++- las liquidaciones son supuestos.
++
++**Sí puede informar una decisión de investigación:**
++- si hay información transversal en monedas líquidas (H1);
++- o si conviene cerrar la familia.
++
++Incluso con una base respaldada, la confirmación independiente exige papel prospectivo de ≈ 2–3,5 años (IC 0,03) a 4–8 años (IC 0,02) [Hip].
++
++### 7.4 Cláusula de cierre
++**Si H1 no se confirma, o H2 sale insuficiente, no se agrega nada para compensar:**
++- ni períodos, universos, horizontes, k ni bandas;
++- ni costos alternativos ni combinaciones con T;
++- ni umbrales más laxos ni otra inferencia.
++
++La grilla de sensibilidad no puede usarse para afirmar nada. La única continuación posible es una **hipótesis nueva**, con prerregistro propio y **solo prospectiva**.
+ 
+ ---
+ 
+-## 6. Filtro de tendencia: prueba incremental posterior (punto 6)
+-- **Fuera de la estrategia base.** La base usa solo rangos relativos (S). El filtro usa el **nivel absoluto** A_s = (R_{s,7} + R_{s,14} + R_{s,21} + R_{s,28}) / 4. Las dos señales no se combinan en la base.
+-- **Compuerta, fijada ahora:** H3 se ejecuta **solo si** la base es **RESPALDADA HISTÓRICAMENTE** (§5.4). Si no, H3 queda **NO HABILITADA** y no se calcula.
+-- **El código y los parámetros de H3 se congelan junto con este protocolo.** Se ejecuta una vez, después de registrar con hash la clasificación de la base.
+-- **Variante filtrada F:**
+-  - mismo T_t, misma mecánica y mismos pesos que la base;
+-  - pero cada moneda de T_t con A_s ≤ 0 en t **no se compra o se vende**, y su parte queda en efectivo, **sin reemplazo**;
+-  - se reevalúa cada semana;
+-  - mismos costos, incluidos los de pasar a efectivo y volver.
++## 8. H3: filtro de momentum absoluto (incremental, subordinado)
++- **Fuera de la base:** A_s = (R_{s,7} + R_{s,14} + R_{s,21} + R_{s,28}) / 4, el nivel absoluto, que no entra en S.
++- **Se ejecuta solo si** la base es RESPALDADA HISTÓRICAMENTE (§3.2 y §6.5), una vez y después de registrar con hash la clasificación de la base.
++- **Variante F:** mismo T_t, misma mecánica y mismos pesos.
++  - Cada s ∈ T_t con A_s ≤ 0 no se compra, o se vende; su parte queda en efectivo, **sin reemplazo**.
++  - Se reevalúa cada semana, con los mismos costos.
+ - **Métrica:**
+-  - ē = exposición media de F en H;
+-  - exceso de timing semanal = r_F − ē × r_base (ambas netas);
+-  - anualizado × 52;
+-  - inferencia como H2, con p₃.
++  - x_t = r_F − ē · r_base (ambas netas), con ē = exposición media de F en H;
++  - es una construcción de referencia, como la «estática equivalente» de T; no es una regla operable;
++  - p₃ por §5.2.
+ - **Criterios:**
+ 
+ | Resultado | Condición |
+ |---|---|
+-| **FAVORABLE** | p₃ ≤ 0,05 (gatekeeping), exceso con costos ×2 > 0 y caída máxima de F < la de la base |
+-| **EN CONTRA** | Límite superior del IC90 < +2 %/año (el mismo umbral de relevancia de E2-B) |
++| **FAVORABLE** | p₃ ≤ 0,05, x̄ > 0 con costos ×2 y caída máxima de F < la de la base |
++| **EN CONTRA** | Extremo superior del IC90 < +2 %/año (fuera de la familia) |
+ | **INSUFICIENTE** | Cualquier otro caso |
+ 
+-- **Potencia** [Hip]: el error estándar es ≈ 8–12 %/año (cartera de altcoins más volátil que BTC), así que el **efecto mínimo detectable es ≈ 22–34 %/año**. Lo esperable es «insuficiente».
+-- **No podrá concluir:** que el filtro reduzca el riesgo de cola de forma significativa, porque las caídas son pocas y la potencia para métricas de caída es mínima.
+-- **Si es FAVORABLE,** F entra en P **como estrategia aparte** de la base, nunca en su lugar.
++- **Potencia** [Hip]: EE ≈ 8–12 %/año, así que el **efecto mínimo detectable es ≈ 22–34 %/año**.
++- **Si es FAVORABLE:** F entra en P como estrategia **aparte**.
+ 
+ ---
+ 
+-## 7. Datos y autorización (punto 7)
++## 9. Datos y autorización
++| Elemento | Detalle | Estimación [Hip] |
++|---|---|---|
++| Listado de símbolos | Bucket `data/spot/monthly/klines/` (es el listado S3 de la propia web, **por verificar**) | 1–5 solicitudes |
++| Listado por símbolo | `data/spot/monthly/klines/{S}/1d/` | 600–1000 solicitudes; 15–35 MB |
++| Klines 1d mensuales y `.CHECKSUM` | 2017-08 → **2026-05**, todos los S terminados en USDT | 21 000–50 000 pares de archivos; ≈ 50–115 MB |
++| Reparaciones | Diarios de `data/spot/daily/klines/…`, solo si falta un mensual o falla su checksum | Pocas |
++| exchangeInfo | `GET https://api.binance.com/api/v3/exchangeInfo` | 1 |
++| BTCUSDT y ETHUSDT | Se reutilizan los archivos locales verificados | 0 |
++
++- **Total:** ≈ 65–150 MB y 43 000–101 000 solicitudes. A ≤ 5 solicitudes por segundo, con espera ante errores: ≈ 2,5–6 h.
++- Gratis, sin dependencias nuevas. **Nada ≥ 2026-06-01.**
++- **Anuncios:** categorías 161, 48 y 49 de binance.com. Antes de leerlas de forma automática se revisan las condiciones de uso; si no lo permiten, la compilación es manual. Todo se fija con hash antes de calcular retornos.
+ 
+-### 7.1 Qué se descargaría (A2: histórico)
+-| Elemento | Ruta | Cantidad estimada [Hip] | Tamaño |
+-|---|---|---|---|
+-| Listado de símbolos | Listado del bucket `data.binance.vision`, prefijo `data/spot/monthly/klines/` con delimitador `/`. **Por verificar:** es el listado S3 que usa la propia web | 1–5 solicitudes | < 1 MB |
+-| Listado por símbolo USDT | Prefijo `data/spot/monthly/klines/{S}/1d/` | 600–1000 solicitudes | 15–35 MB (XML) |
+-| Klines 1d mensuales | `data/spot/monthly/klines/{S}/1d/{S}-1d-{AAAA-MM}.zip`, de 2017-08 a **2026-05**, para todo S terminado en USDT | 21 000–50 000 archivos (≈ 2,2 KB cada uno, medido en los archivos locales de BTC) | 46–110 MB |
+-| Checksums | `….zip.CHECKSUM` | Igual número (≈ 88 B cada uno) | 2–4 MB |
+-| Reparaciones (condicional) | `data/spot/daily/klines/{S}/1d/{S}-1d-{AAAA-MM-DD}.zip` más `.CHECKSUM`, solo para meses sin archivo mensual o con checksum fallido | Desconocido; se informa | Pequeño |
+-| exchangeInfo (instantánea) | `GET https://api.binance.com/api/v3/exchangeInfo` | 1 | Unos MB |
+-| **BTCUSDT y ETHUSDT** | **No se vuelven a bajar.** Se reutilizan los locales (2017-08 → 2026-05, ya verificados) | 0 | 0 |
+-
+-- **Total:** ≈ 65–150 MB y ≈ 43 000–101 000 solicitudes.
+-- A ≤ 5 solicitudes por segundo, con espera ante 429 o 5xx: **≈ 2,5–6 h**.
+-- Gratis. Sin dependencias nuevas: la biblioteca estándar más numpy del entorno de E1.
+-- **Período:** hasta **2026-05-31**. **No** se descarga nada del 2026-06 en adelante hasta que autorices C.
+-- **No se descarga:** futuros, funding, trades, aggTrades, otros intervalos, otros exchanges ni datos pagos.
++**Autorizaciones, por separado:**
+ 
+-### 7.2 Anuncios oficiales (A3)
+-| Categoría | URL oficial [Doc] | Para qué | Volumen estimado [Hip] |
+-|---|---|---|---|
+-| Delisting | `https://www.binance.com/en/support/announcement/list/161` | V-S1, V-S3 | Cientos de anuncios (2018–2026), de los que entran solo los de spot contra USDT |
+-| New Cryptocurrency Listing | `…/list/48` | V-S2 (muestra de 50) | — |
+-| Latest Binance News | `…/list/49` | Renombres y canjes | Decenas |
+-
+-- **Método:**
+-  - lectura de las páginas públicas, a ritmo bajo, guardando para cada anuncio el título, la URL, la fecha, la fecha efectiva y los pares;
+-  - antes de empezar, reviso las condiciones de uso de Binance sobre acceso automatizado;
+-  - si no lo permiten, la compilación es **manual** (estimo varias horas).
+-- **La compilación se completa y se fija con hash antes de calcular cualquier retorno.**
+-
+-### 7.3 Autorizaciones, por separado
+ | | Decisión | Cuándo |
+ |---|---|---|
+-| A1 | Aprobar este protocolo, con los cambios de la revisión: incluye elegir entre gatekeeping y Holm m = 3, y confirmar el 0,01 y el 90 % | Antes de todo |
+-| A2 | Descarga histórica del §7.1 | Después de A1 y de congelar |
+-| A3 | Lectura y compilación de anuncios oficiales (§7.2), incluido el método si es automatizado | Con A2 |
+-| A4 | Ventana ciega C: usar el reservado de H-CARRY para esta hipótesis y descargar los datos de 2026-06 → congelación | Solo si H da «respaldada» |
+-| A5 | Evaluación prospectiva P | Solo si H da «respaldada» (o «información sin ventaja», si querés seguirla) |
++| A1 | Aprobar y congelar **este** documento | Antes de todo |
++| A2 | Descarga del cuadro de arriba | Después de A1 |
++| A3 | Compilación de anuncios | Con A2 |
++| A4 | Ventana C | Solo si H da RESPALDADA |
++| A5 | Evaluación P | Solo si H da RESPALDADA (o, si lo decidís, VENTAJA NO ROBUSTA o INFORMACIÓN SIN VENTAJA, como seguimiento informativo) |
+ 
+ ---
+ 
+-## 8. Validez (antes de interpretar; si falla, se detiene)
+-1. **Checksums:** 100 % verificados; 0 discrepancias sin resolver.
+-2. **Supervivencia:** V-S1 a V-S6 (§2.4).
+-3. **Listas congeladas en F3:** apalancados, duplicados en la primera aparición, renombres y anuncios conciliados, con hash antes de cualquier retorno.
+-4. **Separación de etapas por código:** la etapa de calidad no importa funciones de rendimiento; se demuestra con una prueba.
++## 10. Validez (antes de interpretar; si falla, se detiene)
++1. **Checksums:** 100 % verificados.
++2. **Supervivencia:** §2.3 y la regla de §4.11.
++3. **Listas congeladas en F3**, con hash, antes de cualquier retorno: apalancados, duplicados, renombres y conciliación.
++4. **Separación de etapas:** la etapa de calidad no importa funciones de rendimiento; se demuestra con una prueba.
+ 5. **Sin mirada al futuro:**
+-   - comprobaciones automáticas: ninguna formación en t usa días ≥ t;
+-   - ninguna ejecución usa precios anteriores a t;
+-   - invariancia al truncar los datos en 5 cortes al azar (semilla 20261022): universos, señales, conjuntos objetivo y pesos idénticos hasta cada corte.
+-6. **Pruebas sintéticas:**
+-   - con un nulo verdadero, el rechazo de H1 debe ser ≤ 7 % en 500 simulaciones;
+-   - con un IC plantado de 0,03, la detección debe ser ≥ 70 % (coherente con §5.5);
+-   - el bootstrap de H2 debe estar calibrado bajo el nulo (rechazo 3–7 %).
+-7. **Semanas no evaluables:** ≤ 20 % dentro de H.
+-8. **Bloqueo de fechas:** cualquier lectura ≥ 2026-06-01 falla sin A4; se demuestra con una prueba.
++   - comprobaciones automáticas;
++   - invariancia al truncar en 5 cortes al azar (semilla 20261022): universos, señales, T_t y pesos.
++6. **Calibración** de §5.3, aplicada y documentada.
++7. **Semanas no evaluables** ≤ 20 % y ≥ 156 semanas evaluables en H.
++8. **Bloqueo de fechas:** ninguna lectura ≥ 2026-06-01 sin A4; se demuestra con una prueba.
+ 
+-## 9. Fuera de alcance
++## 11. Fuera de alcance
+ - Cortos y perpetuos.
+ - Otros exchanges o cotizaciones.
+ - Aprendizaje automático o CTREND.
+ - Funding transversal.
+ - Tamaño.
+ - Combinar la señal con T.
+-- Cualquier variante fuera del ítem 29 del §3.3.
+-- Cualquier otra familia.
++- Variantes fuera del ítem 29.
++- Otras familias.
+ 
+-## 10. Restricciones
+-- E1, E2, T, T-MULTI y sus artefactos: sin cambios.
+-- Repositorio: sin cambios; sin commits ni pushes.
++## 12. Restricciones
++- E1, E2, T, T-MULTI y sus artefactos, intactos.
++- Repositorio sin cambios; sin commits ni pushes.
+ - Sin dinero real.
+-- Este documento no se congela ni se ejecuta hasta tu decisión explícita.
++- No se congela ni se ejecuta sin tu decisión explícita.
++
++---
++
++## Anexo A: demostración del control del error de familia
++
++**Notación:**
++- I ⊆ {1, 2, 3} es el conjunto de índices con H_i verdadera (nula cierta).
++- E_i = {rechazar H_i}.
++- G = evento «base ROBUSTA»: cualquier evento que dependa de los datos.
++- α = 0,05.
++
++**Procedimiento:**
++- E₁ y E₂ salen de Holm sobre (p₁, p₂).
++- E₃ = E₁ ∩ E₂ ∩ G ∩ {p₃ ≤ α}.
++
++**Supuestos:**
++- **(S1)** Validez marginal: P_{H_i}(p_i ≤ u) ≤ u para u ∈ {α/2, α}.
++- **(S2)** Las hipótesis son enunciados sobre parámetros, fijados antes de los datos y **no condicionados** a otras pruebas.
++- **(S3)** La familia son solo E₁, E₂ y E₃.
++
++No se supone nada sobre la dependencia entre p₁, p₂ y p₃.
+ 
+-## Fuentes de documentación consultadas
+-- Binance public data (README; estructura, columnas y marcas en µs desde 2025): https://github.com/binance/binance-public-data/
+-- Issue #201 (velas tras la exclusión, con precio arrastrado y 0 operaciones): https://github.com/binance/binance-public-data/issues/201
+-- Anuncios de Binance, categoría Delisting (y enlaces a las demás): https://www.binance.com/en/support/announcement/list/161
+-- Tardis.dev, cobertura de Binance spot: https://docs.tardis.dev/historical-data-details/binance
+-- Estados de símbolo en exchangeInfo (TRADING, HALT, BREAK): https://developers.binance.com/docs/zh-CN/binance-spot-api-docs/rest-api/general-endpoints
++**Lema 1 (Holm).** Para cualquier I con I ∩ {1, 2} ≠ ∅: P(∪_{i∈I∩{1,2}} E_i) ≤ α.
++
++*Demostración:*
++- Si una sola es verdadera, digamos H₁, rechazarla exige p₁ ≤ α/2 (si se rechaza en el primer paso) o p₁ ≤ α después de rechazar H₂ con p₂ ≤ α/2. En cualquier caso exige p₁ ≤ α, así que P(E₁) ≤ α.
++- Si las dos son verdaderas, cualquier rechazo exige p₍₁₎ ≤ α/2, así que P ≤ P(p₁ ≤ α/2) + P(p₂ ≤ α/2) ≤ α.
++- (Holm, 1979: validez con cualquier dependencia.) ∎
++
++**Lema 2.** E₃ ⊆ E₁ ∩ E₂ y E₃ ⊆ {p₃ ≤ α}. Es inmediato por definición. ∎
++
++**Teorema.** Para cada I ⊆ {1, 2, 3}: P(∪_{i∈I} E_i) ≤ α.
++
++| I (nulas verdaderas) | Unión de errores | Cota | Argumento |
++|---|---|---|---|
++| ∅ | ∅ | 0 | No hay nulas verdaderas |
++| {1} | E₁ | ≤ α | Lema 1 |
++| {2} | E₂ | ≤ α | Lema 1 |
++| {1, 2} | E₁ ∪ E₂ | ≤ α | Lema 1 |
++| {3} | E₃ | ≤ P(p₃ ≤ α) ≤ α | Lema 2 y (S1) |
++| {1, 3} | E₁ ∪ E₃ = E₁ | ≤ α | Lema 2 (E₃ ⊆ E₁) y Lema 1 |
++| {2, 3} | E₂ ∪ E₃ = E₂ | ≤ α | Lema 2 y Lema 1 |
++| {1, 2, 3} | E₁ ∪ E₂ ∪ E₃ = E₁ ∪ E₂ | ≤ α | Lema 2 y Lema 1 |
++
++∎
++
++**Equivalencia con unas pruebas cerradas** (Marcus, Peritz y Gabriel, 1976 [Pub\*]). Se toman como pruebas locales de nivel α:
++- φ_{1} = 1[p₁ ≤ α], φ_{2} = 1[p₂ ≤ α], φ_{3} = 1[p₃ ≤ α];
++- φ_{1,2} = φ_{1,2,3} = 1[mín(p₁, p₂) ≤ α/2] (Bonferroni sobre {1, 2});
++- φ_{1,3} = φ_{1}, φ_{2,3} = φ_{2}.
++
++Cada una es válida para su intersección por (S1). Las pruebas cerradas rechazan:
++- **H₁** ⇔ p₁ ≤ α y mín(p₁, p₂) ≤ α/2, que es la regla de Holm;
++- **H₂**, de forma simétrica;
++- **H₃** ⇔ p₃ ≤ α, p₁ ≤ α, p₂ ≤ α y mín(p₁, p₂) ≤ α/2, que es «Holm rechaza H₁ y H₂, y p₃ ≤ α».
++
++El procedimiento propuesto es esa regla intersectada con G, así que sus rechazos son un **subconjunto** de los de las pruebas cerradas y hereda el control fuerte.
++
++**Consecuencias para la potencia:**
++- **H1 y H2:** la misma potencia que Holm m = 2. La compuerta no les cuesta nada.
++- **H3:** nivel completo de 0,05 cuando se habilita. P(se habilite) = P(RESPALDADA), que es baja (§7).
++- **Comparación** (H1 con IC 0,02 / H2 con 20 %/año):
++
++| Procedimiento | Potencia H1 | Potencia H2 | Estado |
++|---|---|---|---|
++| Holm m = 3 (primer paso, 0,0167) | 0,49–0,74 | 0,24–0,45 | Peor, sin beneficio |
++| **Este procedimiento** (primer paso, 0,025; segundo, 0,05) | 0,56–0,79 / 0,68–0,87 | 0,30–0,52 / 0,41–0,64 | **Adoptado** |
++| Secuencia fija (0,05) | 0,68–0,87 | 0,41–0,64 | No adoptado: sería la opción más favorable al éxito |
++
++**Lo que el teorema no cubre:**
++- las etiquetas «en contra» y «relevancia demostrada»;
++- R5 como afirmación;
++- la ventana C y la evaluación P;
++- la sensibilidad;
++- cualquier análisis exploratorio;
++- la distorsión de tamaño de los valores p aproximados (acotada solo empíricamente, en §5.3–5.4).
++
++## Fuentes de documentación
++- https://github.com/binance/binance-public-data/
++- https://github.com/binance/binance-public-data/issues/201
++- https://www.binance.com/en/support/announcement/list/161
++- https://docs.tardis.dev/historical-data-details/binance
++- https://developers.binance.com/docs/zh-CN/binance-spot-api-docs/rest-api/general-endpoints

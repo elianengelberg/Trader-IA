@@ -1,0 +1,118 @@
+páginas sin saludo (cuerpo no delimitable): 1636 · pares con algún lado USDT en el panel: 117
+    ADXOLD → ADX        panel(v/n)=0/1 r=[1.0] n=2 | 1 ADXOLD = 1 ADX
+       AGI → AGIX       panel(v/n)=0/1 r=[1.0] n=1 | 1 AGI = 1 AGIX
+    ANTOLD → ANT        panel(v/n)=0/1 r=[1.0] n=1 | 1 ANTOLD : 1 ANT
+       ANY → MULTI      panel(v/n)=1/1 r=[1.0] n=2 | (ANY) token migration and renaming to Multichain (MULTI)
+    AXSOLD → AXS        panel(v/n)=0/1 r=[1.0] n=1 | 1 AXSOLD : 1 AXS
+       BCC → BCHABC     panel(v/n)=1/1 r=[1.0] n=3 | 1 BCC = 1 BCHABC
+       BCC → BCHSV      panel(v/n)=1/1 r=[1.0] n=3 | 1 BCC = 1 BCHSV
+       BCH → BCHA       panel(v/n)=1/0 r=[1.0] n=1 | 1 BCH = 1 BCHA
+      BCHA → XEC        panel(v/n)=0/1 r=[1000000.0] n=4 | (BCHA) rebrand to eCash (XEC)
+    BCHABC → BCH        panel(v/n)=1/1 r=[] n=2 | ticker of BCHABC to BCH
+      BEAR → BUSD       panel(v/n)=1/1 r=[11.16] n=2 | 1 BEAR = 11.16 BUSD
+       BNB → USDT       panel(v/n)=1/0 r=[272.1225, 549.9491] n=3 | 1 BNB = 272.1225 USDT
+   BNBBEAR → BUSD       panel(v/n)=1/1 r=[58.61] n=2 | 1 BNBBEAR = 58.61 BUSD
+   BNBBULL → BUSD       panel(v/n)=1/1 r=[57.21] n=2 | 1 BNBBULL = 57.21 BUSD
+       BNX → BNX        panel(v/n)=1/1 r=[100.0] n=1 | 1 old BNX = 100 new BNX
+       BNX → BNXOLD     panel(v/n)=1/0 r=[] n=1 | old BNX token has assumed BNXOLD
+    BNXOLD → BNX        panel(v/n)=0/1 r=[100.0] n=1 | 1 BNXOLD = 100 BNX
+       BOT → AUCTION    panel(v/n)=0/1 r=[100.0] n=2 | 1 BOT = 100 AUCTION
+       BQX → VGX        panel(v/n)=0/1 r=[1.0] n=1 | (BQX) token swap to Voyager Token (VGX)
+       BTC → BCD        panel(v/n)=1/0 r=[10.0] n=2 | 1 BTC:10 BCD
+       BTC → BCX        panel(v/n)=1/0 r=[10000.0] n=2 | 1 BTC: 10,000 BCX
+       BTC → SBTC       panel(v/n)=1/0 r=[1.0] n=2 | 1 BTC: 1 SBTC
+      BTCB → BTC        panel(v/n)=0/1 r=[1.0] n=3 | 1 BTCB = 1 BTC
+       BTS → NBS        panel(v/n)=1/1 r=[1.0] n=3 | 1 BTS = 1 NBS
+       BTT → BTTC       panel(v/n)=1/1 r=[1000.0] n=2 | 1 BTT (Old) = 1,000 BTTC
+       BTT → BTTOLD     panel(v/n)=1/0 r=[] n=2 | old BTT tokens will be renamed as BTTOLD
+      BULL → BUSD       panel(v/n)=1/1 r=[1370.28] n=2 | 1 BULL = 1370.28 BUSD
+      BZRX → OOKI       panel(v/n)=1/1 r=[10.0] n=3 | 1 BZRX : 10 OOKI
+       CBK → MBL        panel(v/n)=0/1 r=[35000.0] n=2 | 1 CBK = 35,000 MBL
+       CDT → SSV        panel(v/n)=0/1 r=[0.01] n=2 | 100 CDT : 1 SSV
+       CHZ → CHZ        panel(v/n)=1/1 r=[] n=1 | ratio of 1:1 [Please note: All BEP2 standard Chiliz (CHZ) tokens will be swapped to the CAP20 standard at a ra
+     COCOS → COMBO      panel(v/n)=1/1 r=[1.0] n=1 | (COCOS) token swap and rebranding plan to COMBO (COMBO)
+      DATA → XDATA      panel(v/n)=1/0 r=[] n=4 | old DATA tokens deposited will be renamed as XDATA
+       DGD → ETH        panel(v/n)=0/1 r=[0.193054178] n=2 | 1 DGD = 0.193054178 ETH
+       EDO → PNT        panel(v/n)=0/1 r=[1.0] n=1 | 1 EDO = 1 PNT
+       ENG → SCRT       panel(v/n)=0/1 r=[1.0] n=5 | (ENG) mainnet swap to Secret Network (SCRT)
+       EOS → ADD        panel(v/n)=1/0 r=[0.5] n=2 | 2 EOS : 1 ADD
+       EOS → ATD        panel(v/n)=1/0 r=[1.0] n=1 | 1 EOS : 1 ATD
+       EOS → EON        panel(v/n)=1/0 r=[1.0] n=2 | 1 EOS:1 EON
+       EOS → EOP        panel(v/n)=1/0 r=[1.0] n=2 | 1 EOS : 1 EOP
+       EOS → IQ         panel(v/n)=1/1 r=[5.1] n=2 | 1 EOS : 5.1 IQ
+   EOSBEAR → BUSD       panel(v/n)=1/1 r=[30.21] n=2 | 1 EOSBEAR = 30.21 BUSD
+   EOSBULL → BUSD       panel(v/n)=1/1 r=[3.85] n=2 | 1 EOSBULL = 3.85 BUSD
+       EPS → EPX        panel(v/n)=1/1 r=[88.0] n=2 | 1 EPS = 88 EPX
+       ERD → EGLD       panel(v/n)=1/1 r=[0.001] n=6 | 1000 ERD = 1 EGLD
+   ETHBEAR → BUSD       panel(v/n)=1/1 r=[12.2] n=2 | 1 ETHBEAR = 12.20 BUSD
+   ETHBULL → BUSD       panel(v/n)=1/1 r=[79.18] n=2 | 1 ETHBULL = 79.18 BUSD
+       GNT → GLM        panel(v/n)=0/1 r=[1.0] n=3 | 1 GNT : 1 GLM
+       GTO → GFT        panel(v/n)=1/1 r=[1.0] n=2 | (GTO) token swap to Gifto (GFT)
+       GXS → REI        panel(v/n)=1/1 r=[10.0] n=2 | (GXS) mainnet swap and redenomination plan to REI Network (REI)
+       HSR → HC         panel(v/n)=0/1 r=[1.0] n=4 | (HSR) mainnet swap to HyperCash (HC)
+       INJ → INJ        panel(v/n)=1/1 r=[] n=2 | ratio of 1:1 [The distribution of mainnet Injective Protocol (INJ) tokens was conducted at a ratio of 1:1.]
+      KNCL → KNC        panel(v/n)=0/1 r=[1.0] n=1 | 1 KNCL : 1 KNC
+      LEND → AAVE       panel(v/n)=1/1 r=[0.01] n=3 | 100 LEND = 1 AAVE
+   LOOMOLD → LOOM       panel(v/n)=0/1 r=[1.0] n=1 | 1 LOOMOLD : 1 LOOM
+    LTOOLD → LTO        panel(v/n)=0/1 r=[1.0] n=1 | 1 LTOOLD : 1 LTO
+      LUNA → LUNA       panel(v/n)=1/1 r=[1.034735071] n=2 | 1 LUNA (old) = 1.034735071 LUNA
+      LUNA → LUNC       panel(v/n)=1/1 r=[] n=2 | LUNA (old) was renamed as LUNC
+      LUNC → LUNA       panel(v/n)=1/1 r=[1.53079e-05, 1.034735071] n=3 | 1 LUNC = 1.034735071 LUNA
+     MATIC → POL        panel(v/n)=1/1 r=[1.0] n=1 | (MATIC) token swap to Polygon (POL)
+        MC → BEAMX      panel(v/n)=1/1 r=[100.0] n=1 | (MC) token swap, redenomination and rebranding to Beam (BEAMX)
+       MFT → HIFI       panel(v/n)=1/1 r=[0.01] n=1 | (MFT) token swap, redenomination and rebranding plan to Hifi Finance (HIFI)
+       MTL → XPR        panel(v/n)=1/0 r=[1.0] n=3 | 1 MTL = 1 XPR
+      NANO → XNO        panel(v/n)=1/1 r=[1.0] n=2 | ticker of NANO to XNO
+       NEO → ONT        panel(v/n)=1/1 r=[0.1] n=3 | 1 NEO:0.1 ONT
+      NPXS → PUNDIX     panel(v/n)=1/1 r=[0.001] n=2 | 1,000 NPXS = 1 PUNDIX
+      NULS → NVT        panel(v/n)=1/0 r=[0.1] n=1 | 1 NULS = 0.1 NVT
+       OGN → OGV        panel(v/n)=1/0 r=[1.0] n=2 | 1 OGN = 1 OGV
+       OMG → BOBA       panel(v/n)=1/0 r=[1.0] n=2 | 1 OMG = 1 BOBA
+     OMOLD → OM         panel(v/n)=0/1 r=[1.0] n=1 | 1 OMOLD : 1 OM
+       ONX → ANKR       panel(v/n)=0/1 r=[10000.0] n=2 | 1 ONX = 10,000 ANKR
+       PAX → USDP       panel(v/n)=1/1 r=[1.0] n=2 | (PAX) rebrand to Pax Dollar (USDP)
+   PERLOLD → PERL       panel(v/n)=0/1 r=[1.0] n=2 | 1 PERLOLD = 1 PERL
+       PHB → PHB        panel(v/n)=1/1 r=[0.01] n=1 | 100 PHB (Old) = 1 PHB
+     PHBV1 → PHB        panel(v/n)=0/1 r=[0.01] n=1 | 100 PHBV1 : 1 PHB
+       PHX → PHB        panel(v/n)=0/1 r=[1.0] n=2 | 1 PHX = 1 PHB
+       PLA → PDA        panel(v/n)=1/1 r=[1.0] n=1 | (PLA) token swap to PlayDapp (PDA)
+      POLY → POLYX      panel(v/n)=1/1 r=[1.0] n=2 | (POLY) mainnet swap and rebranding plan to Polymesh (POLYX)
+    PUNDIX → PURSE      panel(v/n)=1/0 r=[8.93061] n=2 | 1 PUNDIX = 8.93061 PURSE
+       PYR → PYR        panel(v/n)=1/1 r=[1.0] n=1 | 1 PYR (Old) = 1 PYR
+      QTUM → QI         panel(v/n)=1/1 r=[0.5] n=2 | 1 QTUM = 0.5 QI
+     QUICK → QUICK      panel(v/n)=1/1 r=[1000.0] n=1 | 1 old QUICK = 1,000 new QUICK
+      RAMP → LEVER      panel(v/n)=1/1 r=[35.0] n=1 | (RAMP) token swap, redenomination and rebranding plan to LeverFi (LEVER)
+       REP → REPV2      panel(v/n)=1/0 r=[1.0] n=1 | (REP) smart contract and token swap to Augur (REPV2)
+     REPV1 → REP        panel(v/n)=0/1 r=[1.0] n=2 | 1 REPV1 = 1 REP
+       RGT → TRIBE      panel(v/n)=1/1 r=[26.7] n=1 | 1 RGT : 26.7 TRIBE
+      RUNE → RUNE       panel(v/n)=1/1 r=[] n=3 | ratio of 1:1 [The conversion to mainnet THORChain (RUNE) tokens will be conducted at a ratio of 1:1.]
+    SLPOLD → SLP        panel(v/n)=0/1 r=[1.0] n=1 | 1 SLPOLD : 1 SLP
+     STEEM → HIVE       panel(v/n)=1/1 r=[1.0] n=4 | 1 STEEM = 1 HIVE
+     STORM → STMX       panel(v/n)=1/1 r=[1.0] n=3 | 1 STORM : 1 STMX
+     STRAT → STRAX      panel(v/n)=1/1 r=[1.0] n=1 | 1 STRAT = 1 STRAX
+     STRAX → STRAX      panel(v/n)=1/1 r=[10.0] n=1 | 1 old STRAX = 10 new STRAX
+       SUN → SUN        panel(v/n)=1/1 r=[1000.0] n=1 | 1 SUN (Old) = 1,000 SUN
+       SUN → SUNOLD     panel(v/n)=1/0 r=[] n=1 | old SUN tokens will be renamed as SUNOLD
+    SUNOLD → SUN        panel(v/n)=0/1 r=[1000.0] n=1 | 1 SUNOLD : 1,000 SUN
+     THETA → TFUEL      panel(v/n)=1/1 r=[5.0] n=4 | 1 THETA = 5 TFUEL
+       TRX → BTT        panel(v/n)=1/1 r=[0.1097681177, 0.11] n=7 | 1 TRX = 0.11 BTT
+       TRX → TRXOLD     panel(v/n)=1/0 r=[] n=1 | old TRX token has assumed TRXOLD
+     TUSDB → TUSD       panel(v/n)=0/1 r=[1.0] n=3 | 1 TUSDB = 1 TUSD
+       TVK → VANRY      panel(v/n)=1/1 r=[1.0] n=1 | (TVK) token swap and rebranding to Vanar (VANRY)
+      USDS → BUSD       panel(v/n)=1/1 r=[1.0] n=1 | 1 USDS = 1 BUSD
+     USDSB → USDS       panel(v/n)=1/1 r=[1.0] n=3 | 1 USDSB = 1 USDS
+       UST → LUNA       panel(v/n)=1/1 r=[0.01468985] n=2 | 1 UST (old) = 0.01468985 LUNA
+       UST → USTC       panel(v/n)=1/1 r=[] n=4 | UST (old) was renamed as USTC
+       UST → WUST       panel(v/n)=1/0 r=[] n=2 | UST (Shuttle) will be renamed as WUST
+      USTC → LUNA       panel(v/n)=1/1 r=[0.0235480008] n=3 | 1 USTC = 0.02354800084 LUNA
+       VEN → VET        panel(v/n)=1/1 r=[100.0] n=3 | 1 VEN = 100 VET
+      VIDT → VIDT       panel(v/n)=1/1 r=[10.0] n=1 | 1 old VIDT = 10 new VIDT
+     WBETH → BETH       panel(v/n)=1/1 r=[1.0] n=1 | 1 WBETH = 1 BETH
+       WIN → TRX        panel(v/n)=1/1 r=[0.010045191] n=3 | 1 WIN = 0.010045191 TRX
+     XDATA → DATA       panel(v/n)=0/1 r=[1.0] n=3 | 1 XDATA : 1 DATA
+       XEM → XYM        panel(v/n)=1/0 r=[1.0] n=2 | 1 XEM = 1 XYM
+       XRP → FLR        panel(v/n)=1/0 r=[0.1511] n=1 | 1 XRP = 0.1511 FLR
+   XRPBEAR → BUSD       panel(v/n)=1/1 r=[548.55] n=2 | 1 XRPBEAR = 548.55 BUSD
+   XRPBULL → BUSD       panel(v/n)=1/1 r=[8.74] n=2 | 1 XRPBULL = 8.74 BUSD
+       XVS → VRT        panel(v/n)=1/0 r=[1000.0] n=2 | 1 XVS = 1,000 VRT
+       XZC → FIRO       panel(v/n)=1/1 r=[1.0] n=2 | ticker of XZC to FIRO

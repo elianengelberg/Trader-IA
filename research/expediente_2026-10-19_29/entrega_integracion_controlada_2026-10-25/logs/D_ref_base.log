@@ -1,0 +1,8 @@
+== suite ref_base · árbol /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/base · write-tree 44850cfcbf53c3f8223d38a92031f4402f8ffb32 · inicio 2026-10-25T18:20:58Z · carga 0.48 0.39 0.20 5/110 1308
+python Python 3.11.17 · /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/venv/bin/python
+comando: PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=packages/tia/src TMPDIR=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/logs/../tmp_ref_base /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/venv/bin/python -B -m pytest tests -q -p no:cacheprovider -rsxX --junitxml=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/logs/D_ref_base.xml
+recolectadas (collect-only, nodeids): 0
+rc=0 · duración 328 s · fin 2026-10-25T18:26:39Z · carga 3.31 2.90 1.46 5/124 3128
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+estado del árbol tras la suite: 0 entradas

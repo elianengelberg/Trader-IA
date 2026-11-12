@@ -1,0 +1,22 @@
+{
+ "control_completa": "AUTORIZACION ACEPTADA (detenido antes de leer insumos)",
+ "control_completa__salida_creada": false,
+ "control_sin_D1": "Rechazo: autorización ausente o incompleta: {'FRASE': True, 'orquestador_v3': True, 'entradas_congeladas': True, 'decision_reapertura_y_adenda_R': True, 'decision_D1_lec",
+ "control_sin_D1__salida_creada": false,
+ "negacion_de_la_frase": "AUTORIZACION ACEPTADA (detenido antes de leer insumos)",
+ "negacion_de_la_frase__salida_creada": false,
+ "negacion_de_las_decisiones": "AUTORIZACION ACEPTADA (detenido antes de leer insumos)",
+ "negacion_de_las_decisiones__salida_creada": false,
+ "frases_citadas_para_rechazarlas": "AUTORIZACION ACEPTADA (detenido antes de leer insumos)",
+ "frases_citadas_para_rechazarlas__salida_creada": false,
+ "contradice_D3_elige_160_semanas": "AUTORIZACION ACEPTADA (detenido antes de leer insumos)",
+ "contradice_D3_elige_160_semanas__salida_creada": false,
+ "contradice_D4_sin_reintentos": "AUTORIZACION ACEPTADA (detenido antes de leer insumos)",
+ "contradice_D4_sin_reintentos__salida_creada": false,
+ "rechaza_riesgos_D5": "AUTORIZACION ACEPTADA (detenido antes de leer insumos)",
+ "rechaza_riesgos_D5__salida_creada": false,
+ "sin_mencion_de_D3_D4_D5": "AUTORIZACION ACEPTADA (detenido antes de leer insumos)",
+ "sin_mencion_de_D3_D4_D5__salida_creada": false,
+ "otra_ventana_declarada": "AUTORIZACION ACEPTADA (detenido antes de leer insumos)",
+ "otra_ventana_declarada__salida_creada": false
+}

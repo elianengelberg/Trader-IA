@@ -1,0 +1,3 @@
+== R24.1 · migraciones alembic desde vacío sobre PostgreSQL (como el paso de la CI, con otra URL): 2026-10-22T23:00:00Z
+base: alembic rc=0 · versión 0007 · tablas 22 · backtests.conditions: json
+comp: alembic rc=0 · versión 0007 · tablas 22 · backtests.conditions: json

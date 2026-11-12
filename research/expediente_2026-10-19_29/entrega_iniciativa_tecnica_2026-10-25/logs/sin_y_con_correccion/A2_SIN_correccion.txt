@@ -1,0 +1,1 @@
+tests/integration/test_live_metrics.py:45: AssertionError: assert None == '0'

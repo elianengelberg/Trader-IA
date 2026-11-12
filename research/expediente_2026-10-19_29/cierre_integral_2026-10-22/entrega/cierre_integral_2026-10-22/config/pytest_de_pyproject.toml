@@ -1,0 +1,15 @@
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+pythonpath = ["packages/tia/src"]
+asyncio_mode = "auto"
+addopts = "-q --strict-markers --strict-config"
+markers = [
+  "slow: long running tests",
+  "integration: requires more than one component wired together",
+  "e2e: end-to-end pipeline test",
+  "failure: failure injection / chaos test",
+  "network: requires outbound network (skipped by default)",
+]
+filterwarnings = ["error::DeprecationWarning:tia.*"]
+

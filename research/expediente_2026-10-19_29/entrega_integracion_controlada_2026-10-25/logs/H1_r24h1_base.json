@@ -1,0 +1,19 @@
+{
+ "arbol": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/AB",
+ "directo": {
+  "entries_blocked:account_state": "guardado",
+  "entries_blocked:orders_unverified": "DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.StringDataRightTruncationError'>: value too lo",
+  "entries_blocked:position_unverified": "DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.StringDataRightTruncationError'>: value too lo",
+  "entries_blocked:position_unprotected": "DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.StringDataRightTruncationError'>: value too lo",
+  "protective_stop_failed": "guardado",
+  "session_deadline_close_unfilled": "guardado"
+ },
+ "punta_a_punta": {
+  "pedidos": 4,
+  "guardados": [
+   "entries_blocked:account_state"
+  ],
+  "flush_persistence_devolvio": true
+ },
+ "columna_kind": 32
+}

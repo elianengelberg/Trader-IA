@@ -1,0 +1,10 @@
+== Resumen del log del servidor PostgreSQL 16.15 desechable (log_statement=mod, log_connections), 2026-10-25T20:11:23Z
+tamaño del log original: 17210068 bytes (no se incluye: contiene solo datos de prueba)
+conexiones autorizadas: 275
+sentencias que modifican registradas: 1391
+bases creadas: 21 · borradas: 32
+líneas ERROR/FATAL por tipo (provocadas por las pruebas: conflictos, truncado de la base, timeouts de bloqueo, desconexiones):
+     11 value too long for type character varying(32)
+     10 canceling statement due to lock timeout
+      6 terminating connection due to administrator command
+estado al detener: servidor detenido (pg_ctl stop -m fast), enlace del socket borrado, 0 procesos postgres, bases restantes antes de detener: postgres, template0, template1

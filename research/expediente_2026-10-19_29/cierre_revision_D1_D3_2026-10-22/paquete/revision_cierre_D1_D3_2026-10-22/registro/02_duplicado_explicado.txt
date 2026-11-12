@@ -1,0 +1,10 @@
+== 2026-10-22T18:28:51Z · contenido duplicado en el manifiesto
+ec226d0533819a502f583d3f8f604deae39dd84192448675492e6d4a88aded69  S_suite_base_venvA.xml
+aef8143d0cbfc2252223b9a41c26137e3d47324b4fca080559bd35d0593d06d6  S_suite_base_CI_libre.xml
+188ed1da6cc9d3821a71e5c5b937caa684af0629200e2e51b30317df15a2586e  S_suite_completa_venvA.xml
+e791de4bd8a6afbf4cf41efa41e5d7b73e8e11db5c0ed983e3c1e13934b413e8  S_suite_completa_CI_libre.xml
+S_suite_base_venvA: inicio 2026-10-22T16:15:53Z · JUnit: 1956 pruebas · 1956 pasan · 0 fallan · 0 errores · 0 omitidas · 319.900 s
+S_suite_base_CI_libre: inicio 2026-10-22T16:22:48Z · JUnit: 1956 pruebas · 1956 pasan · 0 fallan · 0 errores · 0 omitidas · 346.884 s
+S_suite_completa_venvA: inicio 2026-10-22T16:15:54Z · JUnit: 1978 pruebas · 1978 pasan · 0 fallan · 0 errores · 0 omitidas · 365.857 s
+S_suite_completa_CI_libre: inicio 2026-10-22T16:22:48Z · JUnit: 1978 pruebas · 1978 pasan · 0 fallan · 0 errores · 0 omitidas · 391.746 s
+conclusión: los dos comparadores imprimen solo conteos y resultados prueba a prueba (sin tiempos ni entorno); con resultados idénticos en ambos entornos, su salida es idéntica. Los JUnit de origen son distintos (arriba).

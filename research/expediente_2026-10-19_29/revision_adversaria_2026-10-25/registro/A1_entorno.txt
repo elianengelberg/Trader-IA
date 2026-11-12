@@ -1,0 +1,7 @@
+== RA-A.1 entorno: 2026-10-25T17:21:24Z
+hostname: vm · uptime: up 3 minutes · kernel: 6.18.44-fc-v153 · cwd: /home/user/Trader-IA
+python3: Python 3.11.17 · python3.11: Python 3.11.17 · git: git version 2.43.0 · unzip: UnZip 6.00 of 20 April 2009, by Debian.  · psql: psql (PostgreSQL) 16.15 (Ubuntu 16.15-0ubuntu0.24.04.1) · pg bin: 16 
+nproc: 4 · mem: 15 GiB total, 15 GiB disponibles · disco libre: 3.4G · carga: 0.27 0.11 0.03 1/109 275
+-- ruta declarada por el pedido: /home/tia/Trader-IA → NO EXISTE
+-- ruta real del repositorio de la sesión: /home/user/Trader-IA → existe (repo git)
+/home/claude/ /home/ubuntu/ /home/user/ 

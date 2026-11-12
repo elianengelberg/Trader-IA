@@ -1,0 +1,11 @@
+[
+ {
+  "incident_id": "e15-largo",
+  "at": "2026-10-25 19:16:11.121319",
+  "kind": "entries_blocked:position_unverified",
+  "actor": "system",
+  "reason": "e15",
+  "run_id": "r",
+  "detail": "{}"
+ }
+]

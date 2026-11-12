@@ -1,0 +1,17 @@
+{
+ "arbol": "AB",
+ "condicion": "cpu",
+ "semilla": 1001,
+ "programadas": 200,
+ "flush_dijo": true,
+ "flush_interrumpido": false,
+ "flush_segundos": 0.198,
+ "cierre_persistence_flushed": true,
+ "last_error": "",
+ "filas_en_base": 200,
+ "faltan": 0,
+ "reporte": null,
+ "perdidas_identificadas": null,
+ "FALSO_COMPLETO": false,
+ "CIERRE_LIMPIO_CON_PENDIENTES": false
+}

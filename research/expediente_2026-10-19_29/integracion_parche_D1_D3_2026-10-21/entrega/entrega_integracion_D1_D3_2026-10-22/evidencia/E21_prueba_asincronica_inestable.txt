@@ -1,0 +1,7 @@
+== 2026-10-22T02:13:57Z · tests/integration/test_adverse_recovery.py::test_rejects_and_partials_over_hundreds_of_bars_keep_the_invariants_and_the_record_whole, 3 veces por árbol (entorno de la reproducción)
+-- base #1: E   AssertionError: persistence writes still in flight FAILED tests/integration/test_adverse_recovery.py::test_rejects_and_partials_over_hundreds_of_bars_keep_t
+-- base #2: E   AssertionError: persistence writes still in flight FAILED tests/integration/test_adverse_recovery.py::test_rejects_and_partials_over_hundreds_of_bars_keep_t
+-- base #3: PASSED tests/integration/test_adverse_recovery.py::test_rejects_and_partials_over_hundreds_of_bars_keep_the_invariants_and_the_record_whole 
+-- integracion #1: E   AssertionError: persistence writes still in flight FAILED tests/integration/test_adverse_recovery.py::test_rejects_and_partials_over_hundreds_of_bars_keep_t
+-- integracion #2: E   AssertionError: persistence writes still in flight FAILED tests/integration/test_adverse_recovery.py::test_rejects_and_partials_over_hundreds_of_bars_keep_t
+-- integracion #3: E   AssertionError: persistence writes still in flight FAILED tests/integration/test_adverse_recovery.py::test_rejects_and_partials_over_hundreds_of_bars_keep_t

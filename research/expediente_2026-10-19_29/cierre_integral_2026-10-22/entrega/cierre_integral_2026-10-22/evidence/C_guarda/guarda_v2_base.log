@@ -1,0 +1,581 @@
+FFFFF..                                                                  [100%]
+=================================== FAILURES ===================================
+________ test_a_rejected_close_is_sent_again_as_a_new_order_and_closes _________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f070a52b210>
+
+    def test_a_rejected_close_is_sent_again_as_a_new_order_and_closes(monkeypatch: pytest.MonkeyPatch) -> None:
+        """D1, exits: the venue rejects the first close of every position."""
+>       record = _run(monkeypatch, reject_first_close=True, max_holding_bars=TIME_STOP_BARS)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_engine_version_contract.py:413: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_engine_version_contract.py:406: in _run
+    if not _promises_order_hygiene(recorded):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+raw = None
+
+    def _promises_order_hygiene(raw: object) -> bool:
+        """Whether the recorded label promises D1-D3. No label is not "no promise": the guard
+        depends on the change that records it, and runs without it only by mistake."""
+        version = _declared(raw)
+        if version is None:
+>           raise AssertionError(
+                "the engine records no engine_version: this guard depends on the provenance change "
+                "(01 + 02v3) and runs without it only if that change is missing or was reverted alone"
+            )
+E           AssertionError: the engine records no engine_version: this guard depends on the provenance change (01 + 02v3) and runs without it only if that change is missing or was reverted alone
+
+tests/integration/test_engine_version_contract.py:378: AssertionError
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_PR2WTJRP16WVGHBKGYYSEWTX component=execution.paper order_id=ord_F0XZM7BBVS9GNEWE496CS62Q
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_XKYT673WPSADN10GJKN638JT component=execution.paper order_id=ord_6DC5932ADBDEYZK1Q7J0TBJV
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_PR2WTJRP16WVGHBKGYYSEWTX component=execution.paper order_id=ord_F0XZM7BBVS9GNEWE496CS62Q
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_XKYT673WPSADN10GJKN638JT component=execution.paper order_id=ord_6DC5932ADBDEYZK1Q7J0TBJV
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_PR2WTJRP16WVGHBKGYYSEWTX component=execution.paper order_id=ord_F0XZM7BBVS9GNEWE496CS62Q
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_XKYT673WPSADN10GJKN638JT component=execution.paper order_id=ord_6DC5932ADBDEYZK1Q7J0TBJV
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_PR2WTJRP16WVGHBKGYYSEWTX component=execution.paper order_id=ord_F0XZM7BBVS9GNEWE496CS62Q
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_N8WVCCM20DPKT96F52KKKVG7 component=execution.paper order_id=ord_DE0CF2MVHZ7P8NRX0471MSJY
+2026-10-22 22:53:37 [info     ] duplicate_order_suppressed     client_order_id=coid_7D8SQH0CTP8XKDYTT4ZF3450 component=execution.paper order_id=ord_YJM7AZC7R0A9WJ3PPDAJVAN8
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_39CNTNKB1ASCD9R1ENYXD2A8 component=execution.paper order_id=ord_RMEZRPZB1XTRC5XA4S9ZKEHR
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_39CNTNKB1ASCD9R1ENYXD2A8 component=execution.paper order_id=ord_RMEZRPZB1XTRC5XA4S9ZKEHR
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_39CNTNKB1ASCD9R1ENYXD2A8 component=execution.paper order_id=ord_RMEZRPZB1XTRC5XA4S9ZKEHR
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_39CNTNKB1ASCD9R1ENYXD2A8 component=execution.paper order_id=ord_RMEZRPZB1XTRC5XA4S9ZKEHR
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_39CNTNKB1ASCD9R1ENYXD2A8 component=execution.paper order_id=ord_RMEZRPZB1XTRC5XA4S9ZKEHR
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_39CNTNKB1ASCD9R1ENYXD2A8 component=execution.paper order_id=ord_RMEZRPZB1XTRC5XA4S9ZKEHR
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_39CNTNKB1ASCD9R1ENYXD2A8 component=execution.paper order_id=ord_RMEZRPZB1XTRC5XA4S9ZKEHR
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_39CNTNKB1ASCD9R1ENYXD2A8 component=execution.paper order_id=ord_RMEZRPZB1XTRC5XA4S9ZKEHR
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_39CNTNKB1ASCD9R1ENYXD2A8 component=execution.paper order_id=ord_RMEZRPZB1XTRC5XA4S9ZKEHR
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_39CNTNKB1ASCD9R1ENYXD2A8 component=execution.paper order_id=ord_RMEZRPZB1XTRC5XA4S9ZKEHR
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_39CNTNKB1ASCD9R1ENYXD2A8 component=execution.paper order_id=ord_RMEZRPZB1XTRC5XA4S9ZKEHR
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_39CNTNKB1ASCD9R1ENYXD2A8 component=execution.paper order_id=ord_RMEZRPZB1XTRC5XA4S9ZKEHR
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_39CNTNKB1ASCD9R1ENYXD2A8 component=execution.paper order_id=ord_RMEZRPZB1XTRC5XA4S9ZKEHR
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_39CNTNKB1ASCD9R1ENYXD2A8 component=execution.paper order_id=ord_RMEZRPZB1XTRC5XA4S9ZKEHR
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_39CNTNKB1ASCD9R1ENYXD2A8 component=execution.paper order_id=ord_RMEZRPZB1XTRC5XA4S9ZKEHR
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_39CNTNKB1ASCD9R1ENYXD2A8 component=execution.paper order_id=ord_RMEZRPZB1XTRC5XA4S9ZKEHR
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_39CNTNKB1ASCD9R1ENYXD2A8 component=execution.paper order_id=ord_RMEZRPZB1XTRC5XA4S9ZKEHR
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_39CNTNKB1ASCD9R1ENYXD2A8 component=execution.paper order_id=ord_RMEZRPZB1XTRC5XA4S9ZKEHR
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_39CNTNKB1ASCD9R1ENYXD2A8 component=execution.paper order_id=ord_RMEZRPZB1XTRC5XA4S9ZKEHR
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_MZ2TT9WE5Q7HRY2QQK7ZA407 component=execution.paper order_id=ord_MWE587QW9KN4PWVPR23TGPEK
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_VJYWHRXY62Z4TJVBJ3EHZP2Y component=execution.paper order_id=ord_HKQEGG71C0MFHBXHY58SMXSX
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_4NP9ZG6D5YZW7Q5MZ77WBN41 component=execution.paper order_id=ord_KSWK57PTNBM641S0CT0A0P87
+2026-10-22 22:53:39 [info     ] duplicate_order_suppressed     client_order_id=coid_909F2D6M4KHZ64Y62NMD18C7 component=execution.paper order_id=ord_Z7K8B87C823MES6YHKP2CSKP
+2026-10-22 22:53:39 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=99894.71 run_id=bt_BQF3HPF8CER0RBD2A0VW3MMY trades=7
+__________________ test_the_stop_in_the_book_follows_the_leg ___________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f0709f6ab90>
+
+    def test_the_stop_in_the_book_follows_the_leg(monkeypatch: pytest.MonkeyPatch) -> None:
+        """D2: break-even and trailing move the stop in the book, only ever tighter, and a
+        working stop is not replaced by an identical one."""
+>       record = _run(monkeypatch)
+                 ^^^^^^^^^^^^^^^^^
+
+tests/integration/test_engine_version_contract.py:424: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_engine_version_contract.py:406: in _run
+    if not _promises_order_hygiene(recorded):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+raw = None
+
+    def _promises_order_hygiene(raw: object) -> bool:
+        """Whether the recorded label promises D1-D3. No label is not "no promise": the guard
+        depends on the change that records it, and runs without it only by mistake."""
+        version = _declared(raw)
+        if version is None:
+>           raise AssertionError(
+                "the engine records no engine_version: this guard depends on the provenance change "
+                "(01 + 02v3) and runs without it only if that change is missing or was reverted alone"
+            )
+E           AssertionError: the engine records no engine_version: this guard depends on the provenance change (01 + 02v3) and runs without it only if that change is missing or was reverted alone
+
+tests/integration/test_engine_version_contract.py:378: AssertionError
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:53:42 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=99879.01 run_id=bt_7H5F9YX42K2VV8WVD3BRGQGF trades=10
+_______ test_partial_fills_never_add_to_a_closing_position_or_reopen_one _______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f0709b62710>
+
+    def test_partial_fills_never_add_to_a_closing_position_or_reopen_one(monkeypatch: pytest.MonkeyPatch) -> None:
+        """D3, on the close and when flat: most fills partial, entries resting in part."""
+>       record = _run(monkeypatch, partial=0.9)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_engine_version_contract.py:434: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_engine_version_contract.py:406: in _run
+    if not _promises_order_hygiene(recorded):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+raw = None
+
+    def _promises_order_hygiene(raw: object) -> bool:
+        """Whether the recorded label promises D1-D3. No label is not "no promise": the guard
+        depends on the change that records it, and runs without it only by mistake."""
+        version = _declared(raw)
+        if version is None:
+>           raise AssertionError(
+                "the engine records no engine_version: this guard depends on the provenance change "
+                "(01 + 02v3) and runs without it only if that change is missing or was reverted alone"
+            )
+E           AssertionError: the engine records no engine_version: this guard depends on the provenance change (01 + 02v3) and runs without it only if that change is missing or was reverted alone
+
+tests/integration/test_engine_version_contract.py:378: AssertionError
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:53:44 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=100004.89 run_id=bt_QTXM4VZCEVQ2YFGW2JA6C2TW trades=29
+_______ test_a_close_that_ends_with_position_left_is_followed_by_another _______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f0709faf350>
+
+    def test_a_close_that_ends_with_position_left_is_followed_by_another(monkeypatch: pytest.MonkeyPatch) -> None:
+        """D3 safety net: closes are immediate-or-cancel, so most end with position left. The
+        position is never left with neither a stop nor a close working."""
+>       record = _run(monkeypatch, closes_are_ioc=True, partial=0.9, max_holding_bars=TIME_STOP_BARS)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_engine_version_contract.py:444: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_engine_version_contract.py:406: in _run
+    if not _promises_order_hygiene(recorded):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+raw = None
+
+    def _promises_order_hygiene(raw: object) -> bool:
+        """Whether the recorded label promises D1-D3. No label is not "no promise": the guard
+        depends on the change that records it, and runs without it only by mistake."""
+        version = _declared(raw)
+        if version is None:
+>           raise AssertionError(
+                "the engine records no engine_version: this guard depends on the provenance change "
+                "(01 + 02v3) and runs without it only if that change is missing or was reverted alone"
+            )
+E           AssertionError: the engine records no engine_version: this guard depends on the provenance change (01 + 02v3) and runs without it only if that change is missing or was reverted alone
+
+tests/integration/test_engine_version_contract.py:378: AssertionError
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:53:47 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=99999.57 run_id=bt_HE094J84GD4A7JV9Q11MM1DX trades=2
+_____________ test_rejections_partials_and_limit_entries_together ______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f0709e3f610>
+
+    def test_rejections_partials_and_limit_entries_together(monkeypatch: pytest.MonkeyPatch) -> None:
+        """D1-D3 at once, as a venue has them: a third of all orders rejected, most fills
+        partial, limit entries that expire, the first close of every position rejected."""
+>       record = _run(monkeypatch, reject_first_close=True, reject=0.3, partial=0.6, entry_order_type="limit",
+                      max_holding_bars=TIME_STOP_BARS)
+
+tests/integration/test_engine_version_contract.py:453: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_engine_version_contract.py:406: in _run
+    if not _promises_order_hygiene(recorded):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+raw = None
+
+    def _promises_order_hygiene(raw: object) -> bool:
+        """Whether the recorded label promises D1-D3. No label is not "no promise": the guard
+        depends on the change that records it, and runs without it only by mistake."""
+        version = _declared(raw)
+        if version is None:
+>           raise AssertionError(
+                "the engine records no engine_version: this guard depends on the provenance change "
+                "(01 + 02v3) and runs without it only if that change is missing or was reverted alone"
+            )
+E           AssertionError: the engine records no engine_version: this guard depends on the provenance change (01 + 02v3) and runs without it only if that change is missing or was reverted alone
+
+tests/integration/test_engine_version_contract.py:378: AssertionError
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_9DJQ1W32F88ZVGK0YD3EHD47 component=execution.paper order_id=ord_Z451H12PHTR6RGWZCKN3RNZ5
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_494MQD3ZC2J8SSZKND3DCXDF component=execution.paper order_id=ord_S0Y86FKHWARY71CXSWDMXCNN
+2026-10-22 22:53:47 [info     ] duplicate_order_suppressed     client_order_id=coid_BAN8G3AGBEWY5E1J2HGTQQ7G component=execution.paper order_id=ord_9F70XXPEAWEMYF1S3433FCA1
+2026-10-22 22:53:48 [info     ] duplicate_order_suppressed     client_order_id=coid_EABAAW8DD1S3BM3WQDV1QPQM component=execution.paper order_id=ord_7FM4J70F3ZM25D77G950QGYX
+2026-10-22 22:53:48 [info     ] duplicate_order_suppressed     client_order_id=coid_EABAAW8DD1S3BM3WQDV1QPQM component=execution.paper order_id=ord_7FM4J70F3ZM25D77G950QGYX
+2026-10-22 22:53:48 [info     ] duplicate_order_suppressed     client_order_id=coid_EABAAW8DD1S3BM3WQDV1QPQM component=execution.paper order_id=ord_7FM4J70F3ZM25D77G950QGYX
+2026-10-22 22:53:48 [info     ] duplicate_order_suppressed     client_order_id=coid_EABAAW8DD1S3BM3WQDV1QPQM component=execution.paper order_id=ord_7FM4J70F3ZM25D77G950QGYX
+2026-10-22 22:53:48 [info     ] duplicate_order_suppressed     client_order_id=coid_EABAAW8DD1S3BM3WQDV1QPQM component=execution.paper order_id=ord_7FM4J70F3ZM25D77G950QGYX
+2026-10-22 22:53:48 [info     ] duplicate_order_suppressed     client_order_id=coid_9SVZEQ0YGJMQ5FDKBQEPFJWN component=execution.paper order_id=ord_D6R3RV546KJB77A06PJCEZ84
+2026-10-22 22:53:48 [info     ] duplicate_order_suppressed     client_order_id=coid_EABAAW8DD1S3BM3WQDV1QPQM component=execution.paper order_id=ord_7FM4J70F3ZM25D77G950QGYX
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_MS2B5BA5FHAGHVWX3HKZZR7C component=execution.paper order_id=ord_Y4Z5QQDKV5NCVAP0ZMAQ28NF
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_MS2B5BA5FHAGHVWX3HKZZR7C component=execution.paper order_id=ord_Y4Z5QQDKV5NCVAP0ZMAQ28NF
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_MS2B5BA5FHAGHVWX3HKZZR7C component=execution.paper order_id=ord_Y4Z5QQDKV5NCVAP0ZMAQ28NF
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_MS2B5BA5FHAGHVWX3HKZZR7C component=execution.paper order_id=ord_Y4Z5QQDKV5NCVAP0ZMAQ28NF
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_MS2B5BA5FHAGHVWX3HKZZR7C component=execution.paper order_id=ord_Y4Z5QQDKV5NCVAP0ZMAQ28NF
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_MS2B5BA5FHAGHVWX3HKZZR7C component=execution.paper order_id=ord_Y4Z5QQDKV5NCVAP0ZMAQ28NF
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_MS2B5BA5FHAGHVWX3HKZZR7C component=execution.paper order_id=ord_Y4Z5QQDKV5NCVAP0ZMAQ28NF
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_MS2B5BA5FHAGHVWX3HKZZR7C component=execution.paper order_id=ord_Y4Z5QQDKV5NCVAP0ZMAQ28NF
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_MS2B5BA5FHAGHVWX3HKZZR7C component=execution.paper order_id=ord_Y4Z5QQDKV5NCVAP0ZMAQ28NF
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_MS2B5BA5FHAGHVWX3HKZZR7C component=execution.paper order_id=ord_Y4Z5QQDKV5NCVAP0ZMAQ28NF
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_MS2B5BA5FHAGHVWX3HKZZR7C component=execution.paper order_id=ord_Y4Z5QQDKV5NCVAP0ZMAQ28NF
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_MS2B5BA5FHAGHVWX3HKZZR7C component=execution.paper order_id=ord_Y4Z5QQDKV5NCVAP0ZMAQ28NF
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_MS2B5BA5FHAGHVWX3HKZZR7C component=execution.paper order_id=ord_Y4Z5QQDKV5NCVAP0ZMAQ28NF
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_MS2B5BA5FHAGHVWX3HKZZR7C component=execution.paper order_id=ord_Y4Z5QQDKV5NCVAP0ZMAQ28NF
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_MS2B5BA5FHAGHVWX3HKZZR7C component=execution.paper order_id=ord_Y4Z5QQDKV5NCVAP0ZMAQ28NF
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_MS2B5BA5FHAGHVWX3HKZZR7C component=execution.paper order_id=ord_Y4Z5QQDKV5NCVAP0ZMAQ28NF
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_MS2B5BA5FHAGHVWX3HKZZR7C component=execution.paper order_id=ord_Y4Z5QQDKV5NCVAP0ZMAQ28NF
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_MS2B5BA5FHAGHVWX3HKZZR7C component=execution.paper order_id=ord_Y4Z5QQDKV5NCVAP0ZMAQ28NF
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_ZANGBR2CWCQP7NHY4T47VTRK component=execution.paper order_id=ord_Z0R107BF81HDXJEV0HEKTKAT
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_FCNBWE1KSZARB4ZMV4P738W7 component=execution.paper order_id=ord_ZBMR2YFAPDGAG098K64EFJV4
+2026-10-22 22:53:49 [info     ] duplicate_order_suppressed     client_order_id=coid_H6WJZCK420JFZX03P8S9D54C component=execution.paper order_id=ord_YZC4D5XMMJ56XSGS0Y7J122Z
+2026-10-22 22:53:49 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=100018.09 run_id=bt_78KP178Y873XRVY4070GN1WT trades=19
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED tests/integration/test_engine_version_contract.py::test_the_checks_pass_a_clean_record_and_catch_each_defect
+PASSED tests/integration/test_engine_version_contract.py::test_the_label_decides_the_promise_and_cannot_escape_the_guard
+FAILED tests/integration/test_engine_version_contract.py::test_a_rejected_close_is_sent_again_as_a_new_order_and_closes
+FAILED tests/integration/test_engine_version_contract.py::test_the_stop_in_the_book_follows_the_leg
+FAILED tests/integration/test_engine_version_contract.py::test_partial_fills_never_add_to_a_closing_position_or_reopen_one
+FAILED tests/integration/test_engine_version_contract.py::test_a_close_that_ends_with_position_left_is_followed_by_another
+FAILED tests/integration/test_engine_version_contract.py::test_rejections_partials_and_limit_entries_together
+5 failed, 2 passed in 13.15s

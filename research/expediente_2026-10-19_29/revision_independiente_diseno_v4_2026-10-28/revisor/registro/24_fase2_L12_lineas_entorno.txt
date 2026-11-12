@@ -1,0 +1,67 @@
+# fase 2 · L12, líneas del INFORME_REPARACION, entorno del autor · 2026-10-28T20:03:56Z
+## L12 .correr.txt
+{
+ "semanas_ic": "STUB_SIN_CALCULO",
+ "H1": "STUB_SIN_CALCULO",
+ "H2": "STUB_SIN_CALCULO",
+ "holm": "STUB_SIN_CALCULO",
+ "clasificacion_6_5": "STUB_SIN_CALCULO"
+}
+{"escenario": "B1_evaluado_sin_fallo", "termino": "sin excepción"}
+
+## L12 .observar.txt (primeras 12 líneas y campos registro/nuevo_intento)
+{
+ "semanas_ic": "STUB_SIN_CALCULO",
+ "H1": "STUB_SIN_CALCULO",
+ "H2": "STUB_SIN_CALCULO",
+ "holm": "STUB_SIN_CALCULO",
+ "clasificacion_6_5": "STUB_SIN_CALCULO"
+}
+{
+ "salida_1": {
+  "REGISTRO_EJECUCION.json": {
+   "sha256": "c09c8aebe28acca09c67c02ac3c6a449ee0201040d6c94421b8bde9b9c7f59ee",
+   "bytes": 781,
+27: "registro": "NO EXISTE",
+29: "nuevo_intento": "PERMITIDO: corrió completo",
+## ¿el informe documenta el paso de borrado de L12? (grep -n 'borrad' en el informe)
+188:| **L-12** | La unicidad depende del registro | Escenario L12: con el registro borrado, una nueva instancia hace otra ejecución completa | — | **Confirma
+361:| Directorios del scratchpad | 240 al inicio y al final; ninguno borrado |
+395:| **L12** registro borrado después de EVALUADO | EVALUADO | (borrado) | **PERMITIDA** |
+## ¿L12 en INTENTOS? 
+total 40
+drwxr-xr-x  4 root root 4096 Oct 28 13:53 .
+drwxr-xr-x 22 root root 4096 Oct 28 13:53 ..
+-rw-r--r--  1 root root 1205 Oct 28 13:53 INTENTOS_E3.jsonl
+-rw-r--r--  1 root root  241 Oct 28 13:53 autorizacion_prueba_intento1.txt
+-rw-r--r--  1 root root  241 Oct 28 13:53 autorizacion_prueba_intento2.txt
+-rw-r--r--  1 root root   71 Oct 28 13:53 correr.json
+-rw-r--r--  1 root root   23 Oct 28 13:53 manifiesto_prueba.json
+-rw-r--r--  1 root root  712 Oct 28 13:53 observar.json
+drwxr-xr-x  2 root root 4096 Oct 28 13:53 salida_1
+drwxr-xr-x  2 root root 4096 Oct 28 13:53 salida_2
+## números de línea de las 3 subcadenas del v2 dentro de INFORME_REPARACION (solo números; el informe dice 272, 208, 209)
+{'FRASE_v2_en_lineas': [272], 'sha_v2_en_lineas': [208], 'sha_manifiesto_v2_en_lineas': [209]}
+## entorno del autor: copia_A / tmp_pytest_v3 (solo existencia y tamaño)
+copia_A: existe, 28M
+tmp_pytest_v3: existe, 181M
+registro: existe, 248K
+INFORME_REVISION_ADVERSARIAL_E3H1H2.md
+MANIFEST_REVISION_ADVERSARIAL.sha256
+arnes
+arnes_L13_SINTETICO_SIN_DATOS_SIN_CALCULO
+arnes_L15
+arnes_L25_rechazos
+copia_A
+registro
+tmp_patch
+tmp_pytest_v3
+## suite_v3_con_guarda.txt: cabecera (comando y versión)
+..................FF............................FF.                      [100%]
+=================================== FAILURES ===================================
+E   AssertionError: assert (False)
+     +  where False = <built-in method startswith of str object at 0x7fcc80809cb0>('terminal: INVALIDO')
+     +    where <built-in method startswith of str object at 0x7fcc80809cb0> = 'terminal: ERROR en la etapa «validez_previa»: CalculoBloqueado: CÁLCULO BLOQUEADO POR EL REVISOR. Ver /tmp/claude-0/-
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/copia_A/paquete_revision_independiente_E3H1H2_2026-10-28/evidencia/cierre_bloq
+E   AssertionError: terminal: ERROR en la etapa «validez_previa»: CalculoBloqueado: CÁLCULO BLOQUEADO POR EL REVISOR. Ver /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scr
+    assert 'terminal: ER...LTADO_E3.json' == 'termino'

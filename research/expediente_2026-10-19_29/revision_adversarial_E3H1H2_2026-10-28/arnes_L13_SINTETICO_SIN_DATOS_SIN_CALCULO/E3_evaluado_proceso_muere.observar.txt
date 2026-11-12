@@ -1,0 +1,27 @@
+{
+ "salida_1": {
+  "REGISTRO_EJECUCION.json": {
+   "sha256": "08f799401601561d623e42110fb117d05201386989dd9d75e4aa01cc69bba5ea",
+   "bytes": 772,
+   "contiene_STUB": false
+  },
+  "RESULTADO_E3.json": {
+   "sha256": "bf89db48af96c904993f72d43da2013af65337b9bdae218bc68c3467612477aa",
+   "bytes": 1084,
+   "contiene_STUB": true,
+   "veredicto": "EVALUADO"
+  },
+  "VALIDEZ_PREVIA.json": {
+   "sha256": "40c4efd5ac8c0d44b7e53268b6f17c45110534f9c751cd4abb3d82fa40928272",
+   "bytes": 73,
+   "contiene_STUB": true
+  }
+ },
+ "registro": [
+  "{\"utc\": \"2026-10-28T13:52:29.932080+00:00\", \"evento\": \"INICIADO\", \"id_intento\": \"385fcd2bc2b63e2e:/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/arnes_L13_SINTETICO_SIN_DATOS_SIN_CALCULO/E3_evaluado_proceso_muere/salida_1\", \"salida\": \"/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/arnes_L13_SINTETICO_SIN_DATOS_SIN_CALCULO/E3_evaluado_proceso_muere/salida_1\", \"sha_autorizacion\": \"385fcd2bc2b63e2e704b3f2df1f382611f944bcb562376abd67b4b46b200f56c\", \"sha_orquestador\": \"22b7ff20d98e4730f755fc14ccffe796a3c7836fd2b2004756583449bcb64353\", \"sha_manifiesto\": \"7dd0f1fd45965f344076156397aaa372e1f747bdff715938d0874a6d548d89ef\", \"reintento_de\": null}"
+ ],
+ "registro_vs_disco": [],
+ "nuevo_intento": "RECHAZADO: hay un intento sin estado terminal (['385fcd2bc2b63e2e:/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/arnes_L13_SINTETICO_SIN_DATOS_SIN_CALCULO/E3_evaluado_proceso_muere/salid",
+ "salida_2": "NO EXISTE"
+}
+rc_observar=0

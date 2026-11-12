@@ -1,0 +1,5 @@
+SHA-256 del .bin: d7515c0dbd55beacbe0fa82d48a5168fa514b940515fd31e56926c6aadc504f4; .bin == forma canónica del .json: True
+  experimentos/fuera_de_muestra_T.json: declarado 4f8fafde372931aa…; actual == declarado: True
+  experimentos/fuera_de_muestra_T.py: declarado 941b6e11f6566319…; actual == declarado: True
+  PRERREGISTRO_FUERA_DE_MUESTRA_T.md: declarado 94a165560ba2a180…; actual == declarado: True
+la copia del .bin es idéntica a la de v0.5

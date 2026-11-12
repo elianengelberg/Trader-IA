@@ -1,0 +1,19 @@
+== Pruebas dependientes del reloj, con reloj fijado (time-machine, entorno descartable venv_reloj) · 2026-10-22T00:31:08Z
+-- reloj 2026-10-22T00:30:00+00:00 · árbol base (547109460bb5)
+SKIPPED [1] test_account_restore.py:243: the UTC day rolled during the test; the day scenario is covered by the unit tests
+FAILED test_risk_state_persistence.py::test_five_restored_entries_for_the_symbol_refuse_the_sixth_after_the_restart
+-- reloj 2026-10-22T00:30:00+00:00 · árbol integracion (85965ec56298)
+SKIPPED [1] test_account_restore.py:243: the UTC day rolled during the test; the day scenario is covered by the unit tests
+FAILED test_risk_state_persistence.py::test_five_restored_entries_for_the_symbol_refuse_the_sixth_after_the_restart
+-- reloj 2026-10-22T12:00:00+00:00 · árbol base (547109460bb5)
+PASSED test_risk_state_persistence.py::test_five_restored_entries_for_the_symbol_refuse_the_sixth_after_the_restart
+PASSED test_account_restore.py::test_a_day_that_hit_the_loss_limit_still_refuses_entries_after_a_restart
+-- reloj 2026-10-22T12:00:00+00:00 · árbol integracion (85965ec56298)
+PASSED test_risk_state_persistence.py::test_five_restored_entries_for_the_symbol_refuse_the_sixth_after_the_restart
+PASSED test_account_restore.py::test_a_day_that_hit_the_loss_limit_still_refuses_entries_after_a_restart
+-- reloj 2026-10-21T23:30:00+00:00 · árbol base (547109460bb5)
+PASSED test_risk_state_persistence.py::test_five_restored_entries_for_the_symbol_refuse_the_sixth_after_the_restart
+PASSED test_account_restore.py::test_a_day_that_hit_the_loss_limit_still_refuses_entries_after_a_restart
+-- reloj 2026-10-21T23:30:00+00:00 · árbol integracion (85965ec56298)
+PASSED test_risk_state_persistence.py::test_five_restored_entries_for_the_symbol_refuse_the_sixth_after_the_restart
+PASSED test_account_restore.py::test_a_day_that_hit_the_loss_limit_still_refuses_entries_after_a_restart

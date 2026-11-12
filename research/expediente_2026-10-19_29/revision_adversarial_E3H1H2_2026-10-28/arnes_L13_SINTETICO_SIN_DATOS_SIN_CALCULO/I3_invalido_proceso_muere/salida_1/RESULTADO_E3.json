@@ -1,0 +1,11 @@
+{
+ "veredicto": "INVALIDO",
+ "motivo": "validez previa (v3 §10)",
+ "H1": null,
+ "H2": null,
+ "validez_previa": {
+  "valido": false,
+  "nota": "STUB_SIN_CALCULO"
+ },
+ "nota": "E3-H1/H2 NO EVALUABLES con esta ventana. No se busca otra ventana ni se cambia ninguna regla."
+}

@@ -1,0 +1,44 @@
+== Precondiciones de R19 (enmienda 1), registradas antes de cualquier corrida del experimento: 2026-10-22T19:35:35Z
+-- ESTADO: la matriz NO se ejecutó. Motivo: el criterio H-SINC original no distingue las hipótesis (PLAN_R19_ENMIENDA_1.md).
+-- Plan original y herramientas v1 (revisión de cierre, paquete 8e6979ad…):
+356b6d0d68ad275e45f9439fc6b6edc59eb43407d4d8b2376738513c88d4cc0a  /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_revision_D1_D3_2026-10-22/PLAN_R19.md
+d0057aa98cda400f5903398798bc732bd41ce824c3b68c5f9b3f1a7d6e3c8d85  /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_revision_D1_D3_2026-10-22/herramientas/sonda_r19.py
+ad2735fc4b43489d097a63b2847d7d609e4a7d7b76b71c792364989890ac615c  /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_revision_D1_D3_2026-10-22/herramientas/r19_carga.sh
+-- Enmienda 1, plan congelado y herramientas v2:
+1537394e5a9bf89b827d5eaad78b6c511ca55d90288b63a0d0ac66cdfa183e34  PLAN_R19_ENMIENDA_1.md
+a717249d5f092f876ec538fd494bfabd33ec8e22635bda9bf460366f1d1ebaad  plan_r19_enmienda1.json
+2b68b873ffc7d7bcdbd3cee5e537e29ca3f364faf2387266f0c45e30e15bc8e5  herramientas/sonda_r19_v2.py
+69253f71fb9077b3206eba87613db650a4dfa64d7ead36b20170f47196125675  herramientas/r19_experimento.py
+afa61795f78bc726ce2ceca6713ef5b5c2ddb4626a1ca23198581ae1ea9fbfc9  herramientas/r19_analisis.py
+4c70dfbdb654cc5fdf40d1903a26cfa4ce0a00c35ecd9df8fdf66a988fe7cfb2  herramientas/equivalencia_prueba_r19.py
+-- Árboles aislados (clones con --no-local del original, que solo se lee):
+r19_base: HEAD 72ffae5d2698440c8f1afaff12e07bd8adde66fb · cambios 0
+r19_cand: HEAD 72ffae5d2698440c8f1afaff12e07bd8adde66fb · cambios 11 · archivos = completa registrada (01+02v3+03)
+r19_base: live.py 88d0b1857efbbcad898c4781507e8c96a512ec263ca1af9e23bc543f742d5325
+r19_base: test_account_restore.py c38c5f40e1b56168caa41b0f2560ae8e4cb5cfd5444203e2368f4de9d4a7dc2c
+r19_base: código tia (todos los .py) 2367591de5bd6489692fe33643375e1bac16fb46cc2e90fc852ea8803a67c031
+r19_cand: live.py 88d0b1857efbbcad898c4781507e8c96a512ec263ca1af9e23bc543f742d5325
+r19_cand: test_account_restore.py 1c3cc4e7c7166da51f2b03c84d7a4a8ea5bf4bd69038a66613b4619e6d9d594c
+r19_cand: código tia (todos los .py) 625e321359e48cc8002c5165e4814703df02fe2e56805f96a508c08963156ea4
+-- Equivalencia de la prueba de R19 y sus ayudantes (AST):
+test_partial_fills_and_fees_rebuild_identically_however_often  idéntica
+settle                                                         idéntica
+persister                                                      idéntica
+register_run                                                   idéntica
+_db                                                            idéntica
+engine_for                                                     idéntica
+build                                                          DISTINTA
+   build(): la candidata (03) agrega el parámetro opcional start=None; con el valor por defecto el camino es el mismo de la base
+   persistence/repositories.py: solo difieren BacktestRepository, _comparable y _provenance (02v3); la prueba de R19 no los usa
+-- Entorno: Python 3.11.17 · venv_A · pip freeze (74 paquetes) sha256 a1a96cac94471aac46ac7e5374846d0e3ffe93f046df198b71c95fec6869766e = freeze de referencia de la entrega
+-- Sin operación ni servicios reales:
+   la prueba usa FakeMarketData, PaperExecutionProvider (engine_for: rechazos y parciales en 0) y SQLite en tmp_path; LiveRuntime con activation=None
+   64:    return Database(f"sqlite+aiosqlite:///{tmp_path / name}")
+   139:    market = market or FakeMarketData(candles, clock)
+   143:        settings, activation=None, market_data=market, execution=execution, clock=clock,
+   934:        settings, activation=None, market_data=market, execution=seeded, clock=clock,
+   cada pytest corre con unshare -n (solo lo) y entorno mínimo (PATH, HOME y TMPDIR propios, LANG, PYTHONPATH, R19_*): sin credenciales ni proxies
+   interfaces dentro de unshare -n: lo 
+-- Validación del instrumento (pruebas SINTÉTICAS en un árbol aparte; no son el experimento): validacion_sonda/
+   v2/: con el criterio corregido, lenta→lenta_con_productor (foto 1.916, 99,5 % del bucle, la cola avanzó), trabada→trabada (cabeza 'order'), no inyectado detectado
+   mecanica2/: el driver crea y mata los quemadores (ejecutables 2→3 con K=1; 0 vivos al final), unshare y entorno mínimo funcionan

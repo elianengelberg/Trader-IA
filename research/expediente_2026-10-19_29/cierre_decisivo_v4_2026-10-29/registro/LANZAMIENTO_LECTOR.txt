@@ -1,0 +1,5 @@
+Encargo al lector fijado antes de lanzarlo
+UTC: 2026-10-29T00:26:24.270Z
+859fb02113735dc5f9badf72ce53366721704a2da372776d75937044b8fede70  segunda_lectura/ENCARGO_LECTOR.md
+0aa37a51b0dc2c77357d949a5a630e70c909565db641f5e4e7f5bbe9eb3001eb  segunda_lectura/paquete/ITEMS.json
+8af6182788c1534a9fbf81fafd47edb70d1e8b72aa758c8e0dba36baa791a65b  segunda_lectura/paquete_omega/CANDIDATOS.json

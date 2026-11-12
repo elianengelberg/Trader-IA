@@ -1,0 +1,166 @@
+diff --git a/tests/integration/test_account_restore.py b/tests/integration/test_account_restore.py
+index 71a15a89af9cbc266772f125a8c10db3e2603e9a..df56066600a543f6450d3d040a44f706b9285db8 100644
+--- a/tests/integration/test_account_restore.py
++++ b/tests/integration/test_account_restore.py
+@@ -120,15 +120,20 @@ def engine_for(clock: SimulatedClock, settings) -> PaperExecutionProvider:  # ty
+     )
+ 
+ 
++# A series start at a fixed hour, for scenarios that must stay inside one UTC day of the
++# session's clock: it opens 150 bars in, at 08:30:01, with the rest of the day ahead.
++SESSION_DAY_START = datetime(2026, 1, 5, 6, 0, tzinfo=UTC)
++
++
+ def build(  # type: ignore[no-untyped-def]
+     *, persist=None, account: AccountRestore | None = None, risk: RiskRestore | None = None,
+     engine: PaperExecutionProvider | None = None, clock: SimulatedClock | None = None,
+-    market: FakeMarketData | None = None, **live_overrides: Any,
++    market: FakeMarketData | None = None, start: datetime | None = None, **live_overrides: Any,
+ ):
+     scenario = get_scenario("trend_up")
+     candles = generate_series(
+         scenario, symbol=SYMBOL, timeframe="1m",
+-        start=datetime.now(UTC) - timedelta(minutes=scenario.total_bars + 5), seed=9,
++        start=start or datetime.now(UTC) - timedelta(minutes=scenario.total_bars + 5), seed=9,
+     )
+     clock = clock or SimulatedClock(candles[149].close_time + timedelta(seconds=1))
+     market = market or FakeMarketData(candles, clock)
+@@ -225,9 +230,12 @@ async def test_a_day_that_hit_the_loss_limit_still_refuses_entries_after_a_resta
+     db = _db(tmp_path)
+     await db.create_schema()
+     try:
+-        now = datetime.now(UTC)
++        # One clock for the whole scenario: the session's. Taken from the wall, "now" sat
++        # ≈6 h ahead of the session's series, and before ≈05:55 UTC the day of the fills
++        # was not the session's day: the test skipped or failed by the hour. Anchored, the
++        # fills, the rebuild and the bars driven below share one day at any hour.
++        now = build(start=SESSION_DAY_START)[3].now()
+         t0 = now - timedelta(hours=2)
+-        assert t0.date() == now.date() or True
+         await register_run(db, "run_a", started_at=t0)
+         # Buy 0.2 at 50,000; sell at 48,700: -260 and fees, -2.65 % of 10,000 in one UTC day.
+         fills = [
+@@ -239,16 +247,14 @@ async def test_a_day_that_hit_the_loss_limit_still_refuses_entries_after_a_resta
+         assert restore.complete, restore.error
+         # The rebuild says the same thing on a second read.
+         assert (await rebuild(db, now=now)).as_dict() == restore.as_dict()
+-        if restore.current_day != t0.date().isoformat():
+-            pytest.skip("the UTC day rolled during the test; the day scenario is covered by the unit tests")
++        assert restore.current_day == t0.date().isoformat(), "the fills and the rebuild share one day"
+         assert restore.day_start_equity == pytest.approx(CAPITAL)
+         assert restore.equity == pytest.approx(CAPITAL - 260.0 - 4.9)
+ 
+         # The engine seeded from it reads a day down 2.65 %: the breaker refuses. The
+         # runtime's clock sits on the candle series (bar time), so the feed is fresh.
+-        runtime, engine, market, clock = build(account=restore)
+-        if clock.now().date().isoformat() != restore.current_day:
+-            pytest.skip("the UTC day rolled during the test; the day scenario is covered by the unit tests")
++        runtime, engine, market, clock = build(account=restore, start=SESSION_DAY_START)
++        assert clock.now() == now, "the restarted session reads the same clock"
+         engine.restore_portfolio(restore.portfolio_state())
+         portfolio = await engine.get_portfolio()
+         assert portfolio.day_pnl_pct < -2.0
+diff --git a/tests/integration/test_adverse_recovery.py b/tests/integration/test_adverse_recovery.py
+index 4b74f695f62f681f829e3287e16e5e83e0ba4ee3..a83cc099c4a25f875ccf9a84ad94d3e5c7d67128 100644
+--- a/tests/integration/test_adverse_recovery.py
++++ b/tests/integration/test_adverse_recovery.py
+@@ -9,6 +9,8 @@ incomplete and says why — never a quiet absorption.
+ 
+ from __future__ import annotations
+ 
++import asyncio
++import contextlib
+ from datetime import UTC, datetime
+ from pathlib import Path
+ 
+@@ -33,6 +35,18 @@ from tia.execution.paper import PaperExecutionProvider
+ from tia.persistence import AccountJournalRepository
+ 
+ 
++async def _drive_by_hand(runtime) -> None:  # type: ignore[no-untyped-def]
++    """``start()`` also launches the session's own loop. A test that drives the cycles
++    itself must not leave it running: at the fixtures' zero poll interval it spins beside
++    the test (hundreds of thousands of cycles on the same bar, a reconciliation write every
++    twelve), and a flush then waits on a queue that never stops filling — the 10 s budget
++    measured that race, not the record."""
++    task = runtime._task
++    task.cancel()
++    with contextlib.suppress(asyncio.CancelledError):
++        await task
++
++
+ async def _invariants(runtime, engine) -> None:  # type: ignore[no-untyped-def]
+     open_orders = await engine.get_orders(open_only=True)
+     stops = [o for o in open_orders if o.order_type is OrderType.STOP]
+@@ -64,6 +78,7 @@ async def test_rejects_and_partials_over_hundreds_of_bars_keep_the_invariants_an
+         runtime, engine, market, clock = build(persist=persister(db), engine=engine, clock=clock, market=market, max_holding_bars=12)
+         await register_run(db, runtime.run_id)
+         await runtime.start()
++        await _drive_by_hand(runtime)
+         _seed_every_bucket(runtime)
+         try:
+             for bar in range(500):
+@@ -76,6 +91,7 @@ async def test_rejects_and_partials_over_hundreds_of_bars_keep_the_invariants_an
+                     await settle(runtime)
+             assert runtime.counters["orders"] >= 3, "the venue was exercised"
+             assert runtime.counters["fills"] >= 2
++            assert runtime.counters["cycles"] == 500, "the test's cycles were the only ones"
+             await settle(runtime)
+         finally:
+             await runtime.stop()
+diff --git a/tests/integration/test_risk_state_persistence.py b/tests/integration/test_risk_state_persistence.py
+index 47d85b225aa890d1f4a366f3f743fa0610da1656..ae6876484fbb91a26a57ab8833b6ee9b3eac70cb 100644
+--- a/tests/integration/test_risk_state_persistence.py
++++ b/tests/integration/test_risk_state_persistence.py
+@@ -35,15 +35,20 @@ from tia.runtime.live import LiveRuntime
+ from tia.runtime.scenarios import generate_series, get_scenario
+ from tia.runtime.states import LiveState
+ 
++# A series start at a fixed hour, for scenarios that must stay inside one UTC day of the
++# session's clock: it opens 150 bars in, at 08:30:01, with the rest of the day ahead.
++SESSION_DAY_START = datetime(2026, 1, 5, 6, 0, tzinfo=UTC)
++
+ 
+ def build_runtime_paper_with(  # type: ignore[no-untyped-def]
+-    *, persist=None, prior_risk_state: RiskRestore | None = None, **live_overrides: Any
++    *, persist=None, prior_risk_state: RiskRestore | None = None, start: datetime | None = None,
++    **live_overrides: Any,
+ ):
+     """The paper-realtime runtime of the live-runtime tests, plus the restore argument."""
+     scenario = get_scenario("trend_up")
+     candles = generate_series(
+         scenario, symbol="BTC-USD", timeframe="1m",
+-        start=datetime.now(UTC) - timedelta(minutes=scenario.total_bars + 5), seed=9,
++        start=start or datetime.now(UTC) - timedelta(minutes=scenario.total_bars + 5), seed=9,
+     )
+     clock = SimulatedClock(candles[149].close_time + timedelta(seconds=1))
+     market = FakeMarketData(candles, clock)
+@@ -274,14 +279,18 @@ async def test_a_still_incomplete_rebuild_keeps_entries_refused() -> None:
+ 
+ 
+ async def test_five_restored_entries_for_the_symbol_refuse_the_sixth_after_the_restart() -> None:
+-    now = datetime.now(UTC)
++    # The restored day is the session's, read from its clock. Taken from the wall, it was
++    # the session's tomorrow before ≈05:55 UTC (the series sat ≈6 h behind the wall) and
++    # the cap never spoke. Anchored, the drive below stays inside that day at any hour.
++    now = build_runtime_paper_with(start=SESSION_DAY_START)[0]._clock.now()
+     runtime, execution, market = build_runtime_paper_with(
+         prior_risk_state=RiskRestore(
+             complete=True, day=now.date().isoformat(), entries_today=5,
+             entries_today_by_symbol={"BTC-USD": 5},
+             last_entry_at={"BTC-USD": now - timedelta(hours=2)},
+             entry_orders_today=5,
+-        )
++        ),
++        start=SESSION_DAY_START,
+     )
+     await runtime.start()
+     try:
+@@ -296,6 +305,7 @@ async def test_five_restored_entries_for_the_symbol_refuse_the_sixth_after_the_r
+                 break
+         assert any("per-symbol daily trade limit" in r for r in await _refusals(runtime, "risk"))
+         assert execution.submissions == 0
++        assert runtime._clock.now().date() == now.date(), "the drive stayed inside the restored day"
+     finally:
+         await runtime.stop()
+ 

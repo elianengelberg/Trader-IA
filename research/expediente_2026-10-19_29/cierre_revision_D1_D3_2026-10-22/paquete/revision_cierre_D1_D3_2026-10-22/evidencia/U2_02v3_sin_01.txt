@@ -1,0 +1,7 @@
+== 2026-10-22T18:30:28Z · qué produce 02v3 aplicado SIN 01 (árbol a) frente a 01+02v3 (árbol d)
+-- a: engine_version=1.1.0 · huella=ceb7a8fbcdadf43e · run_id=bt_40RYMW7JD9Y6FHHDGQEK7014 · operaciones=5 · retorno=-0.000303 · tiene D1-D3 (order_hygiene)=False
+-- d: engine_version=1.1.0 · huella=003d380d7abb1f99 · run_id=bt_6YK4EKAC7VC78CS704QTQHJS · operaciones=13 · retorno=-0.053728 · tiene D1-D3 (order_hygiene)=True
+-- pruebas de trazabilidad (14) en a:
+14 passed in 25.17s
+-- pruebas D1–D3 definitivas (8, del paquete) en a:
+8 failed in 26.44s

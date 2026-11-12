@@ -1,0 +1,346 @@
+[
+ {
+  "id": "L01",
+  "par": "ANTUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_binance-will-delist-ant-mult_f317e3f215f3.json"
+  ]
+ },
+ {
+  "id": "L02",
+  "par": "ARKUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_notice-of-addition-removal-o_de27e21c5438.json"
+  ]
+ },
+ {
+  "id": "L03",
+  "par": "AUDUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_notice-of-removal-of-trading_5b877cc8b91f.json"
+  ]
+ },
+ {
+  "id": "L04",
+  "par": "AUTOUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_binance-will-delist-qlc-nebl_0a0c8d0291fd.json"
+  ]
+ },
+ {
+  "id": "L05",
+  "par": "BCHSVUSDT",
+  "paginas": [
+   "zd_360026666152_70a328bf3f4b.json"
+  ]
+ },
+ {
+  "id": "L06",
+  "par": "BEARUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_360041613471_a86973496254.json",
+   "zd_360041613471_7f63c6ebd36b.json"
+  ]
+ },
+ {
+  "id": "L07",
+  "par": "BKRWUSDT",
+  "paginas": [
+   "bn_89c3426b722341269effb0c073b30cdf_4b94fd16208f.json"
+  ]
+ },
+ {
+  "id": "L08",
+  "par": "BNBBEARUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_360041613471_a86973496254.json",
+   "zd_360041613471_7f63c6ebd36b.json"
+  ]
+ },
+ {
+  "id": "L09",
+  "par": "BNBBULLUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_360041613471_a86973496254.json",
+   "zd_360041613471_7f63c6ebd36b.json"
+  ]
+ },
+ {
+  "id": "L10",
+  "par": "BONDUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_binance-will-delist-bond-doc_fb422c08c50b.json"
+  ]
+ },
+ {
+  "id": "L11",
+  "par": "BTSUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_binance-will-delist-bts-perl_f8e94ac0bfb3.json"
+  ]
+ },
+ {
+  "id": "L12",
+  "par": "BULLUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_360041613471_a86973496254.json",
+   "zd_360041613471_7f63c6ebd36b.json"
+  ]
+ },
+ {
+  "id": "L13",
+  "par": "CLOAKUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_360023570292_e0d8ca186f81.json",
+   "zd_360023570292_80190cd7d137.json"
+  ]
+ },
+ {
+  "id": "L14",
+  "par": "CREAMUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_notice-of-addition-removal-o_de27e21c5438.json"
+  ]
+ },
+ {
+  "id": "L15",
+  "par": "DOCKUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_binance-will-delist-bond-doc_fb422c08c50b.json"
+  ]
+ },
+ {
+  "id": "L16",
+  "par": "DOTDOWNUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_binance-to-delist-and-cease-_6079c69de2a3.json"
+  ]
+ },
+ {
+  "id": "L17",
+  "par": "DOTUPUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_binance-to-delist-and-cease-_6079c69de2a3.json"
+  ]
+ },
+ {
+  "id": "L18",
+  "par": "EOSBEARUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_360041613471_a86973496254.json",
+   "zd_360041613471_7f63c6ebd36b.json"
+  ]
+ },
+ {
+  "id": "L19",
+  "par": "EOSBULLUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_360041613471_a86973496254.json",
+   "zd_360041613471_7f63c6ebd36b.json"
+  ]
+ },
+ {
+  "id": "L20",
+  "par": "ETHBEARUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_360041613471_a86973496254.json",
+   "zd_360041613471_7f63c6ebd36b.json"
+  ]
+ },
+ {
+  "id": "L21",
+  "par": "ETHBULLUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_360041613471_a86973496254.json",
+   "zd_360041613471_7f63c6ebd36b.json"
+  ]
+ },
+ {
+  "id": "L22",
+  "par": "FTTUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_notice-of-addition-removal-o_de27e21c5438.json"
+  ]
+ },
+ {
+  "id": "L23",
+  "par": "FTTUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_notice-of-removal-of-trading_3e662b1baa19.json"
+  ]
+ },
+ {
+  "id": "L24",
+  "par": "GFTUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_notice-of-addition-removal-o_de27e21c5438.json"
+  ]
+ },
+ {
+  "id": "L25",
+  "par": "HCUSDT",
+  "paginas": [
+   "bn_dcb2722913ee4dec9a8be29da9e3aeb0_b1f63e7c797e.json"
+  ]
+ },
+ {
+  "id": "L26",
+  "par": "HNTUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_notice-of-removal-of-trading_e6861e874e5f.json"
+  ]
+ },
+ {
+  "id": "L27",
+  "par": "IQUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_notice-of-addition-removal-o_de27e21c5438.json"
+  ]
+ },
+ {
+  "id": "L28",
+  "par": "KP3RUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_binance-will-delist-idrt-kp3_1ffb11650aa9.json"
+  ]
+ },
+ {
+  "id": "L29",
+  "par": "LINKUPUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_binance-to-delist-and-cease-_6079c69de2a3.json"
+  ]
+ },
+ {
+  "id": "L30",
+  "par": "MCOUSDT",
+  "paginas": [
+   "bn_1841b3af92f34349a918f80cb8fcc9de_8ff1bf4780bd.json"
+  ]
+ },
+ {
+  "id": "L31",
+  "par": "MDXUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_binance-will-delist-bond-doc_fb422c08c50b.json"
+  ]
+ },
+ {
+  "id": "L32",
+  "par": "MODUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_360023570292_e0d8ca186f81.json",
+   "zd_360023570292_80190cd7d137.json"
+  ]
+ },
+ {
+  "id": "L33",
+  "par": "MULTIUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_binance-will-delist-ant-mult_f317e3f215f3.json"
+  ]
+ },
+ {
+  "id": "L34",
+  "par": "NEBLUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_binance-will-delist-qlc-nebl_0a0c8d0291fd.json"
+  ]
+ },
+ {
+  "id": "L35",
+  "par": "OOKIUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_binance-will-delist-idrt-kp3_1ffb11650aa9.json"
+  ]
+ },
+ {
+  "id": "L36",
+  "par": "PERLUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_binance-will-delist-bts-perl_f8e94ac0bfb3.json"
+  ]
+ },
+ {
+  "id": "L37",
+  "par": "POLSUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_binance-will-delist-bond-doc_fb422c08c50b.json"
+  ]
+ },
+ {
+  "id": "L38",
+  "par": "SALTUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_360023570292_e0d8ca186f81.json",
+   "zd_360023570292_80190cd7d137.json"
+  ]
+ },
+ {
+  "id": "L39",
+  "par": "SUBUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_360023570292_e0d8ca186f81.json",
+   "zd_360023570292_80190cd7d137.json"
+  ]
+ },
+ {
+  "id": "L40",
+  "par": "TRXDOWNUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_binance-to-delist-and-cease-_6079c69de2a3.json"
+  ]
+ },
+ {
+  "id": "L41",
+  "par": "UNFIUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_binance-will-delist-idrt-kp3_1ffb11650aa9.json"
+  ]
+ },
+ {
+  "id": "L42",
+  "par": "WINGSUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_360023570292_e0d8ca186f81.json",
+   "zd_360023570292_80190cd7d137.json"
+  ]
+ },
+ {
+  "id": "L43",
+  "par": "WTCUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_binance-will-delist-bts-perl_f8e94ac0bfb3.json"
+  ]
+ },
+ {
+  "id": "L44",
+  "par": "XMRUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_binance-will-delist-ant-mult_f317e3f215f3.json"
+  ]
+ },
+ {
+  "id": "L45",
+  "par": "XRPBEARUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_360041613471_a86973496254.json",
+   "zd_360041613471_7f63c6ebd36b.json"
+  ]
+ },
+ {
+  "id": "L46",
+  "par": "XRPBULLUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_360041613471_a86973496254.json",
+   "zd_360041613471_7f63c6ebd36b.json"
+  ]
+ },
+ {
+  "id": "L47",
+  "par": "YFIIUSDT",
+  "paginas": [
+   "url_https___www.binance.com_en_support_announcement_binance-will-delist-snm-srm-_013faf0901ef.json"
+  ]
+ }
+]

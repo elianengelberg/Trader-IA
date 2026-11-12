@@ -1,0 +1,14 @@
+== Estado inicial del repositorio original (cierre D1–D3): 2026-10-22T12:20:47Z
+ruta: /home/user/Trader-IA
+HEAD: 72ffae5d2698440c8f1afaff12e07bd8adde66fb
+rama: claude/algo-trading-simulation-platform-ngf7xo
+refs: refs/heads/claude/algo-trading-simulation-platform-ngf7xo 72ffae5d2698440c8f1afaff12e07bd8adde66fb;refs/remotes/origin/claude/algo-trading-simulation-platform-ngf7xo 72ffae5d2698440c8f1afaff12e07bd8adde66fb;
+cambios (porcelain -uall): 0
+stash: 0
+índice (ls-files -s) sha256: 07e0c86bb1c04ba22975582d17d1a729c500ceafe51b1615b1149fca4afac7e2
+árbol de HEAD: 44850cfcbf53c3f8223d38a92031f4402f8ffb32
+reflog (sha256 completo): 6d55854cfe1e43f71e488c6c841dbfa9fa60b6d1ff00f8b679705367ccb21138 · entradas: 13
+remotos: origin	https://github.com/elianengelberg/Trader-IA (fetch);origin	https://github.com/elianengelberg/Trader-IA (push);
+engine.py disco: 547109460bb5734ab7b108dc9387fca802e69b29cc8e74c262b80bdc55533ea4
+paper.py disco:  f5e0cb87a98d951ada347dc183968c59cc914cd52ac5cdaddf574f7264b7ff00
+archivos no rastreados ignorados (conteo, solo informativo): 18

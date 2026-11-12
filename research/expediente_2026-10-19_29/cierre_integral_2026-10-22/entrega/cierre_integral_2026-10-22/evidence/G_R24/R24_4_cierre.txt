@@ -1,0 +1,8 @@
+== R24 · cierre de la instancia: 2026-10-22T23:01:37Z
+bases en el servidor antes de detener: 60
+waiting for server to shut down...... done
+server stopped
+enlace /tmp/tia_r24_cfc0aa8e: eliminado
+procesos postgres: 0
+cluster del sistema: 16  main    5432 down   postgres /var/lib/postgresql/16/main /var/log/postgresql/postgresql-16-main.log
+líneas ERROR en el log del servidor: 0

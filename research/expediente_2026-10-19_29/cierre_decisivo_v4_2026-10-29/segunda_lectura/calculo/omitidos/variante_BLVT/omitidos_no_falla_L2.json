@@ -1,0 +1,52 @@
+[
+ {
+  "par": "MCUSDT",
+  "E": "2023-11-07",
+  "categoria_clasificar": "A",
+  "L": "2023-11-06",
+  "en_bucket": true,
+  "cita": "At 2023-11-07 03:00 (UTC) , Binance will delist all existing MC spot trading pairs (i.e., MC/BTC and MC/USDT) and cancel all pending MC spot trade orders.",
+  "fuente": "paquete_omega/paginas/url_https___www.binance.com_en_support_announcement_binance-will-support-the-mer_425adfd88510.json",
+  "categoria": "A"
+ },
+ {
+  "par": "PLAUSDT",
+  "E": "2024-02-26",
+  "categoria_clasificar": "A",
+  "L": "2024-02-25",
+  "en_bucket": true,
+  "cita": "At 2024-02-26 03:00 (UTC) , Binance will delist all existing PLA spot trading pairs (i.e., PLA/BTC and PLA/USDT) and cancel all pending PLA spot trade orders.",
+  "fuente": "paquete_omega/paginas/url_https___www.binance.com_en_support_announcement_binance-will-support-the-pla_dc497a97c163.json",
+  "categoria": "A"
+ },
+ {
+  "par": "MATICUSDT",
+  "E": "2024-09-10",
+  "categoria_clasificar": "A",
+  "L": "2024-09-09",
+  "en_bucket": true,
+  "cita": "At 2024-09-10 03:00 (UTC) , Binance will delist and cease trading on all spot trading pairs for MATIC. The exact trading pairs being removed are: MATIC/BNB, MATIC/BRL, MATIC/BTC, MATIC/ETH, MATIC/EUR, MATIC/FDUSD, MATIC/JPY, MATIC/TRY, MATIC/USDC, and MATIC/USDT.",
+  "fuente": "paquete_omega/paginas/url_https___www.binance.com_en_support_announcement_binance-will-support-the-pol_6ce597c88773.json",
+  "categoria": "A"
+ },
+ {
+  "par": "QUICKUSDT",
+  "E": "2023-07-17",
+  "categoria_clasificar": "C",
+  "L": null,
+  "en_bucket": true,
+  "cita": "At 2023-07-17 03:00 (UTC) , Binance will suspend and delist all existing QUICK spot trading pairs (i.e., QUICK/BTC, QUICK/BUSD and QUICK/USDT) and cancel all pending QUICK spot trade orders.",
+  "fuente": "paquete_omega/paginas/url_https___www.binance.com_en_support_announcement_binance-will-support-the-qui_8e8c44b03471.json",
+  "categoria": "C_explicada"
+ },
+ {
+  "par": "STRAXUSDT",
+  "E": "2024-03-20",
+  "categoria_clasificar": "C",
+  "L": null,
+  "en_bucket": true,
+  "cita": "At 2024-03-20 03:00 (UTC) , Binance will delist all existing STRAX spot trading pairs (i.e., STRAX/BTC, STRAX/USDT and STRAX/TRY) and cancel all pending STRAX spot trade orders.",
+  "fuente": "paquete_omega/paginas/url_https___www.binance.com_en_support_announcement_binance-will-support-the-str_b8603784a245.json",
+  "categoria": "C_explicada"
+ }
+]

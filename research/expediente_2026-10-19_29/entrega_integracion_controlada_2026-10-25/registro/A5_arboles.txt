@@ -1,0 +1,28 @@
+== IC-A.5 árboles de integración: 2026-10-25T18:20:26Z
+parche 1944f433334cada2c4fa937080241bf51643c1393f54b4d2530003557b2e60bf  v3r3/01_obligatorio_D1_D3_motor_y_pruebas_definitivas.patch
+parche d5c90091b705647cdbdd9044d0406ccc28f12e39c6070deeb5cd8aef03cf6a62  v3r3/02v3_obligatorio_trazabilidad_version_motor_CORREGIDO.patch
+parche 0be65ea6a5e7072ff83c25ed1cccec80877ceb7b1e0609e2468a025b5294e33a  v3r3/03_opcional_pruebas_reloj_y_persistencia.patch
+parche 8d39635635c81a4bf91071a42fb3a348ebf50b819efd92227915be3953306dd5  v3r3/04_opcional_CI_versiones_fijadas.patch
+parche 911a8d9df70e0b734403335d0cf4577e9dc3949df93ef0b67614dc12a81950e3  05v2_guarda_version_motor.patch
+parche f697d48222a46270365ac7392c1beea64f51b88e41c966be510bdc52034b038f  06v3_opcional_gate_ci_procedencia.patch
+base: parches · cambios 0 · árbol 44850cfcbf53c3f8223d38a92031f4402f8ffb32 · esperado 44850cfcbf53c3f8223d38a92031f4402f8ffb32 · COINCIDE · HEAD 72ffae5 · push no-push://integracion-controlada
+A: parches 01_ob
+02v3_· cambios 8 · árbol 5d6a09549a8314f6e6e9386f82a52ca7628510d1 · esperado 5d6a09549a8314f6e6e9386f82a52ca7628510d1 · COINCIDE · HEAD 72ffae5 · push no-push://integracion-controlada
+AB: parches 01_ob
+02v3_
+05v2_· cambios 9 · árbol 4ef14d31d686f4b0521207bd1e011d96e6c74822 · esperado 4ef14d31d686f4b0521207bd1e011d96e6c74822 · COINCIDE · HEAD 72ffae5 · push no-push://integracion-controlada
+ABC: parches 01_ob
+02v3_
+05v2_
+03_op· cambios 12 · árbol 84f9e349526d061771de74ae799d4ecd6e3732ce · esperado 84f9e349526d061771de74ae799d4ecd6e3732ce · COINCIDE · HEAD 72ffae5 · push no-push://integracion-controlada
+A3: parches 01_ob
+02v3_
+03_op· cambios 11 · árbol a94be41a9f5d662f58c8ef82f75ab40f4b1ae373 · esperado a94be41a9f5d662f58c8ef82f75ab40f4b1ae373 · COINCIDE · HEAD 72ffae5 · push no-push://integracion-controlada
+final: parches 01_ob
+02v3_
+05v2_
+03_op
+04_op
+06v3_· cambios 16 · árbol 0477c6a20c5e3831c2da3bf723948b7baafaa518 · esperado 0477c6a20c5e3831c2da3bf723948b7baafaa518 · COINCIDE · HEAD 72ffae5 · push no-push://integracion-controlada
+fin 2026-10-25T18:20:45Z · disco libre 2.1G
+índice protegido antes 37490035d6706739fd7c9add42ad62c4e0c9260089e8e2e77a486f55e3bdcd1b después 37490035d6706739fd7c9add42ad62c4e0c9260089e8e2e77a486f55e3bdcd1b IGUAL

@@ -1,0 +1,67 @@
+{
+ "arreglos_leidos": [
+  "estado",
+  "simbolo"
+ ],
+ "mapeos_en_tabla": 50,
+ "aplicados": {
+  "sin_mapeos": 0,
+  "tabla_22": 22,
+  "tabla_completa": 50
+ },
+ "filas": {
+  "sin_mapeos": 757,
+  "tabla_22": 741,
+  "tabla_completa": 735
+ },
+ "formaciones_A": 158,
+ "cambios_en_a_y_b_dentro_de_A": {
+  "tabla_22→tabla_completa": {
+   "HIFIUSDT": {
+    "formaciones_distintas": 9,
+    "primera": "2023-05-15",
+    "ultima": "2023-07-10",
+    "cumple_a_y_b_con_tabla_completa": true
+   }
+  },
+  "sin_mapeos→tabla_completa": {
+   "BEAMXUSDT": {
+    "formaciones_distintas": 47,
+    "primera": "2023-05-15",
+    "ultima": "2024-05-06",
+    "cumple_a_y_b_con_tabla_completa": true
+   },
+   "COMBOUSDT": {
+    "formaciones_distintas": 25,
+    "primera": "2023-05-15",
+    "ultima": "2023-11-27",
+    "cumple_a_y_b_con_tabla_completa": true
+   },
+   "HIFIUSDT": {
+    "formaciones_distintas": 9,
+    "primera": "2023-05-15",
+    "ultima": "2023-07-10",
+    "cumple_a_y_b_con_tabla_completa": true
+   },
+   "PDAUSDT": {
+    "formaciones_distintas": 64,
+    "primera": "2023-05-15",
+    "ultima": "2024-08-26",
+    "cumple_a_y_b_con_tabla_completa": true
+   },
+   "POLUSDT": {
+    "formaciones_distintas": 92,
+    "primera": "2023-05-15",
+    "ultima": "2025-03-10",
+    "cumple_a_y_b_con_tabla_completa": true
+   },
+   "VANRYUSDT": {
+    "formaciones_distintas": 51,
+    "primera": "2023-05-15",
+    "ultima": "2024-05-27",
+    "cumple_a_y_b_con_tabla_completa": true
+   }
+  }
+ },
+ "nota": "Criterio (d) de volumen no evaluado: exigiría leer QV real."
+}

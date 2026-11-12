@@ -1,0 +1,175 @@
+.............................................................            [100%]
+==================================== PASSES ====================================
+_ test_an_order_that_may_have_reached_the_venue_is_unknown_not_unsent[ReadError] _
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 19:54:40 [info     ] binance_submit                 client_order_id=coid_QETBBD6CRBHEMMH2QTE8GHXR component=execution.binance key=key:d5c821f8 quantity=0.01 side=buy symbol=BTC-USD
+_ test_an_order_that_may_have_reached_the_venue_is_unknown_not_unsent[RemoteProtocolError] _
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 19:54:40 [info     ] binance_submit                 client_order_id=coid_QETBBD6CRBHEMMH2QTE8GHXR component=execution.binance key=key:d5c821f8 quantity=0.01 side=buy symbol=BTC-USD
+_ test_an_order_that_may_have_reached_the_venue_is_unknown_not_unsent[WriteError] _
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 19:54:40 [info     ] binance_submit                 client_order_id=coid_QETBBD6CRBHEMMH2QTE8GHXR component=execution.binance key=key:d5c821f8 quantity=0.01 side=buy symbol=BTC-USD
+______________ test_a_connection_that_was_never_made_sent_nothing ______________
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 19:54:40 [info     ] binance_submit                 client_order_id=coid_QETBBD6CRBHEMMH2QTE8GHXR component=execution.binance key=key:d5c821f8 quantity=0.01 side=buy symbol=BTC-USD
+___________ test_a_cancel_that_may_have_reached_the_venue_is_unknown ___________
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 19:54:40 [info     ] binance_submit                 client_order_id=coid_QETBBD6CRBHEMMH2QTE8GHXR component=execution.binance key=key:d5c821f8 quantity=0.01 side=buy symbol=BTC-USD
+_____ test_an_expired_activation_stops_the_next_order_not_the_next_restart _____
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 19:54:40 [info     ] binance_submit                 client_order_id=coid_QETBBD6CRBHEMMH2QTE8GHXR component=execution.binance key=key:d5c821f8 quantity=0.01 side=buy symbol=BTC-USD
+_ test_cancel_and_query_name_the_order_by_the_venue_id_and_keep_our_client_id __
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 19:54:40 [info     ] binance_submit                 client_order_id=coid_QETBBD6CRBHEMMH2QTE8GHXR component=execution.binance key=key:d5c821f8 quantity=0.01 side=buy symbol=BTC-USD
+_____ test_before_any_acknowledgement_the_order_is_named_by_our_client_id ______
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 19:54:40 [info     ] unknown_order_resolved_absent  client_order_id=tiamm-never-sent-1 component=execution.binance detail='venue confirms the order never arrived; retry is safe'
+_ test_resolving_an_acknowledged_order_the_venue_now_denies_is_unknown_not_absent _
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 19:54:40 [info     ] binance_submit                 client_order_id=coid_QETBBD6CRBHEMMH2QTE8GHXR component=execution.binance key=key:d5c821f8 quantity=0.01 side=buy symbol=BTC-USD
+____________ test_a_resubmitted_intent_does_not_send_a_second_order ____________
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 19:54:40 [info     ] binance_submit                 client_order_id=coid_QETBBD6CRBHEMMH2QTE8GHXR component=execution.binance key=key:d5c821f8 quantity=0.01 side=buy symbol=BTC-USD
+__ test_the_client_order_id_is_sent_to_the_venue_so_it_can_reject_duplicates ___
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 19:54:40 [info     ] binance_submit                 client_order_id=coid_QETBBD6CRBHEMMH2QTE8GHXR component=execution.binance key=key:d5c821f8 quantity=0.01 side=buy symbol=BTC-USD
+_______ test_a_timeout_reports_an_unknown_order_state_and_does_not_retry _______
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 19:54:40 [info     ] binance_submit                 client_order_id=coid_QETBBD6CRBHEMMH2QTE8GHXR component=execution.binance key=key:d5c821f8 quantity=0.01 side=buy symbol=BTC-USD
+______ test_an_unrecognised_order_status_raises_instead_of_being_guessed _______
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 19:54:40 [info     ] binance_submit                 client_order_id=coid_QETBBD6CRBHEMMH2QTE8GHXR component=execution.binance key=key:d5c821f8 quantity=0.01 side=buy symbol=BTC-USD
+________ test_a_transport_error_is_distinguished_from_a_venue_rejection ________
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 19:54:40 [info     ] binance_submit                 client_order_id=coid_QETBBD6CRBHEMMH2QTE8GHXR component=execution.binance key=key:d5c821f8 quantity=0.01 side=buy symbol=BTC-USD
+2026-10-25 19:54:40 [info     ] binance_submit                 client_order_id=coid_QETBBD6CRBHEMMH2QTE8GHXR component=execution.binance key=key:d5c821f8 quantity=0.01 side=buy symbol=BTC-USD
+________ test_rate_limiting_is_reported_as_back_off_not_as_a_rejection _________
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 19:54:40 [info     ] binance_submit                 client_order_id=coid_QETBBD6CRBHEMMH2QTE8GHXR component=execution.binance key=key:d5c821f8 quantity=0.01 side=buy symbol=BTC-USD
+2026-10-25 19:54:40 [warning  ] budget_venue_rate_limited      component=data.binance.budget cooldown_seconds=30.0 status=429
+________ test_a_refused_key_points_at_the_key_rather_than_at_the_order _________
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 19:54:40 [info     ] binance_submit                 client_order_id=coid_QETBBD6CRBHEMMH2QTE8GHXR component=execution.binance key=key:d5c821f8 quantity=0.01 side=buy symbol=BTC-USD
+__________ test_small_quantities_are_not_sent_in_scientific_notation ___________
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 19:54:40 [info     ] binance_submit                 client_order_id=coid_5ATB69ESTZ9KTFV7V6M6XMQK component=execution.binance key=key:d5c821f8 quantity=1e-05 side=buy symbol=BTC-USD
+_ test_a_post_only_order_is_sent_as_limit_maker_with_a_price_and_no_time_in_force _
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 19:54:40 [info     ] binance_submit                 client_order_id=tiamm-test-000001 component=execution.binance key=key:d5c821f8 quantity=0.01 side=buy symbol=BTC-USD
+_ test_a_post_only_order_that_would_take_is_rejected_and_never_retried_as_anything_else _
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 19:54:40 [info     ] binance_submit                 client_order_id=tiamm-test-000001 component=execution.binance key=key:d5c821f8 quantity=0.01 side=buy symbol=BTC-USD
+_____ test_a_stop_is_sent_as_stop_loss_with_a_stop_price_and_nothing_else ______
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 19:54:40 [info     ] binance_submit                 client_order_id=coid_XC6H7MHP8GGYDY84PDT12MW1 component=execution.binance key=key:d5c821f8 quantity=0.01 side=sell symbol=BTC-USD
+_ test_a_stop_the_venue_refuses_is_an_error_not_an_order[-1013-Filter failure: PRICE_FILTER] _
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 19:54:40 [info     ] binance_submit                 client_order_id=coid_XC6H7MHP8GGYDY84PDT12MW1 component=execution.binance key=key:d5c821f8 quantity=0.01 side=sell symbol=BTC-USD
+_ test_a_stop_the_venue_refuses_is_an_error_not_an_order[-2010-Account has insufficient balance for requested action.] _
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 19:54:40 [info     ] binance_submit                 client_order_id=coid_XC6H7MHP8GGYDY84PDT12MW1 component=execution.binance key=key:d5c821f8 quantity=0.01 side=sell symbol=BTC-USD
+_ test_a_stop_the_venue_refuses_is_an_error_not_an_order[-1106-Parameter 'timeInForce' sent when not required.] _
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 19:54:40 [info     ] binance_submit                 client_order_id=coid_XC6H7MHP8GGYDY84PDT12MW1 component=execution.binance key=key:d5c821f8 quantity=0.01 side=sell symbol=BTC-USD
+____________ test_a_stop_whose_answer_is_lost_is_unknown_not_absent ____________
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 19:54:40 [info     ] binance_submit                 client_order_id=coid_XC6H7MHP8GGYDY84PDT12MW1 component=execution.binance key=key:d5c821f8 quantity=0.01 side=sell symbol=BTC-USD
+_____________ test_a_stop_adopted_from_the_venue_is_read_as_a_stop _____________
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 19:54:40 [info     ] order_resolved_present         client_order_id=coid_XC6H7MHP8GGYDY84PDT12MW1 component=execution.binance detail='the venue holds this order; adopted into the local mirror, never resent' state=acknowledged
+_ test_every_bar_boundary_finds_the_position_protected_while_closes_are_rejected _
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 19:54:41 [error    ] safe_mode_entered              component=risk.engine reason='max drawdown 39.92% >= 10.00%'
+__ test_a_close_that_raises_or_times_out_puts_the_stop_back_in_the_same_call ___
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 19:54:41 [warning  ] close_position_failed          component=runtime.live error='[EXECUTION_ERROR] close refused by the venue (scripted)' reason='time stop'
+__ test_a_venue_that_refuses_every_stop_blocks_entries_halts_and_keeps_asking __
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 19:54:41 [warning  ] protective_stop_failed         component=runtime.live error='[EXECUTION_ERROR] order type stop is not supported by this adapter'
+2026-10-25 19:54:41 [warning  ] entries_blocked                cause=position_unprotected component=runtime.live reason='protective stop refused: [EXECUTION_ERROR] order type stop is not supported by this adapter'
+2026-10-25 19:54:41 [warning  ] protective_stop_failed         component=runtime.live error='[EXECUTION_ERROR] order type stop is not supported by this adapter'
+2026-10-25 19:54:41 [warning  ] protective_stop_failed         component=runtime.live error='[EXECUTION_ERROR] order type stop is not supported by this adapter'
+2026-10-25 19:54:41 [warning  ] protective_stop_failed         component=runtime.live error='[EXECUTION_ERROR] order type stop is not supported by this adapter'
+2026-10-25 19:54:41 [warning  ] protective_stop_failed         component=runtime.live error='[EXECUTION_ERROR] order type stop is not supported by this adapter'
+2026-10-25 19:54:41 [warning  ] protective_stop_failed         component=runtime.live error='[EXECUTION_ERROR] order type stop is not supported by this adapter'
+2026-10-25 19:54:41 [info     ] entries_unblocked              cause=position_unprotected component=runtime.live
+________ test_a_stop_rejected_as_an_order_is_handled_like_a_refused_one ________
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 19:54:41 [warning  ] protective_stop_rejected       component=runtime.live reason='scripted venue rejection'
+2026-10-25 19:54:41 [warning  ] entries_blocked                cause=position_unprotected component=runtime.live reason='protective stop rejected: scripted venue rejection'
+2026-10-25 19:54:41 [info     ] entries_unblocked              cause=position_unprotected component=runtime.live
+____ test_a_stop_the_venue_says_never_arrived_is_sent_again_on_the_next_bar ____
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 19:54:41 [warning  ] entries_blocked                cause=position_unprotected component=runtime.live reason='protective stop submission unanswered; the venue says it is not working'
+2026-10-25 19:54:41 [info     ] entries_unblocked              cause=position_unprotected component=runtime.live
+___ test_no_second_stop_while_the_venue_cannot_say_whether_the_first_arrived ___
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 19:54:41 [warning  ] entries_blocked                cause=position_unprotected component=runtime.live reason='protective stop coid_WVHBSRKKJP47XYF5JM1BZKVN unanswered and the venue cannot say whether it exists: [RECONCILIATION_ERROR] the venue cannot say (scripted)'
+2026-10-25 19:54:41 [info     ] entries_unblocked              cause=position_unprotected component=runtime.live
+__ test_a_position_restored_after_a_restart_is_protected_before_its_first_bar __
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 19:54:42 [info     ] schema_created                 component=persistence.database dialect=sqlite version=8
+2026-10-25 19:54:43 [info     ] paper_portfolio_restored       cash=5996.0204 component=execution.paper day_start_equity=10000.0 peak_equity=10000.9302 positions={'BTC-USD': 0.080117}
+=========================== short test summary info ============================
+PASSED tests/unit/test_binance_ambiguous_transport.py::test_an_order_that_may_have_reached_the_venue_is_unknown_not_unsent[ReadError]
+PASSED tests/unit/test_binance_ambiguous_transport.py::test_an_order_that_may_have_reached_the_venue_is_unknown_not_unsent[RemoteProtocolError]
+PASSED tests/unit/test_binance_ambiguous_transport.py::test_an_order_that_may_have_reached_the_venue_is_unknown_not_unsent[WriteError]
+PASSED tests/unit/test_binance_ambiguous_transport.py::test_a_connection_that_was_never_made_sent_nothing
+PASSED tests/unit/test_binance_ambiguous_transport.py::test_a_cancel_that_may_have_reached_the_venue_is_unknown
+PASSED tests/unit/test_binance_ambiguous_transport.py::test_a_failed_read_is_an_outage
+PASSED tests/unit/test_binance_live.py::test_the_adapter_cannot_be_built_live_without_an_activation_token
+PASSED tests/unit/test_binance_live.py::test_an_expired_activation_stops_the_next_order_not_the_next_restart
+PASSED tests/unit/test_binance_live.py::test_cancel_and_query_name_the_order_by_the_venue_id_and_keep_our_client_id
+PASSED tests/unit/test_binance_live.py::test_before_any_acknowledgement_the_order_is_named_by_our_client_id
+PASSED tests/unit/test_binance_live.py::test_resolving_an_acknowledged_order_the_venue_now_denies_is_unknown_not_absent
+PASSED tests/unit/test_binance_live.py::test_a_resubmitted_intent_does_not_send_a_second_order
+PASSED tests/unit/test_binance_live.py::test_the_client_order_id_is_sent_to_the_venue_so_it_can_reject_duplicates
+PASSED tests/unit/test_binance_live.py::test_a_timeout_reports_an_unknown_order_state_and_does_not_retry
+PASSED tests/unit/test_binance_live.py::test_an_unrecognised_order_status_raises_instead_of_being_guessed
+PASSED tests/unit/test_binance_live.py::test_a_transport_error_is_distinguished_from_a_venue_rejection
+PASSED tests/unit/test_binance_live.py::test_rate_limiting_is_reported_as_back_off_not_as_a_rejection
+PASSED tests/unit/test_binance_live.py::test_a_refused_key_points_at_the_key_rather_than_at_the_order
+PASSED tests/unit/test_binance_live.py::test_the_adapter_has_no_method_that_moves_funds
+PASSED tests/unit/test_binance_live.py::test_a_key_that_can_withdraw_is_refused_before_anything_else_happens
+PASSED tests/unit/test_binance_live.py::test_futures_and_margin_permissions_are_refused_too
+PASSED tests/unit/test_binance_live.py::test_an_unverified_permission_set_is_treated_as_unacceptable
+PASSED tests/unit/test_binance_live.py::test_a_correctly_scoped_key_is_accepted_and_ip_restriction_is_advised
+PASSED tests/unit/test_binance_live.py::test_string_booleans_from_the_venue_are_read_correctly
+PASSED tests/unit/test_binance_live.py::test_the_secret_does_not_appear_in_any_representation
+PASSED tests/unit/test_binance_live.py::test_a_signed_request_can_be_logged_without_leaking_key_or_signature
+PASSED tests/unit/test_binance_live.py::test_the_signature_covers_the_exact_string_that_is_sent
+PASSED tests/unit/test_binance_live.py::test_websocket_api_parameters_are_signed_over_the_alphabetically_sorted_payload
+PASSED tests/unit/test_binance_live.py::test_signing_is_deterministic_under_a_frozen_clock
+PASSED tests/unit/test_binance_live.py::test_a_timestamp_and_a_bounded_recv_window_are_always_included
+PASSED tests/unit/test_binance_live.py::test_the_receive_window_cannot_be_widened_without_limit
+PASSED tests/unit/test_binance_live.py::test_credentials_refuse_to_be_built_from_blanks
+PASSED tests/unit/test_binance_live.py::test_empty_environment_values_count_as_no_credentials
+PASSED tests/unit/test_binance_live.py::test_small_quantities_are_not_sent_in_scientific_notation
+PASSED tests/unit/test_binance_live.py::test_symbol_translation_round_trips
+PASSED tests/unit/test_binance_live.py::test_the_balance_is_read_from_the_venue_and_never_computed_locally
+PASSED tests/unit/test_binance_live.py::test_pnl_is_not_asked_of_a_venue_that_does_not_compute_it
+PASSED tests/unit/test_binance_live.py::test_a_post_only_order_is_sent_as_limit_maker_with_a_price_and_no_time_in_force
+PASSED tests/unit/test_binance_live.py::test_a_post_only_order_that_would_take_is_rejected_and_never_retried_as_anything_else
+PASSED tests/unit/test_binance_live.py::test_trades_can_be_read_for_a_symbol_before_any_order_was_placed_and_carry_the_fee_asset
+PASSED tests/unit/test_binance_protective_stop.py::test_a_stop_is_sent_as_stop_loss_with_a_stop_price_and_nothing_else
+PASSED tests/unit/test_binance_protective_stop.py::test_a_stop_without_a_positive_level_is_not_an_intent[None]
+PASSED tests/unit/test_binance_protective_stop.py::test_a_stop_without_a_positive_level_is_not_an_intent[0.0]
+PASSED tests/unit/test_binance_protective_stop.py::test_a_stop_without_a_positive_level_is_not_an_intent[-1.0]
+PASSED tests/unit/test_binance_protective_stop.py::test_a_malformed_stop_is_refused_before_any_request[48000.0-47900.0]
+PASSED tests/unit/test_binance_protective_stop.py::test_a_malformed_stop_is_refused_before_any_request[None-None]
+PASSED tests/unit/test_binance_protective_stop.py::test_a_stop_the_venue_refuses_is_an_error_not_an_order[-1013-Filter failure: PRICE_FILTER]
+PASSED tests/unit/test_binance_protective_stop.py::test_a_stop_the_venue_refuses_is_an_error_not_an_order[-2010-Account has insufficient balance for requested action.]
+PASSED tests/unit/test_binance_protective_stop.py::test_a_stop_the_venue_refuses_is_an_error_not_an_order[-1106-Parameter 'timeInForce' sent when not required.]
+PASSED tests/unit/test_binance_protective_stop.py::test_a_stop_whose_answer_is_lost_is_unknown_not_absent
+PASSED tests/unit/test_binance_protective_stop.py::test_a_stop_adopted_from_the_venue_is_read_as_a_stop
+PASSED tests/unit/test_binance_protective_stop.py::test_live_activation_needs_a_venue_that_accepted_the_protective_stop
+PASSED tests/integration/test_live_position_protection.py::test_every_bar_boundary_finds_the_position_protected_while_closes_are_rejected
+PASSED tests/integration/test_live_position_protection.py::test_a_close_that_raises_or_times_out_puts_the_stop_back_in_the_same_call
+PASSED tests/integration/test_live_position_protection.py::test_an_entry_that_fills_at_once_is_protected_before_the_cycle_ends
+PASSED tests/integration/test_live_position_protection.py::test_a_venue_that_refuses_every_stop_blocks_entries_halts_and_keeps_asking
+PASSED tests/integration/test_live_position_protection.py::test_a_stop_rejected_as_an_order_is_handled_like_a_refused_one
+PASSED tests/integration/test_live_position_protection.py::test_a_stop_whose_answer_was_lost_but_rests_at_the_venue_is_adopted_not_duplicated
+PASSED tests/integration/test_live_position_protection.py::test_a_stop_the_venue_says_never_arrived_is_sent_again_on_the_next_bar
+PASSED tests/integration/test_live_position_protection.py::test_no_second_stop_while_the_venue_cannot_say_whether_the_first_arrived
+PASSED tests/integration/test_live_position_protection.py::test_a_position_restored_after_a_restart_is_protected_before_its_first_bar
+61 passed in 4.36s

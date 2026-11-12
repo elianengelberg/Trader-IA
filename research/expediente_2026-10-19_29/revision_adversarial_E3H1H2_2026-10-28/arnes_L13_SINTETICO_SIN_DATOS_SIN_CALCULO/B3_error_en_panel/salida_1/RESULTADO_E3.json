@@ -1,0 +1,12 @@
+{
+ "veredicto": "ERROR",
+ "etapa": "panel",
+ "tipo": "RuntimeError",
+ "mensaje": "fallo inyectado en la etapa panel (stub)",
+ "traceback": "Traceback (most recent call last):\n  File \"/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/copia_A/paquete_revision_independiente_E3H1H2_2026-10-28/evidencia/cierre_bloqueantes_E3H1H2_2026-10-27/orquestador_v3/ejecutar_E3_v3.py\", line 869, in modo_real\n    P, registro_mapeos = panel_real(datos, universo, mapeos)\n                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/arnes/arnes_L13.py\", line 62, in panel\n    raise RuntimeError(\"fallo inyectado en la etapa panel (stub)\")\nRuntimeError: fallo inyectado en la etapa panel (stub)\n",
+ "sha_traceback": "0e830b14501724e8ea8ef063fcf3e42b65d964486466db8b7c7f263fb9737c5b",
+ "estadisticos_iniciados": false,
+ "H1": null,
+ "H2": null,
+ "nota": "E3-H1/H2 SIN RESULTADO por un fallo técnico: no es EVALUADO ni INVALIDO. Reintentar exige una autorización nueva que cite el sha256 de este archivo; con estadísticos iniciados, es una decisión metodológica."
+}

@@ -1,0 +1,160 @@
+== B3. evidencia/95_* recalculado con el script del paquete (ZIP B y su extracción reproducida, aún presentes)
+6bf96048492f409b8c15d4cdc294227651409a9b6287f0e8548d25609c37f4f9  /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/fx4_zip_B/SOLUCION_FINAL_TRADER_IA_v0.5_2026-10-20.zip
+salida: 0
+95 recalculado == 95 del paquete (byte a byte)
+huella de la extracción B reproducida: fuera de evidencia/ idéntica a su SHA256SUMS
+
+-- salida completa del recálculo (verificar_reproduccion_limpia.py de v0.5):
+== 1. ZIP de origen: SOLUCION_FINAL_TRADER_IA_v0.5_2026-10-20.zip
+SHA-256 6bf96048492f409b8c15d4cdc294227651409a9b6287f0e8548d25609c37f4f9
+OK      SHA256SUMS del ZIP coincide con los bytes de sus 203 archivos
+
+== 2. lo que no es evidencia (código, pruebas, documentos, parches, referencias, preservados, tablas)
+OK      extracción reproducida (después de ejecutar): 139 de 139 idénticos al ZIP
+OK      extracción reproducida (después de ejecutar): archivos nuevos fuera de evidencia/ (p. ej. __pycache__): ninguno
+OK      paquete final: 139 de 139 idénticos al ZIP
+OK      paquete final: archivos nuevos fuera de evidencia/ (p. ej. __pycache__): ninguno
+OK      la evidencia del paquete final ES la reproducida (64 archivos idénticos, más este 95)
+
+== 3. evidencia del ZIP frente a la reproducida
+-- comparar_evidencias.py (comparación semántica):
+IGUAL   11_suite_v0_5.txt
+IGUAL   13_repeticiones.txt
+IGUAL   22_regresion_p1_v0_3_sin_modificar_contra_v0_5.txt
+IGUAL   23_regresion_p1_v0_3_portadas_contra_v0_5.txt
+IGUAL   24_regresion_p2_v0_3_sin_modificar_contra_v0_5.txt
+IGUAL   25_regresion_p4_v0_3_sin_modificar_contra_v0_5.txt
+IGUAL   26_regresion_cruzada_v0_3_sin_modificar_contra_v0_5.txt
+IGUAL   27_regresion_suite_v0_4_sin_modificar_contra_v0_5.txt
+IGUAL   61_parche_aplicado_en_HEAD_pytest.txt
+IGUAL   61_parche_aplicado_en_origin_pytest.txt
+IGUAL   70_ed25519_diferencial.txt
+IGUAL   12_ruff.txt
+IGUAL   05_trazabilidad_regenerada.txt
+IGUAL   27_regresion_suite_v0_4_fallidas.txt
+IGUAL   31_p2_mutaciones_oraculo.txt
+IGUAL   32_p2_tabla_resumen.txt
+IGUAL   41_paquetes_previos_intactos.txt
+IGUAL   60_parches_comprobacion.txt
+IGUAL   98_integridad_final.txt
+IGUAL   99_estado_git_comparado.txt
+IGUAL   52_cruzada_mutaciones.txt
+IGUAL   53_durabilidad_mutaciones.txt
+IGUAL   54_ejecutor_mutaciones.txt
+IGUAL   10_matriz_antes_despues/filas
+IGUAL   10_matriz_antes_despues/fallos_es_*.json (archivos)
+IGUAL   10_matriz_antes_despues/fallos_es_v0_2_det.json
+IGUAL   10_matriz_antes_despues/fallos_es_v0_2_nodet.json
+IGUAL   10_matriz_antes_despues/fallos_es_v0_3_det.json
+IGUAL   10_matriz_antes_despues/fallos_es_v0_3_nodet.json
+IGUAL   10_matriz_antes_despues/fallos_es_v0_4_det.json
+IGUAL   10_matriz_antes_despues/fallos_es_v0_4_nodet.json
+IGUAL   10_matriz_antes_despues/fallos_es_v0_5_det.json
+IGUAL   10_matriz_antes_despues/fallos_es_v0_5_nodet.json
+IGUAL   14_corte_energia/corte_*.json (archivos)
+IGUAL   14_corte_energia/corte_v0_5_det.json
+IGUAL   14_corte_energia/corte_v0_5_nodet.json
+IGUAL   80_estado_real_de_T.json
+37 de 37 comparaciones iguales
+OK      comparación semántica (salida 0)
+-- todos los archivos, uno por uno:
+IGUAL     00_estado_git_inicial_v0_4.txt: idéntico byte a byte
+IGUAL     00_estado_git_inicial_v0_5.txt: idéntico byte a byte
+IGUAL     00_fx0_reproduccion_limpia_v0_4.txt: idéntico byte a byte
+IGUAL     00_preservacion.txt: idéntico byte a byte
+IGUAL     00_preservacion_relativa.txt: idéntico byte a byte
+IGUAL     01_paquetes_previos_extraidos.txt: idéntico byte a byte
+IGUAL     01_referencia_versiones_previas.txt: idéntico byte a byte
+IGUAL     02_investigacion_contraste_btc.txt: idéntico byte a byte
+IGUAL     03_productor_contraste_btc_transcripcion.txt: idéntico byte a byte
+IGUAL     04_cronologia_fuera_de_muestra_transcripcion.txt: idéntico byte a byte
+IGUAL     05_trazabilidad_regenerada.txt: idéntico byte a byte
+IGUAL     06_cobertura_contraste_btc_manifiestos.txt: idéntico byte a byte
+CONTENIDO 10_matriz_antes_despues/MATRIZ_ANTES_DESPUES.md: 3 de 170 líneas difieren tras normalizar; su contenido semántico se comparó arriba. Primera diferencia:
+            A: | `test_P4_F10_sin_directorio_huerfano_si_el_padre_muere` | PASA | FALLA: AssertionError: assert [PosixPath('/...lo_4vpjen_f')] == [] | FALLA: Asserti
+            R: | `test_P4_F10_sin_directorio_huerfano_si_el_padre_muere` | PASA | FALLA: AssertionError: assert [PosixPath('/...lo_zhl1lqh1')] == [] | FALLA: Asserti
+CONTENIDO 10_matriz_antes_despues/fallos_es_v0_2_det.json: 49 de 902 líneas difieren tras normalizar; su contenido semántico se comparó arriba. Primera diferencia:
+            A:    "I1: una ejecución terminó sin salida: a-556a-b45b-2427c90ef46b/scratchpad/fx4_limpio/solucion_final_trader_ia_v0.5_2026-10-20/pruebas/comun/fallos
+            R:    "I1: una ejecución terminó sin salida: 556a-b45b-2427c90ef46b/scratchpad/fx4_limpio_B/solucion_final_trader_ia_v0.5_2026-10-20/pruebas/comun/fallos
+CONTENIDO 10_matriz_antes_despues/fallos_es_v0_2_nodet.json: 49 de 902 líneas difieren tras normalizar; su contenido semántico se comparó arriba. Primera diferencia:
+            A:    "I1: una ejecución terminó sin salida: a-556a-b45b-2427c90ef46b/scratchpad/fx4_limpio/solucion_final_trader_ia_v0.5_2026-10-20/pruebas/comun/fallos
+            R:    "I1: una ejecución terminó sin salida: 556a-b45b-2427c90ef46b/scratchpad/fx4_limpio_B/solucion_final_trader_ia_v0.5_2026-10-20/pruebas/comun/fallos
+CONTENIDO 10_matriz_antes_despues/fallos_es_v0_3_det.json: 49 de 897 líneas difieren tras normalizar; su contenido semántico se comparó arriba. Primera diferencia:
+            A:    "I1: una ejecución terminó sin salida: a-556a-b45b-2427c90ef46b/scratchpad/fx4_limpio/solucion_final_trader_ia_v0.5_2026-10-20/pruebas/comun/fallos
+            R:    "I1: una ejecución terminó sin salida: 556a-b45b-2427c90ef46b/scratchpad/fx4_limpio_B/solucion_final_trader_ia_v0.5_2026-10-20/pruebas/comun/fallos
+CONTENIDO 10_matriz_antes_despues/fallos_es_v0_3_nodet.json: 49 de 897 líneas difieren tras normalizar; su contenido semántico se comparó arriba. Primera diferencia:
+            A:    "I1: una ejecución terminó sin salida: a-556a-b45b-2427c90ef46b/scratchpad/fx4_limpio/solucion_final_trader_ia_v0.5_2026-10-20/pruebas/comun/fallos
+            R:    "I1: una ejecución terminó sin salida: 556a-b45b-2427c90ef46b/scratchpad/fx4_limpio_B/solucion_final_trader_ia_v0.5_2026-10-20/pruebas/comun/fallos
+IGUAL     10_matriz_antes_despues/fallos_es_v0_4_det.json: idéntico byte a byte
+IGUAL     10_matriz_antes_despues/fallos_es_v0_4_nodet.json: idéntico byte a byte
+IGUAL     10_matriz_antes_despues/fallos_es_v0_5_det.json: idéntico byte a byte
+IGUAL     10_matriz_antes_despues/fallos_es_v0_5_nodet.json: idéntico byte a byte
+CONTENIDO 10_matriz_antes_despues/junit_defectos_v0_2.xml: 42 de 156 líneas difieren tras normalizar; su contenido semántico se comparó arriba. Primera diferencia:
+            A: <?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="104" skipped="0" tests="111" time=
+            R: <?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="104" skipped="0" tests="111" time=
+CONTENIDO 10_matriz_antes_despues/junit_defectos_v0_3.xml: 23 de 69 líneas difieren tras normalizar; su contenido semántico se comparó arriba. Primera diferencia:
+            A: <?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="59" skipped="0" tests="111" time="
+            R: <?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="59" skipped="0" tests="111" time="
+CONTENIDO 10_matriz_antes_despues/junit_defectos_v0_4.xml: 13 de 35 líneas difieren tras normalizar; su contenido semántico se comparó arriba. Primera diferencia:
+            A: <?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="33" skipped="0" tests="111" time="
+            R: <?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="33" skipped="0" tests="111" time="
+CONTENIDO 10_matriz_antes_despues/junit_defectos_v0_5.xml: 1 de 1 líneas difieren tras normalizar; su contenido semántico se comparó arriba. Primera diferencia:
+            A: <?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="111" time="4
+            R: <?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="111" time="4
+CONTENIDO 10_matriz_antes_despues/matriz_antes_despues.json: 4 de 1786 líneas difieren tras normalizar; su contenido semántico se comparó arriba. Primera diferencia:
+            A:    "AssertionError: assert (('REGISTRADO'...af717e2ee03'}) == ('INCONSISTENTE', None)"
+            R:    "AssertionError: assert (('REGISTRADO'...b16d82e6a4b'}) == ('INCONSISTENTE', None)"
+CONTENIDO 10_matriz_antes_despues/pytest_defectos_v0_2.txt: 2 de 480 líneas difieren tras normalizar; su contenido semántico se comparó arriba. Primera diferencia:
+            A: E   AssertionError: assert (('REGISTRADO'...af717e2ee03'}) == ('INCONSISTENTE', None)
+            R: E   AssertionError: assert (('REGISTRADO'...b16d82e6a4b'}) == ('INCONSISTENTE', None)
+CONTENIDO 10_matriz_antes_despues/pytest_defectos_v0_3.txt: 2 de 303 líneas difieren tras normalizar; su contenido semántico se comparó arriba. Primera diferencia:
+            A: E   AssertionError: assert [PosixPath('/...lo_4vpjen_f')] == []
+            R: E   AssertionError: assert [PosixPath('/...lo_zhl1lqh1')] == []
+CONTENIDO 10_matriz_antes_despues/pytest_defectos_v0_4.txt: 5 de 217 líneas difieren tras normalizar; su contenido semántico se comparó arriba. Primera diferencia:
+            A: E   AssertionError: 33 respuestas falsificadas aceptadas
+            R: E   AssertionError: 40 respuestas falsificadas aceptadas
+IGUAL     10_matriz_antes_despues/pytest_defectos_v0_5.txt: idéntico salvo tiempos, rutas, fechas y direcciones
+IGUAL     10_matriz_resumen.txt: idéntico byte a byte
+IGUAL     11_suite_v0_5.txt: idéntico salvo tiempos, rutas, fechas y direcciones
+IGUAL     12_ruff.txt: idéntico byte a byte
+IGUAL     13_repeticiones.txt: idéntico salvo tiempos, rutas, fechas y direcciones
+IGUAL     14_corte_energia/corte_v0_5_det.json: idéntico byte a byte
+IGUAL     14_corte_energia/corte_v0_5_nodet.json: idéntico byte a byte
+IGUAL     20_regresion_p1_cambios_de_expectativa.md: idéntico byte a byte
+IGUAL     21_regresion_p1_diff_portado.txt: idéntico byte a byte
+IGUAL     22_regresion_p1_v0_3_sin_modificar_contra_v0_5.txt: idéntico salvo tiempos, rutas, fechas y direcciones
+IGUAL     23_regresion_p1_v0_3_portadas_contra_v0_5.txt: idéntico salvo tiempos, rutas, fechas y direcciones
+IGUAL     24_regresion_p2_v0_3_sin_modificar_contra_v0_5.txt: idéntico salvo tiempos, rutas, fechas y direcciones
+IGUAL     25_regresion_p4_v0_3_sin_modificar_contra_v0_5.txt: idéntico salvo tiempos, rutas, fechas y direcciones
+IGUAL     26_regresion_cruzada_v0_3_sin_modificar_contra_v0_5.txt: idéntico salvo tiempos, rutas, fechas y direcciones
+IGUAL     27_regresion_suite_v0_4_fallidas.txt: idéntico byte a byte
+CONTENIDO 27_regresion_suite_v0_4_sin_modificar_contra_v0_5.txt: 1 de 209 líneas difieren tras normalizar; su contenido semántico se comparó arriba. Primera diferencia:
+            A: E       assert (b'{"contenido...e0d9679c704"}' == b'{"contenido...e0d9679c704"}'
+            R: E       assert (b'{"contenido...21611e19c07"}' == b'{"contenido...21611e19c07"}'
+IGUAL     31_p2_mutaciones_oraculo.txt: idéntico byte a byte
+IGUAL     32_p2_tabla_resumen.txt: idéntico byte a byte
+IGUAL     40_sondas_v0_2_sobre_v0_2.txt: idéntico salvo tiempos, rutas, fechas y direcciones
+IGUAL     41_paquetes_previos_intactos.txt: idéntico byte a byte
+IGUAL     52_cruzada_mutaciones.txt: idéntico byte a byte
+CONTENIDO 53_durabilidad_mutaciones.txt: 3 de 5 líneas difieren tras normalizar; su contenido semántico se comparó arriba. Primera diferencia:
+            A: MUERTA	diario: el evento añadido no se sincroniza (_anotar sin fsync final)	<ruta> AssertionError: 58 de 78 escenarios violan invariantes: [{'op': 'wr
+            R: MUERTA	diario: el evento añadido no se sincroniza (_anotar sin fsync final)	<ruta> AssertionError: 58 de 78 escenarios violan invariantes: [{'op': 'wr
+IGUAL     54_ejecutor_mutaciones.txt: idéntico byte a byte
+IGUAL     60_parches_comprobacion.txt: idéntico salvo tiempos, rutas, fechas y direcciones
+IGUAL     61_parche_aplicado_en_HEAD_pytest.txt: idéntico salvo tiempos, rutas, fechas y direcciones
+IGUAL     61_parche_aplicado_en_origin_pytest.txt: idéntico salvo tiempos, rutas, fechas y direcciones
+IGUAL     70_ed25519_diferencial.txt: idéntico salvo tiempos, rutas, fechas y direcciones
+IGUAL     71_sondas_v0_4_y_v0_5.txt: idéntico salvo tiempos, rutas, fechas y direcciones
+IGUAL     80_estado_real_de_T.json: idéntico byte a byte
+IGUAL     90_estado_git_antes.txt: idéntico byte a byte
+IGUAL     91_estado_git_despues.txt: idéntico byte a byte
+IGUAL     94_reproduccion_limpia_zip_A.txt: idéntico byte a byte
+OK      97_paquete_intacto.txt: solo en la reproducida — etapa 13, agregada tras la primera reproducción (94_*)
+IGUAL     98_integridad_final.txt: idéntico byte a byte
+IGUAL     99_estado_git_comparado.txt: idéntico byte a byte
+
+== 4. huella del repositorio en la ejecución reproducida
+87b9585d31924f8193a6d3eb6d0712a3d3880978681c75d0dd77e00d08f34a8e  -   (29 líneas)
+OK      90 (antes) == 91 (después), byte a byte
+
+TODO COINCIDE

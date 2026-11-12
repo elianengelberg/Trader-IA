@@ -1,0 +1,3 @@
+CORRECCION R1′ congelada después de P0 (R1 literal) y antes de cualquier retorno
+UTC: 2026-10-26T19:46:57.953Z
+86c8fd0b0a3b2fe2728d277b9e106b5e46a651950c767df46a00b68c5fb4e848  CORRECCION_R1prima_alcance_por_clase.md

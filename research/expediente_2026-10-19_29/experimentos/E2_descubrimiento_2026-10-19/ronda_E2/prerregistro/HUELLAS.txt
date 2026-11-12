@@ -1,0 +1,10 @@
+== prerregistro congelado ANTES de descargar la serie de Wikipedia y de calcular nada: 2026-10-19T23:18:21Z
+5b3136d0256021a1bad126fbb4c31c5079599528161a48cba3485feeae34aa6c  prerregistro/PRERREGISTRO_E2.md
+estado: solo se descargó 1 día de Wikipedia (sonda de disponibilidad); ninguna variable ni prueba calculada
+
+== código y datos nuevos fijados ANTES de la ejecución con datos reales: 2026-10-19T23:24:36Z
+9a8df486cbb0320b48110047964148c3738a9c15015a9915271d3f0c2b5ed2b2  codigo/e2.py
+8d9a43b4d9e55c5e03f914b48189638939569fa4fd672530770d51eebceb69d7  datos/wikipedia_bitcoin_pageviews.json
+a31338bf52e9384b6bf0e57147d834bfa7d3d8cf244d812241ad8588f613a519  resultados/prueba_cw_sintetica.json
+5b3136d0256021a1bad126fbb4c31c5079599528161a48cba3485feeae34aa6c  prerregistro/PRERREGISTRO_E2.md
+nota de implementación: PRIMA7 se calcula si hay ≥ 160 de las 168 horas de la ventana (tolera huecos aislados; el prerregistro no fijaba el tratamiento de horas faltantes)

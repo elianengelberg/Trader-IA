@@ -1,0 +1,49 @@
+class tia.backtest.engine.BacktestConfig
+  dataclass fields: ['dataset', 'timeframe', 'initial_capital', 'seed', 'warmup_bars', 'lookback_bars', 'strategy', 'risk', 'execution', 'data_quality', 'use_protective_stops', 'liquidate_at_end', 'is_out_of_sample', 'risk_profile', 'conviction_sizing', 'min_size_fraction', 'pooled_size_cap', 'ev_threshold_bps', 'max_cost_ratio', 'enforce_expected_value', 'use_target', 'breakeven_after_r', 'trail_atr_multiple', 'max_holding_bars', 'exit_on_signal_reversal', 'entry_order_type', 'entry_limit_timeout_bars']
+  __init__(self, dataset: 'str' = 'unnamed', timeframe: 'str' = '1m', initial_capital: 'float' = 100000.0, seed: 'int' = 20260812, warmup_bars: 'int' = 120, lookback_bars: 'int' = 300, strategy: 'StrategyConfig' = <factory>, risk: 'RiskLimits' = <factory>, execution: 'ExecutionSimConfig' = <factory>, data_quality: 'DataQualityConfig' = <factory>, use_protective_stops: 'bool' = True, liquidate_at_end: 'bool' = True, is_out_of_sample: 'bool' = False, risk_profile: 'str' = 'conservative', conviction_sizing: 'bool' = True, min_size_fraction: 'float' = 0.35, pooled_size_cap: 'float' = 0.6, ev_threshold_bps: 'float' = 5.0, max_cost_ratio: 'float' = 0.6, enforce_expected_value: 'bool' = False, use_target: 'bool' = True, breakeven_after_r: 'float' = 1.0, trail_atr_multiple: 'float' = 2.0, max_holding_bars: 'int' = 0, exit_on_signal_reversal: 'bool' = True, entry_order_type: 'str' = 'market', entry_limit_timeout_bars: 'int' = 3) -> None
+  digest(self) -> 'str'
+class tia.backtest.engine.BacktestEngine
+  __init__(self, config: 'BacktestConfig', universe: 'InstrumentUniverse', *, strategies: 'Sequence[str] | None' = None) -> 'None'
+  config(property)
+  run(self, candles: 'Sequence[Candle]', *, symbol: 'str | None' = None) -> 'BacktestResult'
+class tia.backtest.result.BacktestConditions
+  model fields: ['run_id', 'dataset', 'symbols', 'timeframe', 'start', 'end', 'bars', 'initial_capital', 'seed', 'strategy_versions', 'feature_version', 'risk_limits_digest', 'execution_config', 'is_out_of_sample', 'notes']
+  describe(self) -> 'str'
+class tia.backtest.result.BacktestResult
+  model fields: ['conditions', 'metrics', 'equity_curve', 'equity_timestamps', 'trades', 'decisions', 'decision_log', 'open_positions_at_end', 'warnings']
+  evidence_statement(self) -> 'str'
+  final_equity(property)
+  is_reliable(property)
+  to_dict(self) -> 'dict[str, Any]'
+class tia.backtest.result.ClosedTrade
+  model fields: ['trade_id', 'symbol', 'direction', 'quantity', 'entry_price', 'exit_price', 'entry_at', 'exit_at', 'gross_pnl', 'fees', 'net_pnl', 'return_pct', 'bars_held', 'exit_reason', 'regime_at_entry', 'signal_id', 'confidence']
+  duration_seconds(property)
+  to_record(self) -> 'TradeRecord'
+class tia.backtest.result.DecisionCounts
+  model fields: ['bars_processed', 'bars_skipped_insufficient_history', 'bars_skipped_data_quality', 'signals_generated', 'signals_by_direction', 'risk_verdicts', 'risk_rejection_reasons', 'intents_submitted', 'orders_rejected', 'orders_expired', 'fills', 'protective_stops_unplaced', 'approvals_suppressed_position_open', 'budget_rejected', 'ev_would_reject', 'ev_no_evidence', 'ev_rejected', 'filter_rejected', 'sized_down', 'entries_skipped_resting', 'stops_tightened', 'exits_requested']
+  actionable_signal_rate(property)
+  approval_rate(property)
+class tia.backtest.result.DecisionRecord
+  model fields: ['bar_close_time', 'direction', 'confidence', 'verdict', 'approved_quantity', 'regime', 'feature_hash', 'signal_id', 'stage', 'reason', 'ev_net_bps', 'ev_tradeable', 'budget_multiplier', 'sized_quantity']
+  fingerprint(self) -> 'tuple[object, ...]'
+class tia.execution.paper.PaperExecutionProvider
+  __init__(self, config: 'ExecutionSimConfig', universe: 'InstrumentUniverse', clock: 'Clock', rng: 'RngRegistry', *, initial_capital: 'float' = 100000.0) -> 'None'
+  apply_cash_adjustment(self, amount: 'float', *, reason: 'str') -> 'float'
+  cancel_order(self, order_id: 'str') -> 'Order'
+  config(property)
+  expire_stale_orders(self, *, older_than: 'timedelta', now: 'datetime | None' = None) -> 'list[Order]'
+  get_balance(self) -> 'float'
+  get_order(self, order_id: 'str') -> 'Order | None'
+  get_orders(self, *, open_only: 'bool' = False) -> 'list[Order]'
+  get_pnl(self) -> 'dict[str, float]'
+  get_portfolio(self) -> 'PortfolioState'
+  get_positions(self) -> 'dict[str, Position]'
+  get_trades(self, *, limit: 'int' = 100) -> 'list[Fill]'
+  mark_all(self, prices: 'dict[str, float]', at: 'datetime') -> 'None'
+  on_bar(self, candle: 'Candle') -> 'list[Fill]'
+  portfolio(property)
+  reset(self, *, initial_capital: 'float | None' = None) -> 'None'
+  restore_portfolio(self, state: 'PortfolioState') -> 'None'
+  snapshot(self) -> 'dict[str, object]'
+  submit_order(self, intent: 'OrderIntent') -> 'Order'
+tia.backtest.__all__ = ['BacktestConditions', 'BacktestConfig', 'BacktestEngine', 'BacktestResult', 'BaselineComparison', 'BaselineResult', 'ClosedTrade', 'DecisionCounts', 'ExperimentReport', 'ExperimentVerdict', 'Fold', 'MIN_TRADES_FOR_INFERENCE', 'SplitScheme', 'WalkForwardPlan', 'always_flat', 'assert_no_leakage', 'build_plan', 'buy_and_hold', 'evaluate_experiment', 'random_entry', 'run_all_baselines', 'sma_cross', 'volatility_targeted']

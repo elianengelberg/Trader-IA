@@ -1,0 +1,24 @@
+{
+ "arbol": "dev",
+ "condicion": "reinicio",
+ "semilla": 1003,
+ "programadas": 200,
+ "flush_dijo": false,
+ "flush_interrumpido": false,
+ "flush_segundos": 1.002,
+ "cierre_persistence_flushed": false,
+ "last_error": "128 persistence write(s) still in flight after 1s at stop; the record is incomplete",
+ "filas_en_base": 72,
+ "faltan": 128,
+ "reporte": {
+  "scheduled": 200,
+  "confirmed": 72,
+  "failed": 0,
+  "in_flight": 128,
+  "complete": false,
+  "lost": 0
+ },
+ "perdidas_identificadas": [],
+ "FALSO_COMPLETO": false,
+ "CIERRE_LIMPIO_CON_PENDIENTES": false
+}

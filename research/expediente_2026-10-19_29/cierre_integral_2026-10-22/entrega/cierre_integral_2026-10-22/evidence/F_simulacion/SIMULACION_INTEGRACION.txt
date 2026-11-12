@@ -1,0 +1,30 @@
+árbol base 72ffae5: 44850cfcbf53c3f8223d38a92031f4402f8ffb32
+== 1. Unidad A: 01 y después 02v3, en ese orden
+OK   01 aplica
+OK   02v3 aplica sobre 01
+OK   A cambia exactamente los 8 archivos previstos
+OK   archivos de A = los registrados en v3r3
+OK   versión declarada tras A: 1.1.0
+   pruebas de A: higiene 8 passed in 24.61s · trazabilidad 14 passed in 24.12s
+árbol esperado tras A: 5d6a09549a8314f6e6e9386f82a52ca7628510d1
+== 2. Unidad B (guarda 05) sobre A
+OK   05 aplica sobre A
+OK   B agrega solo tests/integration/test_engine_version_contract.py
+   guarda tras B: 7 passed in 13.24s
+árbol esperado tras A+B: 4ef14d31d686f4b0521207bd1e011d96e6c74822
+== 3. Reversión de B
+OK   revertir B devuelve exactamente el árbol de A
+== 4. Reversión conjunta de A (02v3 y después 01)
+OK   revertir A devuelve exactamente el árbol de 72ffae5
+OK   sin cambios ajenos tras revertir
+== 5. B sin A (combinación inválida) y A a medias
+   base + B: 5 failed, 2 passed in 13.75s
+   02v3 sin 01 + B: 5 failed, 2 passed in 13.62s
+   01 sin 02v3 + B (02v3 revertido solo): 5 failed, 2 passed in 13.95s
+OK   el clon vuelve a la base después de las combinaciones
+== 6. Orden: 02v3 antes que 01 también aplica (por eso el orden lo fija el procedimiento)
+OK   02v3→01 da el mismo árbol que 01→02v3
+== 7. 03 sobre A+B y árbol completo
+OK   03 aplica sobre A+B
+árbol esperado tras A+B+03: 84f9e349526d061771de74ae799d4ecd6e3732ce
+RESULTADO: 0 problemas

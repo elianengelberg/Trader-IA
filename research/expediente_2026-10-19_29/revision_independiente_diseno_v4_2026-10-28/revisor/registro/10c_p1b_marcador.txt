@@ -1,0 +1,154 @@
+# comando: /usr/bin/python3 -I -B prototipos/p1b_registro_marcador.py prototipos/tmp_p1b   (variante con marcador 0x1E de inicio de registro)
+# fecha: 2026-10-28T19:51:11Z
+{
+ "1_deteccion_sin_ancla": {
+  "cola_partida_mitad_de_linea": "COLA_CORTADA",
+  "bit_cambiado_linea_2": "CADENA_ROTA",
+  "linea_media_borrada": "CADENA_ROTA",
+  "reorden": "CADENA_ROTA",
+  "duplicado_final": "CADENA_ROTA",
+  "ultima_linea_borrada_entera": {
+   "estado": "OK",
+   "ultimo_evento_visible": "ETAPA(simulacion)",
+   "cabeza_leida_igual_a_la_real": false,
+   "conclusion": "indetectable sin ancla externa: parece que DECISION nunca se escribió"
+  }
+ },
+ "2_prefijos": {
+  "longitud_linea": 278,
+  "prefijos_que_parsean": []
+ },
+ "3_reconciliacion": {
+  "prefijo_de_linea_sin_salto": {
+   "estado_antes": "COLA_CORTADA",
+   "reconciliacion_1": "COLA_DESCARTADA_ANEXADA",
+   "reconciliacion_2_idempotente": "OK",
+   "estado_despues": "OK",
+   "bytes_originales_intactos": true,
+   "lector_sin_resincronizacion": "CADENA_ROTA",
+   "estado_final": "OK",
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "COLA_DESCARTADA",
+    "ABANDONADO"
+   ]
+  },
+  "ceros_sin_salto": {
+   "estado_antes": "COLA_CORTADA",
+   "reconciliacion_1": "COLA_DESCARTADA_ANEXADA",
+   "reconciliacion_2_idempotente": "OK",
+   "estado_despues": "OK",
+   "bytes_originales_intactos": true,
+   "lector_sin_resincronizacion": "CADENA_ROTA",
+   "estado_final": "OK",
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "COLA_DESCARTADA",
+    "ABANDONADO"
+   ]
+  },
+  "basura_con_salto_dentro": {
+   "estado_antes": "COLA_CORTADA",
+   "reconciliacion_1": "COLA_DESCARTADA_ANEXADA",
+   "reconciliacion_2_idempotente": "OK",
+   "estado_despues": "OK",
+   "bytes_originales_intactos": true,
+   "lector_sin_resincronizacion": "CADENA_ROTA",
+   "estado_final": "OK",
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "COLA_DESCARTADA",
+    "ABANDONADO"
+   ]
+  },
+  "doble_cola_partida": {
+   "estado_antes": "COLA_CORTADA",
+   "estado_despues": "OK",
+   "eventos": [
+    "ABIERTO",
+    "COLA_DESCARTADA"
+   ]
+  }
+ },
+ "4_modelo_disco_fsync_EIO_en_DECISION": {
+  "diseno_tal_como_esta": {
+   "anexar_DECISION": "OSError EIO",
+   "fsyncs": [
+    "ok",
+    "ok",
+    "ok",
+    "EIO"
+   ],
+   "manejador_ve_DECISION_en_cache": true,
+   "manejador_escribio_ERROR": false,
+   "ultimo_evento_en_cache_antes_del_corte": "DECISION(INVALIDO)",
+   "ultimo_evento_en_disco_tras_corte": "ETAPA(simulacion)",
+   "estado_cadena_en_disco": "OK",
+   "reconciliacion_segun_A4": "ABANDONADO(simulacion) = ERROR(simulacion) -> reintentable bajo la politica (i)",
+   "ancla": [
+    [
+     "tras_consumo",
+     "fa86f4d6096b056d8bc7cdf7f7ca3cc534c5f4928fe56eb24366a9fb225f3f5d"
+    ]
+   ],
+   "ancla_detecta_perdida_de_DECISION": false
+  },
+  "variante_ancla_write_ahead": {
+   "anexar_DECISION": "OSError EIO",
+   "fsyncs": [
+    "ok",
+    "ok",
+    "ok",
+    "EIO"
+   ],
+   "manejador_ve_DECISION_en_cache": true,
+   "manejador_escribio_ERROR": false,
+   "ultimo_evento_en_cache_antes_del_corte": "DECISION(INVALIDO)",
+   "ultimo_evento_en_disco_tras_corte": "ETAPA(simulacion)",
+   "estado_cadena_en_disco": "OK",
+   "reconciliacion_segun_A4": "ABANDONADO(simulacion) = ERROR(simulacion) -> reintentable bajo la politica (i)",
+   "ancla": [
+    [
+     "tras_consumo",
+     "fa86f4d6096b056d8bc7cdf7f7ca3cc534c5f4928fe56eb24366a9fb225f3f5d"
+    ],
+    [
+     "anuncio_DECISION",
+     "INVALIDO"
+    ]
+   ],
+   "ancla_detecta_perdida_de_DECISION": true
+  }
+ },
+ "4b_modelo_disco_ENOSPC_en_DECISION": {
+  "diseno_tal_como_esta": {
+   "anexar_DECISION": "OSError ENOSPC",
+   "manejador_ve_DECISION": false,
+   "ERROR_escrito": false,
+   "ultimo_evento": "ETAPA(simulacion)",
+   "ancla": [],
+   "ancla_detecta": false
+  },
+  "variante_ancla_write_ahead": {
+   "anexar_DECISION": "OSError ENOSPC",
+   "manejador_ve_DECISION": false,
+   "ERROR_escrito": false,
+   "ultimo_evento": "ETAPA(simulacion)",
+   "ancla": [
+    "anuncio_DECISION INVALIDO"
+   ],
+   "ancla_detecta": true
+  }
+ },
+ "4c_reconciliacion_sobre_cache_y_corte_posterior": {
+  "estado_sin_corte": "OK",
+  "estado_tras_corte": "CADENA_ROTA",
+  "detalle": "basura seguida de una línea completa: sin marcador",
+  "ultimo_valido": "ETAPA(simulacion)",
+  "bytes_disco_tienen_hueco_de_ceros": true
+ }
+}
+# exit=0

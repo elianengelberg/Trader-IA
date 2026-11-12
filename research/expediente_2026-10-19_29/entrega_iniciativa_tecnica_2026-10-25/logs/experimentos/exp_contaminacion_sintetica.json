@@ -1,0 +1,276 @@
+{
+ "diseno": "TI · Experimento: ¿puede la deriva de los escenarios sintéticos hacer «operable» un bucket del motor de EV del vivo?\n\nCorre corridas COMPLETAS del motor de escenarios del repositorio (RuntimeEngine, como las corridas de demo/entrenamiento\nde la API, que persisten sus resultados con market_data=\"synthetic\"), toma los resultados que registró su estimador y los\nentrega al motor de EV con la configuración del vivo (umbral y razón de costos de settings.live), filtrados con la regla\nde admisión del vivo (LiveRuntime._evidence_admitted: «legacy» admite todo, «real_only» solo market_data == \"real\").\nCostos de la evaluación: los del cierre con taker por defecto (comisión 2×7,5 bps) + deslizamiento base 2×2 bps; sin\nspread ni impacto (cota favorable a operar: si con esto no aprueba, con más costos tampoco).\nEsperado de un sistema seguro (fijado antes): bajo ninguna política un resultado sintético vuelve operable un bucket\npara el vivo.",
+ "umbral_bps": 5.0,
+ "razon_costos": 0.6,
+ "escenarios": [
+  "trend_up",
+  "trend_down"
+ ],
+ "semillas": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6
+ ],
+ "operaciones_sinteticas": 26,
+ "buckets": [
+  {
+   "politica": "legacy",
+   "regimen": "high_volatility",
+   "direccion": "long",
+   "banda": [
+    0.55,
+    0.7
+   ],
+   "n": 1,
+   "media_bruta_bps": -5.86,
+   "ee_bps": null,
+   "estimacion_ajustada_bps": 0.0,
+   "costos_bps": 19.0,
+   "operable": false,
+   "razon": "only 1 closed trades for high_volatility/long at this confidence (30 needed), and 1 across all its confidence bands (60 would allow a pooled estimate at double "
+  },
+  {
+   "politica": "legacy",
+   "regimen": "low_volatility",
+   "direccion": "long",
+   "banda": [
+    0.55,
+    0.7
+   ],
+   "n": 2,
+   "media_bruta_bps": 0.43,
+   "ee_bps": 12.36,
+   "estimacion_ajustada_bps": 0.0,
+   "costos_bps": 19.0,
+   "operable": false,
+   "razon": "only 2 closed trades for low_volatility/long at this confidence (30 needed), and 2 across all its confidence bands (60 would allow a pooled estimate at double t"
+  },
+  {
+   "politica": "legacy",
+   "regimen": "ranging",
+   "direccion": "long",
+   "banda": [
+    0.55,
+    0.7
+   ],
+   "n": 2,
+   "media_bruta_bps": -14.5,
+   "ee_bps": 0.13,
+   "estimacion_ajustada_bps": 0.0,
+   "costos_bps": 19.0,
+   "operable": false,
+   "razon": "only 2 closed trades for ranging/long at this confidence (30 needed), and 2 across all its confidence bands (60 would allow a pooled estimate at double the unce"
+  },
+  {
+   "politica": "legacy",
+   "regimen": "ranging",
+   "direccion": "short",
+   "banda": [
+    0.55,
+    0.7
+   ],
+   "n": 1,
+   "media_bruta_bps": -16.24,
+   "ee_bps": null,
+   "estimacion_ajustada_bps": 0.0,
+   "costos_bps": 19.0,
+   "operable": false,
+   "razon": "only 1 closed trades for ranging/short at this confidence (30 needed), and 1 across all its confidence bands (60 would allow a pooled estimate at double the unc"
+  },
+  {
+   "politica": "legacy",
+   "regimen": "trending_down",
+   "direccion": "short",
+   "banda": [
+    0.55,
+    0.7
+   ],
+   "n": 7,
+   "media_bruta_bps": -5.35,
+   "ee_bps": 6.79,
+   "estimacion_ajustada_bps": 0.0,
+   "costos_bps": 19.0,
+   "operable": false,
+   "razon": "only 7 closed trades for trending_down/short at this confidence (30 needed), and 9 across all its confidence bands (60 would allow a pooled estimate at double t"
+  },
+  {
+   "politica": "legacy",
+   "regimen": "trending_down",
+   "direccion": "short",
+   "banda": [
+    0.7,
+    0.85
+   ],
+   "n": 2,
+   "media_bruta_bps": 4.65,
+   "ee_bps": 7.35,
+   "estimacion_ajustada_bps": 0.0,
+   "costos_bps": 19.0,
+   "operable": false,
+   "razon": "only 2 closed trades for trending_down/short at this confidence (30 needed), and 9 across all its confidence bands (60 would allow a pooled estimate at double t"
+  },
+  {
+   "politica": "legacy",
+   "regimen": "trending_up",
+   "direccion": "long",
+   "banda": [
+    0.55,
+    0.7
+   ],
+   "n": 8,
+   "media_bruta_bps": -0.99,
+   "ee_bps": 5.93,
+   "estimacion_ajustada_bps": 0.0,
+   "costos_bps": 19.0,
+   "operable": false,
+   "razon": "only 8 closed trades for trending_up/long at this confidence (30 needed), and 11 across all its confidence bands (60 would allow a pooled estimate at double the"
+  },
+  {
+   "politica": "legacy",
+   "regimen": "trending_up",
+   "direccion": "long",
+   "banda": [
+    0.7,
+    0.85
+   ],
+   "n": 3,
+   "media_bruta_bps": -3.89,
+   "ee_bps": 7.91,
+   "estimacion_ajustada_bps": 0.0,
+   "costos_bps": 19.0,
+   "operable": false,
+   "razon": "only 3 closed trades for trending_up/long at this confidence (30 needed), and 11 across all its confidence bands (60 would allow a pooled estimate at double the"
+  },
+  {
+   "politica": "real_only",
+   "regimen": "high_volatility",
+   "direccion": "long",
+   "banda": [
+    0.55,
+    0.7
+   ],
+   "n": 1,
+   "media_bruta_bps": -5.86,
+   "ee_bps": null,
+   "estimacion_ajustada_bps": 0.0,
+   "costos_bps": 19.0,
+   "operable": false,
+   "razon": "only 0 closed trades for high_volatility/long at this confidence (30 needed), and 0 across all its confidence bands (60 would allow a pooled estimate at double "
+  },
+  {
+   "politica": "real_only",
+   "regimen": "low_volatility",
+   "direccion": "long",
+   "banda": [
+    0.55,
+    0.7
+   ],
+   "n": 2,
+   "media_bruta_bps": 0.43,
+   "ee_bps": 12.36,
+   "estimacion_ajustada_bps": 0.0,
+   "costos_bps": 19.0,
+   "operable": false,
+   "razon": "only 0 closed trades for low_volatility/long at this confidence (30 needed), and 0 across all its confidence bands (60 would allow a pooled estimate at double t"
+  },
+  {
+   "politica": "real_only",
+   "regimen": "ranging",
+   "direccion": "long",
+   "banda": [
+    0.55,
+    0.7
+   ],
+   "n": 2,
+   "media_bruta_bps": -14.5,
+   "ee_bps": 0.13,
+   "estimacion_ajustada_bps": 0.0,
+   "costos_bps": 19.0,
+   "operable": false,
+   "razon": "only 0 closed trades for ranging/long at this confidence (30 needed), and 0 across all its confidence bands (60 would allow a pooled estimate at double the unce"
+  },
+  {
+   "politica": "real_only",
+   "regimen": "ranging",
+   "direccion": "short",
+   "banda": [
+    0.55,
+    0.7
+   ],
+   "n": 1,
+   "media_bruta_bps": -16.24,
+   "ee_bps": null,
+   "estimacion_ajustada_bps": 0.0,
+   "costos_bps": 19.0,
+   "operable": false,
+   "razon": "only 0 closed trades for ranging/short at this confidence (30 needed), and 0 across all its confidence bands (60 would allow a pooled estimate at double the unc"
+  },
+  {
+   "politica": "real_only",
+   "regimen": "trending_down",
+   "direccion": "short",
+   "banda": [
+    0.55,
+    0.7
+   ],
+   "n": 7,
+   "media_bruta_bps": -5.35,
+   "ee_bps": 6.79,
+   "estimacion_ajustada_bps": 0.0,
+   "costos_bps": 19.0,
+   "operable": false,
+   "razon": "only 0 closed trades for trending_down/short at this confidence (30 needed), and 0 across all its confidence bands (60 would allow a pooled estimate at double t"
+  },
+  {
+   "politica": "real_only",
+   "regimen": "trending_down",
+   "direccion": "short",
+   "banda": [
+    0.7,
+    0.85
+   ],
+   "n": 2,
+   "media_bruta_bps": 4.65,
+   "ee_bps": 7.35,
+   "estimacion_ajustada_bps": 0.0,
+   "costos_bps": 19.0,
+   "operable": false,
+   "razon": "only 0 closed trades for trending_down/short at this confidence (30 needed), and 0 across all its confidence bands (60 would allow a pooled estimate at double t"
+  },
+  {
+   "politica": "real_only",
+   "regimen": "trending_up",
+   "direccion": "long",
+   "banda": [
+    0.55,
+    0.7
+   ],
+   "n": 8,
+   "media_bruta_bps": -0.99,
+   "ee_bps": 5.93,
+   "estimacion_ajustada_bps": 0.0,
+   "costos_bps": 19.0,
+   "operable": false,
+   "razon": "only 0 closed trades for trending_up/long at this confidence (30 needed), and 0 across all its confidence bands (60 would allow a pooled estimate at double the "
+  },
+  {
+   "politica": "real_only",
+   "regimen": "trending_up",
+   "direccion": "long",
+   "banda": [
+    0.7,
+    0.85
+   ],
+   "n": 3,
+   "media_bruta_bps": -3.89,
+   "ee_bps": 7.91,
+   "estimacion_ajustada_bps": 0.0,
+   "costos_bps": 19.0,
+   "operable": false,
+   "razon": "only 0 closed trades for trending_up/long at this confidence (30 needed), and 0 across all its confidence bands (60 would allow a pooled estimate at double the "
+  }
+ ]
+}

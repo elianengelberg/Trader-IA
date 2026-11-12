@@ -1,0 +1,34 @@
+== RA-A.2 repositorio protegido (solo lectura, --no-optional-locks): 2026-10-25T17:21:36Z
+sha256 .git/index ANTES: 37490035d6706739fd7c9add42ad62c4e0c9260089e8e2e77a486f55e3bdcd1b · mtime 2026-10-21 19:31:19.512955878 +0000
+HEAD: 72ffae5d2698440c8f1afaff12e07bd8adde66fb · rama: claude/algo-trading-simulation-platform-ngf7xo · formato de objetos: sha1
+árbol de HEAD: 44850cfcbf53c3f8223d38a92031f4402f8ffb32
+refs:
+   refs/heads/claude/algo-trading-simulation-platform-ngf7xo 72ffae5d2698440c8f1afaff12e07bd8adde66fb
+   refs/remotes/origin/claude/algo-trading-simulation-platform-ngf7xo 72ffae5d2698440c8f1afaff12e07bd8adde66fb
+tags: 0 · stash: 0 · remotos: origin	https://github.com/elianengelberg/Trader-IA (fetch);origin	https://github.com/elianengelberg/Trader-IA (push);
+índice (ls-files -s) sha256: 07e0c86bb1c04ba22975582d17d1a729c500ceafe51b1615b1149fca4afac7e2 · entradas: 1072
+modificados/no versionados (porcelain -uall): 0
+ignorados:
+   !! research/entregas_hcarry/hcarry_next_final.zip
+   !! research/entregas_hcarry/hcarry_next_historico_2026-10-16.zip
+   !! research/entregas_hcarry/hcarry_next_snapshot1.zip
+   !! research/entregas_hcarry/hcarry_next_snapshot2.zip
+   !! research/hcarry_next/.venv/
+   !! research/hcarry_next/datos/binance_vision/futures/
+   !! research/hcarry_next/datos/binance_vision/spot/
+   !! research/hcarry_next/datos/otros_simbolos/ETHUSDT/futures/
+   !! research/hcarry_next/datos/otros_simbolos/SOLUSDT/futures/
+   !! research/hcarry_next/experimentos/historico/causal/externos/aave_v3_usdt_ethereum.json
+   !! research/hcarry_next/experimentos/historico/post_test/externos/DTB3.csv
+   !! research/tendencia_btc/datos/BTCUSDT/spot/
+   !! research/tendencia_btc/datos/ETHUSDT/spot/
+   !! research/tendencia_btc/datos_multi/nasdaq/
+   !! research/tendencia_btc/datos_multi/yahoo/
+   !! research/tendencia_btc/datos_papel/BTCUSDT/spot/
+   !! research/tendencia_btc/datos_papel/ETHUSDT/spot/
+   !! research/tendencia_btc/datos_papel/funding_BTCUSDT/futures/
+reflog: 6d55854cfe1e43f71e488c6c841dbfa9fa60b6d1ff00f8b679705367ccb21138 · entradas 13
+último commit: 72ffae5d2698440c8f1afaff12e07bd8adde66fb 2026-10-21 19:31:32 +0000 Keep third-party raw market data for T-MULTI out of version control
+engine.py en disco: 547109460bb5734ab7b108dc9387fca802e69b29cc8e74c262b80bdc55533ea4
+.ruff_cache en la raíz: ausente
+sha256 .git/index DESPUÉS: 37490035d6706739fd7c9add42ad62c4e0c9260089e8e2e77a486f55e3bdcd1b

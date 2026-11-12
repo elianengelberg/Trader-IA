@@ -1,0 +1,2179 @@
+{
+ "regla": "SL-v1 §7.2",
+ "paginas_escaneadas": 535,
+ "candidatos": 169,
+ "candidatos_sin_etiqueta": 23,
+ "lista": [
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_96-hour-flash-promo-complete_e62667dcf667.json",
+   "sha256_pagina": "cd5e6320fbc57fbd72b20992c74298cf9694c227dde6846d42a032a05f94f137",
+   "titulo": "96-Hour Flash Promo: Complete Trades on Binance Spot to Get a 100 USDT Gift Card!",
+   "publicado": "2023-06-07",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! About Us About Press Careers Business Contacts Community Blog Building Trust Legal Terms Privacy Risk Warning Announcements News No"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_anti-scam-ninja-program-repo_7d6b5aec159e.json",
+   "sha256_pagina": "6e098e1b2edea0026bb19dccb5e9b707831f8569503111a1fb9c5bb8d8cc3a11",
+   "titulo": "Anti-Scam Ninja Program: Report Suspicious P2P Activities and Receive 5 USDT per Report",
+   "publicado": "2023-09-14",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! About Us About Press Careers Business Contacts Community Blog Building Trust Legal Terms Privacy Risk Warning Announcements News No"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_auto-invest-adds-magic-compl_88e893d8b60e.json",
+   "sha256_pagina": "2518fc93d04e1aab1794d52244e45736a95724c7fe1b83bcff2d4d119d927fd2",
+   "titulo": "Auto-Invest Adds MAGIC: Complete a Quiz to Receive a Free Auto-Invest MAGIC Trial Plan & Subscribe to Auto-Invest to Share 16 BNB Token Vouchers",
+   "publicado": "2023-06-05",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! About Us About Press Careers Business Contacts Community Blog Building Trust Legal Terms Privacy Risk Warning Announcements News No"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-adds-arb-eth-bch-try_5679a5022839.json",
+   "sha256_pagina": "ccb92991601ab262c788bd5939f33ae9db516e6a1cdb81b4380aee587816a11d",
+   "titulo": "Binance Adds ARB/ETH, BCH/TRY, XVG/TRY & XVG/TUSD Trading Pairs",
+   "publicado": "2023-07-13",
+   "tipo_extraccion": "listado",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! Notice of Removal of Trading Pairs - 2023-09-22 About Us About Press Careers Business Contacts Community Blog Building Trust Legal "
+  },
+  {
+   "par": "MAVIAUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-adds-book-of-meme-bo_1453693f8098.json",
+   "sha256_pagina": "1c420857b17b15d3bc1b08c99cb27c15b7db2aedf59436600f668a3b9d29bbfc",
+   "titulo": "Announcement",
+   "publicado": "2024-03-17",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "the Leverage & Margin Tiers of Multiple USDⓈ-M and COIN-M Perpetual Contracts (2024-12-06) Binance Will List Across Protocol (ACX) and Orca (ORCA) with Seed Tag Applied Binance P2P Launches Merchant Program Upgrade Binance Futures Will Delist USDⓈ-M MAVIAUSDT, OMGUSDT, and BONDUSDT Perpetual Contracts (2024-12-16) Community About Us About Careers Announcements News Press Legal Terms Privacy Building Trust Blog Community Risk Warning Notices Downloads Desktop Application Products Exchange Buy Crypto Pay A"
+  },
+  {
+   "par": "OMGUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-adds-book-of-meme-bo_1453693f8098.json",
+   "sha256_pagina": "1c420857b17b15d3bc1b08c99cb27c15b7db2aedf59436600f668a3b9d29bbfc",
+   "titulo": "Announcement",
+   "publicado": "2024-03-17",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "e & Margin Tiers of Multiple USDⓈ-M and COIN-M Perpetual Contracts (2024-12-06) Binance Will List Across Protocol (ACX) and Orca (ORCA) with Seed Tag Applied Binance P2P Launches Merchant Program Upgrade Binance Futures Will Delist USDⓈ-M MAVIAUSDT, OMGUSDT, and BONDUSDT Perpetual Contracts (2024-12-16) Community About Us About Careers Announcements News Press Legal Terms Privacy Building Trust Blog Community Risk Warning Notices Downloads Desktop Application Products Exchange Buy Crypto Pay Academy Li"
+  },
+  {
+   "par": "BONDUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-adds-book-of-meme-bo_1453693f8098.json",
+   "sha256_pagina": "1c420857b17b15d3bc1b08c99cb27c15b7db2aedf59436600f668a3b9d29bbfc",
+   "titulo": "Announcement",
+   "publicado": "2024-03-17",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT"
+   ],
+   "contexto": "ers of Multiple USDⓈ-M and COIN-M Perpetual Contracts (2024-12-06) Binance Will List Across Protocol (ACX) and Orca (ORCA) with Seed Tag Applied Binance P2P Launches Merchant Program Upgrade Binance Futures Will Delist USDⓈ-M MAVIAUSDT, OMGUSDT, and BONDUSDT Perpetual Contracts (2024-12-16) Community About Us About Careers Announcements News Press Legal Terms Privacy Building Trust Blog Community Risk Warning Notices Downloads Desktop Application Products Exchange Buy Crypto Pay Academy Live Tax Gift Ca"
+  },
+  {
+   "par": "OGNUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-adds-btc-bnb-eth-tus_e2a76bc04723.json",
+   "sha256_pagina": "60dca91a7c9ca881b4475c111371afd497670cbef2b7289f82aed06348cc1adb",
+   "titulo": "Binance Adds BTC, BNB, ETH, TUSD & DAI as Payment Options on Auto-Invest",
+   "publicado": "2023-06-09",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": " 5,000 USDT in Rewards! Word of the Day: Test Your Knowledge on DeFi to Earn Binance Points and More! Enjoy Up to 50% Discounts With Binance Pay’s Fantastic Deals This October & Get Up to 201 TUSD in Rewards! Updates on Capped Funding Rate of USDⓈ-M OGNUSDT Perpetual Contract (2023-10-01) SEA Exclusive: Create Your First Spot Grid Trading Bot & Get Up to 5 USDT in Rewards! Notice of Removal of Margin Trading Pairs - 2023-10-06 Get 1 USDT When Spending $10 on MooGold With Binance Pay! Refer Friends to B"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-adds-btc-ngn-usdt-za_05465cd1ddca.json",
+   "sha256_pagina": "8a13f3c5dccc70055a1e843a6afde6c913c121b8d59101925f7da33f6ab267f0",
+   "titulo": "Binance Adds BTC/NGN & USDT/ZAR Trading Pairs",
+   "publicado": "2023-06-08",
+   "tipo_extraccion": "listado",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! Notice of Removal of Trading Pairs - 2023-09-22 Binance Adds CYBER/ETH & MTL/TRY Trading Pairs Updates on New Binance Loans (Stable"
+  },
+  {
+   "par": "OGNUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-adds-cvc-usdt-wbeth-_cc15b6f05325.json",
+   "sha256_pagina": "d5a23d297549f6736bebf1b5e313bd0d2fb9628c47a02e34b73e0052e4e265d9",
+   "titulo": "Binance Adds CVC/USDT & WBETH/ETH Trading Pairs",
+   "publicado": "2023-05-11",
+   "tipo_extraccion": "listado",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": " 5,000 USDT in Rewards! Word of the Day: Test Your Knowledge on DeFi to Earn Binance Points and More! Enjoy Up to 50% Discounts With Binance Pay’s Fantastic Deals This October & Get Up to 201 TUSD in Rewards! Updates on Capped Funding Rate of USDⓈ-M OGNUSDT Perpetual Contract (2023-10-01) SEA Exclusive: Create Your First Spot Grid Trading Bot & Get Up to 5 USDT in Rewards! Notice of Removal of Margin Trading Pairs - 2023-10-06 Get 1 USDT When Spending $10 on MooGold With Binance Pay! Refer Friends to B"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-adds-doge-tusd-usdt-_3144ae5ee3ec.json",
+   "sha256_pagina": "4b52f4b6c95f5bcd4e7a5946024645ab9b1173193985361fc203908425fd8cbe",
+   "titulo": "Binance Adds DOGE/TUSD, USDT/ARS & WBTC/USDT Trading Pairs",
+   "publicado": "2023-04-27",
+   "tipo_extraccion": "listado",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! Notice of Removal of Trading Pairs - 2023-09-22 Binance Adds CYBER/ETH & MTL/TRY Trading Pairs Updates on New Binance Loans (Stable"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-adds-ltc-try-and-rad_9908a0712a35.json",
+   "sha256_pagina": "58625c95ab23a0afa6a5216d8423a3c5c3481bf2755e183978f94ad3122832ef",
+   "titulo": "Binance Adds LTC/TRY and RAD/TRY Trading Pairs",
+   "publicado": "2023-06-06",
+   "tipo_extraccion": "listado",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! Notice of Removal of Trading Pairs - 2023-09-22 Binance Adds CYBER/ETH & MTL/TRY Trading Pairs Updates on New Binance Loans (Stable"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-adds-pendle-storj-xe_d5e4a73f3683.json",
+   "sha256_pagina": "8b8ff5af1b29cad808a103c6eef8d2860de69bad131ebb2e968ef93eedc93364",
+   "titulo": "Binance Adds PENDLE, STORJ, XEC & XVG on Cross Margin",
+   "publicado": "2023-07-11",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! About Us About Press Careers Business Contacts Community Blog Building Trust Legal Terms Privacy Risk Warning Announcements News No"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-adds-xvg-on-isolated_3d038dd36b76.json",
+   "sha256_pagina": "5c3f483ada817e1a482622d715fb74c4961af4245ba952c364401d9f51561b10",
+   "titulo": "Binance Adds XVG on Isolated Margin",
+   "publicado": "2023-07-06",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! About Us About Press Careers Business Contacts Community Blog Building Trust Legal Terms Privacy Risk Warning Announcements News No"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-completes-integratio_355f1c66827f.json",
+   "sha256_pagina": "4515f5120ecd20729ef3e99243a0d5ec3ed299a903730b232d6405c94c151ce2",
+   "titulo": "Binance Completes Integration of Bitcoin (BTC) on Lightning Network, Opens Deposits and Withdrawals",
+   "publicado": "2023-07-17",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! About Us About Press Careers Business Contacts Community Blog Building Trust Legal Terms Privacy Risk Warning Announcements News No"
+  },
+  {
+   "par": "OGNUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-completes-integratio_987b323e1f76.json",
+   "sha256_pagina": "4580da7d445a8a49191775e6d6ce2d2c67985e0da0940e24e6a6e66c2f2e2940",
+   "titulo": "Binance Completes Integration of Ethereum (ETH) on zkSync Era Network, Opens Deposits and Withdrawals",
+   "publicado": "2023-09-07",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "rning . Latest Articles Word of the Day: Test Your Knowledge on DeFi to Earn Binance Points and More! Enjoy Up to 50% Discounts With Binance Pay’s Fantastic Deals This October & Get Up to 201 TUSD in Rewards! Updates on Capped Funding Rate of USDⓈ-M OGNUSDT Perpetual Contract (2023-10-01) SEA Exclusive: Create Your First Spot Grid Trading Bot & Get Up to 5 USDT in Rewards! Notice of Removal of Margin Trading Pairs - 2023-10-06 Get 1 USDT When Spending $10 on MooGold With Binance Pay! Refer Friends to B"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-completes-integratio_a08ced9db40c.json",
+   "sha256_pagina": "91ddf97b27917cdd50e798d0b2b4d472e8b2f3f938b12866744872567249d002",
+   "titulo": "Binance Completes Integration of Ooki Protocol (OOKI) on Polygon Network, Opens Deposits and Withdrawals",
+   "publicado": "2023-05-29",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! About Us About Press Careers Business Contacts Community Blog Building Trust Legal Terms Privacy Risk Warning Announcements News No"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-defi-staking-subscri_aca8a7bcd365.json",
+   "sha256_pagina": "992192740bfa471ec22a8b94e89d8a0724a2656a0b78a9dca37d5720a4e4aa48",
+   "titulo": "Binance DeFi Staking: Subscribe to 30-Day ETH DeFi Staking & Earn Up to 6.18% Reward Rates",
+   "publicado": "2023-06-05",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! Notice of Removal of Trading Pairs - 2023-09-22 Binance Adds CYBER/ETH & MTL/TRY Trading Pairs Updates on New Binance Loans (Stable"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-encourages-users-to-_745e4a3ad431.json",
+   "sha256_pagina": "81ba7f8e657f21277eebdb1df41528cf3f86a10ea79a808aac3f0530f6bb7c24",
+   "titulo": "Binance Encourages Users to Convert BUSD to Other Stablecoins Prior to February 2024",
+   "publicado": "2023-08-31",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! About Us About Press Careers Business Contacts Community Blog Building Trust Legal Terms Privacy Risk Warning Announcements News No"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-fan-token-launches-b_ea1774523168.json",
+   "sha256_pagina": "a1cb81a5d401b06e173e9feb30ae15bff053b3b04c9d844d4af5dfd307a8645d",
+   "titulo": "Binance Fan Token Launches Brasileirão Assaí Fanverse",
+   "publicado": "2023-05-30",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! Notice of Removal of Trading Pairs - 2023-09-22 Binance Adds CYBER/ETH & MTL/TRY Trading Pairs Updates on New Binance Loans (Stable"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-feed-level-up-now-to_3736f3d639c7.json",
+   "sha256_pagina": "bfe337b2d5a2ddab3d4268e1d01a644155f564a147a71b2d146072e389c15821",
+   "titulo": "Binance Feed: Level Up Now to Unlock Exclusive Benefits & Earn Up to 5,000 USDT in Monthly Rewards!",
+   "publicado": "2023-05-31",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! Notice of Removal of Trading Pairs - 2023-09-22 Binance Adds CYBER/ETH & MTL/TRY Trading Pairs Updates on New Binance Loans (Stable"
+  },
+  {
+   "par": "ANTUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-futures-will-delist-_45eae86a95c6.json",
+   "sha256_pagina": "51ed3105e858b24c4d563a6dce5a5f28a7e679823c6aa84d75446463bb41bfbf",
+   "titulo": "Binance Futures Will Delist and Update the Leverage & Margin Tiers of USDⓈ-M ANTUSDT, DGBUSDT and CTKUSDT Perpetual Contracts",
+   "publicado": "2024-03-25",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "Binance Futures Will Delist and Update the Leverage & Margin Tiers of USDⓈ-M ANTUSDT, DGBUSDT and CTKUSDT Perpetual Contracts | Binance Support Buy Crypto Markets Trade Basic Spot Buy and sell on the Spot market with advanced tools Margin Increase your profits with leverage P2P Buy & sell cryptocurrencies using bank transfer and 800"
+  },
+  {
+   "par": "DGBUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-futures-will-delist-_45eae86a95c6.json",
+   "sha256_pagina": "51ed3105e858b24c4d563a6dce5a5f28a7e679823c6aa84d75446463bb41bfbf",
+   "titulo": "Binance Futures Will Delist and Update the Leverage & Margin Tiers of USDⓈ-M ANTUSDT, DGBUSDT and CTKUSDT Perpetual Contracts",
+   "publicado": "2024-03-25",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "Binance Futures Will Delist and Update the Leverage & Margin Tiers of USDⓈ-M ANTUSDT, DGBUSDT and CTKUSDT Perpetual Contracts | Binance Support Buy Crypto Markets Trade Basic Spot Buy and sell on the Spot market with advanced tools Margin Increase your profits with leverage P2P Buy & sell cryptocurrencies using bank transfer and 800+ options"
+  },
+  {
+   "par": "CTKUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-futures-will-delist-_45eae86a95c6.json",
+   "sha256_pagina": "51ed3105e858b24c4d563a6dce5a5f28a7e679823c6aa84d75446463bb41bfbf",
+   "titulo": "Binance Futures Will Delist and Update the Leverage & Margin Tiers of USDⓈ-M ANTUSDT, DGBUSDT and CTKUSDT Perpetual Contracts",
+   "publicado": "2024-03-25",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "Binance Futures Will Delist and Update the Leverage & Margin Tiers of USDⓈ-M ANTUSDT, DGBUSDT and CTKUSDT Perpetual Contracts | Binance Support Buy Crypto Markets Trade Basic Spot Buy and sell on the Spot market with advanced tools Margin Increase your profits with leverage P2P Buy & sell cryptocurrencies using bank transfer and 800+ options Convert & B"
+  },
+  {
+   "par": "STPTUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-futures-will-delist-_8312a1af17ff.json",
+   "sha256_pagina": "3c7965e8a3ee8b074fd919f7d863642c235570f8c77a710f9d89c7ba93f33859",
+   "titulo": "Binance Futures Will Delist and Update the Leverage & Margin Tiers of USDⓈ-M STPTUSDT, SNTUSDT, MBLUSDT, RADUSDT and CVXUSDT Perpetual Contracts",
+   "publicado": "2024-05-06",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "Binance Futures Will Delist and Update the Leverage & Margin Tiers of USDⓈ-M STPTUSDT, SNTUSDT, MBLUSDT, RADUSDT and CVXUSDT Perpetual Contracts | Binance Support Buy Crypto Markets Trade Basic Spot Buy and sell on the Spot market with advanced tools Margin Increase your profits with leverage P2P Buy & sell cryptocurrencies using ban"
+  },
+  {
+   "par": "SNTUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-futures-will-delist-_8312a1af17ff.json",
+   "sha256_pagina": "3c7965e8a3ee8b074fd919f7d863642c235570f8c77a710f9d89c7ba93f33859",
+   "titulo": "Binance Futures Will Delist and Update the Leverage & Margin Tiers of USDⓈ-M STPTUSDT, SNTUSDT, MBLUSDT, RADUSDT and CVXUSDT Perpetual Contracts",
+   "publicado": "2024-05-06",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "Binance Futures Will Delist and Update the Leverage & Margin Tiers of USDⓈ-M STPTUSDT, SNTUSDT, MBLUSDT, RADUSDT and CVXUSDT Perpetual Contracts | Binance Support Buy Crypto Markets Trade Basic Spot Buy and sell on the Spot market with advanced tools Margin Increase your profits with leverage P2P Buy & sell cryptocurrencies using bank transfe"
+  },
+  {
+   "par": "MBLUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-futures-will-delist-_8312a1af17ff.json",
+   "sha256_pagina": "3c7965e8a3ee8b074fd919f7d863642c235570f8c77a710f9d89c7ba93f33859",
+   "titulo": "Binance Futures Will Delist and Update the Leverage & Margin Tiers of USDⓈ-M STPTUSDT, SNTUSDT, MBLUSDT, RADUSDT and CVXUSDT Perpetual Contracts",
+   "publicado": "2024-05-06",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "Binance Futures Will Delist and Update the Leverage & Margin Tiers of USDⓈ-M STPTUSDT, SNTUSDT, MBLUSDT, RADUSDT and CVXUSDT Perpetual Contracts | Binance Support Buy Crypto Markets Trade Basic Spot Buy and sell on the Spot market with advanced tools Margin Increase your profits with leverage P2P Buy & sell cryptocurrencies using bank transfer and 800"
+  },
+  {
+   "par": "RADUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-futures-will-delist-_8312a1af17ff.json",
+   "sha256_pagina": "3c7965e8a3ee8b074fd919f7d863642c235570f8c77a710f9d89c7ba93f33859",
+   "titulo": "Binance Futures Will Delist and Update the Leverage & Margin Tiers of USDⓈ-M STPTUSDT, SNTUSDT, MBLUSDT, RADUSDT and CVXUSDT Perpetual Contracts",
+   "publicado": "2024-05-06",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "Binance Futures Will Delist and Update the Leverage & Margin Tiers of USDⓈ-M STPTUSDT, SNTUSDT, MBLUSDT, RADUSDT and CVXUSDT Perpetual Contracts | Binance Support Buy Crypto Markets Trade Basic Spot Buy and sell on the Spot market with advanced tools Margin Increase your profits with leverage P2P Buy & sell cryptocurrencies using bank transfer and 800+ options"
+  },
+  {
+   "par": "CVXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-futures-will-delist-_8312a1af17ff.json",
+   "sha256_pagina": "3c7965e8a3ee8b074fd919f7d863642c235570f8c77a710f9d89c7ba93f33859",
+   "titulo": "Binance Futures Will Delist and Update the Leverage & Margin Tiers of USDⓈ-M STPTUSDT, SNTUSDT, MBLUSDT, RADUSDT and CVXUSDT Perpetual Contracts",
+   "publicado": "2024-05-06",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "Binance Futures Will Delist and Update the Leverage & Margin Tiers of USDⓈ-M STPTUSDT, SNTUSDT, MBLUSDT, RADUSDT and CVXUSDT Perpetual Contracts | Binance Support Buy Crypto Markets Trade Basic Spot Buy and sell on the Spot market with advanced tools Margin Increase your profits with leverage P2P Buy & sell cryptocurrencies using bank transfer and 800+ options Convert & B"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-futures-will-delist-_a72ace7bffa0.json",
+   "sha256_pagina": "a429d30041a14c173032924f79b01fffdcd1d9e9ad1e2ba760f118d2c7235c21",
+   "titulo": "Binance Futures Will Delist and Update the Leverage & Margin Tiers of USDⓈ-M 1000SHIBBUSD Perpetual Contract",
+   "publicado": "2023-05-25",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract About Us About Press Careers Business Contacts Community Blog Building Trust Legal Terms Privacy Risk Warning Announcements News Notices Sitemap Cookie Preferences Products Exchange Academy Leveraged Tokens Live Charity Labs Launc"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-futures-will-delist-_d7ef89578087.json",
+   "sha256_pagina": "5f21756aa9e1e737c086cf613d651a124542a8ab94e4e13ef6a0aedfa3c825cb",
+   "titulo": "Binance Futures Will Delist and Update the Leverage & Margin Tiers of USDⓈ-M 1000LUNCBUSD Perpetual Contract",
+   "publicado": "2023-06-01",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! Notice of Removal of Trading Pairs - 2023-09-22 Binance Adds CYBER/ETH & MTL/TRY Trading Pairs Updates on New Binance Loans (Stable"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-futures-will-discont_64fd3f7a9237.json",
+   "sha256_pagina": "9b7b2fb128fe7f1af1c22cadc28a8a6078f546de71109056e3d6502658f9d02a",
+   "titulo": "Binance Futures Will Discontinue Support for SOL in Multi-Assets Mode",
+   "publicado": "2023-05-26",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! About Us About Press Careers Business Contacts Community Blog Building Trust Legal Terms Privacy Risk Warning Announcements News No"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-futures-will-launch-_0b0e8f716342.json",
+   "sha256_pagina": "20b54e47a414cc9f3636b74a214a1cb528cdf0cd41ce30c8ebe0372316638cd8",
+   "titulo": "Binance Futures Will Launch USDⓈ-M UMA Perpetual Contract With Up to 20X Leverage",
+   "publicado": "2023-05-09",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! About Us About Press Careers Business Contacts Community Blog Building Trust Legal Terms Privacy Risk Warning Announcements News No"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-futures-will-launch-_1d01a4ac2307.json",
+   "sha256_pagina": "6daafa7a6b67e569d7f96db6fce8ebefa115aa300ec40fd1ac4321bca6597775",
+   "titulo": "Binance Futures Will Launch USDⓈ-M ARK Perpetual Contract With Up to 10x Leverage",
+   "publicado": "2023-09-19",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract About Us About Press Careers Business Contacts Community Blog Building Trust Legal Terms Privacy Risk Warning Announcements News Notices Sitemap Cookie Preferences Products Exchange Academy Leveraged Tokens Live Charity Labs Launc"
+  },
+  {
+   "par": "MAVIAUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-futures-will-launch-_33a08841c85a.json",
+   "sha256_pagina": "752e75ffe7bce793994dde6d693353307b134e5c0ab52d402692bd6a04b4ab59",
+   "titulo": "Binance Futures Will Launch USDⓈ-Margined AERGO Perpetual Contract With up to 75x Leverage",
+   "publicado": "2024-09-10",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "the Leverage & Margin Tiers of Multiple USDⓈ-M and COIN-M Perpetual Contracts (2024-12-06) Binance Will List Across Protocol (ACX) and Orca (ORCA) with Seed Tag Applied Binance P2P Launches Merchant Program Upgrade Binance Futures Will Delist USDⓈ-M MAVIAUSDT, OMGUSDT, and BONDUSDT Perpetual Contracts (2024-12-16) Community About Us About Careers Announcements News Press Legal Terms Privacy Building Trust Blog Community Risk Warning Notices Downloads Desktop Application Products Exchange Buy Crypto Pay A"
+  },
+  {
+   "par": "OMGUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-futures-will-launch-_33a08841c85a.json",
+   "sha256_pagina": "752e75ffe7bce793994dde6d693353307b134e5c0ab52d402692bd6a04b4ab59",
+   "titulo": "Binance Futures Will Launch USDⓈ-Margined AERGO Perpetual Contract With up to 75x Leverage",
+   "publicado": "2024-09-10",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "e & Margin Tiers of Multiple USDⓈ-M and COIN-M Perpetual Contracts (2024-12-06) Binance Will List Across Protocol (ACX) and Orca (ORCA) with Seed Tag Applied Binance P2P Launches Merchant Program Upgrade Binance Futures Will Delist USDⓈ-M MAVIAUSDT, OMGUSDT, and BONDUSDT Perpetual Contracts (2024-12-16) Community About Us About Careers Announcements News Press Legal Terms Privacy Building Trust Blog Community Risk Warning Notices Downloads Desktop Application Products Exchange Buy Crypto Pay Academy Li"
+  },
+  {
+   "par": "BONDUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-futures-will-launch-_33a08841c85a.json",
+   "sha256_pagina": "752e75ffe7bce793994dde6d693353307b134e5c0ab52d402692bd6a04b4ab59",
+   "titulo": "Binance Futures Will Launch USDⓈ-Margined AERGO Perpetual Contract With up to 75x Leverage",
+   "publicado": "2024-09-10",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT"
+   ],
+   "contexto": "ers of Multiple USDⓈ-M and COIN-M Perpetual Contracts (2024-12-06) Binance Will List Across Protocol (ACX) and Orca (ORCA) with Seed Tag Applied Binance P2P Launches Merchant Program Upgrade Binance Futures Will Delist USDⓈ-M MAVIAUSDT, OMGUSDT, and BONDUSDT Perpetual Contracts (2024-12-16) Community About Us About Careers Announcements News Press Legal Terms Privacy Building Trust Blog Community Risk Warning Notices Downloads Desktop Application Products Exchange Buy Crypto Pay Academy Live Tax Gift Ca"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-futures-will-launch-_33feb6c8e11b.json",
+   "sha256_pagina": "18373218b1b81b546561cf5d5e6c7e899cdb660b698d0b59ad465cbfa08adeef",
+   "titulo": "Binance Futures Will Launch USDⓈ-M HIFI Perpetual Contract with Up to 20X Leverage",
+   "publicado": "2023-09-16",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! Notice of Removal of Trading Pairs - 2023-09-22 Binance Adds CYBER/ETH & MTL/TRY Trading Pairs Updates on New Binance Loans (Stable"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-futures-will-launch-_490e0fce2ca6.json",
+   "sha256_pagina": "896a1ebd503f03b6b6a6802abc15aaaef285a05b44f70f56dc9c9671fb0575eb",
+   "titulo": "Binance Futures Will Launch USDⓈ-M XVG Perpetual Contract With Up to 20x Leverage",
+   "publicado": "2023-07-04",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! About Us About Press Careers Business Contacts Community Blog Building Trust Legal Terms Privacy Risk Warning Announcements News No"
+  },
+  {
+   "par": "MAVIAUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-futures-will-launch-_a6ac0e409c70.json",
+   "sha256_pagina": "bb5461745170c40f6c4880be0ebab3b0336aaf2dbb891aa018c7cab35bc85f75",
+   "titulo": "Binance Futures Will Launch USDⓈ-Margined CATIUSDT and HMSTRUSDT Perpetual Contracts With up to 75x Leverage",
+   "publicado": "2024-09-16",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "the Leverage & Margin Tiers of Multiple USDⓈ-M and COIN-M Perpetual Contracts (2024-12-06) Binance Will List Across Protocol (ACX) and Orca (ORCA) with Seed Tag Applied Binance P2P Launches Merchant Program Upgrade Binance Futures Will Delist USDⓈ-M MAVIAUSDT, OMGUSDT, and BONDUSDT Perpetual Contracts (2024-12-16) Community About Us About Careers Announcements News Press Legal Terms Privacy Building Trust Blog Community Risk Warning Notices Downloads Desktop Application Products Exchange Buy Crypto Pay A"
+  },
+  {
+   "par": "OMGUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-futures-will-launch-_a6ac0e409c70.json",
+   "sha256_pagina": "bb5461745170c40f6c4880be0ebab3b0336aaf2dbb891aa018c7cab35bc85f75",
+   "titulo": "Binance Futures Will Launch USDⓈ-Margined CATIUSDT and HMSTRUSDT Perpetual Contracts With up to 75x Leverage",
+   "publicado": "2024-09-16",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "e & Margin Tiers of Multiple USDⓈ-M and COIN-M Perpetual Contracts (2024-12-06) Binance Will List Across Protocol (ACX) and Orca (ORCA) with Seed Tag Applied Binance P2P Launches Merchant Program Upgrade Binance Futures Will Delist USDⓈ-M MAVIAUSDT, OMGUSDT, and BONDUSDT Perpetual Contracts (2024-12-16) Community About Us About Careers Announcements News Press Legal Terms Privacy Building Trust Blog Community Risk Warning Notices Downloads Desktop Application Products Exchange Buy Crypto Pay Academy Li"
+  },
+  {
+   "par": "BONDUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-futures-will-launch-_a6ac0e409c70.json",
+   "sha256_pagina": "bb5461745170c40f6c4880be0ebab3b0336aaf2dbb891aa018c7cab35bc85f75",
+   "titulo": "Binance Futures Will Launch USDⓈ-Margined CATIUSDT and HMSTRUSDT Perpetual Contracts With up to 75x Leverage",
+   "publicado": "2024-09-16",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT"
+   ],
+   "contexto": "ers of Multiple USDⓈ-M and COIN-M Perpetual Contracts (2024-12-06) Binance Will List Across Protocol (ACX) and Orca (ORCA) with Seed Tag Applied Binance P2P Launches Merchant Program Upgrade Binance Futures Will Delist USDⓈ-M MAVIAUSDT, OMGUSDT, and BONDUSDT Perpetual Contracts (2024-12-16) Community About Us About Careers Announcements News Press Legal Terms Privacy Building Trust Blog Community Risk Warning Notices Downloads Desktop Application Products Exchange Buy Crypto Pay Academy Live Tax Gift Ca"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-futures-will-launch-_f5ecdee4b163.json",
+   "sha256_pagina": "9893001585bf768653bc827438bff30d56d1ed1d7a9320985590d5eccac21b62",
+   "titulo": "Binance Futures Will Launch USDⓈ-M COMBO Perpetual Contract With Up to 20X Leverage",
+   "publicado": "2023-06-01",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! Notice of Removal of Trading Pairs - 2023-09-22 Binance Adds CYBER/ETH & MTL/TRY Trading Pairs Updates on New Binance Loans (Stable"
+  },
+  {
+   "par": "KAIAUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-futures-will-list-co_daca53f30ee5.json",
+   "sha256_pagina": "ea2d3588d887f00daa1a0cd5e145d488f271dc43c695ee477e3a3c1f413f669f",
+   "titulo": "Binance Futures Will List Coin-Margined Quarterly 1229 Futures Contracts",
+   "publicado": "2023-06-27",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "rage & Margin Tiers of Multiple USDⓈ-M Perpetual Contracts (2024-12-05) Notice on New Trading Pairs & Trading Bots Services on Binance Spot - 2024-12-06 EOS Locked Products: Enjoy Up to 29.9% APR in Rewards! Binance Futures Will Launch USDⓈ-Margined KAIAUSDT and AEROUSDT Perpetual Contracts With up to 75x Leverage Notice of Removal of Spot Trading Pairs - 2024-12-06 Simple Earn Extended Offers: Enjoy 16.2% APR With FDUSD and 7% APR With EURI Products! Southeast Asia Exclusive: Enjoy Zero Fees on Deposit"
+  },
+  {
+   "par": "AEROUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-futures-will-list-co_daca53f30ee5.json",
+   "sha256_pagina": "ea2d3588d887f00daa1a0cd5e145d488f271dc43c695ee477e3a3c1f413f669f",
+   "titulo": "Binance Futures Will List Coin-Margined Quarterly 1229 Futures Contracts",
+   "publicado": "2023-06-27",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": " Tiers of Multiple USDⓈ-M Perpetual Contracts (2024-12-05) Notice on New Trading Pairs & Trading Bots Services on Binance Spot - 2024-12-06 EOS Locked Products: Enjoy Up to 29.9% APR in Rewards! Binance Futures Will Launch USDⓈ-Margined KAIAUSDT and AEROUSDT Perpetual Contracts With up to 75x Leverage Notice of Removal of Spot Trading Pairs - 2024-12-06 Simple Earn Extended Offers: Enjoy 16.2% APR With FDUSD and 7% APR With EURI Products! Southeast Asia Exclusive: Enjoy Zero Fees on Deposits & Buy Crypt"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-futures-will-update-_8d1ea72dd1a6.json",
+   "sha256_pagina": "a4c6ae9ba4468dc68e0037b1990f52a5d755127a7e5d577e8a557c45fe8d1e0a",
+   "titulo": "Binance Futures Will Update the Settlement Frequency of USDⓈ-M HIFIUSDT Perpetual Contract",
+   "publicado": "2023-09-17",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! Notice of Removal of Trading Pairs - 2023-09-22 Binance Adds CYBER/ETH & MTL/TRY Trading Pairs Updates on New Binance Loans (Stable"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-futures-will-update-_becc31c51990.json",
+   "sha256_pagina": "4f0c6af836d815114a343a470d028352b91ecea3d8bc95da6929d8ef1563e4c4",
+   "titulo": "Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M HIFIUSDT Perpetual Contract",
+   "publicado": "2023-09-16",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! Notice of Removal of Trading Pairs - 2023-09-22 Binance Adds CYBER/ETH & MTL/TRY Trading Pairs About Us About Press Careers Busines"
+  },
+  {
+   "par": "KAIAUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-launches-binance-web_d27b54770c50.json",
+   "sha256_pagina": "422376e7f43535e05ead9ce44cfe4df9e342350f439e35a2a1101e934dcf0d50",
+   "titulo": "Binance Launches Binance Web3 Wallet",
+   "publicado": "2023-11-08",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "rage & Margin Tiers of Multiple USDⓈ-M Perpetual Contracts (2024-12-05) Notice on New Trading Pairs & Trading Bots Services on Binance Spot - 2024-12-06 EOS Locked Products: Enjoy Up to 29.9% APR in Rewards! Binance Futures Will Launch USDⓈ-Margined KAIAUSDT and AEROUSDT Perpetual Contracts With up to 75x Leverage Notice of Removal of Spot Trading Pairs - 2024-12-06 Simple Earn Extended Offers: Enjoy 16.2% APR With FDUSD and 7% APR With EURI Products! Southeast Asia Exclusive: Enjoy Zero Fees on Deposit"
+  },
+  {
+   "par": "AEROUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-launches-binance-web_d27b54770c50.json",
+   "sha256_pagina": "422376e7f43535e05ead9ce44cfe4df9e342350f439e35a2a1101e934dcf0d50",
+   "titulo": "Binance Launches Binance Web3 Wallet",
+   "publicado": "2023-11-08",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": " Tiers of Multiple USDⓈ-M Perpetual Contracts (2024-12-05) Notice on New Trading Pairs & Trading Bots Services on Binance Spot - 2024-12-06 EOS Locked Products: Enjoy Up to 29.9% APR in Rewards! Binance Futures Will Launch USDⓈ-Margined KAIAUSDT and AEROUSDT Perpetual Contracts With up to 75x Leverage Notice of Removal of Spot Trading Pairs - 2024-12-06 Simple Earn Extended Offers: Enjoy 16.2% APR With FDUSD and 7% APR With EURI Products! Southeast Asia Exclusive: Enjoy Zero Fees on Deposits & Buy Crypt"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-launches-new-portfol_d7233d9ac04d.json",
+   "sha256_pagina": "0a259422bb4b4d5630b323fc319c287a0ca57f74ed4c24dff5e99455ea077152",
+   "titulo": "Binance Launches New Portfolio Margin Program",
+   "publicado": "2023-06-05",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! Notice of Removal of Trading Pairs - 2023-09-22 Binance Adds CYBER/ETH & MTL/TRY Trading Pairs Updates on New Binance Loans (Stable"
+  },
+  {
+   "par": "OGNUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-nft-important-update_ed6db39e677f.json",
+   "sha256_pagina": "0b63b6dfaad8891d4a685b32b0566fbb58d49cb7738757c8d4f18dfd441d7b83",
+   "titulo": "Binance NFT: Important Updates on The Sandbox NFT Staking Program and Polygon Network Support",
+   "publicado": "2023-09-08",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "y Rewards and APR are adjusted daily and the estimated rewards may differ from the actual rewards generated. Not financial advice. For more information, see our Terms of Use and Risk Warning . Latest Articles Updates on Capped Funding Rate of USDⓈ-M OGNUSDT Perpetual Contract (2023-10-01) SEA Exclusive: Create Your First Spot Grid Trading Bot & Get Up to 5 USDT in Rewards! Notice of Removal of Margin Trading Pairs - 2023-10-06 Get 1 USDT When Spending $10 on MooGold With Binance Pay! Refer Friends to B"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-nft-launches-nft-vip_d58fb2d55a4e.json",
+   "sha256_pagina": "d0ee31b96545a7c0c001a832347ae5fbf152a7dc855d8b58a16a19d02850e9c2",
+   "titulo": "Binance NFT Launches NFT VIP Program",
+   "publicado": "2023-05-29",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! Notice of Removal of Trading Pairs - 2023-09-22 Binance Adds CYBER/ETH & MTL/TRY Trading Pairs Updates on New Binance Loans (Stable"
+  },
+  {
+   "par": "DIAUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-october-missions-com_af84c7d9310b.json",
+   "sha256_pagina": "6d52087284f0a8043f7057b1c719c71af6a40a213246224b0ccbdf09c23bef3b",
+   "titulo": "Binance October Missions: Complete Missions to Share 2,000,000 Binance Points & Unlock Exclusive Rewards! (2024-10-01)",
+   "publicado": "2024-10-01",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "8) AVA Flexible Products: Complete Subscription to Enjoy Up to 5% Bonus Tiered APR! Celebrating New Payment Method for Romanian Lei (RON): Buy USDC with Cash via Tradesilvania to Share Token Voucher Rewards! Binance Futures Will Launch USDⓈ-Margined DIAUSDT Perpetual Contract With up to 75x Leverage Binance Will Support the Cosmos (ATOM) Network Upgrade Web3 Wallet Earn Update: Enhancing Simple Yield with 13 New Protocols and Binance SOL Staking! Notice of Removal of Spot Trading Pairs - 2024-10-04 Com"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-options-will-launch-_436371543060.json",
+   "sha256_pagina": "cf8fbe01728b1f0561e6645c9f2ef89f4a4f6374bc6fa659227c60c05a2ee3c5",
+   "titulo": "Binance Options Will Launch Additional BNBUSDT Daily Options",
+   "publicado": "2023-08-29",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! About Us About Press Careers Business Contacts Community Blog Building Trust Legal Terms Privacy Risk Warning Announcements News No"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-resumes-torn-deposit_2ae8550e43a0.json",
+   "sha256_pagina": "521cd9053f3f07198287d49b88c0f8ce4e99cd03ef423d433d019550aed89f60",
+   "titulo": "Binance Resumes TORN Deposits via Ethereum Network & BNB Smart Chain, Will Move TORN into the Innovation Zone by 2023-05-30",
+   "publicado": "2023-05-29",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! Notice of Removal of Trading Pairs - 2023-09-22 Binance Adds CYBER/ETH & MTL/TRY Trading Pairs Updates on New Binance Loans (Stable"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-simple-earn-complete_c3bd910351a0.json",
+   "sha256_pagina": "82f145f90335e22ab9c99f9cb4c112618fe1360aa3029c124d3ef4b52712b38b",
+   "titulo": "Binance Simple Earn: Complete a Quiz on EOS to Receive a Free EOS Locked Products Position!",
+   "publicado": "2023-05-26",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! Notice of Removal of Trading Pairs - 2023-09-22 Binance Adds CYBER/ETH & MTL/TRY Trading Pairs Updates on New Binance Loans (Stable"
+  },
+  {
+   "par": "OGNUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-updates-vip-borrower_9445ee19e300.json",
+   "sha256_pagina": "3aa7f90e424d2e1532dbe77320c884e9bc6fe311e6e8b8059fd10f43f590932c",
+   "titulo": "Binance Updates VIP Borrower Program (2023-06-01)",
+   "publicado": "2023-05-31",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": " 5,000 USDT in Rewards! Word of the Day: Test Your Knowledge on DeFi to Earn Binance Points and More! Enjoy Up to 50% Discounts With Binance Pay’s Fantastic Deals This October & Get Up to 201 TUSD in Rewards! Updates on Capped Funding Rate of USDⓈ-M OGNUSDT Perpetual Contract (2023-10-01) SEA Exclusive: Create Your First Spot Grid Trading Bot & Get Up to 5 USDT in Rewards! Notice of Removal of Margin Trading Pairs - 2023-10-06 Get 1 USDT When Spending $10 on MooGold With Binance Pay! Refer Friends to B"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-upgrades-usd_e2_93_a_be664a855bec.json",
+   "sha256_pagina": "b7e5538d753293e6ddb60043d8434070a246559caa66ec8450dcbfdebcd7d1c9",
+   "titulo": "Binance Upgrades USDⓢ-Margined Futures Liquidity Provider Program (2023-06-05)",
+   "publicado": "2023-06-01",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! Notice of Removal of Trading Pairs - 2023-09-22 Binance Adds CYBER/ETH & MTL/TRY Trading Pairs Updates on New Binance Loans (Stable"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-vip-program-standard_924fe3c3adf7.json",
+   "sha256_pagina": "f0913210cb7576afd77122451700b0b9ca9b209d20222c4c59eda7695845c3ee",
+   "titulo": "Binance VIP Program, Standard Referral and Affiliate Programs Update: VIP 3-9 Users to Enjoy 40% Off Spot and Margin Trading Fees",
+   "publicado": "2023-05-31",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! Notice of Removal of Trading Pairs - 2023-09-22 Binance Adds CYBER/ETH & MTL/TRY Trading Pairs Updates on New Binance Loans (Stable"
+  },
+  {
+   "par": "MAVIAUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-web3-wallet-airdrop-_6f84e9534061.json",
+   "sha256_pagina": "01301c42d555d502c83c20a7a06b69fd4ea3417285d99505257a14740ea52127",
+   "titulo": "Binance Web3 Wallet Airdrop: Grab Your Share of 1,000,000 Polyhedra Network Tokens!",
+   "publicado": "2024-02-06",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "the Leverage & Margin Tiers of Multiple USDⓈ-M and COIN-M Perpetual Contracts (2024-12-06) Binance Will List Across Protocol (ACX) and Orca (ORCA) with Seed Tag Applied Binance P2P Launches Merchant Program Upgrade Binance Futures Will Delist USDⓈ-M MAVIAUSDT, OMGUSDT, and BONDUSDT Perpetual Contracts (2024-12-16) Community About Us About Careers Announcements News Press Legal Terms Privacy Building Trust Blog Community Risk Warning Notices Downloads Desktop Application Products Exchange Buy Crypto Pay A"
+  },
+  {
+   "par": "OMGUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-web3-wallet-airdrop-_6f84e9534061.json",
+   "sha256_pagina": "01301c42d555d502c83c20a7a06b69fd4ea3417285d99505257a14740ea52127",
+   "titulo": "Binance Web3 Wallet Airdrop: Grab Your Share of 1,000,000 Polyhedra Network Tokens!",
+   "publicado": "2024-02-06",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "e & Margin Tiers of Multiple USDⓈ-M and COIN-M Perpetual Contracts (2024-12-06) Binance Will List Across Protocol (ACX) and Orca (ORCA) with Seed Tag Applied Binance P2P Launches Merchant Program Upgrade Binance Futures Will Delist USDⓈ-M MAVIAUSDT, OMGUSDT, and BONDUSDT Perpetual Contracts (2024-12-16) Community About Us About Careers Announcements News Press Legal Terms Privacy Building Trust Blog Community Risk Warning Notices Downloads Desktop Application Products Exchange Buy Crypto Pay Academy Li"
+  },
+  {
+   "par": "BONDUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-web3-wallet-airdrop-_6f84e9534061.json",
+   "sha256_pagina": "01301c42d555d502c83c20a7a06b69fd4ea3417285d99505257a14740ea52127",
+   "titulo": "Binance Web3 Wallet Airdrop: Grab Your Share of 1,000,000 Polyhedra Network Tokens!",
+   "publicado": "2024-02-06",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT"
+   ],
+   "contexto": "ers of Multiple USDⓈ-M and COIN-M Perpetual Contracts (2024-12-06) Binance Will List Across Protocol (ACX) and Orca (ORCA) with Seed Tag Applied Binance P2P Launches Merchant Program Upgrade Binance Futures Will Delist USDⓈ-M MAVIAUSDT, OMGUSDT, and BONDUSDT Perpetual Contracts (2024-12-16) Community About Us About Careers Announcements News Press Legal Terms Privacy Building Trust Blog Community Risk Warning Notices Downloads Desktop Application Products Exchange Buy Crypto Pay Academy Live Tax Gift Ca"
+  },
+  {
+   "par": "MAVIAUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-delist-idrt-kp3_1ffb11650aa9.json",
+   "sha256_pagina": "83f506376c3492d9fddf47b0f7f7a5af21072f7a3c2ddf31d04d2a5c6c80a238",
+   "titulo": "Binance Will Delist IDRT, KP3R, OOKI, UNFI on 2024-11-06",
+   "publicado": "2024-10-23",
+   "tipo_extraccion": "exclusion",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "the Leverage & Margin Tiers of Multiple USDⓈ-M and COIN-M Perpetual Contracts (2024-12-06) Binance Will List Across Protocol (ACX) and Orca (ORCA) with Seed Tag Applied Binance P2P Launches Merchant Program Upgrade Binance Futures Will Delist USDⓈ-M MAVIAUSDT, OMGUSDT, and BONDUSDT Perpetual Contracts (2024-12-16) Community About Us About Careers Announcements News Press Legal Terms Privacy Building Trust Blog Community Risk Warning Notices Downloads Desktop Application Products Exchange Buy Crypto Pay A"
+  },
+  {
+   "par": "OMGUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-delist-idrt-kp3_1ffb11650aa9.json",
+   "sha256_pagina": "83f506376c3492d9fddf47b0f7f7a5af21072f7a3c2ddf31d04d2a5c6c80a238",
+   "titulo": "Binance Will Delist IDRT, KP3R, OOKI, UNFI on 2024-11-06",
+   "publicado": "2024-10-23",
+   "tipo_extraccion": "exclusion",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "e & Margin Tiers of Multiple USDⓈ-M and COIN-M Perpetual Contracts (2024-12-06) Binance Will List Across Protocol (ACX) and Orca (ORCA) with Seed Tag Applied Binance P2P Launches Merchant Program Upgrade Binance Futures Will Delist USDⓈ-M MAVIAUSDT, OMGUSDT, and BONDUSDT Perpetual Contracts (2024-12-16) Community About Us About Careers Announcements News Press Legal Terms Privacy Building Trust Blog Community Risk Warning Notices Downloads Desktop Application Products Exchange Buy Crypto Pay Academy Li"
+  },
+  {
+   "par": "BONDUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-delist-idrt-kp3_1ffb11650aa9.json",
+   "sha256_pagina": "83f506376c3492d9fddf47b0f7f7a5af21072f7a3c2ddf31d04d2a5c6c80a238",
+   "titulo": "Binance Will Delist IDRT, KP3R, OOKI, UNFI on 2024-11-06",
+   "publicado": "2024-10-23",
+   "tipo_extraccion": "exclusion",
+   "etiquetas": [
+    "FUT"
+   ],
+   "contexto": "ers of Multiple USDⓈ-M and COIN-M Perpetual Contracts (2024-12-06) Binance Will List Across Protocol (ACX) and Orca (ORCA) with Seed Tag Applied Binance P2P Launches Merchant Program Upgrade Binance Futures Will Delist USDⓈ-M MAVIAUSDT, OMGUSDT, and BONDUSDT Perpetual Contracts (2024-12-16) Community About Us About Careers Announcements News Press Legal Terms Privacy Building Trust Blog Community Risk Warning Notices Downloads Desktop Application Products Exchange Buy Crypto Pay Academy Live Tax Gift Ca"
+  },
+  {
+   "par": "OMGUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-list-binance-st_bf9342e5ec66.json",
+   "sha256_pagina": "2f538517640cbcca03dad00317e532de892028f16e0e1a79f8e4a96172bf1019",
+   "titulo": "Binance Will List Binance Staked SOL (BNSOL) and Introduce BNSOL Boosted APR Promotion",
+   "publicado": "2024-10-09",
+   "tipo_extraccion": "listado",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": " construed as financial advice. For more information, see our Terms of Use and Risk Warning . Share Register to get rewards Register Now - Get up to 100 USDT in trading fee rebate (for verified users) Register Now Latest Articles Delisting of USDⓈ-M OMGUSDT Perpetual Contract Postponed Binance Will Add Velodrome Finance (VELODROME) on Earn, Buy Crypto, Convert, Margin & Futures Binance Futures Will Launch USDⓈ-Margined AVAUSDT and DEGOUSDT Perpetual Contracts With up to 75x Leverage Binance Convert Chr"
+  },
+  {
+   "par": "AVAUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-list-binance-st_bf9342e5ec66.json",
+   "sha256_pagina": "2f538517640cbcca03dad00317e532de892028f16e0e1a79f8e4a96172bf1019",
+   "titulo": "Binance Will List Binance Staked SOL (BNSOL) and Introduce BNSOL Boosted APR Promotion",
+   "publicado": "2024-10-09",
+   "tipo_extraccion": "listado",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "rebate (for verified users) Register Now Latest Articles Delisting of USDⓈ-M OMGUSDT Perpetual Contract Postponed Binance Will Add Velodrome Finance (VELODROME) on Earn, Buy Crypto, Convert, Margin & Futures Binance Futures Will Launch USDⓈ-Margined AVAUSDT and DEGOUSDT Perpetual Contracts With up to 75x Leverage Binance Convert Christmas Exclusive: Trade the Top-Performing Tokens to Share 12,000 USDC in Rewards Introducing Vana (VANA) on Binance Launchpool! Farm VANA by Locking BNB and FDUSD Community"
+  },
+  {
+   "par": "DEGOUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-list-binance-st_bf9342e5ec66.json",
+   "sha256_pagina": "2f538517640cbcca03dad00317e532de892028f16e0e1a79f8e4a96172bf1019",
+   "titulo": "Binance Will List Binance Staked SOL (BNSOL) and Introduce BNSOL Boosted APR Promotion",
+   "publicado": "2024-10-09",
+   "tipo_extraccion": "listado",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "verified users) Register Now Latest Articles Delisting of USDⓈ-M OMGUSDT Perpetual Contract Postponed Binance Will Add Velodrome Finance (VELODROME) on Earn, Buy Crypto, Convert, Margin & Futures Binance Futures Will Launch USDⓈ-Margined AVAUSDT and DEGOUSDT Perpetual Contracts With up to 75x Leverage Binance Convert Christmas Exclusive: Trade the Top-Performing Tokens to Share 12,000 USDC in Rewards Introducing Vana (VANA) on Binance Launchpool! Farm VANA by Locking BNB and FDUSD Community About Us Abo"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-open-trading-fo_8d39d53772bc.json",
+   "sha256_pagina": "3502bd0412ae6631badc5ac10493506fe91e2b51775680b7931c4015d3f6158e",
+   "titulo": "Binance Will Open Trading for SUI",
+   "publicado": "2023-05-03",
+   "tipo_extraccion": "listado",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! Notice of Removal of Trading Pairs - 2023-09-22 Binance Adds CYBER/ETH & MTL/TRY Trading Pairs Updates on New Binance Loans (Stable"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-reduce-the-proc_c606b97322bd.json",
+   "sha256_pagina": "d49931a6743539b9463aac534c237587b479b6a7b268280e5f6c3fa5e3694cd5",
+   "titulo": "Binance Will Reduce the Processing Time for ETH Staking Withdrawals",
+   "publicado": "2023-05-11",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! About Us About Press Careers Business Contacts Community Blog Building Trust Legal Terms Privacy Risk Warning Announcements News No"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-bnb_a8f596c8fec0.json",
+   "sha256_pagina": "67653b580065fc5271a45d6636f45af7ee1e3a9f4a5f008fbd6886155a286ec6",
+   "titulo": "Binance Will Support the BNB Smart Chain (BEP20) Network Upgrade & Hard Fork",
+   "publicado": "2023-06-01",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": " investment. This material should not be construed as financial advice. For more information, see our Terms of Use and Risk Warning . Latest Articles Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! Notice of Removal of Trading Pairs - 2023-09-22 Binance Adds CYBER/ETH & MTL/TRY Trading Pairs Updates on New Binance Loans (Stable"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-con_0581134f2591.json",
+   "sha256_pagina": "4d7039ca64acc1f6e7307a5f543e71605e3066536f3fec5df8064a530982298f",
+   "titulo": "Binance Will Support the Conflux Network (CFX) Mainnet Integration",
+   "publicado": "2023-04-11",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! About Us About Press Careers Business Contacts Community Blog Building Trust Legal Terms Privacy Risk Warning Announcements News No"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-hor_3782de259057.json",
+   "sha256_pagina": "949b174505074761c2101635bfe30efffebde0201d2fa02dd90c69844bc89e58",
+   "titulo": "Binance Will Support the Horizen (ZEN) Network Upgrade & Hard Fork",
+   "publicado": "2023-06-06",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! About Us About Press Careers Business Contacts Community Blog Building Trust Legal Terms Privacy Risk Warning Announcements News No"
+  },
+  {
+   "par": "OGNUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-hor_7c1cb63a8ada.json",
+   "sha256_pagina": "a4f0a1c23801a3e7405f42971856fb32b414ccf29b45bc81ceec9b4efbd135f9",
+   "titulo": "Binance Will Support the Horizen (ZEN) Network Upgrade & Hard Fork",
+   "publicado": "2023-09-19",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": " 5,000 USDT in Rewards! Word of the Day: Test Your Knowledge on DeFi to Earn Binance Points and More! Enjoy Up to 50% Discounts With Binance Pay’s Fantastic Deals This October & Get Up to 201 TUSD in Rewards! Updates on Capped Funding Rate of USDⓈ-M OGNUSDT Perpetual Contract (2023-10-01) SEA Exclusive: Create Your First Spot Grid Trading Bot & Get Up to 5 USDT in Rewards! Notice of Removal of Margin Trading Pairs - 2023-10-06 Get 1 USDT When Spending $10 on MooGold With Binance Pay! Refer Friends to B"
+  },
+  {
+   "par": "PONKEUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-hor_c52e910d4063.json",
+   "sha256_pagina": "6420ca70f08b8af97c5b6f5d919269ed49c36234000170233c97d73144eb0439",
+   "titulo": "Binance Will Support the Horizen (ZEN) Network Upgrade",
+   "publicado": "2024-09-02",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "Up to 7 Days Interest-Free Borrowing on USDT, FDUSD or USDC Flexible Loans Notice of Removal of Margin Trading Pairs - 2024-11-14 Binance Futures Copy Trading Adds New USDⓈ-M Perpetual Contracts (2024-11-05) Binance Futures Will Launch USDⓈ-Margined PONKEUSDT Perpetual Contract With up to 75x Leverage Updates on Binance Futures Settlement Price Calculation Word of the Day: Test Your Knowledge on “Crypto Mining” to Earn Binance Points and More! Community About Us About Careers Announcements News Press Leg"
+  },
+  {
+   "par": "MCUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-mer_425adfd88510.json",
+   "sha256_pagina": "71ca74276767eb5193f3f72b2e6b4b71d7292f579a23dccc688a04b5d2127d8d",
+   "titulo": "Binance Will Support the Merit Circle (MC) Token Swap, Redenomination and Rebranding to Beam (BEAMX)",
+   "publicado": "2023-10-25",
+   "tipo_extraccion": "renombre",
+   "etiquetas": [
+    "OTRO"
+   ],
+   "contexto": "art contract addresses : ERC20 ; BEP20 . Token Swap and Redenomination All MC tokens will be swapped for BEAMX at a ratio of 1 MC = 100 BEAMX . Spot At 2023-11-07 03:00 (UTC) , Binance will delist all existing MC spot trading pairs (i.e., MC/BTC and MC/USDT) and cancel all pending MC spot trade orders. Binance will terminate Trading Bots services for the aforementioned spot trading pairs at 2023-11-07 03:00 (UTC) , where applicable. Users are strongly advised to update and/or cancel their Trading Bots "
+  },
+  {
+   "par": "PONKEUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-pep_f319d0e8cf60.json",
+   "sha256_pagina": "53e16153a7eded3f32547cc04cdedfbf988c6cb3d518ab4b4e621ff87e8e3705",
+   "titulo": "Binance Will Support the Pepper (1000PEPPER) Airdrop for Chiliz (CHZ) Holders",
+   "publicado": "2024-10-09",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "Up to 7 Days Interest-Free Borrowing on USDT, FDUSD or USDC Flexible Loans Notice of Removal of Margin Trading Pairs - 2024-11-14 Binance Futures Copy Trading Adds New USDⓈ-M Perpetual Contracts (2024-11-05) Binance Futures Will Launch USDⓈ-Margined PONKEUSDT Perpetual Contract With up to 75x Leverage Updates on Binance Futures Settlement Price Calculation Community About Us About Careers Announcements News Press Legal Terms Privacy Building Trust Blog Community Risk Warning Notices Downloads Desktop App"
+  },
+  {
+   "par": "PLAUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-pla_dc497a97c163.json",
+   "sha256_pagina": "6209b96887f3e1ae9de503e3d1f7b8442a32d621755c95f91e12e74c023dd6b7",
+   "titulo": "Binance Will Support the PlayDapp (PLA) Token Swap to PlayDapp (PDA)",
+   "publicado": "2024-02-22",
+   "tipo_extraccion": "renombre",
+   "etiquetas": [
+    "OTRO"
+   ],
+   "contexto": "ion. Token Swap PLA tokens will assume the ticker of PDA on Binance ( i.e. , 1 PLA = 1 PDA ). PlayDapp (PDA) smart contract address : ERC20 . Spot At 2024-02-26 03:00 (UTC) , Binance will delist all existing PLA spot trading pairs (i.e., PLA/BTC and PLA/USDT) and cancel all pending PLA spot trade orders. Binance will terminate Trading Bots services for the aforementioned spot trading pairs at 2024-02-26 03:00 (UTC) , where applicable. Users are strongly advised to update and/or cancel their Trading Bots"
+  },
+  {
+   "par": "PDAUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-pla_dc497a97c163.json",
+   "sha256_pagina": "6209b96887f3e1ae9de503e3d1f7b8442a32d621755c95f91e12e74c023dd6b7",
+   "titulo": "Binance Will Support the PlayDapp (PLA) Token Swap to PlayDapp (PDA)",
+   "publicado": "2024-02-22",
+   "tipo_extraccion": "renombre",
+   "etiquetas": [
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "26 03:00 (UTC) , where applicable. Users are strongly advised to update and/or cancel their Trading Bots prior to the cessation of Trading Bots services to avoid any potential losses. At 2024-03-01 08:00 (UTC) , trading will open for the PDA/BTC and PDA/USDT spot trading pairs. Margin and VIP Loan PLA was removed from Margin and VIP Loan as per the schedule announced here. Earn At 2024-02-23 02:00 (UTC) , Binance Simple Earn will cease support for PLA Simple Earn Flexible Products, and subscriptions wil"
+  },
+  {
+   "par": "MATICUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-pol_6ce597c88773.json",
+   "sha256_pagina": "230c690c9ef7636eeb118380b60481b4a8a3039197746729985e2ae82008c63a",
+   "titulo": "Binance Will Support the Polygon (MATIC) Token Swap to Polygon (POL)",
+   "publicado": "2024-08-28",
+   "tipo_extraccion": "renombre",
+   "etiquetas": [],
+   "contexto": "t the Polygon (MATIC) token swap to Polygon (POL). At 2024-09-10 03:00 (UTC) , Binance will delist all existing MATIC spot trading pairs (i.e., MATIC/BNB, MATIC/BRL, MATIC/BTC, MATIC/ETH, MATIC/EUR, MATIC/FDUSD, MATIC/JPY, MATIC/TRY, MATIC/USDC, and MATIC/USDT) and cancel all pending MATIC spot trading orders. At 2024-09-13 10:00 (UTC) , Binance will open trading for the POL/BNB, POL/BRL, POL/BTC, POL/ETH, POL/EUR, POL/FDUSD, POL/JPY, POL/TRY, POL/USDC, and POL/USDT trading pairs. General Deposits and Wit"
+  },
+  {
+   "par": "QUICKUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-qui_8e8c44b03471.json",
+   "sha256_pagina": "1cc0ff29d338063106a728dff83654f7766d09758bb7c7904f029d7c72c697f4",
+   "titulo": "Binance Will Support the QuickSwap (QUICK) Token Swap and Redenomination Plan",
+   "publicado": "2023-07-10",
+   "tipo_extraccion": "renombre",
+   "etiquetas": [
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "gin borrowing, as well as QUICK/BTC, QUICK/BUSD and QUICK/USDT isolated margin borrowing. At 2023-07-13 06:00 (UTC) , Binance will close users’ positions, conduct an automatic settlement and cancel all pending orders on the QUICK/BTC, QUICK/BUSD and QUICK/USDT cross and isolated margin pairs. If users have any outstanding cross margin and/or isolated margin loans, QUICK assets held in their cross margin and/or isolated margin accounts may be sold. We will then delist these pairs from cross margin and isol"
+  },
+  {
+   "par": "MAVIAUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-sei_a1d65387a4fa.json",
+   "sha256_pagina": "9ccc77102f5e1220d7e9fed2c5069b0921f13a9817cb83e2e99e4f4c92a9ea67",
+   "titulo": "Binance Will Support the Sei (SEI) and Ronin (RON) Network Upgrades & Hard Forks",
+   "publicado": "2023-10-20",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "the Leverage & Margin Tiers of Multiple USDⓈ-M and COIN-M Perpetual Contracts (2024-12-06) Binance Will List Across Protocol (ACX) and Orca (ORCA) with Seed Tag Applied Binance P2P Launches Merchant Program Upgrade Binance Futures Will Delist USDⓈ-M MAVIAUSDT, OMGUSDT, and BONDUSDT Perpetual Contracts (2024-12-16) Community About Us About Careers Announcements News Press Legal Terms Privacy Building Trust Blog Community Risk Warning Notices Downloads Desktop Application Products Exchange Buy Crypto Pay A"
+  },
+  {
+   "par": "OMGUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-sei_a1d65387a4fa.json",
+   "sha256_pagina": "9ccc77102f5e1220d7e9fed2c5069b0921f13a9817cb83e2e99e4f4c92a9ea67",
+   "titulo": "Binance Will Support the Sei (SEI) and Ronin (RON) Network Upgrades & Hard Forks",
+   "publicado": "2023-10-20",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "e & Margin Tiers of Multiple USDⓈ-M and COIN-M Perpetual Contracts (2024-12-06) Binance Will List Across Protocol (ACX) and Orca (ORCA) with Seed Tag Applied Binance P2P Launches Merchant Program Upgrade Binance Futures Will Delist USDⓈ-M MAVIAUSDT, OMGUSDT, and BONDUSDT Perpetual Contracts (2024-12-16) Community About Us About Careers Announcements News Press Legal Terms Privacy Building Trust Blog Community Risk Warning Notices Downloads Desktop Application Products Exchange Buy Crypto Pay Academy Li"
+  },
+  {
+   "par": "BONDUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-sei_a1d65387a4fa.json",
+   "sha256_pagina": "9ccc77102f5e1220d7e9fed2c5069b0921f13a9817cb83e2e99e4f4c92a9ea67",
+   "titulo": "Binance Will Support the Sei (SEI) and Ronin (RON) Network Upgrades & Hard Forks",
+   "publicado": "2023-10-20",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT"
+   ],
+   "contexto": "ers of Multiple USDⓈ-M and COIN-M Perpetual Contracts (2024-12-06) Binance Will List Across Protocol (ACX) and Orca (ORCA) with Seed Tag Applied Binance P2P Launches Merchant Program Upgrade Binance Futures Will Delist USDⓈ-M MAVIAUSDT, OMGUSDT, and BONDUSDT Perpetual Contracts (2024-12-16) Community About Us About Careers Announcements News Press Legal Terms Privacy Building Trust Blog Community Risk Warning Notices Downloads Desktop Application Products Exchange Buy Crypto Pay Academy Live Tax Gift Ca"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-sta_659f6d027d20.json",
+   "sha256_pagina": "76ce2c0c4971cad2448c522c42d4e8c27f8d8f614d69716732ccf334c5b6a9c2",
+   "titulo": "Binance Will Support the Stacks (STX) Network Upgrade & Hard Fork",
+   "publicado": "2023-05-26",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! About Us About Press Careers Business Contacts Community Blog Building Trust Legal Terms Privacy Risk Warning Announcements News No"
+  },
+  {
+   "par": "STRAXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-str_b8603784a245.json",
+   "sha256_pagina": "f56875228a00dac3650eacf07c3370bceb70dd759e9c2b4b716cbff74f0d3f96",
+   "titulo": "Binance Will Support the Stratis (STRAX) Token Swap and Redenomination Plan",
+   "publicado": "2024-03-08",
+   "tipo_extraccion": "renombre",
+   "etiquetas": [
+    "FUT"
+   ],
+   "contexto": "Perpetual Contract. Please note that users are allowed to close any existing positions after this time. At 2024-03-15 09:00 (UTC) , Binance Futures will close all positions, conduct an automatic settlement and cancel all pending orders on the USDⓈ-M STRAXUSDT Perpetual Contract, and delist this contract after the settlement is complete. Users are advised to close any open positions prior to 2024-03-15 09:00 (UTC) to avoid automatic settlement. Please refer to the delisting process of futures contracts fo"
+  },
+  {
+   "par": "PONKEUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-ter_016f4c8ab06e.json",
+   "sha256_pagina": "09be41ae2b75e583e143d14426344a090845446ad8cc0e379c0bf81aa014891c",
+   "titulo": "Binance Will Support the Terra Classic (LUNC) Network Upgrade",
+   "publicado": "2024-09-18",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "Up to 7 Days Interest-Free Borrowing on USDT, FDUSD or USDC Flexible Loans Notice of Removal of Margin Trading Pairs - 2024-11-14 Binance Futures Copy Trading Adds New USDⓈ-M Perpetual Contracts (2024-11-05) Binance Futures Will Launch USDⓈ-Margined PONKEUSDT Perpetual Contract With up to 75x Leverage Updates on Binance Futures Settlement Price Calculation Word of the Day: Test Your Knowledge on “Crypto Mining” to Earn Binance Points and More! Community About Us About Careers Announcements News Press Leg"
+  },
+  {
+   "par": "OGNUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-tru_8a1e87682669.json",
+   "sha256_pagina": "f4f6c3c5f860b7f77efde46e04f949bf9f3e91e7fb4fc5c6b828bbff214c7753",
+   "titulo": "Binance Will Support the TrueUSD (TUSD) Contract Swap",
+   "publicado": "2023-06-08",
+   "tipo_extraccion": "renombre",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": " 5,000 USDT in Rewards! Word of the Day: Test Your Knowledge on DeFi to Earn Binance Points and More! Enjoy Up to 50% Discounts With Binance Pay’s Fantastic Deals This October & Get Up to 201 TUSD in Rewards! Updates on Capped Funding Rate of USDⓈ-M OGNUSDT Perpetual Contract (2023-10-01) SEA Exclusive: Create Your First Spot Grid Trading Bot & Get Up to 5 USDT in Rewards! Notice of Removal of Margin Trading Pairs - 2023-10-06 Get 1 USDT When Spending $10 on MooGold With Binance Pay! Community About Us"
+  },
+  {
+   "par": "MAVIAUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-zil_28f6abe4512f.json",
+   "sha256_pagina": "b7dd69b1c1d65a4df778bfecadd7013cbcba640b22e512152d9cdc78443e0eef",
+   "titulo": "Announcement",
+   "publicado": "2024-01-03",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "the Leverage & Margin Tiers of Multiple USDⓈ-M and COIN-M Perpetual Contracts (2024-12-06) Binance Will List Across Protocol (ACX) and Orca (ORCA) with Seed Tag Applied Binance P2P Launches Merchant Program Upgrade Binance Futures Will Delist USDⓈ-M MAVIAUSDT, OMGUSDT, and BONDUSDT Perpetual Contracts (2024-12-16) Community About Us About Careers Announcements News Press Legal Terms Privacy Building Trust Blog Community Risk Warning Notices Downloads Desktop Application Products Exchange Buy Crypto Pay A"
+  },
+  {
+   "par": "OMGUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-zil_28f6abe4512f.json",
+   "sha256_pagina": "b7dd69b1c1d65a4df778bfecadd7013cbcba640b22e512152d9cdc78443e0eef",
+   "titulo": "Announcement",
+   "publicado": "2024-01-03",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "e & Margin Tiers of Multiple USDⓈ-M and COIN-M Perpetual Contracts (2024-12-06) Binance Will List Across Protocol (ACX) and Orca (ORCA) with Seed Tag Applied Binance P2P Launches Merchant Program Upgrade Binance Futures Will Delist USDⓈ-M MAVIAUSDT, OMGUSDT, and BONDUSDT Perpetual Contracts (2024-12-16) Community About Us About Careers Announcements News Press Legal Terms Privacy Building Trust Blog Community Risk Warning Notices Downloads Desktop Application Products Exchange Buy Crypto Pay Academy Li"
+  },
+  {
+   "par": "BONDUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-zil_28f6abe4512f.json",
+   "sha256_pagina": "b7dd69b1c1d65a4df778bfecadd7013cbcba640b22e512152d9cdc78443e0eef",
+   "titulo": "Announcement",
+   "publicado": "2024-01-03",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT"
+   ],
+   "contexto": "ers of Multiple USDⓈ-M and COIN-M Perpetual Contracts (2024-12-06) Binance Will List Across Protocol (ACX) and Orca (ORCA) with Seed Tag Applied Binance P2P Launches Merchant Program Upgrade Binance Futures Will Delist USDⓈ-M MAVIAUSDT, OMGUSDT, and BONDUSDT Perpetual Contracts (2024-12-16) Community About Us About Careers Announcements News Press Legal Terms Privacy Building Trust Blog Community Risk Warning Notices Downloads Desktop Application Products Exchange Buy Crypto Pay Academy Live Tax Gift Ca"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_buy-crypto-with-your-credit-_0236d0020659.json",
+   "sha256_pagina": "77ce7e0584c7729331018385eaae3cc2628036a9737e01316220cf3913d75b36",
+   "titulo": "Buy Crypto with Your Credit or Debit Card to Enjoy Discounts on Fiat Transaction Fees and Get a 5 USDT Token Voucher!",
+   "publicado": "2023-06-05",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! About Us About Press Careers Business Contacts Community Blog Building Trust Legal Terms Privacy Risk Warning Announcements News No"
+  },
+  {
+   "par": "BKRWUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_c-48_6bb59eeb5bd2.json",
+   "sha256_pagina": "f9338bfffa62579470c3c5553b0430991ff9c88ec05c7b8fdf10bc6ce50ff1a7",
+   "titulo": "New Crypto Listings｜Binance Support",
+   "publicado": null,
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "Announces Acquisition of Swipe and Lists Swipe (SXP)\"},{\"id\":28414,\"code\":\"8c0a23c32f5f4278b5d393764cfd403d\",\"title\":\"Isolated Margin Trading for REN, ICX Enabled on Binance\"},{\"id\":28345,\"code\":\"2b3f76142dff4e2f9747eca06509035a\",\"title\":\"BKRW/BUSD, BKRW/USDT, SC/USDT and ZEN/USDT Trading Pairs Added on Binance\"},{\"id\":28301,\"code\":\"69f7a2acb66340dba75c8c3374570c4f\",\"title\":\"Notice of Removal of Trading Pairs - 2020/07/03\"},{\"id\":28273,\"code\":\"7dc7b025877248edab05fb1296efa300\",\"title\":\"Binance Futures La"
+  },
+  {
+   "par": "SCUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_c-48_6bb59eeb5bd2.json",
+   "sha256_pagina": "f9338bfffa62579470c3c5553b0430991ff9c88ec05c7b8fdf10bc6ce50ff1a7",
+   "titulo": "New Crypto Listings｜Binance Support",
+   "publicado": null,
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "cquisition of Swipe and Lists Swipe (SXP)\"},{\"id\":28414,\"code\":\"8c0a23c32f5f4278b5d393764cfd403d\",\"title\":\"Isolated Margin Trading for REN, ICX Enabled on Binance\"},{\"id\":28345,\"code\":\"2b3f76142dff4e2f9747eca06509035a\",\"title\":\"BKRW/BUSD, BKRW/USDT, SC/USDT and ZEN/USDT Trading Pairs Added on Binance\"},{\"id\":28301,\"code\":\"69f7a2acb66340dba75c8c3374570c4f\",\"title\":\"Notice of Removal of Trading Pairs - 2020/07/03\"},{\"id\":28273,\"code\":\"7dc7b025877248edab05fb1296efa300\",\"title\":\"Binance Futures Launch BTCU"
+  },
+  {
+   "par": "ZENUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_c-48_6bb59eeb5bd2.json",
+   "sha256_pagina": "f9338bfffa62579470c3c5553b0430991ff9c88ec05c7b8fdf10bc6ce50ff1a7",
+   "titulo": "New Crypto Listings｜Binance Support",
+   "publicado": null,
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "f Swipe and Lists Swipe (SXP)\"},{\"id\":28414,\"code\":\"8c0a23c32f5f4278b5d393764cfd403d\",\"title\":\"Isolated Margin Trading for REN, ICX Enabled on Binance\"},{\"id\":28345,\"code\":\"2b3f76142dff4e2f9747eca06509035a\",\"title\":\"BKRW/BUSD, BKRW/USDT, SC/USDT and ZEN/USDT Trading Pairs Added on Binance\"},{\"id\":28301,\"code\":\"69f7a2acb66340dba75c8c3374570c4f\",\"title\":\"Notice of Removal of Trading Pairs - 2020/07/03\"},{\"id\":28273,\"code\":\"7dc7b025877248edab05fb1296efa300\",\"title\":\"Binance Futures Launch BTCUSD Quarterly "
+  },
+  {
+   "par": "DOGEUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_c-48_6bb59eeb5bd2.json",
+   "sha256_pagina": "f9338bfffa62579470c3c5553b0430991ff9c88ec05c7b8fdf10bc6ce50ff1a7",
+   "titulo": "New Crypto Listings｜Binance Support",
+   "publicado": null,
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "ings Isolated Margin Trading for DOGE, SC, REP, BNT and BTT Enabled on Binance Binance Will Delist ARN, FUEL and LUN on 2020/07/20 Binance Will List ETHUP and ETHDOWN Binance Leveraged Tokens Binance Lists Synthetix (SNX) Binance Futures Will Launch DOGE/USDT Perpetual Contract With Up to 50x Leverage Isolated Margin Trading for COMP, NULS, LRC and LEND Enabled on Binance Binance Announces Acquisition of Swipe and Lists Swipe (SXP) Isolated Margin Trading for REN, ICX Enabled on Binance BKRW/BUSD, BKRW/U"
+  },
+  {
+   "par": "OMGUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_c-48_6bb59eeb5bd2.json",
+   "sha256_pagina": "f9338bfffa62579470c3c5553b0430991ff9c88ec05c7b8fdf10bc6ce50ff1a7",
+   "titulo": "New Crypto Listings｜Binance Support",
+   "publicado": null,
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT"
+   ],
+   "contexto": "d on Binance BKRW/BUSD, BKRW/USDT, SC/USDT and ZEN/USDT Trading Pairs Added on Binance Notice of Removal of Trading Pairs - 2020/07/03 Binance Futures Launch BTCUSD Quarterly 1225 Futures Contract With Up to 125x Leverage Binance Futures Will Launch OMG/USDT Perpetual Contract With Up to 50x Leverage Binance Lists Binance IDR Stable Coin (BIDR) Binance Futures Will Launch COMP/USDT Perpetual Contract With Up to 50x Leverage Binance Lists Compound (COMP) < 1 2 3 ... 28 > New Crypto Listings Latest News N"
+  },
+  {
+   "par": "KAIAUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_compete-in-futures-traders-l_bef0807ce116.json",
+   "sha256_pagina": "9b0c584af432bdb9d6400853b49652a0e14ea4dbf4388db66720dc1d61830467",
+   "titulo": "Compete in Futures Traders League and Win a Share of up to 7,000,000 USDT in Rewards and Exclusive Binance VIP Swag!",
+   "publicado": "2024-10-04",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "rage & Margin Tiers of Multiple USDⓈ-M Perpetual Contracts (2024-12-05) Notice on New Trading Pairs & Trading Bots Services on Binance Spot - 2024-12-06 EOS Locked Products: Enjoy Up to 29.9% APR in Rewards! Binance Futures Will Launch USDⓈ-Margined KAIAUSDT and AEROUSDT Perpetual Contracts With up to 75x Leverage Notice of Removal of Spot Trading Pairs - 2024-12-06 Simple Earn Extended Offers: Enjoy 16.2% APR With FDUSD and 7% APR With EURI Products! Southeast Asia Exclusive: Enjoy Zero Fees on Deposit"
+  },
+  {
+   "par": "AEROUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_compete-in-futures-traders-l_bef0807ce116.json",
+   "sha256_pagina": "9b0c584af432bdb9d6400853b49652a0e14ea4dbf4388db66720dc1d61830467",
+   "titulo": "Compete in Futures Traders League and Win a Share of up to 7,000,000 USDT in Rewards and Exclusive Binance VIP Swag!",
+   "publicado": "2024-10-04",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": " Tiers of Multiple USDⓈ-M Perpetual Contracts (2024-12-05) Notice on New Trading Pairs & Trading Bots Services on Binance Spot - 2024-12-06 EOS Locked Products: Enjoy Up to 29.9% APR in Rewards! Binance Futures Will Launch USDⓈ-Margined KAIAUSDT and AEROUSDT Perpetual Contracts With up to 75x Leverage Notice of Removal of Spot Trading Pairs - 2024-12-06 Simple Earn Extended Offers: Enjoy 16.2% APR With FDUSD and 7% APR With EURI Products! Southeast Asia Exclusive: Enjoy Zero Fees on Deposits & Buy Crypt"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_complete-your-first-purchase_6229833b07d0.json",
+   "sha256_pagina": "ecd66bb0c1206be6920f9ec300946810e08ed6a1e395dcbdf30b5a346e508507",
+   "titulo": "Complete Your First Purchase on P2P Express & Subscribe to Simple Earn Flexible Products to Get Up to 15 UFT!",
+   "publicado": "2023-05-10",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! About Us About Press Careers Business Contacts Community Blog Building Trust Legal Terms Privacy Risk Warning Announcements News No"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_create-futures-grid-strategi_87c2eefb2596.json",
+   "sha256_pagina": "96df8941c8fb9f322026ab18b1a5c655a33f01f7407ae98c8a18aaaf2d40e96a",
+   "titulo": "Create Futures Grid Strategies to Share Up to 50,000 USDT in Rewards & VIP+1 Upgrade Vouchers!",
+   "publicado": "2023-04-26",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! About Us About Press Careers Business Contacts Community Blog Building Trust Legal Terms Privacy Risk Warning Announcements News No"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_create-your-first-spot-grid-_c80d8f810f95.json",
+   "sha256_pagina": "598847f4f9dd13681b195f1404ec518117dcef5e313b364028c709d827a56fa4",
+   "titulo": "Create Your First Spot Grid Strategy and Share 10,000 USDT in Rewards! (2023-06-08)",
+   "publicado": "2023-06-08",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! About Us About Press Careers Business Contacts Community Blog Building Trust Legal Terms Privacy Risk Warning Announcements News No"
+  },
+  {
+   "par": "DOGEUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_dac145812db6.json",
+   "sha256_pagina": "f156e792acc2e8f396ff70f15828601feb787330c61f8360dfc093f44224833d",
+   "titulo": "Announcement｜Binance Support",
+   "publicado": null,
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "ings Isolated Margin Trading for DOGE, SC, REP, BNT and BTT Enabled on Binance Binance Will Delist ARN, FUEL and LUN on 2020/07/20 Binance Will List ETHUP and ETHDOWN Binance Leveraged Tokens Binance Lists Synthetix (SNX) Binance Futures Will Launch DOGE/USDT Perpetual Contract With Up to 50x Leverage View more Latest News Binance Will Support Kyber Network (KNC) Staking With Initial 3 Month Bonus Upcoming Zcoin (XZC) Network Upgrade Supported on Binance Upcoming Zilliqa (ZIL) Network Upgrade Supported o"
+  },
+  {
+   "par": "OGNUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_earn-wednesday-new-limited-t_fb1ad405dcbd.json",
+   "sha256_pagina": "1e84e62b3bd3dc0076d9dbeeaf59ead4b9814fbd0d168e784da4b876a6345d4c",
+   "titulo": "Earn Wednesday: New Limited-Time Offers Available Now! (2023-05-31)",
+   "publicado": "2023-05-31",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": " 5,000 USDT in Rewards! Word of the Day: Test Your Knowledge on DeFi to Earn Binance Points and More! Enjoy Up to 50% Discounts With Binance Pay’s Fantastic Deals This October & Get Up to 201 TUSD in Rewards! Updates on Capped Funding Rate of USDⓈ-M OGNUSDT Perpetual Contract (2023-10-01) SEA Exclusive: Create Your First Spot Grid Trading Bot & Get Up to 5 USDT in Rewards! Notice of Removal of Margin Trading Pairs - 2023-10-06 Get 1 USDT When Spending $10 on MooGold With Binance Pay! Community About Us"
+  },
+  {
+   "par": "OGNUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_enjoy-discounts-of-up-to-50-_f959c4bbbd71.json",
+   "sha256_pagina": "ef663df26e5c846360d3339ef4749df541695849c968475d8490e3a0be7c7c12",
+   "titulo": "Enjoy Discounts of Up to 50% With Binance Pay’s Fantastic Deals This June & Get a 57,000 FLOKI Token Voucher!",
+   "publicado": "2023-06-01",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": " 5,000 USDT in Rewards! Word of the Day: Test Your Knowledge on DeFi to Earn Binance Points and More! Enjoy Up to 50% Discounts With Binance Pay’s Fantastic Deals This October & Get Up to 201 TUSD in Rewards! Updates on Capped Funding Rate of USDⓈ-M OGNUSDT Perpetual Contract (2023-10-01) SEA Exclusive: Create Your First Spot Grid Trading Bot & Get Up to 5 USDT in Rewards! Notice of Removal of Margin Trading Pairs - 2023-10-06 Get 1 USDT When Spending $10 on MooGold With Binance Pay! Community About Us"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_enjoy-up-to-10-usdt-instant-_37e4455a5694.json",
+   "sha256_pagina": "19b268c511f8cfe43e0cf073236ff79397e0712dcb2ae71878e1f36369afd356",
+   "titulo": "Enjoy Up to 10 USDT Instant Discount on Fiat Transaction Fees When Depositing EUR",
+   "publicado": "2023-06-01",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! Notice of Removal of Trading Pairs - 2023-09-22 Binance Adds CYBER/ETH & MTL/TRY Trading Pairs Updates on New Binance Loans (Stable"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_existing-deposit-addresses-t_b1e344cb062d.json",
+   "sha256_pagina": "e8ebc64a219e4150e554b450e6ec11a01d399ae5eb0ad6810df362c96421f54a",
+   "titulo": "Existing Deposit Addresses to Be Retired (2023-04-18)",
+   "publicado": "2023-04-18",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! About Us About Press Careers Business Contacts Community Blog Building Trust Legal Terms Privacy Risk Warning Announcements News No"
+  },
+  {
+   "par": "MAVIAUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_hodl-europe-discover-new-bin_b4ef2e3c226e.json",
+   "sha256_pagina": "a1c81787812dc2ea6efa95339adb1dad485b44081b6019f5450c01a5e9f58bec",
+   "titulo": "HODL Europe: Discover New Binance Earn Offers and Rewards This October!",
+   "publicado": "2024-10-14",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "the Leverage & Margin Tiers of Multiple USDⓈ-M and COIN-M Perpetual Contracts (2024-12-06) Binance Will List Across Protocol (ACX) and Orca (ORCA) with Seed Tag Applied Binance P2P Launches Merchant Program Upgrade Binance Futures Will Delist USDⓈ-M MAVIAUSDT, OMGUSDT, and BONDUSDT Perpetual Contracts (2024-12-16) Community About Us About Careers Announcements News Press Legal Terms Privacy Building Trust Blog Community Risk Warning Notices Downloads Desktop Application Products Exchange Buy Crypto Pay A"
+  },
+  {
+   "par": "OMGUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_hodl-europe-discover-new-bin_b4ef2e3c226e.json",
+   "sha256_pagina": "a1c81787812dc2ea6efa95339adb1dad485b44081b6019f5450c01a5e9f58bec",
+   "titulo": "HODL Europe: Discover New Binance Earn Offers and Rewards This October!",
+   "publicado": "2024-10-14",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "e & Margin Tiers of Multiple USDⓈ-M and COIN-M Perpetual Contracts (2024-12-06) Binance Will List Across Protocol (ACX) and Orca (ORCA) with Seed Tag Applied Binance P2P Launches Merchant Program Upgrade Binance Futures Will Delist USDⓈ-M MAVIAUSDT, OMGUSDT, and BONDUSDT Perpetual Contracts (2024-12-16) Community About Us About Careers Announcements News Press Legal Terms Privacy Building Trust Blog Community Risk Warning Notices Downloads Desktop Application Products Exchange Buy Crypto Pay Academy Li"
+  },
+  {
+   "par": "BONDUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_hodl-europe-discover-new-bin_b4ef2e3c226e.json",
+   "sha256_pagina": "a1c81787812dc2ea6efa95339adb1dad485b44081b6019f5450c01a5e9f58bec",
+   "titulo": "HODL Europe: Discover New Binance Earn Offers and Rewards This October!",
+   "publicado": "2024-10-14",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT"
+   ],
+   "contexto": "ers of Multiple USDⓈ-M and COIN-M Perpetual Contracts (2024-12-06) Binance Will List Across Protocol (ACX) and Orca (ORCA) with Seed Tag Applied Binance P2P Launches Merchant Program Upgrade Binance Futures Will Delist USDⓈ-M MAVIAUSDT, OMGUSDT, and BONDUSDT Perpetual Contracts (2024-12-16) Community About Us About Careers Announcements News Press Legal Terms Privacy Building Trust Blog Community Risk Warning Notices Downloads Desktop Application Products Exchange Buy Crypto Pay Academy Live Tax Gift Ca"
+  },
+  {
+   "par": "DIAUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_introducing-neutron-ntrn-on-_a8368b730eac.json",
+   "sha256_pagina": "20dc830be67a4e97b68668eb7cb6c04f4aee4a8615cdee6e837fe19d18a81466",
+   "titulo": "Introducing Neutron (NTRN) on Binance Launchpool! Farm NTRN by Staking BNB, TUSD and FDUSD",
+   "publicado": "2023-10-10",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "8) AVA Flexible Products: Complete Subscription to Enjoy Up to 5% Bonus Tiered APR! Celebrating New Payment Method for Romanian Lei (RON): Buy USDC with Cash via Tradesilvania to Share Token Voucher Rewards! Binance Futures Will Launch USDⓈ-Margined DIAUSDT Perpetual Contract With up to 75x Leverage Binance Will Support the Cosmos (ATOM) Network Upgrade Web3 Wallet Earn Update: Enhancing Simple Yield with 13 New Protocols and Binance SOL Staking! Notice of Removal of Spot Trading Pairs - 2024-10-04 Bin"
+  },
+  {
+   "par": "PONKEUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_introducing-scroll-scr-on-bi_3eb9eb5b2312.json",
+   "sha256_pagina": "87ba007f0c684929e49b2dd85fe5fac0ea0983eb125e21386871a6b27a590c8e",
+   "titulo": "Introducing Scroll (SCR) on Binance Launchpool and Pre-Market!",
+   "publicado": "2024-10-08",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "Up to 7 Days Interest-Free Borrowing on USDT, FDUSD or USDC Flexible Loans Notice of Removal of Margin Trading Pairs - 2024-11-14 Binance Futures Copy Trading Adds New USDⓈ-M Perpetual Contracts (2024-11-05) Binance Futures Will Launch USDⓈ-Margined PONKEUSDT Perpetual Contract With up to 75x Leverage Community About Us About Careers Announcements News Press Legal Terms Privacy Building Trust Blog Community Risk Warning Notices Downloads Desktop Application Products Exchange Buy Crypto Pay Academy Live T"
+  },
+  {
+   "par": "1000WHYUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_introducing-thena-the-on-bin_30cdc53ec441.json",
+   "sha256_pagina": "d9773d43dfb19e6d8b50e0dcd427d140fcc749de5e4adf5ef365c86eae876c8f",
+   "titulo": "Introducing Thena (THE) on Binance HODLer Airdrops! Subscribe your BNB to Simple Earn",
+   "publicado": "2024-11-26",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "OTRO"
+   ],
+   "contexto": " More! LATAM Exclusive: Earn Up to 100 USD Cashback in Bitcoin This Christmas Suspension of Gifto (GFT) Deposits and Update on the Delisting Date (2024-12-03) Notice on the New Adjustments for P2P Merchants in the TWD Market Updates on Tick Size for 1000WHYUSDT and 1000CHEEMSUSDT USDⓈ-M Perpetual Futures Contracts (2024-11-29) Community About Us About Careers Announcements News Press Legal Terms Privacy Building Trust Blog Community Risk Warning Notices Downloads Desktop Application Products Exchange Buy C"
+  },
+  {
+   "par": "1000CHEEMSUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_introducing-thena-the-on-bin_30cdc53ec441.json",
+   "sha256_pagina": "d9773d43dfb19e6d8b50e0dcd427d140fcc749de5e4adf5ef365c86eae876c8f",
+   "titulo": "Introducing Thena (THE) on Binance HODLer Airdrops! Subscribe your BNB to Simple Earn",
+   "publicado": "2024-11-26",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "OTRO"
+   ],
+   "contexto": "lusive: Earn Up to 100 USD Cashback in Bitcoin This Christmas Suspension of Gifto (GFT) Deposits and Update on the Delisting Date (2024-12-03) Notice on the New Adjustments for P2P Merchants in the TWD Market Updates on Tick Size for 1000WHYUSDT and 1000CHEEMSUSDT USDⓈ-M Perpetual Futures Contracts (2024-11-29) Community About Us About Careers Announcements News Press Legal Terms Privacy Building Trust Blog Community Risk Warning Notices Downloads Desktop Application Products Exchange Buy Crypto Pay Academy L"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_introducing-trading-bots-an-_936cb424410f.json",
+   "sha256_pagina": "cf75299a96a4726d2f0d8e51d26170d73b08162e4e8a11a037615ea83e97ce8d",
+   "titulo": "Introducing Trading Bots: An Upgrade on Strategy Trading",
+   "publicado": "2023-05-11",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! About Us About Press Careers Business Contacts Community Blog Building Trust Legal Terms Privacy Risk Warning Announcements News No"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_invite-your-friends-to-binan_53afbdc4daf3.json",
+   "sha256_pagina": "d913ad6ae95e05e549acf751ccdb73f41f36c5356f232a1e287fabc4b1586841",
+   "titulo": "Invite Your Friends to Binance MENA Communities and Earn a Share of 2,500 USDT in Rewards",
+   "publicado": "2023-06-05",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! About Us About Press Careers Business Contacts Community Blog Building Trust Legal Terms Privacy Risk Warning Announcements News No"
+  },
+  {
+   "par": "OGNUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_join-the-binance-feed-fever-_ca11c0c19662.json",
+   "sha256_pagina": "753ee6bf0c4801336ef82d08d8eb87feab363e1aa5d0a10c9f201007fbabffc7",
+   "titulo": "Join the Binance Feed Fever Challenge to Grab a Share of 3,500 USDT in Rewards & Earn Exclusive Traffic Boosts",
+   "publicado": "2023-05-09",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": " 5,000 USDT in Rewards! Word of the Day: Test Your Knowledge on DeFi to Earn Binance Points and More! Enjoy Up to 50% Discounts With Binance Pay’s Fantastic Deals This October & Get Up to 201 TUSD in Rewards! Updates on Capped Funding Rate of USDⓈ-M OGNUSDT Perpetual Contract (2023-10-01) SEA Exclusive: Create Your First Spot Grid Trading Bot & Get Up to 5 USDT in Rewards! Notice of Removal of Margin Trading Pairs - 2023-10-06 Get 1 USDT When Spending $10 on MooGold With Binance Pay! Refer Friends to B"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_join-this-week-s-challenge-t_c0163ed29f4c.json",
+   "sha256_pagina": "c9cf4cd36b0a5779f8c28bfb00b03ecebf9226c6cf6b8ed462e03f070a0a7251",
+   "titulo": "Join This Week’s Challenge to Share 500,000 Binance Points & Redeem Exclusive Rewards! (2023-09-06)",
+   "publicado": "2023-09-06",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! About Us About Press Careers Business Contacts Community Blog Building Trust Legal Terms Privacy Risk Warning Announcements News No"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_new-cloud-mining-products-la_23716980ca38.json",
+   "sha256_pagina": "fa187f00fe2208305f38bffe9f9cbb0ac9cb3c89715da98a60e16136028445cf",
+   "titulo": "New Cloud Mining Products Launched (2023-05-11)",
+   "publicado": "2023-05-11",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! About Us About Press Careers Business Contacts Community Blog Building Trust Legal Terms Privacy Risk Warning Announcements News No"
+  },
+  {
+   "par": "OGNUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_new-cloud-mining-products-la_57ad4d35f483.json",
+   "sha256_pagina": "49a05d8514b46cc963a6452e7e523a9ed6d107fe9f5dea3f60ee1bdd05d1466a",
+   "titulo": "New Cloud Mining Products Launched (2023-06-08)",
+   "publicado": "2023-06-08",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": " 5,000 USDT in Rewards! Word of the Day: Test Your Knowledge on DeFi to Earn Binance Points and More! Enjoy Up to 50% Discounts With Binance Pay’s Fantastic Deals This October & Get Up to 201 TUSD in Rewards! Updates on Capped Funding Rate of USDⓈ-M OGNUSDT Perpetual Contract (2023-10-01) SEA Exclusive: Create Your First Spot Grid Trading Bot & Get Up to 5 USDT in Rewards! Notice of Removal of Margin Trading Pairs - 2023-10-06 Get 1 USDT When Spending $10 on MooGold With Binance Pay! Refer Friends to B"
+  },
+  {
+   "par": "OGNUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_new-cloud-mining-products-la_7eacc12ed630.json",
+   "sha256_pagina": "d95bf6674f24e6fe51b99e208059066d04ac6002517229a4ddb7e9d52f09a9a8",
+   "titulo": "New Cloud Mining Products Launched (2023-05-25)",
+   "publicado": "2023-05-25",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": " 5,000 USDT in Rewards! Word of the Day: Test Your Knowledge on DeFi to Earn Binance Points and More! Enjoy Up to 50% Discounts With Binance Pay’s Fantastic Deals This October & Get Up to 201 TUSD in Rewards! Updates on Capped Funding Rate of USDⓈ-M OGNUSDT Perpetual Contract (2023-10-01) SEA Exclusive: Create Your First Spot Grid Trading Bot & Get Up to 5 USDT in Rewards! Notice of Removal of Margin Trading Pairs - 2023-10-06 Get 1 USDT When Spending $10 on MooGold With Binance Pay! Refer Friends to B"
+  },
+  {
+   "par": "OGNUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_new-cloud-mining-products-la_c9edd0950c85.json",
+   "sha256_pagina": "270736e7ad9541c97979406d611532db653759119e112fe05e56dcff952ebf36",
+   "titulo": "New Cloud Mining Products Launched (2023-06-01)",
+   "publicado": "2023-06-01",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": " 5,000 USDT in Rewards! Word of the Day: Test Your Knowledge on DeFi to Earn Binance Points and More! Enjoy Up to 50% Discounts With Binance Pay’s Fantastic Deals This October & Get Up to 201 TUSD in Rewards! Updates on Capped Funding Rate of USDⓈ-M OGNUSDT Perpetual Contract (2023-10-01) SEA Exclusive: Create Your First Spot Grid Trading Bot & Get Up to 5 USDT in Rewards! Notice of Removal of Margin Trading Pairs - 2023-10-06 Get 1 USDT When Spending $10 on MooGold With Binance Pay! Refer Friends to B"
+  },
+  {
+   "par": "OGNUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_new-dual-investment-products_4112b3778bd2.json",
+   "sha256_pagina": "336d3da97d1fcd6f8d5ca0c02875b252b1bc8f30a84b43591729829f59ff43ac",
+   "titulo": "New Dual Investment Products Launched (2023-05-10)",
+   "publicado": "2023-05-10",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": " 5,000 USDT in Rewards! Word of the Day: Test Your Knowledge on DeFi to Earn Binance Points and More! Enjoy Up to 50% Discounts With Binance Pay’s Fantastic Deals This October & Get Up to 201 TUSD in Rewards! Updates on Capped Funding Rate of USDⓈ-M OGNUSDT Perpetual Contract (2023-10-01) SEA Exclusive: Create Your First Spot Grid Trading Bot & Get Up to 5 USDT in Rewards! Notice of Removal of Margin Trading Pairs - 2023-10-06 Community About Us About Business Contacts Careers Announcements News Press "
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_new-loanable-assets-collater_b2a55bd3425a.json",
+   "sha256_pagina": "d2312ea5407483b828a556b24c0cf0df90d8435002358b6f3695f7786a1ee332",
+   "titulo": "New Loanable Assets & Collateral Assets Available on Flexible Loan & VIP Loan (2023-06-08)",
+   "publicado": "2023-06-08",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! About Us About Press Careers Business Contacts Community Blog Building Trust Legal Terms Privacy Risk Warning Announcements News No"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_new-loanable-assets-collater_b78275485273.json",
+   "sha256_pagina": "c4435ce5915321ad047170f7ac69243fdfc85a196f1416153499c7351e3d1149",
+   "titulo": "New Loanable Assets & Collateral Assets Available on Flexible Loan & VIP Loan (2023-05-25)",
+   "publicado": "2023-05-25",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! Notice of Removal of Trading Pairs - 2023-09-22 Binance Adds CYBER/ETH & MTL/TRY Trading Pairs Updates on New Binance Loans (Stable"
+  },
+  {
+   "par": "ARDRUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_notice-of-removal-of-isolate_15450146c6b7.json",
+   "sha256_pagina": "8b035a579ce356f1f2d148f34cebfac8bffa203d6a189695fb968c6a54aae01f",
+   "titulo": "Notice of Removal of Isolated Margin Trading Pairs - 2023-09-28",
+   "publicado": "2023-09-21",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "MARGEN"
+   ],
+   "contexto": "lated Margin Trading Pairs - 2023-09-28 2023-09-21 06:10 This is a general announcement. Products and services referred to here may not be available in your region. Fellow Binancians , Binance Margin will delist the 1INCH/BUSD, AERGO/BUSD, ARDR/BTC, ARDR/USDT, DATA/BUSD, DIA/BUSD, ERN/BUSD, FIS/BUSD, IOST/BUSD, IQ/BUSD, KNC/BUSD, LOKA/BUSD, LTO/BUSD, OM/BUSD, RARE/BUSD, SUSHI/BUSD, T/BUSD, THETA/BUSD, YFI/BUSD and ZEC/BUSD isolated margin pairs at 2023-09-28 06:00 (UTC) . Please note: At 2023-09-22 06:00"
+  },
+  {
+   "par": "KAIAUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_notice-of-removal-of-spot-tr_905251912707.json",
+   "sha256_pagina": "2193ec35bfa7b6153c89407d56e10a48afe3e1b24e41b1da15ac951253925eb0",
+   "titulo": "Notice of Removal of Spot Trading Pairs - 2023-11-20",
+   "publicado": "2023-11-17",
+   "tipo_extraccion": "exclusion",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "rage & Margin Tiers of Multiple USDⓈ-M Perpetual Contracts (2024-12-05) Notice on New Trading Pairs & Trading Bots Services on Binance Spot - 2024-12-06 EOS Locked Products: Enjoy Up to 29.9% APR in Rewards! Binance Futures Will Launch USDⓈ-Margined KAIAUSDT and AEROUSDT Perpetual Contracts With up to 75x Leverage Notice of Removal of Spot Trading Pairs - 2024-12-06 Simple Earn Extended Offers: Enjoy 16.2% APR With FDUSD and 7% APR With EURI Products! Southeast Asia Exclusive: Enjoy Zero Fees on Deposit"
+  },
+  {
+   "par": "AEROUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_notice-of-removal-of-spot-tr_905251912707.json",
+   "sha256_pagina": "2193ec35bfa7b6153c89407d56e10a48afe3e1b24e41b1da15ac951253925eb0",
+   "titulo": "Notice of Removal of Spot Trading Pairs - 2023-11-20",
+   "publicado": "2023-11-17",
+   "tipo_extraccion": "exclusion",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": " Tiers of Multiple USDⓈ-M Perpetual Contracts (2024-12-05) Notice on New Trading Pairs & Trading Bots Services on Binance Spot - 2024-12-06 EOS Locked Products: Enjoy Up to 29.9% APR in Rewards! Binance Futures Will Launch USDⓈ-Margined KAIAUSDT and AEROUSDT Perpetual Contracts With up to 75x Leverage Notice of Removal of Spot Trading Pairs - 2024-12-06 Simple Earn Extended Offers: Enjoy 16.2% APR With FDUSD and 7% APR With EURI Products! Southeast Asia Exclusive: Enjoy Zero Fees on Deposits & Buy Crypt"
+  },
+  {
+   "par": "PONKEUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_notice-of-removal-of-spot-tr_bedf24cb5c07.json",
+   "sha256_pagina": "0cd134b5385a8edc953b55bd0398319bc4327b4b9617018b430fa209c11bf0d7",
+   "titulo": "Notice of Removal of Spot Trading Pairs - 2024-10-11",
+   "publicado": "2024-10-09",
+   "tipo_extraccion": "exclusion",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "Up to 7 Days Interest-Free Borrowing on USDT, FDUSD or USDC Flexible Loans Notice of Removal of Margin Trading Pairs - 2024-11-14 Binance Futures Copy Trading Adds New USDⓈ-M Perpetual Contracts (2024-11-05) Binance Futures Will Launch USDⓈ-Margined PONKEUSDT Perpetual Contract With up to 75x Leverage Updates on Binance Futures Settlement Price Calculation Word of the Day: Test Your Knowledge on “Crypto Mining” to Earn Binance Points and More! Community About Us About Careers Announcements News Press Leg"
+  },
+  {
+   "par": "OGNUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_notice-regarding-the-binance_7d88869e7098.json",
+   "sha256_pagina": "3214caf8e03e918b4e1d4aa361a024d48ab9d0bd3fcdf35fc2453ed4a899cf40",
+   "titulo": "Notice Regarding the Binance VIP Program, Standard Referral and Affiliate Program Updates",
+   "publicado": "2023-06-06",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "onsult an independent financial adviser prior to making any investment. This material should not be construed as financial advice. For more information, see our Terms of Use and Risk Warning . Latest Articles Updates on Capped Funding Rate of USDⓈ-M OGNUSDT Perpetual Contract (2023-10-01) SEA Exclusive: Create Your First Spot Grid Trading Bot & Get Up to 5 USDT in Rewards! Notice of Removal of Margin Trading Pairs - 2023-10-06 Get 1 USDT When Spending $10 on MooGold With Binance Pay! Refer Friends to B"
+  },
+  {
+   "par": "AAVEUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_notice-regarding-the-removal_0dae155574f8.json",
+   "sha256_pagina": "34cd7829b801b102ad6237d750cd480265144579c0561cc8ad5a16a1d0bbdaab",
+   "titulo": "Notice Regarding the Removal of Selected Liquidity Pools on Binance Liquid Swap (2023-12-06)",
+   "publicado": "2023-11-29",
+   "tipo_extraccion": "otro",
+   "etiquetas": [],
+   "contexto": "quidity pools to concentrate liquidity, reduce slippage and provide users with better transaction prices. Based on our most recent reviews, Binance Liquid Swap will remove the following liquidity pools at 2023-12-06 04:00 (UTC) . AAVE/BNB, AAVE/ETH, AAVE/USDT, AVAX/USDT, BCH/BNB, BCH/USDT, CAKE/USDT, CHZ/USDT, COMP/BTC, DOT/BNB, DUSK/USDT, DYDX/BTC, DYDX/USDT, EDU/BTC, FIL/USDT, FTM/USDT, GALA/USDT, GMT/BTC, GMT/USDT, HOOK/BTC, ICP/USDT, INJ/BNB, MANA/USDT, MATIC/BTC, NEAR/BTC, NEO/USDT, RUNE/USDT, SHIB/"
+  },
+  {
+   "par": "AVAXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_notice-regarding-the-removal_0dae155574f8.json",
+   "sha256_pagina": "34cd7829b801b102ad6237d750cd480265144579c0561cc8ad5a16a1d0bbdaab",
+   "titulo": "Notice Regarding the Removal of Selected Liquidity Pools on Binance Liquid Swap (2023-12-06)",
+   "publicado": "2023-11-29",
+   "tipo_extraccion": "otro",
+   "etiquetas": [],
+   "contexto": "ls to concentrate liquidity, reduce slippage and provide users with better transaction prices. Based on our most recent reviews, Binance Liquid Swap will remove the following liquidity pools at 2023-12-06 04:00 (UTC) . AAVE/BNB, AAVE/ETH, AAVE/USDT, AVAX/USDT, BCH/BNB, BCH/USDT, CAKE/USDT, CHZ/USDT, COMP/BTC, DOT/BNB, DUSK/USDT, DYDX/BTC, DYDX/USDT, EDU/BTC, FIL/USDT, FTM/USDT, GALA/USDT, GMT/BTC, GMT/USDT, HOOK/BTC, ICP/USDT, INJ/BNB, MANA/USDT, MATIC/BTC, NEAR/BTC, NEO/USDT, RUNE/USDT, SHIB/DOGE, SOL/B"
+  },
+  {
+   "par": "BCHUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_notice-regarding-the-removal_0dae155574f8.json",
+   "sha256_pagina": "34cd7829b801b102ad6237d750cd480265144579c0561cc8ad5a16a1d0bbdaab",
+   "titulo": "Notice Regarding the Removal of Selected Liquidity Pools on Binance Liquid Swap (2023-12-06)",
+   "publicado": "2023-11-29",
+   "tipo_extraccion": "otro",
+   "etiquetas": [],
+   "contexto": "quidity, reduce slippage and provide users with better transaction prices. Based on our most recent reviews, Binance Liquid Swap will remove the following liquidity pools at 2023-12-06 04:00 (UTC) . AAVE/BNB, AAVE/ETH, AAVE/USDT, AVAX/USDT, BCH/BNB, BCH/USDT, CAKE/USDT, CHZ/USDT, COMP/BTC, DOT/BNB, DUSK/USDT, DYDX/BTC, DYDX/USDT, EDU/BTC, FIL/USDT, FTM/USDT, GALA/USDT, GMT/BTC, GMT/USDT, HOOK/BTC, ICP/USDT, INJ/BNB, MANA/USDT, MATIC/BTC, NEAR/BTC, NEO/USDT, RUNE/USDT, SHIB/DOGE, SOL/BNB, TRX/USDT, USDC/"
+  },
+  {
+   "par": "CAKEUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_notice-regarding-the-removal_0dae155574f8.json",
+   "sha256_pagina": "34cd7829b801b102ad6237d750cd480265144579c0561cc8ad5a16a1d0bbdaab",
+   "titulo": "Notice Regarding the Removal of Selected Liquidity Pools on Binance Liquid Swap (2023-12-06)",
+   "publicado": "2023-11-29",
+   "tipo_extraccion": "otro",
+   "etiquetas": [],
+   "contexto": "educe slippage and provide users with better transaction prices. Based on our most recent reviews, Binance Liquid Swap will remove the following liquidity pools at 2023-12-06 04:00 (UTC) . AAVE/BNB, AAVE/ETH, AAVE/USDT, AVAX/USDT, BCH/BNB, BCH/USDT, CAKE/USDT, CHZ/USDT, COMP/BTC, DOT/BNB, DUSK/USDT, DYDX/BTC, DYDX/USDT, EDU/BTC, FIL/USDT, FTM/USDT, GALA/USDT, GMT/BTC, GMT/USDT, HOOK/BTC, ICP/USDT, INJ/BNB, MANA/USDT, MATIC/BTC, NEAR/BTC, NEO/USDT, RUNE/USDT, SHIB/DOGE, SOL/BNB, TRX/USDT, USDC/USDT, VET/B"
+  },
+  {
+   "par": "CHZUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_notice-regarding-the-removal_0dae155574f8.json",
+   "sha256_pagina": "34cd7829b801b102ad6237d750cd480265144579c0561cc8ad5a16a1d0bbdaab",
+   "titulo": "Notice Regarding the Removal of Selected Liquidity Pools on Binance Liquid Swap (2023-12-06)",
+   "publicado": "2023-11-29",
+   "tipo_extraccion": "otro",
+   "etiquetas": [],
+   "contexto": "age and provide users with better transaction prices. Based on our most recent reviews, Binance Liquid Swap will remove the following liquidity pools at 2023-12-06 04:00 (UTC) . AAVE/BNB, AAVE/ETH, AAVE/USDT, AVAX/USDT, BCH/BNB, BCH/USDT, CAKE/USDT, CHZ/USDT, COMP/BTC, DOT/BNB, DUSK/USDT, DYDX/BTC, DYDX/USDT, EDU/BTC, FIL/USDT, FTM/USDT, GALA/USDT, GMT/BTC, GMT/USDT, HOOK/BTC, ICP/USDT, INJ/BNB, MANA/USDT, MATIC/BTC, NEAR/BTC, NEO/USDT, RUNE/USDT, SHIB/DOGE, SOL/BNB, TRX/USDT, USDC/USDT, VET/BTC, VET/ET"
+  },
+  {
+   "par": "DUSKUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_notice-regarding-the-removal_0dae155574f8.json",
+   "sha256_pagina": "34cd7829b801b102ad6237d750cd480265144579c0561cc8ad5a16a1d0bbdaab",
+   "titulo": "Notice Regarding the Removal of Selected Liquidity Pools on Binance Liquid Swap (2023-12-06)",
+   "publicado": "2023-11-29",
+   "tipo_extraccion": "otro",
+   "etiquetas": [],
+   "contexto": "tter transaction prices. Based on our most recent reviews, Binance Liquid Swap will remove the following liquidity pools at 2023-12-06 04:00 (UTC) . AAVE/BNB, AAVE/ETH, AAVE/USDT, AVAX/USDT, BCH/BNB, BCH/USDT, CAKE/USDT, CHZ/USDT, COMP/BTC, DOT/BNB, DUSK/USDT, DYDX/BTC, DYDX/USDT, EDU/BTC, FIL/USDT, FTM/USDT, GALA/USDT, GMT/BTC, GMT/USDT, HOOK/BTC, ICP/USDT, INJ/BNB, MANA/USDT, MATIC/BTC, NEAR/BTC, NEO/USDT, RUNE/USDT, SHIB/DOGE, SOL/BNB, TRX/USDT, USDC/USDT, VET/BTC, VET/ETH Users who hold positions in "
+  },
+  {
+   "par": "DYDXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_notice-regarding-the-removal_0dae155574f8.json",
+   "sha256_pagina": "34cd7829b801b102ad6237d750cd480265144579c0561cc8ad5a16a1d0bbdaab",
+   "titulo": "Notice Regarding the Removal of Selected Liquidity Pools on Binance Liquid Swap (2023-12-06)",
+   "publicado": "2023-11-29",
+   "tipo_extraccion": "otro",
+   "etiquetas": [],
+   "contexto": "es. Based on our most recent reviews, Binance Liquid Swap will remove the following liquidity pools at 2023-12-06 04:00 (UTC) . AAVE/BNB, AAVE/ETH, AAVE/USDT, AVAX/USDT, BCH/BNB, BCH/USDT, CAKE/USDT, CHZ/USDT, COMP/BTC, DOT/BNB, DUSK/USDT, DYDX/BTC, DYDX/USDT, EDU/BTC, FIL/USDT, FTM/USDT, GALA/USDT, GMT/BTC, GMT/USDT, HOOK/BTC, ICP/USDT, INJ/BNB, MANA/USDT, MATIC/BTC, NEAR/BTC, NEO/USDT, RUNE/USDT, SHIB/DOGE, SOL/BNB, TRX/USDT, USDC/USDT, VET/BTC, VET/ETH Users who hold positions in the above liquidity p"
+  },
+  {
+   "par": "FILUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_notice-regarding-the-removal_0dae155574f8.json",
+   "sha256_pagina": "34cd7829b801b102ad6237d750cd480265144579c0561cc8ad5a16a1d0bbdaab",
+   "titulo": "Notice Regarding the Removal of Selected Liquidity Pools on Binance Liquid Swap (2023-12-06)",
+   "publicado": "2023-11-29",
+   "tipo_extraccion": "otro",
+   "etiquetas": [],
+   "contexto": "t recent reviews, Binance Liquid Swap will remove the following liquidity pools at 2023-12-06 04:00 (UTC) . AAVE/BNB, AAVE/ETH, AAVE/USDT, AVAX/USDT, BCH/BNB, BCH/USDT, CAKE/USDT, CHZ/USDT, COMP/BTC, DOT/BNB, DUSK/USDT, DYDX/BTC, DYDX/USDT, EDU/BTC, FIL/USDT, FTM/USDT, GALA/USDT, GMT/BTC, GMT/USDT, HOOK/BTC, ICP/USDT, INJ/BNB, MANA/USDT, MATIC/BTC, NEAR/BTC, NEO/USDT, RUNE/USDT, SHIB/DOGE, SOL/BNB, TRX/USDT, USDC/USDT, VET/BTC, VET/ETH Users who hold positions in the above liquidity pools will automatic"
+  },
+  {
+   "par": "FTMUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_notice-regarding-the-removal_0dae155574f8.json",
+   "sha256_pagina": "34cd7829b801b102ad6237d750cd480265144579c0561cc8ad5a16a1d0bbdaab",
+   "titulo": "Notice Regarding the Removal of Selected Liquidity Pools on Binance Liquid Swap (2023-12-06)",
+   "publicado": "2023-11-29",
+   "tipo_extraccion": "otro",
+   "etiquetas": [],
+   "contexto": "eviews, Binance Liquid Swap will remove the following liquidity pools at 2023-12-06 04:00 (UTC) . AAVE/BNB, AAVE/ETH, AAVE/USDT, AVAX/USDT, BCH/BNB, BCH/USDT, CAKE/USDT, CHZ/USDT, COMP/BTC, DOT/BNB, DUSK/USDT, DYDX/BTC, DYDX/USDT, EDU/BTC, FIL/USDT, FTM/USDT, GALA/USDT, GMT/BTC, GMT/USDT, HOOK/BTC, ICP/USDT, INJ/BNB, MANA/USDT, MATIC/BTC, NEAR/BTC, NEO/USDT, RUNE/USDT, SHIB/DOGE, SOL/BNB, TRX/USDT, USDC/USDT, VET/BTC, VET/ETH Users who hold positions in the above liquidity pools will automatically recei"
+  },
+  {
+   "par": "GALAUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_notice-regarding-the-removal_0dae155574f8.json",
+   "sha256_pagina": "34cd7829b801b102ad6237d750cd480265144579c0561cc8ad5a16a1d0bbdaab",
+   "titulo": "Notice Regarding the Removal of Selected Liquidity Pools on Binance Liquid Swap (2023-12-06)",
+   "publicado": "2023-11-29",
+   "tipo_extraccion": "otro",
+   "etiquetas": [],
+   "contexto": "nance Liquid Swap will remove the following liquidity pools at 2023-12-06 04:00 (UTC) . AAVE/BNB, AAVE/ETH, AAVE/USDT, AVAX/USDT, BCH/BNB, BCH/USDT, CAKE/USDT, CHZ/USDT, COMP/BTC, DOT/BNB, DUSK/USDT, DYDX/BTC, DYDX/USDT, EDU/BTC, FIL/USDT, FTM/USDT, GALA/USDT, GMT/BTC, GMT/USDT, HOOK/BTC, ICP/USDT, INJ/BNB, MANA/USDT, MATIC/BTC, NEAR/BTC, NEO/USDT, RUNE/USDT, SHIB/DOGE, SOL/BNB, TRX/USDT, USDC/USDT, VET/BTC, VET/ETH Users who hold positions in the above liquidity pools will automatically receive their de"
+  },
+  {
+   "par": "GMTUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_notice-regarding-the-removal_0dae155574f8.json",
+   "sha256_pagina": "34cd7829b801b102ad6237d750cd480265144579c0561cc8ad5a16a1d0bbdaab",
+   "titulo": "Notice Regarding the Removal of Selected Liquidity Pools on Binance Liquid Swap (2023-12-06)",
+   "publicado": "2023-11-29",
+   "tipo_extraccion": "otro",
+   "etiquetas": [],
+   "contexto": "ll remove the following liquidity pools at 2023-12-06 04:00 (UTC) . AAVE/BNB, AAVE/ETH, AAVE/USDT, AVAX/USDT, BCH/BNB, BCH/USDT, CAKE/USDT, CHZ/USDT, COMP/BTC, DOT/BNB, DUSK/USDT, DYDX/BTC, DYDX/USDT, EDU/BTC, FIL/USDT, FTM/USDT, GALA/USDT, GMT/BTC, GMT/USDT, HOOK/BTC, ICP/USDT, INJ/BNB, MANA/USDT, MATIC/BTC, NEAR/BTC, NEO/USDT, RUNE/USDT, SHIB/DOGE, SOL/BNB, TRX/USDT, USDC/USDT, VET/BTC, VET/ETH Users who hold positions in the above liquidity pools will automatically receive their deposited assets in t"
+  },
+  {
+   "par": "NEOUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_notice-regarding-the-removal_0dae155574f8.json",
+   "sha256_pagina": "34cd7829b801b102ad6237d750cd480265144579c0561cc8ad5a16a1d0bbdaab",
+   "titulo": "Notice Regarding the Removal of Selected Liquidity Pools on Binance Liquid Swap (2023-12-06)",
+   "publicado": "2023-11-29",
+   "tipo_extraccion": "otro",
+   "etiquetas": [],
+   "contexto": "E/BNB, AAVE/ETH, AAVE/USDT, AVAX/USDT, BCH/BNB, BCH/USDT, CAKE/USDT, CHZ/USDT, COMP/BTC, DOT/BNB, DUSK/USDT, DYDX/BTC, DYDX/USDT, EDU/BTC, FIL/USDT, FTM/USDT, GALA/USDT, GMT/BTC, GMT/USDT, HOOK/BTC, ICP/USDT, INJ/BNB, MANA/USDT, MATIC/BTC, NEAR/BTC, NEO/USDT, RUNE/USDT, SHIB/DOGE, SOL/BNB, TRX/USDT, USDC/USDT, VET/BTC, VET/ETH Users who hold positions in the above liquidity pools will automatically receive their deposited assets in their Spot wallets at 2023-12-06 04:00 (UTC) . Please Note : The removal"
+  },
+  {
+   "par": "RUNEUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_notice-regarding-the-removal_0dae155574f8.json",
+   "sha256_pagina": "34cd7829b801b102ad6237d750cd480265144579c0561cc8ad5a16a1d0bbdaab",
+   "titulo": "Notice Regarding the Removal of Selected Liquidity Pools on Binance Liquid Swap (2023-12-06)",
+   "publicado": "2023-11-29",
+   "tipo_extraccion": "otro",
+   "etiquetas": [],
+   "contexto": "E/ETH, AAVE/USDT, AVAX/USDT, BCH/BNB, BCH/USDT, CAKE/USDT, CHZ/USDT, COMP/BTC, DOT/BNB, DUSK/USDT, DYDX/BTC, DYDX/USDT, EDU/BTC, FIL/USDT, FTM/USDT, GALA/USDT, GMT/BTC, GMT/USDT, HOOK/BTC, ICP/USDT, INJ/BNB, MANA/USDT, MATIC/BTC, NEAR/BTC, NEO/USDT, RUNE/USDT, SHIB/DOGE, SOL/BNB, TRX/USDT, USDC/USDT, VET/BTC, VET/ETH Users who hold positions in the above liquidity pools will automatically receive their deposited assets in their Spot wallets at 2023-12-06 04:00 (UTC) . Please Note : The removal of the afo"
+  },
+  {
+   "par": "TRXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_notice-regarding-the-removal_0dae155574f8.json",
+   "sha256_pagina": "34cd7829b801b102ad6237d750cd480265144579c0561cc8ad5a16a1d0bbdaab",
+   "titulo": "Notice Regarding the Removal of Selected Liquidity Pools on Binance Liquid Swap (2023-12-06)",
+   "publicado": "2023-11-29",
+   "tipo_extraccion": "otro",
+   "etiquetas": [],
+   "contexto": "H/BNB, BCH/USDT, CAKE/USDT, CHZ/USDT, COMP/BTC, DOT/BNB, DUSK/USDT, DYDX/BTC, DYDX/USDT, EDU/BTC, FIL/USDT, FTM/USDT, GALA/USDT, GMT/BTC, GMT/USDT, HOOK/BTC, ICP/USDT, INJ/BNB, MANA/USDT, MATIC/BTC, NEAR/BTC, NEO/USDT, RUNE/USDT, SHIB/DOGE, SOL/BNB, TRX/USDT, USDC/USDT, VET/BTC, VET/ETH Users who hold positions in the above liquidity pools will automatically receive their deposited assets in their Spot wallets at 2023-12-06 04:00 (UTC) . Please Note : The removal of the aforementioned liquidity pools do"
+  },
+  {
+   "par": "USDCUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_notice-regarding-the-removal_0dae155574f8.json",
+   "sha256_pagina": "34cd7829b801b102ad6237d750cd480265144579c0561cc8ad5a16a1d0bbdaab",
+   "titulo": "Notice Regarding the Removal of Selected Liquidity Pools on Binance Liquid Swap (2023-12-06)",
+   "publicado": "2023-11-29",
+   "tipo_extraccion": "otro",
+   "etiquetas": [],
+   "contexto": "/USDT, CAKE/USDT, CHZ/USDT, COMP/BTC, DOT/BNB, DUSK/USDT, DYDX/BTC, DYDX/USDT, EDU/BTC, FIL/USDT, FTM/USDT, GALA/USDT, GMT/BTC, GMT/USDT, HOOK/BTC, ICP/USDT, INJ/BNB, MANA/USDT, MATIC/BTC, NEAR/BTC, NEO/USDT, RUNE/USDT, SHIB/DOGE, SOL/BNB, TRX/USDT, USDC/USDT, VET/BTC, VET/ETH Users who hold positions in the above liquidity pools will automatically receive their deposited assets in their Spot wallets at 2023-12-06 04:00 (UTC) . Please Note : The removal of the aforementioned liquidity pools does not impa"
+  },
+  {
+   "par": "AVAUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_notice-regarding-the-removal_150c3ee696bd.json",
+   "sha256_pagina": "d0ec42c6a50f13066e5a7dbe3642ffe09a3386fa3ca35e156a6ffe82d94bb807",
+   "titulo": "Notice Regarding the Removal of Selected Liquidity Pools on Binance Liquid Swap (2023-09-01)",
+   "publicado": "2023-08-28",
+   "tipo_extraccion": "otro",
+   "etiquetas": [],
+   "contexto": "concentrate liquidity for our users and ensure optimized trading experience, price and slippage. Based on our most recent reviews, Binance Liquid Swap will remove the following liquidity pools at 2023-09-01 04:00 (UTC) . ADA/BNB, ALICE/BTC, APE/BTC, AVA/USDT, AVAX/BNB, BTC/TUSD, CHZ/BNB, CHZ/BTC, CTSI/BNB, DOT/BUSD, ENJ/USDT, FIL/BNB, FRONT/BUSD, GALA/BNB, ICP/BNB, ID/BTC, KDA/USDT, LIT/USDT, MATIC/BNB, NEO/BNB, PAXG/USDT, PEPE/USDT, SANTOS/USDT, SUSHI/BNB, SUSHI/BTC, SXP/BNB, SXP/BTC, THETA/BNB, THETA/"
+  },
+  {
+   "par": "ENJUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_notice-regarding-the-removal_150c3ee696bd.json",
+   "sha256_pagina": "d0ec42c6a50f13066e5a7dbe3642ffe09a3386fa3ca35e156a6ffe82d94bb807",
+   "titulo": "Notice Regarding the Removal of Selected Liquidity Pools on Binance Liquid Swap (2023-09-01)",
+   "publicado": "2023-08-28",
+   "tipo_extraccion": "otro",
+   "etiquetas": [],
+   "contexto": "erience, price and slippage. Based on our most recent reviews, Binance Liquid Swap will remove the following liquidity pools at 2023-09-01 04:00 (UTC) . ADA/BNB, ALICE/BTC, APE/BTC, AVA/USDT, AVAX/BNB, BTC/TUSD, CHZ/BNB, CHZ/BTC, CTSI/BNB, DOT/BUSD, ENJ/USDT, FIL/BNB, FRONT/BUSD, GALA/BNB, ICP/BNB, ID/BTC, KDA/USDT, LIT/USDT, MATIC/BNB, NEO/BNB, PAXG/USDT, PEPE/USDT, SANTOS/USDT, SUSHI/BNB, SUSHI/BTC, SXP/BNB, SXP/BTC, THETA/BNB, THETA/BTC, TKO/USDT, TLM/USDT, TRX/BNB, TRX/ETH, WBTC/ETH, XMR/ETH, XMR/US"
+  },
+  {
+   "par": "KDAUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_notice-regarding-the-removal_150c3ee696bd.json",
+   "sha256_pagina": "d0ec42c6a50f13066e5a7dbe3642ffe09a3386fa3ca35e156a6ffe82d94bb807",
+   "titulo": "Notice Regarding the Removal of Selected Liquidity Pools on Binance Liquid Swap (2023-09-01)",
+   "publicado": "2023-08-28",
+   "tipo_extraccion": "otro",
+   "etiquetas": [],
+   "contexto": "ews, Binance Liquid Swap will remove the following liquidity pools at 2023-09-01 04:00 (UTC) . ADA/BNB, ALICE/BTC, APE/BTC, AVA/USDT, AVAX/BNB, BTC/TUSD, CHZ/BNB, CHZ/BTC, CTSI/BNB, DOT/BUSD, ENJ/USDT, FIL/BNB, FRONT/BUSD, GALA/BNB, ICP/BNB, ID/BTC, KDA/USDT, LIT/USDT, MATIC/BNB, NEO/BNB, PAXG/USDT, PEPE/USDT, SANTOS/USDT, SUSHI/BNB, SUSHI/BTC, SXP/BNB, SXP/BTC, THETA/BNB, THETA/BTC, TKO/USDT, TLM/USDT, TRX/BNB, TRX/ETH, WBTC/ETH, XMR/ETH, XMR/USDT, XVS/BTC, XVS/USDT, ZEN/USDT Users who hold positions i"
+  },
+  {
+   "par": "LITUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_notice-regarding-the-removal_150c3ee696bd.json",
+   "sha256_pagina": "d0ec42c6a50f13066e5a7dbe3642ffe09a3386fa3ca35e156a6ffe82d94bb807",
+   "titulo": "Notice Regarding the Removal of Selected Liquidity Pools on Binance Liquid Swap (2023-09-01)",
+   "publicado": "2023-08-28",
+   "tipo_extraccion": "otro",
+   "etiquetas": [],
+   "contexto": "ce Liquid Swap will remove the following liquidity pools at 2023-09-01 04:00 (UTC) . ADA/BNB, ALICE/BTC, APE/BTC, AVA/USDT, AVAX/BNB, BTC/TUSD, CHZ/BNB, CHZ/BTC, CTSI/BNB, DOT/BUSD, ENJ/USDT, FIL/BNB, FRONT/BUSD, GALA/BNB, ICP/BNB, ID/BTC, KDA/USDT, LIT/USDT, MATIC/BNB, NEO/BNB, PAXG/USDT, PEPE/USDT, SANTOS/USDT, SUSHI/BNB, SUSHI/BTC, SXP/BNB, SXP/BTC, THETA/BNB, THETA/BTC, TKO/USDT, TLM/USDT, TRX/BNB, TRX/ETH, WBTC/ETH, XMR/ETH, XMR/USDT, XVS/BTC, XVS/USDT, ZEN/USDT Users who hold positions in the abov"
+  },
+  {
+   "par": "XMRUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_notice-regarding-the-removal_150c3ee696bd.json",
+   "sha256_pagina": "d0ec42c6a50f13066e5a7dbe3642ffe09a3386fa3ca35e156a6ffe82d94bb807",
+   "titulo": "Notice Regarding the Removal of Selected Liquidity Pools on Binance Liquid Swap (2023-09-01)",
+   "publicado": "2023-08-28",
+   "tipo_extraccion": "otro",
+   "etiquetas": [],
+   "contexto": "J/USDT, FIL/BNB, FRONT/BUSD, GALA/BNB, ICP/BNB, ID/BTC, KDA/USDT, LIT/USDT, MATIC/BNB, NEO/BNB, PAXG/USDT, PEPE/USDT, SANTOS/USDT, SUSHI/BNB, SUSHI/BTC, SXP/BNB, SXP/BTC, THETA/BNB, THETA/BTC, TKO/USDT, TLM/USDT, TRX/BNB, TRX/ETH, WBTC/ETH, XMR/ETH, XMR/USDT, XVS/BTC, XVS/USDT, ZEN/USDT Users who hold positions in the above liquidity pools will automatically receive their deposited assets in their Spot wallets at 2023-09-01 04:00 (UTC) . Please Note : The removal of the aforementioned liquidity pools do"
+  },
+  {
+   "par": "XVSUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_notice-regarding-the-removal_150c3ee696bd.json",
+   "sha256_pagina": "d0ec42c6a50f13066e5a7dbe3642ffe09a3386fa3ca35e156a6ffe82d94bb807",
+   "titulo": "Notice Regarding the Removal of Selected Liquidity Pools on Binance Liquid Swap (2023-09-01)",
+   "publicado": "2023-08-28",
+   "tipo_extraccion": "otro",
+   "etiquetas": [],
+   "contexto": "ONT/BUSD, GALA/BNB, ICP/BNB, ID/BTC, KDA/USDT, LIT/USDT, MATIC/BNB, NEO/BNB, PAXG/USDT, PEPE/USDT, SANTOS/USDT, SUSHI/BNB, SUSHI/BTC, SXP/BNB, SXP/BTC, THETA/BNB, THETA/BTC, TKO/USDT, TLM/USDT, TRX/BNB, TRX/ETH, WBTC/ETH, XMR/ETH, XMR/USDT, XVS/BTC, XVS/USDT, ZEN/USDT Users who hold positions in the above liquidity pools will automatically receive their deposited assets in their Spot wallets at 2023-09-01 04:00 (UTC) . Please Note : The removal of the aforementioned liquidity pools does not impact tradi"
+  },
+  {
+   "par": "ZENUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_notice-regarding-the-removal_150c3ee696bd.json",
+   "sha256_pagina": "d0ec42c6a50f13066e5a7dbe3642ffe09a3386fa3ca35e156a6ffe82d94bb807",
+   "titulo": "Notice Regarding the Removal of Selected Liquidity Pools on Binance Liquid Swap (2023-09-01)",
+   "publicado": "2023-08-28",
+   "tipo_extraccion": "otro",
+   "etiquetas": [],
+   "contexto": "GALA/BNB, ICP/BNB, ID/BTC, KDA/USDT, LIT/USDT, MATIC/BNB, NEO/BNB, PAXG/USDT, PEPE/USDT, SANTOS/USDT, SUSHI/BNB, SUSHI/BTC, SXP/BNB, SXP/BTC, THETA/BNB, THETA/BTC, TKO/USDT, TLM/USDT, TRX/BNB, TRX/ETH, WBTC/ETH, XMR/ETH, XMR/USDT, XVS/BTC, XVS/USDT, ZEN/USDT Users who hold positions in the above liquidity pools will automatically receive their deposited assets in their Spot wallets at 2023-09-01 04:00 (UTC) . Please Note : The removal of the aforementioned liquidity pools does not impact trading of the "
+  },
+  {
+   "par": "OGNUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_play-the-fruit-fusion-game-t_21f4f4aa1630.json",
+   "sha256_pagina": "b53e9bb9eaca9b95cd3cbbf1a0ad91d8f1baa39b3e42f6c0614f0bd7affc9411",
+   "titulo": "Play the Fruit Fusion Game to Grab Crypto Box Rewards Worth Up to 10 USDT Each! (2023-06-01)",
+   "publicado": "2023-06-01",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": " 5,000 USDT in Rewards! Word of the Day: Test Your Knowledge on DeFi to Earn Binance Points and More! Enjoy Up to 50% Discounts With Binance Pay’s Fantastic Deals This October & Get Up to 201 TUSD in Rewards! Updates on Capped Funding Rate of USDⓈ-M OGNUSDT Perpetual Contract (2023-10-01) SEA Exclusive: Create Your First Spot Grid Trading Bot & Get Up to 5 USDT in Rewards! Notice of Removal of Margin Trading Pairs - 2023-10-06 Get 1 USDT When Spending $10 on MooGold With Binance Pay! Refer Friends to B"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_play-word-of-the-day-now-to-_ddb626e1c950.json",
+   "sha256_pagina": "a199e6e70f2ed0fa3a308aa4b852b3aff68a7d1bcf059fa8557d34e933b73181",
+   "titulo": "Play Word of the Day Now to Test Your Knowledge on Scam Prevention & Share 3,000 USDT in Trading Fee Rebate Vouchers!",
+   "publicado": "2023-06-05",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! About Us About Press Careers Business Contacts Community Blog Building Trust Legal Terms Privacy Risk Warning Announcements News No"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_sign-up-as-a-binance-p2p-cas_d47676f977ca.json",
+   "sha256_pagina": "0740f24979e165e28f95aab2d1d8cf15da7ae95196b1803a1c272813045a984f",
+   "titulo": "Sign Up as a Binance P2P Cash Merchant to Receive Exclusive Binance Merchandise & 40 USDT in Token Voucher!",
+   "publicado": "2023-05-26",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! Notice of Removal of Trading Pairs - 2023-09-22 Binance Adds CYBER/ETH & MTL/TRY Trading Pairs About Us About Press Careers Busines"
+  },
+  {
+   "par": "OGNUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_trade-the-top-moving-pairs-o_0a3a33ed7fc1.json",
+   "sha256_pagina": "b2ec968d03031d017e069c841cb63d8cb196dfbd860861337781ea51752ccc3e",
+   "titulo": "Trade the Top-Moving Pairs on Binance Convert to Share 9,600 USDT in Rewards!",
+   "publicado": "2023-05-31",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": " 5,000 USDT in Rewards! Word of the Day: Test Your Knowledge on DeFi to Earn Binance Points and More! Enjoy Up to 50% Discounts With Binance Pay’s Fantastic Deals This October & Get Up to 201 TUSD in Rewards! Updates on Capped Funding Rate of USDⓈ-M OGNUSDT Perpetual Contract (2023-10-01) SEA Exclusive: Create Your First Spot Grid Trading Bot & Get Up to 5 USDT in Rewards! Notice of Removal of Margin Trading Pairs - 2023-10-06 Get 1 USDT When Spending $10 on MooGold With Binance Pay! Refer Friends to B"
+  },
+  {
+   "par": "MAVIAUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_update-on-the-binance-referr_85dc792a6608.json",
+   "sha256_pagina": "c93ccd1cbbb2a0a47e8220193dd1cf4539a461e7cdb494288d0998121a5581b8",
+   "titulo": "Update on the Binance Referral Program for Users in Türkiye",
+   "publicado": "2024-10-23",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "the Leverage & Margin Tiers of Multiple USDⓈ-M and COIN-M Perpetual Contracts (2024-12-06) Binance Will List Across Protocol (ACX) and Orca (ORCA) with Seed Tag Applied Binance P2P Launches Merchant Program Upgrade Binance Futures Will Delist USDⓈ-M MAVIAUSDT, OMGUSDT, and BONDUSDT Perpetual Contracts (2024-12-16) Community About Us About Careers Announcements News Press Legal Terms Privacy Building Trust Blog Community Risk Warning Notices Downloads Desktop Application Products Exchange Buy Crypto Pay A"
+  },
+  {
+   "par": "OMGUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_update-on-the-binance-referr_85dc792a6608.json",
+   "sha256_pagina": "c93ccd1cbbb2a0a47e8220193dd1cf4539a461e7cdb494288d0998121a5581b8",
+   "titulo": "Update on the Binance Referral Program for Users in Türkiye",
+   "publicado": "2024-10-23",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "e & Margin Tiers of Multiple USDⓈ-M and COIN-M Perpetual Contracts (2024-12-06) Binance Will List Across Protocol (ACX) and Orca (ORCA) with Seed Tag Applied Binance P2P Launches Merchant Program Upgrade Binance Futures Will Delist USDⓈ-M MAVIAUSDT, OMGUSDT, and BONDUSDT Perpetual Contracts (2024-12-16) Community About Us About Careers Announcements News Press Legal Terms Privacy Building Trust Blog Community Risk Warning Notices Downloads Desktop Application Products Exchange Buy Crypto Pay Academy Li"
+  },
+  {
+   "par": "BONDUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_update-on-the-binance-referr_85dc792a6608.json",
+   "sha256_pagina": "c93ccd1cbbb2a0a47e8220193dd1cf4539a461e7cdb494288d0998121a5581b8",
+   "titulo": "Update on the Binance Referral Program for Users in Türkiye",
+   "publicado": "2024-10-23",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT"
+   ],
+   "contexto": "ers of Multiple USDⓈ-M and COIN-M Perpetual Contracts (2024-12-06) Binance Will List Across Protocol (ACX) and Orca (ORCA) with Seed Tag Applied Binance P2P Launches Merchant Program Upgrade Binance Futures Will Delist USDⓈ-M MAVIAUSDT, OMGUSDT, and BONDUSDT Perpetual Contracts (2024-12-16) Community About Us About Careers Announcements News Press Legal Terms Privacy Building Trust Blog Community Risk Warning Notices Downloads Desktop Application Products Exchange Buy Crypto Pay Academy Live Tax Gift Ca"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_updates-on-binance-eth-2-0-s_f12b3b5a16f6.json",
+   "sha256_pagina": "12790b5dd24f3efdea20237a69ffa1037f90e791c45996391d03c94b1f06af55",
+   "titulo": "Updates on Binance ETH 2.0 Staking Withdrawals",
+   "publicado": "2023-04-13",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! Notice of Removal of Trading Pairs - 2023-09-22 Binance Adds CYBER/ETH & MTL/TRY Trading Pairs Updates on New Binance Loans (Stable"
+  },
+  {
+   "par": "BNBUPUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_updates-on-binance-leveraged_2f015a993d37.json",
+   "sha256_pagina": "b85b2657948787af8d3cc69c1a8d1ac45e067ef5a83a551580cd70bc41efde7c",
+   "titulo": "Updates on Binance Leveraged Tokens (BLVT) Services",
+   "publicado": "2024-02-19",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT"
+   ],
+   "contexto": "uspended at 2024-02-28 06:00 (UTC) . Binance will then delist and cease redemption for these BLVTs, as per the table below. Binance Leveraged Token (BLVT) Pairs Cessation Time for Trading & Subscription Services Delisting & Redemption Cessation Time BNBUP/USDT 2024-02-28 06:00 (UTC) 2024-04-01 06:00 (UTC) BNBDOWN/USDT ETHUP/USDT 2024-04-02 06:00 (UTC) ETHDOWN/USDT BTCUP/USDT 2024-04-03 06:00 (UTC) BTCDOWN/USDT Each BLVT represents a basket of perpetual contract positions and are designed for short-term tr"
+  },
+  {
+   "par": "BNBDOWNUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_updates-on-binance-leveraged_2f015a993d37.json",
+   "sha256_pagina": "b85b2657948787af8d3cc69c1a8d1ac45e067ef5a83a551580cd70bc41efde7c",
+   "titulo": "Updates on Binance Leveraged Tokens (BLVT) Services",
+   "publicado": "2024-02-19",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT"
+   ],
+   "contexto": "list and cease redemption for these BLVTs, as per the table below. Binance Leveraged Token (BLVT) Pairs Cessation Time for Trading & Subscription Services Delisting & Redemption Cessation Time BNBUP/USDT 2024-02-28 06:00 (UTC) 2024-04-01 06:00 (UTC) BNBDOWN/USDT ETHUP/USDT 2024-04-02 06:00 (UTC) ETHDOWN/USDT BTCUP/USDT 2024-04-03 06:00 (UTC) BTCDOWN/USDT Each BLVT represents a basket of perpetual contract positions and are designed for short-term trading. BLVTs are rebalanced daily and are not a replacement"
+  },
+  {
+   "par": "ETHUPUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_updates-on-binance-leveraged_2f015a993d37.json",
+   "sha256_pagina": "b85b2657948787af8d3cc69c1a8d1ac45e067ef5a83a551580cd70bc41efde7c",
+   "titulo": "Updates on Binance Leveraged Tokens (BLVT) Services",
+   "publicado": "2024-02-19",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "e redemption for these BLVTs, as per the table below. Binance Leveraged Token (BLVT) Pairs Cessation Time for Trading & Subscription Services Delisting & Redemption Cessation Time BNBUP/USDT 2024-02-28 06:00 (UTC) 2024-04-01 06:00 (UTC) BNBDOWN/USDT ETHUP/USDT 2024-04-02 06:00 (UTC) ETHDOWN/USDT BTCUP/USDT 2024-04-03 06:00 (UTC) BTCDOWN/USDT Each BLVT represents a basket of perpetual contract positions and are designed for short-term trading. BLVTs are rebalanced daily and are not a replacement for margin"
+  },
+  {
+   "par": "ETHDOWNUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_updates-on-binance-leveraged_2f015a993d37.json",
+   "sha256_pagina": "b85b2657948787af8d3cc69c1a8d1ac45e067ef5a83a551580cd70bc41efde7c",
+   "titulo": "Updates on Binance Leveraged Tokens (BLVT) Services",
+   "publicado": "2024-02-19",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "er the table below. Binance Leveraged Token (BLVT) Pairs Cessation Time for Trading & Subscription Services Delisting & Redemption Cessation Time BNBUP/USDT 2024-02-28 06:00 (UTC) 2024-04-01 06:00 (UTC) BNBDOWN/USDT ETHUP/USDT 2024-04-02 06:00 (UTC) ETHDOWN/USDT BTCUP/USDT 2024-04-03 06:00 (UTC) BTCDOWN/USDT Each BLVT represents a basket of perpetual contract positions and are designed for short-term trading. BLVTs are rebalanced daily and are not a replacement for margin leveraged products. Refer to this b"
+  },
+  {
+   "par": "BTCUPUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_updates-on-binance-leveraged_2f015a993d37.json",
+   "sha256_pagina": "b85b2657948787af8d3cc69c1a8d1ac45e067ef5a83a551580cd70bc41efde7c",
+   "titulo": "Updates on Binance Leveraged Tokens (BLVT) Services",
+   "publicado": "2024-02-19",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "below. Binance Leveraged Token (BLVT) Pairs Cessation Time for Trading & Subscription Services Delisting & Redemption Cessation Time BNBUP/USDT 2024-02-28 06:00 (UTC) 2024-04-01 06:00 (UTC) BNBDOWN/USDT ETHUP/USDT 2024-04-02 06:00 (UTC) ETHDOWN/USDT BTCUP/USDT 2024-04-03 06:00 (UTC) BTCDOWN/USDT Each BLVT represents a basket of perpetual contract positions and are designed for short-term trading. BLVTs are rebalanced daily and are not a replacement for margin leveraged products. Refer to this blog for mor"
+  },
+  {
+   "par": "BTCDOWNUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_updates-on-binance-leveraged_2f015a993d37.json",
+   "sha256_pagina": "b85b2657948787af8d3cc69c1a8d1ac45e067ef5a83a551580cd70bc41efde7c",
+   "titulo": "Updates on Binance Leveraged Tokens (BLVT) Services",
+   "publicado": "2024-02-19",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "VT) Pairs Cessation Time for Trading & Subscription Services Delisting & Redemption Cessation Time BNBUP/USDT 2024-02-28 06:00 (UTC) 2024-04-01 06:00 (UTC) BNBDOWN/USDT ETHUP/USDT 2024-04-02 06:00 (UTC) ETHDOWN/USDT BTCUP/USDT 2024-04-03 06:00 (UTC) BTCDOWN/USDT Each BLVT represents a basket of perpetual contract positions and are designed for short-term trading. BLVTs are rebalanced daily and are not a replacement for margin leveraged products. Refer to this blog for more information. Please Note : At 2024"
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_updates-on-tick-size-for-mul_a56fb9a3b3b5.json",
+   "sha256_pagina": "39184883d2c8b43c44f955fde6f13478e212778e1b39ce35f321c4824e2640d4",
+   "titulo": "Updates on Tick Size for Multiple USDⓈ-M Perpetual Futures Contracts (2023-06-05)",
+   "publicado": "2023-05-26",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! Notice of Removal of Trading Pairs - 2023-09-22 About Us About Press Careers Business Contacts Community Blog Building Trust Legal "
+  },
+  {
+   "par": "IMXUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_updates-on-tick-size-for-spo_04581f4504c1.json",
+   "sha256_pagina": "2dc9df719194e0c70f8c456d03d6bec192d6fc6dba09dec81f50ae93f2f50d6b",
+   "titulo": "Updates on Tick Size for Spot Trading Pairs (2023-05-18)",
+   "publicado": "2023-05-11",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN"
+   ],
+   "contexto": "I Endpoints (2023-09-21) Notice of Addition & Removal of Trading Pairs - 2023-09-22 Binance Will Support the Shentu (CTK) Network Upgrade & Hard Fork Binance Futures Will Update the Leverage, Margin Tiers and Capped Funding Rate Multiplier of USDⓈ-M IMXUSDT Perpetual Contract Subscribe to Dual Investment & Share Up to $18,888 in BTC Token Vouchers This Mid-Autumn Festival! About Us About Press Careers Business Contacts Community Blog Building Trust Legal Terms Privacy Risk Warning Announcements News No"
+  },
+  {
+   "par": "OGNUSDT",
+   "archivo": "url_https___www.binance.com_en_support_announcement_wallet-maintenance-for-bnb-b_f15061616142.json",
+   "sha256_pagina": "3033c6c63b1febf447a914cc7f33b45984289c4768ea08234d9d786501d61725",
+   "titulo": "Wallet Maintenance for BNB Beacon Chain (BEP2) - 2023-06-12",
+   "publicado": "2023-06-08",
+   "tipo_extraccion": "otro",
+   "etiquetas": [
+    "FUT",
+    "MARGEN",
+    "OTRO"
+   ],
+   "contexto": " 5,000 USDT in Rewards! Word of the Day: Test Your Knowledge on DeFi to Earn Binance Points and More! Enjoy Up to 50% Discounts With Binance Pay’s Fantastic Deals This October & Get Up to 201 TUSD in Rewards! Updates on Capped Funding Rate of USDⓈ-M OGNUSDT Perpetual Contract (2023-10-01) SEA Exclusive: Create Your First Spot Grid Trading Bot & Get Up to 5 USDT in Rewards! Notice of Removal of Margin Trading Pairs - 2023-10-06 Get 1 USDT When Spending $10 on MooGold With Binance Pay! Refer Friends to B"
+  }
+ ]
+}

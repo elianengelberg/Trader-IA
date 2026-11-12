@@ -1,0 +1,103 @@
+{
+ "pruebas": [
+  "tests"
+ ],
+ "mutantes": [
+  {
+   "id": "M23",
+   "archivo": "packages/tia/src/tia/risk/engine.py",
+   "descripcion": "el freno de drawdown nunca salta",
+   "rc": 1,
+   "resultado": "MUERTO",
+   "primera_falla": "FAILED tests/integration/test_account_restore.py::test_a_drawdown_past_the_breaker_survives_a_restart",
+   "segundos": 39.7
+  },
+  {
+   "id": "M24",
+   "archivo": "packages/tia/src/tia/risk/engine.py",
+   "descripcion": "el freno de drawdown rechaza la señal pero no pone el sistema en modo seguro",
+   "rc": 1,
+   "resultado": "MUERTO",
+   "primera_falla": "FAILED tests/integration/test_funding_settlement.py::test_a_missing_mark_at_the_settlement_leaves_the_period_unreconciled",
+   "segundos": 164.2
+  },
+  {
+   "id": "M25",
+   "archivo": "packages/tia/src/tia/risk/engine.py",
+   "descripcion": "el límite de pérdida diaria nunca bloquea",
+   "rc": 1,
+   "resultado": "MUERTO",
+   "primera_falla": "FAILED tests/integration/test_account_restore.py::test_a_day_that_hit_the_loss_limit_still_refuses_entries_after_a_restart",
+   "segundos": 32.4
+  },
+  {
+   "id": "M26",
+   "archivo": "packages/tia/src/tia/execution/exits.py",
+   "descripcion": "la regla de salida puede aflojar el stop (falta «solo más ajustado»)",
+   "rc": 1,
+   "resultado": "MUERTO",
+   "primera_falla": "FAILED tests/integration/test_adverse_recovery.py::test_rejects_and_partials_over_hundreds_of_bars_keep_the_invariants_and_the_record_whole",
+   "segundos": 54.6
+  },
+  {
+   "id": "M27",
+   "archivo": "packages/tia/src/tia/execution/exits.py",
+   "descripcion": "el stop puede quedar del otro lado del último cierre",
+   "rc": 1,
+   "resultado": "MUERTO",
+   "primera_falla": "FAILED tests/unit/test_exits.py::test_a_stop_stays_a_stop_never_through_the_last_close",
+   "segundos": 376.8
+  },
+  {
+   "id": "M28",
+   "archivo": "packages/tia/src/tia/execution/exits.py",
+   "descripcion": "se elige el candidato más flojo en vez del más ajustado",
+   "rc": 1,
+   "resultado": "MUERTO",
+   "primera_falla": "FAILED tests/unit/test_exits.py::test_the_tightest_candidate_wins - Assertion...",
+   "segundos": 387.8
+  },
+  {
+   "id": "M29",
+   "archivo": "packages/tia/src/tia/economics/expected_value.py",
+   "descripcion": "sin encogimiento por error estándar",
+   "rc": 1,
+   "resultado": "MUERTO",
+   "primera_falla": "FAILED tests/integration/test_live_runtime.py::test_exploration_buys_lessons_in_unproven_buckets_but_never_in_disproven_ones",
+   "segundos": 205.6
+  },
+  {
+   "id": "M30",
+   "archivo": "packages/tia/src/tia/economics/expected_value.py",
+   "descripcion": "un costo desconocido no impide operar",
+   "rc": 1,
+   "resultado": "MUERTO",
+   "primera_falla": "FAILED tests/unit/test_cost_semantics.py::test_an_incomplete_estimate_never_makes_a_trade_tradeable",
+   "segundos": 413.8
+  },
+  {
+   "id": "M31",
+   "archivo": "packages/tia/src/tia/economics/expected_value.py",
+   "descripcion": "se ignora el techo de la razón de costos",
+   "rc": 1,
+   "resultado": "MUERTO",
+   "primera_falla": "FAILED tests/unit/test_cost_semantics.py::test_the_cost_ratio_ceiling_refuses_a_trade_that_depends_on_the_cost_model",
+   "segundos": 397.9
+  },
+  {
+   "id": "M32",
+   "archivo": "packages/tia/src/tia/runtime/states.py",
+   "descripcion": "HALT_NEW_ORDERS no admite órdenes que reducen (no se puede cerrar ni proteger)",
+   "resultado": "NO_APLICA (aparece 2 veces)"
+  },
+  {
+   "id": "M33",
+   "archivo": "packages/tia/src/tia/economics/expected_value.py",
+   "descripcion": "muestra mínima de 3 en vez de 30",
+   "rc": 1,
+   "resultado": "MUERTO",
+   "primera_falla": "FAILED tests/integration/test_live_runtime.py::test_an_unfilled_limit_entry_expires_and_frees_the_session",
+   "segundos": 203.8
+  }
+ ]
+}

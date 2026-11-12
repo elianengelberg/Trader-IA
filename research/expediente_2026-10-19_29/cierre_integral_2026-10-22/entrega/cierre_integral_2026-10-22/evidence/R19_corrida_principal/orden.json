@@ -1,0 +1,1766 @@
+[
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 13
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 1
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 13
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 8
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 18
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 6
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 7
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 2
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 10
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 18
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 6
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 9
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 4
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 5
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 9
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 1
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 8
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 16
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 16
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 17
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 5
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 13
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 7
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 8
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 8
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 1
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 1,
+"sel": "modulo",
+"rep": 1
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 14
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 8
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 7
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 0,
+"sel": "modulo",
+"rep": 1
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 4
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 5
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 12
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 1,
+"sel": "modulo",
+"rep": 1
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 1
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 9
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 0,
+"sel": "modulo",
+"rep": 1
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 1,
+"sel": "modulo",
+"rep": 1
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 13
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 9
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 11
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 20
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 18
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 4
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 7
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 3
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 16
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 15
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 7
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 17
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 20
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 10
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 13
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 20
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 19
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 17
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 4
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 1
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 12
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 11
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 19
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 5
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 8
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 14
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 6
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 14
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 20
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 17
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 2
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 13
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 3
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 6
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 6
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 11
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 1
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 2
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 3
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 10
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 11
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 12
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 4
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 13
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 0,
+"sel": "modulo",
+"rep": 1
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 17
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 0,
+"sel": "modulo",
+"rep": 1
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 0,
+"sel": "modulo",
+"rep": 1
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 4
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 8
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 6
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 11
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 14
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 16
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 5
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 14
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 19
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 5
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 12
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 20
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 7
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 11
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 16
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 16
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 18
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 3
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 2
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 19
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 2
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 9
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 14
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 19
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 19
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 8
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 6
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 18
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 0,
+"sel": "modulo",
+"rep": 1
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 9
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 18
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 3
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 3
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 3
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 20
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 18
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 15
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 1
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 12
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 15
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 18
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 18
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 10
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 3
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 15
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 6
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 6
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 9
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 9
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 17
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 12
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 9
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 19
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 15
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 12
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 8
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 10
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 4
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 15
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 1
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 15
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 20
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 20
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 3
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 7
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 15
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 1,
+"sel": "modulo",
+"rep": 1
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 8
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 10
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 10
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 1,
+"sel": "modulo",
+"rep": 1
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 1,
+"sel": "modulo",
+"rep": 1
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 13
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 8
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 11
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 10
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 18
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 11
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 5
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 14
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 18
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 20
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 20
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 15
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 16
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 20
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 5
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 6
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 14
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 4
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 14
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 7
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 19
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 19
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 19
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 12
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 10
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 15
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 12
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 12
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 14
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 12
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 5
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 2
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 2
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 11
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 7
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 4
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 4
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 2
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 10
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 6
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 16
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 19
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 16
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 17
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 13
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 17
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 17
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 4
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 15
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 17
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 6
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 3
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 16
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 11
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 10
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 4
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 2
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 11
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 5
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 14
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 9
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 5
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 18
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 5
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 2
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 1
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 7
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 13
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 1
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 3
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 12
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 17
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 16
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 8
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 9
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 16
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 13
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 14
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 2
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 15
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 1
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 19
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 17
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 20
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 1
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 1,
+"sel": "prueba",
+"rep": 11
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 0,
+"sel": "prueba",
+"rep": 13
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 3
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 9
+},
+{
+"arbol": "r19_cand",
+"K": 4,
+"park": 1,
+"sel": "prueba",
+"rep": 10
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 1,
+"sel": "prueba",
+"rep": 2
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 0,
+"sel": "prueba",
+"rep": 7
+},
+{
+"arbol": "r19_base",
+"K": 4,
+"park": 0,
+"sel": "prueba",
+"rep": 7
+}
+]

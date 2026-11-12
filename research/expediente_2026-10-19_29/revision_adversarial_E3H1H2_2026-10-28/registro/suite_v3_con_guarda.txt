@@ -1,0 +1,22 @@
+..................FF............................FF.                      [100%]
+=================================== FAILURES ===================================
+E   AssertionError: assert (False)
+     +  where False = <built-in method startswith of str object at 0x7fcc80809cb0>('terminal: INVALIDO')
+     +    where <built-in method startswith of str object at 0x7fcc80809cb0> = 'terminal: ERROR en la etapa «validez_previa»: CalculoBloqueado: CÁLCULO BLOQUEADO POR EL REVISOR. Ver /tmp/claude-0/-...chpad/revision_adversarial_E3H1H2_2026-10-28/tmp_pytest_v3/bt/test_INVALIDO_explicito_y_no_r0/salida/RESULTADO_E3.json'.startswith
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/copia_A/paquete_revision_independiente_E3H1H2_2026-10-28/evidencia/cierre_bloqueantes_E3H1H2_2026-10-27/pruebas/test_orquestador_v3.py:381: AssertionError: assert (False)
+E   AssertionError: terminal: ERROR en la etapa «validez_previa»: CalculoBloqueado: CÁLCULO BLOQUEADO POR EL REVISOR. Ver /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/tmp_pytest_v3/bt/test_EVALUADO_de_punta_a_punta0/salida/RESULTADO_E3.json
+    assert 'terminal: ER...LTADO_E3.json' == 'termino'
+      
+      - termino
+      + terminal: ERROR en la etapa «validez_previa»: CalculoBloqueado: CÁLCULO BLOQUEADO POR EL REVISOR. Ver /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/tmp_pytest_v3/bt/test_EVALUADO_de_punta_a_punta0/salida/RESULTADO_E3.json
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/copia_A/paquete_revision_independiente_E3H1H2_2026-10-28/evidencia/cierre_bloqueantes_E3H1H2_2026-10-27/pruebas/test_orquestador_v3.py:391: AssertionError: terminal: ERROR en la etapa «validez_previa»: CalculoBloqueado: CÁLCULO BLOQUEADO POR EL REVISOR. Ver /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/tmp_pytest_v3/bt/test_EVALUADO_de_punta_a_punta0/salida/RESULTADO_E3.json
+E   guarda_revisor.CalculoBloqueado: CÁLCULO BLOQUEADO POR EL REVISOR
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/arnes/guarda_revisor.py:13: guarda_revisor.CalculoBloqueado: CÁLCULO BLOQUEADO POR EL REVISOR
+E   guarda_revisor.CalculoBloqueado: CÁLCULO BLOQUEADO POR EL REVISOR
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/arnes/guarda_revisor.py:13: guarda_revisor.CalculoBloqueado: CÁLCULO BLOQUEADO POR EL REVISOR
+=========================== short test summary info ============================
+FAILED ../copia_A/paquete_revision_independiente_E3H1H2_2026-10-28/evidencia/cierre_bloqueantes_E3H1H2_2026-10-27/pruebas/test_orquestador_v3.py::test_INVALIDO_explicito_y_no_reescrito_como_ERROR
+FAILED ../copia_A/paquete_revision_independiente_E3H1H2_2026-10-28/evidencia/cierre_bloqueantes_E3H1H2_2026-10-27/pruebas/test_orquestador_v3.py::test_EVALUADO_de_punta_a_punta_y_sin_segunda_ejecucion
+FAILED ../copia_A/paquete_revision_independiente_E3H1H2_2026-10-28/evidencia/cierre_bloqueantes_E3H1H2_2026-10-27/pruebas/test_orquestador_v3.py::test_ejecutar_del_v3_identico_al_del_v2[20261026-0.02]
+FAILED ../copia_A/paquete_revision_independiente_E3H1H2_2026-10-28/evidencia/cierre_bloqueantes_E3H1H2_2026-10-27/pruebas/test_orquestador_v3.py::test_ejecutar_del_v3_identico_al_del_v2[37-0.0]
+4 failed, 47 passed in 1.25s

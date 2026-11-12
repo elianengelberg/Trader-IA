@@ -1,0 +1,60 @@
+{
+ "aviso": "DATOS SINTÉTICOS generados por este script; no son datos históricos",
+ "P1_nulo": {
+  "sims": 200,
+  "tasa_RESPALDADA": 0.025,
+  "tasa_EN_CONTRA": 0.035,
+  "ic_medio_promedio": -1.434414042887175e-05,
+  "ok": true
+ },
+ "P2_efecto_plantado": {
+  "sims": 60,
+  "k_rev": 0.06,
+  "tasa_RESPALDADA": 1.0,
+  "ic_medio_promedio": 0.05710300619567814,
+  "ok": true
+ },
+ "P3_fuga": {
+  "FugaDeFuturo_lanzada": true,
+  "alterar_t+2_no_cambia_ic": true,
+  "alterar_t+1_cambia_ic": true,
+  "alterar_t_no_cambia_universo_ni_cartera": true,
+  "ok": true
+ },
+ "P4_exclusiones": {
+  "BTCUP": true,
+  "FOOUP_sin_FOO": false,
+  "USDC": true,
+  "EUR": true,
+  "BTC": false,
+  "ETHBULL_sin_ETH": false,
+  "ok": true
+ },
+ "P5_salidas": {
+  "salidas": 1,
+  "n_ic": 59,
+  "n_universo": 60,
+  "ok": true
+ },
+ "P6_rotacion": {
+  "fija": [
+   1.0,
+   0.0,
+   0.0
+  ],
+  "total": [
+   1.0,
+   1.0
+  ],
+  "ok": true
+ },
+ "P7_clasificacion": {
+  "positivo": "RESPALDADA_INFORMACION",
+  "negativo": "EN_CONTRA_SIGNO_OPUESTO",
+  "cero_preciso": "REFUTADA_TAMANO_RELEVANTE",
+  "cero_ruidoso": "INSUFICIENTE",
+  "pocos_dias": "INVALIDO",
+  "ok": true
+ },
+ "todas_ok": true
+}

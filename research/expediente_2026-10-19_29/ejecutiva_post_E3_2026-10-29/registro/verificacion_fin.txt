@@ -1,0 +1,24 @@
+UTC 2026-10-29T02:33:17Z
+dir 757 6506fb03c211def710abe61a2493799000b80996c63000fcfc98da624cbaba79 experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3/resultados/calidad/series
+dir 757 6506fb03c211def710abe61a2493799000b80996c63000fcfc98da624cbaba79 paquete_revision_independiente_E3H1H2_2026-10-28_DATOS/evidencia/experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3/resultados/calidad/series
+IGUAL 3b64a04d experimentos/E3R_desbloqueo_2026-10-26/ejecutar_E3R.py
+IGUAL c089cc6a cierre_bloqueantes_E3H1H2_2026-10-27/orquestador_v3/ejecutar_E3_v3.py
+IGUAL 3b64a04d revision_adversarial_E3H1H2_2026-10-28/copia_A/paquete_revision_independiente_E3H1H2_2026-10-28/evidencia/experimentos/E3R_desbloqueo_2026-10-26/ejecutar_E3R.py
+IGUAL c089cc6a revision_adversarial_E3H1H2_2026-10-28/copia_A/paquete_revision_independiente_E3H1H2_2026-10-28/evidencia/cierre_bloqueantes_E3H1H2_2026-10-27/orquestador_v3/ejecutar_E3_v3.py
+IGUAL 01fc9344 revision_adversarial_E3H1H2_2026-10-28/copia_A/paquete_revision_independiente_E3H1H2_2026-10-28/evidencia/reparacion_E3H1H2_2026-10-26/orquestador_v2/ejecutar_E3_v2.py
+IGUAL 01fc9344 revision_adversarial_E3H1H2_2026-10-28/copia_A/paquete_revision_independiente_E3H1H2_2026-10-28/evidencia/revision_independiente_E3H1H2_2026-10-26/copia_aislada/reparacion_E3H1H2_2026-10-26/orquestador_v2/ejecutar_E3_v2.py
+IGUAL 3b64a04d entrega_direccion_tecnica_2026-10-26/E3R/ejecutar_E3R.py
+IGUAL 3b64a04d integracion_controlada_2026-10-25/trabajo/extraccion_zip_DT/entrega_direccion_tecnica_2026-10-26/E3R/ejecutar_E3R.py
+IGUAL 3b64a04d integracion_controlada_2026-10-25/trabajo/extraccion_zip_DT_final/entrega_direccion_tecnica_2026-10-26/E3R/ejecutar_E3R.py
+IGUAL 01fc9344 reparacion_E3H1H2_2026-10-26/orquestador_v2/ejecutar_E3_v2.py
+IGUAL 3b64a04d paquete_revision_independiente_E3H1H2_2026-10-28/evidencia/experimentos/E3R_desbloqueo_2026-10-26/ejecutar_E3R.py
+IGUAL c089cc6a paquete_revision_independiente_E3H1H2_2026-10-28/evidencia/cierre_bloqueantes_E3H1H2_2026-10-27/orquestador_v3/ejecutar_E3_v3.py
+IGUAL 01fc9344 paquete_revision_independiente_E3H1H2_2026-10-28/evidencia/reparacion_E3H1H2_2026-10-26/orquestador_v2/ejecutar_E3_v2.py
+IGUAL 01fc9344 paquete_revision_independiente_E3H1H2_2026-10-28/evidencia/revision_independiente_E3H1H2_2026-10-26/copia_aislada/reparacion_E3H1H2_2026-10-26/orquestador_v2/ejecutar_E3_v2.py
+IGUAL 01fc9344 revision_independiente_E3H1H2_2026-10-26/copia_aislada/reparacion_E3H1H2_2026-10-26/orquestador_v2/ejecutar_E3_v2.py
+tarball 0562b919b7e318abd34e753e04247bb6305c1405ad7ca5894858e320c69f8d1d
+MANIFEST_CIERRE_DECISIVO 527/527 entradas OK (528 líneas: la 1 es un encabezado #) sha 94d629c653b521a1213c1d3f45dff798567830db8fd295242c4995857ecfe6f8
+INFORME_CIERRE_DECISIVO_V4 sha 3c2bdeab53e80ccf8d2b803bef88e8b1a06baada93318f76ac624790c319c702
+mounts_sobre_scratchpad 0
+INTENTOS_E3 274 (todos dentro de revision_adversarial_E3H1H2_2026-10-28: inyección de fallos L-13 sobre copias; el árbol RA tiene la misma huella que al inicio)
+git rama claude/algo-trading-simulation-platform-ngf7xo HEAD 72ffae5d2698440c8f1afaff12e07bd8adde66fb porcelain 0 stash 0

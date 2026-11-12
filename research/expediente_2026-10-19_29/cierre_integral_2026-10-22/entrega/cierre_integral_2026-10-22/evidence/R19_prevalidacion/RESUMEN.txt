@@ -1,0 +1,7 @@
+001_val_K0_park0_prueba1 test_lenta_con_productor -> lenta_con_productor | foto 808 avanzó en la espera 14 | sin productor 10 / 784 | cabeza reconciliation
+001_val_K0_park0_prueba1 test_trabada -> trabada | foto 1072 avanzó en la espera 0 | sin productor 0 / 1072 | cabeza order
+002_val_K0_park1_prueba1 test_lenta_con_productor -> lenta_sin_productor | foto 9 avanzó en la espera 9 | sin productor None / None | cabeza None
+002_val_K0_park1_prueba1 test_trabada -> trabada | foto 1 avanzó en la espera 0 | sin productor 0 / 1 | cabeza order
+errores no inyectados: ['boom', 'boom']
+001_val_K0_park0_prueba1 pruebas que pasan: el vaciado pedido por otro llamador no recibe espera extra -> ['omitida: no la pidió settle(); esperar c']
+002_val_K0_park1_prueba1 pruebas que pasan: el vaciado pedido por otro llamador no recibe espera extra -> ['omitida: no la pidió settle(); esperar c']

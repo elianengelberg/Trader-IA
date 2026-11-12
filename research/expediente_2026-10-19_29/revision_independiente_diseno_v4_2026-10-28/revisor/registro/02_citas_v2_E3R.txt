@@ -1,0 +1,37 @@
+# citas verificadas de reparacion_E3H1H2_2026-10-26/orquestador_v2/ejecutar_E3_v2.py (01fc9344…) y experimentos/E3R_desbloqueo_2026-10-26/ejecutar_E3R.py (3b64a04d…)
+## v2 líneas 510-518
+   510	def modo_real(e3: Path, ventana: Path, autorizacion: Path, salida: Path, manifiesto: Path = None):
+   511	    if salida.exists():
+   512	        raise SystemExit(f"{salida} ya existe: la ejecución confirmatoria es única")
+   513	    manifiesto = Path(manifiesto or MANIFIESTO)
+   514	    texto = autorizacion.read_text() if autorizacion.exists() else ""
+   515	    requeridos = {"FRASE": FRASE in texto, "orquestador_v2": sha(Path(__file__)) in texto,
+   516	                  "entradas_congeladas": manifiesto.exists() and sha(manifiesto) in texto}
+   517	    if not all(requeridos.values()):
+   518	        raise SystemExit(f"autorización ausente o incompleta: {requeridos}. No se lee ningún precio.")
+## v2 líneas 53-62 (importar_congelados: sys.path + import desde disco)
+    53	def importar_congelados(e3: Path):
+    54	    cod = e3 / "codigo"
+    55	    for nombre, h in CONGELADOS.items():
+    56	        if sha(cod / nombre) != h:
+    57	            raise SystemExit(f"{nombre} no coincide con su hash congelado: no se ejecuta")
+    58	    sys.path.insert(0, str(cod))
+    59	    import inferencia
+    60	    import motor
+    61	    import universo
+    62	    return universo, motor, inferencia
+## E3R líneas 459-472
+   459	def modo_real(e3: Path, p0: Path, autorizacion: Path, salida: Path):
+   460	    if salida.exists():
+   461	        raise SystemExit(f"{salida} ya existe: la ejecución confirmatoria es única")
+   462	    texto = autorizacion.read_text() if autorizacion.exists() else ""
+   463	    requeridos = {"FRASE": FRASE in texto, "orquestador": sha(Path(__file__)) in texto, "P0": sha(p0) in texto,
+   464	                  "adenda_R": sha(AQUI / "ADENDA_R_auditoria_de_supervivencia_interna.md") in texto,
+   465	                  "adenda_R2": sha(AQUI / "ADENDA_R2_cortes_con_salto_de_precio.md") in texto}
+   466	    p0d = json.loads(p0.read_text())
+   467	    if "R1prima" in p0d.get("adenda", ""):
+   468	        requeridos["correccion_R1prima"] = sha(AQUI / "CORRECCION_R1prima_alcance_por_clase.md") in texto
+   469	    otros = [q for q in AQUI.glob("P0_resultado*.json") if q.resolve() != p0.resolve()]
+   470	    requeridos["una_sola_opcion"] = not any(sha(q) in texto for q in otros)  # la autorización elige una única ventana
+   471	    if not all(requeridos.values()):
+   472	        raise SystemExit(f"autorización ausente o incompleta: {requeridos}. No se lee ningún precio.")

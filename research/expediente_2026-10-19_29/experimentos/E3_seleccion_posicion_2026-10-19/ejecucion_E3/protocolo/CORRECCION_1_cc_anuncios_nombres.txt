@@ -1,0 +1,7 @@
+Corrección de recolección (no metodológica) — 2026-10-20T03:54:51Z
+cc_anuncios.py: el nombre de archivo de cada página se truncaba a 120 caracteres y 181 URL largas de binance.com colisionaron
+(7847 archivos para 8028 URL únicas). Se agregó un hash SHA-1 de la clave al nombre y la etapa 'renombrar' (cada archivo se renombra
+según la url de su propio contenido); luego 'paginas' bajó solo las 181 faltantes. No cambia la selección de capturas ni la extracción.
+Hash anterior (congelado en CONGELACION_ADENDA_3.txt): 6255236ba3fb2939c30b877b29d5efd00656813acbc7cfd856d78ce53367cc91 (copia: logs/cc_anuncios_v1_congelado.py.txt)
+Hash nuevo: 67e0a4cb0f1786ec104610ab2afbd19a062b6faf3c2891e42a69578c4f4de613
+Resultado: 8028 páginas (logs/06b_cc_paginas_colisiones.txt); clasificación re-ejecutada: logs/07_cc_clasificar.txt

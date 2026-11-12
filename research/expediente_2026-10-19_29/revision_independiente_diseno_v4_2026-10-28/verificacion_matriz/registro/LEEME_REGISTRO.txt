@@ -1,0 +1,25 @@
+Registro de la verificación de MATRIZ_METODOLOGICA.md (agente separado, misma familia de modelos, lanzado por el autor).
+Todo se ejecutó desde el scratchpad:
+  /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad
+Python: <scratchpad>/integracion_controlada_2026-10-25/venv/bin/python  (siempre con -B -I)
+Nadie abrió .npz ni ZIP; no se ejecutó ningún orquestador ni script de conciliación o de ventanas.
+
+0. sha256 de la matriz al empezar y al terminar (sin cambios):
+   825f141e9a392ad6c659493a60dcc20fd9d956d70dbd52a9e9e2f0d9c44ed207
+   $ sha256sum revision_independiente_diseno_v4_2026-10-28/metodologia/MATRIZ_METODOLOGICA.md
+
+1. bash revision_independiente_diseno_v4_2026-10-28/verificacion_matriz/registro/verif_citas.sh            > salida_verif_citas.txt
+2. python -B -I .../registro/comandos_adicionales.py                                                       > salida_comandos_adicionales.txt
+3. python -B -I .../metodologia/alcance_pasada_N5.py <E3>/codigo/cc_clasificar.py <E3> .../registro/alcance_N5_reejecutado.json
+                                                                                                           > salida_alcance_N5_reejecutado.txt
+   (E3 = experimentos/E3_seleccion_posicion_2026-10-19/ejecucion_E3). El JSON re-ejecutado es idéntico al original (comparado en memoria).
+4. python -B -I .../metodologia/potencia_analitica.py                                                      > salida_potencia_reejecutada.txt
+   (idéntico a metodologia/potencia_analitica.txt; sha256 bee317e6c7b7b131b23e…)
+5. python -B -I .../registro/cota_conjunta.py                                                              > salida_cota_conjunta.txt
+6. bash .../registro/busquedas_texto.sh                                                                    > salida_busquedas_texto.txt
+7. python -B -I .../registro/conteo_fechas_posteriores.py                                                  > salida_conteo_fechas_posteriores.txt
+8. python -B -I .../registro/titulos_eventos.py                                                            > salida_titulos_eventos.txt
+9. python -B -I .../registro/oraciones_fechas.py > oraciones_fechas_distintas_de_E.txt ; python -B -I .../registro/bkrw_pasada2.py > salida_bkrw_pasada2.txt
+10. bash .../registro/verif_registro_p0.sh > salida_verif_registro_p0.txt  (hashes y mtimes de REGISTRO_P0.txt)
+11. cmp de las re-ejecuciones: comparacion_reejecuciones.txt
+12. conteo_veredictos.txt: grep -c de los veredictos de la tabla de VERIFICACION_MATRIZ.md.

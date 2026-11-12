@@ -1,0 +1,30 @@
+== IC-A.7 suites de referencia (misión) frente a las de la revisión adversaria: 2026-10-25T18:27:54Z
+== suite ref_base · árbol /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/base · write-tree 44850cfcbf53c3f8223d38a92031f4402f8ffb32 · inicio 2026-10-25T18:20:58Z · carga 0.48 0.
+comando: PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=packages/tia/src TMPDIR=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/logs/../tmp_ref_base /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556
+rc=0 · duración 328 s · fin 2026-10-25T18:26:39Z · carga 3.31 2.90 1.46 5/124 3128
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+== suite ref_A · árbol /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/A · write-tree 5d6a09549a8314f6e6e9386f82a52ca7628510d1 · inicio 2026-10-25T18:20:58Z · carga 0.48 0.39 0.2
+comando: PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=packages/tia/src TMPDIR=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/logs/../tmp_ref_A /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b
+rc=0 · duración 372 s · fin 2026-10-25T18:27:23Z · carga 3.27 2.95 1.54 3/115 3233
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+== suite ref_A3 · árbol /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/A3 · write-tree a94be41a9f5d662f58c8ef82f75ab40f4b1ae373 · inicio 2026-10-25T18:20:58Z · carga 0.48 0.39 0
+comando: PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=packages/tia/src TMPDIR=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/logs/../tmp_ref_A3 /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-
+rc=0 · duración 372 s · fin 2026-10-25T18:27:23Z · carga 3.27 2.95 1.54 2/111 3243
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+== suite ref_final · árbol /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/final · write-tree 0477c6a20c5e3831c2da3bf723948b7baafaa518 · inicio 2026-10-25T18:20:58Z · carga 0.48 
+comando: PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=packages/tia/src TMPDIR=/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/logs/../tmp_ref_final /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-55
+rc=0 · duración 385 s · fin 2026-10-25T18:27:36Z · carga 2.77 2.85 1.53 1/107 3284
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+ref_base   junit fd332886233eb762 · log 887d626ad8602496 · atributos {'tests': 1956, 'failures': 0, 'errors': 0, 'skipped': 0} · casos 1956 · {'passed': 1956} · duplicados 0 · tiempo 324.7 s
+           frente a la referencia base (1956 casos, {'passed': 1956}): mismos nodeids True · mismo resultado por prueba True · faltan [] · sobran [] · cambian []
+ref_A      junit 275d50aabeffcd4e · log 6623445dd3988d48 · atributos {'tests': 1978, 'failures': 0, 'errors': 0, 'skipped': 0} · casos 1978 · {'passed': 1978} · duplicados 0 · tiempo 370.0 s
+           frente a la referencia A (1978 casos, {'passed': 1978}): mismos nodeids True · mismo resultado por prueba True · faltan [] · sobran [] · cambian []
+ref_A3     junit 0e3da307e045e43c · log 6623445dd3988d48 · atributos {'tests': 1978, 'failures': 0, 'errors': 0, 'skipped': 0} · casos 1978 · {'passed': 1978} · duplicados 0 · tiempo 370.2 s
+           frente a la referencia A3 (1978 casos, {'passed': 1978}): mismos nodeids True · mismo resultado por prueba True · faltan [] · sobran [] · cambian []
+ref_final  junit 157cd9866309ff92 · log f4659ef19e3c7116 · atributos {'tests': 1985, 'failures': 0, 'errors': 0, 'skipped': 0} · casos 1985 · {'passed': 1985} · duplicados 0 · tiempo 382.9 s
+           frente a la referencia final (1985 casos, {'passed': 1985}): mismos nodeids True · mismo resultado por prueba True · faltan [] · sobran [] · cambian []
+nota: 'recolectadas (collect-only)'=0 es el mismo defecto de medición ya documentado en la revisión (grep sobre la salida -q); el conteo válido es el del JUnit

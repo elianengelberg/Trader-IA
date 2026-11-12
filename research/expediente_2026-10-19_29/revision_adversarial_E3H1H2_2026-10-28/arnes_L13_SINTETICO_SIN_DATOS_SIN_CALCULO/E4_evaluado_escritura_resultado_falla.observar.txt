@@ -1,0 +1,36 @@
+{
+ "salida_1": {
+  "REGISTRO_EJECUCION.json": {
+   "sha256": "73a0363244c96927f46be646c9ea018d78c71c5d7db927d244956dc69cdf07fe",
+   "bytes": 784,
+   "contiene_STUB": false
+  },
+  "RESULTADO_E3.json": {
+   "sha256": "6f27e4aca664d9104d9f3b15ebda7a800f783e39af0ce591efb4bb043cf76bbe",
+   "bytes": 1341,
+   "contiene_STUB": false,
+   "veredicto": "ERROR",
+   "etapa": "escritura",
+   "estadisticos_iniciados": true
+  },
+  "VALIDEZ_PREVIA.json": {
+   "sha256": "40c4efd5ac8c0d44b7e53268b6f17c45110534f9c751cd4abb3d82fa40928272",
+   "bytes": 73,
+   "contiene_STUB": true
+  }
+ },
+ "registro": [
+  "{\"utc\": \"2026-10-28T13:52:30.176001+00:00\", \"evento\": \"INICIADO\", \"id_intento\": \"385fcd2bc2b63e2e:/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/arnes_L13_SINTETICO_SIN_DATOS_SIN_CALCULO/E4_evaluado_escritura_resultado_falla/salida_1\", \"salida\": \"/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/arnes_L13_SINTETICO_SIN_DATOS_SIN_CALCULO/E4_evaluado_escritura_resultado_falla/salida_1\", \"sha_autorizacion\": \"385fcd2bc2b63e2e704b3f2df1f382611f944bcb562376abd67b4b46b200f56c\", \"sha_orquestador\": \"22b7ff20d98e4730f755fc14ccffe796a3c7836fd2b2004756583449bcb64353\", \"sha_manifiesto\": \"7dd0f1fd45965f344076156397aaa372e1f747bdff715938d0874a6d548d89ef\", \"reintento_de\": null}",
+  "{\"utc\": \"2026-10-28T13:52:30.179097+00:00\", \"evento\": \"ERROR\", \"id_intento\": \"385fcd2bc2b63e2e:/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/arnes_L13_SINTETICO_SIN_DATOS_SIN_CALCULO/E4_evaluado_escritura_resultado_falla/salida_1\", \"etapa\": \"escritura\", \"tipo\": \"OSError\", \"estadisticos_iniciados\": true, \"sha_resultado\": \"6f27e4aca664d9104d9f3b15ebda7a800f783e39af0ce591efb4bb043cf76bbe\"}"
+ ],
+ "registro_vs_disco": [
+  {
+   "evento": "ERROR",
+   "sha_resultado": "6f27e4aca664d9104d9f3b15ebda7a800f783e39af0ce591efb4bb043cf76bbe",
+   "coincide_con_disco": true
+  }
+ ],
+ "nuevo_intento": "RECHAZADO: el ERROR previo ocurrió en la etapa «escritura», con estadísticos iniciados: reintentar es una decisión metodológica, no técnica",
+ "salida_2": "NO EXISTE"
+}
+rc_observar=0

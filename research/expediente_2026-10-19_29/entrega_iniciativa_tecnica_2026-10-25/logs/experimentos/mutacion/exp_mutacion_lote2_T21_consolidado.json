@@ -1,0 +1,125 @@
+{
+ "nota": "Consolidado del lote 2 en T21 (suite completa). M24 corrió dentro de la ventana de P25 y lo 'mató' una prueba de funding que falla sin mutante: se repitió fuera de la ventana. M32 no se aplicó (su cadena aparece 2 veces); M32b es la misma hipótesis con contexto único, agregada DESPUÉS de la primera corrida (exp_mutacion_lote2_b.py).",
+ "pruebas": [
+  "tests"
+ ],
+ "mutantes": [
+  {
+   "id": "M23",
+   "archivo": "packages/tia/src/tia/risk/engine.py",
+   "descripcion": "el freno de drawdown nunca salta",
+   "rc": 1,
+   "resultado": "MUERTO",
+   "primera_falla": "FAILED tests/integration/test_account_restore.py::test_a_drawdown_past_the_breaker_survives_a_restart",
+   "segundos": 39.7,
+   "origen": "exp_mutacion_lote2_T21.json"
+  },
+  {
+   "id": "M24",
+   "archivo": "packages/tia/src/tia/risk/engine.py",
+   "descripcion": "el freno de drawdown rechaza la señal pero no pone el sistema en modo seguro",
+   "rc": 1,
+   "resultado": "MUERTO",
+   "primera_falla": "FAILED tests/unit/test_risk_engine.py::TestCircuitBreakers::test_drawdown_breach_halts_the_system_not_just_the_signal",
+   "segundos": 409.7,
+   "origen": "exp_mutacion_lote2_T21_repeticion.json"
+  },
+  {
+   "id": "M25",
+   "archivo": "packages/tia/src/tia/risk/engine.py",
+   "descripcion": "el límite de pérdida diaria nunca bloquea",
+   "rc": 1,
+   "resultado": "MUERTO",
+   "primera_falla": "FAILED tests/integration/test_account_restore.py::test_a_day_that_hit_the_loss_limit_still_refuses_entries_after_a_restart",
+   "segundos": 32.4,
+   "origen": "exp_mutacion_lote2_T21.json"
+  },
+  {
+   "id": "M26",
+   "archivo": "packages/tia/src/tia/execution/exits.py",
+   "descripcion": "la regla de salida puede aflojar el stop (falta «solo más ajustado»)",
+   "rc": 1,
+   "resultado": "MUERTO",
+   "primera_falla": "FAILED tests/integration/test_adverse_recovery.py::test_rejects_and_partials_over_hundreds_of_bars_keep_the_invariants_and_the_record_whole",
+   "segundos": 54.6,
+   "origen": "exp_mutacion_lote2_T21.json"
+  },
+  {
+   "id": "M27",
+   "archivo": "packages/tia/src/tia/execution/exits.py",
+   "descripcion": "el stop puede quedar del otro lado del último cierre",
+   "rc": 1,
+   "resultado": "MUERTO",
+   "primera_falla": "FAILED tests/unit/test_exits.py::test_a_stop_stays_a_stop_never_through_the_last_close",
+   "segundos": 376.8,
+   "origen": "exp_mutacion_lote2_T21.json"
+  },
+  {
+   "id": "M28",
+   "archivo": "packages/tia/src/tia/execution/exits.py",
+   "descripcion": "se elige el candidato más flojo en vez del más ajustado",
+   "rc": 1,
+   "resultado": "MUERTO",
+   "primera_falla": "FAILED tests/unit/test_exits.py::test_the_tightest_candidate_wins - Assertion...",
+   "segundos": 387.8,
+   "origen": "exp_mutacion_lote2_T21.json"
+  },
+  {
+   "id": "M29",
+   "archivo": "packages/tia/src/tia/economics/expected_value.py",
+   "descripcion": "sin encogimiento por error estándar",
+   "rc": 1,
+   "resultado": "MUERTO",
+   "primera_falla": "FAILED tests/integration/test_live_runtime.py::test_exploration_buys_lessons_in_unproven_buckets_but_never_in_disproven_ones",
+   "segundos": 205.6,
+   "origen": "exp_mutacion_lote2_T21.json"
+  },
+  {
+   "id": "M30",
+   "archivo": "packages/tia/src/tia/economics/expected_value.py",
+   "descripcion": "un costo desconocido no impide operar",
+   "rc": 1,
+   "resultado": "MUERTO",
+   "primera_falla": "FAILED tests/unit/test_cost_semantics.py::test_an_incomplete_estimate_never_makes_a_trade_tradeable",
+   "segundos": 413.8,
+   "origen": "exp_mutacion_lote2_T21.json"
+  },
+  {
+   "id": "M31",
+   "archivo": "packages/tia/src/tia/economics/expected_value.py",
+   "descripcion": "se ignora el techo de la razón de costos",
+   "rc": 1,
+   "resultado": "MUERTO",
+   "primera_falla": "FAILED tests/unit/test_cost_semantics.py::test_the_cost_ratio_ceiling_refuses_a_trade_that_depends_on_the_cost_model",
+   "segundos": 397.9,
+   "origen": "exp_mutacion_lote2_T21.json"
+  },
+  {
+   "id": "M32",
+   "archivo": "packages/tia/src/tia/runtime/states.py",
+   "descripcion": "HALT_NEW_ORDERS no admite órdenes que reducen (no se puede cerrar ni proteger)",
+   "resultado": "NO_APLICA (aparece 2 veces)",
+   "origen": "exp_mutacion_lote2_T21.json"
+  },
+  {
+   "id": "M32b",
+   "archivo": "packages/tia/src/tia/runtime/states.py",
+   "descripcion": "HALT_NEW_ORDERS no admite órdenes que reducen (corregido: cadena única)",
+   "rc": 1,
+   "resultado": "MUERTO",
+   "primera_falla": "FAILED tests/integration/test_exit_guard.py::test_deadline_and_time_stop_in_the_same_cycle_send_one_exit_and_the_book_ends_flat",
+   "segundos": 111.2,
+   "origen": "exp_mutacion_lote2_T21_repeticion.json"
+  },
+  {
+   "id": "M33",
+   "archivo": "packages/tia/src/tia/economics/expected_value.py",
+   "descripcion": "muestra mínima de 3 en vez de 30",
+   "rc": 1,
+   "resultado": "MUERTO",
+   "primera_falla": "FAILED tests/integration/test_live_runtime.py::test_an_unfilled_limit_entry_expires_and_frees_the_session",
+   "segundos": 203.8,
+   "origen": "exp_mutacion_lote2_T21.json"
+  }
+ ]
+}

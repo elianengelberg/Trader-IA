@@ -1,0 +1,11 @@
+ZIP: SOLUCION_FINAL_TRADER_IA_v0.5_2026-10-20.zip
+SHA-256 del ZIP: 5bf9bc5d004b51188fdd407ae71eaae2ccefec7251af7001f8d89b264b4f5308
+integridad (testzip): OK
+archivos en el ZIP: 206; en SHA256SUMS.txt: 205 (+ SHA256SUMS.txt)
+faltan en el ZIP: ninguno
+sobran en el ZIP: ninguno
+hashes que no coinciden tras extraer: ninguno
+SOLUCION_FINAL_TRADER_IA_v0.5_2026-10-20.zip.
+SHA-256 del ZIP: 5bf9bc5d004b51188fdd407ae71eaae2ccefec7251af7001f8d89b264b4f5308
+raíz única: ['solucion_final_trader_ia_v0.5_2026-10-20']; miembros: 206; en SHA256SUMS: 205; lista igual: True; hashes distintos: ninguno
+enlaces simbólicos o rutas absolutas o con '..': ninguno

@@ -1,0 +1,132 @@
+diff --git a/packages/tia/src/tia/runtime/live.py b/packages/tia/src/tia/runtime/live.py
+index 58821c7..94fcb22 100644
+--- a/packages/tia/src/tia/runtime/live.py
++++ b/packages/tia/src/tia/runtime/live.py
+@@ -3602,7 +3602,14 @@ class LiveRuntime:
+                     "stop_price": adopted.stop_price,
+                 }
+ 
+-        quantity = abs(position_quantity)
++        # The stop covers the whole lots the venue holds, never more. A spot venue that
++        # takes the buy commission in the base asset leaves the holding off the lot grid,
++        # and a quantity off the grid is refused (Binance: LOT_SIZE): the position was
++        # left without its stop after every entry. The remainder below one lot is dust
++        # (``_holds``), which no order can sell or protect.
++        quantity = filters_for(self._symbol, DEFAULT_UNIVERSE, self._filters).quantize(abs(position_quantity))
++        if quantity <= 0:
++            return
+         existing = self._protective
+         if existing is not None and existing.get("order_id"):
+             order = await self._poll_protective()
+diff --git a/tests/integration/test_stop_quantity_on_the_lot_grid.py b/tests/integration/test_stop_quantity_on_the_lot_grid.py
+new file mode 100644
+index 0000000..4c62e5b
+--- /dev/null
++++ b/tests/integration/test_stop_quantity_on_the_lot_grid.py
+@@ -0,0 +1,106 @@
++"""A protective stop is sized on the venue's lot grid.
++
++A spot venue that takes the buy commission in the base asset leaves the account holding
++less than the fill — 0.999 of it at a 0.1 % commission — and that holding is off the lot
++grid. The session sized its stop from the holding as the venue reports it, and a quantity
++off the grid is refused by the venue (Binance: the LOT_SIZE filter). The position was left
++without its stop, entries blocked and the session halted for new orders, after every entry.
++(The paper engine charges fees in the quote asset, which is why no paper run showed this.)
++
++Expected outcomes, fixed before running: after an entry on such a venue a stop is working,
++on the lot grid, never above the holding and short of it by less than one lot, and the
++session has lost no protection.
++"""
++
++from __future__ import annotations
++
++from typing import Any
++
++from tia.domain.enums import Direction, MarketRegime, OrderState, OrderType, Side
++from tia.domain.instruments import DEFAULT_UNIVERSE
++from tia.domain.orders import Order, OrderIntent
++from tia.domain.portfolio import Position
++from tia.economics.expected_value import Outcome
++from tia.execution.state_machine import transition
++
++from .test_live_runtime import FakeExecution, build_runtime
++
++SYMBOL = "BTC-USD"
++LOT = float(DEFAULT_UNIVERSE.get(SYMBOL).lot_size)
++COMMISSION = 0.001
++
++
++def _on_grid(quantity: float) -> bool:
++    lots = quantity / LOT
++    return abs(lots - round(lots)) < 1e-6
++
++
++class BaseAssetCommissionVenue(FakeExecution):
++    """Keeps the buy commission out of the bought asset and refuses a quantity off the lot grid."""
++
++    def __init__(self, **kwargs: Any) -> None:
++        super().__init__(**kwargs)
++        self.refused_off_grid = 0
++
++    async def submit_order(self, intent: OrderIntent) -> Order:
++        if intent.client_order_id not in self.orders and not _on_grid(intent.quantity):
++            self.refused_off_grid += 1
++            self.submissions += 1
++            now = self._clock_now()
++            order = Order(
++                order_id=f"o-{self.submissions}", client_order_id=intent.client_order_id,
++                intent_id=intent.intent_id, signal_id=intent.signal_id, symbol=intent.symbol,
++                side=intent.side, order_type=intent.order_type, quantity=intent.quantity,
++                stop_price=intent.stop_price, state=OrderState.ACKNOWLEDGED, created_at=now, updated_at=now,
++            )
++            transition(order, OrderState.REJECTED, at=now, reason="Filter failure: LOT_SIZE")
++            order.reject_reason = "Filter failure: LOT_SIZE"
++            self.orders[intent.client_order_id] = order
++            return order
++        new = intent.client_order_id not in self.orders
++        order = await super().submit_order(intent)
++        if new and order.fills and intent.side is Side.BUY:
++            held = self.positions[intent.symbol]
++            self.positions[intent.symbol] = Position(
++                symbol=intent.symbol, quantity=held.quantity - intent.quantity * COMMISSION,
++                average_price=held.average_price,
++            )
++        return order
++
++
++async def _open_a_long(runtime, venue, market) -> None:  # type: ignore[no-untyped-def]
++    """Drive bars until a long fills: only the long side has an edge (the commission is on buys)."""
++    runtime._edges.record_many([
++        Outcome(regime=regime, direction=direction, confidence=0.65,
++                net_return_bps=(200.0 if direction is Direction.LONG else -200.0) + (3.0 if i % 2 else -3.0))
++        for regime in MarketRegime for direction in (Direction.LONG, Direction.SHORT) for i in range(40)
++    ])
++    for _ in range(300):
++        market.advance()
++        await runtime._cycle_once()
++        if runtime._open_trade is not None:
++            runtime._planned_exit["target"] = None  # the target has its own test
++            assert venue.positions[SYMBOL].quantity > 0, "a long was opened"
++            return
++    raise AssertionError("no position was ever opened")
++
++
++async def test_the_stop_after_an_entry_is_on_the_lot_grid_and_the_position_stays_protected() -> None:
++    venue = BaseAssetCommissionVenue()
++    runtime, _, market = build_runtime(execution=venue)
++    await runtime.start()
++    try:
++        await _open_a_long(runtime, venue, market)
++        market.advance()
++        await runtime._cycle_once()
++        held = venue.positions[SYMBOL].quantity
++        assert not _on_grid(held), "precondition: the commission left the holding off the lot grid"
++        stops = [o for o in venue.orders.values() if o.order_type is OrderType.STOP and not o.state.is_terminal]
++        assert len(stops) == 1, f"one working stop expected; refused off the grid: {venue.refused_off_grid}"
++        covered = stops[0].quantity
++        assert _on_grid(covered)
++        assert covered <= held + 1e-12 and held - covered < LOT
++        assert runtime.counters["protective_stop_failures"] == 0
++        assert "position_unprotected" not in runtime.entry_blocks
++    finally:
++        await runtime.stop()

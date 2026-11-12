@@ -1,0 +1,19 @@
+== Fase A.7–A.8 · protección del repositorio y estado de seguridad: 2026-10-22T22:11:37Z
+-- A.7 copias de trabajo:
+   - todo clon nuevo se hace con herramientas/clon_seguro.sh: --no-local y push deshabilitado (pushurl=no-push://…)
+   prueba de push desde la copia (debe fallar): git: 'remote-no-push' is not a git command. See 'git --help'.
+   refs del original después de la prueba: refs/heads/claude/algo-trading-simulation-platform-ngf7xo refs/remotes/origin/claude/algo-trading-simulation-platform-ngf7xo 
+   r19_base (árbol congelado de R19): pushurl deshabilitado (solo .git/config; archivos y estado no cambian)
+   r19_cand (árbol congelado de R19): pushurl deshabilitado (solo .git/config; archivos y estado no cambian)
+   - las herramientas de esta misión no ejecutan git sobre /home/user/Trader-IA salvo lecturas (rev-parse, status, for-each-ref, reflog, ls-files) y clone --no-local
+-- A.8 estado de seguridad (lectura de código y entorno; nada se modifica):
+   modo por defecto: 585:    mode: TradingMode = TradingMode.PAPER
+   LIVE no es un permiso: la ejecución real exige un LiveActivationToken que solo emite tia/live/gate.py (operador con nombre y todas las comprobaciones del gate); ninguna configuración lo produce
+   ejecución Binance: 433:    use_testnet: bool = True (testnet por defecto)
+   market maker: 519:    real_money: bool = False (sin efecto en ningún camino de código; el runtime rechaza proveedores reales)
+   archivos .env en el repositorio: 0 (solo ejemplos: .env.example .env.production.example )
+   variables TIA_*, BINANCE*, EXCHANGE* en el entorno: 0
+   token de activación en disco: 0 archivos
+   validada_para_operar: no existe en el repositorio protegido (grep: 0 coincidencias) ni en experimentos/, entrega_final/ ni expediente_metodologico_2026-10-20/ (búsqueda acotada). No se crea ni se cambia. Su valor NO se puede afirmar porque la marca no se encontró; la garantía efectiva de no operar con dinero real es la del gate de activación (arriba), que esta misión no toca
+   las corridas de esta misión: solo backtest, PaperExecutionProvider y FakeMarketData, SQLite temporal; R19 con unshare -n (sin red)
+   ESTADO: paper/testnet; dinero real BLOQUEADO; ninguna acción de esta misión lo habilita

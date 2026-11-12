@@ -1,0 +1,146 @@
+[
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 0,
+"rep": 3
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 1,
+"rep": 1
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 0,
+"rep": 1
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 0,
+"rep": 3
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 1,
+"rep": 2
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 0,
+"rep": 3
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 0,
+"rep": 1
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 1,
+"rep": 2
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 1,
+"rep": 2
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 1,
+"rep": 3
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 1,
+"rep": 2
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 1,
+"rep": 1
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 1,
+"rep": 1
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 1,
+"rep": 1
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 0,
+"rep": 2
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 0,
+"rep": 2
+},
+{
+"arbol": "r19_cand",
+"K": 0,
+"park": 0,
+"rep": 1
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 0,
+"rep": 2
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 0,
+"rep": 2
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 1,
+"rep": 3
+},
+{
+"arbol": "r19_base",
+"K": 0,
+"park": 1,
+"rep": 3
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 0,
+"rep": 1
+},
+{
+"arbol": "r19_base",
+"K": 8,
+"park": 1,
+"rep": 3
+},
+{
+"arbol": "r19_cand",
+"K": 8,
+"park": 0,
+"rep": 3
+}
+]

@@ -1,0 +1,36 @@
+===== E7-E9_23h36Z
+base: 1956 pruebas, 1956 pasan · integrado: 1962 pruebas, 1962 pasan
+pruebas de la base que faltan en el integrado: ninguna
+pruebas nuevas: ['test_a_close_that_leaves_position_is_released_and_retried', 'test_a_leg_without_a_stop_level_is_reported', 'test_a_rejected_close_is_sent_again_and_closes', 'test_partial_fills_leave_no_untracked_or_stuck_position', 'test_stops_and_exits_survive_rejections', 'test_the_stop_in_the_book_follows_the_leg'] · todas pasan: True
+pruebas de la base con otro resultado en el integrado: ninguna
+pruebas de la base que no pasan en el árbol base: ninguna
+pruebas de la base que no pasan en el árbol integrado: ninguna
+SIN REGRESIONES FRENTE A LA BASE
+rc=0
+===== extraccion_intento2_00h12Z
+base: 1956 pruebas, 1954 pasan · integrado: 1962 pruebas, 1960 pasan
+pruebas de la base que faltan en el integrado: ninguna
+pruebas nuevas: ['test_a_close_that_leaves_position_is_released_and_retried', 'test_a_leg_without_a_stop_level_is_reported', 'test_a_rejected_close_is_sent_again_and_closes', 'test_partial_fills_leave_no_untracked_or_stuck_position', 'test_stops_and_exits_survive_rejections', 'test_the_stop_in_the_book_follows_the_leg'] · todas pasan: True
+pruebas de la base con otro resultado en el integrado: ninguna
+pruebas de la base que no pasan en el árbol base: [('test_a_day_that_hit_the_loss_limit_still_refuses_entries_after_a_restart', 'omitida', 'reloj (E20, E24)'), ('test_five_restored_entries_for_the_symbol_refuse_the_sixth_after_the_restart', 'falla', 'reloj (E20, E24)')]
+pruebas de la base que no pasan en el árbol integrado: [('test_a_day_that_hit_the_loss_limit_still_refuses_entries_after_a_restart', 'omitida', 'reloj (E20, E24)'), ('test_five_restored_entries_for_the_symbol_refuse_the_sixth_after_the_restart', 'falla', 'reloj (E20, E24)')]
+SIN REGRESIONES FRENTE A LA BASE
+rc=0
+===== extraccion_final_00h36Z
+base: 1956 pruebas, 1954 pasan · integrado: 1962 pruebas, 1960 pasan
+pruebas de la base que faltan en el integrado: ninguna
+pruebas nuevas: ['test_a_close_that_leaves_position_is_released_and_retried', 'test_a_leg_without_a_stop_level_is_reported', 'test_a_rejected_close_is_sent_again_and_closes', 'test_partial_fills_leave_no_untracked_or_stuck_position', 'test_stops_and_exits_survive_rejections', 'test_the_stop_in_the_book_follows_the_leg'] · todas pasan: True
+pruebas de la base con otro resultado en el integrado: ninguna
+pruebas de la base que no pasan en el árbol base: [('test_a_day_that_hit_the_loss_limit_still_refuses_entries_after_a_restart', 'omitida', 'reloj (E20, E24)'), ('test_five_restored_entries_for_the_symbol_refuse_the_sixth_after_the_restart', 'falla', 'reloj (E20, E24)')]
+pruebas de la base que no pasan en el árbol integrado: [('test_a_day_that_hit_the_loss_limit_still_refuses_entries_after_a_restart', 'omitida', 'reloj (E20, E24)'), ('test_five_restored_entries_for_the_symbol_refuse_the_sixth_after_the_restart', 'falla', 'reloj (E20, E24)')]
+SIN REGRESIONES FRENTE A LA BASE
+rc=0
+===== extraccion_final_02h01Z
+base: 1956 pruebas, 1953 pasan · integrado: 1962 pruebas, 1959 pasan
+pruebas de la base que faltan en el integrado: ninguna
+pruebas nuevas: ['test_a_close_that_leaves_position_is_released_and_retried', 'test_a_leg_without_a_stop_level_is_reported', 'test_a_rejected_close_is_sent_again_and_closes', 'test_partial_fills_leave_no_untracked_or_stuck_position', 'test_stops_and_exits_survive_rejections', 'test_the_stop_in_the_book_follows_the_leg'] · todas pasan: True
+pruebas de la base con otro resultado en el integrado: ninguna
+pruebas de la base que no pasan en el árbol base: [('test_a_day_that_hit_the_loss_limit_still_refuses_entries_after_a_restart', 'omitida', 'reloj (E20, E24)'), ('test_five_restored_entries_for_the_symbol_refuse_the_sixth_after_the_restart', 'falla', 'reloj (E20, E24)'), ('test_rejects_and_partials_over_hundreds_of_bars_keep_the_invariants_and_the_record_whole', 'falla', 'límite de 10 s (E21–E2
+pruebas de la base que no pasan en el árbol integrado: [('test_a_day_that_hit_the_loss_limit_still_refuses_entries_after_a_restart', 'omitida', 'reloj (E20, E24)'), ('test_five_restored_entries_for_the_symbol_refuse_the_sixth_after_the_restart', 'falla', 'reloj (E20, E24)'), ('test_rejects_and_partials_over_hundreds_of_bars_keep_the_invariants_and_the_record_whole', 'falla', 'límite de 10 s (E21
+SIN REGRESIONES FRENTE A LA BASE
+rc=0

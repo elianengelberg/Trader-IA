@@ -1,0 +1,24 @@
+# comando: /usr/bin/python3 -I -B prototipos/p4_flock_link_excl.py prototipos/tmp_p4
+# fecha: 2026-10-28T19:46:15Z
+{
+ "1_segundo_proceso_mientras_el_primero_retiene": "EWOULDBLOCK(11)",
+ "1_hijo_retiene": true,
+ "1_padre_mientras_hijo_retiene": "EWOULDBLOCK(11)",
+ "1_padre_tras_SIGKILL_del_hijo": "bloqueo obtenido tras 0.000s",
+ "2_tras_borrar_y_recrear": {
+  "A_sigue_bloqueando_inodo": 1860277,
+  "B_obtiene_bloqueo": true,
+  "B_inodo": 1860278,
+  "dos_exclusivos_a_la_vez": true,
+  "mitigacion_A_detecta_fstat_vs_stat": true
+ },
+ "3_publicacion_inicial": {
+  "existe": true,
+  "fsync_directorio": "ok"
+ },
+ "3_link_sobre_existente": "EEXIST",
+ "3_O_EXCL_con_temporal_huerfano": "EEXIST (un temporal huérfano con nombre determinista bloquea el reintento)",
+ "3_contenido_publicado_tras_escribir_por_el_temporal": "OBJETO",
+ "3_nota": "link() crea un segundo nombre del MISMO inodo: mientras exista el temporal, escribir por él altera el objeto publicado. Hay que unlink() el temporal tras publicar y, como root, el modo 0444 no impide escribir."
+}
+# exit=0

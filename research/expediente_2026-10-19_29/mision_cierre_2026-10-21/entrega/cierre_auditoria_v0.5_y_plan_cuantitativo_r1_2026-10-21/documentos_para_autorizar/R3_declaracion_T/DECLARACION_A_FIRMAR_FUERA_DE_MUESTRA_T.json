@@ -1,0 +1,26 @@
+{
+ "formato": "trader-ia/declaracion/v1",
+ "emisor": "PROPIETARIO-T",
+ "emitida_utc": "2026-10-20T20:45:39Z",
+ "artefactos": [
+  {
+   "ruta": "experimentos/fuera_de_muestra_T.json",
+   "sha256": "4f8fafde372931aab29b94612eb658f5fac9259e51cdf7dace7a1b30fc633c45",
+   "descripcion": "artefacto fuera de muestra de T"
+  },
+  {
+   "ruta": "experimentos/fuera_de_muestra_T.py",
+   "sha256": "941b6e11f6566319b93614ee671b184d60c7b5fbc64a3931a6ff2c8da17fe0fa",
+   "descripcion": "artefacto fuera de muestra de T"
+  },
+  {
+   "ruta": "PRERREGISTRO_FUERA_DE_MUESTRA_T.md",
+   "sha256": "94a165560ba2a1807bf604b079dbf2c8eea7e7e4401fcc5ccb5db275464db58f",
+   "descripcion": "artefacto fuera de muestra de T"
+  }
+ ],
+ "contexto": {
+  "commit_local": "692f2b2d7af3189027b62e60367d104d855b0f3f",
+  "proposito": "referencia independiente de los artefactos fuera de muestra de T para P1"
+ }
+}

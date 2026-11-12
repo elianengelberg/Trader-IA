@@ -1,0 +1,93 @@
+== Usos en el repositorio (base 72ffae5) de lo que el parche toca
+-- patrón: _sync_protective_stop
+packages/tia/src/tia/runtime/engine.py:632:            await self._sync_protective_stop(symbol)
+packages/tia/src/tia/runtime/engine.py:1139:    async def _sync_protective_stop(self, symbol: str) -> None:
+packages/tia/src/tia/runtime/live.py:3247:        ``_planned_exit`` and the next :meth:`_sync_protective_stop` replaces the resting
+packages/tia/src/tia/runtime/live.py:3401:        await self._sync_protective_stop(position.quantity)
+packages/tia/src/tia/runtime/live.py:3403:    async def _sync_protective_stop(self, position_quantity: float) -> None:
+tests/integration/test_account_restore.py:954:            await runtime._sync_protective_stop(restore.position_quantity)
+tests/integration/test_account_restore.py:989:            await runtime._sync_protective_stop(restore.position_quantity)
+-- patrón: _request_exit
+-- patrón: order_hygiene
+-- patrón: resting_orders
+packages/tia/src/tia/mm/engine.py:421:                "resting_orders": [o.order_id for o in active],
+tests/unit/mm/test_hold.py:65:    assert holds[0]["resting_orders"] and holds[0]["allowance"]["hold_only"] is True
+-- patrón: _stop_placements
+-- patrón: class .*\(BacktestEngine\)
+-- patrón: class .*\(PaperExecutionProvider\)
+-- patrón: \.is_reliable
+packages/tia/src/tia/backtest/result.py:242:        return self.metrics.is_reliable() and not self.warnings
+packages/tia/src/tia/backtest/result.py:254:        if not self.metrics.is_reliable():
+tests/unit/test_statistics.py:106:        assert metrics.is_reliable() is False
+tests/unit/test_statistics.py:134:        assert metrics.is_reliable() is True
+-- patrón: result\.warnings\|\.warnings)
+-- .warnings / evidence_statement / is_reliable fuera de backtest/result.py:
+packages/tia/src/tia/api/state.py:3171:                    "evidence_statement": row.evidence_statement,
+packages/tia/src/tia/api/state.py:3172:                    "warnings": row.warnings,
+packages/tia/src/tia/api/state.py:3238:            "evidence_statement": report.evidence_statement(),
+packages/tia/src/tia/api/state.py:3239:            "warnings": list(result.warnings),
+packages/tia/src/tia/backtest/__init__.py:5::meth:`ExperimentReport.evidence_statement` is the only sanctioned way to state it in
+packages/tia/src/tia/backtest/experiment.py:113:    def evidence_statement(self) -> str:
+packages/tia/src/tia/backtest/experiment.py:115:        lines = [self.result.evidence_statement(), "", "Against the mandatory baselines:"]
+packages/tia/src/tia/backtest/experiment.py:271:    if result.warnings:
+packages/tia/src/tia/backtest/experiment.py:272:        reasons.extend(result.warnings)
+packages/tia/src/tia/llm/context.py:205:            warnings=verdict.warnings,
+packages/tia/src/tia/persistence/models.py:367:    evidence_statement: Mapped[str] = mapped_column(Text, default="")
+packages/tia/src/tia/quant/statistics.py:106:    def is_reliable(self) -> bool:
+scripts/run_backtest.py:98:    print(report.evidence_statement())
+tests/e2e/test_end_to_end.py:327:    assert "makes no claim about future results" in report["evidence_statement"]
+tests/unit/test_backtest.py:122:        assert any("force-closed" in w for w in result.warnings)
+tests/unit/test_backtest.py:128:        assert any("unrealised mark" in w for w in result.warnings)
+tests/unit/test_backtest.py:189:def test_the_evidence_statement_never_promises_anything() -> None:
+tests/unit/test_backtest.py:191:    statement = _result().evidence_statement()
+tests/unit/test_backtest.py:203:        assert any("separate skill from chance" in w for w in result.warnings)
+tests/unit/test_backtest.py:385:    statement = evaluate_experiment(_result(), SERIES, at=NOW).evidence_statement()
+-- quién construye BacktestEngine:
+packages/tia/src/tia/api/state.py:3199:            engine = BacktestEngine(
+scripts/run_backtest.py:65:    engine = BacktestEngine(
+scripts/strategy_experiment.py:256:    result = BacktestEngine(config, DEFAULT_UNIVERSE, strategies=[strategy]).run(window, symbol=symbol)
+tests/integration/test_backtest_parity.py:57:    return BacktestEngine(config, DEFAULT_UNIVERSE).run(SERIES)
+tests/integration/test_backtest_parity.py:88:    result = BacktestEngine(config, DEFAULT_UNIVERSE).run(SERIES)
+tests/integration/test_backtest_parity.py:232:        BacktestEngine(config, DEFAULT_UNIVERSE).run(SERIES)
+tests/property/test_no_lookahead.py:64:    engine = BacktestEngine(
+tests/property/test_no_lookahead.py:274:    first = BacktestEngine(engine_config, DEFAULT_UNIVERSE).run(SERIES[:400])
+tests/property/test_no_lookahead.py:275:    second = BacktestEngine(engine_config, DEFAULT_UNIVERSE).run(SERIES[:400])
+tests/property/test_no_lookahead.py:287:    engine = BacktestEngine(
+tests/property/test_no_lookahead.py:329:    original = BacktestEngine(engine_config, DEFAULT_UNIVERSE).run(SERIES[:BARS])
+tests/property/test_no_lookahead.py:330:    perturbed = BacktestEngine(engine_config, DEFAULT_UNIVERSE).run(mutated)
+tests/unit/test_backtest.py:50:    engine = BacktestEngine(
+tests/unit/test_backtest.py:156:    engine = BacktestEngine(BacktestConfig(timeframe="1h"), DEFAULT_UNIVERSE)
+tests/unit/test_backtest.py:167:    engine = BacktestEngine(BacktestConfig(timeframe="1h"), DEFAULT_UNIVERSE)
+tests/unit/test_limit_price_ticks.py:118:    BacktestEngine(config, DEFAULT_UNIVERSE).run(SERIES)
+-- run_id de backtests en persistencia/API:
+packages/tia/src/tia/api/state.py:198:                    await RunRepository(session).release_lease(self.live_runtime.run_id)
+packages/tia/src/tia/api/state.py:304:                run_id=engine.run_id,
+packages/tia/src/tia/api/state.py:317:                    await RunRepository(session).stop(engine.run_id, datetime.now(UTC))
+packages/tia/src/tia/api/state.py:319:                        engine.run_id, f"start_failed: {str(exc)[:300]}"
+packages/tia/src/tia/api/state.py:348:                            "run_id": incident.get("run_id"),
+packages/tia/src/tia/api/state.py:506:            and row.run_id != session.run_id
+packages/tia/src/tia/api/state.py:669:            await RunRepository(session).stop(runtime.run_id, datetime.now(UTC))
+packages/tia/src/tia/api/state.py:708:            run_id = runtime.run_id
+packages/tia/src/tia/api/state.py:712:                await RunRepository(session).delete(run_id)
+packages/tia/src/tia/api/state.py:742:                    await OrderRepository(session).upsert(payload["run_id"], payload["order"])
+packages/tia/src/tia/api/state.py:744:                    await FillRepository(session).append(payload["run_id"], payload["fill"])
+packages/tia/src/tia/api/state.py:754:                    await MarketMakerRepository(session).append_journal(payload["run_id"], int(payload["seq"]), payload["row"])
+packages/tia/src/tia/api/state.py:756:                    await MarketMakerRepository(session).upsert_fill(payload["run_id"], payload["fill"])
+packages/tia/src/tia/api/state.py:761:                        payload["run_id"],
+packages/tia/src/tia/api/state.py:769:                    await EventRepository(session).append(payload["run_id"], payload["envelope"])
+-- campos de BacktestConditions:
+    run_id: str
+    dataset: str
+    symbols: tuple[str, ...]
+    timeframe: str
+    start: datetime
+    end: datetime
+    bars: int
+    initial_capital: float
+    seed: int
+    strategy_versions: dict[str, str] = Field(default_factory=dict)
+    feature_version: str = ""
+    risk_limits_digest: str = ""
+    execution_config: dict[str, float | int | bool] = Field(default_factory=dict)
+    is_out_of_sample: bool = False
+    notes: tuple[str, ...] = ()

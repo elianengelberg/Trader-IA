@@ -1,0 +1,25 @@
+Archivos que cambian respecto de 72ffae5d2698440c8f1afaff12e07bd8adde66fb (git apply --numstat)
+
+== 01_obligatorio_D1_D3_motor_y_pruebas_definitivas.patch
+  +67   -8    packages/tia/src/tia/backtest/engine.py
+  +9    -0    packages/tia/src/tia/execution/paper.py
+  +342  -0    tests/unit/test_backtest_order_hygiene.py
+== 02v3_obligatorio_trazabilidad_version_motor_CORREGIDO.patch
+  +10   -0    docs/ARCHITECTURE.md
+  +2    -0    packages/tia/src/tia/api/state.py
+  +76   -2    packages/tia/src/tia/backtest/engine.py
+  +7    -0    packages/tia/src/tia/backtest/result.py
+  +55   -0    packages/tia/src/tia/persistence/repositories.py
+  +302  -0    tests/integration/test_backtest_provenance.py
+== 03_opcional_pruebas_reloj_y_persistencia.patch
+  +15   -9    tests/integration/test_account_restore.py
+  +16   -0    tests/integration/test_adverse_recovery.py
+  +14   -4    tests/integration/test_risk_state_persistence.py
+== 04_opcional_CI_versiones_fijadas.patch
+  +2    -1    .github/workflows/ci.yml
+  +80   -0    constraints/ci-py311.txt
+
+Obligatorios (01+02v3, una unidad): 8 archivos — producción: backtest/engine.py, backtest/result.py, execution/paper.py, persistence/repositories.py, api/state.py; documentación: docs/ARCHITECTURE.md; pruebas nuevas: tests/unit/test_backtest_order_hygiene.py, tests/integration/test_backtest_provenance.py
+Recomendado (03): 3 archivos de prueba en tests/integration/
+Opcional (04): .github/workflows/ci.yml (2 líneas) y constraints/ci-py311.txt (nuevo)
+Sin cambios: esquema y migraciones (0007), configuración operativa, credenciales, despliegue, frontend, tia.runtime, tia.live, tia.mm, validada_para_operar.

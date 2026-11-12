@@ -1,0 +1,62 @@
+{
+ "version_sonda": 2,
+ "park": false,
+ "cpus": 4,
+ "carga_inicio": [
+  1.30517578125,
+  1.23291015625,
+  1.1884765625
+ ],
+ "fondo": 0,
+ "manual": 0,
+ "flushes": [
+  {
+   "prueba": "tests/integration/test_validacion_sonda_r19.py::test_errores_inyectado_y_no_inyectado",
+   "llamador": "settle",
+   "plazo_s": 2.0,
+   "pendientes": 2,
+   "pendientes_por_tipo": {
+    "sin_empezar": 2
+   },
+   "bucle_vivo": false,
+   "carga1": 1.31,
+   "seg": 0.0,
+   "ok": true,
+   "ciclos_fondo_durante": 0
+  }
+ ],
+ "errores_escritura": [
+  {
+   "prueba": "tests/integration/test_validacion_sonda_r19.py::test_errores_inyectado_y_no_inyectado",
+   "tipo": "fill",
+   "excepcion": "RuntimeError",
+   "mensaje": "database unavailable during fill",
+   "inyectada": true
+  },
+  {
+   "prueba": "tests/integration/test_validacion_sonda_r19.py::test_errores_inyectado_y_no_inyectado",
+   "tipo": "order",
+   "excepcion": "ValueError",
+   "mensaje": "boom",
+   "inyectada": false
+  }
+ ],
+ "pruebas": {
+  "tests/integration/test_validacion_sonda_r19.py::test_errores_inyectado_y_no_inyectado": {
+   "resultado": "passed",
+   "fases": {
+    "setup": "passed",
+    "call": "passed",
+    "teardown": "passed"
+   },
+   "seg": 0.02
+  }
+ },
+ "por_prueba": {},
+ "carga_fin": [
+  1.30517578125,
+  1.23291015625,
+  1.1884765625
+ ],
+ "exit": 0
+}

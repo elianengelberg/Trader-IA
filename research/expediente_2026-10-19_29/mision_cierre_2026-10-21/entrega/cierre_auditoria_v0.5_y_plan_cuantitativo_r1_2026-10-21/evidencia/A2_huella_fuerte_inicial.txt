@@ -1,0 +1,29 @@
+HEAD 692f2b2d7af3189027b62e60367d104d855b0f3f
+origin/claude/algo-trading-simulation-platform-ngf7xo c6339e3fcd6041cb6c4ad7f5545f0ff306a4fd2f
+referencias (git for-each-ref): 61cc4dc45f08f2cd6aba77706aadfb035f887201de023d2b6789ae08f9af8c23
+contenido de los cambios sin commit (git diff): 9778abe81d6e82c69b463e00ad557fc7844995e6f51372247c9e45d8fa608323
+   M research/.gitignore contenido: ff98fa9cc48f016204e2b3e3f176b2d831ec1870d9e1242da7045ed2998f95d4
+   M research/tendencia_btc/ARTEFACTOS_SHA256.txt contenido: be3d6fa9e19763d5b495a13dc6682ed8c729245f6ee4d38acec5b375d0cb5611
+   M research/tendencia_btc/papel/PRERREGISTRO_PAPEL.md contenido: 695d1d0f0e952e3f8619f5be8783dc176a5a960160543b502bd07a83080a72c3
+  ?? research/tendencia_btc/datos_multi/nasdaq/ metadatos: 7c9ab4fe4ab1fb1ae636534bcc3ce58a700362b0e29095131218ffc4aadba74e
+  ?? research/tendencia_btc/datos_multi/yahoo/ metadatos: 97ec9ca421ada9c2a792ca3beaa8d6d11cb49014d90267ea4ddbfe3c53ed2f0c
+  ?? research/tendencia_btc/papel/VERIFICACION_OPERATIVA_2026-10-17.md contenido: 514fc34ea3e39b820800f32504a98cef09d141563f072fcbfa763ad28d5b0670
+  ?? research/tendencia_btc/papel/corte.py contenido: b5bc9a59263ac42f1615219c7ed02776a2f1775a7b5091be2300a7b5d1ab05a0
+  ?? research/tendencia_btc/tests/test_papel_corte.py contenido: d88aa557c1603ae4d7d9406480dcb1b345be27cf46f38991210544c4157954f2
+  !! research/entregas_hcarry/hcarry_next_final.zip metadatos: 3876056 1792200109
+  !! research/entregas_hcarry/hcarry_next_historico_2026-10-16.zip metadatos: 14994084 1792200110
+  !! research/entregas_hcarry/hcarry_next_snapshot1.zip metadatos: 134482 1792200108
+  !! research/entregas_hcarry/hcarry_next_snapshot2.zip metadatos: 1229073 1792200109
+  !! research/hcarry_next/.venv/ metadatos: a5f597783da85f5238a4e4426659c72a180767fb2d1e43db2d923f2b1d0508f4
+  !! research/hcarry_next/datos/binance_vision/futures/ metadatos: 1a2b51d093b78591c07a67c3e64ead3c05feae9c899fcb9aa3a303cb54748f60
+  !! research/hcarry_next/datos/binance_vision/spot/ metadatos: b057386f262cd554c29072ba5be6348384b3015950ee7667f038a195d3d10597
+  !! research/hcarry_next/datos/otros_simbolos/ETHUSDT/futures/ metadatos: 1b31c7b5c12604fcbe12257e82f074b4266b41e913b9582529ad9f0221e82b6c
+  !! research/hcarry_next/datos/otros_simbolos/SOLUSDT/futures/ metadatos: 1ce24f30dfb29c00e8c077c2332739170fee1f016029e55d289745146c87fff4
+  !! research/hcarry_next/experimentos/historico/causal/externos/aave_v3_usdt_ethereum.json metadatos: 213149 1792199727
+  !! research/hcarry_next/experimentos/historico/post_test/externos/DTB3.csv metadatos: 26860 1792183812
+  !! research/tendencia_btc/datos/BTCUSDT/spot/ metadatos: b3212a03f70f7777af09f3a22ebaa4d5174ba5a135627147fc6a253aa0c23932
+  !! research/tendencia_btc/datos/ETHUSDT/spot/ metadatos: 183c54f953d8432ddb28f2d3134f3a61c4434673beebcbd316a355ab5100b548
+  !! research/tendencia_btc/datos_papel/BTCUSDT/spot/ metadatos: d6d9736214a43ad4a68c2234407197bc7d625973975dcf9cdbfd34e8ad8b87ed
+  !! research/tendencia_btc/datos_papel/ETHUSDT/spot/ metadatos: dab947376e9140f6f2452a7422e2d03705734c517166e67ebf109da37bab034e
+  !! research/tendencia_btc/datos_papel/funding_BTCUSDT/futures/ metadatos: dd91c9d042045bbb0cbfacbd20c6c9f6c163f01c323d1a6a28993b7d1dd2ae60
+87b9585d31924f8193a6d3eb6d0712a3d3880978681c75d0dd77e00d08f34a8e  -

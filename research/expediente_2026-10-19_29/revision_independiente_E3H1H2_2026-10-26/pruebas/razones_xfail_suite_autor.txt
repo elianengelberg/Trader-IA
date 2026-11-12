@@ -1,0 +1,16 @@
+E   AssertionError: 
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_independiente_E3H1H2_2026-10-26/copia_aislada/reparacion_E3H1H2_2026-10-26/orquestador_v2/pruebas/test_orquestador_v2.py:102: AssertionError:
+E   AssertionError: leyo_precios
+    assert (False)
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_independiente_E3H1H2_2026-10-26/copia_aislada/reparacion_E3H1H2_2026-10-26/orquestador_v2/pruebas/test_orquestador_v2.py:230: AssertionError: leyo_precios
+E   AssertionError: detenido: P0 no es VÁLIDO: no hay ventana H
+    assert (True and 'INVALIDO' in 'detenido: P0 no es VÁLIDO: no hay ventana H')
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_independiente_E3H1H2_2026-10-26/copia_aislada/reparacion_E3H1H2_2026-10-26/orquestador_v2/pruebas/test_orquestador_v2.py:301: AssertionError: detenido: P0 no es VÁLIDO: no hay ventana H
+E   AssertionError: assert ['QQQUSDT', 'R2X0QQQUSDT'] == ['QQQUSDT']
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_independiente_E3H1H2_2026-10-26/copia_aislada/reparacion_E3H1H2_2026-10-26/orquestador_v2/pruebas/test_orquestador_v2.py:354: AssertionError: assert ['QQQUSDT', 'R2X0QQQUSDT'] == ['QQQUSDT']
+E   AssertionError: assert ('MMMUSDT' not in ['MMMUSDT', 'NNNUSDT', 'ZZZUSDT'])
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_independiente_E3H1H2_2026-10-26/copia_aislada/reparacion_E3H1H2_2026-10-26/orquestador_v2/pruebas/test_orquestador_v2.py:369: AssertionError: assert ('MMMUSDT' not in ['MMMUSDT', 'NNNUSDT', 'ZZZUSDT'])
+E   AssertionError: no se crea ningún símbolo nuevo
+    assert ['BBXUSDT', 'R2X0BBXUSDT'] == ['BBXUSDT']
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_independiente_E3H1H2_2026-10-26/copia_aislada/reparacion_E3H1H2_2026-10-26/orquestador_v2/pruebas/test_orquestador_v2.py:383: AssertionError: no se crea ningún símbolo nuevo
+6 failed, 1 passed, 27 deselected in 1.31s

@@ -1,0 +1,3 @@
+/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/reparacion_E3H1H2_2026-10-26/verificaciones/copia_codigo_E3/ejecucion_E3/codigo/universo.py:93: RuntimeWarning: All-NaN slice encountered
+  V = np.nanmedian(np.where(P.act[:, w], P.QV[:, w], np.nan), axis=1)
+{"validez": {"semanas": 120, "evaluables": 120, "invariancia_ok": true, "bloqueo_fechas": true}, "semanas_ic": 120, "H1": {"ic_medio": 0.16532324245834898, "ee_nw": 0.010186759965737976, "z": 16.229227253257676, "p1": 0.0, "ic90": [0.1485675133818208, 0.18207897153487715], "clasificacion_6_1": "INFORMACION CONFIRMADA · relevancia demostrada"}, "clasificacion_6_5": "RESPALDADA HISTORICAMENTE"}

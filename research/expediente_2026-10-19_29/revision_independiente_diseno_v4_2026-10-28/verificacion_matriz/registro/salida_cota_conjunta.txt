@@ -1,0 +1,6 @@
+n=158 sd_IC=0.16 TE=0.35: min potencias a 0,025 = 0.072 | cota válida (min a 0,05) = 0.126 | independientes = 0.053
+n=158 sd_IC=0.12 TE=0.25: min potencias a 0,025 = 0.103 | cota válida (min a 0,05) = 0.171 | independientes = 0.107
+n=160 sd_IC=0.16 TE=0.35: min potencias a 0,025 = 0.072 | cota válida (min a 0,05) = 0.126 | independientes = 0.053
+n=160 sd_IC=0.12 TE=0.25: min potencias a 0,025 = 0.104 | cota válida (min a 0,05) = 0.172 | independientes = 0.109
+n=274 sd_IC=0.16 TE=0.35: min potencias a 0,025 = 0.096 | cota válida (min a 0,05) = 0.161 | independientes = 0.099
+n=274 sd_IC=0.12 TE=0.25: min potencias a 0,025 = 0.148 | cota válida (min a 0,05) = 0.233 | independientes = 0.196

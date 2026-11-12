@@ -1,0 +1,49 @@
+CADENA DE PARCHES DEL CICLO DE INICIATIVA TÉCNICA (2026-10-25)
+Base: commit 72ffae5d2698440c8f1afaff12e07bd8adde66fb + parches/base_01_15 (idénticos a la entrega anterior) = árbol T15 17332e1c510d0004f7744bde0a68f008f01652b7
+Cada árbol se verificó en un clon nuevo (logs/arbol_candidato/) y lo verifica reproducir_TI.sh.
+T21 es el último árbol con cambios de código; 22 solo corrige documentación (docs/LIVE_RUNBOOK.md, docs/DEPLOYMENT.md).
+La CI local completa (dos jobs) y la mutación corrieron sobre T21; ninguna prueba lee los dos documentos que cambia el 22.
+
+== 16_TI_controles_de_emergencia_conservan_la_proteccion.patch
+   sha256  5ea6b8cac21afc18e9206c0e6e7aaaa4526704f12e1a6995fcd52e0d9c53d80c
+   árbol   17332e1c510d0004f7744bde0a68f008f01652b7 -> 3492c18720360385887371adbb8b471aac594c92
+     +80 -9    packages/tia/src/tia/runtime/live.py
+    +146 0     tests/integration/test_emergency_controls_protection.py
+      +8 -1    tests/integration/test_order_integrity.py
+== 17_TI_compuerta_de_evidencia_real.patch
+   sha256  aa8acea9eeb1446b2e352c31aa2c5228b97653e60958e7ebbda875e7f768199e
+   árbol   3492c18720360385887371adbb8b471aac594c92 -> e41e594de591411ff945967b2f214e4e8c3f0d3f
+     +21 -4    packages/tia/src/tia/api/gate_probes.py
+      +6 0     packages/tia/src/tia/runtime/live.py
+     +76 0     tests/integration/test_edge_evidence_gate.py
+== 18_TI_metricas_de_la_sesion_24x7.patch
+   sha256  e77a71123f900648a813d870012648952f3ed34ba96438058029082a8fcf1747
+   árbol   e41e594de591411ff945967b2f214e4e8c3f0d3f -> b0f675b3e2786cbe444d94e45d348c5d8cf0bbf1
+     +52 0     packages/tia/src/tia/api/state.py
+     +73 0     tests/integration/test_live_metrics.py
+== 19_TI_contrato_de_persistencia_y_alertas.patch
+   sha256  83447ed3e77281d7c3f79c39727448fe93c8fed066593a87525d76294e9940ea
+   árbol   b0f675b3e2786cbe444d94e45d348c5d8cf0bbf1 -> 48fcb394037d6fbfdb04763da257608adc4544f4
+     +30 -6    packages/tia/src/tia/api/state.py
+     +13 -8    packages/tia/src/tia/runtime/engine.py
+     +97 0     tests/integration/test_alert_delivery.py
+      +2 -1    tests/integration/test_live_api.py
+     +22 -1    tests/integration/test_scenario_engine_persistence.py
+     +82 0     tests/integration/test_session_persistence_contract.py
+== 20_TI_pruebas_que_cierran_huecos_de_deteccion.patch
+   sha256  c6738483749c95af0fece96b5fb08b3c18d5180ec738f54a219f766ab1c20bcc
+   árbol   48fcb394037d6fbfdb04763da257608adc4544f4 -> ab2d720682029a1df8af3646f6e3bde351b97768
+    +154 0     tests/integration/test_protective_stop_contract.py
+     +52 0     tests/integration/test_unknown_entry_halts_entries.py
+== 21_TI_watchdog_al_reanudar_tras_una_pausa.patch
+   sha256  b23639a3fe1e1956f42e72bc98c06d0bd7721d8222d2f8c87245efbb3198a0df
+   árbol   ab2d720682029a1df8af3646f6e3bde351b97768 -> bcfa40082d74f7ad0d1bd1581cd913df64e143f8
+      +4 -1    packages/tia/src/tia/runtime/live.py
+     +78 0     tests/integration/test_watchdog_after_standing.py
+== 22_TI_documentacion_del_kill_switch.patch
+   sha256  fd17dd5418a2e767ea5abc1a34d91c9faac5f4fbc33eb53ce277426cbdd3c609
+   árbol   bcfa40082d74f7ad0d1bd1581cd913df64e143f8 -> 87af7a4504aa821b1d627be4cee178ec7be42497
+      +1 -1    docs/DEPLOYMENT.md
+      +9 -3    docs/LIVE_RUNBOOK.md
+
+Árbol final T22: 87af7a4504aa821b1d627be4cee178ec7be42497

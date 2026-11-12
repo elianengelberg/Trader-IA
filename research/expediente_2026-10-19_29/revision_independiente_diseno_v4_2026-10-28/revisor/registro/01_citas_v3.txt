@@ -1,0 +1,148 @@
+# citas verificadas de cierre_bloqueantes_E3H1H2_2026-10-27/orquestador_v3/ejecutar_E3_v3.py (sha256 c089cc6a…, ver 00_verificacion_insumos.txt)
+# comando: sed -n para cada rango; fecha 2026-10-28T19:37:47Z
+## líneas 56,64
+    56	sys.dont_write_bytecode = True  # no escribir cachés en ningún directorio
+    57	_BYTES_PROPIOS = Path(__file__).read_bytes()  # C10: los bytes de este archivo, leídos una vez al cargarlo
+    58	SHA_PROPIO = hashlib.sha256(_BYTES_PROPIOS).hexdigest()
+    59	AQUI = Path(__file__).resolve().parent
+    60	E3_DEFECTO = AQUI.parent.parent / "experimentos" / "E3_seleccion_posicion_2026-10-19" / "ejecucion_E3"
+    61	REPARACION = AQUI.parent.parent / "reparacion_E3H1H2_2026-10-26"
+    62	CIERRE = AQUI.parent
+    63	MANIFIESTO = AQUI / "ENTRADAS_CONGELADAS_V3.json"
+    64	INTENTOS = AQUI / "INTENTOS_E3.jsonl"
+## líneas 743,768
+   743	class Intentos:
+   744	    """Registro de intentos de la ejecución única (una línea JSON por evento), con bloqueo exclusivo mientras dura un
+   745	    intento. El bloqueo lo libera el sistema si el proceso muere; el registro, en cambio, queda con el intento abierto."""
+   746	
+   747	    def __init__(self, ruta: Path):
+   748	        self.f = open(ruta, "a+", encoding="utf-8")
+   749	        try:
+   750	            fcntl.flock(self.f.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+   751	        except OSError as exc:
+   752	            self.f.close()
+   753	            raise Rechazo("otra ejecución de E3 está en curso: el registro de intentos está bloqueado") from exc
+   754	        self.f.seek(0)
+   755	        self.eventos = [json.loads(linea) for linea in self.f.read().splitlines() if linea.strip()]
+   756	
+   757	    def anotar(self, **ev):
+   758	        ev = {"utc": dt.datetime.now(dt.UTC).isoformat(), **ev}
+   759	        self.f.write(json.dumps(ev, ensure_ascii=False) + "\n")
+   760	        self.f.flush()
+   761	        os.fsync(self.f.fileno())
+   762	        self.eventos.append(ev)
+   763	
+   764	    def cerrar(self):
+   765	        try:
+   766	            fcntl.flock(self.f.fileno(), fcntl.LOCK_UN)
+   767	        finally:
+   768	            self.f.close()
+## líneas 771,796
+   771	def permitir_intento(intentos: Intentos, sha_aut: str, texto: str):
+   772	    """C11: hay una sola ejecución con resultado. Se rechaza, ANTES de crear la salida:
+   773	      - si ya hay un EVALUADO o un INVALIDO;
+   774	      - si hay un intento INICIADO sin estado terminal (el proceso murió o el disco falló: revisión manual);
+   775	      - si el último ERROR ocurrió con estadísticos ya iniciados (reintentar sería una decisión metodológica);
+   776	      - si, tras un ERROR previo a los estadísticos, la autorización es la misma o no cita el sha256 de ese RESULTADO."""
+   777	    ev = intentos.eventos
+   778	    terminales = [e for e in ev if e["evento"] in ("EVALUADO", "INVALIDO")]
+   779	    if terminales:
+   780	        raise Rechazo(f"E3 ya tiene un resultado terminal ({terminales[-1]['evento']}, {terminales[-1]['utc']}): no hay otra ejecución")
+   781	    abiertos = ({e["id_intento"] for e in ev if e["evento"] == "INICIADO"}
+   782	                - {e["id_intento"] for e in ev if e["evento"] in ("ERROR", "EVALUADO", "INVALIDO")})
+   783	    if abiertos:
+   784	        raise Rechazo(f"hay un intento sin estado terminal ({sorted(abiertos)}): requiere revisión manual antes de cualquier otro")
+   785	    errores = [e for e in ev if e["evento"] == "ERROR"]
+   786	    if not errores:
+   787	        return None
+   788	    u = errores[-1]
+   789	    if u["estadisticos_iniciados"]:
+   790	        raise Rechazo(f"el ERROR previo ocurrió en la etapa «{u['etapa']}», con estadísticos iniciados: "
+   791	                      "reintentar es una decisión metodológica, no técnica")
+   792	    if any(e.get("sha_autorizacion") == sha_aut for e in ev):
+   793	        raise Rechazo("esta autorización ya se usó en un intento anterior: un reintento exige una autorización nueva")
+   794	    if f"REINTENTO TRAS ERROR {u['sha_resultado']}" not in texto:
+   795	        raise Rechazo(f"la autorización de reintento tiene que citar «REINTENTO TRAS ERROR {u['sha_resultado']}»")
+   796	    return u
+## líneas 799,805
+   799	def resultado_invalido(salida: Path, intentos: Intentos, id_intento: str, motivo: str, **extra):
+   800	    """C5: INVÁLIDO como resultado explícito, sin H1 ni H2."""
+   801	    res = {"veredicto": "INVALIDO", "motivo": motivo, "H1": None, "H2": None, **extra,
+   802	           "nota": "E3-H1/H2 NO EVALUABLES con esta ventana. No se busca otra ventana ni se cambia ninguna regla."}
+   803	    h = escribir_atomico(salida / "RESULTADO_E3.json", res)
+   804	    intentos.anotar(evento="INVALIDO", id_intento=id_intento, sha_resultado=h)
+   805	    raise FinTerminal(f"INVALIDO: {motivo}. Ver {salida / 'RESULTADO_E3.json'}")
+## líneas 808,825
+   808	def resultado_error(salida: Path, intentos: Intentos, id_intento: str, etapa: str, exc: BaseException):
+   809	    """C11: cualquier excepción después de crear la salida deja un ERROR explícito; nunca un éxito aparente ni un
+   810	    hueco. Si ni siquiera se puede escribir, el intento queda abierto y el siguiente se rechaza (revisión manual)."""
+   811	    tb = "".join(traceback.format_exception(type(exc), exc, exc.__traceback__))
+   812	    res = {"veredicto": "ERROR", "etapa": etapa, "tipo": type(exc).__name__, "mensaje": str(exc)[:2000],
+   813	           "traceback": tb, "sha_traceback": sha_bytes(tb.encode("utf-8")),
+   814	           "estadisticos_iniciados": etapa not in ETAPAS_SIN_ESTADISTICOS, "H1": None, "H2": None,
+   815	           "nota": "E3-H1/H2 SIN RESULTADO por un fallo técnico: no es EVALUADO ni INVALIDO. Reintentar exige una "
+   816	                   "autorización nueva que cite el sha256 de este archivo; con estadísticos iniciados, es una decisión "
+   817	                   "metodológica."}
+   818	    try:
+   819	        h = escribir_atomico(salida / "RESULTADO_E3.json", res)
+   820	    except BaseException as exc2:
+   821	        raise FinTerminal(f"ERROR en la etapa «{etapa}» y no se pudo escribir RESULTADO_E3.json ({exc2!r}); el intento "
+   822	                          "queda abierto en el registro: revisión manual") from exc
+   823	    intentos.anotar(evento="ERROR", id_intento=id_intento, etapa=etapa, tipo=type(exc).__name__,
+   824	                    estadisticos_iniciados=res["estadisticos_iniciados"], sha_resultado=h)
+   825	    raise FinTerminal(f"ERROR en la etapa «{etapa}»: {type(exc).__name__}: {exc}. Ver {salida / 'RESULTADO_E3.json'}") from exc
+## líneas 828,842
+   828	def modo_real(e3: Path, ventana: Path, autorizacion: Path, salida: Path, manifiesto: Path = None):
+   829	    e3, ventana, autorizacion, salida = Path(e3), Path(ventana), Path(autorizacion), Path(salida)
+   830	    if salida.exists():
+   831	        raise Rechazo(f"{salida} ya existe: la ejecución confirmatoria es única")
+   832	    aut_bytes = autorizacion.read_bytes() if autorizacion.is_file() else b""
+   833	    texto = aut_bytes.decode("utf-8", errors="replace")
+   834	    man_path = Path(manifiesto or MANIFIESTO)
+   835	    man_bytes = man_path.read_bytes() if man_path.is_file() else b""  # C9: el manifiesto también se lee una sola vez
+   836	    sha_aut, sha_man = sha_bytes(aut_bytes), sha_bytes(man_bytes)
+   837	    requeridos = {"FRASE": FRASE in texto, "orquestador_v3": SHA_PROPIO in texto,
+   838	                  "entradas_congeladas": bool(man_bytes) and sha_man in texto,
+   839	                  **{f"decision_{k}": f in texto for k, f in FRASES_DECISION.items()}}
+   840	    if not all(requeridos.values()):
+   841	        raise Rechazo(f"autorización ausente o incompleta: {requeridos}. No se lee ningún precio.")
+   842	    intentos = Intentos(INTENTOS)
+## líneas 858,866
+   858	        id_intento = f"{sha_aut[:16]}:{salida}"
+   859	        salida.mkdir(parents=True, exist_ok=False)
+   860	        intentos.anotar(evento="INICIADO", id_intento=id_intento, salida=str(salida), sha_autorizacion=sha_aut,
+   861	                        sha_orquestador=SHA_PROPIO, sha_manifiesto=sha_man, reintento_de=previo and previo["sha_resultado"])
+   862	        registro = {"inicio_utc": dt.datetime.now(dt.UTC).isoformat(), "estado": "EN_CURSO", "ventana": str(ventana),
+   863	                    "sha_ventana": sha_bytes(datos["ventana_A"]), "sha_orquestador": SHA_PROPIO, "sha_manifiesto": sha_man,
+   864	                    "sha_autorizacion": sha_aut, "inicio_H": INICIO_H_A, "mapeos_en_tabla": len(mapeos),
+   865	                    "mapeos_aplicados_en_la_comprobacion_previa": len(reg_previo), "reintento_de": previo and previo["sha_resultado"]}
+   866	        escribir_atomico(salida / "REGISTRO_EJECUCION.json", registro)  # antes de calcular
+## líneas 867,894
+   867	        etapa = "panel"
+   868	        try:
+   869	            P, registro_mapeos = panel_real(datos, universo, mapeos)
+   870	            inicio = dt.date.fromisoformat(INICIO_H_A)
+   871	            formaciones = universo.lunes(inicio, ULTIMA_FORMACION + dt.timedelta(days=7))
+   872	            etapa = "validez_previa"
+   873	            validez, cache = validez_previa(P, formaciones, universo, motor)
+   874	            escribir_atomico(salida / "VALIDEZ_PREVIA.json", {**validez, "mapeos_aplicados": registro_mapeos})
+   875	            if not validez["valido"]:
+   876	                resultado_invalido(salida, intentos, id_intento, "validez previa (v3 §10)", validez_previa=validez)
+   877	            etapa = "calculo"
+   878	            Fm = universo.lunes(inicio, ULTIMA_FORMACION + dt.timedelta(days=9), dia_semana=2)
+   879	            res = ejecutar(P, formaciones, universo, motor, inferencia, cache=cache, formaciones_miercoles=Fm)
+   880	            etapa = "escritura"
+   881	            res["veredicto"] = "EVALUADO"
+   882	            res["validez_previa"] = validez
+   883	            res["mapeos_aplicados"] = registro_mapeos
+   884	            res["registro"] = registro
+   885	            h = escribir_atomico(salida / "RESULTADO_E3.json", res)
+   886	            intentos.anotar(evento="EVALUADO", id_intento=id_intento, sha_resultado=h)
+   887	        except FinTerminal:
+   888	            raise
+   889	        except BaseException as exc:  # incluye SystemExit de código congelado y KeyboardInterrupt
+   890	            resultado_error(salida, intentos, id_intento, etapa, exc)
+   891	        print(json.dumps({k: res[k] for k in ("semanas_ic", "H1", "H2", "holm", "clasificacion_6_5")}, default=float,
+   892	                         ensure_ascii=False, indent=1))
+   893	    finally:
+   894	        intentos.cerrar()

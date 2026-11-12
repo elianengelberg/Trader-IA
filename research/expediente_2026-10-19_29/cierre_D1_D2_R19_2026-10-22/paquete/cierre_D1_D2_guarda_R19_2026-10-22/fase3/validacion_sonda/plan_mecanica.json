@@ -1,0 +1,3 @@
+{"arboles": {"val": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_D1_D2_R19_2026-10-22/fase3/validacion_sonda/arbol"}, "python": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_D1_D3_2026-10-22/entorno/venv_A/bin/python", "K": [0, 1], "park": [0], "N": 1, "N_modulo": 0,
+ "prueba": "tests/integration/test_validacion_sonda_r19.py::test_errores_inyectado_y_no_inyectado",
+ "modulo": "tests/integration/test_validacion_sonda_r19.py", "semilla_orden": 1, "calentamiento_s": 1, "extra_s": 3, "extra2_s": 2, "limite_corrida_s": 300}

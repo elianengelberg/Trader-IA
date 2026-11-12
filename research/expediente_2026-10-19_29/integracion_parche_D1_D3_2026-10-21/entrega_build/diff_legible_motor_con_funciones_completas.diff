@@ -1,0 +1,1364 @@
+diff --git a/packages/tia/src/tia/backtest/engine.py b/packages/tia/src/tia/backtest/engine.py
+index 1a1ba3d..0f681d8 100644
+--- a/packages/tia/src/tia/backtest/engine.py
++++ b/packages/tia/src/tia/backtest/engine.py
+@@ -233,729 +233,788 @@ class _OpenLeg:
+ class BacktestEngine:
+     """Runs one experiment over one symbol's bars."""
+ 
+     def __init__(
+         self,
+         config: BacktestConfig,
+         universe: InstrumentUniverse,
+         *,
+         strategies: Sequence[str] | None = None,
+     ) -> None:
+         self._config = config
+         self._universe = universe
+         self._strategy_names = tuple(strategies or config.strategy.enabled)
++        self._stop_placements = 0
++        #: what the order hygiene (D1-D3) had to do in the last run
++        self.order_hygiene: dict[str, int] = {}
+ 
+     @property
+     def config(self) -> BacktestConfig:
+         return self._config
+ 
+     def run(self, candles: Sequence[Candle], *, symbol: str | None = None) -> BacktestResult:
+         """Execute the bar loop and return the complete record."""
+         bars = list(candles)
+         if len(bars) < 2:
+             raise BacktestError("a backtest needs at least two bars", bars=len(bars))
+ 
+         resolved = symbol or bars[0].symbol
+         if any(candle.symbol != resolved for candle in bars):
+             raise BacktestError(
+                 "this engine runs one symbol at a time; the input mixes several",
+                 symbol=resolved,
+             )
+         _assert_chronological(bars)
+ 
+         cfg = self._config
+         timeframe = Timeframe.parse(cfg.timeframe)
+         clock = SimulatedClock(bars[0].open_time)
+         rng = RngRegistry(cfg.seed)
+ 
+         quality_engine = DataQualityEngine(cfg.data_quality)
+         feature_builder = FeatureBuilder()
+         regime_classifier = RegimeClassifier()
+         strategy_engine = StrategyEngine(
+             build_strategies(self._strategy_names), cfg.strategy, clock
+         )
+         risk_engine = RiskEngine(cfg.risk, self._universe, clock)
+         provider = PaperExecutionProvider(
+             cfg.execution, self._universe, clock, rng, initial_capital=cfg.initial_capital
+         )
+ 
+         # The session's post-approval machinery, from the same modules (Phase 1.3).
+         budget_engine = RiskBudgetEngine(RiskProfileName(cfg.risk_profile))
+         cost_model = CostModel(
+             FeeSchedule(
+                 maker_bps=cfg.execution.maker_fee_bps,
+                 taker_bps=cfg.execution.taker_fee_bps,
+                 verified_at_source=False,
+                 source="backtest: the simulator's configured fee model — not a live account",
+             ),
+             impact_coefficient=cfg.execution.impact_coefficient,
+         )
+         estimator = EdgeEstimator()
+         ev_engine = ExpectedValueEngine(
+             estimator, threshold_bps=cfg.ev_threshold_bps, max_cost_ratio=cfg.max_cost_ratio
+         )
+         instrument = self._universe.get(resolved)
+         bar_seconds = float(timeframe.seconds)
+         entry_is_limit = cfg.entry_order_type == "limit"
+ 
+         counts = _MutableCounts()
++        self._stop_placements = 0
++        self.order_hygiene = {
++            "entry_remainders_cancelled_on_exit": 0,
++            "stale_entry_remainders_cancelled_flat": 0,
++            "exits_done_with_position_left": 0,
++            "bars_with_leg_and_no_stop": 0,
++        }
+         equity: list[float] = []
+         stamps: list[datetime] = []
+         closed: list[ClosedTrade] = []
+         decision_log: list[DecisionRecord] = []
+         warnings: list[str] = []
+ 
+         leg: _OpenLeg | None = None
+         pending: _PendingEntry | None = None
+         stop_order_id: str | None = None
+         bars_in_market = 0
+         peak_equity = cfg.initial_capital
+         consecutive_losses = 0
+         last_atr = 0.0
+         warmup = max(cfg.warmup_bars, feature_builder.min_bars)
+ 
+         for index, candle in enumerate(bars):
+             clock.advance_to(candle.close_time)
+             counts.bars_processed += 1
+ 
+             # --- 2. match what was already resting ---------------------------
+             fills = provider.on_bar(candle)
+             counts.fills += len(fills)
+             for fill in fills:
+                 # The frequency limits count round trips *opened*, as the session's do:
+                 # the entry's fill arms the cooldown, an exit's or a stop's does not.
+                 if pending is not None and fill.order_id == pending.order_id and leg is None:
+                     risk_engine.record_execution(fill.symbol, fill.filled_at)
+ 
+             portfolio = provider.portfolio
+             position = portfolio.positions.get(resolved)
+             flat = position is None or position.is_flat
+ 
+             if fills:
+                 leg, finished = _fold_fills(fills, leg, index, pending)
+                 closed.extend(finished)
+                 for trade in finished:
+                     # The round trip becomes evidence, exactly as the session records it:
+                     # the gross move is the sample, the fees paid travel beside it.
+                     notional = trade.entry_price * trade.quantity
+                     if notional > 0:
+                         gross_bps = trade.gross_pnl / notional * 10_000.0
+                         fees_bps = trade.fees / notional * 10_000.0
+                         estimator.record(
+                             Outcome(
+                                 regime=trade.regime_at_entry,
+                                 direction=trade.direction,
+                                 confidence=trade.confidence,
+                                 net_return_bps=gross_bps - fees_bps,
+                                 fees_bps=fees_bps,
+                                 gross_return_bps=gross_bps,
+                                 market_data="backtest",
+                             )
+                         )
+                     consecutive_losses = 0 if trade.net_pnl > 0 else consecutive_losses + 1
+                 if flat:
+                     leg = None
+                     pending = None
+                 elif pending is not None and leg is not None and pending.order_id:
+                     entry_order = _sync(provider.get_order(pending.order_id))
+                     if entry_order is not None and entry_order.state.is_terminal:
+                         pending = None  # the entry is done; the leg carries its provenance
+ 
+             # A limit entry still resting past its timeout is cancelled: the moment the
+             # signal priced has passed (the session's rule; a missed entry costs nothing).
+             if pending is not None and leg is None and pending.limit and pending.order_id:
+                 resting_order = _sync(provider.get_order(pending.order_id))
+                 if resting_order is None or resting_order.state.is_terminal:
+                     pending = None
+                 elif index - pending.placed_bar >= cfg.entry_limit_timeout_bars:
+                     _sync(provider.cancel_order(pending.order_id))
+                     counts.orders_expired += 1
+                     pending = None
+ 
+             # --- 2b. manage the open position the way the session does -------
+             if leg is not None and not flat and leg.exit_pending is None:
+                 long = leg.direction is Direction.LONG
+                 extreme = candle.high if long else candle.low
+                 leg.best_price = (
+                     extreme if leg.best_price is None
+                     else (max(leg.best_price, extreme) if long else min(leg.best_price, extreme))
+                 )
+                 reason: str | None = None
+                 target = leg.target_price if cfg.use_target else None
+                 if target and target > 0 and (candle.high >= target if long else candle.low <= target):
+                     reason = "target reached"
+                 elif cfg.max_holding_bars > 0 and index - leg.entry_bar >= cfg.max_holding_bars:
+                     reason = "time stop"
+                 if reason is not None:
+                     stop_order_id = self._request_exit(
+                         provider, leg, reason, stop_order_id, candle, counts
+                     )
+                 elif leg.stop_price and leg.stop_price > 0:
+                     update = tighten_stop(
+                         direction=leg.direction,
+                         entry_price=leg.entry_price,
+                         initial_stop=float(leg.initial_stop or leg.stop_price),
+                         current_stop=float(leg.stop_price),
+                         best_price=leg.best_price or candle.close,
+                         last_close=candle.close,
+                         atr=last_atr,
+                         breakeven_after_r=cfg.breakeven_after_r,
+                         trail_atr_multiple=cfg.trail_atr_multiple,
+                         fee_buffer_bps=cost_model.fees.round_trip_bps(entry_maker=entry_is_limit),
+                     )
+                     if update is not None:
+                         leg.stop_price = update.stop_price
+                         leg.stop_kind = update.kind
+                         counts.stops_tightened += 1
+ 
+             # Keep the protective stop in step with the position: cancelled when flat,
+             # resized when a partial fill changed the quantity it is meant to cover,
+             # moved when the exit rules tightened it, never re-placed over a close in
+             # flight.
+             if cfg.use_protective_stops:
+                 stop_order_id = self._sync_protective_stop(
+-                    provider, leg, stop_order_id, counts
++                    provider, leg, stop_order_id, counts, symbol=resolved
+                 )
+ 
+             if not flat:
+                 bars_in_market += 1
+ 
+             equity.append(portfolio.equity)
+             stamps.append(candle.close_time)
+             peak_equity = max(peak_equity, portfolio.equity)
+ 
+             # --- 3. decide, using only bars up to and including this one -----
+             if index + 1 < warmup:
+                 counts.bars_skipped_insufficient_history += 1
+                 continue
+             if index == len(bars) - 1:
+                 # No bar remains to execute against, so a decision here could only
+                 # inflate the signal counts with proposals nothing could act on.
+                 continue
+ 
+             # A bounded, backward-looking slice: the same buffer a live runtime holds.
+             window = bars[max(0, index + 1 - cfg.lookback_bars) : index + 1]
+             report = quality_engine.evaluate(
+                 symbol=resolved,
+                 timeframe=cfg.timeframe,
+                 candles=window,
+                 now=candle.close_time,
+                 last_feed_message_at=candle.close_time,
+             )
+             if report.hard_fail:
+                 counts.bars_skipped_data_quality += 1
+                 continue
+ 
+             features = feature_builder.build(resolved, cfg.timeframe, window)
+             values = features.finite_values()
+             last_atr = max(0.0, values.get("atr_pct", 0.0) / 100.0) * candle.close
+             regime = regime_classifier.classify(features, now=candle.close_time)
+ 
+             signal, _fusion = strategy_engine.evaluate(
+                 features=features,
+                 regime=regime,
+                 quality=report,
+                 snapshot=self._snapshot(candle, features, regime, provider, report),
+                 correlation_id=f"bt-{index:06d}",
+             )
+             counts.signals_generated += 1
+             counts.count_direction(signal.direction.value)
+ 
+             decision = risk_engine.evaluate(
+                 signal=signal,
+                 portfolio=portfolio,
+                 features=features,
+                 quality=report,
+                 now=candle.close_time,
+             )
+             counts.count_verdict(decision)
+             record: dict[str, Any] = {
+                 "bar_close_time": candle.close_time,
+                 "direction": signal.direction,
+                 "confidence": signal.confidence,
+                 "verdict": decision.verdict,
+                 "approved_quantity": decision.approved_quantity,
+                 "regime": regime.regime,
+                 "feature_hash": features.feature_hash,
+                 "signal_id": signal.signal_id,
+             }
+ 
+             def log(stage: str, reason: str = "", _record: dict[str, Any] = record, **extra: Any) -> None:
+                 decision_log.append(DecisionRecord(**_record, stage=stage, reason=reason, **extra))
+ 
+             if not decision.allows_execution:
+                 log("no_trade" if not signal.direction.is_actionable else "risk", decision.primary_reason())
+                 continue
+             if not flat:
+                 opposing = leg is not None and (
+                     (leg.direction is Direction.LONG) != (signal.direction is Direction.LONG)
+                 )
+                 if opposing and cfg.exit_on_signal_reversal and leg is not None and leg.exit_pending is None:
+                     # The system changing its mind: close, as the session does, through
+                     # no edge gate — an exit is not a discretionary trade.
+                     stop_order_id = self._request_exit(
+                         provider, leg, "signal reversed", stop_order_id, candle, counts
+                     )
+                     log("signal_reversed", "approved signal against the open leg: closing")
+                     continue
+                 # An approved entry while already positioned would pyramid. This engine
+                 # trades one leg at a time so every round trip in the report is
+                 # unambiguous. Counted because the gap between "approved" and "submitted"
+                 # is otherwise invisible, and it is usually large.
+                 counts.approvals_suppressed_position_open += 1
+                 log("position_open", "a position is already open")
+                 continue
+             if pending is not None:
+                 counts.entries_skipped_resting += 1
+                 log("resting", "an entry is already working")
+                 continue
+ 
+             # --- 5b. the risk budget: the profile's risk per trade and its multipliers --
+             drawdown = (
+                 0.0 if peak_equity <= 0
+                 else max(0.0, (peak_equity - portfolio.equity) / peak_equity * 100.0)
+             )
+             budget = budget_engine.compute(
+                 BudgetInputs(
+                     equity=portfolio.equity,
+                     peak_equity=peak_equity,
+                     drawdown_pct=drawdown,
+                     realised_annual_volatility=max(0.0, values.get("realized_vol_20", 0.0)),
+                     consecutive_losses=consecutive_losses,
+                     trades_today=risk_engine.state.trades_today,
+                     open_gross_exposure_pct=(
+                         portfolio.gross_exposure / portfolio.equity * 100.0
+                         if portfolio.equity > 0 else 0.0
+                     ),
+                 )
+             )
+             if not budget.allows_new_trades:
+                 counts.budget_rejected += 1
+                 log("budget", f"risk budget — {budget.binding_constraint}",
+                     budget_multiplier=budget.total_multiplier)
+                 continue
+ 
+             # --- 5c. expected value, priced as the session prices it ---------------
+             recent = window[-20:] if len(window) >= 20 else window
+             typical_volume = sum(bar.volume for bar in recent) / len(recent) if recent else candle.volume
+             # The simulator takes ``base_slippage_bps`` adversely on *each* leg against the
+             # bar's open (PaperExecutionProvider._apply_slippage): as a book, that is a
+             # spread of twice the base, half of which each crossing pays. Priced that way
+             # here so the expected value charges the spread the simulator will realise,
+             # not half of it (Phase 1.3, Etapa Dos). The session prices the quoted spread
+             # when its feed shows one.
+             conditions = MarketConditions(
+                 price=max(candle.close, 1e-9),
+                 spread_bps=2.0 * cfg.execution.base_slippage_bps,
+                 volatility_per_bar=max(0.0, values.get("atr_pct", 0.0) / 100.0),
+                 top_of_book_quantity=typical_volume * cfg.execution.max_participation_rate,
+                 bar_volume=typical_volume,
+                 latency_ms=float(cfg.execution.submit_latency_ms + cfg.execution.ack_latency_ms),
+                 bar_seconds=bar_seconds,
+             )
+             evaluation = ev_engine.evaluate(
+                 regime=regime.regime,
+                 direction=signal.direction,
+                 confidence=signal.confidence,
+                 costs=cost_model.estimate(
+                     quantity=decision.approved_quantity, conditions=conditions,
+                     entry_maker=entry_is_limit,
+                 ),
+             )
+             ev_fields = {
+                 "ev_net_bps": evaluation.net_edge_bps,
+                 "ev_tradeable": evaluation.is_tradeable,
+                 "budget_multiplier": budget.total_multiplier,
+             }
+             if not evaluation.is_tradeable:
+                 counts.ev_would_reject += 1
+                 if evaluation.edge_estimate is None:
+                     counts.ev_no_evidence += 1
+                 if cfg.enforce_expected_value:
+                     counts.ev_rejected += 1
+                     log("expected_value", evaluation.explain()[:300], **ev_fields)
+                     continue
+ 
+             # --- 5d. conviction and the sizing contract -----------------------------
+             size_fraction = 1.0
+             if cfg.conviction_sizing:
+                 size_fraction = conviction_fraction(
+                     evaluation.edge_estimate,
+                     exploring=False,
+                     min_fraction=cfg.min_size_fraction,
+                     exploration_fraction=cfg.min_size_fraction,
+                     pooled_cap=cfg.pooled_size_cap,
+                 ).fraction
+             budgeted = apply_risk_budget(
+                 approved_quantity=decision.approved_quantity,
+                 entry_price=signal.entry_reference,
+                 stop_price=decision.stop_price,
+                 limit_risk_currency=(
+                     decision.sizing.risk_budget_currency if decision.sizing is not None else 0.0
+                 ),
+                 budget_risk_currency=budget.risk_currency,
+                 conviction_fraction=size_fraction,
+                 step_size=instrument.lot_size if instrument is not None else None,
+                 min_notional=instrument.min_notional if instrument is not None else 0.0,
+                 allows_new_trades=budget.allows_new_trades,
+             )
+             if not budgeted.accepted:
+                 if budgeted.refused_reason in {"below_min_notional", "below_lot_step"}:
+                     counts.filter_rejected += 1
+                     log("filters", f"order filters — {budgeted.refused_reason}", **ev_fields)
+                 else:
+                     counts.budget_rejected += 1
+                     log("budget", f"risk budget sizing — {budgeted.refused_reason}", **ev_fields)
+                 continue
+             if budgeted.quantity < decision.approved_quantity * (1.0 - 1e-9):
+                 counts.sized_down += 1
+                 decision = decision.model_copy(update={"approved_quantity": budgeted.quantity})
+ 
+             pending = _PendingEntry(
+                 signal_id=signal.signal_id,
+                 confidence=signal.confidence,
+                 regime=regime.regime,
+                 stop_price=decision.stop_price,
+                 direction=signal.direction,
+                 target_price=decision.target_price,
+                 placed_bar=index,
+                 limit=entry_is_limit,
+                 expected_net_bps=evaluation.net_edge_bps,
+                 size_fraction=size_fraction,
+             )
+             order = _sync(
+                 provider.submit_order(
+                     self._to_intent(
+                         decision, signal.direction,
+                         limit_price=(
+                             self._limit_price_for(
+                                 signal.direction, candle.close, cfg.execution.base_slippage_bps,
+                                 tick_size=instrument.tick_size if instrument is not None else None,
+                             )
+                             if entry_is_limit else None
+                         ),
+                     )
+                 )
+             )
+             counts.intents_submitted += 1
+             pending.order_id = order.order_id
+             log("sent", "", sized_quantity=budgeted.quantity, **ev_fields)
+             if order.state.is_terminal:
+                 counts.orders_rejected += 1
+                 pending = None
+ 
+         # --- close the book ---------------------------------------------------
+         if cfg.liquidate_at_end and leg is not None:
+             if stop_order_id is not None:
+                 _sync(provider.cancel_order(stop_order_id))
+                 stop_order_id = None
+             trade, note = self._liquidate(provider, bars[-1], leg, len(bars) - 1)
+             closed.append(trade)
+             warnings.append(note)
+             leg = None
+             equity[-1] = provider.portfolio.equity
+ 
+         open_at_end = {
+             s: p.quantity for s, p in provider.portfolio.positions.items() if not p.is_flat
+         }
+         if open_at_end:
+             warnings.append(
+                 "positions were still open when the sample ended; the final equity "
+                 "includes an unrealised mark, not a realised result"
+             )
++        unprotected = self.order_hygiene["bars_with_leg_and_no_stop"]
++        if cfg.use_protective_stops and unprotected:
++            warnings.append(
++                f"{unprotected} bars held a position with no stop level and no exit in "
++                "flight; the reported losses of those bars were not bounded by a stop"
++            )
+ 
+         metrics = compute_metrics(
+             equity_curve=equity,
+             trades=[t.to_record() for t in closed],
+             periods_per_year=timeframe.bars_per_year(),
+             bars_in_market=bars_in_market,
+         )
+         warnings.extend(_sample_warnings(closed, bars))
+ 
+         conditions = BacktestConditions(
+             run_id=deterministic_id("bt", cfg.dataset, resolved, cfg.digest()),
+             dataset=cfg.dataset,
+             symbols=(resolved,),
+             timeframe=cfg.timeframe,
+             start=bars[0].open_time,
+             end=bars[-1].close_time,
+             bars=len(bars),
+             initial_capital=cfg.initial_capital,
+             seed=cfg.seed,
+             strategy_versions=strategy_engine.strategy_versions(),
+             feature_version=FEATURE_VERSION,
+             risk_limits_digest=content_hash(cfg.risk.model_dump(mode="json")),
+             execution_config=cfg.execution.model_dump(mode="json"),
+             is_out_of_sample=cfg.is_out_of_sample,
+         )
+ 
+         _log.info(
+             "backtest_complete",
+             run_id=conditions.run_id,
+             bars=len(bars),
+             trades=len(closed),
+             final_equity=round(equity[-1], 2) if equity else 0.0,
+         )
+ 
+         return BacktestResult(
+             conditions=conditions,
+             metrics=metrics,
+             equity_curve=tuple(equity),
+             equity_timestamps=tuple(stamps),
+             trades=tuple(closed),
+             decisions=counts.freeze(),
+             decision_log=tuple(decision_log),
+             open_positions_at_end=open_at_end,
+             warnings=tuple(warnings),
+         )
+ 
+     # ------------------------------------------------------------------ helpers
+ 
+     def _snapshot(
+         self,
+         candle: Candle,
+         features: FeatureSet,
+         regime: RegimeAssessment,
+         provider: PaperExecutionProvider,
+         report: DataQualityReport,
+     ) -> MarketSnapshot:
+         portfolio = provider.portfolio
+         return MarketSnapshot(
+             taken_at=candle.close_time,
+             symbol=candle.symbol,
+             timeframe=self._config.timeframe,
+             last_close=candle.close,
+             last_candle_open_time=candle.open_time,
+             features=dict(features.values),
+             regime=regime.regime,
+             volatility=features.get("atr_pct", 0.0),
+             data_quality_score=report.quality_score,
+             data_freshness_score=report.freshness_score,
+             open_positions=portfolio.snapshot_exposures(),
+             gross_exposure=portfolio.gross_exposure,
+             net_exposure=portfolio.net_exposure,
+             available_capital=portfolio.available_capital(),
+             equity=portfolio.equity,
+         )
+ 
+     @staticmethod
+     def _to_intent(
+         decision: RiskDecision, direction: Direction, *, limit_price: float | None = None
+     ) -> OrderIntent:
+         side = direction.to_side()
+         order_type = OrderType.LIMIT if limit_price is not None else OrderType.MARKET
+         return OrderIntent(
+             intent_id=deterministic_id("int", decision.decision_id),
+             client_order_id=OrderIntent.build_client_order_id(
+                 signal_id=decision.signal_id,
+                 symbol=decision.symbol,
+                 side=side,
+                 quantity=decision.approved_quantity,
+                 order_type=order_type,
+                 limit_price=limit_price,
+             ),
+             signal_id=decision.signal_id,
+             risk_decision_id=decision.decision_id,
+             symbol=decision.symbol,
+             side=side,
+             quantity=decision.approved_quantity,
+             order_type=order_type,
+             limit_price=limit_price,
+             time_in_force=TimeInForce.GTC,
+             created_at=decision.decided_at,
+         )
+ 
+     @staticmethod
+     def _limit_price_for(
+         direction: Direction, reference: float, spread_bps: float, *, tick_size: float | None = None
+     ) -> float:
+         """Where a post-only entry rests: the session's rule — half the configured spread
+         on our side of the reference, so the price a maker actually gets, not the mid.
+         The simulator fills it only when the next bar trades *through* it (no queue
+         model exists, so touching is not filling: the conservative policy).
+ 
+         Quantized to the instrument's tick when the universe states one (Phase 1.6), in
+         the session's direction — down for a buy, up for a sell — so rounding can only
+         make the order more passive, never cross the book. The tick is the instrument
+         universe's own, the same local rule the paper-live session judges orders by when
+         no venue filters are loaded; with no instrument there is no tick, and the raw
+         price stands (said in the parity table, not guessed).
+         """
+         half_spread = spread_bps / 10_000.0 / 2.0
+         raw = reference * (1.0 - half_spread) if direction is Direction.LONG else reference * (1.0 + half_spread)
+         if not tick_size:
+             return raw
+         return float(quantize_price_passive(raw, tick_size, buy=direction is Direction.LONG))
+ 
+     def _request_exit(
+         self,
+         provider: PaperExecutionProvider,
+         leg: _OpenLeg,
+         reason: str,
+         stop_order_id: str | None,
+         candle: Candle,
+         counts: _MutableCounts,
+     ) -> str | None:
+         """The one exit path: stop cancelled first, one reduce-only market close, nothing
+         else while it works. The fill arrives on the next bar and :func:`_fold_fills`
+         closes the round trip under ``reason``."""
++        # D3: the rest of an entry still resting is cancelled before the close, as the
++        # session's ``_close_position`` does; otherwise it fills into the position while
++        # the close (sized to the leg) is in flight and the leg is left stuck.
++        for order in provider.resting_orders(leg.symbol):
++            if not order.reduce_only and order.order_type is not OrderType.STOP:
++                _sync(provider.cancel_order(order.order_id))
++                self.order_hygiene["entry_remainders_cancelled_on_exit"] += 1
+         if stop_order_id is not None:
+             _sync(provider.cancel_order(stop_order_id))
+         side = Side.SELL if leg.direction is Direction.LONG else Side.BUY
++        exit_key = f"exit:{reason.replace(' ', '-')}:{leg.signal_id}"
+         intent = OrderIntent(
+             intent_id=deterministic_id("int", "exit", leg.signal_id, reason, candle.close_time),
++            # D1: one id per bar, as the session's; a retry with the same id after a
++            # rejection was suppressed as a duplicate and the position never closed.
+             client_order_id=OrderIntent.build_client_order_id(
+-                signal_id=f"exit:{reason.replace(' ', '-')}:{leg.signal_id}",
++                signal_id=f"{exit_key}:{candle.close_time.isoformat()}",
+                 symbol=leg.symbol,
+                 side=side,
+                 quantity=leg.quantity,
+                 order_type=OrderType.MARKET,
+             ),
+-            signal_id=f"exit:{reason.replace(' ', '-')}:{leg.signal_id}",
++            signal_id=exit_key,
+             risk_decision_id=f"exit:{leg.signal_id}",
+             symbol=leg.symbol,
+             side=side,
+             quantity=leg.quantity,
+             order_type=OrderType.MARKET,
+             time_in_force=TimeInForce.GTC,
+             created_at=candle.close_time,
+             reduce_only=True,
+         )
+         order = _sync(provider.submit_order(intent))
+         counts.exits_requested[reason] = counts.exits_requested.get(reason, 0) + 1
+         if order.state.is_terminal and not order.fills:
+             counts.orders_rejected += 1
+             return None  # the position stays; the stop is re-placed on the next sync
+         leg.exit_pending = reason
+         leg.exit_order_id = order.order_id
+         return None
+ 
+     def _sync_protective_stop(
+         self,
+         provider: PaperExecutionProvider,
+         leg: _OpenLeg | None,
+         current_id: str | None,
+         counts: _MutableCounts,
++        *,
++        symbol: str,
+     ) -> str | None:
+         """Keep exactly one protective stop matching the open leg.
+ 
+         Cancelled when the position is flat, replaced when a partial fill changed the
+-        quantity it covers. A stop that protects the wrong size is worse than none,
+-        because the report will show a bounded loss that was not actually bounded.
++        quantity it covers or the exit rules moved its level. A stop that protects the
++        wrong size or sits at a stale level is worse than none, because the report will
++        show a bounded loss that was not actually bounded.
+         """
++        if leg is None:
++            # D3: flat, the rest of an entry that already filled in part is stale; it
++            # would open a leg with no stop and no target. A fresh entry is left alone.
++            for order in provider.resting_orders(symbol):
++                if (not order.reduce_only and order.order_type is not OrderType.STOP
++                        and order.filled_quantity > 0):
++                    _sync(provider.cancel_order(order.order_id))
++                    self.order_hygiene["stale_entry_remainders_cancelled_flat"] += 1
++        elif leg.exit_pending is not None and leg.exit_order_id:
++            # D3: a close that finished with position left would hold the leg forever;
++            # releasing it lets the stop be re-placed and the exit asked for again.
++            exit_order = _sync(provider.get_order(leg.exit_order_id))
++            if exit_order is not None and exit_order.state.is_terminal and leg.quantity > 0:
++                leg.exit_pending = None
++                leg.exit_order_id = ""
++                self.order_hygiene["exits_done_with_position_left"] += 1
++        if leg is not None and leg.stop_price is None and leg.exit_pending is None:
++            self.order_hygiene["bars_with_leg_and_no_stop"] += 1
+         if leg is None or leg.stop_price is None or leg.exit_pending is not None:
+             # No leg, no stop level, or a close in flight: a stop re-placed over a
+             # working close is the double fill the session refuses too.
+             if current_id is not None:
+                 _sync(provider.cancel_order(current_id))
+             return None
+ 
+         existing = _sync(provider.get_order(current_id)) if current_id else None
+         if existing is not None and not existing.state.is_terminal:
+             covered = existing.quantity - existing.filled_quantity
+-            if abs(covered - leg.quantity) <= max(leg.quantity * 1e-6, 1e-9):
++            same_size = abs(covered - leg.quantity) <= max(leg.quantity * 1e-6, 1e-9)
++            # D2: the level too, as the session's ``same_level``; comparing the size alone
++            # left break-even and trailing moves on the leg and the old stop in the book.
++            same_level = (
++                abs(float(existing.stop_price or 0.0) - float(leg.stop_price))
++                <= 1e-9 * float(leg.stop_price)
++            )
++            if same_size and same_level:
+                 return current_id
+             _sync(provider.cancel_order(current_id))
+ 
+         side = Side.SELL if leg.direction is Direction.LONG else Side.BUY
++        self._stop_placements += 1
+         intent = OrderIntent(
+-            intent_id=deterministic_id("int", "stop", leg.signal_id, leg.quantity),
++            intent_id=deterministic_id(
++                "int", "stop", leg.signal_id, leg.quantity, self._stop_placements
++            ),
++            # D1: one id per placement; after a cancel the same id was suppressed as a
++            # duplicate and the stop was never placed again.
+             client_order_id=OrderIntent.build_client_order_id(
+-                signal_id=f"{leg.signal_id}:protective",
++                signal_id=f"{leg.signal_id}:protective:{self._stop_placements}",
+                 symbol=leg.symbol,
+                 side=side,
+                 quantity=leg.quantity,
+                 order_type=OrderType.STOP,
+             ),
+             signal_id=leg.signal_id,
+             risk_decision_id=f"protective:{leg.signal_id}",
+             symbol=leg.symbol,
+             side=side,
+             quantity=leg.quantity,
+             order_type=OrderType.STOP,
+             stop_price=leg.stop_price,
+             time_in_force=TimeInForce.GTC,
+             created_at=leg.entry_at,
+         )
+         try:
+             order = _sync(provider.submit_order(intent))
+         except (TiaError, ValueError) as exc:
+             # A stop the venue will not accept is a real outcome, and the honest
+             # response is to record that the position is unprotected rather than to
+             # pretend the order exists.
+             _log.warning(
+                 "protective_stop_rejected", symbol=leg.symbol, error=str(exc)
+             )
+             counts.protective_stops_unplaced += 1
+             return None
+         if order.state.is_terminal:
+             counts.protective_stops_unplaced += 1
+             return None
+         return order.order_id
+ 
+     def _liquidate(
+         self,
+         provider: PaperExecutionProvider,
+         last: Candle,
+         leg: _OpenLeg,
+         bar_index: int,
+     ) -> tuple[ClosedTrade, str]:
+         """Close the open leg at the last bar's close, marked as a forced exit.
+ 
+         Reporting an open position's mark as though it were a result lets a losing trade
+         sit unrealised at the edge of the sample and quietly improve every metric that
+         depends on realised P&L. Closing it costs a taker fee and the base slippage,
+         charged here because a forced exit is never a maker and never free.
+ 
+         This is still an assumption: the strategy did not choose this exit, and in a real
+         session the close is not a price you can reliably transact at.
+         """
+         costs = self._config.execution
+         direction_sign = 1.0 if leg.direction is Direction.LONG else -1.0
+         exit_price = last.close * (1.0 - direction_sign * costs.base_slippage_bps / 10_000.0)
+         exit_price = max(last.low, min(last.high, exit_price))
+ 
+         gross = direction_sign * leg.quantity * (exit_price - leg.entry_price)
+         fee = abs(leg.quantity * exit_price) * costs.taker_fee_bps / 10_000.0
+         notional = leg.entry_price * leg.quantity
+ 
+         closing_fill = Fill(
+             fill_id=deterministic_id("fill", "liquidation", leg.signal_id, last.close_time),
+             order_id=deterministic_id("ord", "liquidation", leg.signal_id),
+             sequence=0,
+             symbol=leg.symbol,
+             side=Side.SELL if leg.direction is Direction.LONG else Side.BUY,
+             quantity=leg.quantity,
+             price=exit_price,
+             fee=fee,
+             liquidity="taker",
+             filled_at=last.close_time,
+         )
+         provider.portfolio.apply_fill(closing_fill)
+ 
+         trade = ClosedTrade(
+             trade_id=deterministic_id("trade", closing_fill.fill_id),
+             symbol=leg.symbol,
+             direction=leg.direction,
+             quantity=leg.quantity,
+             entry_price=leg.entry_price,
+             exit_price=exit_price,
+             entry_at=leg.entry_at,
+             exit_at=closing_fill.filled_at,
+             gross_pnl=gross,
+             fees=leg.fees + fee,
+             net_pnl=gross - leg.fees - fee,
+             return_pct=((gross - leg.fees - fee) / notional * 100.0) if notional > 0 else 0.0,
+             bars_held=max(0, bar_index - leg.entry_bar),
+             exit_reason="forced liquidation at end of sample",
+             regime_at_entry=leg.regime,
+             signal_id=leg.signal_id,
+             confidence=leg.confidence,
+         )
+         return (
+             trade,
+             "an open position was force-closed at the final bar's close; that exit was "
+             "chosen by the sample boundary, not by the strategy",
+         )
+ 
+ 
+ # --------------------------------------------------------------------------- free helpers
+diff --git a/packages/tia/src/tia/execution/paper.py b/packages/tia/src/tia/execution/paper.py
+index a621224..2d98fad 100644
+--- a/packages/tia/src/tia/execution/paper.py
++++ b/packages/tia/src/tia/execution/paper.py
+@@ -52,549 +52,558 @@ _MAKER_TYPES = (OrderType.LIMIT, OrderType.LIMIT_MAKER)
+ class PaperExecutionProvider(ExecutionProvider):
+     """Deterministic simulated execution against bar data."""
+ 
+     def __init__(
+         self,
+         config: ExecutionSimConfig,
+         universe: InstrumentUniverse,
+         clock: Clock,
+         rng: RngRegistry,
+         *,
+         initial_capital: float = 100_000.0,
+     ) -> None:
+         super().__init__(
+             ExecutionCapabilities(
+                 name="paper",
+                 is_simulated=True,
+                 notes=(
+                     "Bar-based matching engine. No order book, no market impact from our "
+                     "own orders, no venue microstructure. Not equivalent to a real market."
+                 ),
+             )
+         )
+         self._config = config
+         self._universe = universe
+         self._clock = clock
+         self._rng = rng
+         self._portfolio = PortfolioState.initial(initial_capital)
+ 
+         self._orders: dict[str, Order] = {}
+         self._by_client_id: dict[str, str] = {}
+         self._resting: list[str] = []
+         self._fills: list[Fill] = []
+         self._last_price: dict[str, float] = {}
+         self._fill_sequence = 0
+ 
+     # ------------------------------------------------------------------ queries
+ 
+     @property
+     def portfolio(self) -> PortfolioState:
+         return self._portfolio
+ 
+     @property
+     def config(self) -> ExecutionSimConfig:
+         return self._config
+ 
+     def _resolve(self, order_ref: str) -> Order | None:
+         """An order by its venue id *or* its client id.
+ 
+         The runtime addresses orders by ``client_order_id`` (the id it chose and the one a
+         real venue cancels by); this engine indexes by its own ``order_id``. Resolving both
+         here is what makes "cancel" mean the same thing against every provider.
+         """
+         order = self._orders.get(order_ref)
+         if order is None:
+             mapped = self._by_client_id.get(order_ref)
+             order = self._orders.get(mapped) if mapped else None
+         return order
+ 
+     async def get_order(self, order_id: str) -> Order | None:
+         return self._resolve(order_id)
+ 
+     async def get_orders(self, *, open_only: bool = False) -> list[Order]:
+         orders = list(self._orders.values())
+         if open_only:
+             orders = [o for o in orders if o.state.is_open]
+         return sorted(orders, key=lambda o: o.created_at)
+ 
++    def resting_orders(self, symbol: str | None = None) -> list[Order]:
++        """Orders still waiting in the book, in the order they will be matched."""
++        out = []
++        for order_id in self._resting:
++            order = self._orders.get(order_id)
++            if order is not None and not order.state.is_terminal and symbol in (None, order.symbol):
++                out.append(order)
++        return out
++
+     async def get_positions(self) -> dict[str, Position]:
+         return {s: p for s, p in self._portfolio.positions.items() if not p.is_flat}
+ 
+     async def get_balance(self) -> float:
+         return self._portfolio.cash
+ 
+     def apply_cash_adjustment(self, amount: float, *, reason: str) -> float:
+         """Move cash for something that is not a fill: funding, a liquidation fee.
+ 
+         A simulated perpetual account pays funding every eight hours and a fee when it
+         is liquidated; neither arrives as a trade, and both must reach the same cash
+         the fills reach, or the books and the venue would disagree by exactly that
+         amount at the next reconciliation. Positive adds, negative charges.
+         """
+         self._portfolio.cash += float(amount)
+         self._portfolio.updated_at = self._clock.now()
+         _log.info("paper_cash_adjustment", amount=round(float(amount), 6), reason=reason)
+         return self._portfolio.cash
+ 
+     async def get_trades(self, *, limit: int = 100) -> list[Fill]:
+         return self._fills[-limit:]
+ 
+     async def get_pnl(self) -> dict[str, float]:
+         return {
+             "realized": self._portfolio.realized_pnl,
+             "unrealized": self._portfolio.unrealized_pnl,
+             "total": self._portfolio.realized_pnl + self._portfolio.unrealized_pnl,
+             "fees": self._portfolio.fees_paid,
+             "equity": self._portfolio.equity,
+         }
+ 
+     async def get_portfolio(self) -> PortfolioState:
+         return self._portfolio
+ 
+     # ------------------------------------------------------------------ submission
+ 
+     async def submit_order(self, intent: OrderIntent) -> Order:
+         """Submit an intent, or return the existing order for a duplicate.
+ 
+         Idempotency is the whole point of ``client_order_id``: a retry after a timeout,
+         a redelivered event, or a reconnect must never open a second position.
+         """
+         existing_id = self._by_client_id.get(intent.client_order_id)
+         if existing_id is not None:
+             _log.info(
+                 "duplicate_order_suppressed",
+                 client_order_id=intent.client_order_id,
+                 order_id=existing_id,
+             )
+             return self._orders[existing_id]
+ 
+         instrument = self._universe.get(intent.symbol)
+         now = self._clock.now()
+         order = Order(
+             order_id=deterministic_id("ord", intent.client_order_id),
+             client_order_id=intent.client_order_id,
+             intent_id=intent.intent_id,
+             signal_id=intent.signal_id,
+             symbol=intent.symbol,
+             side=intent.side,
+             order_type=intent.order_type,
+             quantity=intent.quantity,
+             limit_price=intent.limit_price,
+             stop_price=intent.stop_price,
+             time_in_force=intent.time_in_force,
+             created_at=now,
+             updated_at=now,
+             correlation_id=intent.correlation_id,
+             reduce_only=intent.reduce_only,
+         )
+         self._orders[order.order_id] = order
+         self._by_client_id[intent.client_order_id] = order.order_id
+ 
+         if instrument is None:
+             transition(order, OrderState.REJECTED, at=now, reason="unknown instrument")
+             return order
+ 
+         # The venue's entry check, the same rule set the intent builder applied: a whole
+         # number of lots, at least one lot, and — for an order that opens or adds
+         # exposure — the instrument's minimum notional at the price it will be judged
+         # at (its limit, else the last close this engine has seen). A reducing order
+         # is exempt: a position must always be closable. With no price known at all the
+         # notional cannot be judged here and the intent builder's check stands alone.
+         held = self._portfolio.positions.get(intent.symbol)
+         held_quantity = held.quantity if held is not None else 0.0
+         reducing = intent.reduce_only or (
+             held_quantity != 0.0 and (intent.side is Side.SELL) == (held_quantity > 0)
+         )
+         judged_at = intent.limit_price or self._last_price.get(intent.symbol)
+         try:
+             validate_quantity(
+                 filters_for(intent.symbol, self._universe),
+                 intent.quantity,
+                 reference_price=judged_at,
+                 reduce_only=reducing,
+                 notional_required=False,
+             )
+         except OrderFilterError as exc:
+             transition(order, OrderState.REJECTED, at=now, reason=str(exc))
+             return order
+ 
+         if intent.reduce_only and not self._reduces(order, held_quantity):
+             # What a futures venue does with a reduce-only order that would open or add:
+             # refuses it. Before 1.3 the flag only exempted the minimum notional, and a
+             # "reduce-only" close sent over a position the stop had just taken out
+             # opened the position the other way (Phase 1.3, G5).
+             transition(
+                 order, OrderState.REJECTED, at=now,
+                 reason="reduce-only order would not reduce the position",
+             )
+             return order
+ 
+         if intent.side is Side.SELL and not instrument.shortable:
+             position = self._portfolio.positions.get(intent.symbol)
+             held = position.quantity if position else 0.0
+             if held < intent.quantity:
+                 transition(
+                     order, OrderState.REJECTED, at=now, reason="short selling not permitted"
+                 )
+                 return order
+ 
+         transition(order, OrderState.VALIDATED, at=now)
+         transition(order, OrderState.RISK_APPROVED, at=now)
+ 
+         # Latency is modelled as clock offsets on the state timestamps rather than as
+         # real sleeping, so a backtest runs at full speed while still recording that a
+         # submission was not instantaneous.
+         submit_at = now + timedelta(milliseconds=self._config.submit_latency_ms)
+         transition(order, OrderState.SUBMITTING, at=submit_at)
+ 
+         if self._should_reject(order):
+             transition(
+                 order,
+                 OrderState.REJECTED,
+                 at=submit_at,
+                 reason="simulated venue rejection",
+             )
+             return order
+ 
+         transition(order, OrderState.SUBMITTED, at=submit_at)
+         ack_at = submit_at + timedelta(milliseconds=self._config.ack_latency_ms)
+         transition(order, OrderState.ACKNOWLEDGED, at=ack_at)
+         self._resting.append(order.order_id)
+         return order
+ 
+     async def cancel_order(self, order_id: str) -> Order:
+         """Cancel by venue id or client id. A cancelled order leaves the resting book at
+         once and can never be matched by a later bar."""
+         order = self._resolve(order_id)
+         if order is None:
+             raise DuplicateOrderError(f"unknown order {order_id}", order_id=order_id)
+         now = self._clock.now()
+         if order.state.is_terminal:
+             return order
+         transition(order, OrderState.CANCEL_REQUESTED, at=now)
+         transition(order, OrderState.CANCELLED, at=now, reason="cancelled by caller")
+         if order.order_id in self._resting:
+             self._resting.remove(order.order_id)
+         return order
+ 
+     # ------------------------------------------------------------------ matching
+ 
+     def on_bar(self, candle: Candle) -> list[Fill]:
+         """Advance the simulation by one bar, returning any fills it produced.
+ 
+         Called by the runtime and the backtester with each closed bar. Orders submitted
+         during bar *t* are matched against bar *t+1*, which is what keeps the engine
+         honest about the fact that a decision cannot be executed at the price that
+         triggered it.
+         """
+         self._last_price[candle.symbol] = candle.close
+         produced: list[Fill] = []
+ 
+         for order_id in list(self._resting):
+             order = self._orders.get(order_id)
+             if order is None or order.state.is_terminal:
+                 self._resting.remove(order_id)
+                 continue
+             if order.symbol != candle.symbol:
+                 continue
+             # An order created during this very bar cannot be filled by it.
+             if order.created_at >= candle.close_time:
+                 continue
+ 
+             fill = self._try_fill(order, candle)
+             if fill is not None:
+                 produced.append(fill)
+ 
+             if order.state.is_terminal and order_id in self._resting:
+                 self._resting.remove(order_id)
+ 
+         self._portfolio.mark(candle.symbol, candle.close, candle.close_time)
+         return produced
+ 
+     @staticmethod
+     def _reduces(order: Order, held_quantity: float) -> bool:
+         """Whether ``order`` would shrink a position of ``held_quantity`` (signed)."""
+         if abs(held_quantity) < 1e-12:
+             return False
+         return (order.side is Side.SELL) == (held_quantity > 0)
+ 
+     def _try_fill(self, order: Order, candle: Candle) -> Fill | None:
+         instrument = self._universe.get(order.symbol)
+         if instrument is None:
+             return None
+ 
+         if order.reduce_only:
+             # Enforced at the fill, against the position as it is *now*: another order
+             # (the protective stop, an earlier close) may have reduced or closed it since
+             # this one was accepted. A reduce-only order never fills past flat; one with
+             # nothing left to reduce expires, as the venue's would (Phase 1.3, G5).
+             held = self._portfolio.positions.get(order.symbol)
+             held_quantity = held.quantity if held is not None else 0.0
+             if not self._reduces(order, held_quantity):
+                 transition(
+                     order, OrderState.EXPIRED, at=candle.close_time,
+                     reason="reduce-only order had nothing left to reduce",
+                 )
+                 return None
+             reducible = abs(held_quantity)
+         else:
+             reducible = float("inf")
+ 
+         trigger = self._fill_price(order, candle)
+         if trigger is None:
+             return None
+ 
+         available = self._available_quantity(candle)
+         if available <= 0:
+             return None
+ 
+         quantity = min(order.remaining_quantity, available)
+         if self._should_partially_fill(order) and quantity >= order.remaining_quantity:
+             # A partial fill is the normal case for anything non-trivial in size; force
+             # one occasionally so downstream code that assumes "submitted == filled"
+             # breaks here rather than in production.
+             stream = f"execution:partial_size:{order.symbol}"
+             quantity *= float(self._rng.get(stream).uniform(0.35, 0.85))
+ 
+         quantity = instrument.round_quantity(quantity)
+         if quantity <= 0:
+             return None
+         if order.reduce_only and quantity > reducible * (1.0 + 1e-9) + 1e-12:
+             # Never past flat: the remainder is sized to exactly what is held, float
+             # residue included, so the position lands on zero rather than on dust.
+             quantity = reducible
+ 
+         liquidity = "maker" if order.order_type in _MAKER_TYPES else "taker"
+         if liquidity == "maker":
+             # No slippage on a resting order: a limit never fills worse than its limit at
+             # any venue. The queue it had to wait in is what the trade-through requirement
+             # in ``_fill_price`` models; charging slippage on top of it priced a cost that
+             # cannot occur and distorted every paper-live round trip by that amount.
+             price, slippage_bps = instrument.round_price(trigger), 0.0
+         else:
+             price, slippage_bps = self._apply_slippage(
+                 order, trigger, quantity, candle, instrument
+             )
+         fee_bps = (
+             self._config.maker_fee_bps if liquidity == "maker" else self._config.taker_fee_bps
+         )
+         fee = abs(quantity * price) * fee_bps / 10_000.0
+ 
+         self._fill_sequence += 1
+         fill = Fill(
+             fill_id=deterministic_id("fill", order.order_id, self._fill_sequence),
+             order_id=order.order_id,
+             sequence=self._fill_sequence,
+             symbol=order.symbol,
+             side=order.side,
+             quantity=quantity,
+             price=price,
+             fee=fee,
+             slippage_bps=slippage_bps,
+             latency_ms=self._config.submit_latency_ms + self._config.ack_latency_ms,
+             liquidity=liquidity,
+             filled_at=candle.close_time,
+         )
+ 
+         order.register_fill(fill)
+         self._fills.append(fill)
+         self._portfolio.apply_fill(fill)
+ 
+         target = resolve_fill_state(order)
+         if target != order.state:
+             transition(order, target, at=candle.close_time)
+         elif target is OrderState.PARTIALLY_FILLED:
+             transition(order, OrderState.PARTIALLY_FILLED, at=candle.close_time)
+         if (
+             order.reduce_only
+             and not order.state.is_terminal
+             and abs((self._portfolio.positions.get(order.symbol) or Position(symbol=order.symbol)).quantity) < 1e-12
+         ):
+             # The position is flat: what remains of a reduce-only order can never fill.
+             transition(
+                 order, OrderState.EXPIRED, at=candle.close_time,
+                 reason="reduce-only order: position flat, remainder expired",
+             )
+ 
+         return fill
+ 
+     def _fill_price(self, order: Order, candle: Candle) -> float | None:
+         """The reference price at which this order would trigger, or ``None``.
+ 
+         Market orders reference the bar's open — the first price available after the
+         decision — rather than its close, which would let a strategy transact at a price
+         it could not have known.
+         """
+         if order.order_type is OrderType.MARKET:
+             return candle.open
+ 
+         if order.order_type in _MAKER_TYPES:
+             limit = order.limit_price
+             if limit is None:
+                 return None
+             # Require the price to trade through the limit, not merely touch it: at the
+             # exact limit there is no guarantee of queue priority. Once it does, a resting
+             # order is taken at its own price — the taker who crosses it gets the price
+             # improvement, the maker never does — so the fill is the limit, not the open.
+             if order.side is Side.BUY and candle.low < limit:
+                 return limit
+             if order.side is Side.SELL and candle.high > limit:
+                 return limit
+             return None
+ 
+         if order.order_type in (OrderType.STOP, OrderType.STOP_LIMIT):
+             stop = order.stop_price
+             if stop is None:
+                 return None
+             triggered = (
+                 candle.high >= stop if order.side is Side.BUY else candle.low <= stop
+             )
+             if not triggered:
+                 return None
+             if order.order_type is OrderType.STOP:
+                 # A stop becomes a market order once triggered, and the fill is at least
+                 # as bad as the stop level — that gap is the cost of a stop.
+                 return max(stop, candle.open) if order.side is Side.BUY else min(stop, candle.open)
+             limit = order.limit_price
+             if limit is None:
+                 return None
+             if order.side is Side.BUY and candle.low < limit:
+                 return min(limit, max(stop, candle.open))
+             if order.side is Side.SELL and candle.high > limit:
+                 return max(limit, min(stop, candle.open))
+             return None
+ 
+         if order.order_type is OrderType.TAKE_PROFIT:
+             target = order.limit_price or order.stop_price
+             if target is None:
+                 return None
+             if order.side is Side.SELL and candle.high >= target:
+                 return target
+             if order.side is Side.BUY and candle.low <= target:
+                 return target
+             return None
+ 
+         return None
+ 
+     def _available_quantity(self, candle: Candle) -> float:
+         """How much of this bar's volume we are allowed to consume.
+ 
+         Without a participation cap a backtest can fill an arbitrarily large order in a
+         single thin bar, which is the most common way a strategy's reported capacity
+         exceeds anything achievable.
+         """
+         if candle.volume <= 0:
+             return 0.0
+         return candle.volume * self._config.max_participation_rate
+ 
+     def _apply_slippage(
+         self,
+         order: Order,
+         reference: float,
+         quantity: float,
+         candle: Candle,
+         instrument: Instrument,
+     ) -> tuple[float, float]:
+         """Return ``(fill_price, slippage_bps)``, always adverse to the order."""
+         base = self._config.base_slippage_bps
+ 
+         # Impact scales with the square root of our participation in the bar — the
+         # conventional approximation, and superlinear enough to penalise size.
+         participation = quantity / candle.volume if candle.volume > 0 else 1.0
+         impact = self._config.impact_coefficient * math.sqrt(min(1.0, participation)) * 100.0
+ 
+         # A wider bar means a less certain price; scale a little with realised range.
+         range_bps = (candle.high - candle.low) / candle.close * 10_000.0 if candle.close > 0 else 0.0
+         range_component = min(range_bps * 0.05, 25.0)
+ 
+         total_bps = base + impact + range_component
+         direction = 1.0 if order.side is Side.BUY else -1.0
+         price = reference * (1.0 + direction * total_bps / 10_000.0)
+ 
+         # Never fill outside the bar's actual range — a price that never traded is not a
+         # fill, it is a fiction.
+         price = max(candle.low, min(candle.high, price))
+         price = instrument.round_price(price)
+         if price <= 0:
+             price = instrument.round_price(candle.close)
+ 
+         realized_bps = abs(price - reference) / reference * 10_000.0 if reference > 0 else 0.0
+         return (price, realized_bps)
+ 
+     def _should_reject(self, order: Order) -> bool:
+         if self._config.reject_probability <= 0:
+             return False
+         draw = float(self._rng.get(f"execution:reject:{order.symbol}").random())
+         return draw < self._config.reject_probability
+ 
+     def _should_partially_fill(self, order: Order) -> bool:
+         if self._config.partial_fill_probability <= 0:
+             return False
+         draw = float(self._rng.get(f"execution:partial:{order.symbol}").random())
+         return draw < self._config.partial_fill_probability
+ 
+     # ------------------------------------------------------------------ maintenance
+ 
+     def expire_stale_orders(self, *, older_than: timedelta, now: datetime | None = None) -> list[Order]:
+         """Expire resting orders past their useful life.
+ 
+         An order left resting from a thesis that has since been invalidated is exactly
+         the "trade with an expired signal" the platform is built to avoid.
+         """
+         moment = ensure_utc(now) if now else self._clock.now()
+         expired: list[Order] = []
+         for order_id in list(self._resting):
+             order = self._orders.get(order_id)
+             if order is None or order.state.is_terminal:
+                 continue
+             if moment - order.created_at >= older_than:
+                 transition(order, OrderState.EXPIRED, at=moment, reason="order age exceeded TTL")
+                 self._resting.remove(order_id)
+                 expired.append(order)
+         return expired
+ 
+     def mark_all(self, prices: dict[str, float], at: datetime) -> None:
+         for symbol, price in prices.items():
+             self._portfolio.mark(symbol, price, at)
+ 
+     def restore_portfolio(self, state: PortfolioState) -> None:
+         """Hand the engine the account the journal says it holds.
+ 
+         A restarted process must not start flat at base capital while the record says
+         otherwise: cash, position, realised P&L, fees, the equity peak and the UTC day's
+         opening equity all come from the rebuilt journal. Resting orders are *not*
+         restored — an order the engine no longer holds cannot fill, and the runtime
+         re-creates the one order that matters (the protective stop) from its own plan.
+         """
+         self._portfolio = state.model_copy(deep=True)
+         for symbol, position in self._portfolio.positions.items():
+             if position.last_price > 0:
+                 self._last_price[symbol] = float(position.last_price)
+         _log.info(
+             "paper_portfolio_restored",
+             cash=round(self._portfolio.cash, 4),
+             positions={s: p.quantity for s, p in self._portfolio.positions.items()},
+             peak_equity=round(self._portfolio.peak_equity, 4),
+             day_start_equity=round(self._portfolio.day_start_equity, 4),
+         )
+ 
+     def reset(self, *, initial_capital: float | None = None) -> None:
+         """Clear all state. Used between backtest runs."""
+         capital = initial_capital or self._portfolio.initial_capital
+         self._portfolio = PortfolioState.initial(capital)
+         self._orders.clear()
+         self._by_client_id.clear()
+         self._resting.clear()
+         self._fills.clear()
+         self._last_price.clear()
+         self._fill_sequence = 0
+ 
+     def snapshot(self) -> dict[str, object]:
+         """Provider-side state, as the reconciliation engine sees it."""
+         return {
+             "orders": {oid: o.state.value for oid, o in self._orders.items()},
+             "positions": {
+                 s: p.quantity for s, p in self._portfolio.positions.items() if not p.is_flat
+             },
+             "balance": self._portfolio.cash,
+             "fill_count": len(self._fills),
+         }

@@ -1,0 +1,67 @@
+{
+ "caso": "J3_guarda_xfail",
+ "tipo": "18",
+ "esperado": "fail",
+ "razon_esperada": "disagree",
+ "rc": 1,
+ "veredicto": "fail",
+ "provenance_json": true,
+ "problemas": [
+  "the JUnit report and the session disagree (missing [], extra [], different ['tests.integration.test_engine_version_contract::test_a_close_that_ends_with_position_left_is_followed_by_another', 'tests.integration.test_engine_version_contract::test_a_rejected_close_is_sent_again_as_a_new_order_and_closes', 'tests.integration.test_engine_version_contract::test_partial_fills_never_add_to_a_closing_position_or_reopen_one'])"
+ ],
+ "OK": true,
+ "provenance": {
+  "policy_version": 1,
+  "session_sha256": "97e58b2d71939021c50939c20fd8d6d6e1c17e7e0e1f188a99111ffddb7ae1e7",
+  "junit_sha256": "9c51a59a577756e68aede03c799c74a41297e6227446ea153ade20131a1072ab",
+  "report": {
+   "tests": 2032,
+   "passed": 2022,
+   "failed": 0,
+   "error": 0,
+   "skipped": 10,
+   "xfailed": 0,
+   "xpassed": 0
+  },
+  "engine_version": "1.2.0",
+  "engine_imported": {
+   "file": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/trabajo/gate_main/packages/tia/src/tia/backtest/engine.py",
+   "file_in_checkout": "packages/tia/src/tia/backtest/engine.py",
+   "file_sha256": "1c70ef65f9d386d446f080597ec30ec82cd177e1c7d002c39cee86aa834de92b",
+   "version": "1.2.0"
+  },
+  "guard_required": true,
+  "guard": {
+   "defined": 7,
+   "ran": 7,
+   "passed": 7
+  },
+  "working_tree": "c7688384d8005be4f95b378f8699b38a5b81dfe7",
+  "python": {
+   "executable": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/venv/bin/python",
+   "implementation": "CPython",
+   "prefix": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/venv",
+   "version": "3.11.17"
+  },
+  "distributions_sha256": "4541005a29772a2f302c257c076ce2702e59d103c0cf78f19df720bb3ddd2055",
+  "commit": "72ffae5d2698440c8f1afaff12e07bd8adde66fb",
+  "tree": "44850cfcbf53c3f8223d38a92031f4402f8ffb32",
+  "github_sha": null,
+  "github_ref": null,
+  "run": null,
+  "nonce": "local-main-cd54d95bae349348",
+  "inputs_sha256": {
+   ".github/workflows/ci.yml": "e41e02e073bd61b5083f1d31ec77771941317e9681a19e588335b6ddf4341822",
+   "constraints/ci-py311.txt": "0f42875fa7eb1894be30c0b12734c7d95a16a95debb7e2d54c38fd3b88edd71a",
+   "pyproject.toml": "fb3bc273b2a385db042b4f9a89fb660223622ede63b892608d791caf9ac2ae7a",
+   "scripts/ci_gate.py": "b47c735057c0a5f4a3ab9b20d6aac182d4e8fc08c9f16691d0e490afd0794215",
+   "scripts/ci_provenance.py": "0a3cb6d7254146fc65d60b148dd8b8b92e071c363ae450c7887ae3b4963241a0",
+   "scripts/ci_gate_policy.json": "0358e306ae04de4d9276678e3f6a1783d6b66b10f4e050871bdb6918edaca4d8"
+  },
+  "verdict": "fail",
+  "problems": [
+   "the JUnit report and the session disagree (missing [], extra [], different ['tests.integration.test_engine_version_contract::test_a_close_that_ends_with_position_left_is_followed_by_another', 'tests.integration.test_engine_version_contract::test_a_rejected_close_is_sent_again_as_a_new_order_and_closes', 'tests.integration.test_engine_version_contract::test_partial_fills_never_add_to_a_closing_position_or_reopen_one'])"
+  ]
+ },
+ "stderr": ""
+}

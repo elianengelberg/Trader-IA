@@ -1,0 +1,279 @@
+{
+ "universo_por_anio": {
+  "2018": {
+   "semanas": 53,
+   "evaluables": 0,
+   "elegibles_mediana": 6.0
+  },
+  "2019": {
+   "semanas": 52,
+   "evaluables": 0,
+   "elegibles_mediana": 16.5
+  },
+  "2020": {
+   "semanas": 52,
+   "evaluables": 39,
+   "elegibles_mediana": 41.0
+  },
+  "2021": {
+   "semanas": 52,
+   "evaluables": 52,
+   "elegibles_mediana": 173.5
+  },
+  "2022": {
+   "semanas": 52,
+   "evaluables": 52,
+   "elegibles_mediana": 213.0
+  },
+  "2023": {
+   "semanas": 52,
+   "evaluables": 52,
+   "elegibles_mediana": 168.5
+  },
+  "2024": {
+   "semanas": 53,
+   "evaluables": 53,
+   "elegibles_mediana": 286.0
+  },
+  "2025": {
+   "semanas": 52,
+   "evaluables": 52,
+   "elegibles_mediana": 248.5
+  },
+  "2026": {
+   "semanas": 21,
+   "evaluables": 21,
+   "elegibles_mediana": 154.0
+  }
+ },
+ "inicio_componente_i_13_semanas_evaluables": "2020-05-11",
+ "ventana_desde_componente_i": {
+  "desde_componente_i": "2020-05-11",
+  "semanas": 315,
+  "evaluables": 315,
+  "no_evaluables_pct": 0.0
+ },
+ "componentes_ii_iii_iv": "ver conciliacion.json (conciliacion.py, Adenda 3)",
+ "salidas_observadas_por_anio": {
+  "2018": 2,
+  "2019": 3,
+  "2020": 21,
+  "2021": 20,
+  "2022": 43,
+  "2023": 24,
+  "2024": 46,
+  "2025": 51,
+  "2026": 26
+ },
+ "colas_tras_ultimo_activo": {
+  "con_velas_cero_operaciones": 1,
+  "sin_velas": 227
+ },
+ "cortes_con_reanudacion": {
+  "total": 34,
+  "dias_mediana": 1.0,
+  "con_salto_de_precio_x10": 26,
+  "lista_saltos": [
+   {
+    "simbolo": "AAVEDOWNUSDT",
+    "ultimo_activo": "2021-04-05",
+    "reanuda": "2021-04-07",
+    "dias": 1,
+    "ratio_precio": 19480.51948051948
+   },
+   {
+    "simbolo": "ADADOWNUSDT",
+    "ultimo_activo": "2021-04-06",
+    "reanuda": "2021-04-08",
+    "dias": 1,
+    "ratio_precio": 17241.379310344826
+   },
+   {
+    "simbolo": "BNBDOWNUSDT",
+    "ultimo_activo": "2021-04-12",
+    "reanuda": "2021-04-14",
+    "dias": 1,
+    "ratio_precio": 175331.23028391166
+   },
+   {
+    "simbolo": "BNXUSDT",
+    "ultimo_activo": "2023-02-15",
+    "reanuda": "2023-02-22",
+    "dias": 6,
+    "ratio_precio": 0.010585042219541615
+   },
+   {
+    "simbolo": "COCOSUSDT",
+    "ultimo_activo": "2021-01-18",
+    "reanuda": "2021-01-23",
+    "dias": 4,
+    "ratio_precio": 1112.0
+   },
+   {
+    "simbolo": "DOTDOWNUSDT",
+    "ultimo_activo": "2021-04-05",
+    "reanuda": "2021-04-07",
+    "dias": 1,
+    "ratio_precio": 20139.86013986014
+   },
+   {
+    "simbolo": "DOTDOWNUSDT",
+    "ultimo_activo": "2021-10-20",
+    "reanuda": "2021-10-22",
+    "dias": 1,
+    "ratio_precio": 119165.8391261172
+   },
+   {
+    "simbolo": "DREPUSDT",
+    "ultimo_activo": "2021-03-28",
+    "reanuda": "2021-04-02",
+    "dias": 4,
+    "ratio_precio": 100.33202305079571
+   },
+   {
+    "simbolo": "ETHDOWNUSDT",
+    "ultimo_activo": "2021-07-07",
+    "reanuda": "2021-07-09",
+    "dias": 1,
+    "ratio_precio": 103448.27586206897
+   },
+   {
+    "simbolo": "LINKDOWNUSDT",
+    "ultimo_activo": "2021-04-06",
+    "reanuda": "2021-04-08",
+    "dias": 1,
+    "ratio_precio": 21053.864168618267
+   },
+   {
+    "simbolo": "LTCDOWNUSDT",
+    "ultimo_activo": "2021-08-16",
+    "reanuda": "2021-08-18",
+    "dias": 1,
+    "ratio_precio": 174182.31081865687
+   },
+   {
+    "simbolo": "LUNAUSDT",
+    "ultimo_activo": "2022-05-12",
+    "reanuda": "2022-05-31",
+    "dias": 18,
+    "ratio_precio": 3124.9999999999995
+   },
+   {
+    "simbolo": "QUICKUSDT",
+    "ultimo_activo": "2023-07-16",
+    "reanuda": "2023-07-21",
+    "dias": 4,
+    "ratio_precio": 0.0009959731543624161
+   },
+   {
+    "simbolo": "STRAXUSDT",
+    "ultimo_activo": "2024-03-19",
+    "reanuda": "2024-03-28",
+    "dias": 8,
+    "ratio_precio": 0.09875086745315753
+   },
+   {
+    "simbolo": "SUNUSDT",
+    "ultimo_activo": "2021-06-13",
+    "reanuda": "2021-06-18",
+    "dias": 4,
+    "ratio_precio": 0.0010370119611825773
+   },
+   {
+    "simbolo": "SUSHIDOWNUSDT",
+    "ultimo_activo": "2021-03-22",
+    "reanuda": "2021-03-24",
+    "dias": 1,
+    "ratio_precio": 19801.980198019803
+   },
+   {
+    "simbolo": "SUSHIDOWNUSDT",
+    "ultimo_activo": "2021-09-22",
+    "reanuda": "2021-09-24",
+    "dias": 1,
+    "ratio_precio": 100910.42854515357
+   },
+   {
+    "simbolo": "SXPDOWNUSDT",
+    "ultimo_activo": "2021-03-09",
+    "reanuda": "2021-03-11",
+    "dias": 1,
+    "ratio_precio": 53191.48936170213
+   },
+   {
+    "simbolo": "SXPDOWNUSDT",
+    "ultimo_activo": "2021-04-12",
+    "reanuda": "2021-04-14",
+    "dias": 1,
+    "ratio_precio": 125925.92592592591
+   },
+   {
+    "simbolo": "TRXDOWNUSDT",
+    "ultimo_activo": "2021-09-12",
+    "reanuda": "2021-09-14",
+    "dias": 1,
+    "ratio_precio": 115269.34749620638
+   },
+   {
+    "simbolo": "UNIDOWNUSDT",
+    "ultimo_activo": "2021-08-16",
+    "reanuda": "2021-08-18",
+    "dias": 1,
+    "ratio_precio": 154385.96491228067
+   },
+   {
+    "simbolo": "VIDTUSDT",
+    "ultimo_activo": "2022-10-30",
+    "reanuda": "2022-11-09",
+    "dias": 9,
+    "ratio_precio": 0.09534127843986998
+   },
+   {
+    "simbolo": "XLMDOWNUSDT",
+    "ultimo_activo": "2021-08-25",
+    "reanuda": "2021-08-27",
+    "dias": 1,
+    "ratio_precio": 114411.520928305
+   },
+   {
+    "simbolo": "XRPDOWNUSDT",
+    "ultimo_activo": "2021-04-06",
+    "reanuda": "2021-04-08",
+    "dias": 1,
+    "ratio_precio": 17307.69230769231
+   },
+   {
+    "simbolo": "XTZDOWNUSDT",
+    "ultimo_activo": "2021-09-07",
+    "reanuda": "2021-09-09",
+    "dias": 1,
+    "ratio_precio": 80314.03416237271
+   },
+   {
+    "simbolo": "YFIDOWNUSDT",
+    "ultimo_activo": "2021-05-30",
+    "reanuda": "2021-06-01",
+    "dias": 1,
+    "ratio_precio": 87096.7741935484
+   }
+  ]
+ },
+ "relistados_tras_30_dias": {
+  "total": 8,
+  "lista": [
+   {
+    "simbolo": "BCHDOWNUSDT",
+    "fin_episodio": "2020-11-08",
+    "nuevo_episodio": "2021-04-15",
+    "ratio_precio": 1.3740038472107723
+   },
+   {
+    "simbolo": "BCHUPUSDT",
+    "fin_episodio": "2020-11-08",
+    "nuevo_episodio": "2021-04-15",
+    "ratio_precio": 1.022390348635109
+   },
+   {
+    "simbolo": "CVCUSDT",
+    "fin_episodio": "2022-12-08",
+    "nuevo_episodio":

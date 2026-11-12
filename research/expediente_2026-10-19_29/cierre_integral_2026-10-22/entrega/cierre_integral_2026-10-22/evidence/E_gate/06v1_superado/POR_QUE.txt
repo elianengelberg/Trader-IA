@@ -1,0 +1,7 @@
+06 (v1, 931ff4f8790786f2a3477fb09c184ded022f1d203a73e0370a9526758b7c09ec) queda SUPERADO por 06v2.
+Motivo, demostrado en logs/E/E2_final_suite_gate.log: `ruff check packages tests scripts` (el paso de lint de la CI que el
+propio 06 deja) falla con 5 errores en scripts/ci_gate.py (S603, S607, S314, RUF100, PTH123). Con 06 v1 la CI real fallaría
+en el lint antes de correr las pruebas. La suite (1985/1985) y el gate (pass) no se ven afectados: ci_gate.py no es una prueba.
+06v2 cambia SOLO scripts/ci_gate.py, con los idiomas del propio repositorio: ejecutable de git resuelto con shutil.which y
+`noqa: S603 - fixed argv, resolved executable` (como tia/backtest/holdout.py), `noqa: S314` con su motivo (como
+tia/data/intel.py), Path.open y sin el noqa sobrante. ci.yml y .gitignore no cambian. Ninguna comprobación del gate cambia.

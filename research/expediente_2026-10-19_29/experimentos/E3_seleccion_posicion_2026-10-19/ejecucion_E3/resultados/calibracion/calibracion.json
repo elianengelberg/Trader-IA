@@ -1,0 +1,102 @@
+{
+ "n": 340,
+ "simulaciones": 1000,
+ "B": 1999,
+ "semilla": 20261023,
+ "bandas": {
+  "0.05": [
+   0.036,
+   0.064
+  ],
+  "0.025": [
+   0.015,
+   0.035
+  ]
+ },
+ "H2_H3": {
+  "G1_ell13": {
+   "rechazo_005": 0.07,
+   "rechazo_0025": 0.045,
+   "dentro_banda_005": false,
+   "dentro_banda_0025": false,
+   "sobre_rechaza": true,
+   "potencia_mu30_005": 0.689,
+   "potencia_mu30_0025": 0.583
+  },
+  "G2_ell13": {
+   "rechazo_005": 0.053,
+   "rechazo_0025": 0.028,
+   "dentro_banda_005": true,
+   "dentro_banda_0025": true,
+   "sobre_rechaza": false,
+   "potencia_mu30_005": 0.551,
+   "potencia_mu30_0025": 0.441
+  },
+  "G3_ell13": {
+   "rechazo_005": 0.057,
+   "rechazo_0025": 0.034,
+   "dentro_banda_005": true,
+   "dentro_banda_0025": true,
+   "sobre_rechaza": false,
+   "potencia_mu30_005": 0.719,
+   "potencia_mu30_0025": 0.616
+  },
+  "G4_ell13": {
+   "rechazo_005": 0.042,
+   "rechazo_0025": 0.022,
+   "dentro_banda_005": true,
+   "dentro_banda_0025": true,
+   "sobre_rechaza": false,
+   "potencia_mu30_005": 0.677,
+   "potencia_mu30_0025": 0.561
+  },
+  "G5_ell13": {
+   "rechazo_005": 0.051,
+   "rechazo_0025": 0.021,
+   "dentro_banda_005": true,
+   "dentro_banda_0025": true,
+   "sobre_rechaza": false,
+   "potencia_mu30_005": 0.648,
+   "potencia_mu30_0025": 0.502
+  },
+  "G1_ell26": {
+   "rechazo_005": 0.062,
+   "rechazo_0025": 0.039,
+   "sobre_rechaza": true
+  },
+  "G2_ell26": {
+   "rechazo_005": 0.051,
+   "rechazo_0025": 0.022,
+   "sobre_rechaza": false
+  },
+  "G3_ell26": {
+   "rechazo_005": 0.063,
+   "rechazo_0025": 0.032,
+   "sobre_rechaza": false
+  },
+  "G4_ell26": {
+   "rechazo_005": 0.061,
+   "rechazo_0025": 0.03,
+   "sobre_rechaza": false
+  },
+  "G5_ell26": {
+   "rechazo_005": 0.061,
+   "rechazo_0025": 0.03,
+   "sobre_rechaza": false
+  }
+ },
+ "H1": {
+  "L4": {
+   "rechazo_005": 0.044,
+   "rechazo_0025": 0.022,
+   "dentro_banda_005": true,
+   "dentro_banda_0025": true,
+   "sobre_rechaza": false
+  }
+ },
+ "decision": {
+  "H2_H3": "sobre-rechazo en ['G1_ell13']: corresponde repetir con ell=26 (v3 \u00a75.3)",
+  "H1": "L=4 aceptado"
+ },
+ "segundos": 17.9
+}

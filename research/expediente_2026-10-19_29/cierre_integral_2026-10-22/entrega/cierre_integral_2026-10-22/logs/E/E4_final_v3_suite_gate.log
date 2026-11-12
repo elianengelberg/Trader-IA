@@ -1,0 +1,18 @@
+== suite completa del árbol final v3 (A + 05v2 + 03 + 04 + 06v3) como la CI parcheada: 2026-10-25T16:53:28Z
+python: Python 3.11.17 · freeze: a1a96cac94471aac · carga al inicio: 0.23 0.48 0.38 1/106 1539
+== ruff como la CI parcheada (packages tests scripts)
+All checks passed!
+ruff rc=0
+comando: PYTHONPATH=packages/tia/src python -B -m pytest tests -q -p no:cacheprovider --junitxml=ci-evidence/junit.xml
+pytest rc=0 · duración 407 s · carga al final: 0.92 0.87 0.61 1/108 2129
+JUnit: 1985 pruebas · 1985 pasan · 0 fallan · 0 errores · 0 omitidas · 404.830 s
+== gate (scripts/ci_gate.py v3), como el paso de la CI
+commit `72ffae5d2698440c8f1afaff12e07bd8adde66fb` · tree `44850cfcbf53c3f8223d38a92031f4402f8ffb32` · Python 3.11.17
+tests 1985 · passed 1985 · failed 0 · errors 0 · skipped 0 · version guard 7/7
+engine_version 1.1.0 · pip freeze `a1a96cac94471aac…`
+**gate: pass**
+gate rc=0
+== alembic upgrade head desde cero (copia aparte, como la CI)
+alembic rc=0
+estado del árbol tras la suite: 16 entradas (esperado 16)
+fin 2026-10-25T17:00:17Z

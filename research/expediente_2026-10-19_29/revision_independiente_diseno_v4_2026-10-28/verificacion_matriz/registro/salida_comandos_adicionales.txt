@@ -1,0 +1,60 @@
+## 1. P0 oficial y P0 R1prima (E3R/P0_resultado*.json)
+P0_resultado.json {'inicio_H': '2023-05-01', 'semanas_H': 160, 'evaluables_H': 160, 'veredicto': 'VALIDO', 'componentes': {'i': '2020-05-11', 'ii_prima': '2023-05-01', 'ultima_falla_en_alcance': '2023-04-27', 'iv_prima_anio': 2018}}
+  fallas: [('BKRWUSDT', '2021-02-19', 'T', True), ('DOTDOWNUSDT', '2023-04-27', 'T', True), ('DOTUPUSDT', '2023-04-27', 'T', True), ('TRXDOWNUSDT', '2023-04-27', 'T', True)]
+P0_resultado_R1prima.json {'inicio_H': '2021-02-22', 'semanas_H': 274, 'evaluables_H': 274, 'veredicto': 'VALIDO', 'componentes': {'i': '2020-05-11', 'ii_prima': '2021-02-22', 'ultima_falla_en_alcance': '2021-02-19', 'iv_prima_anio': 2018}}
+  fallas: [('BKRWUSDT', '2021-02-19', 'T', True), ('DOTDOWNUSDT', '2023-04-27', 'T', False), ('DOTUPUSDT', '2023-04-27', 'T', False), ('TRXDOWNUSDT', '2023-04-27', 'T', False)]
+## 2. marcas de modificación (segundos) de los archivos de la cronología
+19:43:13.957 CONGELACION_ADENDA_R.txt
+19:44:39.460 p0_auditoria_interna.py
+19:44:41.632 P0_resultado.json
+19:45:18.282 p0b_verificar_suspension.py
+19:46:10.237 P0d_potencia_H1_segun_ventana.txt
+19:46:53.865 CORRECCION_R1prima_alcance_por_clase.md
+19:46:57.953 CONGELACION_R1prima.txt
+19:47:23.060 p0_auditoria_interna_R1prima.py
+19:47:23.061 REGISTRO_P0.txt
+19:47:23.314 P0_resultado_R1prima.json
+## 3. listas fijas por lunes (F3)
+2023-04-24 apalancados: ['ADADOWNUSDT', 'BTCDOWNUSDT', 'ETHDOWNUSDT']
+2023-05-08 apalancados: ['BTCDOWNUSDT', 'ETHDOWNUSDT']
+nº de apalancados por lunes: mín/máx en los 439 lunes: 0 30
+lunes en que algún símbolo BKRW* figura en lista_fija : 0
+lunes en que algún símbolo BKRW* figura en apalancados : 0
+lunes en que algún símbolo BKRW* figura en baja_volatilidad_o_duplicado : 0
+lunes en que algún símbolo BKRW* figura en elegibles : 0
+## 4. vs3 / acciones (REP/segunda_pasada/resoluciones_manuales.json)
+claves eventos: 47 | sin_fecha: 8 | acciones: {'confirmar': 37, 'descartar': 1, 'fecha_corregida': 4, 'C_explicada': 5}
+vs3 muestra_pasada1==True: ['ETHBEARUSDT|2020-03-31', 'ETHBULLUSDT|2020-03-31', 'AUTOUSDT|2023-04-18', 'DOTUPUSDT|2023-04-27', 'CREAMUSDT|2023-09-22', 'GFTUSDT|2023-09-22', 'ANTUSDT|2024-02-20', 'DOCKUSDT|2024-07-22', 'POLSUSDT|2024-07-22', 'KP3RUSDT|2024-11-06']
+  BKRWUSDT|2021-02-19 muestra_pasada1= False resultado= descartar E_texto= 2021-02-19
+  DOTDOWNUSDT|2023-04-27 muestra_pasada1= False resultado= fecha_corregida E_texto= 2023-05-10
+  DOTUPUSDT|2023-04-27 muestra_pasada1= True resultado= fecha_corregida E_texto= 2023-05-10
+  TRXDOWNUSDT|2023-04-27 muestra_pasada1= False resultado= fecha_corregida E_texto= 2023-05-09
+  LINKUPUSDT|2023-04-27 muestra_pasada1= False resultado= fecha_corregida E_texto= 2023-05-11
+## 5. omitidos
+TRXUPUSDT en panel: True | evento pasada1: False | evento pasada2: False
+LINKDOWNUSDT en panel: True | evento pasada1: False | evento pasada2: False
+GTOUSDT en panel: True | evento pasada1: False | evento pasada2: False
+BTCSTUSDT en panel: True | evento pasada1: False | evento pasada2: False
+SRMUSDT en panel: True | evento pasada1: False | evento pasada2: False
+TRIBEUSDT en panel: True | evento pasada1: False | evento pasada2: False
+KEYUSDT en panel: True | evento pasada1: False | evento pasada2: False
+BKRWUSDT en panel: True | evento pasada1: True | evento pasada2: True
+fallas ventana A (pasada2): [('TRXDOWNUSDT', '2023-05-09', False), ('TRXUPUSDT', '2023-05-09', True), ('DOTDOWNUSDT', '2023-05-10', False), ('DOTUPUSDT', '2023-05-10', False), ('LINKDOWNUSDT', '2023-05-11', True), ('LINKUPUSDT', '2023-05-11', False)] | inicio 2023-05-15 | semanas 158
+2023 (pasada2, iv'): {'salidas': 21, 'en_alcance': 19, 'ANUNCIO': 6, 'SUSPENSION': 18, 'COLA_CERO': 0, 'sin_evidencia': 1, 'pct_sin_evidencia': 5.3}
+2023 (P0 R1 literal): {'salidas': 24, 'en_alcance': 22, 'ANUNCIO': 7, 'SUSPENSION': 21, 'COLA_CERO': 0, 'sin_evidencia': 1, 'pct_sin_evidencia': 4.5}
+evidencia interna vs anuncio (P0 oficial, suma de años): en_alcance=220 ANUNCIO=32 SUSPENSION=219 COLA_CERO=1
+## 6. aritmética de fechas
+lunes de 2023-05-01 a 2026-05-18: 160
+lunes de 2023-05-15 a 2026-05-18: 158
+lunes de 2021-02-22 a 2026-05-18: 274
+lunes de 2023-05-29 a 2026-05-18: 156
+lunes de 2020-05-11 a 2026-05-18: 315
+GTO: último activo 2022-11-27 -> GFT 2023-09-22: diferencia 299 días; inactivos 298
+LUNA viejo: último activo 2022-05-12 -> LUNC primer día 2022-09-09: inactivos 119
+UST: último 2022-05-12 -> USTC primero 2023-03-10: inactivos 301
+GTOUSDT [['2019-07-01', '2022-11-27']]
+GFTUSDT [['2023-09-22', '2024-12-02']]
+LUNCUSDT [['2022-09-09', '2026-05-31']]
+USTUSDT [['2021-12-24', '2022-05-12']]
+USTCUSDT [['2023-03-10', '2026-05-31']]
+congelación R 19:43:13.957 -> P0 19:44:40.432: segundos = 86.5

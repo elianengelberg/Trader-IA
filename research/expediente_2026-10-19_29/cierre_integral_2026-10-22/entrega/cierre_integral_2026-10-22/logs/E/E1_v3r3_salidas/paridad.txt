@@ -1,0 +1,8 @@
+2026-10-22 23:40:06 [info     ] backtest_complete              bars=58402 component=backtest.engine final_equity=98651.46 run_id=bt_JRA6C1BXE9KT0NKNPJYMGFS8 trades=171
+2026-10-22 23:40:06 [info     ] backtest_complete              bars=58402 component=backtest.engine final_equity=99714.95 run_id=bt_XSHE1RRVJPBVCSVC6H9SZMN8 trades=218
+2026-10-22 23:40:08 [info     ] backtest_complete              bars=58402 component=backtest.engine final_equity=98833.09 run_id=bt_EJACMZD47WC6MZHN94AP1EV3 trades=744
+2026-10-22 23:40:12 [info     ] backtest_complete              bars=58402 component=backtest.engine final_equity=97838.8 run_id=bt_A1THPJ94RHTAW4PQHT3Q4BFH trades=959
+P1 629 1418ebccb21c 0ebbe7234446 568ad0f3185f bt_EJACMZD47WC6MZHN94AP1EV3
+P2 139 075c89b57b43 d03f117df87a 74a2dc8b4c69 bt_JRA6C1BXE9KT0NKNPJYMGFS8
+P3 185 60583835ba17 46c01be279da ea61c6b7b66b bt_XSHE1RRVJPBVCSVC6H9SZMN8
+S1 795 8b153452ef81 ad1013dcc713 fca2fa53eb76 bt_A1THPJ94RHTAW4PQHT3Q4BFH

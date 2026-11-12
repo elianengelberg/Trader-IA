@@ -1,0 +1,12 @@
+== Corrida SUPLEMENTARIA de R19 (registrador pasivo; no decide nada): 24 corridas
+celda                    n  rc!=0  programadas(med)  terminadas==programadas  máx_pendientes  vaciado1_s(med/máx)  vaciado_en_stop_s(máx)  stop_s(máx)  persistencia_completa  ciclos_fondo(med)
+r19_base|K0|park0        3  0         12444         3/3                      9658          6.619/7.625           0.000                 0.000        3/3                     148951
+r19_base|K0|park1        3  0            31         3/3                        31          0.053/0.059           0.000                 0.000        3/3                          0
+r19_base|K8|park0        3  0           220         3/3                       798          0.314/1.305           0.000                 0.000        3/3                       2265
+r19_base|K8|park1        3  0            31         3/3                        31          0.133/0.153           0.000                 0.000        3/3                          0
+r19_cand|K0|park0        3  0         14462         3/3                      9562          7.482/7.590           0.000                 0.000        3/3                     173169
+r19_cand|K0|park1        3  0            31         3/3                        31          0.059/0.077           0.000                 0.000        3/3                          0
+r19_cand|K8|park0        3  0           186         3/3                       106          0.219/0.256           0.000                 0.000        3/3                       1855
+r19_cand|K8|park1        3  0            31         3/3                        31          0.104/0.115           0.000                 0.000        3/3                          0
+-- evolución de la cola (001_r19_base_K0_park0_r3): 31 muestras; pendientes máx 6526; primeras/últimas: [(0.98, 0, 'ciclo'), (1.06, 31, 'vaciad'), (1.23, 375, 'ciclo'), (1.48, 890, 'ciclo')] … [(6.52, 0, 'stop_f'), (6.52, 0, 'vaciad'), (6.52, 0, 'vaciad'), (6.54, 0, 'fin')]
+-- evolución de la cola (006_r19_cand_K0_park0_r3): 21 muestras; pendientes máx 3188; primeras/últimas: [(0.98, 0, 'ciclo'), (1.05, 31, 'vaciad'), (1.23, 418, 'ciclo'), (1.48, 768, 'ciclo')] … [(4.04, 0, 'stop_f'), (4.04, 0, 'vaciad'), (4.04, 0, 'vaciad'), (4.07, 0, 'fin')]

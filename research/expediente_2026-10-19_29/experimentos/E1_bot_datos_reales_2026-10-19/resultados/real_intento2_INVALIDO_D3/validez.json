@@ -1,0 +1,26 @@
+{
+ "invariancia_prefijo_real": true,
+ "solo_largos_sin_cortos": true,
+ "stops_y_duraciones": false,
+ "problemas": [
+  "S2|P1: round trip de más de 2000 barras",
+  "S4|P1: round trip de más de 2000 barras",
+  "P1: round trip de más de 2000 barras",
+  "S6|P1: round trip de más de 2000 barras",
+  "S5|P1: round trip de más de 2000 barras",
+  "P3: round trip de más de 2000 barras",
+  "S2|P3: round trip de más de 2000 barras",
+  "S3|P3: round trip de más de 2000 barras",
+  "S4|P3: round trip de más de 2000 barras",
+  "S5|P3: round trip de más de 2000 barras",
+  "S6|P3: round trip de más de 2000 barras",
+  "S1: round trip de más de 2000 barras",
+  "S2|S1: round trip de más de 2000 barras",
+  "S3|S1: round trip de más de 2000 barras",
+  "S4|S1: round trip de más de 2000 barras",
+  "S5|S1: round trip de más de 2000 barras",
+  "S6|S1: round trip de más de 2000 barras",
+  "VALIDEZ|S1|prefijo70: round trip de más de 2000 barras"
+ ],
+ "todo_ok": false
+}

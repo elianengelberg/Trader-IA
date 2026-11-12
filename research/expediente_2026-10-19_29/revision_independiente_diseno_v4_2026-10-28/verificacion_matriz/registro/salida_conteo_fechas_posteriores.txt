@@ -1,0 +1,28 @@
+eventos 2023-2024 con alguna fecha candidata posterior a E: 23
+   DOTDOWNUSDT 2023-04-27 T 14 d
+   DOTUPUSDT 2023-04-27 T 14 d
+   LINKUPUSDT 2023-04-27 B 14 d
+   TRXDOWNUSDT 2023-04-27 T 14 d
+   YFIIUSDT 2023-08-22 A 92 d
+   ARKUSDT 2023-09-22 C_no_explicada 7 d
+   CREAMUSDT 2023-09-22 C_no_explicada 7 d
+   FTTUSDT 2023-09-22 C_no_explicada 7 d
+   GFTUSDT 2023-09-22 C_no_explicada 7 d
+   IQUSDT 2023-09-22 C_no_explicada 7 d
+   BTSUSDT 2023-12-07 A 91 d
+   PERLUSDT 2023-12-07 A 91 d
+   WTCUSDT 2023-12-07 A 91 d
+   ANTUSDT 2024-02-20 A 91 d
+   MULTIUSDT 2024-02-20 A 91 d
+   XMRUSDT 2024-02-20 A 91 d
+   BONDUSDT 2024-07-22 A 93 d
+   DOCKUSDT 2024-07-22 A 93 d
+   MDXUSDT 2024-07-22 A 93 d
+   POLSUSDT 2024-07-22 A 93 d
+   KP3RUSDT 2024-11-06 A 93 d
+   OOKIUSDT 2024-11-06 A 93 d
+   UNFIUSDT 2024-11-06 A 93 d
+con fecha posterior >= 14 días: 18
+con fecha posterior >= 28 días: 14
+nombres con >= 28 días: ['YFII', 'BTS', 'PERL', 'WTC', 'ANT', 'MULTI', 'XMR', 'BOND', 'DOCK', 'MDX', 'POLS', 'KP3R', 'OOKI', 'UNFI']
+con discrepancia (cualquier signo) y E en 2023-2024: 25

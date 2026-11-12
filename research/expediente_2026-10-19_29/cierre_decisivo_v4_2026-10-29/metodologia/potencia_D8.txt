@@ -1,0 +1,27 @@
+Validación (v3 §7.2, 345 semanas, 6,75 años): H1 IC 0,02 α 0,025 → [0.64, 0.87] (v3 0,56–0,79; la v3 usa un EE más conservador) · H2 10 %/año α 0,025 → [0.11, 0.18] (v3 0,11–0,17)
+
+=== 158 semanas (3.03 años) ===
+H1 φ=0.0 α=0.025: potencia por IC {0.01: [0.12, 0.18], 0.02: [0.35, 0.55], 0.03: [0.65, 0.88]} · MDE80 IC = 0.0267–0.0357
+H1 φ=0.0 α=0.05: potencia por IC {0.01: [0.2, 0.28], 0.02: [0.47, 0.67], 0.03: [0.76, 0.93]} · MDE80 IC = 0.0237–0.0317
+H1 φ=0.1 α=0.025: potencia por IC {0.01: [0.11, 0.16], 0.02: [0.3, 0.47], 0.03: [0.57, 0.81]} · MDE80 IC = 0.0296–0.0394
+H1 φ=0.1 α=0.05: potencia por IC {0.01: [0.18, 0.24], 0.02: [0.41, 0.6], 0.03: [0.69, 0.88]} · MDE80 IC = 0.0262–0.0350
+H2 α=0.025: potencia por exceso neto {'5%': [0.04, 0.05], '10%': [0.07, 0.1], '20%': [0.17, 0.29], '30%': [0.32, 0.55]} · con TE 41–59 %: 10 %/año → [0.05, 0.06] · MDE80 = 40%–56% por año
+H2 α=0.05: potencia por exceso neto {'5%': [0.08, 0.1], '10%': [0.13, 0.17], '20%': [0.26, 0.4], '30%': [0.44, 0.67]} · con TE 41–59 %: 10 %/año → [0.09, 0.11] · MDE80 = 36%–50% por año
+Cota P(RESPALDADA) ≤ P(H2 rechaza a 0,05): 10 %/año → [0.13, 0.17] · 20 %/año → [0.26, 0.4]
+  Efecto IC 0.02 y 10 %/año (desvío 0.16, TE 0.35): P(ninguna rechaza) ≈ 0.60; bajo el nulo ≈ 0.95; razón de verosimilitud ≈ 0.64
+  Efecto IC 0.02 y 10 %/año (desvío 0.12, TE 0.25): P(ninguna rechaza) ≈ 0.40; bajo el nulo ≈ 0.95; razón de verosimilitud ≈ 0.42
+  Efecto IC 0.03 y 20 %/año (desvío 0.16, TE 0.35): P(ninguna rechaza) ≈ 0.29; bajo el nulo ≈ 0.95; razón de verosimilitud ≈ 0.30
+  Efecto IC 0.03 y 20 %/año (desvío 0.12, TE 0.25): P(ninguna rechaza) ≈ 0.08; bajo el nulo ≈ 0.95; razón de verosimilitud ≈ 0.09
+
+=== 160 semanas (3.07 años) ===
+H1 φ=0.0 α=0.025: potencia por IC {0.01: [0.12, 0.18], 0.02: [0.35, 0.56], 0.03: [0.66, 0.89]} · MDE80 IC = 0.0266–0.0354
+H1 φ=0.0 α=0.05: potencia por IC {0.01: [0.2, 0.28], 0.02: [0.47, 0.68], 0.03: [0.77, 0.94]} · MDE80 IC = 0.0236–0.0315
+H1 φ=0.1 α=0.025: potencia por IC {0.01: [0.11, 0.16], 0.02: [0.3, 0.48], 0.03: [0.57, 0.82]} · MDE80 IC = 0.0294–0.0392
+H1 φ=0.1 α=0.05: potencia por IC {0.01: [0.18, 0.24], 0.02: [0.42, 0.6], 0.03: [0.69, 0.89]} · MDE80 IC = 0.0261–0.0348
+H2 α=0.025: potencia por exceso neto {'5%': [0.04, 0.05], '10%': [0.07, 0.1], '20%': [0.17, 0.29], '30%': [0.32, 0.56]} · con TE 41–59 %: 10 %/año → [0.05, 0.06] · MDE80 = 40%–56% por año
+H2 α=0.05: potencia por exceso neto {'5%': [0.08, 0.1], '10%': [0.13, 0.17], '20%': [0.26, 0.4], '30%': [0.44, 0.68]} · con TE 41–59 %: 10 %/año → [0.09, 0.11] · MDE80 = 35%–50% por año
+Cota P(RESPALDADA) ≤ P(H2 rechaza a 0,05): 10 %/año → [0.13, 0.17] · 20 %/año → [0.26, 0.4]
+  Efecto IC 0.02 y 10 %/año (desvío 0.16, TE 0.35): P(ninguna rechaza) ≈ 0.60; bajo el nulo ≈ 0.95; razón de verosimilitud ≈ 0.63
+  Efecto IC 0.02 y 10 %/año (desvío 0.12, TE 0.25): P(ninguna rechaza) ≈ 0.40; bajo el nulo ≈ 0.95; razón de verosimilitud ≈ 0.42
+  Efecto IC 0.03 y 20 %/año (desvío 0.16, TE 0.35): P(ninguna rechaza) ≈ 0.28; bajo el nulo ≈ 0.95; razón de verosimilitud ≈ 0.30
+  Efecto IC 0.03 y 20 %/año (desvío 0.12, TE 0.25): P(ninguna rechaza) ≈ 0.08; bajo el nulo ≈ 0.95; razón de verosimilitud ≈ 0.09

@@ -1,0 +1,12 @@
+{
+ "inicio_utc": "2026-10-21T21:59:54.576683+00:00",
+ "huellas_codigo": {
+  "sim1.py": "711d9a9f989a8f8b9ebb812cb34b45b9b5ad3c40d178d64edcc1567a9bbe9f9d",
+  "sim1_comun.py": "676d8b1dd5a10f502409d916be9949d338f7ed8551a21e3d7df8d9bbe4e2003d",
+  "e1.py": "a5523096f82d08078a03a5b66488d60bbc527af9aa2767a52d236324373118aa",
+  "e1_comun.py": "b61cab579c86457e7b1d0dd1e27f16fe8dfe06db62fcb4c25aa058bc1641f882",
+  "tia/backtest/engine.py": "85965ec56298519ca107d2bb61f301fe22a02584b5fc98917d147d81e036da88",
+  "tia/execution/paper.py": "05569d169edc8faacb0d7720747005fd3249ed2247acb8063500dc7e518bfe2b"
+ },
+ "m1_promocion_sha256": "e73f85c6c388e155bf41c1441b701a8b2dcfaf0bb536619cdde063fece13e6eb"
+}

@@ -1,0 +1,48 @@
+OK    K0_control_sin_guarda                                esperado=fail rc=1 prov=True razón=sí · the JUnit report and the session disagree (missing ['tests.integration.test_engine_version_contract::test_a_cl
+OK    K1_asignacion_duplicada_primera_1_0_0                esperado=fail rc=1 prov=True razón=sí · the JUnit report and the session disagree (missing ['tests.integration.test_engine_version_contract::test_a_cl
+OK    K2_dentro_de_if                                      esperado=fail rc=1 prov=True razón=sí · the JUnit report and the session disagree (missing ['tests.integration.test_engine_version_contract::test_a_cl
+OK    K3_dentro_de_try                                     esperado=fail rc=1 prov=True razón=sí · the JUnit report and the session disagree (missing ['tests.integration.test_engine_version_contract::test_a_cl
+OK    K4_desempaquetado_de_tupla                           esperado=fail rc=1 prov=True razón=sí · the JUnit report and the session disagree (missing ['tests.integration.test_engine_version_contract::test_a_cl
+OK    K5_importada_de_otro_modulo                          esperado=fail rc=1 prov=True razón=sí · the JUnit report and the session disagree (missing ['tests.integration.test_engine_version_contract::test_a_cl
+OK    K6_comentario_y_docstring_enganosos                  esperado=fail rc=1 prov=True razón=sí · the JUnit report and the session disagree (missing ['tests.integration.test_engine_version_contract::test_a_cl
+OK    K7_sintaxis_rota                                     esperado=fail rc=1 prov=True razón=sí · the JUnit report and the session disagree (missing ['tests.integration.test_engine_version_contract::test_a_cl
+OK    K8_bytes_no_utf8                                     esperado=fail rc=1 prov=True razón=sí · the JUnit report and the session disagree (missing ['tests.integration.test_engine_version_contract::test_a_cl
+OK    K9_expresion                                         esperado=fail rc=1 prov=True razón=sí · the JUnit report and the session disagree (missing ['tests.integration.test_engine_version_contract::test_a_cl
+OK    K10_anotada                                          esperado=fail rc=1 prov=True razón=sí · the JUnit report and the session disagree (missing ['tests.integration.test_engine_version_contract::test_a_cl
+OK    J1_casi_todo_omitido                                 esperado=fail rc=1 prov=True razón=sí · the JUnit report and the session disagree (missing [], extra [], different ['tests.adversarial.test_mm_fill_pa
+OK    J2_subconjunto_de_4_pruebas                          esperado=fail rc=1 prov=True razón=sí · the JUnit report and the session disagree (missing ['tests.adversarial.test_mm_fill_paths_synthetic::test_a_ca
+OK    J3_guarda_xfail                                      esperado=fail rc=1 prov=True razón=sí · the JUnit report and the session disagree (missing [], extra [], different ['tests.integration.test_engine_ver
+OK    J4_guarda_duplicada                                  esperado=fail rc=1 prov=True razón=sí · the JUnit report lists tests.integration.test_engine_version_contract::test_a_rejected_close_is_sent_again_as_
+OK    J5_guarda_reemplazada_por_7_triviales                esperado=fail rc=1 prov=True razón=sí · the JUnit report and the session disagree (missing ['tests.integration.test_engine_version_contract::test_a_cl
+OK    J6_junit_inexistente                                 esperado=fail rc=1 prov=True razón=sí · the JUnit report ci-evidence/junit.xml is missing or empty
+OK    J7_junit_real_con_otro_interprete_del_gate           esperado=pass rc=0 prov=True razón=sí · 
+OK    N01_declaracion_duplicada_mismo_valor                esperado=fail rc=1 prov=True razón=sí · the engine binds ENGINE_VERSION 2 times (lines [107, 108]); exactly one is allowed
+OK    N02_declaracion_condicional_if_else                  esperado=fail rc=1 prov=True razón=sí · the engine binds ENGINE_VERSION 2 times (lines [108, 110]); exactly one is allowed
+OK    N03_parcheada_desde_otro_modulo                      esperado=fail rc=1 prov=True razón=sí · ENGINE_VERSION is bound or patched outside the engine module: ['packages/tia/src/tia/core/parche_adversario.py
+FALLA N04_modulo_sustituido_en_el_path_REAL                esperado=fail rc=1 prov=True razón=NO · the suite ran ['tests/integration/test_engine_version_contract.py'], not ['tests']
+OK    N05_sintaxis_rota_con_junit_completo                 esperado=fail rc=1 prov=True razón=sí · the engine source cannot be read as Python (SyntaxError: invalid syntax (engine.py, line 108))
+OK    N06_junit_truncado                                   esperado=fail rc=1 prov=True razón=sí · the JUnit report does not parse (unclosed token: line 1, column 4328)
+OK    N07_junit_vacio                                      esperado=fail rc=1 prov=True razón=sí · the JUnit report ci-evidence/junit.xml is missing or empty
+OK    N08_junit_dice_pasada_la_que_fallo                   esperado=fail rc=1 prov=True razón=sí · the JUnit report and the session disagree (missing [], extra [], different ['tests.integration.test_backtest_s
+OK    N09a_junit_de_otra_corrida                           esperado=fail rc=1 prov=True razón=sí · the JUnit report is from another run (nonce 'otra-corrida')
+OK    N09b_sesion_de_otra_corrida                          esperado=fail rc=1 prov=True razón=sí · the session record is from another run (nonce 'otra')
+OK    N09c_sin_nonce_en_el_entorno                         esperado=fail rc=1 prov=True razón=sí · CI_RUN_NONCE is not set: this run cannot be told apart from another
+OK    N10_suite_reducida_con_k_REAL                        esperado=fail rc=1 prov=True razón=sí · the suite was narrowed (keyword='engine_version_contract')
+OK    N11_deselect_REAL                                    esperado=fail rc=1 prov=True razón=sí · the suite ran ['tests/integration/test_engine_version_contract.py'], not ['tests']
+OK    N12_guarda_con_nombres_correctos_y_contenido_trivial esperado=fail rc=1 prov=True razón=sí · the guard tests/integration/test_engine_version_contract.py is not the policy's (sha256 0aff92e11b936d975df886
+OK    N13_resultado_de_la_guarda_no_coincide               esperado=fail rc=1 prov=True razón=sí · the JUnit report and the session disagree (missing [], extra [], different ['tests.integration.test_engine_ver
+OK    N14_dependencias_distintas_de_las_fijadas_SIMULADO   esperado=fail rc=1 prov=True razón=sí · installed versions differ from the pins: ['httpx 0.27.2 (pinned 0.28.1)']
+OK    N15_otro_python_SIMULADO                             esperado=fail rc=1 prov=True razón=sí · the tests ran on Python '3.12.7'; the policy requires 3.11
+OK    N16a_artefactos_viejos_de_otra_corrida               esperado=fail rc=1 prov=True razón=sí · the session record is from another run (nonce 'local-pg-79d30150e0133522')
+OK    N16b_archivo_alterado_despues_de_la_corrida          esperado=fail rc=1 prov=True razón=sí · the working tree changed after the tests started (c7688384d8005be4f95b378f8699b38a5b81dfe7 then, 382afb55a34a9
+OK    N17a_sesion_ilegible                                 esperado=fail rc=1 prov=True razón=sí · the session record ci-evidence/session.json is missing or unreadable (Expecting property name enclosed in doub
+OK    N17b_politica_ausente_error_interno                  esperado=fail rc=1 prov=True razón=sí · internal error in the gate: FileNotFoundError: [Errno 2] No such file or directory: 'scripts/ci_gate_policy.js
+OK    N17c_atributos_junit_inconsistentes                  esperado=fail rc=1 prov=True razón=sí · the JUnit testsuite says tests=abc but holds 2032
+OK    N18_omision_no_permitida                             esperado=fail rc=1 prov=True razón=sí · 1 tests skipped or xfailed outside the allow-list: ['tests.unit.test_walkforward::test_a_plan_passes_its_own_l
+OK    N19_xpass                                            esperado=fail rc=1 prov=True razón=sí · 0 failed, 0 errored, 1 passed unexpectedly
+OK    N20_control_corrida_honesta                          esperado=pass rc=0 prov=True razón=sí · 
+OK    N21_job_pg_con_pruebas_pg_omitidas                   esperado=fail rc=1 prov=True razón=sí · 10 tests skipped or xfailed outside the allow-list: ['tests.integration.test_backtest_store_concurrency::test_
+OK    N25_versionado_ignorado_alterado_despues             esperado=fail rc=1 prov=True razón=sí · the working tree changed after the tests started (c7688384d8005be4f95b378f8699b38a5b81dfe7 then, e63959bfdf2b1
+OK    N26_archivo_nuevo_plantado_despues                   esperado=fail rc=1 prov=True razón=sí · the working tree changed after the tests started (c7688384d8005be4f95b378f8699b38a5b81dfe7 then, 16c231cb793c8
+OK    N24_politica_debilitada_despues_de_la_corrida        esperado=fail rc=1 prov=True razón=sí · the working tree changed after the tests started (c7688384d8005be4f95b378f8699b38a5b81dfe7 then, 83b77c7b27b0a
+RESULTADO: 1 de 47 casos con un desenlace distinto del esperado (18 originales, 29 nuevos)

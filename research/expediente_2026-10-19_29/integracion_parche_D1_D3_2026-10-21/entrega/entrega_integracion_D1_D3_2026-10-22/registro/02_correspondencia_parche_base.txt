@@ -1,0 +1,19 @@
+== Correspondencia parche ↔ base: 2026-10-21T23:20:15Z
+clon aislado: /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_parche_D1_D3_2026-10-21/base (git clone --no-local; HEAD 72ffae5d2698440c8f1afaff12e07bd8adde66fb; remotos: origin	/home/user/Trader-IA (fetch))
+blob engine.py en 72ffae5: 1a1ba3d15b21bc32d43d0a0ee050830dfa5cb411
+blob paper.py en 72ffae5:  a6212245a7c7643fb45a27e8ce1c20bd7c4a45d3
+líneas index del parche:
+diff --git a/packages/tia/src/tia/backtest/engine.py b/packages/tia/src/tia/backtest/engine.py
+index 1a1ba3d..0f681d8 100644
+diff --git a/packages/tia/src/tia/execution/paper.py b/packages/tia/src/tia/execution/paper.py
+index a621224..2d98fad 100644
+diffstat del parche:
+ packages/tia/src/tia/backtest/engine.py |   75 ++++++++++++++++++++++++++++---
+ packages/tia/src/tia/execution/paper.py |    9 ++++
+ 2 files changed, 76 insertions(+), 8 deletions(-)
+git apply --check: Checking patch packages/tia/src/tia/backtest/engine.py... Checking patch packages/tia/src/tia/execution/paper.py... 
+huellas del parche y de la prueba en HUELLAS.txt de SIM1:
+05569d169edc8faacb0d7720747005fd3249ed2247acb8063500dc7e518bfe2b  trader-ia/packages/tia/src/tia/execution/paper.py
+685cf4ec9d5f5a36c087ecaf06f7bfac4cb903509f1d984e48e68208312a4cd5  parche/test_backtest_order_hygiene.py
+85965ec56298519ca107d2bb61f301fe22a02584b5fc98917d147d81e036da88  trader-ia/packages/tia/src/tia/backtest/engine.py
+ca23679da564d553806e1a2960cb3c4c639a75b185d2d0bc6a82c5f4287eb208  parche/parche_motor_D1_D3.diff

@@ -1,0 +1,28 @@
+{
+ "salida_1": {
+  "REGISTRO_EJECUCION.json": {
+   "sha256": "c09c8aebe28acca09c67c02ac3c6a449ee0201040d6c94421b8bde9b9c7f59ee",
+   "bytes": 781,
+   "contiene_STUB": false
+  },
+  "RESULTADO_E3.json": {
+   "sha256": "9205e2f7223e722db2f216b3770c4398cc08497f8ab303d53c9eb85a1ad1ace8",
+   "bytes": 1093,
+   "contiene_STUB": true,
+   "veredicto": "EVALUADO"
+  },
+  "VALIDEZ_PREVIA.json": {
+   "sha256": "40c4efd5ac8c0d44b7e53268b6f17c45110534f9c751cd4abb3d82fa40928272",
+   "bytes": 73,
+   "contiene_STUB": true
+  }
+ },
+ "registro": "NO EXISTE",
+ "registro_vs_disco": [],
+ "nuevo_intento": "PERMITIDO: corrió completo",
+ "salida_2": [
+  "REGISTRO_EJECUCION.json",
+  "RESULTADO_E3.json",
+  "VALIDEZ_PREVIA.json"
+ ]
+}

@@ -1,0 +1,109 @@
+{
+ "datos": "SINTÉTICOS (generador de E1; 5000 y 8000 velas 1 h); no son históricos",
+ "motor": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_parche_D1_D3_2026-10-21/integracion/packages/tia/src/tia/backtest/engine.py",
+ "sha256_engine": "85965ec56298519ca107d2bb61f301fe22a02584b5fc98917d147d81e036da88",
+ "V1": {
+  "operaciones": 83,
+  "barras_abiertas": 375,
+  "max_barras_seguidas_sin_stop": 1,
+  "barras_stop_a_otro_nivel": 0,
+  "ordenes_rechazadas": 2,
+  "higiene": {
+   "entry_remainders_cancelled_on_exit": 0,
+   "stale_entry_remainders_cancelled_flat": 0,
+   "exits_done_with_position_left": 0,
+   "bars_with_leg_and_no_stop": 0
+  },
+  "ok": true
+ },
+ "V2": {
+  "trend_following": {
+   "decisiones_antes_del_corte": 3379,
+   "operaciones_antes_del_corte": 50,
+   "identicas": true,
+   "ok": true
+  },
+  "mean_reversion": {
+   "decisiones_antes_del_corte": 3379,
+   "operaciones_antes_del_corte": 11,
+   "identicas": true,
+   "ok": true
+  },
+  "breakout": {
+   "decisiones_antes_del_corte": 3379,
+   "operaciones_antes_del_corte": 8,
+   "identicas": true,
+   "ok": true
+  },
+  "trend_following+mean_reversion+breakout": {
+   "decisiones_antes_del_corte": 3379,
+   "operaciones_antes_del_corte": 69,
+   "identicas": true,
+   "ok": true
+  }
+ },
+ "V3": {
+  "trend_following": {
+   "decisiones_antes_del_corte": 3379,
+   "operaciones_antes_del_corte": 50,
+   "identicas": true,
+   "ok": true
+  },
+  "mean_reversion": {
+   "decisiones_antes_del_corte": 3379,
+   "operaciones_antes_del_corte": 11,
+   "identicas": true,
+   "ok": true
+  },
+  "breakout": {
+   "decisiones_antes_del_corte": 3379,
+   "operaciones_antes_del_corte": 8,
+   "identicas": true,
+   "ok": true
+  },
+  "trend_following+mean_reversion+breakout": {
+   "decisiones_antes_del_corte": 3379,
+   "operaciones_antes_del_corte": 69,
+   "identicas": true,
+   "ok": true
+  }
+ },
+ "V6": {
+  "trend_following": {
+   "round_trips": 77,
+   "max_barras_round_trip": 45,
+   "ultima_entrada": "2020-11-17T16:00:00+00:00",
+   "fin_de_datos": "2020-11-29T07:00:00+00:00",
+   "higiene": {
+    "entry_remainders_cancelled_on_exit": 20,
+    "stale_entry_remainders_cancelled_flat": 8,
+    "exits_done_with_position_left": 0,
+    "bars_with_leg_and_no_stop": 0
+   },
+   "ok": true
+  },
+  "trend_following+mean_reversion+breakout": {
+   "round_trips": 92,
+   "max_barras_round_trip": 68,
+   "ultima_entrada": "2020-11-26T21:00:00+00:00",
+   "fin_de_datos": "2020-11-29T07:00:00+00:00",
+   "higiene": {
+    "entry_remainders_cancelled_on_exit": 16,
+    "stale_entry_remainders_cancelled_flat": 10,
+    "exits_done_with_position_left": 0,
+    "bars_with_leg_and_no_stop": 0
+   },
+   "ok": true
+  }
+ },
+ "V5_solo_largos_trend_following": true,
+ "V5_solo_largos_mean_reversion": true,
+ "V5_solo_largos_breakout": true,
+ "V5_solo_largos_trend_following+mean_reversion+breakout": true,
+ "DET": {
+  "huella_a": "2ec41ec6bea9da20ebf169d210484d7e57971efa5e5a7c5d0ea20d568d9bc603",
+  "huella_b": "2ec41ec6bea9da20ebf169d210484d7e57971efa5e5a7c5d0ea20d568d9bc603",
+  "ok": true
+ },
+ "todo_ok": true
+}

@@ -1,0 +1,7 @@
+{
+ "invariancia_prefijo_real": true,
+ "solo_largos_sin_cortos": true,
+ "stops_y_duraciones": true,
+ "problemas": [],
+ "todo_ok": true
+}

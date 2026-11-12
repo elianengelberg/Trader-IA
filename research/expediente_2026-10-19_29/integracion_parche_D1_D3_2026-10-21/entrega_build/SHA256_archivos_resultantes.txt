@@ -1,0 +1,3 @@
+85965ec56298519ca107d2bb61f301fe22a02584b5fc98917d147d81e036da88  packages/tia/src/tia/backtest/engine.py
+05569d169edc8faacb0d7720747005fd3249ed2247acb8063500dc7e518bfe2b  packages/tia/src/tia/execution/paper.py
+f10baa1041a031ff72013e77680f33b13bc338dd613a5dcbd16be74551f5fc65  tests/unit/test_backtest_order_hygiene.py

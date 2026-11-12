@@ -1,0 +1,26 @@
+.......                                                                  [100%]
+==================================== PASSES ====================================
+________ test_a_rejected_close_is_sent_again_as_a_new_order_and_closes _________
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:53:25 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=99891.51 run_id=bt_90Y0N4NDY53PBN4J4JSTMZ7A trades=13
+__________________ test_the_stop_in_the_book_follows_the_leg ___________________
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:53:28 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=99901.95 run_id=bt_BXWNRMBMSFP8T8J08DAVCBYQ trades=12
+_______ test_partial_fills_never_add_to_a_closing_position_or_reopen_one _______
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:53:30 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=99938.94 run_id=bt_BX15TY83794DA1TAB8YRHRZZ trades=72
+_______ test_a_close_that_ends_with_position_left_is_followed_by_another _______
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:53:33 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=99932.07 run_id=bt_Z0FFVDZT5X94B55CA0X01XZR trades=65
+_____________ test_rejections_partials_and_limit_entries_together ______________
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 22:53:35 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=100000.61 run_id=bt_XMC69Q4P2GGRT2K7EPFSCANH trades=36
+=========================== short test summary info ============================
+PASSED tests/integration/test_engine_version_contract.py::test_a_rejected_close_is_sent_again_as_a_new_order_and_closes
+PASSED tests/integration/test_engine_version_contract.py::test_the_stop_in_the_book_follows_the_leg
+PASSED tests/integration/test_engine_version_contract.py::test_partial_fills_never_add_to_a_closing_position_or_reopen_one
+PASSED tests/integration/test_engine_version_contract.py::test_a_close_that_ends_with_position_left_is_followed_by_another
+PASSED tests/integration/test_engine_version_contract.py::test_rejections_partials_and_limit_entries_together
+PASSED tests/integration/test_engine_version_contract.py::test_the_checks_pass_a_clean_record_and_catch_each_defect
+PASSED tests/integration/test_engine_version_contract.py::test_the_label_decides_the_promise_and_cannot_escape_the_guard
+7 passed in 13.52s

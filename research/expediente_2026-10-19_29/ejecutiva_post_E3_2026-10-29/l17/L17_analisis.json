@@ -1,0 +1,328 @@
+{
+ "negativos": 53,
+ "rechazados_por_la_regla_prevista": 53,
+ "por_otra_regla": [],
+ "positivos_nuevos": 10,
+ "positivos_aceptados": 10,
+ "positivos_rechazados": [],
+ "detalle_negativos": [
+  {
+   "vector": "produccion_rechaza_tipo_prueba",
+   "esperada": "F5",
+   "real": "F5",
+   "motivo": "RECHAZO F5 tipo 'PRUEBA_SINTETICA' no admitido en modo produccion"
+  },
+  {
+   "vector": "BOM",
+   "esperada": "F1",
+   "real": "F1",
+   "motivo": "RECHAZO F1 BOM o espacio/salto final"
+  },
+  {
+   "vector": "salto_final",
+   "esperada": "F1",
+   "real": "F1",
+   "motivo": "RECHAZO F1 BOM o espacio/salto final"
+  },
+  {
+   "vector": "espacio_final",
+   "esperada": "F1",
+   "real": "F1",
+   "motivo": "RECHAZO F1 BOM o espacio/salto final"
+  },
+  {
+   "vector": "no_canonico_indentado",
+   "esperada": "F1",
+   "real": "F1",
+   "motivo": "RECHAZO F1 no es la forma canónica"
+  },
+  {
+   "vector": "claves_desordenadas",
+   "esperada": "F1",
+   "real": "F1",
+   "motivo": "RECHAZO F1 no es la forma canónica"
+  },
+  {
+   "vector": "clave_repetida_mismo_valor",
+   "esperada": "F1",
+   "real": "F1",
+   "motivo": "RECHAZO F1 clave repetida: version"
+  },
+  {
+   "vector": "clave_repetida_otro_valor",
+   "esperada": "F1",
+   "real": "F1",
+   "motivo": "RECHAZO F1 clave repetida: tipo"
+  },
+  {
+   "vector": "NaN",
+   "esperada": "F1",
+   "real": "F1",
+   "motivo": "RECHAZO F1 número no finito: NaN"
+  },
+  {
+   "vector": "Infinity",
+   "esperada": "F1",
+   "real": "F1",
+   "motivo": "RECHAZO F1 número no finito: Infinity"
+  },
+  {
+   "vector": "float_158.0",
+   "esperada": "F2",
+   "real": "F2",
+   "motivo": "RECHAZO F2 tipo de .evaluacion.semanas: float"
+  },
+  {
+   "vector": "exponente_1e2",
+   "esperada": "F1",
+   "real": "F1",
+   "motivo": "RECHAZO F1 no es la forma canónica"
+  },
+  {
+   "vector": "no_ascii_crudo",
+   "esperada": "F1",
+   "real": "F1",
+   "motivo": "RECHAZO F1 bytes no ASCII"
+  },
+  {
+   "vector": "escape_unicode_NUL",
+   "esperada": "F3",
+   "real": "F3",
+   "motivo": "RECHAZO F3 gramática: emisor"
+  },
+  {
+   "vector": "escape_salto_en_id",
+   "esperada": "F3",
+   "real": "F3",
+   "motivo": "RECHAZO F3 gramática: evaluacion.id"
+  },
+  {
+   "vector": "id_largo",
+   "esperada": "F3",
+   "real": "F3",
+   "motivo": "RECHAZO F3 gramática: evaluacion.id"
+  },
+  {
+   "vector": "id_minusculas",
+   "esperada": "F3",
+   "real": "F3",
+   "motivo": "RECHAZO F3 gramática: evaluacion.id"
+  },
+  {
+   "vector": "texto_libre_emisor",
+   "esperada": "F3",
+   "real": "F3",
+   "motivo": "RECHAZO F3 gramática: emisor"
+  },
+  {
+   "vector": "campo_de_mas_raiz",
+   "esperada": "F2",
+   "real": "F2",
+   "motivo": "RECHAZO F2 claves distintas en raíz: ['nota']"
+  },
+  {
+   "vector": "campo_de_mas_anidado",
+   "esperada": "F2",
+   "real": "F2",
+   "motivo": "RECHAZO F2 claves distintas en .registro: ['extra']"
+  },
+  {
+   "vector": "campo_faltante",
+   "esperada": "F2",
+   "real": "F2",
+   "motivo": "RECHAZO F2 claves distintas en .codigo: ['entorno_sha256']"
+  },
+  {
+   "vector": "null_indebido",
+   "esperada": "F2",
+   "real": "F2",
+   "motivo": "RECHAZO F2 tipo de .evaluacion.fin_H: NoneType"
+  },
+  {
+   "vector": "bool_por_int",
+   "esperada": "F2",
+   "real": "F2",
+   "motivo": "RECHAZO F2 tipo de .evaluacion.semanas: bool"
+  },
+  {
+   "vector": "semanas_155",
+   "esperada": "F3",
+   "real": "F3",
+   "motivo": "RECHAZO F3 gramática: semanas"
+  },
+  {
+   "vector": "hash_mayusculas",
+   "esperada": "F3",
+   "real": "F3",
+   "motivo": "RECHAZO F3 gramática: orquestador_sha256"
+  },
+  {
+   "vector": "hash_truncado",
+   "esperada": "F3",
+   "real": "F3",
+   "motivo": "RECHAZO F3 gramática: orquestador_sha256"
+  },
+  {
+   "vector": "fecha_imposible",
+   "esperada": "F3",
+   "real": "F3",
+   "motivo": "RECHAZO F3 fecha imposible"
+  },
+  {
+   "vector": "instante_sin_Z",
+   "esperada": "F3",
+   "real": "F3",
+   "motivo": "RECHAZO F3 gramática: emitida_utc"
+  },
+  {
+   "vector": "lista_en_lugar_de_objeto",
+   "esperada": "F2",
+   "real": "F2",
+   "motivo": "RECHAZO F2 claves distintas en .insumos: list"
+  },
+  {
+   "vector": "D2_R1_prima",
+   "esperada": "F4",
+   "real": "F4",
+   "motivo": "RECHAZO F4 decisión D2 = 'R1_PRIMA': el orquestador solo implementa 'R1_LITERAL'"
+  },
+  {
+   "vector": "D4_160_semanas",
+   "esperada": "F4",
+   "real": "F4",
+   "motivo": "RECHAZO F4 decisión D4 = 'A3_1_5_TITULO': el orquestador solo implementa 'N5_UNIVERSAL'"
+  },
+  {
+   "vector": "D7_reintento_i",
+   "esperada": "F4",
+   "real": "F4",
+   "motivo": "RECHAZO F4 decisión D7 = 'REINTENTO_I': el orquestador solo implementa 'CERO_REINTENTOS'"
+  },
+  {
+   "vector": "D1_negado_con_texto",
+   "esperada": "F4",
+   "real": "F4",
+   "motivo": "RECHAZO F4 decisión D1 = 'NO REABRIR_EJECUCION_CON_ADENDA_R': el orquestador solo implementa 'REABRIR_EJECUCION_CON_ADENDA_R'"
+  },
+  {
+   "vector": "riesgo_omitido",
+   "esperada": "F4",
+   "real": "F4",
+   "motivo": "RECHAZO F4 riesgos aceptados distintos del conjunto declarado"
+  },
+  {
+   "vector": "riesgo_repetido",
+   "esperada": "F4",
+   "real": "F4",
+   "motivo": "RECHAZO F4 riesgos aceptados distintos del conjunto declarado"
+  },
+  {
+   "vector": "riesgos_desordenados",
+   "esperada": "F4",
+   "real": "F4",
+   "motivo": "RECHAZO F4 riesgos aceptados distintos del conjunto declarado"
+  },
+  {
+   "vector": "ventana_otra",
+   "esperada": "F6",
+   "real": "F6",
+   "motivo": "RECHAZO F6 ventana_sha256 no coincide con lo calculado"
+  },
+  {
+   "vector": "orquestador_otro",
+   "esperada": "F6",
+   "real": "F6",
+   "motivo": "RECHAZO F6 orquestador_sha256 no coincide con lo calculado"
+  },
+  {
+   "vector": "entorno_otro",
+   "esperada": "F6",
+   "real": "F6",
+   "motivo": "RECHAZO F6 entorno_sha256 no coincide con lo calculado"
+  },
+  {
+   "vector": "inicio_otro",
+   "esperada": "F6",
+   "real": "F6",
+   "motivo": "RECHAZO F6 inicio_H no coincide con lo calculado"
+  },
+  {
+   "vector": "semanas_otras",
+   "esperada": "F6",
+   "real": "F6",
+   "motivo": "RECHAZO F6 semanas no coincide con lo calculado"
+  },
+  {
+   "vector": "tipo_desconocido",
+   "esperada": "F5",
+   "real": "F5",
+   "motivo": "RECHAZO F5 tipo 'E3_EXPLORATORIA' no admitido en modo prueba"
+  },
+  {
+   "vector": "version_otra",
+   "esperada": "F3",
+   "real": "F3",
+   "motivo": "RECHAZO F3 gramática: version"
+  },
+  {
+   "vector": "vigencia_larga",
+   "esperada": "F7",
+   "real": "F7",
+   "motivo": "RECHAZO F7 fuera de vigencia"
+  },
+  {
+   "vector": "cabeza_anterior",
+   "esperada": "F6",
+   "real": "F6",
+   "motivo": "RECHAZO F6 cabeza del registro distinta (autorización de otro estado)"
+  },
+  {
+   "vector": "nonce_consumido",
+   "esperada": "F6",
+   "real": "F6",
+   "motivo": "RECHAZO F6 nonce ya consumido"
+  },
+  {
+   "vector": "vencida",
+   "esperada": "F7",
+   "real": "F7",
+   "motivo": "RECHAZO F7 fuera de vigencia"
+  },
+  {
+   "vector": "todavia_no_vigente",
+   "esperada": "F7",
+   "real": "F7",
+   "motivo": "RECHAZO F7 fuera de vigencia"
+  },
+  {
+   "vector": "firma_otra_clave",
+   "esperada": "F8",
+   "real": "F8",
+   "motivo": "RECHAZO F8 firma inválida"
+  },
+  {
+   "vector": "firma_de_otros_bytes",
+   "esperada": "F8",
+   "real": "F8",
+   "motivo": "RECHAZO F8 firma inválida"
+  },
+  {
+   "vector": "firma_truncada",
+   "esperada": "F8",
+   "real": "F8",
+   "motivo": "RECHAZO F8 firma inválida"
+  },
+  {
+   "vector": "firma_byte_cambiado",
+   "esperada": "F8",
+   "real": "F8",
+   "motivo": "RECHAZO F8 firma inválida"
+  },
+  {
+   "vector": "clave_publica_otra",
+   "esperada": "F8",
+   "real": "F8",
+   "motivo": "RECHAZO F8 firma inválida"
+  }
+ ]
+}

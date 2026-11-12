@@ -1,0 +1,16 @@
+{
+ "pruebas": [
+  "tests/integration/test_protective_stop_contract.py"
+ ],
+ "mutantes": [
+  {
+   "id": "M14",
+   "archivo": "packages/tia/src/tia/runtime/live.py",
+   "descripcion": "más de un stop en reposo al reiniciar sin bloquear",
+   "rc": 1,
+   "resultado": "MUERTO",
+   "primera_falla": "FAILED tests/integration/test_protective_stop_contract.py::test_two_stops_resting_against_a_restored_position_halt_the_session",
+   "segundos": 2.0
+  }
+ ]
+}

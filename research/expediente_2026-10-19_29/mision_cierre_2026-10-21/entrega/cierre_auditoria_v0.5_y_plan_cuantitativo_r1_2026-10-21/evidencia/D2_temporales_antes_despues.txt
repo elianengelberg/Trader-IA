@@ -1,0 +1,5 @@
+== D-2: fugas de temporales en TMPDIR, antes (v0.5) y después (corrección 0002), con TMPDIR nuevos y vacíos
+v05_ref: sondas → 19 entradas en TMPDIR; p1 → 11 directorios reproduccion_* (otros: 0); pytest: 8 failed, 40 passed in 37.20s
+v05_fix: sondas → 0 entradas en TMPDIR; p1 → 0 directorios reproduccion_* (otros: 0); pytest: 8 failed, 40 passed in 35.43s
+salida de las sondas (71) idéntica antes y después (normalizada)
+(las 8 fallas de pytest, iguales antes y después, son del entorno de esta comprobación: sin PYTHONPATH no se importa 'hcarry'; con PYTHONPATH pasan 48 de 48)

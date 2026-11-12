@@ -1,0 +1,341 @@
+[
+ {
+  "simbolo": "AAVEDOWNUSDT",
+  "ultimo_activo": "2021-04-05",
+  "reanuda": "2021-04-07",
+  "anuncio": {
+   "archivo": "bn_c72f436a7847451eb403bfbdaf617984_1d0bcb863df7.json",
+   "captura": "20210413",
+   "relacion_N_por_1": 10000,
+   "cita": "10,000-for-1 reverse token split",
+   "fechas": [
+    "2021-04-07"
+   ]
+  },
+  "finalizacion": {
+   "archivo": "bn_c72f436a7847451eb403bfbdaf617984_1d0bcb863df7.json",
+   "captura": "20210413",
+   "cita": "resume trading activity for AAVEDOWN/USDT and DOTDOWN/USDT at 2021-04-07"
+  }
+ },
+ {
+  "simbolo": "ADADOWNUSDT",
+  "ultimo_activo": "2021-04-06",
+  "reanuda": "2021-04-08",
+  "anuncio": {
+   "archivo": "bn_c72f436a7847451eb403bfbdaf617984_1d0bcb863df7.json",
+   "captura": "20210413",
+   "relacion_N_por_1": 10000,
+   "cita": "10,000-for-1 reverse token split",
+   "fechas": [
+    "2021-04-07"
+   ]
+  },
+  "finalizacion": {
+   "archivo": "bn_3c8f883affd64fe183485b2634992dda_0f606a3213eb.json",
+   "captura": "20210419",
+   "cita": "resume trading activity for ADADOWN/USDT, XRPDOWN/USDT, and LINKDOWN/USDT at 2021-04-08"
+  }
+ },
+ {
+  "simbolo": "BNBDOWNUSDT",
+  "ultimo_activo": "2021-04-12",
+  "reanuda": "2021-04-14",
+  "anuncio": {
+   "archivo": "bn_8587ebb4c3c94f92a4fa7ecb23781f20_9b3b1796ccc5.json",
+   "captura": "20210513",
+   "relacion_N_por_1": 100000,
+   "cita": "100,000-for-1 reverse token split",
+   "fechas": [
+    "2021-04-13",
+    "2021-04-14"
+   ]
+  },
+  "finalizacion": {
+   "archivo": "bn_89a6fc26c4314749abcd714ba8c0b171_2223fd5ff42c.json",
+   "captura": "20210518",
+   "cita": "resume trading activity for BNBDOWN/USDT and SXPDOWN/USDT at 2021-04-14"
+  }
+ },
+ {
+  "simbolo": "DOTDOWNUSDT",
+  "ultimo_activo": "2021-04-05",
+  "reanuda": "2021-04-07",
+  "anuncio": {
+   "archivo": "bn_c72f436a7847451eb403bfbdaf617984_1d0bcb863df7.json",
+   "captura": "20210413",
+   "relacion_N_por_1": 10000,
+   "cita": "10,000-for-1 reverse token split",
+   "fechas": [
+    "2021-04-07"
+   ]
+  },
+  "finalizacion": {
+   "archivo": "bn_c72f436a7847451eb403bfbdaf617984_1d0bcb863df7.json",
+   "captura": "20210413",
+   "cita": "resume trading activity for AAVEDOWN/USDT and DOTDOWN/USDT at 2021-04-07"
+  }
+ },
+ {
+  "simbolo": "DOTDOWNUSDT",
+  "ultimo_activo": "2021-10-20",
+  "reanuda": "2021-10-22",
+  "anuncio": {
+   "archivo": "bn_e5b1ce92490b490480d3f4cbac923d12_a84a9353fdd3.json",
+   "captura": "20211024",
+   "relacion_N_por_1": 100000,
+   "cita": "100,000-for-1 reverse token split, starting at 2021-10-21",
+   "fechas": [
+    "2021-10-21",
+    "2021-10-22"
+   ]
+  },
+  "finalizacion": {
+   "archivo": "bn_ff6a85a9ab844d47bff798a605c9d5c3_83a65377dddc.json",
+   "captura": "20211128",
+   "cita": "resume trading activity for DOTDOWN/USDT at 2021-10-22"
+  }
+ },
+ {
+  "simbolo": "ETHDOWNUSDT",
+  "ultimo_activo": "2021-07-07",
+  "reanuda": "2021-07-09",
+  "anuncio": {
+   "archivo": "url_https___www.binance.com_en_support_announcement_important-updates-to-ethdown_d00a74849e3f.json",
+   "captura": "20230324",
+   "relacion_N_por_1": 100000,
+   "cita": "100,000-for-1 reverse token split, starting at 2021-07-08",
+   "fechas": [
+    "2021-07-08",
+    "2021-07-09"
+   ]
+  },
+  "finalizacion": {
+   "archivo": "bn_5e01a75cbbc141f5aa057d67c701d30c_df2440526f5c.json",
+   "captura": "20210729",
+   "cita": "resume trading activity for ETHDOWN/USDT at 2021-07-09"
+  }
+ },
+ {
+  "simbolo": "LINKDOWNUSDT",
+  "ultimo_activo": "2021-04-06",
+  "reanuda": "2021-04-08",
+  "anuncio": {
+   "archivo": "bn_c72f436a7847451eb403bfbdaf617984_1d0bcb863df7.json",
+   "captura": "20210413",
+   "relacion_N_por_1": 10000,
+   "cita": "10,000-for-1 reverse token split",
+   "fechas": [
+    "2021-04-07"
+   ]
+  },
+  "finalizacion": {
+   "archivo": "bn_3c8f883affd64fe183485b2634992dda_0f606a3213eb.json",
+   "captura": "20210419",
+   "cita": "resume trading activity for ADADOWN/USDT, XRPDOWN/USDT, and LINKDOWN/USDT at 2021-04-08"
+  }
+ },
+ {
+  "simbolo": "LTCDOWNUSDT",
+  "ultimo_activo": "2021-08-16",
+  "reanuda": "2021-08-18",
+  "anuncio": {
+   "archivo": "bn_1b9392b259744884b342dc9708aa9b90_d55d5ecd0667.json",
+   "captura": "20211205",
+   "relacion_N_por_1": 100000,
+   "cita": "100,000-for-1 reverse token split",
+   "fechas": [
+    "2021-08-17",
+    "2021-08-18"
+   ]
+  },
+  "finalizacion": {
+   "archivo": "bn_b8cd16f2c71c4883a7b400b566e2b007_dc693b8fc52d.json",
+   "captura": "20211128",
+   "cita": "resume trading activity for UNIDOWN/USDT and LTCDOWN/USDT at 2021-08-18"
+  }
+ },
+ {
+  "simbolo": "SUSHIDOWNUSDT",
+  "ultimo_activo": "2021-03-22",
+  "reanuda": "2021-03-24",
+  "anuncio": {
+   "archivo": "bn_a00da142c1c549faaa7c1f78817930b7_58f2001193e3.json",
+   "captura": "20210801",
+   "relacion_N_por_1": 10000,
+   "cita": "10,000-for-1 reverse token split, starting at 2021-03-23",
+   "fechas": [
+    "2021-03-23",
+    "2021-03-24"
+   ]
+  },
+  "finalizacion": null
+ },
+ {
+  "simbolo": "SUSHIDOWNUSDT",
+  "ultimo_activo": "2021-09-22",
+  "reanuda": "2021-09-24",
+  "anuncio": {
+   "archivo": "bn_2e762fb338374b17adde728059708ff2_4583557ade82.json",
+   "captura": "20211017",
+   "relacion_N_por_1": 100000,
+   "cita": "100,000-for-1 reverse token split, starting at 2021-09-23",
+   "fechas": [
+    "2021-09-23",
+    "2021-09-24"
+   ]
+  },
+  "finalizacion": {
+   "archivo": "bn_407e5d6a193a4f62a4bab80c6b55688d_4f931a6a8c80.json",
+   "captura": "20211027",
+   "cita": "resume trading activity for SUSHIDOWN/USDT at 2021-09-24"
+  }
+ },
+ {
+  "simbolo": "SXPDOWNUSDT",
+  "ultimo_activo": "2021-03-09",
+  "reanuda": "2021-03-11",
+  "anuncio": {
+   "archivo": "bn_a43a407fd48f44d29ecc59bb86772c25_d91c65379177.json",
+   "captura": "20210412",
+   "relacion_N_por_1": 10000,
+   "cita": "10,000-for-1 reverse token split, starting at 2021-03-10",
+   "fechas": [
+    "2021-03-10",
+    "2021-03-11"
+   ]
+  },
+  "finalizacion": null
+ },
+ {
+  "simbolo": "SXPDOWNUSDT",
+  "ultimo_activo": "2021-04-12",
+  "reanuda": "2021-04-14",
+  "anuncio": {
+   "archivo": "bn_8587ebb4c3c94f92a4fa7ecb23781f20_9b3b1796ccc5.json",
+   "captura": "20210513",
+   "relacion_N_por_1": 100000,
+   "cita": "100,000-for-1 reverse token split",
+   "fechas": [
+    "2021-04-13",
+    "2021-04-14"
+   ]
+  },
+  "finalizacion": {
+   "archivo": "bn_89a6fc26c4314749abcd714ba8c0b171_2223fd5ff42c.json",
+   "captura": "20210518",
+   "cita": "resume trading activity for BNBDOWN/USDT and SXPDOWN/USDT at 2021-04-14"
+  }
+ },
+ {
+  "simbolo": "TRXDOWNUSDT",
+  "ultimo_activo": "2021-09-12",
+  "reanuda": "2021-09-14",
+  "anuncio": {
+   "archivo": "bn_c057c3e6e3c644d7b087ab1d6e2446b7_3db55726a5fa.json",
+   "captura": "20211205",
+   "relacion_N_por_1": 100000,
+   "cita": "100,000-for-1 reverse token split, starting at 2021-09-13",
+   "fechas": [
+    "2021-09-13",
+    "2021-09-14"
+   ]
+  },
+  "finalizacion": {
+   "archivo": "bn_babc78610f694537a223b6f5384c080d_a5668982c8a6.json",
+   "captura": "20211026",
+   "cita": "resume trading activity for TRXDOWN/USDT at 2021-09-14"
+  }
+ },
+ {
+  "simbolo": "UNIDOWNUSDT",
+  "ultimo_activo": "2021-08-16",
+  "reanuda": "2021-08-18",
+  "anuncio": {
+   "archivo": "bn_1b9392b259744884b342dc9708aa9b90_d55d5ecd0667.json",
+   "captura": "20211205",
+   "relacion_N_por_1": 100000,
+   "cita": "100,000-for-1 reverse token split",
+   "fechas": [
+    "2021-08-17",
+    "2021-08-18"
+   ]
+  },
+  "finalizacion": {
+   "archivo": "bn_b8cd16f2c71c4883a7b400b566e2b007_dc693b8fc52d.json",
+   "captura": "20211128",
+   "cita": "resume trading activity for UNIDOWN/USDT and LTCDOWN/USDT at 2021-08-18"
+  }
+ },
+ {
+  "simbolo": "XLMDOWNUSDT",
+  "ultimo_activo": "2021-08-25",
+  "reanuda": "2021-08-27",
+  "anuncio": {
+   "archivo": "bn_3c970877a4d446b1a7f42b8b731a773f_bf2e5f6cdab3.json",
+   "captura": "20211027",
+   "relacion_N_por_1": 100000,
+   "cita": "100,000-for-1 reverse token split, starting at 2021-08-26",
+   "fechas": [
+    "2021-08-26",
+    "2021-08-27"
+   ]
+  },
+  "finalizacion": null
+ },
+ {
+  "simbolo": "XRPDOWNUSDT",
+  "ultimo_activo": "2021-04-06",
+  "reanuda": "2021-04-08",
+  "anuncio": {
+   "archivo": "bn_c72f436a7847451eb403bfbdaf617984_1d0bcb863df7.json",
+   "captura": "20210413",
+   "relacion_N_por_1": 10000,
+   "cita": "10,000-for-1 reverse token split",
+   "fechas": [
+    "2021-04-07"
+   ]
+  },
+  "finalizacion": {
+   "archivo": "bn_3c8f883affd64fe183485b2634992dda_0f606a3213eb.json",
+   "captura": "20210419",
+   "cita": "resume trading activity for ADADOWN/USDT, XRPDOWN/USDT, and LINKDOWN/USDT at 2021-04-08"
+  }
+ },
+ {
+  "simbolo": "XTZDOWNUSDT",
+  "ultimo_activo": "2021-09-07",
+  "reanuda": "2021-09-09",
+  "anuncio": {
+   "archivo": "bn_e48368c945b84bf89cea20339ec345bf_f761bfa56466.json",
+   "captura": "20211018",
+   "relacion_N_por_1": 100000,
+   "cita": "100,000-for-1 reverse token split, starting at 2021-09-08",
+   "fechas": [
+    "2021-09-08",
+    "2021-09-09"
+   ]
+  },
+  "finalizacion": {
+   "archivo": "bn_9e7dde521b1547e490c0d5d3d6140b34_b632e67d2ab6.json",
+   "captura": "20211019",
+   "cita": "resume trading activity for XTZDOWN/USDT at 2021-09-09"
+  }
+ },
+ {
+  "simbolo": "YFIDOWNUSDT",
+  "ultimo_activo": "2021-05-30",
+  "reanuda": "2021-06-01",
+  "anuncio": {
+   "archivo": "bn_23d1357993cd43749a5f682ab2e8c739_5be41422d523.json",
+   "captura": "20211129",
+   "relacion_N_por_1": 100000,
+   "cita": "100,000-for-1 reverse token split, starting at 2021-05-31",
+   "fechas": [
+    "2021-05-31",
+    "2021-06-01"
+   ]
+  },
+  "finalizacion": null
+ }
+]

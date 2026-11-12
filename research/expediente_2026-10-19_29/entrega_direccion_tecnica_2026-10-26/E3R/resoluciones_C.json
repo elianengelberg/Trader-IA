@@ -1,0 +1,7 @@
+{
+ "ARKUSDT": {"resolucion": "agregado", "cita": "At 2023-09-22 08:00 (UTC), Binance will open trading for the ARK/USDT, CREAM/USDT, FTT/USDT, GFT/USDT, IQ/USDT and USDT/VAI spot trading pairs. At 2023-09-29 03:00 (UTC), Binance will remove and cease trading on the ARK/BUSD, CREAM/BUSD, FTT/BUSD, GFT/BUSD, IQ/BUSD and BUSD/VAI spot trading pairs.", "fuente": "datos_anuncios/commoncrawl/paginas/url_https___www.binance.com_en_support_announcement_notice-of-addition-removal-o_de27e21c5438.json (sha256 c34150128ea70f7e…), captura CC-MAIN-2023-50"},
+ "CREAMUSDT": {"resolucion": "agregado", "cita": "ídem ARKUSDT", "fuente": "ídem ARKUSDT"},
+ "FTTUSDT": {"resolucion": "agregado", "cita": "ídem ARKUSDT", "fuente": "ídem ARKUSDT"},
+ "GFTUSDT": {"resolucion": "agregado", "cita": "ídem ARKUSDT", "fuente": "ídem ARKUSDT"},
+ "IQUSDT": {"resolucion": "agregado", "cita": "ídem ARKUSDT", "fuente": "ídem ARKUSDT"}
+}

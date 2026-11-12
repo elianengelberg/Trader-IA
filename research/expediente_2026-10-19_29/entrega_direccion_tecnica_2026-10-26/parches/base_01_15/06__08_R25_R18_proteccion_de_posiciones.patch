@@ -1,0 +1,1391 @@
+diff --git a/packages/tia/src/tia/api/gate_probes.py b/packages/tia/src/tia/api/gate_probes.py
+index 4792a3f..87ed8e1 100644
+--- a/packages/tia/src/tia/api/gate_probes.py
++++ b/packages/tia/src/tia/api/gate_probes.py
+@@ -266,6 +266,16 @@ def _venue_validation(
+ ) -> GateCheck:
+     if record is None:
+         return failing(CheckName.VENUE_VALIDATION, problem or "no validation record", problem)
++    if record.facts.get("protective_stop_accepted") is not True:
++        # R25: every position the session opens is protected by a stop this adapter
++        # sends as STOP_LOSS. Until the venue has accepted that exact request, a live
++        # position's protection is an assumption — and the adapter refused every stop
++        # before the mapping existed, which no test against a mock could reveal.
++        return failing(
++            CheckName.VENUE_VALIDATION,
++            "the venue has never accepted this adapter's protective stop (STOP_LOSS)",
++            "run scripts/validate_binance.py --account --order --stop --testnet",
++        )
+     return passing(
+         CheckName.VENUE_VALIDATION,
+         f"schema valid, fingerprint intact, validator v{record.validator_version}, "
+diff --git a/packages/tia/src/tia/backtest/engine.py b/packages/tia/src/tia/backtest/engine.py
+index 708a25a..f20918b 100644
+--- a/packages/tia/src/tia/backtest/engine.py
++++ b/packages/tia/src/tia/backtest/engine.py
+@@ -101,7 +101,10 @@ MIN_TRADES_FOR_INFERENCE = 30
+ #: 1.1.0 — order hygiene D1-D3: fresh ids for retried exits and stops, the stop follows
+ #: its level, no leg stuck behind an entry remainder. The first version recorded: results
+ #: stored before it carry none, and their engine is unknown — not 1.0.0, not anything else.
+-ENGINE_VERSION = "1.1.0"
++#: 1.2.0 — R18: a close the venue rejects puts the stop back on the same bar, so the next
++#: bar is never matched with neither a stop nor a close working. Changes only runs in
++#: which a close was rejected.
++ENGINE_VERSION = "1.2.0"
+ 
+ #: The sub-packages whose code decides what a run produces. Their source is hashed into
+ #: the engine fingerprint, so a change nobody versioned still gives a different ``run_id``.
+@@ -924,7 +927,13 @@ class BacktestEngine:
+         counts.exits_requested[reason] = counts.exits_requested.get(reason, 0) + 1
+         if order.state.is_terminal and not order.fills:
+             counts.orders_rejected += 1
+-            return None  # the position stays; the stop is re-placed on the next sync
++            # R18: the stop was cancelled for this close and the close is not working. The
++            # position goes back under its stop now, on this bar. Left to the next sync —
++            # which runs after the next bar is matched — that bar was matched with neither
++            # a stop nor a close working, exactly when the leg could run through its level.
++            if self._config.use_protective_stops and leg.stop_price is not None:
++                return self._place_protective_stop(provider, leg, counts)
++            return None
+         leg.exit_pending = reason
+         leg.exit_order_id = order.order_id
+         return None
+@@ -983,7 +992,13 @@ class BacktestEngine:
+             if same_size and same_level:
+                 return current_id
+             _sync(provider.cancel_order(current_id))
++        return self._place_protective_stop(provider, leg, counts)
+ 
++    def _place_protective_stop(
++        self, provider: PaperExecutionProvider, leg: _OpenLeg, counts: _MutableCounts
++    ) -> str | None:
++        """Send one protective stop for the whole leg at its level: the order id when the
++        venue took it, ``None`` when it refused it (counted, never pretended)."""
+         side = Side.SELL if leg.direction is Direction.LONG else Side.BUY
+         self._stop_placements += 1
+         intent = OrderIntent(
+diff --git a/packages/tia/src/tia/data/providers/binance_live.py b/packages/tia/src/tia/data/providers/binance_live.py
+index d7e5eba..c42ab53 100644
+--- a/packages/tia/src/tia/data/providers/binance_live.py
++++ b/packages/tia/src/tia/data/providers/binance_live.py
+@@ -79,10 +79,26 @@ _ORDER_TYPE_MAP = {
+     # Post-only. The venue rejects it (code -2010, "would immediately match and take")
+     # rather than letting it take liquidity; it carries no timeInForce parameter.
+     OrderType.LIMIT_MAKER: "LIMIT_MAKER",
++    # The protective stop. The runtime places every one as OrderType.STOP: a stop that
++    # becomes a market order when its level trades, which is the venue's STOP_LOSS. It
++    # was missing from this map, so every protective stop was refused here, before any
++    # request, and the session ran its positions without one (R25). STOP_LOSS carries a
++    # stopPrice and neither a price nor a timeInForce. REQUIRES TESTNET VALIDATION: the
++    # request shape is the documented one; no Binance host has answered it yet.
++    OrderType.STOP: "STOP_LOSS",
+     OrderType.STOP_LIMIT: "STOP_LOSS_LIMIT",
+     OrderType.TAKE_PROFIT: "TAKE_PROFIT_LIMIT",
+ }
+ 
++#: The venue's order-type word back to ours, for orders adopted from the venue (an open
++#: order listed at reconciliation, an order resolved after a timeout) that no intent of
++#: this session describes. Before, every such order was read as MARKET — a resting stop
++#: from an earlier session showed up as a market order nobody could explain.
++_VENUE_ORDER_TYPE = {venue: ours for ours, venue in _ORDER_TYPE_MAP.items()}
++
++#: Order types the venue refuses a timeInForce on ("parameter sent when not required").
++_NO_TIME_IN_FORCE = frozenset({OrderType.MARKET, OrderType.LIMIT_MAKER, OrderType.STOP})
++
+ _TIF_MAP = {
+     TimeInForce.GTC: "GTC",
+     TimeInForce.IOC: "IOC",
+@@ -146,7 +162,9 @@ class BinanceExecutionProvider(ExecutionProvider):
+                     "REQUIRES VALIDATION: endpoints and field names written from "
+                     "documentation and never exercised — every Binance host was blocked in "
+                     "the build environment. Run scripts/validate_binance.py first. Costs are "
+-                    "not modelled here because they are real: the venue charges them."
++                    "not modelled here because they are real: the venue charges them. Stops "
++                    "are sent as STOP_LOSS (stop-market); that request shape has not been "
++                    "accepted by any Binance host yet either."
+                 ),
+             ),
+             activation=activation,
+@@ -302,6 +320,16 @@ class BinanceExecutionProvider(ExecutionProvider):
+                 "it is not in the documented spot order-type set",
+                 order_type=intent.order_type.value,
+             )
++        if intent.order_type is OrderType.STOP and (
++            intent.stop_price is None or intent.stop_price <= 0 or intent.limit_price is not None
++        ):
++            # Refused here, before any request: a stop-market order is a stopPrice and
++            # nothing else. Sent without one the venue rejects it; sent with a price it
++            # would be read as another order type than the one the caller asked for.
++            raise ExecutionError(
++                "a stop order needs a positive stop price and no limit price",
++                order_type=intent.order_type.value,
++            )
+ 
+         params: dict[str, Any] = {
+             "symbol": self.to_venue_symbol(intent.symbol),
+@@ -311,9 +339,10 @@ class BinanceExecutionProvider(ExecutionProvider):
+             "newClientOrderId": intent.client_order_id,
+             "newOrderRespType": "FULL",
+         }
+-        if intent.order_type not in (OrderType.MARKET, OrderType.LIMIT_MAKER):
+-            # REQUIRES VALIDATION: the venue refuses a timeInForce on MARKET and on
+-            # LIMIT_MAKER ("parameter sent when not required"), so neither carries one.
++        if intent.order_type not in _NO_TIME_IN_FORCE:
++            # REQUIRES VALIDATION: the venue refuses a timeInForce on MARKET, on
++            # LIMIT_MAKER and on STOP_LOSS ("parameter sent when not required"), so none
++            # of them carries one.
+             params["timeInForce"] = _TIF_MAP.get(intent.time_in_force, "GTC")
+         if intent.limit_price is not None:
+             params["price"] = _format_decimal(intent.limit_price)
+@@ -646,7 +675,11 @@ class BinanceExecutionProvider(ExecutionProvider):
+             signal_id=intent.signal_id if intent else (base.signal_id if base else ""),
+             symbol=symbol,
+             side=side,
+-            order_type=intent.order_type if intent else (base.order_type if base else OrderType.MARKET),
++            order_type=(
++                intent.order_type if intent
++                else base.order_type if base
++                else _VENUE_ORDER_TYPE.get(str(payload.get("type", "")).upper(), OrderType.MARKET)
++            ),
+             quantity=quantity or 1e-9,
+             limit_price=float(payload["price"]) if _positive(payload.get("price")) else None,
+             stop_price=float(payload["stopPrice"]) if _positive(payload.get("stopPrice")) else None,
+diff --git a/packages/tia/src/tia/runtime/live.py b/packages/tia/src/tia/runtime/live.py
+index 23a5ae4..e53dc23 100644
+--- a/packages/tia/src/tia/runtime/live.py
++++ b/packages/tia/src/tia/runtime/live.py
+@@ -561,6 +561,7 @@ class LiveRuntime:
+             "stops_placed": 0, "exits_stop": 0, "exits_target": 0,
+             "exits_reversal": 0, "exits_time": 0, "suppressed_position_open": 0,
+             "unprotected_positions": 0,
++            "protective_stop_failures": 0,
+             "stops_tightened": 0, "exits_breakeven": 0, "exits_trail": 0,
+             "spread_rejected": 0, "strategy_muted": 0, "sized_down": 0,
+             "htf_rejected": 0, "htf_sized_down": 0,
+@@ -594,6 +595,16 @@ class LiveRuntime:
+         #: The one protective stop covering the open position, if any. Exactly one, sized
+         #: to the position: a stop that protects the wrong size is worse than none.
+         self._protective: dict[str, Any] | None = None
++        #: A protective stop whose submission ended without an answer the venue could
++        #: give (R25): it may rest there. Asked about on every bar before any other stop
++        #: is sent, so a lost answer never becomes two stops.
++        self._protective_unknown: OrderIntent | None = None
++        self._adopted_stop: Order | None = None
++        #: Protective stops sent this session. Part of each stop's client id: a stop put
++        #: back on the bar its predecessor was cancelled (a close that did not work, R18)
++        #: would otherwise carry the cancelled one's id, and the venue answers a repeated
++        #: id with the dead order instead of placing a new one (D1, as in the backtest).
++        self._stop_placements = 0
+         #: The exit levels the entry was approved with, carried from the decision to the
+         #: position, and the bar the position opened on (for the optional time stop).
+         self._planned_exit: dict[str, Any] = {}
+@@ -2618,6 +2629,11 @@ class LiveRuntime:
+             )
+         self._record_order(order)
+         self._save("order", {"run_id": self.run_id, "order": order})
++        if fills and not reducing:
++            # R18: an entry that fills on its acknowledgement — a market order at a real
++            # venue — is a position from this moment. It is put under its stop now, not by
++            # the next bar's position management a whole bar of market later.
++            await self._reprotect("entry filled")
+ 
+     def _save_order_if_changed(self, record: dict[str, Any], order: Order) -> None:
+         """Write the venue's view of a tracked order when it changed since the last write.
+@@ -3355,6 +3371,8 @@ class LiveRuntime:
+         if not holding:
+             if self._protective is not None:
+                 await self._cancel_protective()
++            if self._pending_exit is None and self._protective_unknown is None:
++                self._protection_confirmed()  # nothing held: nothing left unprotected
+             return
+         if self._pending_exit is not None:
+             # A close is in flight: nothing else is placed on the position — not a new
+@@ -3407,15 +3425,39 @@ class LiveRuntime:
+         from the venue's view of the order so a triggered stop closes the round trip
+         even on a venue that does not push fills. A position whose entry carried no
+         stop is counted as unprotected and said so — never silently.
++
++        A position is protected only by a stop the venue confirmed working (R25). A stop
++        it refused, rejected, or whose answer was lost and cannot be recovered leaves the
++        position unprotected, and that is not a line in a log: entries are blocked, the
++        session is halted for new orders, and the stop is asked for again on every bar.
++        A confirmed stop lifts the entry block; the halt stays for an operator to lift —
++        re-protection does not resume trading by itself.
+         """
+         stop_price = self._planned_exit.get("stop")
+         if not stop_price or stop_price <= 0:
+             if self._protective is None:
+-                self.counters["unprotected_positions"] += 1
+                 _log.warning("position_unprotected", symbol=self._symbol)
+                 self._protective = {"order_id": "", "client_order_id": "", "quantity": 0.0,
+                                     "stop_price": None, "unprotected": True}
++                self._protection_lost("the open position carries no stop level")
+             return
++        stop_price = self._stop_on_tick(float(stop_price), long=position_quantity > 0)
++
++        if self._protective_unknown is not None:
++            if not await self._settle_unknown_stop():
++                # The venue still cannot say whether the last stop arrived. A second one
++                # is not sent on top of it; the position stays counted as unprotected.
++                return
++            if self._adopted_stop is not None:
++                # It rests there after all: it is this position's stop, compared below
++                # with the level and size wanted like any other.
++                adopted = self._adopted_stop
++                self._protective = {
++                    "order_id": adopted.order_id,
++                    "client_order_id": adopted.client_order_id,
++                    "quantity": adopted.quantity - adopted.filled_quantity,
++                    "stop_price": adopted.stop_price,
++                }
+ 
+         quantity = abs(position_quantity)
+         existing = self._protective
+@@ -3432,6 +3474,7 @@ class LiveRuntime:
+                 same_size = abs(covered - quantity) <= max(quantity * 1e-6, 1e-9)
+                 same_level = abs(float(existing.get("stop_price") or 0.0) - float(stop_price)) <= 1e-9
+                 if same_size and same_level:
++                    self._protection_confirmed()
+                     return
+                 if not await self._cancel_protective():
+                     # The venue did not confirm the cancel: the old stop stays tracked and
+@@ -3440,10 +3483,16 @@ class LiveRuntime:
+                     return
+ 
+         side = Side.SELL if position_quantity > 0 else Side.BUY
++        self._stop_placements += 1
+         intent = OrderIntent(
+-            intent_id=deterministic_id("int", "stop", self._symbol, quantity, self._clock.now()),
++            intent_id=deterministic_id(
++                "int", "stop", self._symbol, quantity, self._clock.now(), self._stop_placements
++            ),
+             client_order_id=OrderIntent.build_client_order_id(
+-                signal_id=f"protective:{self._symbol}:{self.run_id}:{self.counters['bars']}",
++                signal_id=(
++                    f"protective:{self._symbol}:{self.run_id}:{self.counters['bars']}:"
++                    f"{self._stop_placements}"
++                ),
+                 symbol=self._symbol,
+                 side=side,
+                 quantity=quantity,
+@@ -3462,14 +3511,36 @@ class LiveRuntime:
+         )
+         try:
+             order = await self._execution.submit_order(intent)
++        except ReconciliationError as exc:
++            # The request left and its answer did not come back: the stop may rest at the
++            # venue. It is asked about by its client id now and on every bar until the
++            # venue answers; nothing else is sent meanwhile (a second stop on top of a
++            # resting one is the position the other way once both fire).
++            self.counters["unknown_order_states"] += 1
++            self._protective_unknown = intent
++            if not await self._settle_unknown_stop():
++                self._protection_lost(
++                    f"protective stop submission unanswered and unresolved: {str(exc)[:200]}"
++                )
++                return
++            if self._adopted_stop is None:
++                self._protection_lost(
++                    "protective stop submission unanswered; the venue says it is not working"
++                )
++                return
++            order = self._adopted_stop
+         except Exception as exc:
+             _log.warning("protective_stop_failed", error=str(exc)[:200])
++            self._protection_lost(f"protective stop refused: {str(exc)[:300]}")
+             return
+         if order.state.is_terminal and not order.fills:
+             _log.warning(
+                 "protective_stop_rejected",
+                 reason=order.reject_reason or order.state.value,
+             )
++            self._protection_lost(
++                f"protective stop rejected: {order.reject_reason or order.state.value}"
++            )
+             return
+         self._protective = {
+             "order_id": order.order_id,
+@@ -3488,6 +3559,65 @@ class LiveRuntime:
+             "live.stop_placed",
+             {"stop_price": float(stop_price), "quantity": quantity, "side": side.value},
+         )
++        if not order.state.is_terminal:
++            self._protection_confirmed()
++
++    def _stop_on_tick(self, stop_price: float, *, long: bool) -> float:
++        """The stop level on the venue's price grid, rounded toward the position: up for
++        a long's sell stop, down for a short's buy stop. A level off the grid is refused
++        by the venue (PRICE_FILTER), and rounding the other way would let the loss run
++        past the level the position was sized for."""
++        tick = self._filters.get("tick_size")
++        if not tick:
++            return stop_price
++        return float(quantize_price_passive(stop_price, tick, buy=not long))
++
++    async def _settle_unknown_stop(self) -> bool:
++        """Ask the venue about the stop whose submission went unanswered. True once its
++        fate is known — adopted as the protective stop when it rests there, forgotten when
++        the venue confirms it never arrived — False while the venue still cannot say."""
++        intent = self._protective_unknown
++        self._adopted_stop = None
++        if intent is None:
++            return True
++        try:
++            order = await self._resolve_unknown(intent)
++        except ReconciliationError as exc:
++            self._block_entries(
++                "position_unprotected",
++                f"protective stop {intent.client_order_id} unanswered and the venue cannot "
++                f"say whether it exists: {str(exc)[:200]}",
++            )
++            return False
++        self._protective_unknown = None
++        if order is not None:
++            for fill in order.fills:  # it rested and fired: what it did is booked now
++                self._on_fill(fill)
++            if not order.state.is_terminal:
++                self._adopted_stop = order
++        return True
++
++    def _protection_lost(self, reason: str) -> None:
++        """The open position has no stop the venue confirmed (R25). Counted once per
++        unprotected spell, said in an incident and in ``last_error``, entries blocked and
++        the session halted for new orders; reducing orders — the stop itself, an exit —
++        are still allowed in that state."""
++        self.counters["protective_stop_failures"] += 1
++        if "position_unprotected" not in self._blocks:
++            self.counters["unprotected_positions"] += 1
++        self._incident("protective_stop_failed", reason=reason[:500])
++        self._block_entries("position_unprotected", reason)
++        self.last_error = f"position unprotected: {reason}"[:500]
++        self.halt_new_orders(reason="open position without a confirmed protective stop")
++
++    def _protection_confirmed(self) -> None:
++        """A stop the venue confirmed working, or no position to protect: the entry
++        block for an unprotected position is lifted. A halt it caused is not — RUNNING
++        is given back by an operator, who sees why it was taken."""
++        if "position_unprotected" in self._blocks:
++            self._unblock_entries("position_unprotected")
++            if self.last_error.startswith("position unprotected:"):
++                self.last_error = ""
+ 
+     async def _read_tracked_order(self, record: dict[str, Any]) -> tuple[Order | None, str]:
+         """The venue's view of a tracked order, by either of its ids.
+@@ -3782,7 +3912,7 @@ class LiveRuntime:
+                     self._incident(
+                         "exit_rejected",
+                         reason=f"{reason}: {order.reject_reason or order.state.value}; the position "
+-                        "remains and keeps its protection",
++                        "remains and its stop is put back before the cycle goes on",
+                     )
+             self._emit(
+                 "live.exit",
+@@ -3827,6 +3957,7 @@ class LiveRuntime:
+         try:
+             portfolio = await self._execution.get_portfolio()
+         except Exception:
++            await self._reprotect(f"exit ({reason}) not sent")  # the stop is gone (R18)
+             return False
+         position = portfolio.positions.get(self._symbol)
+         if position is None or position.is_flat:
+@@ -3835,8 +3966,34 @@ class LiveRuntime:
+         quantity = abs(position.quantity)
+         side = Side.SELL if position.quantity > 0 else Side.BUY
+         order = await self._submit_exit(symbol=self._symbol, side=side, quantity=quantity, reason=reason)
++        if self._pending_exit is None:
++            # R18: the stop was cancelled to make way for this close, and no close is
++            # working — refused, rejected, filled only in part, or lost. The position goes
++            # back under its stop now: left to the next bar, the venue would match that
++            # bar with neither a stop nor a close working, which is the loss the stop is
++            # there to cap.
++            await self._reprotect(f"exit ({reason}) not working")
+         return order is not None
+ 
++    async def _reprotect(self, context: str) -> None:
++        """Put the open position under its stop now, within the cycle (R18): after an
++        exit that is not working, and after an entry that filled on its acknowledgement."""
++        try:
++            portfolio = await self._execution.get_portfolio()
++        except Exception as exc:
++            self._protection_lost(f"{context}; the position cannot be read: {str(exc)[:200]}")
++            return
++        position = portfolio.positions.get(self._symbol)
++        if position is None or position.is_flat:
++            return
++        if not self.machine.state.accepts_reducing_orders:
++            self._protection_lost(
++                f"{context}; the session's state ({self.machine.state.value}) does not "
++                "allow a stop to be placed"
++            )
++            return
++        await self._sync_protective_stop(position.quantity)
++
+     async def _resolve_unknown(self, intent: OrderIntent) -> Order | None:
+         resolver = getattr(self._execution, "resolve_unknown_order", None)
+         if resolver is None:
+diff --git a/scripts/validate_binance.py b/scripts/validate_binance.py
+index 2023fe0..ee64a73 100644
+--- a/scripts/validate_binance.py
++++ b/scripts/validate_binance.py
+@@ -24,6 +24,9 @@ output, and both fail closed until they are.
+     # Add a live order round trip. TESTNET ONLY, and it says so.
+     python scripts/validate_binance.py --account --order --testnet
+ 
++    # And the protective stop the runtime places on every position (R25). TESTNET ONLY.
++    python scripts/validate_binance.py --account --order --stop --testnet
++
+ **What this script will not do.** It will not place an order against mainnet. ``--order``
+ requires ``--testnet``, and the check is here rather than in a comment because a validation
+ script that can spend money is a validation script nobody should run.
+@@ -49,10 +52,13 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "packages" / "tia"
+ import httpx
+ 
+ from tia.core.clock import SystemClock
++from tia.data.providers.binance_live import BinanceExecutionProvider
+ from tia.data.providers.binance_signing import (
+     BinanceCredentials,
+     BinanceSigner,
+ )
++from tia.domain.enums import OrderType, Side, TimeInForce
++from tia.domain.orders import OrderIntent
+ from tia.live.permissions import check_permissions
+ 
+ #: Bumped when the envelope or the fact set changes. The gate refuses records from any
+@@ -428,6 +434,73 @@ async def validate_order(
+         results.bad("cancel", f"{exc}")
+ 
+ 
++async def validate_stop(
++    client: httpx.AsyncClient, signer: BinanceSigner, results: Results, symbol: str
++) -> None:
++    """Place one protective stop **through the adapter** on the testnet, read it, cancel it.
++
++    The request is the one the live runtime sends for every protective stop (an
++    ``OrderType.STOP`` intent, which the adapter maps to STOP_LOSS), not one written by
++    hand here: what is validated is this repository's request, not the documentation. A
++    SELL stop half the market below, for a small size the testnet account holds: it rests
++    and never triggers. Recorded as ``protective_stop_accepted``; the activation gate's
++    venue validation fails without it (R25).
++    """
++    section("Protective stop through the adapter (testnet)")
++    results.facts["protective_stop_accepted"] = False
++    try:
++        book = (
++            await client.get("/api/v3/ticker/bookTicker", params={"symbol": symbol})
++        ).json()
++        level = round(float(book["bidPrice"]) * 0.5, 2)
++    except (httpx.HTTPError, KeyError, ValueError) as exc:
++        results.bad("protective stop", f"could not read the book: {exc}")
++        return
++    adapter = BinanceExecutionProvider(
++        signer=signer, clock=SystemClock(), simulated=True, base_url=str(client.base_url)
++    )
++    ours = BinanceExecutionProvider.from_venue_symbol(symbol)
++    stamp = int(datetime.now(UTC).timestamp())
++    intent = OrderIntent(
++        intent_id=f"validate-stop-{stamp}",
++        client_order_id=OrderIntent.build_client_order_id(
++            signal_id=f"validate-stop-{stamp}", symbol=ours, side=Side.SELL,
++            quantity=0.001, order_type=OrderType.STOP,
++        ),
++        signal_id=f"validate-stop-{stamp}",
++        risk_decision_id="validate-stop",
++        symbol=ours,
++        side=Side.SELL,
++        quantity=0.001,
++        order_type=OrderType.STOP,
++        stop_price=level,
++        time_in_force=TimeInForce.GTC,
++        created_at=datetime.now(UTC),
++        reduce_only=True,
++    )
++    try:
++        try:
++            order = await adapter.submit_order(intent)
++        except Exception as exc:
++            results.bad("protective stop", f"the venue refused the adapter's stop: {str(exc)[:300]}")
++            return
++        if order.state.is_terminal:
++            results.bad("protective stop", f"accepted then {order.state.value}: {order.reject_reason}")
++            return
++        results.facts["protective_stop_accepted"] = True
++        results.ok("protective stop", f"STOP_LOSS resting, orderId={order.order_id} stop={level}")
++        try:
++            cancelled = await adapter.cancel_order(order.client_order_id)
++            results.ok("protective stop cancel", f"state={cancelled.state.value}")
++        except Exception as exc:
++            results.bad(
++                "protective stop cancel",
++                f"{str(exc)[:200]} — a stop was left resting on the testnet; cancel it manually.",
++            )
++    finally:
++        await adapter.close()
++
++
+ # --------------------------------------------------------------------------- main
+ 
+ 
+@@ -442,7 +515,7 @@ async def run(args: argparse.Namespace) -> Results:
+     async with httpx.AsyncClient(base_url=base_url, timeout=20.0) as client:
+         await validate_public(client, results, symbol)
+ 
+-        if args.account or args.order:
++        if args.account or args.order or args.stop:
+             # The configuration reads TIA_LIVE__*; the flat names are the older spelling.
+             api_key = os.environ.get("TIA_LIVE__BINANCE_API_KEY", "") or os.environ.get("TIA_BINANCE_API_KEY", "")
+             api_secret = os.environ.get("TIA_LIVE__BINANCE_API_SECRET", "") or os.environ.get("TIA_BINANCE_API_SECRET", "")
+@@ -465,6 +538,8 @@ async def run(args: argparse.Namespace) -> Results:
+                 await validate_account(client, signer, results)
+                 if args.order:
+                     await validate_order(client, signer, results, symbol)
++                if args.stop:
++                    await validate_stop(client, signer, results, symbol)
+ 
+     return results
+ 
+@@ -550,13 +625,18 @@ def main() -> int:
+         action="store_true",
+         help="also place, duplicate and cancel one resting order (requires --testnet)",
+     )
++    parser.add_argument(
++        "--stop",
++        action="store_true",
++        help="also place and cancel one protective stop through the adapter (requires --testnet)",
++    )
+     parser.add_argument("--recv-window", type=int, default=5_000)
+     parser.add_argument("--json-out", default="", help="write confirmed facts to this path")
+     args = parser.parse_args()
+ 
+-    if args.order and not args.testnet:
++    if (args.order or args.stop) and not args.testnet:
+         parser.error(
+-            "--order requires --testnet. This script does not place orders against an "
++            "--order and --stop require --testnet. This script does not place orders against an "
+             "account with real money in it, and the restriction is not overridable."
+         )
+ 
+diff --git a/tests/integration/test_live_position_protection.py b/tests/integration/test_live_position_protection.py
+new file mode 100644
+index 0000000..82513b6
+--- /dev/null
++++ b/tests/integration/test_live_position_protection.py
+@@ -0,0 +1,373 @@
++"""R25 and R18 in the live runtime: a held position is never left unprotected by choice.
++
++Policy, fixed before these tests were written:
++
++* A position is *protected* when the venue holds, for at least its whole size, a working
++  stop on the closing side, or a working close (a reduce-only order that is not a stop).
++* At every bar boundary — the moment a venue can match against a new bar — a held position
++  is protected. Tolerance zero: no bar, not one.
++* Inside a cycle the stop is cancelled to make way for a close; until the close is accepted
++  or the stop is back, the position is unprotected. That window is measured here in venue
++  calls and must close before the cycle ends (at most two calls: the cancel and a close
++  that does not work).
++* A stop the venue did not confirm — refused, rejected, or lost in a timeout it cannot
++  answer — is not a log line (R25): the position is counted unprotected once per spell, an
++  incident says why, entries are blocked, the session is halted for new orders and the stop
++  is asked for again every bar. A stop the venue confirms lifts the entry block; the halt
++  stays for an operator. A stop whose answer was lost is asked about before another is
++  sent: never two stops because an answer went missing.
++
++The venue here is the in-memory one of ``test_live_runtime``, which fills market orders on
++their acknowledgement as a real venue does, plus scripted failures and a record of what it
++holds after every call. Expected outcomes are stated per test before it runs.
++"""
++
++from __future__ import annotations
++
++from dataclasses import dataclass
++from datetime import UTC, datetime, timedelta
++from typing import Any
++
++from tia.core.clock import SimulatedClock
++from tia.core.errors import ExecutionError, ReconciliationError
++from tia.domain.enums import OrderState, OrderType, Side
++from tia.domain.orders import Order, OrderIntent
++from tia.execution.state_machine import transition
++from tia.runtime.live import LiveRuntime
++from tia.runtime.scenarios import generate_series, get_scenario
++from tia.runtime.states import LiveState
++
++from .test_live_runtime import FakeExecution, FakeMarketData, _open_a_position, live_settings
++
++SYMBOL = "BTC-USD"
++
++
++@dataclass(frozen=True)
++class Event:
++    what: str
++    held: float
++    protected: bool | None  # None: nothing held
++    stops: int  # stops working at the venue
++
++
++class ProtectionVenue(FakeExecution):
++    """The in-memory venue with scripted stop and close failures and a record of whether
++    the position was protected after every call it answered and at every bar boundary."""
++
++    def __init__(self, **kwargs: Any) -> None:
++        super().__init__(**kwargs)
++        self.stop_script: list[str] = []  # per STOP submission: refuse | reject | timeout_absent | timeout_present | timeout_unknown
++        self.stop_default = ""  # applied once the script is used up ("" = accept)
++        self.close_script: list[str] = []  # per close: reject | raise | timeout_absent
++        self.reject_first_close_of_each_trip = False
++        self.resolver_down = False
++        self.events: list[Event] = []
++        self.looks: list[Event] = []
++        self.stop_submissions = 0
++        self.entry_submissions = 0
++        self._trip_close_rejected = False
++
++    # -- what the position has ---------------------------------------------------------
++    def held(self) -> float:
++        position = self.positions.get(SYMBOL)
++        return 0.0 if position is None else float(position.quantity)
++
++    def protected(self) -> bool | None:
++        held = self.held()
++        if abs(held) < 1e-12:
++            return None
++        against = Side.SELL if held > 0 else Side.BUY
++        for order in self.orders.values():
++            if order.state.is_terminal or order.symbol != SYMBOL or order.side is not against:
++                continue
++            if order.quantity - order.filled_quantity + 1e-12 < abs(held):
++                continue
++            if order.order_type is OrderType.STOP or order.reduce_only:
++                return True
++        return False
++
++    def _note(self, what: str) -> None:
++        self.events.append(Event(what, self.held(), self.protected(), len(self.working_stops())))
++
++    def look(self) -> None:
++        self.looks.append(Event("bar boundary", self.held(), self.protected(), len(self.working_stops())))
++
++    def working_stops(self) -> list[Order]:
++        return [o for o in self.orders.values() if o.order_type is OrderType.STOP and not o.state.is_terminal]
++
++    # -- the venue --------------------------------------------------------------------
++    def _dead(self, intent: OrderIntent, state: OrderState) -> Order:
++        now = self._clock_now()
++        self.submissions += 1
++        order = Order(
++            order_id=f"o-{self.submissions}", client_order_id=intent.client_order_id, intent_id=intent.intent_id,
++            signal_id=intent.signal_id, symbol=intent.symbol, side=intent.side, order_type=intent.order_type,
++            quantity=intent.quantity, stop_price=intent.stop_price, state=OrderState.ACKNOWLEDGED,
++            created_at=now, updated_at=now,
++        )
++        if state is OrderState.REJECTED:
++            transition(order, OrderState.REJECTED, at=now, reason="scripted venue rejection")
++        else:
++            transition(order, OrderState.CANCEL_REQUESTED, at=now)
++            transition(order, OrderState.CANCELLED, at=now, reason="scripted venue rejection")
++        order.reject_reason = "scripted venue rejection"
++        self.orders[intent.client_order_id] = order
++        return order
++
++    async def submit_order(self, intent: OrderIntent) -> Order:
++        is_stop = intent.order_type is OrderType.STOP
++        is_close = intent.reduce_only and not is_stop
++        try:
++            if is_stop and intent.client_order_id not in self.orders:
++                self.stop_submissions += 1
++                step = self.stop_script.pop(0) if self.stop_script else self.stop_default
++                if step == "refuse":
++                    raise ExecutionError("order type stop is not supported by this adapter")
++                if step == "reject":
++                    return self._dead(intent, OrderState.REJECTED)
++                if step == "timeout_absent":
++                    raise ReconciliationError("stop submission timed out (scripted)")
++                if step in ("timeout_present", "timeout_unknown"):
++                    await super().submit_order(intent)  # it did arrive and rests
++                    if step == "timeout_unknown":
++                        self.resolver_down = True
++                    raise ReconciliationError("stop submission timed out (scripted)")
++            if is_close and intent.client_order_id not in self.orders:
++                step = self.close_script.pop(0) if self.close_script else ""
++                if not step and self.reject_first_close_of_each_trip and not self._trip_close_rejected:
++                    self._trip_close_rejected = True
++                    step = "reject"
++                if step == "reject":
++                    return self._dead(intent, OrderState.CANCELLED)
++                if step == "raise":
++                    raise ExecutionError("close refused by the venue (scripted)")
++                if step == "timeout_absent":
++                    raise ReconciliationError("close submission timed out (scripted)")
++            if not intent.reduce_only and not is_stop:
++                self.entry_submissions += 1
++            order = await super().submit_order(intent)
++            if is_close and order.fills:
++                self._trip_close_rejected = False
++            return order
++        finally:
++            self._note(f"submit {intent.order_type.value}{' close' if is_close else ''}")
++
++    async def cancel_order(self, order_id: str) -> Order:
++        try:
++            return await super().cancel_order(order_id)
++        finally:
++            self._note("cancel")
++
++    async def resolve_unknown_order(self, *, symbol: str, client_order_id: str) -> Order | None:
++        if self.resolver_down:
++            raise ReconciliationError("the venue cannot say (scripted)")
++        return self.orders.get(client_order_id)
++
++
++def build(*, max_holding_bars: int = 0) -> tuple[LiveRuntime, ProtectionVenue, FakeMarketData, list[dict[str, Any]]]:
++    scenario = get_scenario("trend_up")
++    candles = generate_series(
++        scenario, symbol=SYMBOL, timeframe="1m",
++        start=datetime.now(UTC) - timedelta(minutes=scenario.total_bars + 5), seed=9,
++    )
++    clock = SimulatedClock(candles[149].close_time + timedelta(seconds=1))
++    market = FakeMarketData(candles, clock)
++    venue = ProtectionVenue(clock=clock)
++    written: list[dict[str, Any]] = []
++
++    def persist(kind: str, payload: dict[str, Any]) -> None:
++        if kind == "incident":
++            written.append(payload)
++
++    runtime = LiveRuntime(
++        live_settings(max_holding_bars=max_holding_bars), activation=None, market_data=market,
++        execution=venue, clock=clock, poll_interval_seconds=0.0, persist=persist,
++    )
++    return runtime, venue, market, written
++
++
++async def bar(runtime: LiveRuntime, venue: ProtectionVenue, market: FakeMarketData) -> None:
++    market.advance()
++    venue.look()  # the venue may match against this bar now: the position must be protected
++    await runtime._cycle_once()
++
++
++def unprotected_streak(events: list[Event]) -> int:
++    longest = streak = 0
++    for event in events:
++        streak = streak + 1 if event.protected is False else 0
++        longest = max(longest, streak)
++    return longest
++
++
++# ------------------------------------------------------------------------------- R18
++
++
++async def test_every_bar_boundary_finds_the_position_protected_while_closes_are_rejected() -> None:
++    """Expected: the first close of every round trip rejected, time stops every 3 bars,
++    200 bars; at least 3 closes rejected and 3 round trips completed; 0 bar boundaries with
++    a held position unprotected; inside a cycle at most 2 venue calls unprotected; never
++    two stops working at once; nothing counted unprotected."""
++    runtime, venue, market, _ = build(max_holding_bars=3)
++    venue.reject_first_close_of_each_trip = True
++    await runtime.start()
++    try:
++        await _open_a_position(runtime, venue, market)
++        for _ in range(200):
++            await bar(runtime, venue, market)
++        assert runtime.counters["exits_rejected"] >= 3, runtime.counters["exits_rejected"]
++        assert runtime.counters["round_trips"] >= 3, runtime.counters["round_trips"]
++        held_looks = [look for look in venue.looks if look.protected is not None]
++        assert held_looks, "the scenario must hold positions across bars"
++        assert [look for look in held_looks if look.protected is False] == []
++        assert unprotected_streak(venue.events) <= 2, unprotected_streak(venue.events)
++        assert max(e.stops for e in venue.events) == 1
++        assert runtime.counters["unprotected_positions"] == 0
++    finally:
++        await runtime.stop()
++
++
++async def test_a_close_that_raises_or_times_out_puts_the_stop_back_in_the_same_call() -> None:
++    """Expected: after each failed close (refused with an exception; timed out and the
++    venue says it never arrived) exactly one stop is working before the market moves."""
++    runtime, venue, market, written = build()
++    await runtime.start()
++    try:
++        await _open_a_position(runtime, venue, market)
++        await bar(runtime, venue, market)
++        for failure in ("raise", "timeout_absent"):
++            venue.close_script = [failure]
++            assert await runtime._close_position("time stop") is False
++            assert venue.held() != 0.0, "the position is still there"
++            assert len(venue.working_stops()) == 1, f"{failure}: the stop is back before the next bar"
++            assert venue.protected() is True
++        assert {"exit_submit_failed", "exit_not_accepted"} <= {i["kind"] for i in written}
++    finally:
++        await runtime.stop()
++
++
++async def test_an_entry_that_fills_at_once_is_protected_before_the_cycle_ends() -> None:
++    """Expected: the cycle that fills the entry also places its stop; the very next bar
++    boundary finds the position protected."""
++    runtime, venue, market, _ = build()
++    await runtime.start()
++    try:
++        await _open_a_position(runtime, venue, market)
++        assert venue.held() != 0.0
++        assert venue.protected() is True
++        assert unprotected_streak(venue.events) <= 1  # the entry fill, then its stop
++    finally:
++        await runtime.stop()
++
++
++# ------------------------------------------------------------------------------- R25
++
++
++async def test_a_venue_that_refuses_every_stop_blocks_entries_halts_and_keeps_asking() -> None:
++    """Expected: unprotected counted once; an incident; entries blocked; HALT_NEW_ORDERS;
++    the stop asked for again on each of 5 bars; no entry sent meanwhile; the snapshot says
++    unprotected. Once the venue takes the stop: one working stop, entry block lifted, the
++    halt kept until an operator resumes."""
++    runtime, venue, market, written = build()
++    venue.stop_default = "refuse"
++    await runtime.start()
++    try:
++        await _open_a_position(runtime, venue, market)
++        assert venue.protected() is False
++        assert runtime.counters["unprotected_positions"] == 1
++        assert "position_unprotected" in runtime.entry_blocks
++        assert runtime.machine.state is LiveState.HALT_NEW_ORDERS
++        assert runtime.last_error.startswith("position unprotected")
++        assert runtime.snapshot()["position"]["protected"] is False
++        assert "protective_stop_failed" in {i["kind"] for i in written}
++        asked, entries = venue.stop_submissions, venue.entry_submissions
++        for _ in range(5):
++            await bar(runtime, venue, market)
++        assert venue.stop_submissions == asked + 5, "asked for again on every bar"
++        assert venue.entry_submissions == entries, "no entry while a position is unprotected"
++        assert runtime.counters["unprotected_positions"] == 1, "one spell, counted once"
++        assert runtime.counters["protective_stop_failures"] == venue.stop_submissions
++
++        venue.stop_default = ""
++        await bar(runtime, venue, market)
++        assert len(venue.working_stops()) == 1 and venue.protected() is True
++        assert "position_unprotected" not in runtime.entry_blocks
++        assert runtime.last_error == ""
++        assert runtime.machine.state is LiveState.HALT_NEW_ORDERS, "re-protection does not resume trading"
++        runtime.resume(actor="test operator")
++        assert runtime.machine.state is LiveState.RUNNING
++    finally:
++        await runtime.stop()
++
++
++async def test_a_stop_rejected_as_an_order_is_handled_like_a_refused_one() -> None:
++    """Expected: a REJECTED stop order is not a stop: same block, halt and count."""
++    runtime, venue, market, _ = build()
++    venue.stop_script = ["reject"]
++    await runtime.start()
++    try:
++        await _open_a_position(runtime, venue, market)
++        assert runtime.counters["unprotected_positions"] == 1
++        assert runtime.machine.state is LiveState.HALT_NEW_ORDERS
++        await bar(runtime, venue, market)
++        assert len(venue.working_stops()) == 1 and "position_unprotected" not in runtime.entry_blocks
++    finally:
++        await runtime.stop()
++
++
++async def test_a_stop_whose_answer_was_lost_but_rests_at_the_venue_is_adopted_not_duplicated() -> None:
++    """Expected: the timed-out stop is found resting and adopted in the same call: one
++    stop sent, one working, nothing halted or counted unprotected; later bars move it like
++    any other (the trailing stop), never with two working at once."""
++    runtime, venue, market, _ = build()
++    venue.stop_script = ["timeout_present"]
++    await runtime.start()
++    try:
++        await _open_a_position(runtime, venue, market)
++        assert venue.stop_submissions == 1
++        assert len(venue.working_stops()) == 1 and venue.protected() is True
++        assert runtime.counters["unknown_order_states"] >= 1
++        assert runtime.counters["unprotected_positions"] == 0
++        assert runtime.machine.state is LiveState.RUNNING
++        for _ in range(3):
++            await bar(runtime, venue, market)
++        assert max(e.stops for e in venue.events) == 1 and venue.protected() is True
++    finally:
++        await runtime.stop()
++
++
++async def test_a_stop_the_venue_says_never_arrived_is_sent_again_on_the_next_bar() -> None:
++    """Expected: unprotected spell counted, halted; the next bar sends a new stop."""
++    runtime, venue, market, _ = build()
++    venue.stop_script = ["timeout_absent"]
++    await runtime.start()
++    try:
++        await _open_a_position(runtime, venue, market)
++        assert runtime.counters["unprotected_positions"] == 1
++        await bar(runtime, venue, market)
++        assert venue.stop_submissions == 2 and len(venue.working_stops()) == 1
++    finally:
++        await runtime.stop()
++
++
++async def test_no_second_stop_while_the_venue_cannot_say_whether_the_first_arrived() -> None:
++    """Expected: while the venue cannot answer, no stop is sent (3 bars), entries stay
++    blocked and the session halted; when it answers, the resting stop is adopted (and moved,
++    if the exit rules moved its level meanwhile), never two working at once."""
++    runtime, venue, market, _ = build()
++    venue.stop_script = ["timeout_unknown"]
++    await runtime.start()
++    try:
++        await _open_a_position(runtime, venue, market)
++        for _ in range(3):
++            await bar(runtime, venue, market)
++        assert venue.stop_submissions == 1, "never two stops because an answer went missing"
++        assert "position_unprotected" in runtime.entry_blocks
++        assert runtime.machine.state is LiveState.HALT_NEW_ORDERS
++        venue.resolver_down = False
++        await bar(runtime, venue, market)
++        assert len(venue.working_stops()) == 1 and venue.protected() is True
++        assert max(e.stops for e in venue.events) == 1
++        assert "position_unprotected" not in runtime.entry_blocks
++    finally:
++        await runtime.stop()
+diff --git a/tests/integration/test_live_runtime.py b/tests/integration/test_live_runtime.py
+index b700577..b5d76ee 100644
+--- a/tests/integration/test_live_runtime.py
++++ b/tests/integration/test_live_runtime.py
+@@ -1289,25 +1289,37 @@ async def test_every_open_position_gets_exactly_one_protective_stop() -> None:
+     sized to it, and reported as such."""
+     runtime, execution, market = build_runtime_paper()
+     await runtime.start()
++
++    def stops() -> list[Order]:
++        return [o for o in execution.orders.values() if o.order_type is OrderType.STOP]
++
+     try:
+         await _open_a_position(runtime, execution, market)
+-        # The stop is placed by the next bar's position management.
++        # R18: this venue fills the entry on its acknowledgement, as a real one does, so
++        # the position exists from that moment and its stop is placed then — before, it
++        # waited for the next bar's position management, a whole bar unprotected.
++        assert [o.state.is_terminal for o in stops()] == [False], "protected as the entry fills"
+         market.advance()
+         await runtime._cycle_once()
+-        stops = [o for o in execution.orders.values() if o.order_type is OrderType.STOP]
+-        assert len(stops) == 1, "exactly one protective stop"
+-        stop = stops[0]
+-        assert not stop.state.is_terminal
++        working = [o for o in stops() if not o.state.is_terminal]
++        assert len(working) == 1, "exactly one protective stop"
++        stop = working[0]
+         assert stop.stop_price is not None and stop.stop_price > 0
+         position = await execution.get_positions()
+         held = abs(next(iter(position.values())).quantity)
+         assert stop.quantity == pytest.approx(held)
+-        assert runtime.counters["stops_placed"] == 1
++        # A stop is replaced only when the exit rules moved its level (the trailing stop
++        # may move it on this bar); never re-sent at the level it already has.
++        assert runtime.counters["stops_placed"] == len(stops())
++        assert len({o.stop_price for o in stops()}) == len(stops()), "re-sent at an unchanged level"
+         assert runtime.snapshot()["position"]["protected"] is True
+-        # Another bar changes nothing: one stop, not one per bar.
++        # Another bar: one stop working, and a new one only if the level moved.
++        sent, level = len(stops()), stop.stop_price
+         market.advance()
+         await runtime._cycle_once()
+-        assert sum(1 for o in execution.orders.values() if o.order_type is OrderType.STOP) == 1
++        assert sum(1 for o in stops() if not o.state.is_terminal) == 1
++        moved = runtime._planned_exit["stop"] != level
++        assert len(stops()) == sent + (1 if moved else 0)
+     finally:
+         await runtime.stop()
+ 
+@@ -1321,7 +1333,7 @@ async def test_a_triggered_stop_closes_the_round_trip_and_records_why() -> None:
+         await _open_a_position(runtime, execution, market)
+         market.advance()
+         await runtime._cycle_once()
+-        stop = next(o for o in execution.orders.values() if o.order_type is OrderType.STOP)
++        stop = next(o for o in execution.orders.values() if o.order_type is OrderType.STOP and not o.state.is_terminal)
+         reviews_before = runtime._retro.reviews
+ 
+         execution.fill_resting(stop)  # the market went through the stop
+@@ -1729,7 +1741,7 @@ def _synthetic_review(strategy_id: str, net_bps: float, n: int) -> dict[str, Any
+ async def _close_through_the_stop(runtime: LiveRuntime, execution: FakeExecution, market: FakeMarketData) -> None:
+     market.advance()
+     await runtime._cycle_once()
+-    stop = next(o for o in execution.orders.values() if o.order_type is OrderType.STOP)
++    stop = next(o for o in execution.orders.values() if o.order_type is OrderType.STOP and not o.state.is_terminal)
+     execution.fill_resting(stop)
+     market.advance()
+     await runtime._cycle_once()
+diff --git a/tests/unit/test_backtest_protection_window.py b/tests/unit/test_backtest_protection_window.py
+new file mode 100644
+index 0000000..7037b5d
+--- /dev/null
++++ b/tests/unit/test_backtest_protection_window.py
+@@ -0,0 +1,207 @@
++"""R18 in the backtest: no bar is matched with a held position the engine left uncovered.
++
++The venue matches resting orders at the start of every bar. A held position must meet that
++moment covered: a working stop on the closing side, or a working close. Tolerance zero —
++the order-hygiene tests allow up to eight bars and the version guard one, and a one-bar
++allowance is exactly where this window hid: a close the venue rejected left the stop
++cancelled until the next sync, which runs *after* the next bar is matched.
++
++The only uncovered bar these tests accept is one the venue chose: the engine sent a stop
++on the previous bar and the venue rejected it (a random rejection rate rejects stops too).
++Every other uncovered bar fails, with the bar and what was sent before it.
++
++Expected outcomes, fixed before running: 0 engine-caused uncovered bars in every scenario,
++and each scenario must actually reject closes (or stops) for the check to mean anything.
++"""
++
++from __future__ import annotations
++
++import asyncio
++from dataclasses import dataclass, field
++from pathlib import Path
++from typing import ClassVar
++
++import pytest
++
++import tia.backtest.engine as engine_module
++from tia.backtest import BacktestConfig, BacktestEngine
++from tia.core.config import ExecutionSimConfig
++from tia.data.providers.csv_replay import CsvReplayProvider
++from tia.domain.enums import OrderState, OrderType, Side
++from tia.domain.instruments import DEFAULT_UNIVERSE
++from tia.domain.market import Candle
++from tia.execution.paper import PaperExecutionProvider
++from tia.execution.state_machine import transition
++from tia.strategy import library
++from tia.strategy.library import TrendFollowingStrategy
++
++FIXTURES = Path(__file__).resolve().parents[2] / "data" / "fixtures"
++SERIES: list[Candle] = asyncio.run(CsvReplayProvider(FIXTURES).get_candles("BTC-USD", "1h", limit=700))
++
++
++@dataclass
++class Sent:
++    bar: int
++    order_type: OrderType
++    reduce_only: bool
++    rejected: bool
++
++
++@dataclass
++class Look:
++    bar: int
++    held: float
++    covered: bool
++
++
++@dataclass
++class Record:
++    sent: list[Sent] = field(default_factory=list)
++    looks: list[Look] = field(default_factory=list)
++    closes_rejected: int = 0
++    stops_rejected: int = 0
++
++
++def _is_close(order: object) -> bool:
++    return bool(getattr(order, "reduce_only", False)) and getattr(order, "order_type", None) is not OrderType.STOP
++
++
++class _Venue(PaperExecutionProvider):
++    """The paper venue, recording; per scenario it rejects closes (the first of each
++    position, or the first two) or lets them fill only at once."""
++
++    last: ClassVar[_Venue | None] = None
++    closes_to_reject: ClassVar[int] = 0
++    closes_are_ioc: ClassVar[bool] = False
++
++    def __init__(self, *args: object, **kwargs: object) -> None:
++        super().__init__(*args, **kwargs)  # type: ignore[arg-type]
++        _Venue.last = self
++        self.bar = -1
++        self.record = Record()
++        self._rejected_this_position = 0
++
++    def _held(self, symbol: str) -> float:
++        position = self.portfolio.positions.get(symbol)
++        return 0.0 if position is None or position.is_flat else float(position.quantity)
++
++    def _should_reject(self, order):  # type: ignore[no-untyped-def]
++        if _is_close(order) and self._rejected_this_position < self.closes_to_reject:
++            self._rejected_this_position += 1
++            self.record.closes_rejected += 1
++            return True
++        rejected = super()._should_reject(order)
++        if rejected and order.order_type is OrderType.STOP:
++            self.record.stops_rejected += 1
++        return rejected
++
++    async def submit_order(self, intent):  # type: ignore[no-untyped-def]
++        order = await super().submit_order(intent)
++        self.record.sent.append(Sent(self.bar, intent.order_type, bool(intent.reduce_only),
++                                     order.state.is_terminal and not order.fills))
++        return order
++
++    def _try_fill(self, order, candle):  # type: ignore[no-untyped-def]
++        before = self._held(order.symbol)
++        fill = super()._try_fill(order, candle)
++        if fill is not None and before == 0.0 and self._held(order.symbol) != 0.0:
++            self._rejected_this_position = 0  # a new position
++        if self.closes_are_ioc and _is_close(order) and not order.state.is_terminal:
++            transition(order, OrderState.EXPIRED, at=candle.close_time, reason="immediate-or-cancel")
++        return fill
++
++    def on_bar(self, candle):  # type: ignore[no-untyped-def]
++        self.bar += 1
++        held = self._held(candle.symbol)
++        covered = False
++        if held:
++            against = Side.SELL if held > 0 else Side.BUY
++            for order in asyncio.run(self.get_orders(open_only=True)):
++                if order.symbol != candle.symbol or order.side is not against:
++                    continue
++                if order.quantity - order.filled_quantity + 1e-12 < abs(held):
++                    continue
++                if order.order_type is OrderType.STOP or order.reduce_only:
++                    covered = True
++        self.record.looks.append(Look(self.bar, held, covered))
++        return super().on_bar(candle)
++
++
++class _PatientTrendFollowing(TrendFollowingStrategy):
++    """Keeps positions open long enough for the signal to reverse (as in the hygiene tests)."""
++
++    def __init__(self) -> None:
++        super().__init__(adx_threshold=10.0, atr_stop_multiple=12.0)
++
++
++def _run(monkeypatch: pytest.MonkeyPatch, *, closes_to_reject: int = 1, closes_are_ioc: bool = False,
++         reject: float = 0.0, partial: float = 0.0, strategies: tuple[str, ...] | None = None,
++         **config: object) -> Record:
++    monkeypatch.setattr(engine_module, "PaperExecutionProvider", _Venue)
++    monkeypatch.setattr(_Venue, "closes_to_reject", closes_to_reject)
++    monkeypatch.setattr(_Venue, "closes_are_ioc", closes_are_ioc)
++    monkeypatch.setattr(_Venue, "last", None)
++    BacktestEngine(
++        BacktestConfig(dataset="fixtures", timeframe="1h", warmup_bars=120,
++                       execution=ExecutionSimConfig(reject_probability=reject, partial_fill_probability=partial),
++                       **config),
++        DEFAULT_UNIVERSE,
++        strategies=strategies,
++    ).run(SERIES)
++    venue = _Venue.last
++    assert venue is not None and len(venue.record.looks) == len(SERIES), "the engine did not run on the recording venue"
++    return venue.record
++
++
++def uncovered_by_the_engine(record: Record) -> list[str]:
++    """Bars matched with a held position and nothing covering it, except where the venue
++    rejected the stop the engine sent on the bar before."""
++    found = []
++    for look in record.looks:
++        if not look.held or look.covered:
++            continue
++        before = [s for s in record.sent if s.bar == look.bar - 1]
++        last_stop = next((s for s in reversed(before) if s.order_type is OrderType.STOP), None)
++        if last_stop is not None and last_stop.rejected:
++            continue  # the venue's choice, not the engine's
++        sent = [f"{s.order_type.value}{'/close' if s.reduce_only else ''}{' REJECTED' if s.rejected else ''}" for s in before]
++        found.append(f"bar {look.bar}: {look.held} held uncovered; sent on bar {look.bar - 1}: {sent}")
++    return found
++
++
++def test_a_rejected_time_stop_close_leaves_no_bar_uncovered(monkeypatch: pytest.MonkeyPatch) -> None:
++    record = _run(monkeypatch, closes_to_reject=1, max_holding_bars=6)
++    assert record.closes_rejected >= 5, record.closes_rejected
++    assert not uncovered_by_the_engine(record), uncovered_by_the_engine(record)[:3]
++
++
++def test_a_rejected_reversal_close_leaves_no_bar_uncovered(monkeypatch: pytest.MonkeyPatch) -> None:
++    """The reversal path: the close is asked for in the decision step and the bar ends
++    right after it — before 1.2.0 with the stop cancelled and nothing working."""
++    monkeypatch.setitem(library.STRATEGY_REGISTRY, "trend_following", _PatientTrendFollowing)
++    record = _run(monkeypatch, closes_to_reject=1, strategies=("trend_following",), use_target=False,
++                  trail_atr_multiple=50.0, breakeven_after_r=50.0)
++    assert record.closes_rejected >= 3, record.closes_rejected  # the fixture reverses three legs
++    assert not uncovered_by_the_engine(record), uncovered_by_the_engine(record)[:3]
++
++
++def test_closes_rejected_twice_with_random_rejections_and_partials(monkeypatch: pytest.MonkeyPatch) -> None:
++    record = _run(monkeypatch, closes_to_reject=2, reject=0.3, partial=0.6, entry_order_type="limit",
++                  max_holding_bars=6)
++    assert record.closes_rejected >= 5 and record.stops_rejected >= 1, (record.closes_rejected, record.stops_rejected)
++    assert not uncovered_by_the_engine(record), uncovered_by_the_engine(record)[:3]
++
++
++def test_immediate_or_cancel_closes_leave_no_bar_uncovered(monkeypatch: pytest.MonkeyPatch) -> None:
++    record = _run(monkeypatch, closes_to_reject=0, closes_are_ioc=True, partial=0.9, max_holding_bars=6)
++    assert any(s.reduce_only for s in record.sent)
++    assert not uncovered_by_the_engine(record), uncovered_by_the_engine(record)[:3]
++
++
++def test_the_check_catches_an_uncovered_bar_and_excuses_only_a_rejected_stop() -> None:
++    """Without this a check that can never fail would pass every engine."""
++    caught = Record(sent=[Sent(4, OrderType.MARKET, True, True)], looks=[Look(5, 1.0, False)])
++    assert uncovered_by_the_engine(caught)
++    excused = Record(sent=[Sent(4, OrderType.STOP, False, True)], looks=[Look(5, 1.0, False)])
++    assert not uncovered_by_the_engine(excused)
++    assert not uncovered_by_the_engine(Record(looks=[Look(5, 1.0, True), Look(6, 0.0, False)]))
+diff --git a/tests/unit/test_binance_protective_stop.py b/tests/unit/test_binance_protective_stop.py
+new file mode 100644
+index 0000000..9807c32
+--- /dev/null
++++ b/tests/unit/test_binance_protective_stop.py
+@@ -0,0 +1,159 @@
++"""R25: the protective stop through the Binance adapter, against a mock transport.
++
++Every position the live runtime opens is protected by an ``OrderType.STOP`` intent. The
++adapter had no mapping for it and refused each one locally, before any request — so a live
++session ran its positions without a stop, and no test noticed because the paper venue
++accepts stops natively.
++
++What these tests prove is the part that is ours: the request the adapter builds for a stop
++(the venue's STOP_LOSS: a stopPrice, no price, no timeInForce), that a malformed stop is
++refused before anything is sent, that the venue's refusals and lost answers surface as the
++errors the runtime acts on, and that a stop adopted from the venue is read as a stop. They
++do **not** prove that Binance accepts the request: the mock answers whatever it is told to.
++That is what ``scripts/validate_binance.py --stop --testnet`` is for, and the activation
++gate's venue validation fails until a testnet record says the venue accepted it.
++"""
++
++from __future__ import annotations
++
++from datetime import UTC, datetime
++from typing import Any
++
++import httpx
++import pytest
++
++from tia.api.gate_probes import _venue_validation
++from tia.core.errors import ExecutionError, OrderRejectedError, ReconciliationError
++from tia.domain.enums import OrderState, OrderType, Side, TimeInForce
++from tia.domain.orders import OrderIntent
++from tia.live.gate import CheckName
++
++from .test_binance_live import ACK_RESPONSE, START, provider
++
++
++def stop_intent(*, stop_price: float | None = 48_000.0, limit_price: float | None = None,
++                signal_id: str = "protective:BTC-USD:run:7") -> OrderIntent:
++    return OrderIntent(
++        intent_id="int-stop",
++        client_order_id=OrderIntent.build_client_order_id(
++            signal_id=signal_id, symbol="BTC-USD", side=Side.SELL, quantity=0.01,
++            order_type=OrderType.STOP,
++        ),
++        signal_id=signal_id,
++        risk_decision_id="protective:BTC-USD",
++        symbol="BTC-USD",
++        side=Side.SELL,
++        quantity=0.01,
++        order_type=OrderType.STOP,
++        stop_price=stop_price,
++        limit_price=limit_price,
++        time_in_force=TimeInForce.GTC,
++        created_at=START,
++        reduce_only=True,
++    )
++
++
++def _params(request: httpx.Request) -> dict[str, str]:
++    return dict(httpx.QueryParams(request.url.query.decode()))
++
++
++async def test_a_stop_is_sent_as_stop_loss_with_a_stop_price_and_nothing_else() -> None:
++    seen: list[httpx.Request] = []
++    intent = stop_intent()
++
++    def handler(request: httpx.Request) -> httpx.Response:
++        seen.append(request)
++        return httpx.Response(200, json={**ACK_RESPONSE, "type": "STOP_LOSS", "side": "SELL", "price": "0.00000000",
++                                         "stopPrice": "48000.00", "clientOrderId": intent.client_order_id})
++
++    order = await provider(handler, simulated=True).submit_order(intent)
++
++    assert len(seen) == 1 and seen[0].method == "POST" and seen[0].url.path == "/api/v3/order"
++    params = _params(seen[0])
++    assert params["type"] == "STOP_LOSS"
++    assert params["side"] == "SELL" and params["symbol"] == "BTCUSDT"
++    assert float(params["stopPrice"]) == 48_000.0 and float(params["quantity"]) == 0.01
++    assert params["newClientOrderId"] == intent.client_order_id
++    # STOP_LOSS takes neither: the venue answers "parameter sent when not required".
++    assert "timeInForce" not in params and "price" not in params
++    assert order.order_type is OrderType.STOP and order.state is OrderState.ACKNOWLEDGED
++    assert order.stop_price == 48_000.0
++
++
++@pytest.mark.parametrize("stop_price", [None, 0.0, -1.0])
++def test_a_stop_without_a_positive_level_is_not_an_intent(stop_price: float | None) -> None:
++    with pytest.raises(ValueError, match="stop"):
++        stop_intent(stop_price=stop_price)
++
++
++@pytest.mark.parametrize(("stop_price", "limit_price"), [(48_000.0, 47_900.0), (None, None)])
++async def test_a_malformed_stop_is_refused_before_any_request(stop_price: float | None, limit_price: float | None) -> None:
++    """The adapter's own check, under the domain model's: a stop with a limit price (which
++    the model allows) and one built without validation are refused before any request."""
++    calls: list[httpx.Request] = []
++
++    def handler(request: httpx.Request) -> httpx.Response:
++        calls.append(request)
++        return httpx.Response(200, json=ACK_RESPONSE)
++
++    good = stop_intent()
++    malformed = good.model_copy(update={"stop_price": stop_price, "limit_price": limit_price})
++    with pytest.raises(ExecutionError, match="stop price"):
++        await provider(handler, simulated=True).submit_order(malformed)
++    assert calls == []
++
++
++@pytest.mark.parametrize(("code", "message"), [
++    (-1013, "Filter failure: PRICE_FILTER"),
++    (-2010, "Account has insufficient balance for requested action."),
++    (-1106, "Parameter 'timeInForce' sent when not required."),
++])
++async def test_a_stop_the_venue_refuses_is_an_error_not_an_order(code: int, message: str) -> None:
++    def handler(request: httpx.Request) -> httpx.Response:
++        return httpx.Response(400, json={"code": code, "msg": message})
++
++    with pytest.raises(OrderRejectedError):
++        await provider(handler, simulated=True).submit_order(stop_intent())
++
++
++async def test_a_stop_whose_answer_is_lost_is_unknown_not_absent() -> None:
++    def handler(request: httpx.Request) -> httpx.Response:
++        raise httpx.ReadTimeout("no answer", request=request)
++
++    with pytest.raises(ReconciliationError, match="UNKNOWN"):
++        await provider(handler, simulated=True).submit_order(stop_intent())
++
++
++async def test_a_stop_adopted_from_the_venue_is_read_as_a_stop() -> None:
++    """An order no intent of this session describes (a restart, a resolved timeout) is
++    read by the venue's own type word; before, every one was read as MARKET."""
++    intent = stop_intent()
++
++    def handler(request: httpx.Request) -> httpx.Response:
++        assert request.method == "GET" and _params(request)["origClientOrderId"] == intent.client_order_id
++        return httpx.Response(200, json={**ACK_RESPONSE, "type": "STOP_LOSS", "side": "SELL", "price": "0.00000000",
++                                         "stopPrice": "48000.00", "clientOrderId": intent.client_order_id})
++
++    order = await provider(handler, simulated=True).resolve_unknown_order(
++        symbol="BTC-USD", client_order_id=intent.client_order_id
++    )
++    assert order is not None and order.order_type is OrderType.STOP and order.stop_price == 48_000.0
++
++
++def _record(**facts: Any) -> Any:
++    from tia.api.gate_probes import BinanceValidationRecord
++
++    return BinanceValidationRecord(
++        validator_version=2, generated_at=datetime.now(UTC), environment="testnet", symbol="BTCUSDT",
++        git_commit="abc", fingerprint="0" * 32,
++        facts={"duplicate_order_rejected": True, **facts},
++    )
++
++
++def test_live_activation_needs_a_venue_that_accepted_the_protective_stop() -> None:
++    """Binance live stays blocked until a testnet run accepted this adapter's stop."""
++    assert not _venue_validation(_record(), "").passed
++    assert not _venue_validation(_record(protective_stop_accepted=False), "").passed
++    assert _venue_validation(_record(protective_stop_accepted=True), "").passed
++    check = _venue_validation(_record(), "")
++    assert check.name is CheckName.VENUE_VALIDATION and "STOP_LOSS" in check.detail

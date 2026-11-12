@@ -1,0 +1,5 @@
+run_id A: bt_111WYX71MFPWFVE30Z1CNBYH · operaciones 9 · retorno -0.116093
+run_id B: bt_111WYX71MFPWFVE30Z1CNBYH · operaciones 8 · retorno -0.088758
+misma procedencia registrada: {'engine_version': True, 'engine_fingerprint': True, 'data_fingerprint': True, 'universe_digest': True}
+segundo guardado: RECHAZADO: backtest bt_111WYX71MFPWFVE30Z1CNBYH is already stored with the same provenance and other results (trades, total_return_pct, max_drawdown_pct, sharpe, equity_curve): something the provenance does not record changed (the environment, or a substituted part of the engine); refusing to replace it
+filas: [('bt_111WYX71MFPWFVE30Z1CNBYH', 9, -0.116093)]

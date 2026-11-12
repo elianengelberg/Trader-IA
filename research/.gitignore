@@ -19,3 +19,9 @@ tendencia_btc/papel/cortes/**/*.zip
 tendencia_btc/papel/cortes/**/*.CHECKSUM
 tendencia_btc/datos_multi/nasdaq/
 tendencia_btc/datos_multi/yahoo/
+# expediente_2026-10-19_29: lo excluido figura con su sha256 o huella de árbol en expediente_2026-10-19_29/_inventario/
+# páginas web archivadas de terceros (anuncios de Binance; URL y sha256 en PAGINAS_ARCHIVADAS_NO_VERSIONADAS.tsv)
+expediente_2026-10-19_29/**/paginas/
+!expediente_2026-10-19_29/**/fixture_*/**/paginas/
+# temporales de prueba
+expediente_2026-10-19_29/**/tmp*/

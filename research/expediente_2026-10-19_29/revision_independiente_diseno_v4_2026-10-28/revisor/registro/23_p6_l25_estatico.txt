@@ -1,0 +1,26 @@
+# comando: /usr/bin/python3 -I -B revision_independiente_diseno_v4_2026-10-28/revisor/prototipos/p6_l25_estatico.py <scratchpad>
+# fecha: 2026-10-28T20:02:30Z
+{
+ "documento": "reparacion_E3H1H2_2026-10-26/INFORME_REPARACION_E3H1H2.md",
+ "sha256_documento": "9b26ecb5689a939e2a5b51a3085b531259794d97000bf5fc1bf1da28d0102de5",
+ "bytes": 24128,
+ "v2": {
+  "FRASE_presente": true,
+  "sha_v2_presente": true,
+  "sha_manifiesto_v2_presente": true,
+  "ACEPTARIA_v2_por_subcadenas": true
+ },
+ "v3": {
+  "FRASE_presente": false,
+  "sha_v3_presente": false,
+  "sha_manifiesto_v3_presente": false,
+  "decisiones_presentes": [
+   false,
+   false
+  ],
+  "ACEPTARIA_v3_por_subcadenas": false
+ },
+ "sha_v2_esperado_prefijo": "01fc9344",
+ "sha_v3_esperado_prefijo": "c089cc6a"
+}
+# exit=0

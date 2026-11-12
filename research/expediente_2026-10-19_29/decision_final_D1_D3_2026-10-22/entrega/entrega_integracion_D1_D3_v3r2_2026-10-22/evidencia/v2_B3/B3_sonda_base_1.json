@@ -1,0 +1,86 @@
+{
+ "exit": 1,
+ "flushes": [
+  {
+   "pendientes": 32,
+   "seg": 4.95,
+   "ok": true,
+   "quedan": 0
+  },
+  {
+   "pendientes": 5,
+   "seg": 0.589,
+   "ok": true,
+   "quedan": 0
+  },
+  {
+   "pendientes": 4,
+   "seg": 0.445,
+   "ok": true,
+   "quedan": 0
+  },
+  {
+   "pendientes": 3,
+   "seg": 0.184,
+   "ok": true,
+   "quedan": 0
+  },
+  {
+   "pendientes": 41,
+   "seg": 8.382,
+   "ok": true,
+   "quedan": 0
+  },
+  {
+   "pendientes": 63,
+   "seg": 10.007,
+   "ok": false,
+   "quedan": 4471
+  },
+  {
+   "pendientes": 4470,
+   "seg": 0.574,
+   "ok": true,
+   "quedan": 0
+  }
+ ],
+ "escrituras": 49496,
+ "seg_escritura_total": 24.122,
+ "por_tipo": {
+  "account_event": {
+   "n": 65,
+   "seg": 8.004,
+   "ms_media": 123.13
+  },
+  "edge_outcome": {
+   "n": 5,
+   "seg": 0.002,
+   "ms_media": 0.33
+  },
+  "fill": {
+   "n": 16,
+   "seg": 1.891,
+   "ms_media": 118.19
+  },
+  "latency": {
+   "n": 6,
+   "seg": 0.002,
+   "ms_media": 0.28
+  },
+  "order": {
+   "n": 41,
+   "seg": 4.652,
+   "ms_media": 113.47
+  },
+  "reconciliation": {
+   "n": 49362,
+   "seg": 9.572,
+   "ms_media": 0.19
+  },
+  "run_heartbeat": {
+   "n": 1,
+   "seg": 0.001,
+   "ms_media": 0.6
+  }
+ }
+}

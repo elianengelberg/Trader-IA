@@ -1,0 +1,29 @@
+# microcomprobaciones · 2026-10-28T19:49:32Z
+## a. flock sobre un descriptor de DIRECTORIO (candidato a bloqueo que sobrevive al borrado/recreación del archivo)
+flock sobre directorio funciona; segundo intento: Resource temporarily unavailable
+## b. hilos tras import numpy con OPENBLAS_NUM_THREADS=1 (venv)
+hilos: 1 numpy 2.4.6
+## c. idem con -I (ignora el entorno: ¿OPENBLAS_NUM_THREADS se sigue leyendo? la variable la lee la biblioteca C, no Python)
+hilos: 1
+## d. numpy.show_config (BLAS) resumido, venv
+{
+ "blas": {
+  "name": "scipy-openblas",
+  "found": true,
+  "version": "0.3.31.188.0",
+  "detection method": "pkgconfig",
+  "include directory": "/opt/_internal/cpython-3.11.14/lib/python3.11/site-packages/scipy_openblas64/include",
+  "lib directory": "/opt/_internal/cpython-3.11.14/lib/python3.11/site-packages/scipy_openblas64/lib",
+  "openblas configuration": "OpenBLAS 0.3.31.188.0  USE64BITINT DYNAMIC_ARCH NO_AFFINITY Haswell MAX_THREADS=64",
+  "pc file directory": "/project/.openblas"
+ },
+ "lapack": {
+  "name": "scipy-openblas",
+  "found": true,
+  "version": "0.3.31.188.0",
+  "detection method": "pkgconfig",
+  "include directory": "/opt/_internal/cpython-3.11.14/lib/python3.11/site-packa
+## e. PYTHONHASHSEED: orden de iteración de un set de str cambia entre procesos
+['ETHUSDT', 'XRPUSDT', 'BTCUSDT', 'ADAUSDT']
+['ETHUSDT', 'BTCUSDT', 'ADAUSDT', 'XRPUSDT']
+['XRPUSDT', 'BTCUSDT', 'ETHUSDT', 'ADAUSDT']

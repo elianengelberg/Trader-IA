@@ -1,0 +1,148 @@
+{
+ "filas": [
+  {
+   "camino": "E3-H1 información, IC real 0,02 (histórico)",
+   "pi": 0.1,
+   "potencia": 0.56,
+   "P_respaldo": 0.079,
+   "VPP": 0.713
+  },
+  {
+   "camino": "E3-H1 información, IC real 0,02 (histórico)",
+   "pi": 0.1,
+   "potencia": 0.79,
+   "P_respaldo": 0.102,
+   "VPP": 0.778
+  },
+  {
+   "camino": "E3-H1 información, IC real 0,02 (histórico)",
+   "pi": 0.25,
+   "potencia": 0.56,
+   "P_respaldo": 0.159,
+   "VPP": 0.882
+  },
+  {
+   "camino": "E3-H1 información, IC real 0,02 (histórico)",
+   "pi": 0.25,
+   "potencia": 0.79,
+   "P_respaldo": 0.216,
+   "VPP": 0.913
+  },
+  {
+   "camino": "E3-H1 información, IC real 0,03 (histórico)",
+   "pi": 0.1,
+   "potencia": 0.88,
+   "P_respaldo": 0.111,
+   "VPP": 0.796
+  },
+  {
+   "camino": "E3-H1 información, IC real 0,03 (histórico)",
+   "pi": 0.1,
+   "potencia": 0.99,
+   "P_respaldo": 0.122,
+   "VPP": 0.815
+  },
+  {
+   "camino": "E3-H1 información, IC real 0,03 (histórico)",
+   "pi": 0.25,
+   "potencia": 0.88,
+   "P_respaldo": 0.239,
+   "VPP": 0.921
+  },
+  {
+   "camino": "E3-H1 información, IC real 0,03 (histórico)",
+   "pi": 0.25,
+   "potencia": 0.99,
+   "P_respaldo": 0.266,
+   "VPP": 0.93
+  },
+  {
+   "camino": "Económica prospectiva 5 años, IR 0,35",
+   "pi": 0.1,
+   "potencia": 0.07,
+   "P_respaldo": 0.03,
+   "VPP": 0.237
+  },
+  {
+   "camino": "Económica prospectiva 5 años, IR 0,35",
+   "pi": 0.1,
+   "potencia": 0.12,
+   "P_respaldo": 0.035,
+   "VPP": 0.348
+  },
+  {
+   "camino": "Económica prospectiva 5 años, IR 0,35",
+   "pi": 0.25,
+   "potencia": 0.07,
+   "P_respaldo": 0.036,
+   "VPP": 0.483
+  },
+  {
+   "camino": "Económica prospectiva 5 años, IR 0,35",
+   "pi": 0.25,
+   "potencia": 0.12,
+   "P_respaldo": 0.049,
+   "VPP": 0.615
+  },
+  {
+   "camino": "Económica prospectiva 5 años, IR 0,5",
+   "pi": 0.1,
+   "potencia": 0.15,
+   "P_respaldo": 0.038,
+   "VPP": 0.4
+  },
+  {
+   "camino": "Económica prospectiva 5 años, IR 0,5",
+   "pi": 0.1,
+   "potencia": 0.2,
+   "P_respaldo": 0.043,
+   "VPP": 0.471
+  },
+  {
+   "camino": "Económica prospectiva 5 años, IR 0,5",
+   "pi": 0.25,
+   "potencia": 0.15,
+   "P_respaldo": 0.056,
+   "VPP": 0.667
+  },
+  {
+   "camino": "Económica prospectiva 5 años, IR 0,5",
+   "pi": 0.25,
+   "potencia": 0.2,
+   "P_respaldo": 0.069,
+   "VPP": 0.727
+  },
+  {
+   "camino": "Económica prospectiva 5 años, IR 1,0",
+   "pi": 0.1,
+   "potencia": 0.55,
+   "P_respaldo": 0.077,
+   "VPP": 0.71
+  },
+  {
+   "camino": "Económica prospectiva 5 años, IR 1,0",
+   "pi": 0.1,
+   "potencia": 0.6,
+   "P_respaldo": 0.083,
+   "VPP": 0.727
+  },
+  {
+   "camino": "Económica prospectiva 5 años, IR 1,0",
+   "pi": 0.25,
+   "potencia": 0.55,
+   "P_respaldo": 0.156,
+   "VPP": 0.88
+  },
+  {
+   "camino": "Económica prospectiva 5 años, IR 1,0",
+   "pi": 0.25,
+   "potencia": 0.6,
+   "P_respaldo": 0.169,
+   "VPP": 0.889
+  }
+ ],
+ "refutacion_E3_H1_si_IC_0": {
+  "0.007": 0.414,
+  "0.0095": 0.277
+ }
+}

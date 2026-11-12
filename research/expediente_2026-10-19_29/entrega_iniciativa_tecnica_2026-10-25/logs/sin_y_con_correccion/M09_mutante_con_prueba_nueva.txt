@@ -1,0 +1,2 @@
+FAILED tests/integration/test_protective_stop_size.py::test_the_stop_level_is_rounded_toward_the_position_on_the_venue_grid[True-50000.004-50000.01]
+FAILED tests/integration/test_protective_stop_size.py::test_the_stop_level_is_rounded_toward_the_position_on_the_venue_grid[False-50000.006-50000.0]

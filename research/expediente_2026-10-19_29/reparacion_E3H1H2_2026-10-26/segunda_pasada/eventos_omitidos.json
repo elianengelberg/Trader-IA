@@ -1,0 +1,47 @@
+[
+ {
+  "par": "TRXUPUSDT",
+  "E": "2023-05-09",
+  "en_bucket": true,
+  "categoria": "T",
+  "L": "2022-11-28",
+  "episodios": [
+   [
+    "2020-09-10",
+    "2022-11-28"
+   ]
+  ],
+  "meses_con_archivo_2022_2023": [
+   "2022-10",
+   "2022-11"
+  ],
+  "cita": "Binance will delist and cease redemption for the TRXUP, TRXDOWN, DOTUP, DOTDOWN, LINKUP and LINKDOWN leveraged tokens at the following timings: At 2023-05-09 06:00 (UTC) : TRXUP, TRXDOWN At 2023-05-10 06:00 (UTC) : DOTUP, DOTDOWN At 2023-05-11 06:00 (UTC) : LINKUP, LINKDOWN",
+  "fuente": "datos_anuncios/commoncrawl/paginas/url_https___www.binance.com_en_support_announcement_binance-to-delist-and-cease-_6079c69de2a3.json (captura 20240810193751)",
+  "motivo_omision": "La extracción generó eventos para TRXDOWN, DOTUP, DOTDOWN y LINKUP del mismo anuncio, pero no para TRXUP ni LINKDOWN."
+ },
+ {
+  "par": "LINKDOWNUSDT",
+  "E": "2023-05-11",
+  "en_bucket": true,
+  "categoria": "T",
+  "L": "2023-04-05",
+  "episodios": [
+   [
+    "2020-07-16",
+    "2023-04-05"
+   ]
+  ],
+  "meses_con_archivo_2022_2023": [
+   "2022-10",
+   "2022-11",
+   "2022-12",
+   "2023-01",
+   "2023-02",
+   "2023-03",
+   "2023-04"
+  ],
+  "cita": "Binance will delist and cease redemption for the TRXUP, TRXDOWN, DOTUP, DOTDOWN, LINKUP and LINKDOWN leveraged tokens at the following timings: At 2023-05-09 06:00 (UTC) : TRXUP, TRXDOWN At 2023-05-10 06:00 (UTC) : DOTUP, DOTDOWN At 2023-05-11 06:00 (UTC) : LINKUP, LINKDOWN",
+  "fuente": "datos_anuncios/commoncrawl/paginas/url_https___www.binance.com_en_support_announcement_binance-to-delist-and-cease-_6079c69de2a3.json (captura 20240810193751)",
+  "motivo_omision": "La extracción generó eventos para TRXDOWN, DOTUP, DOTDOWN y LINKUP del mismo anuncio, pero no para TRXUP ni LINKDOWN."
+ }
+]

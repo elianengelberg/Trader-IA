@@ -1,0 +1,170 @@
+diff --git a/packages/tia/src/tia/backtest/engine.py b/packages/tia/src/tia/backtest/engine.py
+index 1a1ba3d..0f681d8 100644
+--- a/packages/tia/src/tia/backtest/engine.py
++++ b/packages/tia/src/tia/backtest/engine.py
+@@ -243,6 +243,9 @@ class BacktestEngine:
+         self._config = config
+         self._universe = universe
+         self._strategy_names = tuple(strategies or config.strategy.enabled)
++        self._stop_placements = 0
++        #: what the order hygiene (D1-D3) had to do in the last run
++        self.order_hygiene: dict[str, int] = {}
+ 
+     @property
+     def config(self) -> BacktestConfig:
+@@ -298,6 +301,13 @@ class BacktestEngine:
+         entry_is_limit = cfg.entry_order_type == "limit"
+ 
+         counts = _MutableCounts()
++        self._stop_placements = 0
++        self.order_hygiene = {
++            "entry_remainders_cancelled_on_exit": 0,
++            "stale_entry_remainders_cancelled_flat": 0,
++            "exits_done_with_position_left": 0,
++            "bars_with_leg_and_no_stop": 0,
++        }
+         equity: list[float] = []
+         stamps: list[datetime] = []
+         closed: list[ClosedTrade] = []
+@@ -413,7 +423,7 @@ class BacktestEngine:
+             # flight.
+             if cfg.use_protective_stops:
+                 stop_order_id = self._sync_protective_stop(
+-                    provider, leg, stop_order_id, counts
++                    provider, leg, stop_order_id, counts, symbol=resolved
+                 )
+ 
+             if not flat:
+@@ -662,6 +672,12 @@ class BacktestEngine:
+                 "positions were still open when the sample ended; the final equity "
+                 "includes an unrealised mark, not a realised result"
+             )
++        unprotected = self.order_hygiene["bars_with_leg_and_no_stop"]
++        if cfg.use_protective_stops and unprotected:
++            warnings.append(
++                f"{unprotected} bars held a position with no stop level and no exit in "
++                "flight; the reported losses of those bars were not bounded by a stop"
++            )
+ 
+         metrics = compute_metrics(
+             equity_curve=equity,
+@@ -798,19 +814,29 @@ class BacktestEngine:
+         """The one exit path: stop cancelled first, one reduce-only market close, nothing
+         else while it works. The fill arrives on the next bar and :func:`_fold_fills`
+         closes the round trip under ``reason``."""
++        # D3: the rest of an entry still resting is cancelled before the close, as the
++        # session's ``_close_position`` does; otherwise it fills into the position while
++        # the close (sized to the leg) is in flight and the leg is left stuck.
++        for order in provider.resting_orders(leg.symbol):
++            if not order.reduce_only and order.order_type is not OrderType.STOP:
++                _sync(provider.cancel_order(order.order_id))
++                self.order_hygiene["entry_remainders_cancelled_on_exit"] += 1
+         if stop_order_id is not None:
+             _sync(provider.cancel_order(stop_order_id))
+         side = Side.SELL if leg.direction is Direction.LONG else Side.BUY
++        exit_key = f"exit:{reason.replace(' ', '-')}:{leg.signal_id}"
+         intent = OrderIntent(
+             intent_id=deterministic_id("int", "exit", leg.signal_id, reason, candle.close_time),
++            # D1: one id per bar, as the session's; a retry with the same id after a
++            # rejection was suppressed as a duplicate and the position never closed.
+             client_order_id=OrderIntent.build_client_order_id(
+-                signal_id=f"exit:{reason.replace(' ', '-')}:{leg.signal_id}",
++                signal_id=f"{exit_key}:{candle.close_time.isoformat()}",
+                 symbol=leg.symbol,
+                 side=side,
+                 quantity=leg.quantity,
+                 order_type=OrderType.MARKET,
+             ),
+-            signal_id=f"exit:{reason.replace(' ', '-')}:{leg.signal_id}",
++            signal_id=exit_key,
+             risk_decision_id=f"exit:{leg.signal_id}",
+             symbol=leg.symbol,
+             side=side,
+@@ -835,13 +861,34 @@ class BacktestEngine:
+         leg: _OpenLeg | None,
+         current_id: str | None,
+         counts: _MutableCounts,
++        *,
++        symbol: str,
+     ) -> str | None:
+         """Keep exactly one protective stop matching the open leg.
+ 
+         Cancelled when the position is flat, replaced when a partial fill changed the
+-        quantity it covers. A stop that protects the wrong size is worse than none,
+-        because the report will show a bounded loss that was not actually bounded.
++        quantity it covers or the exit rules moved its level. A stop that protects the
++        wrong size or sits at a stale level is worse than none, because the report will
++        show a bounded loss that was not actually bounded.
+         """
++        if leg is None:
++            # D3: flat, the rest of an entry that already filled in part is stale; it
++            # would open a leg with no stop and no target. A fresh entry is left alone.
++            for order in provider.resting_orders(symbol):
++                if (not order.reduce_only and order.order_type is not OrderType.STOP
++                        and order.filled_quantity > 0):
++                    _sync(provider.cancel_order(order.order_id))
++                    self.order_hygiene["stale_entry_remainders_cancelled_flat"] += 1
++        elif leg.exit_pending is not None and leg.exit_order_id:
++            # D3: a close that finished with position left would hold the leg forever;
++            # releasing it lets the stop be re-placed and the exit asked for again.
++            exit_order = _sync(provider.get_order(leg.exit_order_id))
++            if exit_order is not None and exit_order.state.is_terminal and leg.quantity > 0:
++                leg.exit_pending = None
++                leg.exit_order_id = ""
++                self.order_hygiene["exits_done_with_position_left"] += 1
++        if leg is not None and leg.stop_price is None and leg.exit_pending is None:
++            self.order_hygiene["bars_with_leg_and_no_stop"] += 1
+         if leg is None or leg.stop_price is None or leg.exit_pending is not None:
+             # No leg, no stop level, or a close in flight: a stop re-placed over a
+             # working close is the double fill the session refuses too.
+@@ -852,15 +899,27 @@ class BacktestEngine:
+         existing = _sync(provider.get_order(current_id)) if current_id else None
+         if existing is not None and not existing.state.is_terminal:
+             covered = existing.quantity - existing.filled_quantity
+-            if abs(covered - leg.quantity) <= max(leg.quantity * 1e-6, 1e-9):
++            same_size = abs(covered - leg.quantity) <= max(leg.quantity * 1e-6, 1e-9)
++            # D2: the level too, as the session's ``same_level``; comparing the size alone
++            # left break-even and trailing moves on the leg and the old stop in the book.
++            same_level = (
++                abs(float(existing.stop_price or 0.0) - float(leg.stop_price))
++                <= 1e-9 * float(leg.stop_price)
++            )
++            if same_size and same_level:
+                 return current_id
+             _sync(provider.cancel_order(current_id))
+ 
+         side = Side.SELL if leg.direction is Direction.LONG else Side.BUY
++        self._stop_placements += 1
+         intent = OrderIntent(
+-            intent_id=deterministic_id("int", "stop", leg.signal_id, leg.quantity),
++            intent_id=deterministic_id(
++                "int", "stop", leg.signal_id, leg.quantity, self._stop_placements
++            ),
++            # D1: one id per placement; after a cancel the same id was suppressed as a
++            # duplicate and the stop was never placed again.
+             client_order_id=OrderIntent.build_client_order_id(
+-                signal_id=f"{leg.signal_id}:protective",
++                signal_id=f"{leg.signal_id}:protective:{self._stop_placements}",
+                 symbol=leg.symbol,
+                 side=side,
+                 quantity=leg.quantity,
+diff --git a/packages/tia/src/tia/execution/paper.py b/packages/tia/src/tia/execution/paper.py
+index a621224..2d98fad 100644
+--- a/packages/tia/src/tia/execution/paper.py
++++ b/packages/tia/src/tia/execution/paper.py
+@@ -116,6 +116,15 @@ class PaperExecutionProvider(ExecutionProvider):
+             orders = [o for o in orders if o.state.is_open]
+         return sorted(orders, key=lambda o: o.created_at)
+ 
++    def resting_orders(self, symbol: str | None = None) -> list[Order]:
++        """Orders still waiting in the book, in the order they will be matched."""
++        out = []
++        for order_id in self._resting:
++            order = self._orders.get(order_id)
++            if order is not None and not order.state.is_terminal and symbol in (None, order.symbol):
++                out.append(order)
++        return out
++
+     async def get_positions(self) -> dict[str, Position]:
+         return {s: p for s, p in self._portfolio.positions.items() if not p.is_flat}
+ 

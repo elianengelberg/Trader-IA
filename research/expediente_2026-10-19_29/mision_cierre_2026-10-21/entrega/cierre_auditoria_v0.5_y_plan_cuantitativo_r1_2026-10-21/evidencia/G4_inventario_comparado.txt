@@ -1,0 +1,1 @@
+inventario final == inicial (repositorio, T, T-MULTI, ZIP y manifiestos): True

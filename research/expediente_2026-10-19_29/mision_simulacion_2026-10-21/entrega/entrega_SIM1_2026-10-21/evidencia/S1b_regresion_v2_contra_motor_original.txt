@@ -1,0 +1,9 @@
+E       AssertionError: ['bar 537: 9 bars without a stop', 'bar 538: 10 bars without a stop', 'bar 539: 11 bars without a stop']
+E       AssertionError: ['bar 175: leg stop 62584.94100498582, order in the book 62608.515972277375', 'bar 176: leg stop 62567.83067468193, order in the book 62608.515972277375', 'bar 177: leg stop 62567.83067468193, ord
+E       AssertionError: ['bar 508: 4.300000000000484e-05 still held, waiting on a close that is filled', 'bar 509: 4.600000000000484e-05 still held, waiting on a close that is filled', 'bar 510: 4.800000000000484e-05 sti
+E       AttributeError: '_Instrumented' object has no attribute 'order_hygiene'
+FAILED tests/unit/test_backtest_order_hygiene.py::test_stops_and_exits_survive_rejections
+FAILED tests/unit/test_backtest_order_hygiene.py::test_the_stop_in_the_book_follows_the_leg
+FAILED tests/unit/test_backtest_order_hygiene.py::test_partial_fills_leave_no_untracked_or_stuck_position
+FAILED tests/unit/test_backtest_order_hygiene.py::test_a_leg_without_a_stop_level_is_reported
+4 failed in 23.10s

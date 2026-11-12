@@ -1,0 +1,2733 @@
+{
+ "resumen": {
+  "manejador/SIGINT": {
+   "corridas": 12,
+   "con_fallas": 0,
+   "fallas": [],
+   "clases": {
+    "INVALIDO": 4,
+    "EVALUADO": 7,
+    "NO_DECIDIDO": 1
+   },
+   "con_DECISION": 11
+  },
+  "manejador/SIGTERM": {
+   "corridas": 12,
+   "con_fallas": 0,
+   "fallas": [],
+   "clases": {
+    "INVALIDO": 4,
+    "EVALUADO": 8
+   },
+   "con_DECISION": 12
+  },
+  "manejador/SIGHUP": {
+   "corridas": 12,
+   "con_fallas": 0,
+   "fallas": [],
+   "clases": {
+    "INVALIDO": 4,
+    "EVALUADO": 8
+   },
+   "con_DECISION": 12
+  },
+  "manejador/SIGQUIT": {
+   "corridas": 12,
+   "con_fallas": 0,
+   "fallas": [],
+   "clases": {
+    "INVALIDO": 4,
+    "EVALUADO": 7,
+    "NO_DECIDIDO": 1
+   },
+   "con_DECISION": 11
+  },
+  "manejador/SIGUSR1": {
+   "corridas": 12,
+   "con_fallas": 0,
+   "fallas": [],
+   "clases": {
+    "INVALIDO": 4,
+    "EVALUADO": 6,
+    "INCIERTO": 1,
+    "NO_DECIDIDO": 1
+   },
+   "con_DECISION": 10
+  },
+  "manejador/SIGKILL": {
+   "corridas": 12,
+   "con_fallas": 0,
+   "fallas": [],
+   "clases": {
+    "INCIERTO": 2,
+    "TERMINAL_SIN_OBJETO": 4,
+    "EVALUADO": 3,
+    "INVALIDO": 2,
+    "NO_DECIDIDO": 1
+   },
+   "con_DECISION": 9
+  },
+  "mascara/SIGINT": {
+   "corridas": 12,
+   "con_fallas": 2,
+   "fallas": [
+    "S-2"
+   ],
+   "clases": {
+    "TERMINAL_SIN_OBJETO": 1,
+    "INCIERTO": 4,
+    "EVALUADO": 4,
+    "INVALIDO": 3
+   },
+   "con_DECISION": 8
+  },
+  "mascara/SIGTERM": {
+   "corridas": 12,
+   "con_fallas": 1,
+   "fallas": [
+    "S-2"
+   ],
+   "clases": {
+    "INVALIDO": 2,
+    "NO_DECIDIDO": 5,
+    "INCIERTO": 2,
+    "EVALUADO": 3
+   },
+   "con_DECISION": 5
+  },
+  "mascara/SIGHUP": {
+   "corridas": 12,
+   "con_fallas": 3,
+   "fallas": [
+    "S-2"
+   ],
+   "clases": {
+    "INVALIDO": 3,
+    "NO_DECIDIDO": 3,
+    "TERMINAL_SIN_OBJETO": 2,
+    "EVALUADO": 3,
+    "INCIERTO": 1
+   },
+   "con_DECISION": 8
+  },
+  "mascara/SIGQUIT": {
+   "corridas": 12,
+   "con_fallas": 3,
+   "fallas": [
+    "S-2"
+   ],
+   "clases": {
+    "TERMINAL_SIN_OBJETO": 2,
+    "EVALUADO": 5,
+    "INVALIDO": 3,
+    "NO_DECIDIDO": 2
+   },
+   "con_DECISION": 10
+  },
+  "mascara/SIGUSR1": {
+   "corridas": 12,
+   "con_fallas": 0,
+   "fallas": [],
+   "clases": {
+    "TERMINAL_SIN_OBJETO": 1,
+    "EVALUADO": 5,
+    "INVALIDO": 2,
+    "DECISION_ANUNCIADA_NO_PERSISTIDA": 1,
+    "NO_DECIDIDO": 1,
+    "VACIO": 1,
+    "INCIERTO": 1
+   },
+   "con_DECISION": 8
+  },
+  "mascara/SIGKILL": {
+   "corridas": 12,
+   "con_fallas": 0,
+   "fallas": [],
+   "clases": {
+    "INVALIDO": 2,
+    "NO_DECIDIDO": 1,
+    "TERMINAL_SIN_OBJETO": 3,
+    "DECISION_ANUNCIADA_NO_PERSISTIDA": 1,
+    "INCIERTO": 3,
+    "EVALUADO": 1,
+    "VACIO": 1
+   },
+   "con_DECISION": 6
+  }
+ },
+ "filas": [
+  {
+   "modo": "manejador",
+   "senal": "SIGINT",
+   "escenario": "INVALIDO",
+   "t_senal": 1.291,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "INVALIDO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGINT",
+   "escenario": "EVALUADO",
+   "t_senal": 0.69,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGINT",
+   "escenario": "EVALUADO",
+   "t_senal": 2.142,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGINT",
+   "escenario": "INVALIDO",
+   "t_senal": 1.147,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "INVALIDO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGINT",
+   "escenario": "EVALUADO",
+   "t_senal": 0.603,
+   "returncode": -2,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGINT",
+   "escenario": "EVALUADO",
+   "t_senal": 1.586,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGINT",
+   "escenario": "INVALIDO",
+   "t_senal": 2.161,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "INVALIDO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGINT",
+   "escenario": "EVALUADO",
+   "t_senal": 1.077,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGINT",
+   "escenario": "EVALUADO",
+   "t_senal": 0.42,
+   "returncode": 130,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "ERROR"
+   ],
+   "clase": "NO_DECIDIDO",
+   "detalle": "ERROR durable",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGINT",
+   "escenario": "INVALIDO",
+   "t_senal": 0.779,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "INVALIDO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGINT",
+   "escenario": "EVALUADO",
+   "t_senal": 0.76,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGINT",
+   "escenario": "EVALUADO",
+   "t_senal": 1.076,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGTERM",
+   "escenario": "INVALIDO",
+   "t_senal": 1.954,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "INVALIDO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGTERM",
+   "escenario": "EVALUADO",
+   "t_senal": 0.701,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGTERM",
+   "escenario": "EVALUADO",
+   "t_senal": 1.227,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGTERM",
+   "escenario": "INVALIDO",
+   "t_senal": 0.748,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "INVALIDO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGTERM",
+   "escenario": "EVALUADO",
+   "t_senal": 2.044,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGTERM",
+   "escenario": "EVALUADO",
+   "t_senal": 1.391,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGTERM",
+   "escenario": "INVALIDO",
+   "t_senal": 2.006,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "INVALIDO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGTERM",
+   "escenario": "EVALUADO",
+   "t_senal": 0.454,
+   "returncode": -15,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGTERM",
+   "escenario": "EVALUADO",
+   "t_senal": 0.727,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGTERM",
+   "escenario": "INVALIDO",
+   "t_senal": 0.86,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "INVALIDO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGTERM",
+   "escenario": "EVALUADO",
+   "t_senal": 0.796,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGTERM",
+   "escenario": "EVALUADO",
+   "t_senal": 1.107,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGHUP",
+   "escenario": "INVALIDO",
+   "t_senal": 0.644,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "INVALIDO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGHUP",
+   "escenario": "EVALUADO",
+   "t_senal": 1.27,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGHUP",
+   "escenario": "EVALUADO",
+   "t_senal": 0.488,
+   "returncode": -1,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGHUP",
+   "escenario": "INVALIDO",
+   "t_senal": 0.447,
+   "returncode": -1,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "INVALIDO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGHUP",
+   "escenario": "EVALUADO",
+   "t_senal": 0.85,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGHUP",
+   "escenario": "EVALUADO",
+   "t_senal": 0.667,
+   "returncode": -1,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGHUP",
+   "escenario": "INVALIDO",
+   "t_senal": 2.053,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "INVALIDO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGHUP",
+   "escenario": "EVALUADO",
+   "t_senal": 0.819,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGHUP",
+   "escenario": "EVALUADO",
+   "t_senal": 2.112,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGHUP",
+   "escenario": "INVALIDO",
+   "t_senal": 0.514,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "INVALIDO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGHUP",
+   "escenario": "EVALUADO",
+   "t_senal": 1.952,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGHUP",
+   "escenario": "EVALUADO",
+   "t_senal": 1.925,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGQUIT",
+   "escenario": "INVALIDO",
+   "t_senal": 1.424,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "INVALIDO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGQUIT",
+   "escenario": "EVALUADO",
+   "t_senal": 1.97,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGQUIT",
+   "escenario": "EVALUADO",
+   "t_senal": 1.175,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGQUIT",
+   "escenario": "INVALIDO",
+   "t_senal": 1.073,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "INVALIDO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGQUIT",
+   "escenario": "EVALUADO",
+   "t_senal": 1.765,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGQUIT",
+   "escenario": "EVALUADO",
+   "t_senal": 1.202,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGQUIT",
+   "escenario": "INVALIDO",
+   "t_senal": 1.991,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "INVALIDO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGQUIT",
+   "escenario": "EVALUADO",
+   "t_senal": 2.088,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGQUIT",
+   "escenario": "EVALUADO",
+   "t_senal": 0.329,
+   "returncode": 131,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ERROR"
+   ],
+   "clase": "NO_DECIDIDO",
+   "detalle": "ERROR durable",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGQUIT",
+   "escenario": "INVALIDO",
+   "t_senal": 1.253,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "INVALIDO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGQUIT",
+   "escenario": "EVALUADO",
+   "t_senal": 1.489,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGQUIT",
+   "escenario": "EVALUADO",
+   "t_senal": 1.48,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGUSR1",
+   "escenario": "INVALIDO",
+   "t_senal": 1.88,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "INVALIDO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGUSR1",
+   "escenario": "EVALUADO",
+   "t_senal": 1.073,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGUSR1",
+   "escenario": "EVALUADO",
+   "t_senal": 0.891,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGUSR1",
+   "escenario": "INVALIDO",
+   "t_senal": 1.104,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "INVALIDO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGUSR1",
+   "escenario": "EVALUADO",
+   "t_senal": 1.5,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGUSR1",
+   "escenario": "EVALUADO",
+   "t_senal": 1.687,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGUSR1",
+   "escenario": "INVALIDO",
+   "t_senal": 0.579,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "INVALIDO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGUSR1",
+   "escenario": "EVALUADO",
+   "t_senal": 1.489,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGUSR1",
+   "escenario": "EVALUADO",
+   "t_senal": 0.971,
+   "returncode": -10,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA"
+   ],
+   "clase": "INCIERTO",
+   "detalle": "última etapa durable: validez, sin decisión ni prueba de que no la hubo",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGUSR1",
+   "escenario": "INVALIDO",
+   "t_senal": 1.298,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "INVALIDO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGUSR1",
+   "escenario": "EVALUADO",
+   "t_senal": 0.431,
+   "returncode": -10,
+   "eventos": [
+    "ABIERTO"
+   ],
+   "clase": "NO_DECIDIDO",
+   "detalle": "última etapa durable: None",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGUSR1",
+   "escenario": "EVALUADO",
+   "t_senal": 2.19,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGKILL",
+   "escenario": "INVALIDO",
+   "t_senal": 0.756,
+   "returncode": -9,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA"
+   ],
+   "clase": "INCIERTO",
+   "detalle": "última etapa durable: validez, sin decisión ni prueba de que no la hubo",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGKILL",
+   "escenario": "EVALUADO",
+   "t_senal": 1.17,
+   "returncode": -9,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION"
+   ],
+   "clase": "TERMINAL_SIN_OBJETO(EVALUADO)",
+   "detalle": null,
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGKILL",
+   "escenario": "EVALUADO",
+   "t_senal": 1.765,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGKILL",
+   "escenario": "INVALIDO",
+   "t_senal": 1.098,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "INVALIDO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGKILL",
+   "escenario": "EVALUADO",
+   "t_senal": 1.496,
+   "returncode": -9,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION"
+   ],
+   "clase": "TERMINAL_SIN_OBJETO(EVALUADO)",
+   "detalle": null,
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGKILL",
+   "escenario": "EVALUADO",
+   "t_senal": 2.114,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGKILL",
+   "escenario": "INVALIDO",
+   "t_senal": 1.24,
+   "returncode": -9,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA"
+   ],
+   "clase": "INCIERTO",
+   "detalle": "última etapa durable: validez, sin decisión ni prueba de que no la hubo",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGKILL",
+   "escenario": "EVALUADO",
+   "t_senal": 0.581,
+   "returncode": -9,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA"
+   ],
+   "clase": "NO_DECIDIDO",
+   "detalle": "última etapa durable: panel",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGKILL",
+   "escenario": "EVALUADO",
+   "t_senal": 1.579,
+   "returncode": -9,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION"
+   ],
+   "clase": "TERMINAL_SIN_OBJETO(EVALUADO)",
+   "detalle": null,
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGKILL",
+   "escenario": "INVALIDO",
+   "t_senal": 1.091,
+   "returncode": -9,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "INVALIDO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGKILL",
+   "escenario": "EVALUADO",
+   "t_senal": 1.908,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "manejador",
+   "senal": "SIGKILL",
+   "escenario": "EVALUADO",
+   "t_senal": 1.2,
+   "returncode": -9,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION"
+   ],
+   "clase": "TERMINAL_SIN_OBJETO(EVALUADO)",
+   "detalle": null,
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGINT",
+   "escenario": "INVALIDO",
+   "t_senal": 0.914,
+   "returncode": -2,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION"
+   ],
+   "clase": "TERMINAL_SIN_OBJETO(INVALIDO)",
+   "detalle": null,
+   "fallas": [
+    "S-2"
+   ],
+   "stderr_ultima": "KeyboardInterrupt"
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGINT",
+   "escenario": "EVALUADO",
+   "t_senal": 0.544,
+   "returncode": -2,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA"
+   ],
+   "clase": "INCIERTO",
+   "detalle": "última etapa durable: validez, sin decisión ni prueba de que no la hubo",
+   "fallas": [],
+   "stderr_ultima": "KeyboardInterrupt"
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGINT",
+   "escenario": "EVALUADO",
+   "t_senal": 2.199,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGINT",
+   "escenario": "INVALIDO",
+   "t_senal": 2.133,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "INVALIDO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGINT",
+   "escenario": "EVALUADO",
+   "t_senal": 0.708,
+   "returncode": -2,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA"
+   ],
+   "clase": "INCIERTO",
+   "detalle": "última etapa durable: simulacion, sin decisión ni prueba de que no la hubo",
+   "fallas": [],
+   "stderr_ultima": "KeyboardInterrupt"
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGINT",
+   "escenario": "EVALUADO",
+   "t_senal": 1.814,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGINT",
+   "escenario": "INVALIDO",
+   "t_senal": 1.707,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "INVALIDO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGINT",
+   "escenario": "EVALUADO",
+   "t_senal": 1.343,
+   "returncode": -2,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [
+    "S-2"
+   ],
+   "stderr_ultima": "KeyboardInterrupt"
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGINT",
+   "escenario": "EVALUADO",
+   "t_senal": 1.912,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGINT",
+   "escenario": "INVALIDO",
+   "t_senal": 1.77,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "INVALIDO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGINT",
+   "escenario": "EVALUADO",
+   "t_senal": 0.721,
+   "returncode": -2,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA"
+   ],
+   "clase": "INCIERTO",
+   "detalle": "última etapa durable: simulacion, sin decisión ni prueba de que no la hubo",
+   "fallas": [],
+   "stderr_ultima": "KeyboardInterrupt"
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGINT",
+   "escenario": "EVALUADO",
+   "t_senal": 0.888,
+   "returncode": -2,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA"
+   ],
+   "clase": "INCIERTO",
+   "detalle": "última etapa durable: simulacion, sin decisión ni prueba de que no la hubo",
+   "fallas": [],
+   "stderr_ultima": "KeyboardInterrupt"
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGTERM",
+   "escenario": "INVALIDO",
+   "t_senal": 1.754,
+   "returncode": -15,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "INVALIDO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGTERM",
+   "escenario": "EVALUADO",
+   "t_senal": 0.322,
+   "returncode": -15,
+   "eventos": [
+    "ABIERTO"
+   ],
+   "clase": "NO_DECIDIDO",
+   "detalle": "última etapa durable: None",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGTERM",
+   "escenario": "EVALUADO",
+   "t_senal": 0.986,
+   "returncode": -15,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA"
+   ],
+   "clase": "NO_DECIDIDO",
+   "detalle": "última etapa durable: panel",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGTERM",
+   "escenario": "INVALIDO",
+   "t_senal": 0.933,
+   "returncode": -15,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA"
+   ],
+   "clase": "INCIERTO",
+   "detalle": "última etapa durable: validez, sin decisión ni prueba de que no la hubo",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGTERM",
+   "escenario": "EVALUADO",
+   "t_senal": 1.552,
+   "returncode": -15,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [
+    "S-2"
+   ],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGTERM",
+   "escenario": "EVALUADO",
+   "t_senal": 0.38,
+   "returncode": -15,
+   "eventos": [
+    "ABIERTO"
+   ],
+   "clase": "NO_DECIDIDO",
+   "detalle": "última etapa durable: None",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGTERM",
+   "escenario": "INVALIDO",
+   "t_senal": 2.019,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "INVALIDO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGTERM",
+   "escenario": "EVALUADO",
+   "t_senal": 1.472,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGTERM",
+   "escenario": "EVALUADO",
+   "t_senal": 0.607,
+   "returncode": -15,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA"
+   ],
+   "clase": "NO_DECIDIDO",
+   "detalle": "última etapa durable: panel",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGTERM",
+   "escenario": "INVALIDO",
+   "t_senal": 0.273,
+   "returncode": -15,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA"
+   ],
+   "clase": "NO_DECIDIDO",
+   "detalle": "última etapa durable: panel",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGTERM",
+   "escenario": "EVALUADO",
+   "t_senal": 0.632,
+   "returncode": -15,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA"
+   ],
+   "clase": "INCIERTO",
+   "detalle": "última etapa durable: simulacion, sin decisión ni prueba de que no la hubo",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGTERM",
+   "escenario": "EVALUADO",
+   "t_senal": 1.941,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGHUP",
+   "escenario": "INVALIDO",
+   "t_senal": 1.463,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "INVALIDO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGHUP",
+   "escenario": "EVALUADO",
+   "t_senal": 0.42,
+   "returncode": -1,
+   "eventos": [
+    "ABIERTO"
+   ],
+   "clase": "NO_DECIDIDO",
+   "detalle": "última etapa durable: None",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGHUP",
+   "escenario": "EVALUADO",
+   "t_senal": 0.892,
+   "returncode": -1,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION"
+   ],
+   "clase": "TERMINAL_SIN_OBJETO(EVALUADO)",
+   "detalle": null,
+   "fallas": [
+    "S-2"
+   ],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGHUP",
+   "escenario": "INVALIDO",
+   "t_senal": 1.299,
+   "returncode": -1,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION"
+   ],
+   "clase": "INVALIDO",
+   "detalle": "objeto verificado",
+   "fallas": [
+    "S-2"
+   ],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGHUP",
+   "escenario": "EVALUADO",
+   "t_senal": 1.509,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGHUP",
+   "escenario": "EVALUADO",
+   "t_senal": 1.594,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGHUP",
+   "escenario": "INVALIDO",
+   "t_senal": 1.978,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "INVALIDO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGHUP",
+   "escenario": "EVALUADO",
+   "t_senal": 0.82,
+   "returncode": -1,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA"
+   ],
+   "clase": "NO_DECIDIDO",
+   "detalle": "última etapa durable: panel",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGHUP",
+   "escenario": "EVALUADO",
+   "t_senal": 0.526,
+   "returncode": -1,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA"
+   ],
+   "clase": "NO_DECIDIDO",
+   "detalle": "última etapa durable: panel",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGHUP",
+   "escenario": "INVALIDO",
+   "t_senal": 0.804,
+   "returncode": -1,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION"
+   ],
+   "clase": "TERMINAL_SIN_OBJETO(INVALIDO)",
+   "detalle": null,
+   "fallas": [
+    "S-2"
+   ],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGHUP",
+   "escenario": "EVALUADO",
+   "t_senal": 1.887,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGHUP",
+   "escenario": "EVALUADO",
+   "t_senal": 0.485,
+   "returncode": -1,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA"
+   ],
+   "clase": "INCIERTO",
+   "detalle": "última etapa durable: validez, sin decisión ni prueba de que no la hubo",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGQUIT",
+   "escenario": "INVALIDO",
+   "t_senal": 0.925,
+   "returncode": -3,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION"
+   ],
+   "clase": "TERMINAL_SIN_OBJETO(INVALIDO)",
+   "detalle": null,
+   "fallas": [
+    "S-2"
+   ],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGQUIT",
+   "escenario": "EVALUADO",
+   "t_senal": 1.557,
+   "returncode": -3,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGQUIT",
+   "escenario": "EVALUADO",
+   "t_senal": 1.221,
+   "returncode": -3,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [
+    "S-2"
+   ],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGQUIT",
+   "escenario": "INVALIDO",
+   "t_senal": 2.017,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "INVALIDO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGQUIT",
+   "escenario": "EVALUADO",
+   "t_senal": 1.483,
+   "returncode": -3,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGQUIT",
+   "escenario": "EVALUADO",
+   "t_senal": 1.51,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGQUIT",
+   "escenario": "INVALIDO",
+   "t_senal": 1.385,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "INVALIDO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGQUIT",
+   "escenario": "EVALUADO",
+   "t_senal": 0.325,
+   "returncode": -3,
+   "eventos": [
+    "ABIERTO"
+   ],
+   "clase": "NO_DECIDIDO",
+   "detalle": "última etapa durable: None",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGQUIT",
+   "escenario": "EVALUADO",
+   "t_senal": 0.394,
+   "returncode": -3,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA"
+   ],
+   "clase": "NO_DECIDIDO",
+   "detalle": "última etapa durable: panel",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGQUIT",
+   "escenario": "INVALIDO",
+   "t_senal": 1.99,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "INVALIDO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGQUIT",
+   "escenario": "EVALUADO",
+   "t_senal": 1.764,
+   "returncode": -3,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION"
+   ],
+   "clase": "TERMINAL_SIN_OBJETO(EVALUADO)",
+   "detalle": null,
+   "fallas": [
+    "S-2"
+   ],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGQUIT",
+   "escenario": "EVALUADO",
+   "t_senal": 1.884,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGUSR1",
+   "escenario": "INVALIDO",
+   "t_senal": 0.858,
+   "returncode": -10,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION"
+   ],
+   "clase": "TERMINAL_SIN_OBJETO(INVALIDO)",
+   "detalle": null,
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGUSR1",
+   "escenario": "EVALUADO",
+   "t_senal": 1.986,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGUSR1",
+   "escenario": "EVALUADO",
+   "t_senal": 1.921,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGUSR1",
+   "escenario": "INVALIDO",
+   "t_senal": 1.453,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "INVALIDO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGUSR1",
+   "escenario": "EVALUADO",
+   "t_senal": 1.152,
+   "returncode": -10,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA"
+   ],
+   "clase": "DECISION_ANUNCIADA_NO_PERSISTIDA(EVALUADO)",
+   "detalle": null,
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGUSR1",
+   "escenario": "EVALUADO",
+   "t_senal": 0.396,
+   "returncode": -10,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA"
+   ],
+   "clase": "NO_DECIDIDO",
+   "detalle": "última etapa durable: panel",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGUSR1",
+   "escenario": "INVALIDO",
+   "t_senal": 0.264,
+   "returncode": -10,
+   "eventos": [],
+   "clase": "VACIO",
+   "detalle": null,
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGUSR1",
+   "escenario": "EVALUADO",
+   "t_senal": 1.112,
+   "returncode": -10,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA"
+   ],
+   "clase": "INCIERTO",
+   "detalle": "última etapa durable: simulacion, sin decisión ni prueba de que no la hubo",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGUSR1",
+   "escenario": "EVALUADO",
+   "t_senal": 1.95,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGUSR1",
+   "escenario": "INVALIDO",
+   "t_senal": 1.547,
+   "returncode": -10,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION"
+   ],
+   "clase": "INVALIDO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGUSR1",
+   "escenario": "EVALUADO",
+   "t_senal": 1.563,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGUSR1",
+   "escenario": "EVALUADO",
+   "t_senal": 1.132,
+   "returncode": -10,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGKILL",
+   "escenario": "INVALIDO",
+   "t_senal": 1.344,
+   "returncode": 0,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION",
+    "PUBLICADO"
+   ],
+   "clase": "INVALIDO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGKILL",
+   "escenario": "EVALUADO",
+   "t_senal": 0.475,
+   "returncode": -9,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA"
+   ],
+   "clase": "NO_DECIDIDO",
+   "detalle": "última etapa durable: panel",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGKILL",
+   "escenario": "EVALUADO",
+   "t_senal": 1.697,
+   "returncode": -9,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION"
+   ],
+   "clase": "TERMINAL_SIN_OBJETO(EVALUADO)",
+   "detalle": null,
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGKILL",
+   "escenario": "INVALIDO",
+   "t_senal": 0.96,
+   "returncode": -9,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION"
+   ],
+   "clase": "TERMINAL_SIN_OBJETO(INVALIDO)",
+   "detalle": null,
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGKILL",
+   "escenario": "EVALUADO",
+   "t_senal": 1.318,
+   "returncode": -9,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA"
+   ],
+   "clase": "DECISION_ANUNCIADA_NO_PERSISTIDA(EVALUADO)",
+   "detalle": null,
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGKILL",
+   "escenario": "EVALUADO",
+   "t_senal": 0.658,
+   "returncode": -9,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA"
+   ],
+   "clase": "INCIERTO",
+   "detalle": "última etapa durable: simulacion, sin decisión ni prueba de que no la hubo",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGKILL",
+   "escenario": "INVALIDO",
+   "t_senal": 0.453,
+   "returncode": -9,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA"
+   ],
+   "clase": "INCIERTO",
+   "detalle": "última etapa durable: validez, sin decisión ni prueba de que no la hubo",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGKILL",
+   "escenario": "EVALUADO",
+   "t_senal": 1.456,
+   "returncode": -9,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION"
+   ],
+   "clase": "EVALUADO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGKILL",
+   "escenario": "EVALUADO",
+   "t_senal": 0.403,
+   "returncode": -9,
+   "eventos": [],
+   "clase": "VACIO",
+   "detalle": null,
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGKILL",
+   "escenario": "INVALIDO",
+   "t_senal": 1.971,
+   "returncode": -9,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "DECISION"
+   ],
+   "clase": "INVALIDO",
+   "detalle": "objeto verificado",
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGKILL",
+   "escenario": "EVALUADO",
+   "t_senal": 1.144,
+   "returncode": -9,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA",
+    "ETAPA",
+    "DECISION"
+   ],
+   "clase": "TERMINAL_SIN_OBJETO(EVALUADO)",
+   "detalle": null,
+   "fallas": [],
+   "stderr_ultima": ""
+  },
+  {
+   "modo": "mascara",
+   "senal": "SIGKILL",
+   "escenario": "EVALUADO",
+   "t_senal": 0.83,
+   "returncode": -9,
+   "eventos": [
+    "ABIERTO",
+    "ETAPA",
+    "ETAPA"
+   ],
+   "clase": "INCIERTO",
+   "detalle": "última etapa durable: validez, sin decisión ni prueba de que no la hubo",
+   "fallas": [],
+   "stderr_ultima": ""
+  }
+ ]
+}

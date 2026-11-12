@@ -1,0 +1,61 @@
+VERIFICACIÓN FINAL — integración controlada Trader-IA — 2026-10-25T20:20:01Z
+ESTADO DE AUTORIZACIÓN: NO AUTORIZADO PARA OPERAR CON DINERO REAL
+
+1. Árbol candidato
+   base 72ffae5d2698440c8f1afaff12e07bd8adde66fb (árbol 44850cfcbf53c3f8223d38a92031f4402f8ffb32)
+   cadena parches/CADENA.txt (13 pasos) → 17332e1c510d0004f7744bde0a68f008f01652b7
+
+2. Repositorio protegido (/home/user/Trader-IA), solo lectura
+   inicial (registro/A0_estado_inicial.txt): índice 37490035d6706739fd7c9add42ad62c4e0c9260089e8e2e77a486f55e3bdcd1b · HEAD 72ffae5 · cambios 0 · ignorados 18 · reflog 13 · tags 0 · stash 0
+   final:   índice 37490035d6706739fd7c9add42ad62c4e0c9260089e8e2e77a486f55e3bdcd1b · HEAD 72ffae5 · cambios 0 · ignorados 18 · reflog 13 · tags 0 · stash 0
+   ref refs/heads/claude/algo-trading-simulation-platform-ngf7xo 72ffae5d2698440c8f1afaff12e07bd8adde66fb
+   ref refs/remotes/origin/claude/algo-trading-simulation-platform-ngf7xo 72ffae5d2698440c8f1afaff12e07bd8adde66fb
+   validada_para_operar: no existe en el repositorio (0 coincidencias, incluidos ignorados); nada lo creó ni lo modificó
+   commits / push / PR / merge / deploy de esta misión: 0
+
+3. CI local equivalente sobre el árbol final (logs/J_main, logs/J_pg)
+   J_main: ruff rc=0 · All checks passed!
+   J_main: pytest rc=0 · 490 s · -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+   J_main: gate rc=0
+   J_main: commit `72ffae5d2698440c8f1afaff12e07bd8adde66fb` · working tree `17332e1c510d0004f7744bde0a68f008f01652b7`
+   J_main: tests 2038 · passed 2028 · failed 0 · errors 0 · skipped 10 · guard {'defined': 7, 'ran': 7, 'passed': 7}
+   J_main: **gate: pass**
+   J_main: alembic sqlite upgrade head rc=0
+   J_pg: ruff rc=0 · All checks passed!
+   J_pg: pytest rc=0 · 501 s · -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+   J_pg: gate rc=0
+   J_pg: commit `72ffae5d2698440c8f1afaff12e07bd8adde66fb` · working tree `17332e1c510d0004f7744bde0a68f008f01652b7`
+   J_pg: tests 2038 · passed 2038 · failed 0 · errors 0 · skipped 0 · guard {'defined': 7, 'ran': 7, 'passed': 7}
+   J_pg: **gate: pass**
+   J_pg: alembic sqlite upgrade head rc=0
+   J_pg: alembic pg upgrade head rc=0
+   J_pg: alembic pg downgrade base rc=0
+   J_pg: alembic pg upgrade head rc=0
+
+4. Reproducción desde una extracción LIMPIA del paquete (logs/V_reproduccion_desde_extraccion_limpia.txt)
+   MANIFEST.sha256: todo verifica
+   árbol final: 17332e1c510d0004f7744bde0a68f008f01652b7 OK (candidato)
+   ruff rc=0
+   pytest rc=0 (salida en /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/verif_entrega_ic_20261025T201138Z/clon_reproduccion/pytest.txt)
+   tests 2038 · passed 2028 · failed 0 · errors 0 · skipped 10 · guard {'defined': 7, 'ran': 7, 'passed': 7}
+   **gate: pass**
+   índice del origen: IGUAL (37490035d6706739fd7c9add42ad62c4e0c9260089e8e2e77a486f55e3bdcd1b)
+   RESULTADO: reproducido sin diferencias
+   nota: esta corrida (con pruebas) usó el paquete preliminar. La única diferencia con el final es la guarda de destino de
+   reproducir.sh (defecto propio corregido: logs/N_reproducir_guarda.txt), este archivo y el manifiesto. El paquete FINAL
+   se reverificó desde su propia extracción limpia (manifiesto + cadena de árboles): ver el .zip.verificacion.txt junto al ZIP.
+
+5. Gate v4 adversario: 18/18 originales; 28/29 nuevos con razón esperada (N04: falla cerrada por otra razón, premisa no realizada); N04b OK; 0 aprobados en falso (logs/C_gate_v4*.txt, logs/C_gate_v4_N04b)
+6. Simulación integral sobre el árbol final (logs/K_sim_T15): candidato 15/15 (semillas 7 y 8); base A+B+03 10/15 (falla E04b, E08, E11, E12, E13); E15 reversión segura (logs/K_E15.txt)
+7. Dependencia horaria (logs/J_hora): base falla 00:30/02:30/05:50 UTC y pasa 05:56/12:00/23:59; candidato pasa a todas; mutante detectado a 02:30 y 12:00
+8. PostgreSQL desechable: detenido (pg_ctl stop -m fast), enlace /tmp/tia_ic_* borrado, directorio de datos borrado, 0 procesos postgres; bases antes de detener: postgres, template0, template1 (logs/PG_resumen_servidor.txt)
+9. Procesos residuales (python/pytest/postgres): 0
+10. Contenido del paquete: enlaces simbólicos 0 · sockets 0 · bases (*.db, *.sqlite) 0 · __pycache__/pyc 0 · coincidencias de secretos: solo nombres de pruebas (p. ej. test_no_endpoint_returns_a_secret)
+
+11. NO verificado (y por qué)
+   - CI remota (GitHub Actions): requiere push autorizado
+   - testnet de Binance (R25/N1): requiere credenciales de testnet y autorización
+   - Docker (parche 14 opcional): requiere autorización de producción
+   - job frontend: fuera del alcance de los parches
+
+12. El sha256 del ZIP final está FUERA del ZIP (entrega_integracion_controlada_2026-10-25.zip.sha256) porque este archivo va dentro.

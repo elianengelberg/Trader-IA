@@ -1,0 +1,18 @@
+== Determinismo y entornos de la guarda (archivo ff1ad5402b41ccf8…): 2026-10-22T19:51:03Z
+-- 01+02v3, venv_A, repetición 1
+5164caa4bc99815b
+-- 01+02v3, venv_A, repetición 2
+5164caa4bc99815b
+-- 01+02v3, venv_A, repetición 3
+5164caa4bc99815b
+-- 01+02v3, venv_CI_libre (sin versiones fijadas: alembic 1.20.1, coverage 7.17.0, python-dateutil 3.0.0)
+7 passed in 13.98s
+-- 02v3 sin 01, venv_CI_libre
+5 failed, 2 passed in 13.71s
+-- completa (01+02v3+03), venv_A
+7 passed in 13.63s
+-- base 72ffae5, venv_A
+SKIPPED [5] tests/integration/test_engine_version_contract.py:384: the engine records version None: it does not claim D1-D3
+2 passed, 5 skipped in 13.51s
+-- ruff (venv_A) sobre el archivo, en la completa
+All checks passed!

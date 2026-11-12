@@ -1,0 +1,12 @@
+Archivos que cambiarían al integrar (respecto de 72ffae5d2698440c8f1afaff12e07bd8adde66fb)
+
+estado  +líneas  -líneas  ruta  blob antes → blob después  sha256 después
+M  +67  -8  packages/tia/src/tia/backtest/engine.py  1a1ba3d15b21 → 0f681d81be66  85965ec56298519ca107d2bb61f301fe22a02584b5fc98917d147d81e036da88
+M  +9  -0  packages/tia/src/tia/execution/paper.py  a6212245a7c7 → 2d98faddde31  05569d169edc8faacb0d7720747005fd3249ed2247acb8063500dc7e518bfe2b
+A  +227  -0  tests/unit/test_backtest_order_hygiene.py  (no existe) → efe0c662b06a  f10baa1041a031ff72013e77680f33b13bc338dd613a5dcbd16be74551f5fc65
+
+Ningún otro archivo cambia: ni configuración, ni dependencias, ni migraciones, ni frontend, ni datos.
+Comprobación: git status --porcelain=v1 -uall en el árbol de integración:
+ M packages/tia/src/tia/backtest/engine.py
+ M packages/tia/src/tia/execution/paper.py
+ A tests/unit/test_backtest_order_hygiene.py

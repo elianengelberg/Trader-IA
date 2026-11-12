@@ -1,0 +1,24 @@
+{
+ "arbol": "dev",
+ "condicion": "suite_concurrente",
+ "semilla": 1002,
+ "programadas": 200,
+ "flush_dijo": true,
+ "flush_interrumpido": false,
+ "flush_segundos": 0.191,
+ "cierre_persistence_flushed": true,
+ "last_error": "",
+ "filas_en_base": 200,
+ "faltan": 0,
+ "reporte": {
+  "scheduled": 200,
+  "confirmed": 200,
+  "failed": 0,
+  "in_flight": 0,
+  "complete": true,
+  "lost": 0
+ },
+ "perdidas_identificadas": [],
+ "FALSO_COMPLETO": false,
+ "CIERRE_LIMPIO_CON_PENDIENTES": false
+}

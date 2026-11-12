@@ -1,0 +1,10 @@
+>       assert not engine.violations["d1_stop"], engine.violations["d1_stop"][:3]
+E       AssertionError: ['bar 537: 9 bars without a stop', 'bar 538: 10 bars without a stop', 'bar 539: 11 bars without a stop']
+E       assert not ['bar 537: 9 bars without a stop', 'bar 538: 10 bars without a stop', 'bar 539: 11 bars without a stop', 'bar 540: 12 bars without a stop', 'bar 541: 13 bars without a stop', 'bar 542: 14 bars without a stop', ...]
+tests/unit/test_backtest_order_hygiene.py:97: AssertionError
+>       assert not engine.violations["d2"], engine.violations["d2"][:3]
+E       AssertionError: ['bar 175: leg stop 62584.94100498582, order in the book 62608.515972277375', 'bar 176: leg stop 62567.83067468193, order in the book 62608.515972277375', 'bar 177: leg stop 62567.83067468193, order in the book 62608.515972277375']
+E       assert not ['bar 175: leg stop 62584.94100498582, order in the book 62608.515972277375', 'bar 176: leg stop 62567.83067468193, or...rder in the book 62608.515972277375', 'bar 180: leg stop 62462.69553130117, order in the book 62608.515972277375', ...]
+tests/unit/test_backtest_order_hygiene.py:104: AssertionError
+E       AttributeError: '_Instrumented' object has no attribute 'order_hygiene'
+3 failed, 1 passed in 19.79s

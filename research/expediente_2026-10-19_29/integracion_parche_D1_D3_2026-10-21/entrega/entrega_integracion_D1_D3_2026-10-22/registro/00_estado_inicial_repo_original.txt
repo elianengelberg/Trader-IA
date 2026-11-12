@@ -1,0 +1,13 @@
+== Estado inicial del repositorio original: 2026-10-21T23:19:47Z
+ruta: /home/user/Trader-IA
+HEAD: 72ffae5d2698440c8f1afaff12e07bd8adde66fb
+rama: claude/algo-trading-simulation-platform-ngf7xo
+origin/rama: 72ffae5d2698440c8f1afaff12e07bd8adde66fb
+cambios (porcelain -uall): 0
+stash: 0
+sha256 engine.py en HEAD: 547109460bb5734ab7b108dc9387fca802e69b29cc8e74c262b80bdc55533ea4
+sha256 paper.py en HEAD: f5e0cb87a98d951ada347dc183968c59cc914cd52ac5cdaddf574f7264b7ff00
+sha256 engine.py en disco: 547109460bb5734ab7b108dc9387fca802e69b29cc8e74c262b80bdc55533ea4
+tests/unit/test_backtest_order_hygiene.py en el repo: ls: cannot access 'tests/unit/test_backtest_order_hygiene.py': No such file or directory
+lista de refs: refs/heads/claude/algo-trading-simulation-platform-ngf7xo 72ffae5;refs/remotes/origin/claude/algo-trading-simulation-platform-ngf7xo 72ffae5;
+huella del árbol de trabajo (ls-files -s): 07e0c86bb1c04ba2

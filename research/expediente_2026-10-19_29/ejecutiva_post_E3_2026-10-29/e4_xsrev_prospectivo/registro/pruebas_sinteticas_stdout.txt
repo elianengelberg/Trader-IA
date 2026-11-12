@@ -1,0 +1,2 @@
+{"aviso": "DATOS SINTÉTICOS generados por este script; no son datos históricos", "P1_nulo": true, "P2_efecto_plantado": true, "P3_fuga": true, "P4_exclusiones": true, "P5_salidas": true, "P6_rotacion": true, "P7_clasificacion": true, "todas_ok": true}
+{"P1": {"sims": 200, "tasa_RESPALDADA": 0.025, "tasa_EN_CONTRA": 0.035, "ic_medio_promedio": -1.434414042887175e-05, "ok": true}, "P2": {"sims": 60, "k_rev": 0.06, "tasa_RESPALDADA": 1.0, "ic_medio_promedio": 0.05710300619567814, "ok": true}}

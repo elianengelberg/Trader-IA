@@ -1,0 +1,10 @@
+== base_limpia/trader-ia
+packages/tia/src/tia/backtest/engine.py:693: error: "MarketConditions" has no attribute "run_id"  [attr-defined]
+packages/tia/src/tia/backtest/engine.py:857: error: Argument 1 to "cancel_order" of "PaperExecutionProvider" has incompatible type "str | None"; expected "str"  [arg-type]
+pyproject.toml: note: unused section(s): module = ['anthropic.*', 'pandas.*', 'prometheus_client.*', 'redis.*']
+Found 15 errors in 3 files (checked 2 source files)
+== trader-ia
+packages/tia/src/tia/backtest/engine.py:709: error: "MarketConditions" has no attribute "run_id"  [attr-defined]
+packages/tia/src/tia/backtest/engine.py:911: error: Argument 1 to "cancel_order" of "PaperExecutionProvider" has incompatible type "str | None"; expected "str"  [arg-type]
+pyproject.toml: note: unused section(s): module = ['anthropic.*', 'pandas.*', 'prometheus_client.*', 'redis.*']
+Found 14 errors in 2 files (checked 2 source files)

@@ -1,0 +1,12 @@
+HEAD 692f2b2d7af3189027b62e60367d104d855b0f3f
+rama claude/algo-trading-simulation-platform-ngf7xo
+huella porcelain: 87b9585d31924f8193a6d3eb6d0712a3d3880978681c75d0dd77e00d08f34a8e  -
+commits locales no publicados:
+692f2b2 Close T-MULTI evidence package and record final research state
+f518ac1 Freeze T-MULTI preregistration and code before any data access
+stash: 0
+17c17
+<   !! research/hcarry_next/.venv/ metadatos: a5f597783da85f5238a4e4426659c72a180767fb2d1e43db2d923f2b1d0508f4
+---
+>   !! research/hcarry_next/.venv/ metadatos: 76578a93c7398769175d7cb3242431785211bd5daf45a804635912ae343ec9ea
+DESVIACIÓN CONOCIDA I-1: la huella difiere SOLO en los metadatos de research/hcarry_next/.venv/ (un .pyc creado por error por esta misión y revertido; queda distinto el mtime de un directorio). No se oculta: 01_RESULTADOS_AUDITORIA.md §5.

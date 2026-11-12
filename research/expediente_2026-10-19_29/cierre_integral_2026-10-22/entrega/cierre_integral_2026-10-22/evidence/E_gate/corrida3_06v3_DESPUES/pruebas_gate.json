@@ -1,0 +1,251 @@
+[
+ {
+  "caso": "real_final",
+  "interprete": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_D1_D3_2026-10-22/entorno/venv_A/bin/python",
+  "esperado": "pass",
+  "veredicto": "pass",
+  "rc": 0,
+  "motivo_esperado": null,
+  "problemas": [],
+  "engine_version": "1.1.0",
+  "report": {
+   "tests": 1985,
+   "passed": 1985,
+   "failure": 0,
+   "error": 0,
+   "skipped": 0,
+   "guard_ran": 7,
+   "guard_passed": 7
+  },
+  "OK": true,
+  "stderr": ""
+ },
+ {
+  "caso": "guarda_omitida",
+  "interprete": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_D1_D3_2026-10-22/entorno/venv_A/bin/python",
+  "esperado": "fail",
+  "veredicto": "fail",
+  "rc": 1,
+  "motivo_esperado": "version guard ran 7 and passed 0 of 7",
+  "problemas": [
+   "engine claims 1.1.0 but the version guard ran 7 and passed 0 of 7"
+  ],
+  "engine_version": "1.1.0",
+  "report": {
+   "tests": 1985,
+   "passed": 1978,
+   "failure": 0,
+   "error": 0,
+   "skipped": 7,
+   "guard_ran": 7,
+   "guard_passed": 0
+  },
+  "OK": true,
+  "stderr": ""
+ },
+ {
+  "caso": "guarda_quitada",
+  "interprete": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_D1_D3_2026-10-22/entorno/venv_A/bin/python",
+  "esperado": "fail",
+  "veredicto": "fail",
+  "rc": 1,
+  "motivo_esperado": "version guard ran 0 and passed 0 of 7",
+  "problemas": [
+   "engine claims 1.1.0 but the version guard ran 0 and passed 0 of 7"
+  ],
+  "engine_version": "1.1.0",
+  "report": {
+   "tests": 1978,
+   "passed": 1978,
+   "failure": 0,
+   "error": 0,
+   "skipped": 0,
+   "guard_ran": 0,
+   "guard_passed": 0
+  },
+  "OK": true,
+  "stderr": ""
+ },
+ {
+  "caso": "guarda_6_de_7",
+  "interprete": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_D1_D3_2026-10-22/entorno/venv_A/bin/python",
+  "esperado": "fail",
+  "veredicto": "fail",
+  "rc": 1,
+  "motivo_esperado": "version guard ran 6 and passed 6 of 7",
+  "problemas": [
+   "engine claims 1.1.0 but the version guard ran 6 and passed 6 of 7"
+  ],
+  "engine_version": "1.1.0",
+  "report": {
+   "tests": 1984,
+   "passed": 1984,
+   "failure": 0,
+   "error": 0,
+   "skipped": 0,
+   "guard_ran": 6,
+   "guard_passed": 6
+  },
+  "OK": true,
+  "stderr": ""
+ },
+ {
+  "caso": "falla_ajena",
+  "interprete": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_D1_D3_2026-10-22/entorno/venv_A/bin/python",
+  "esperado": "fail",
+  "veredicto": "fail",
+  "rc": 1,
+  "motivo_esperado": "1 failed and 0 errored",
+  "problemas": [
+   "1 failed and 0 errored"
+  ],
+  "engine_version": "1.1.0",
+  "report": {
+   "tests": 1985,
+   "passed": 1984,
+   "failure": 1,
+   "error": 0,
+   "skipped": 0,
+   "guard_ran": 7,
+   "guard_passed": 7
+  },
+  "OK": true,
+  "stderr": ""
+ },
+ {
+  "caso": "falla_en_guarda",
+  "interprete": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_D1_D3_2026-10-22/entorno/venv_A/bin/python",
+  "esperado": "fail",
+  "veredicto": "fail",
+  "rc": 1,
+  "motivo_esperado": "passed 6 of 7",
+  "problemas": [
+   "1 failed and 0 errored",
+   "engine claims 1.1.0 but the version guard ran 7 and passed 6 of 7"
+  ],
+  "engine_version": "1.1.0",
+  "report": {
+   "tests": 1985,
+   "passed": 1984,
+   "failure": 1,
+   "error": 0,
+   "skipped": 0,
+   "guard_ran": 7,
+   "guard_passed": 6
+  },
+  "OK": true,
+  "stderr": ""
+ },
+ {
+  "caso": "error",
+  "interprete": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_D1_D3_2026-10-22/entorno/venv_A/bin/python",
+  "esperado": "fail",
+  "veredicto": "fail",
+  "rc": 1,
+  "motivo_esperado": "0 failed and 1 errored",
+  "problemas": [
+   "0 failed and 1 errored"
+  ],
+  "engine_version": "1.1.0",
+  "report": {
+   "tests": 1985,
+   "passed": 1984,
+   "failure": 0,
+   "error": 1,
+   "skipped": 0,
+   "guard_ran": 7,
+   "guard_passed": 7
+  },
+  "OK": true,
+  "stderr": ""
+ },
+ {
+  "caso": "junit_vacio",
+  "interprete": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_D1_D3_2026-10-22/entorno/venv_A/bin/python",
+  "esperado": "fail",
+  "veredicto": "fail",
+  "rc": 1,
+  "motivo_esperado": "the JUnit report holds no test",
+  "problemas": [
+   "the JUnit report holds no test",
+   "engine claims 1.1.0 but the version guard ran 0 and passed 0 of 7"
+  ],
+  "engine_version": "1.1.0",
+  "report": {
+   "tests": 0,
+   "passed": 0,
+   "failure": 0,
+   "error": 0,
+   "skipped": 0,
+   "guard_ran": 0,
+   "guard_passed": 0
+  },
+  "OK": true,
+  "stderr": ""
+ },
+ {
+  "caso": "base_sin_version_sin_guarda",
+  "interprete": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_D1_D3_2026-10-22/entorno/venv_A/bin/python",
+  "esperado": "pass",
+  "veredicto": "pass",
+  "rc": 0,
+  "motivo_esperado": null,
+  "problemas": [],
+  "engine_version": null,
+  "report": {
+   "tests": 1978,
+   "passed": 1978,
+   "failure": 0,
+   "error": 0,
+   "skipped": 0,
+   "guard_ran": 0,
+   "guard_passed": 0
+  },
+  "OK": true,
+  "stderr": ""
+ },
+ {
+  "caso": "otro_interprete_real",
+  "interprete": "/usr/bin/python3.11",
+  "esperado": "pass",
+  "veredicto": "pass",
+  "rc": 0,
+  "motivo_esperado": null,
+  "problemas": [],
+  "engine_version": "1.1.0",
+  "report": {
+   "tests": 1985,
+   "passed": 1985,
+   "failure": 0,
+   "error": 0,
+   "skipped": 0,
+   "guard_ran": 7,
+   "guard_passed": 7
+  },
+  "OK": true,
+  "stderr": ""
+ },
+ {
+  "caso": "otro_interprete_guarda_omitida",
+  "interprete": "/usr/bin/python3.11",
+  "esperado": "fail",
+  "veredicto": "fail",
+  "rc": 1,
+  "motivo_esperado": "version guard ran 7 and passed 0 of 7",
+  "problemas": [
+   "engine claims 1.1.0 but the version guard ran 7 and passed 0 of 7"
+  ],
+  "engine_version": "1.1.0",
+  "report": {
+   "tests": 1985,
+   "passed": 1978,
+   "failure": 0,
+   "error": 0,
+   "skipped": 7,
+   "guard_ran": 7,
+   "guard_passed": 0
+  },
+  "OK": true,
+  "stderr": ""
+ }
+]

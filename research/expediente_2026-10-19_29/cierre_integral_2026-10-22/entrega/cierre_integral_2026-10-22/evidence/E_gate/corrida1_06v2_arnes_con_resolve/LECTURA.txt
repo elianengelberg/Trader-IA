@@ -1,0 +1,8 @@
+Corrida 1 (06v2, arnés con defecto): 5/9. En TODOS los casos el gate registró engine_version None.
+Causa en el arnés: pruebas_gate.py resolvía el intérprete con Path.resolve(), que sigue el enlace del venv a /usr/bin/python3.11
+(sin dependencias del proyecto); así el gate no podía importar tia y su `except ImportError: return None` lo tomaba como
+«motor sin versión», dejaba de exigir la guarda y aprobaba un JUnit con la guarda omitida, quitada o en 6 de 7.
+Lectura: el defecto del arnés DESTAPÓ un defecto real del gate (falla abierto ante un ImportError). Se corrigen los dos:
+el arnés usa el intérprete tal como se le pasa (sin resolver enlaces) y agrega casos con otro intérprete; el gate (06v3) lee
+ENGINE_VERSION de la fuente del motor sin importarlo y falla cerrado si no puede leerlo. Los veredictos esperados de los 9
+casos originales NO cambian.

@@ -1,0 +1,9 @@
+== Entregas y paquetes previos que no deben cambiar (sha256 al inicio de la misión)
+f4d69ad7fc33284b6f5874dc33de9f3efe8cb98f531f58d847cb221b679c5596  entrega_integracion_D1_D3_v3_2026-10-22.zip
+d912c88a59b878520501ff221fd78d2d2eef870ae0b681d2108441ab8cbd5155  entrega_integracion_D1_D3_v3r2_2026-10-22.zip
+1394a8cd97f0bc9c065a295dcfe8b508496f1e51a8826a54244d6c6671418d49  entrega_integracion_D1_D3_v3_2026-10-22.zip.sha256
+e62a711b7b4c6aad00eea9033074d433a76639b032b00a12da49a9cdf6eb7b67  entrega_integracion_D1_D3_v3r2_2026-10-22.zip.sha256
+fd9ce645a26e0c9ed3a2ff602c2cabd8525442fd697cab3d61a79e657ca30f8e  VERIFICACION_EXTRACCION_LIMPIA_v3r2.txt
+8e6979ad141c3d4dc0001a058b06a94c27247bb91df2383431fe8dde8b590f58  /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/cierre_revision_D1_D3_2026-10-22/paquete/revision_cierre_D1_D3_2026-10-22.zip
+carpeta v3r2 publicada (sha256 del listado de hashes de todos sus archivos):
+29912e1b43271f13046b1da65042fe4a7805ab6cdfa56101597f0d6c297456ea

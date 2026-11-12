@@ -1,0 +1,21 @@
+A+B+03+04: 665d0643bd986a5e484192ef50957b64992305cc OK
++08_R25_R18_proteccion_de_posiciones: defa96c7ae494b462dc16d5702ca81119b0082ea esperado defa96c7ae494b462dc16d5702ca81119b0082ea OK
++07: ab62a136ad9ca9dd357353e3bde881fd99f29c2e esperado ab62a136ad9ca9dd357353e3bde881fd99f29c2e OK
++09_R15_guardado_atomico_backtest: e4d8761996b66aabd391d2138e99cc323f066aa3 esperado e4d8761996b66aabd391d2138e99cc323f066aa3 OK
++10_R24H1_largo_de_incidentes: 43a8979a9c5aef64913d3637249dd4b76f19ea22 esperado 43a8979a9c5aef64913d3637249dd4b76f19ea22 OK
++11_R19_escrituras_confirmadas: 06243b4a646401177cf337314aa2d1e7d9896c8d esperado 06243b4a646401177cf337314aa2d1e7d9896c8d OK
++12_gate_v4_procedencia_y_ci_postgresql: 91dfea3421ed398cab9a5790afb7f18dd4049ada esperado 91dfea3421ed398cab9a5790afb7f18dd4049ada OK
++13_R18_reproteccion_al_reiniciar: c7688384d8005be4f95b378f8699b38a5b81dfe7 esperado c7688384d8005be4f95b378f8699b38a5b81dfe7 OK
++15_R25b_transporte_ambiguo_es_estado_desconocido: 17332e1c510d0004f7744bde0a68f008f01652b7 esperado 17332e1c510d0004f7744bde0a68f008f01652b7 OK
++16: 3492c18720360385887371adbb8b471aac594c92 esperado 3492c18720360385887371adbb8b471aac594c92 OK
+   ruff rc=0 · pruebas del parche rc=0 · ..............                                                           [100%]
++17: e41e594de591411ff945967b2f214e4e8c3f0d3f esperado e41e594de591411ff945967b2f214e4e8c3f0d3f OK
+   ruff rc=0 · pruebas del parche rc=0 · ...                                                                      [100%]
++18: b0f675b3e2786cbe444d94e45d348c5d8cf0bbf1 esperado b0f675b3e2786cbe444d94e45d348c5d8cf0bbf1 OK
+   ruff rc=0 · pruebas del parche rc=0 · .                                                                        [100%]
++19: 48fcb394037d6fbfdb04763da257608adc4544f4 esperado 48fcb394037d6fbfdb04763da257608adc4544f4 OK
+   ruff rc=0 · pruebas del parche rc=0 · .............................................................            [100%]
++20: ab2d720682029a1df8af3646f6e3bde351b97768 esperado ab2d720682029a1df8af3646f6e3bde351b97768 OK
+   ruff rc=0 · pruebas del parche rc=0 · ........                                                                 [100%]
++21: bcfa40082d74f7ad0d1bd1581cd913df64e143f8 esperado bcfa40082d74f7ad0d1bd1581cd913df64e143f8 OK
+   ruff rc=0 · pruebas del parche rc=0 · ..                                                                       [100%]

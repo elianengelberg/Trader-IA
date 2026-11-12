@@ -1,0 +1,728 @@
+diff --git a/.github/workflows/ci.yml b/.github/workflows/ci.yml
+index 1394143..2fc576b 100644
+--- a/.github/workflows/ci.yml
++++ b/.github/workflows/ci.yml
+@@ -24,6 +24,9 @@ jobs:
+     timeout-minutes: 30
+     env:
+       PYTHONPATH: packages/tia/src
++      # One value per run and attempt: the JUnit report and the session record must carry
++      # it, so an artifact from another run cannot pass the gate as this one's.
++      CI_RUN_NONCE: ${{ github.run_id }}-${{ github.run_attempt }}-${{ github.sha }}
+     steps:
+       - uses: actions/checkout@v4
+ 
+@@ -40,13 +43,89 @@ jobs:
+         run: ruff check packages tests scripts
+ 
+       - name: Tests (unit, property, integration, failure, e2e)
+-        run: python -m pytest tests -q
++        run: python -m pytest tests -q -p scripts.ci_provenance --junitxml=ci-evidence/junit.xml
++
++      # The run tied to its code, suite and environment, and refused when it is not the whole
++      # suite, not this run's, or the engine claims a version its guard did not prove
++      # (scripts/ci_gate.py, policy scripts/ci_gate_policy.json). Runs even when the tests
++      # failed, so the evidence of a red run is kept too.
++      - name: Gate (provenance, suite, version guard)
++        if: ${{ !cancelled() }}
++        run: python scripts/ci_gate.py ci-evidence ci-evidence/junit.xml
++
++      - name: Keep the evidence
++        if: ${{ !cancelled() }}
++        uses: actions/upload-artifact@v4
++        with:
++          name: ci-evidence-${{ github.sha }}-${{ github.run_attempt }}
++          path: ci-evidence/
++          retention-days: 90
+ 
+       - name: Migrations apply from empty
+         env:
+           TIA_DATABASE_URL: sqlite:///./data/runtime/ci.db
+         run: python -m alembic upgrade head
+ 
++  # The same suite against a real PostgreSQL 16: the store's PostgreSQL tests (07, R15,
++  # R24-H1) skip without TIA_TEST_POSTGRESQL_URL, and here the gate requires them to pass.
++  # The service is a throwaway container of this job; its trust authentication is local to
++  # the job's network and holds no data.
++  postgresql:
++    runs-on: ubuntu-latest
++    timeout-minutes: 30
++    services:
++      postgres:
++        image: postgres:16
++        env:
++          POSTGRES_HOST_AUTH_METHOD: trust
++        ports:
++          - 5432:5432
++        options: >-
++          --health-cmd "pg_isready -U postgres"
++          --health-interval 5s
++          --health-timeout 5s
++          --health-retries 20
++    env:
++      PYTHONPATH: packages/tia/src
++      CI_RUN_NONCE: ${{ github.run_id }}-${{ github.run_attempt }}-${{ github.sha }}-pg
++      CI_GATE_REQUIRE_POSTGRESQL: "1"
++      TIA_TEST_POSTGRESQL_URL: postgresql+asyncpg://postgres@localhost:5432/postgres
++    steps:
++      - uses: actions/checkout@v4
++
++      - uses: actions/setup-python@v5
++        with:
++          python-version: "3.11"
++          cache: pip
++          cache-dependency-path: constraints/ci-py311.txt
++
++      - name: Install
++        run: pip install -c constraints/ci-py311.txt -e ".[api,db,postgres,redis,llm,dev]"
++
++      - name: Tests against PostgreSQL
++        run: python -m pytest tests -q -p scripts.ci_provenance --junitxml=ci-evidence/junit.xml
++
++      - name: Gate (PostgreSQL tests required)
++        if: ${{ !cancelled() }}
++        run: python scripts/ci_gate.py ci-evidence ci-evidence/junit.xml
++
++      - name: Keep the evidence
++        if: ${{ !cancelled() }}
++        uses: actions/upload-artifact@v4
++        with:
++          name: ci-evidence-postgresql-${{ github.sha }}-${{ github.run_attempt }}
++          path: ci-evidence/
++          retention-days: 90
++
++      - name: Migrations up, down to base and up again on PostgreSQL
++        env:
++          TIA_DATABASE_URL: postgresql://postgres@localhost:5432/ci_migrations
++        run: |
++          python -c "import psycopg2; c = psycopg2.connect(host='localhost', user='postgres', dbname='postgres'); c.autocommit = True; c.cursor().execute('CREATE DATABASE ci_migrations')"
++          python -m alembic upgrade head
++          python -m alembic downgrade base
++          python -m alembic upgrade head
++
+   frontend:
+     runs-on: ubuntu-latest
+     timeout-minutes: 15
+diff --git a/scripts/ci_gate.py b/scripts/ci_gate.py
+new file mode 100644
+index 0000000..aea9285
+--- /dev/null
++++ b/scripts/ci_gate.py
+@@ -0,0 +1,411 @@
++"""CI gate (v4): a green run is green only for the code, suite and environment it actually ran.
++
++Usage: python scripts/ci_gate.py <evidence_dir> <junit.xml>
++
++Run after ``python -m pytest tests -p scripts.ci_provenance --junitxml=<evidence>/junit.xml``
++with ``CI_RUN_NONCE`` set by the workflow. The policy it applies is the file
++``scripts/ci_gate_policy.json``, fixed before any run and part of the recorded inputs.
++
++It fails the job, and still writes ``provenance.json``, when any of these does not hold:
++
++* **the report is this run's and is whole** — the JUnit report parses, its counts match its
++  test cases, no test case appears twice, and it carries this run's nonce, as does the
++  session record the plugin wrote from inside the test process (an artifact from another
++  run carries another nonce);
++* **report and session agree** — the same tests with the same outcome in both;
++* **the whole suite ran** — the configured paths, no ``-k``/``-m``/deselection/``--lf``/
++  ``--ignore``/``--maxfail``, at least the policy's number of tests, no failure, error or
++  xpass, and no skip or xfail outside the policy's allow-list (with
++  ``CI_GATE_REQUIRE_POSTGRESQL=1`` the PostgreSQL tests must have *passed*);
++* **one engine version, read and run** — the engine module binds ``ENGINE_VERSION`` exactly
++  once, at its top level, to a string literal; nothing else in the package binds or patches
++  it; the version imported by the tests equals it and was imported from this checkout's
++  file, unchanged;
++* **the guard ran because it is the guard** — when the version claims order hygiene, the
++  guard file is byte-for-byte the policy's, and every test it defines ran and passed;
++* **nothing changed under the run** — the working tree's content when the gate runs is the
++  one the tests started on;
++* **the environment is the declared one** — the test interpreter's Python is the policy's
++  and every installed distribution pinned in ``constraints/ci-py311.txt`` has its pinned
++  version (taken from the test process, not from a ``pip freeze`` of another interpreter).
++
++Any error inside the gate is a failure, never a pass.
++"""
++
++from __future__ import annotations
++
++import ast
++import hashlib
++import json
++import os
++import shutil
++import subprocess
++import sys
++import tempfile
++import xml.etree.ElementTree as ET
++from datetime import datetime
++from pathlib import Path
++from typing import Any
++
++POLICY = Path("scripts/ci_gate_policy.json")
++INPUTS = (".github/workflows/ci.yml", "constraints/ci-py311.txt", "pyproject.toml", "scripts/ci_gate.py",
++          "scripts/ci_provenance.py", "scripts/ci_gate_policy.json")
++NAME = "ENGINE_VERSION"
++
++
++def _sha256(path: Path) -> str | None:
++    return hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else None
++
++
++def _git(*args: str, env: dict[str, str] | None = None) -> str:
++    git = shutil.which("git")
++    if git is None:
++        raise RuntimeError("git is not on PATH, so the run cannot be tied to its code")
++    return subprocess.run(  # noqa: S603 - fixed argv, resolved executable
++        [git, *args], capture_output=True, text=True, check=True, env=env,
++    ).stdout.strip()
++
++
++def _working_tree_id(evidence: Path) -> str:
++    """The working copy's content id, as ``scripts/ci_provenance.py`` computes it: in a
++    throwaway index, without the evidence directory when it lies inside the checkout."""
++    inside = not evidence.is_absolute() or evidence.resolve().is_relative_to(Path.cwd().resolve())
++    exclude = [f":(exclude){evidence.resolve().relative_to(Path.cwd().resolve()).as_posix()}"] if inside else []
++    with tempfile.TemporaryDirectory() as scratch:
++        env = dict(os.environ, GIT_INDEX_FILE=str(Path(scratch) / "index"))
++        _git("add", "-A", "--", ".", *exclude, env=env)
++        return _git("write-tree", env=env)
++
++
++def _version_tuple(raw: str) -> tuple[int, ...]:
++    parts = tuple(int(p) for p in raw.split("."))
++    return parts + (0,) * (3 - len(parts))
++
++
++# ------------------------------------------------------------------ the engine version
++
++
++def _bindings(tree: ast.AST) -> list[tuple[ast.AST, ast.AST | None, bool]]:
++    """Every binding of ENGINE_VERSION in a module: (node, value, at_top_level)."""
++    top = set(map(id, getattr(tree, "body", [])))
++    found: list[tuple[ast.AST, ast.AST | None, bool]] = []
++
++    def names(target: ast.AST) -> list[str]:
++        if isinstance(target, ast.Name):
++            return [target.id]
++        if isinstance(target, ast.Tuple | ast.List):
++            return [n for t in target.elts for n in names(t)]
++        if isinstance(target, ast.Starred):
++            return names(target.value)
++        return []
++
++    for node in ast.walk(tree):
++        if isinstance(node, ast.Assign):
++            for target in node.targets:
++                if NAME in names(target):
++                    simple = isinstance(target, ast.Name)
++                    found.append((node, node.value if simple else None, id(node) in top))
++        elif isinstance(node, ast.AnnAssign | ast.AugAssign) and NAME in names(node.target):
++            plain = isinstance(node, ast.AnnAssign) and node.value is not None
++            found.append((node, node.value if plain else None, id(node) in top))
++        elif isinstance(node, ast.NamedExpr | ast.For | ast.AsyncFor | ast.comprehension) and NAME in names(node.target):
++            found.append((node, None, False))
++        elif (isinstance(node, ast.Import | ast.ImportFrom)
++              and any((alias.asname or alias.name.split(".")[0]) == NAME for alias in node.names)) or (
++                isinstance(node, ast.FunctionDef | ast.AsyncFunctionDef | ast.ClassDef) and node.name == NAME):
++            found.append((node, None, id(node) in top))
++        elif isinstance(node, ast.Global | ast.Nonlocal) and NAME in node.names:
++            found.append((node, None, False))
++    return found
++
++
++def _static_version(engine: Path, problems: list[str]) -> str | None:
++    try:
++        source = engine.read_text(encoding="utf-8")
++        tree = ast.parse(source, filename=str(engine))
++    except (OSError, UnicodeDecodeError, SyntaxError) as exc:
++        problems.append(f"the engine source cannot be read as Python ({type(exc).__name__}: {exc})")
++        return None
++    bindings = _bindings(tree)
++    if len(bindings) != 1:
++        lines = [getattr(node, "lineno", "?") for node, _, _ in bindings]
++        problems.append(f"the engine binds {NAME} {len(bindings)} times (lines {lines}); exactly one is allowed")
++        return None
++    node, value, top = bindings[0]
++    if not top or not isinstance(value, ast.Constant) or not isinstance(value.value, str):
++        problems.append(f"{NAME} (line {getattr(node, 'lineno', '?')}) is not a top-level string literal")
++        return None
++    return value.value
++
++
++def _bound_elsewhere(package: Path, engine: Path) -> list[str]:
++    """Anything else in the package that binds, assigns or patches ENGINE_VERSION."""
++    found = []
++    for path in sorted(package.rglob("*.py")):
++        if path.resolve() == engine.resolve():
++            continue
++        try:
++            tree = ast.parse(path.read_text(encoding="utf-8"))
++        except (OSError, UnicodeDecodeError, SyntaxError) as exc:
++            found.append(f"{path}: unreadable ({type(exc).__name__})")
++            continue
++        for node, _, _ in _bindings(tree):
++            if not isinstance(node, ast.Import | ast.ImportFrom):
++                found.append(f"{path}:{getattr(node, 'lineno', '?')}")
++        for node in ast.walk(tree):
++            if isinstance(node, ast.Attribute) and node.attr == NAME and isinstance(node.ctx, ast.Store | ast.Del):
++                found.append(f"{path}:{node.lineno} (attribute)")
++            if (isinstance(node, ast.Call) and getattr(node.func, "id", getattr(node.func, "attr", "")) in ("setattr", "delattr")
++                    and len(node.args) > 1 and isinstance(node.args[1], ast.Constant) and node.args[1].value == NAME):
++                found.append(f"{path}:{node.lineno} ({node.func.__class__.__name__} setattr)")
++    return found
++
++
++# ------------------------------------------------------------------ the JUnit report
++
++
++def _junit(junit: Path, problems: list[str]) -> tuple[dict[str, str], dict[str, str], list[str]]:
++    """(outcome by test, properties, testsuite timestamps). Problems for anything malformed."""
++    if not junit.is_file() or junit.stat().st_size == 0:
++        problems.append(f"the JUnit report {junit} is missing or empty")
++        return {}, {}, []
++    try:
++        root = ET.parse(junit).getroot()  # noqa: S314 - the report this job's pytest just wrote
++    except ET.ParseError as exc:
++        problems.append(f"the JUnit report does not parse ({exc})")
++        return {}, {}, []
++    suites = [root] if root.tag == "testsuite" else list(root.iter("testsuite"))
++    if root.tag not in ("testsuite", "testsuites") or not suites:
++        problems.append(f"the JUnit report has no testsuite (root <{root.tag}>)")
++        return {}, {}, []
++    outcomes: dict[str, str] = {}
++    properties: dict[str, str] = {}
++    stamps = []
++    for suite in suites:
++        cases = suite.findall("testcase")
++        counted = {"tests": len(cases), "failures": 0, "errors": 0, "skipped": 0}
++        for case in cases:
++            key = f"{case.get('classname', '')}::{case.get('name', '')}"
++            if key in outcomes:
++                problems.append(f"the JUnit report lists {key} twice")
++            if case.find("failure") is not None:
++                outcome = "failed"
++                counted["failures"] += 1
++            elif case.find("error") is not None:
++                outcome = "error"
++                counted["errors"] += 1
++            elif case.find("skipped") is not None:
++                skipped = case.find("skipped")
++                outcome = "xfailed" if skipped is not None and skipped.get("type") == "pytest.xfail" else "skipped"
++                counted["skipped"] += 1
++            else:
++                outcome = "passed"
++            outcomes[key] = outcome
++        for attribute, value in counted.items():
++            declared = suite.get(attribute)
++            if declared is None or not declared.isdigit() or int(declared) != value:
++                problems.append(f"the JUnit testsuite says {attribute}={declared} but holds {value}")
++        for prop in suite.iter("property"):
++            properties[prop.get("name", "")] = prop.get("value", "")
++        if suite.get("timestamp"):
++            stamps.append(suite.get("timestamp", ""))
++    return outcomes, properties, stamps
++
++
++def _guard_names(guard: Path) -> set[str]:
++    tree = ast.parse(guard.read_text(encoding="utf-8"))
++    return {node.name for node in tree.body
++            if isinstance(node, ast.FunctionDef | ast.AsyncFunctionDef) and node.name.startswith("test_")}
++
++
++def _pins(constraints: Path) -> dict[str, str]:
++    pins = {}
++    for line in constraints.read_text().splitlines():
++        line = line.split("#", 1)[0].strip()
++        if "==" in line:
++            name, version = line.split("==", 1)
++            pins[name.strip().lower().replace("_", "-")] = version.strip()
++    return pins
++
++
++# ------------------------------------------------------------------ the checks
++
++
++def check(evidence: Path, junit: Path, record: dict[str, Any]) -> list[str]:
++    problems: list[str] = []
++    policy = json.loads(POLICY.read_text(encoding="utf-8"))
++    record["policy_version"] = policy["policy_version"]
++    nonce = os.environ.get("CI_RUN_NONCE")
++    if not nonce:
++        problems.append("CI_RUN_NONCE is not set: this run cannot be told apart from another")
++
++    session_path = evidence / "session.json"
++    try:
++        session = json.loads(session_path.read_text(encoding="utf-8"))
++        if not isinstance(session, dict):
++            raise ValueError("not an object")
++    except (OSError, ValueError) as exc:
++        problems.append(f"the session record {session_path} is missing or unreadable ({exc})")
++        session = {}
++    record["session_sha256"] = _sha256(session_path)
++
++    outcomes, properties, stamps = _junit(junit, problems)
++    record["junit_sha256"] = _sha256(junit)
++
++    # this run's
++    if nonce and session.get("nonce") != nonce:
++        problems.append(f"the session record is from another run (nonce {session.get('nonce')!r})")
++    if nonce and properties.get("ci_run_nonce") != nonce:
++        problems.append(f"the JUnit report is from another run (nonce {properties.get('ci_run_nonce')!r})")
++    started, finished = session.get("started_at"), session.get("finished_at")
++    for stamp in stamps:
++        try:
++            at = datetime.fromisoformat(stamp).timestamp()
++        except ValueError:
++            problems.append(f"the JUnit timestamp {stamp!r} does not parse")
++            continue
++        if not (isinstance(started, int | float) and isinstance(finished, int | float)
++                and started - 120 <= at <= finished + 120):
++            problems.append(f"the JUnit report was written at {stamp}, outside the session it claims to report")
++
++    # report and session agree
++    recorded = session.get("outcomes") or {}
++    normal = {k: ("passed" if v == "xpassed" else v) for k, v in recorded.items()}
++    if outcomes and normal != outcomes:
++        missing = sorted(set(normal) - set(outcomes))[:3]
++        extra = sorted(set(outcomes) - set(normal))[:3]
++        differ = sorted(k for k in set(normal) & set(outcomes) if normal[k] != outcomes[k])[:3]
++        problems.append(f"the JUnit report and the session disagree (missing {missing}, extra {extra}, different {differ})")
++    if session and session.get("collected") != len(recorded):
++        problems.append(f"{session.get('collected')} tests collected but {len(recorded)} reported")
++
++    # the whole suite
++    suite = policy["suite"]
++    selection = session.get("selection") or {}
++    if selection.get("args") != suite["paths"]:
++        problems.append(f"the suite ran {selection.get('args')}, not {suite['paths']}")
++    for option in ("keyword", "markexpr", "deselect", "ignore", "lf", "ff", "maxfail"):
++        if selection.get(option):
++            problems.append(f"the suite was narrowed ({option}={selection.get(option)!r})")
++    if session.get("deselected"):
++        problems.append(f"{session.get('deselected')} tests were deselected")
++    counts = {k: sum(1 for v in recorded.values() if v == k)
++              for k in ("passed", "failed", "error", "skipped", "xfailed", "xpassed")}
++    record["report"] = {"tests": len(recorded), **counts}
++    if len(recorded) < suite["min_tests"]:
++        problems.append(f"{len(recorded)} tests ran; the policy requires at least {suite['min_tests']}")
++    if counts["failed"] or counts["error"] or counts["xpassed"]:
++        problems.append(f"{counts['failed']} failed, {counts['error']} errored, {counts['xpassed']} passed unexpectedly")
++    require_pg = os.environ.get("CI_GATE_REQUIRE_POSTGRESQL") == "1"
++    allowed = tuple(suite["allowed_skips"]) if not require_pg else ()
++    unexpected = sorted(k for k, v in recorded.items() if v in ("skipped", "xfailed") and not k.startswith(allowed))
++    if unexpected:
++        problems.append(f"{len(unexpected)} tests skipped or xfailed outside the allow-list: {unexpected[:3]}")
++    if session.get("exitstatus") != 0:
++        problems.append(f"pytest exited with status {session.get('exitstatus')}")
++    if require_pg:
++        pg = [k for k in recorded if k.startswith(tuple(policy["postgresql"]["tests"]))]
++        ran = [k for k in pg if recorded[k] == "passed"]
++        record["postgresql_tests_passed"] = len(ran)
++        if len(ran) < policy["postgresql"]["min_passed"] or len(ran) != len(pg):
++            problems.append(f"the PostgreSQL job passed {len(ran)} of {len(pg)} PostgreSQL tests "
++                            f"(at least {policy['postgresql']['min_passed']} required, none skipped)")
++
++    # one engine version, read and run
++    engine_path = Path(policy["engine"]["module"])
++    version = _static_version(engine_path, problems)
++    record["engine_version"] = version
++    elsewhere = _bound_elsewhere(Path(policy["engine"]["package"]), engine_path)
++    if elsewhere:
++        problems.append(f"{NAME} is bound or patched outside the engine module: {elsewhere[:3]}")
++    ran_engine = session.get("engine") or {}
++    record["engine_imported"] = ran_engine
++    if ran_engine.get("error"):
++        problems.append(f"the tests could not import the engine ({ran_engine['error']})")
++    if version is not None and ran_engine.get("version") != version:
++        problems.append(f"the tests ran engine_version {ran_engine.get('version')!r}; the source declares {version!r}")
++    if ran_engine.get("file_in_checkout") != engine_path.as_posix():
++        problems.append(f"the tests imported the engine from {ran_engine.get('file')!r}, not this checkout's {engine_path}")
++    if ran_engine.get("file_sha256") != _sha256(engine_path):
++        problems.append("the engine file the tests imported is not the one in the checkout now")
++
++    # the guard
++    guard = policy["guard"]
++    claims = True if version is None else _version_tuple(version) >= _version_tuple(guard["claims_since"])
++    record["guard_required"] = claims
++    if claims:
++        guard_path = Path(guard["module"])
++        if _sha256(guard_path) != guard["sha256"]:
++            problems.append(f"the guard {guard_path} is not the policy's (sha256 {_sha256(guard_path)})")
++        else:
++            expected = {f"{guard['classname']}::{name}" for name in _guard_names(guard_path)}
++            in_report = {k for k in outcomes if k.startswith(guard["classname"] + "::")}
++            in_session = {k for k in recorded if k.startswith(guard["classname"] + "::")}
++            passed = {k for k in in_session if recorded[k] == "passed"}
++            record["guard"] = {"defined": len(expected), "ran": len(in_session), "passed": len(passed)}
++            if not expected or in_report != expected or in_session != expected or passed != expected:
++                problems.append(f"engine claims {version} but the guard defines {len(expected)} tests, the report "
++                                f"has {len(in_report)}, the session {len(in_session)}, {len(passed)} passed")
++
++    # nothing changed under the run
++    now = _working_tree_id(evidence)
++    record["working_tree"] = now
++    if session.get("working_tree_at_start") != now:
++        problems.append(f"the working tree changed after the tests started "
++                        f"({session.get('working_tree_at_start')} then, {now} now)")
++
++    # the environment
++    python = (session.get("python") or {}).get("version", "")
++    record["python"] = session.get("python")
++    record["distributions_sha256"] = session.get("distributions_sha256")
++    if not python.startswith(policy["python"] + "."):
++        problems.append(f"the tests ran on Python {python!r}; the policy requires {policy['python']}")
++    installed = dict(line.split("==", 1) for line in session.get("distributions") or [] if "==" in line)
++    drift = sorted(f"{name} {installed[name]} (pinned {pin})"
++                   for name, pin in _pins(Path(policy["constraints"])).items()
++                   if name in installed and installed[name] != pin)
++    if drift:
++        problems.append(f"installed versions differ from the pins: {drift[:3]}")
++    if not installed:
++        problems.append("the session recorded no installed distributions")
++    return problems
++
++
++def main(evidence: Path, junit: Path) -> int:
++    record: dict[str, Any] = {}
++    try:
++        problems = check(evidence, junit, record)
++    except Exception as exc:  # the gate's own failure is a failure, never a pass
++        problems = [f"internal error in the gate: {type(exc).__name__}: {exc}"]
++    try:
++        record.update({"commit": _git("rev-parse", "HEAD"), "tree": _git("rev-parse", "HEAD^{tree}")})
++    except Exception as exc:
++        problems.append(f"the run cannot be tied to a commit ({type(exc).__name__}: {exc})")
++    record.update({
++        "github_sha": os.environ.get("GITHUB_SHA"), "github_ref": os.environ.get("GITHUB_REF"),
++        "run": os.environ.get("GITHUB_RUN_ID"), "nonce": os.environ.get("CI_RUN_NONCE"),
++        "inputs_sha256": {name: _sha256(Path(name)) for name in INPUTS},
++        "verdict": "fail" if problems else "pass", "problems": problems,
++    })
++    evidence.mkdir(parents=True, exist_ok=True)
++    (evidence / "provenance.json").write_text(json.dumps(record, indent=1, default=str) + "\n")
++    report = record.get("report") or {}
++    lines = [f"commit `{record.get('commit')}` · working tree `{record.get('working_tree')}`",
++             f"tests {report.get('tests')} · passed {report.get('passed')} · failed {report.get('failed')} · "
++             f"errors {report.get('error')} · skipped {report.get('skipped')} · guard {record.get('guard')}",
++             f"engine_version {record.get('engine_version')} · Python {(record.get('python') or {}).get('version')} "
++             f"· distributions `{str(record.get('distributions_sha256'))[:16]}…`",
++             "**gate: " + ("FAIL — " + "; ".join(problems) if problems else "pass") + "**"]
++    summary = os.environ.get("GITHUB_STEP_SUMMARY")
++    if summary:
++        with Path(summary).open("a") as out:
++            out.write("\n\n".join(lines) + "\n")
++    print("\n".join(lines))
++    return 1 if problems else 0
++
++
++if __name__ == "__main__":
++    if len(sys.argv) != 3:
++        print(__doc__)
++        sys.exit(2)
++    sys.exit(main(Path(sys.argv[1]), Path(sys.argv[2])))
+diff --git a/scripts/ci_gate_policy.json b/scripts/ci_gate_policy.json
+new file mode 100644
+index 0000000..7c0aa24
+--- /dev/null
++++ b/scripts/ci_gate_policy.json
+@@ -0,0 +1,37 @@
++{
++ "policy_version": 1,
++ "_why": "Fixed before any run of the gate it governs (2026-10-25). Changing it changes what a green run means: review it as code.",
++ "python": "3.11",
++ "constraints": "constraints/ci-py311.txt",
++ "engine": {
++  "module": "packages/tia/src/tia/backtest/engine.py",
++  "package": "packages/tia/src/tia"
++ },
++ "guard": {
++  "module": "tests/integration/test_engine_version_contract.py",
++  "classname": "tests.integration.test_engine_version_contract",
++  "sha256": "262840b3f0fc7807a1feb8f6919a3e6563ec7879bc65fbf1eabda779427bd623",
++  "claims_since": "1.1.0"
++ },
++ "suite": {
++  "paths": ["tests"],
++  "min_tests": 2031,
++  "_min_tests": "the number of tests collected when this policy was fixed; a smaller suite is a narrowed one",
++  "allowed_skips": [
++   "tests.integration.test_backtest_store_postgresql::",
++   "tests.integration.test_backtest_store_concurrency::test_racing_",
++   "tests.integration.test_backtest_store_concurrency::test_a_writer_",
++   "tests.integration.test_incident_kind_length::test_on_postgresql_"
++  ],
++  "_allowed_skips": "PostgreSQL-only tests, skipped without TIA_TEST_POSTGRESQL_URL; the postgresql job must pass them"
++ },
++ "postgresql": {
++  "tests": [
++   "tests.integration.test_backtest_store_postgresql::",
++   "tests.integration.test_backtest_store_concurrency::test_racing_",
++   "tests.integration.test_backtest_store_concurrency::test_a_writer_",
++   "tests.integration.test_incident_kind_length::test_on_postgresql_"
++  ],
++  "min_passed": 10
++ }
++}
+diff --git a/scripts/ci_provenance.py b/scripts/ci_provenance.py
+new file mode 100644
+index 0000000..d7f27fb
+--- /dev/null
++++ b/scripts/ci_provenance.py
+@@ -0,0 +1,157 @@
++"""pytest plugin: what this test run was, recorded by the interpreter that ran it.
++
++Loaded only by CI (``python -m pytest tests -p scripts.ci_provenance ...``). It writes
++``ci-evidence/session.json`` and stamps the JUnit report, so the gate (``scripts/ci_gate.py``)
++judges a run by facts from inside it instead of by what another interpreter sees later:
++
++* the run nonce (``CI_RUN_NONCE``, set by the workflow), also written into the JUnit report
++  as a testsuite property — a report or a session file from another run does not match;
++* the interpreter (executable, version) and every installed distribution, from
++  ``importlib.metadata`` of *this* process — not a ``pip freeze`` run elsewhere;
++* the engine as imported here: its ``ENGINE_VERSION`` and the file it was imported from,
++  with that file's hash — a module substituted on the path shows up as another file;
++* the working tree's content id when the run started, so files changed afterwards show;
++* how the suite was selected (paths, ``-k``, ``-m``, deselections, ``--lf``) and the
++  outcome of every test, under the name the JUnit report gives it.
++
++It changes no test and no outcome.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import importlib.metadata
++import json
++import os
++import platform
++import shutil
++import subprocess
++import sys
++import tempfile
++import time
++from pathlib import Path
++from typing import Any
++
++import pytest
++from _pytest.junitxml import mangle_test_address
++
++EVIDENCE = Path(os.environ.get("CI_EVIDENCE_DIR", "ci-evidence"))
++_STATE: dict[str, Any] = {"outcomes": {}, "deselected": 0}
++
++
++def working_tree_id(root: Path) -> str | None:
++    """The git tree id of the working copy as it is on disk (tracked and untracked files,
++    minus the evidence directory), computed in a throwaway index: the repository's own
++    index is not touched."""
++    git = shutil.which("git")
++    if git is None:
++        return None
++    evidence = (root / EVIDENCE).resolve()
++    inside = evidence.is_relative_to(root.resolve())
++    exclude = [f":(exclude){evidence.relative_to(root.resolve()).as_posix()}"] if inside else []
++    with tempfile.TemporaryDirectory() as scratch:
++        env = dict(os.environ, GIT_INDEX_FILE=str(Path(scratch) / "index"))
++        run = {"cwd": root, "env": env, "capture_output": True, "text": True, "check": False}
++        added = subprocess.run([git, "add", "-A", "--", ".", *exclude], **run)  # noqa: S603 - fixed argv
++        if added.returncode != 0:
++            return None
++        tree = subprocess.run([git, "write-tree"], **run)  # noqa: S603 - fixed argv
++        return tree.stdout.strip() or None
++
++
++def _sha256(path: Path) -> str | None:
++    return hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else None
++
++
++def _distributions() -> list[str]:
++    found = {}
++    for dist in importlib.metadata.distributions():
++        name = (dist.metadata.get("Name") or "").strip()
++        if name:
++            found[name.lower().replace("_", "-")] = dist.version
++    return sorted(f"{name}=={version}" for name, version in found.items())
++
++
++def _engine(root: Path) -> dict[str, Any]:
++    try:
++        import tia.backtest.engine as engine
++    except Exception as exc:  # recorded, judged by the gate
++        return {"error": f"{type(exc).__name__}: {exc}"[:300]}
++    path = Path(engine.__file__).resolve()
++    try:
++        relative = path.relative_to(root.resolve()).as_posix()
++    except ValueError:
++        relative = None
++    return {
++        "version": getattr(engine, "ENGINE_VERSION", None),
++        "file": str(path),
++        "file_in_checkout": relative,
++        "file_sha256": _sha256(path),
++    }
++
++
++def pytest_configure(config: pytest.Config) -> None:
++    root = Path(config.rootpath)
++    option = config.option
++    distributions = _distributions()
++    _STATE.update({
++        "nonce": os.environ.get("CI_RUN_NONCE"),
++        "started_at": time.time(),
++        "rootdir": str(root),
++        "python": {"executable": sys.executable, "version": platform.python_version(),
++                   "implementation": platform.python_implementation(), "prefix": sys.prefix},
++        "distributions": distributions,
++        "distributions_sha256": hashlib.sha256("\n".join(distributions).encode()).hexdigest(),
++        "working_tree_at_start": working_tree_id(root),
++        "selection": {
++            "args": list(config.args),
++            "keyword": getattr(option, "keyword", "") or "",
++            "markexpr": getattr(option, "markexpr", "") or "",
++            "deselect": list(getattr(option, "deselect", None) or []),
++            "ignore": list(getattr(option, "ignore", None) or []) + list(getattr(option, "ignore_glob", None) or []),
++            "lf": bool(getattr(option, "lf", False)),
++            "ff": bool(getattr(option, "failedfirst", False)),
++            "maxfail": int(getattr(option, "maxfail", 0) or 0),
++        },
++    })
++
++
++def pytest_deselected(items: list[pytest.Item]) -> None:
++    _STATE["deselected"] += len(items)
++
++
++def pytest_collection_finish(session: pytest.Session) -> None:
++    _STATE["collected"] = len(session.items)
++    _STATE["engine"] = _engine(Path(session.config.rootpath))
++
++
++def pytest_runtest_logreport(report: pytest.TestReport) -> None:
++    names = mangle_test_address(report.nodeid)
++    key = f"{'.'.join(names[:-1])}::{names[-1]}"
++    outcomes = _STATE["outcomes"]
++    if report.when == "setup":
++        if report.skipped:
++            outcomes[key] = "xfailed" if hasattr(report, "wasxfail") else "skipped"
++        elif report.failed:
++            outcomes[key] = "error"
++    elif report.when == "call":
++        if hasattr(report, "wasxfail"):
++            outcomes[key] = "xfailed" if report.skipped else "xpassed"
++        else:
++            outcomes[key] = report.outcome  # passed | failed | skipped
++    elif report.when == "teardown" and report.failed:
++        outcomes[key] = "error"
++
++
++@pytest.fixture(scope="session", autouse=True)
++def _ci_provenance_stamp(record_testsuite_property: Any) -> None:
++    """The run's nonce and interpreter, written into the JUnit report itself."""
++    record_testsuite_property("ci_run_nonce", _STATE.get("nonce") or "")
++    record_testsuite_property("ci_python", _STATE["python"]["version"])
++    record_testsuite_property("ci_distributions_sha256", _STATE["distributions_sha256"])
++
++
++def pytest_sessionfinish(session: pytest.Session, exitstatus: int) -> None:  # noqa: ARG001 - the hook's signature
++    EVIDENCE.mkdir(parents=True, exist_ok=True)
++    record = {**_STATE, "finished_at": time.time(), "exitstatus": int(exitstatus)}
++    (EVIDENCE / "session.json").write_text(json.dumps(record, indent=1, sort_keys=True) + "\n")

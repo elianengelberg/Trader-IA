@@ -1,0 +1,8 @@
+R1_validez_previa_cuenta_como_con_estadisticos       detectado · 5 failed, 45 passed, 1 skipped in 1.21s · ['test_excepcion_en_cada_etapa_deja_ERROR_explicito[validez_previa-validez_previa]']
+R2_acepta_autorizacion_repetida_tras_ERROR           SOBREVIVE · 4 failed, 46 passed, 1 skipped in 1.21s · []
+R3_resultado_no_atomico                              SOBREVIVE · 4 failed, 46 passed, 1 skipped in 1.22s · []
+R4_registro_EVALUADO_antes_de_escribir_el_resultado  SOBREVIVE · 4 failed, 46 passed, 1 skipped in 1.28s · []
+R5_ERROR_sobrescribe_aunque_ya_haya_resultado        SOBREVIVE · 4 failed, 46 passed, 1 skipped in 1.45s · []
+R6_ignora_sha_del_manifiesto_en_la_autorizacion      detectado · 5 failed, 45 passed, 1 skipped in 1.38s · ['test_autorizacion_incompleta_se_rechaza[2]']
+R7_sin_comprobar_salida_existente                    detectado · 5 failed, 45 passed, 1 skipped in 1.47s · ['test_salida_existente_no_se_reescribe']
+R8_reintento_sin_citar_el_ERROR                      SOBREVIVE · 4 failed, 46 passed, 1 skipped in 1.17s · []

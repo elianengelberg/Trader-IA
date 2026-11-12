@@ -1,0 +1,6 @@
+{
+ "datos": "SINTÉTICOS",
+ "rechazo_al_5pct_bajo_nulo": 0.02,
+ "potencia_al_5pct_alternativa": 1.0,
+ "nota": "CW es algo conservador en muestras finitas (Clark y West, 2007); se espera rechazo ≲ 5 % bajo el nulo"
+}

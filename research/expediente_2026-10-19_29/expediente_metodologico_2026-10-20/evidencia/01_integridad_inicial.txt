@@ -1,0 +1,9 @@
+== 2026-10-20T15:46:26Z verificación de integridad de documentos previos (solo lectura)
+-- fase_documental_2026-10-20/SHA256SUMS:
+OK: 18 de 18
+-- auditoria_T_REV_EMA9/SHA256SUMS:
+OK: 12 de 12
+-- E3 CIERRE_E3_MANIFIESTO:
+OK: 176
+-- repositorio:
+HEAD 692f2b2d7af3189027b62e60367d104d855b0f3f; divergencia 2	0; entradas 8; sha256(status --ignored) 87b9585d31924f8193a6d3eb6d0712a3d3880978681c75d0dd77e00d08f34a8e

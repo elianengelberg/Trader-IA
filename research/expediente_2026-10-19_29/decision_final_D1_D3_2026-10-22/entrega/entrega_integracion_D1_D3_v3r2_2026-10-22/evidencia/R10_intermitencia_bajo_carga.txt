@@ -1,0 +1,87 @@
+== 2026-10-22T16:40:18Z · carga: 4.86 5.04 3.69 5/115 4654
+#1 01:30 fin_base (carga 5.15):
+    E   assert 1 == 0
+    E   AssertionError: persistence writes still in flight
+    E   AssertionError: persistence writes still in flight
+    2026-10-22 01:30:32 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during account_event'
+    2026-10-22 01:30:34 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during fill'
+    2026-10-22 01:30:34 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during account_event'
+    2026-10-22 01:30:35 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during account_event'
+    2026-10-22 01:30:35 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during account_event'
+    2026-10-22 01:30:50 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during fill'
+    FAILED tests/integration/test_risk_state_persistence.py::test_five_restored_entries_for_the_symbol_refuse_the_sixth_after_the_restart
+    FAILED tests/integration/test_account_restore.py::test_partial_fills_and_fees_rebuild_identically_however_often
+    FAILED tests/integration/test_adverse_recovery.py::test_rejects_and_partials_over_hundreds_of_bars_keep_the_invariants_and_the_record_whole
+    3 failed, 30 passed, 1 skipped, 2 warnings in 55.59s
+#1 01:30 fin_completa (carga 5.15):
+    E   AssertionError: persistence writes still in flight
+    2026-10-22 01:30:22 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during account_event'
+    2026-10-22 01:30:24 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during fill'
+    2026-10-22 01:30:24 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during account_event'
+    2026-10-22 01:30:24 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during account_event'
+    2026-10-22 01:30:24 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during account_event'
+    2026-10-22 01:30:29 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during fill'
+    FAILED tests/integration/test_account_restore.py::test_partial_fills_and_fees_rebuild_identically_however_often
+    1 failed, 33 passed, 2 warnings in 35.37s
+#2 02:30 fin_base (carga 3.48):
+    E   assert 1 == 0
+    E   AssertionError: persistence writes still in flight
+    E   AssertionError: persistence writes still in flight
+    2026-10-22 02:30:29 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during account_event'
+    2026-10-22 02:30:32 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during fill'
+    2026-10-22 02:30:32 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during account_event'
+    2026-10-22 02:30:32 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during account_event'
+    2026-10-22 02:30:32 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during account_event'
+    2026-10-22 02:31:17 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during fill'
+    FAILED tests/integration/test_risk_state_persistence.py::test_five_restored_entries_for_the_symbol_refuse_the_sixth_after_the_restart
+    FAILED tests/integration/test_account_restore.py::test_partial_fills_and_fees_rebuild_identically_however_often
+    FAILED tests/integration/test_adverse_recovery.py::test_rejects_and_partials_over_hundreds_of_bars_keep_the_invariants_and_the_record_whole
+    3 failed, 30 passed, 1 skipped, 2 warnings in 80.15s (0:01:20)
+#2 02:30 fin_completa (carga 2.50):
+    2026-10-22 02:30:18 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during account_event'
+    2026-10-22 02:30:19 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during fill'
+    2026-10-22 02:30:19 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during account_event'
+    2026-10-22 02:30:20 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during account_event'
+    2026-10-22 02:30:20 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during account_event'
+    2026-10-22 02:30:24 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during fill'
+    34 passed, 1 warning in 26.73s
+#3 03:30 fin_base (carga 1.71):
+    E   assert 1 == 0
+    E   AssertionError: persistence writes still in flight
+    2026-10-22 03:30:19 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during account_event'
+    2026-10-22 03:30:20 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during fill'
+    2026-10-22 03:30:20 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during account_event'
+    2026-10-22 03:30:21 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during account_event'
+    2026-10-22 03:30:21 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during account_event'
+    2026-10-22 03:30:47 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during fill'
+    FAILED tests/integration/test_risk_state_persistence.py::test_five_restored_entries_for_the_symbol_refuse_the_sixth_after_the_restart
+    FAILED tests/integration/test_adverse_recovery.py::test_rejects_and_partials_over_hundreds_of_bars_keep_the_invariants_and_the_record_whole
+    2 failed, 31 passed, 1 skipped, 1 warning in 50.02s
+#3 03:30 fin_completa (carga 1.49):
+    2026-10-22 03:30:18 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during account_event'
+    2026-10-22 03:30:20 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during fill'
+    2026-10-22 03:30:20 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during account_event'
+    2026-10-22 03:30:20 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during account_event'
+    2026-10-22 03:30:20 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during account_event'
+    2026-10-22 03:30:24 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during fill'
+    34 passed, 1 warning in 27.20s
+#4 04:30 fin_base (carga 1.41):
+    E   assert 1 == 0
+    E   AssertionError: persistence writes still in flight
+    2026-10-22 04:30:17 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during account_event'
+    2026-10-22 04:30:18 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during fill'
+    2026-10-22 04:30:18 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during account_event'
+    2026-10-22 04:30:18 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during account_event'
+    2026-10-22 04:30:18 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during account_event'
+    2026-10-22 04:30:44 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during fill'
+    FAILED tests/integration/test_risk_state_persistence.py::test_five_restored_entries_for_the_symbol_refuse_the_sixth_after_the_restart
+    FAILED tests/integration/test_adverse_recovery.py::test_rejects_and_partials_over_hundreds_of_bars_keep_the_invariants_and_the_record_whole
+    2 failed, 31 passed, 1 skipped, 1 warning in 47.08s
+#4 04:30 fin_completa (carga 1.32):
+    2026-10-22 04:30:21 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during account_event'
+    2026-10-22 04:30:22 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during fill'
+    2026-10-22 04:30:22 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during account_event'
+    2026-10-22 04:30:22 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during account_event'
+    2026-10-22 04:30:22 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during account_event'
+    2026-10-22 04:30:26 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during fill'
+    34 passed, 1 warning in 29.32s

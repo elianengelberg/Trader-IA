@@ -1,0 +1,185 @@
+{
+ "inflacion_R_5_miradas": 1.024719881114111,
+ "filas": [
+  {
+   "delta_anual": 0.03,
+   "te": 0.05,
+   "ir_requerido": 0.6,
+   "anos_n_max": 22.34,
+   "n_max_dias": 8161,
+   "en_rango_calibrado_1096_1826": false,
+   "delta_diario": 8.213552361396303e-05
+  },
+  {
+   "delta_anual": 0.03,
+   "te": 0.1,
+   "ir_requerido": 0.3,
+   "anos_n_max": 89.37,
+   "n_max_dias": 32641,
+   "en_rango_calibrado_1096_1826": false,
+   "delta_diario": 8.213552361396303e-05
+  },
+  {
+   "delta_anual": 0.03,
+   "te": 0.15,
+   "ir_requerido": 0.2,
+   "anos_n_max": 201.07,
+   "n_max_dias": 73442,
+   "en_rango_calibrado_1096_1826": false,
+   "delta_diario": 8.213552361396303e-05
+  },
+  {
+   "delta_anual": 0.03,
+   "te": 0.2,
+   "ir_requerido": 0.15,
+   "anos_n_max": 357.46,
+   "n_max_dias": 130564,
+   "en_rango_calibrado_1096_1826": false,
+   "delta_diario": 8.213552361396303e-05
+  },
+  {
+   "delta_anual": 0.05,
+   "te": 0.05,
+   "ir_requerido": 1.0,
+   "anos_n_max": 8.04,
+   "n_max_dias": 2938,
+   "en_rango_calibrado_1096_1826": false,
+   "delta_diario": 0.00013689253935660506
+  },
+  {
+   "delta_anual": 0.05,
+   "te": 0.1,
+   "ir_requerido": 0.5,
+   "anos_n_max": 32.17,
+   "n_max_dias": 11751,
+   "en_rango_calibrado_1096_1826": false,
+   "delta_diario": 0.00013689253935660506
+  },
+  {
+   "delta_anual": 0.05,
+   "te": 0.15,
+   "ir_requerido": 0.333,
+   "anos_n_max": 72.39,
+   "n_max_dias": 26440,
+   "en_rango_calibrado_1096_1826": false,
+   "delta_diario": 0.00013689253935660506
+  },
+  {
+   "delta_anual": 0.05,
+   "te": 0.2,
+   "ir_requerido": 0.25,
+   "anos_n_max": 128.69,
+   "n_max_dias": 47003,
+   "en_rango_calibrado_1096_1826": false,
+   "delta_diario": 0.00013689253935660506
+  },
+  {
+   "delta_anual": 0.1,
+   "te": 0.05,
+   "ir_requerido": 2.0,
+   "anos_n_max": 2.01,
+   "n_max_dias": 735,
+   "en_rango_calibrado_1096_1826": false,
+   "delta_diario": 0.0002737850787132101
+  },
+  {
+   "delta_anual": 0.1,
+   "te": 0.1,
+   "ir_requerido": 1.0,
+   "anos_n_max": 8.04,
+   "n_max_dias": 2938,
+   "en_rango_calibrado_1096_1826": false,
+   "delta_diario": 0.0002737850787132101
+  },
+  {
+   "delta_anual": 0.1,
+   "te": 0.15,
+   "ir_requerido": 0.667,
+   "anos_n_max": 18.1,
+   "n_max_dias": 6610,
+   "en_rango_calibrado_1096_1826": false,
+   "delta_diario": 0.0002737850787132101
+  },
+  {
+   "delta_anual": 0.1,
+   "te": 0.2,
+   "ir_requerido": 0.5,
+   "anos_n_max": 32.17,
+   "n_max_dias": 11751,
+   "en_rango_calibrado_1096_1826": false,
+   "delta_diario": 0.0002737850787132101
+  },
+  {
+   "delta_anual": 0.15,
+   "te": 0.05,
+   "ir_requerido": 3.0,
+   "anos_n_max": 0.89,
+   "n_max_dias": 327,
+   "en_rango_calibrado_1096_1826": false,
+   "delta_diario": 0.0004106776180698152
+  },
+  {
+   "delta_anual": 0.15,
+   "te": 0.1,
+   "ir_requerido": 1.5,
+   "anos_n_max": 3.57,
+   "n_max_dias": 1306,
+   "en_rango_calibrado_1096_1826": true,
+   "delta_diario": 0.0004106776180698152
+  },
+  {
+   "delta_anual": 0.15,
+   "te": 0.15,
+   "ir_requerido": 1.0,
+   "anos_n_max": 8.04,
+   "n_max_dias": 2938,
+   "en_rango_calibrado_1096_1826": false,
+   "delta_diario": 0.0004106776180698152
+  },
+  {
+   "delta_anual": 0.15,
+   "te": 0.2,
+   "ir_requerido": 0.75,
+   "anos_n_max": 14.3,
+   "n_max_dias": 5223,
+   "en_rango_calibrado_1096_1826": false,
+   "delta_diario": 0.0004106776180698152
+  },
+  {
+   "delta_anual": 0.2,
+   "te": 0.05,
+   "ir_requerido": 4.0,
+   "anos_n_max": 0.5,
+   "n_max_dias": 184,
+   "en_rango_calibrado_1096_1826": false,
+   "delta_diario": 0.0005475701574264203
+  },
+  {
+   "delta_anual": 0.2,
+   "te": 0.1,
+   "ir_requerido": 2.0,
+   "anos_n_max": 2.01,
+   "n_max_dias": 735,
+   "en_rango_calibrado_1096_1826": false,
+   "delta_diario": 0.0005475701574264203
+  },
+  {
+   "delta_anual": 0.2,
+   "te": 0.15,
+   "ir_requerido": 1.333,
+   "anos_n_max": 4.52,
+   "n_max_dias": 1653,
+   "en_rango_calibrado_1096_1826": true,
+   "delta_diario": 0.0005475701574264203
+  },
+  {
+   "delta_anual": 0.2,
+   "te": 0.2,
+   "ir_requerido": 1.0,
+   "anos_n_max": 8.04,
+   "n_max_dias": 2938,
+   "en_rango_calibrado_1096_1826": false,
+   "delta_diario": 0.0005475701574264203
+  }
+ ]
+}

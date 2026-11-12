@@ -1,0 +1,67 @@
+{
+ "simbolos_usdt": 757,
+ "con_algun_dia_activo": 663,
+ "totales": {
+  "zips_mensuales": 26317,
+  "checksum_ok": 26317,
+  "checksum_falla": 0,
+  "filas_descartadas": 0,
+  "fechas_repetidas": 2,
+  "filas_invalidas": 279,
+  "conflictos_mensual_diario": 0,
+  "dias_reparados_con_diarios": 0,
+  "fuera_de_rango": 0
+ },
+ "dias_no_activos_dentro_de_la_vida": {
+  "sin_archivo_mensual": 3189,
+  "fila_ausente_en_archivo": 293,
+  "cero_operaciones": 0,
+  "invalida_o_conflicto": 43,
+  "fallo_descarga": 0
+ },
+ "simbolos_con_cortes_reanudados": 31,
+ "simbolos_con_mas_de_un_episodio": 8,
+ "colas_con_velas_cero_operaciones": 1,
+ "altas_y_bajas_por_anio": {
+  "2017": {
+   "altas": 6,
+   "bajas": 0
+  },
+  "2018": {
+   "altas": 18,
+   "bajas": 2
+  },
+  "2019": {
+   "altas": 68,
+   "bajas": 3
+  },
+  "2020": {
+   "altas": 158,
+   "bajas": 21
+  },
+  "2021": {
+   "altas": 129,
+   "bajas": 20
+  },
+  "2022": {
+   "altas": 41,
+   "bajas": 43
+  },
+  "2023": {
+   "altas": 63,
+   "bajas": 24
+  },
+  "2024": {
+   "altas": 63,
+   "bajas": 46
+  },
+  "2025": {
+   "altas": 102,
+   "bajas": 51
+  },
+  "2026": {
+   "altas": 23,
+   "bajas": 26
+  }
+ }
+}

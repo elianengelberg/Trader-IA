@@ -1,0 +1,21 @@
+== 2026-10-22T13:05:06Z venv_A
+2026-10-22 13:09:45 [info     ] backtest_complete              bars=58402 component=backtest.engine final_equity=99714.95 run_id=bt_5110YVCMFZJZSV1W1GZDVDWV trades=218
+2026-10-22 13:09:46 [info     ] backtest_complete              bars=58402 component=backtest.engine final_equity=98651.46 run_id=bt_W24727MED5R5KF6JV4Z3KBKN trades=171
+2026-10-22 13:09:50 [info     ] backtest_complete              bars=58402 component=backtest.engine final_equity=97838.8 run_id=bt_VFA2FGSHPCVPQKNNVFJHRYJJ trades=959
+2026-10-22 13:09:51 [info     ] backtest_complete              bars=58402 component=backtest.engine final_equity=98833.09 run_id=bt_FNDXB81VZW9RZMZ8V2JADP53 trades=744
+P1 629 1418ebccb21c 0ebbe7234446 568ad0f3185f bt_FNDXB81VZW9RZMZ8V2JADP53
+P2 139 075c89b57b43 d03f117df87a 74a2dc8b4c69 bt_W24727MED5R5KF6JV4Z3KBKN
+P3 185 60583835ba17 46c01be279da ea61c6b7b66b bt_5110YVCMFZJZSV1W1GZDVDWV
+S1 795 8b153452ef81 ad1013dcc713 fca2fa53eb76 bt_VFA2FGSHPCVPQKNNVFJHRYJJ
+rc=0
+== 2026-10-22T13:09:52Z entorno E1
+2026-10-22 13:14:30 [info     ] backtest_complete              bars=58402 component=backtest.engine final_equity=98651.46 run_id=bt_W24727MED5R5KF6JV4Z3KBKN trades=171
+2026-10-22 13:14:31 [info     ] backtest_complete              bars=58402 component=backtest.engine final_equity=99714.95 run_id=bt_5110YVCMFZJZSV1W1GZDVDWV trades=218
+2026-10-22 13:14:32 [info     ] backtest_complete              bars=58402 component=backtest.engine final_equity=98833.09 run_id=bt_FNDXB81VZW9RZMZ8V2JADP53 trades=744
+2026-10-22 13:14:36 [info     ] backtest_complete              bars=58402 component=backtest.engine final_equity=97838.8 run_id=bt_VFA2FGSHPCVPQKNNVFJHRYJJ trades=959
+P1 629 1418ebccb21c 0ebbe7234446 568ad0f3185f bt_FNDXB81VZW9RZMZ8V2JADP53
+P2 139 075c89b57b43 d03f117df87a 74a2dc8b4c69 bt_W24727MED5R5KF6JV4Z3KBKN
+P3 185 60583835ba17 46c01be279da ea61c6b7b66b bt_5110YVCMFZJZSV1W1GZDVDWV
+S1 795 8b153452ef81 ad1013dcc713 fca2fa53eb76 bt_VFA2FGSHPCVPQKNNVFJHRYJJ
+rc=0
+== fin 2026-10-22T13:14:37Z

@@ -1,0 +1,218 @@
+diff --git a/tests/integration/test_protective_stop_contract.py b/tests/integration/test_protective_stop_contract.py
+new file mode 100644
+index 0000000..fe502c2
+--- /dev/null
++++ b/tests/integration/test_protective_stop_contract.py
+@@ -0,0 +1,154 @@
++"""Parts of the protective-stop contract no test checked until a mutation experiment showed it.
++
++Each mutant below survived the whole live suite (``logs/TI/exp_mutacion_T15.json``):
++
++* M04 — size ignored when comparing the resting stop with the position: a stop kept covering
++  the quantity it was placed for after the position changed size. Too small, part of the
++  position is unprotected; too large, the stop sells what is not held once it fires.
++* M09 — the stop level rounded away from the position on the venue's grid: no test loaded a
++  tick size, so the rounding never ran.
++* M10 — re-protection without asking whether the state allows a reducing order: no test
++  reached it from a state that does not.
++* M12 — no re-protection when a close is not sent at all (the position could not be read
++  again after the stop was cancelled): R18's tests covered the close that is sent and refused.
++* M14 — two stops resting against a restored position adopted instead of halting: the
++  restart tests left one stop or none at the venue, never two.
++
++Expected outcomes, fixed before running: after the position changes size, exactly one stop
++covers exactly the new quantity at the same level; the level rounds toward the position; and
++a session that may not send orders sends none, and says the position is unprotected; a close
++that is not sent leaves the position under its stop again within the same call; two stops
++found against a restored position halt the session, block entries, and are left for a person.
++"""
++
++from __future__ import annotations
++
++from decimal import Decimal
++
++import pytest
++
++from tia.domain.enums import OrderType, TimeInForce
++from tia.domain.instruments import DEFAULT_UNIVERSE
++from tia.domain.orders import OrderIntent
++
++from .test_account_restore import SYMBOL, build, open_position
++
++
++def _stops(engine):  # type: ignore[no-untyped-def]
++    return [o for o in engine.resting_orders(SYMBOL) if o.order_type is OrderType.STOP]
++
++
++@pytest.mark.parametrize("factor", [0.5, 0.25])
++async def test_a_stop_is_resized_when_the_position_it_covers_changes_size(factor: float) -> None:
++    runtime, engine, market, _ = build()
++    await runtime.start()
++    try:
++        await open_position(runtime, market)
++        market.advance()
++        await runtime._cycle_once()
++        [before] = _stops(engine)
++        held = before.quantity - before.filled_quantity
++
++        step = Decimal(str(DEFAULT_UNIVERSE.get(SYMBOL).lot_size))  # a real position is on the lot grid
++        new_size = float((Decimal(str(held * factor)) // step) * step)
++
++        await runtime._sync_protective_stop(new_size)
++
++        stops = _stops(engine)
++        assert len(stops) == 1, "exactly one stop rests"
++        assert stops[0].quantity - stops[0].filled_quantity == pytest.approx(new_size), "it covers the new size"
++        assert float(stops[0].stop_price) == pytest.approx(float(before.stop_price), abs=1e-9), "at the same level"
++    finally:
++        await runtime.stop(reason="end")
++
++
++@pytest.mark.parametrize(("long", "raw", "expected"), [(True, 50_000.004, 50_000.01), (False, 50_000.006, 50_000.0)])
++def test_the_stop_level_is_rounded_toward_the_position_on_the_venue_grid(long: bool, raw: float, expected: float) -> None:
++    """A long's sell stop rounds up and a short's buy stop rounds down — toward the position,
++    so the loss never runs past the level it was sized for."""
++    runtime, *_ = build()
++    runtime._filters["tick_size"] = 0.01
++    assert runtime._stop_on_tick(raw, long=long) == pytest.approx(expected, abs=1e-9)  # a tick is 0.01: no relative slack
++
++
++async def test_a_session_that_may_not_send_orders_does_not_reprotect_but_says_so() -> None:
++    from tia.runtime.states import LiveState
++
++    runtime, engine, market, _ = build()
++    await runtime.start()
++    try:
++        await open_position(runtime, market)
++        market.advance()
++        await runtime._cycle_once()
++        [stop] = _stops(engine)
++        await engine.cancel_order(stop.order_id)
++        runtime._protective = None
++        runtime.machine.transition(LiveState.SAFE_MODE, reason="drill", actor="test")
++        sent = len(await engine.get_orders())
++
++        await runtime._reprotect("drill")
++
++        assert len(await engine.get_orders()) == sent, "nothing was sent"
++        assert _stops(engine) == []
++        assert runtime.counters["unprotected_positions"] == 1
++        assert "position_unprotected" in runtime.entry_blocks
++    finally:
++        await runtime.stop(reason="end")
++
++
++async def test_a_close_that_is_not_sent_puts_the_stop_back_in_the_same_call() -> None:
++    runtime, engine, market, _ = build()
++    await runtime.start()
++    try:
++        await open_position(runtime, market)
++        market.advance()
++        await runtime._cycle_once()
++        assert len(_stops(engine)) == 1
++        real = engine.get_portfolio
++        reads = {"n": 0}
++
++        async def second_read_fails():  # type: ignore[no-untyped-def]
++            reads["n"] += 1
++            if reads["n"] == 2:  # the read after the stop's cancel: a transient outage
++                raise ConnectionError("venue unreachable (injected)")
++            return await real()
++
++        engine.get_portfolio = second_read_fails
++        sent = await runtime._close_position("time stop")
++        engine.get_portfolio = real
++
++        assert sent is False
++        assert len(_stops(engine)) == 1, "protected again before any bar is matched"
++    finally:
++        await runtime.stop(reason="end")
++
++
++async def test_two_stops_resting_against_a_restored_position_halt_the_session() -> None:
++    from tia.runtime.states import LiveState
++
++    runtime, engine, market, clock = build()
++    await runtime.start()
++    try:
++        await open_position(runtime, market)
++        market.advance()
++        await runtime._cycle_once()
++        [first] = _stops(engine)
++        coid = OrderIntent.build_client_order_id(signal_id="left-over", symbol=SYMBOL, side=first.side,
++                                                 quantity=first.quantity, order_type=OrderType.STOP)
++        await engine.submit_order(OrderIntent(
++            intent_id="int-left-over", client_order_id=coid, signal_id="left-over", risk_decision_id="left-over",
++            symbol=SYMBOL, side=first.side, quantity=first.quantity, order_type=OrderType.STOP,
++            stop_price=float(first.stop_price), time_in_force=TimeInForce.GTC, created_at=clock.now(),
++            reduce_only=True,
++        ))
++        runtime._protective = None  # what a new session knows of the previous one's stops
++        before = sorted(o.order_id for o in _stops(engine))
++        assert len(before) == 2
++
++        await runtime._protect_restored_position()
++
++        assert runtime.machine.state is LiveState.HALT_NEW_ORDERS
++        assert "orders_unverified" in runtime.entry_blocks
++        assert sorted(o.order_id for o in _stops(engine)) == before, "neither adopted nor cancelled: left for a person"
++    finally:
++        await runtime.stop(reason="end")
+diff --git a/tests/integration/test_unknown_entry_halts_entries.py b/tests/integration/test_unknown_entry_halts_entries.py
+new file mode 100644
+index 0000000..6d81225
+--- /dev/null
++++ b/tests/integration/test_unknown_entry_halts_entries.py
+@@ -0,0 +1,52 @@
++"""An entry whose fate the venue cannot tell halts entries — through the loop that runs it.
++
++A submission that times out is resolved by its client id before anything else is sent; when
++the venue cannot answer either, the error leaves the cycle and the loop's failure taxonomy
++halts new entries. The tests that covered the timeout drove ``_cycle_once`` directly and
++accepted RUNNING as an outcome, so the halt itself was never checked: a mutation experiment
++removed it and the whole live suite stayed green (M18, ``logs/TI/exp_mutacion_T15.json``).
++Without the halt, the next signal can send a second entry on top of one that may be filled.
++
++Expected outcomes, fixed before running: after the unresolvable timeout the session takes
++no new orders, and over the following bars no second entry is submitted.
++"""
++
++from __future__ import annotations
++
++from tia.core.errors import ReconciliationError
++from tia.domain.enums import Direction, MarketRegime
++from tia.economics.expected_value import Outcome
++
++from .test_live_runtime import FakeExecution, build_runtime
++
++
++async def test_an_entry_the_venue_cannot_resolve_halts_entries_and_none_follows() -> None:
++    execution = FakeExecution()
++    execution.fail_next = [ReconciliationError("timed out; state UNKNOWN", path="/api/v3/order")]
++
++    async def cannot_say(*, symbol: str, client_order_id: str):  # type: ignore[no-untyped-def]
++        raise ReconciliationError("the venue cannot say whether it arrived", client_order_id=client_order_id)
++
++    execution.resolve_unknown_order = cannot_say  # type: ignore[method-assign]
++    runtime, _, market = build_runtime(execution=execution)
++    await runtime.start()
++    try:
++        runtime._edges.record_many([
++            Outcome(regime=regime, direction=direction, confidence=0.65, net_return_bps=200.0)
++            for regime in MarketRegime for direction in (Direction.LONG, Direction.SHORT) for _ in range(40)
++        ])
++        before = execution.submissions
++        for _ in range(300):
++            market.advance()
++            await runtime._loop_body_once_for_tests()
++            if execution.submissions > before:
++                break
++        assert execution.submissions == before + 1, "an entry was attempted"
++
++        assert runtime.machine.state.accepts_new_orders is False, "entries halt while the entry's fate is unknown"
++        for _ in range(60):
++            market.advance()
++            await runtime._loop_body_once_for_tests()
++        assert execution.submissions == before + 1, "no second entry on top of one that may be filled"
++    finally:
++        await runtime.stop()

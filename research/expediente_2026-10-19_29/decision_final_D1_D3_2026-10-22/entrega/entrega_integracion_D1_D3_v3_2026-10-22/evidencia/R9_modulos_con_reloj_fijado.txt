@@ -1,0 +1,13 @@
+== 2026-10-22T16:30:31Z · módulos completos con reloj de pared fijado (time-machine 3.5.1, venv_T)
+00:30 UTC  fin_base:       2 FAILED      31 PASSED       1 SKIPPED 
+00:30 UTC  fin_completa:       1 FAILED      33 PASSED 
+03:00 UTC  fin_base:       3 FAILED      30 PASSED       1 SKIPPED 
+03:00 UTC  fin_completa:      34 PASSED 
+05:30 UTC  fin_base:       3 FAILED      30 PASSED       1 SKIPPED 
+05:30 UTC  fin_completa:       1 FAILED      33 PASSED 
+05:50 UTC  fin_base:       3 FAILED      30 PASSED       1 SKIPPED 
+05:50 UTC  fin_completa:      34 PASSED 
+12:00 UTC  fin_base:       1 FAILED      33 PASSED 
+12:00 UTC  fin_completa:       1 FAILED      33 PASSED 
+23:59 UTC  fin_base:       1 FAILED      33 PASSED 
+23:59 UTC  fin_completa:      34 PASSED 

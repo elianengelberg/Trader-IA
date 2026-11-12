@@ -1,0 +1,27 @@
+== motor correcto (01+02v3): 300 corridas · datos ['BTC-USD_1h', 'BTC-USD_1m', 'ETH-USD_1m'] · semillas 1–20 (20)
+   d1_cierre_rechazado    corridas= 60 · la prueba fallaría en   0 · alguna comprobación salta en   0 · precondición no cumplida en   0 · por comprobación {}
+                          posiciones por corrida: mín 5 · mediana 5 · máx 13
+   d2_stop_sigue          corridas= 60 · la prueba fallaría en   0 · alguna comprobación salta en   0 · precondición no cumplida en   0 · por comprobación {}
+                          posiciones por corrida: mín 5 · mediana 5 · máx 12
+   d3_parciales           corridas= 60 · la prueba fallaría en   0 · alguna comprobación salta en   0 · precondición no cumplida en   0 · por comprobación {}
+                          posiciones por corrida: mín 5 · mediana 5 · máx 10
+   d3_ioc                 corridas= 60 · la prueba fallaría en   0 · alguna comprobación salta en   0 · precondición no cumplida en   0 · por comprobación {}
+                          posiciones por corrida: mín 5 · mediana 5 · máx 9
+   todo_junto             corridas= 60 · la prueba fallaría en   0 · alguna comprobación salta en   0 · precondición no cumplida en   0 · por comprobación {}
+                          posiciones por corrida: mín 5 · mediana 5 · máx 12
+== 02v3 sin 01: 150 corridas · datos ['BTC-USD_1h', 'BTC-USD_1m', 'ETH-USD_1m'] · semillas 1–10 (10)
+   d1_cierre_rechazado    corridas= 30 · la prueba fallaría en  30 · alguna comprobación salta en  30 · precondición no cumplida en   0 · por comprobación {'dead_orders_sent_again': 30, 'positions_held_too_long': 30, 'uncovered_streaks': 30}
+                          fallas por datos: {'BTC-USD_1h': 10, 'BTC-USD_1m': 10, 'ETH-USD_1m': 10}
+                          posiciones por corrida: mín 5 · mediana 5 · máx 7
+   d2_stop_sigue          corridas= 30 · la prueba fallaría en  30 · alguna comprobación salta en  30 · precondición no cumplida en   0 · por comprobación {'stop_moves_none': 30}
+                          fallas por datos: {'BTC-USD_1h': 10, 'BTC-USD_1m': 10, 'ETH-USD_1m': 10}
+                          posiciones por corrida: mín 5 · mediana 5 · máx 10
+   d3_parciales           corridas= 30 · la prueba fallaría en  13 · alguna comprobación salta en  13 · precondición no cumplida en   0 · por comprobación {'growth_after_close': 6, 'uncovered_streaks': 9, 'dead_orders_sent_again': 2, 'entries_filling_a_later_position': 6}
+                          fallas por datos: {'BTC-USD_1h': 5, 'BTC-USD_1m': 4, 'ETH-USD_1m': 4}
+                          posiciones por corrida: mín 1 · mediana 5 · máx 9
+   d3_ioc                 corridas= 30 · la prueba fallaría en  30 · alguna comprobación salta en  30 · precondición no cumplida en   1 · por comprobación {'uncovered_streaks': 30, 'growth_after_close': 14}
+                          fallas por datos: {'BTC-USD_1h': 10, 'BTC-USD_1m': 10, 'ETH-USD_1m': 10}
+                          posiciones por corrida: mín 1 · mediana 1 · máx 2
+   todo_junto             corridas= 30 · la prueba fallaría en  30 · alguna comprobación salta en  30 · precondición no cumplida en   0 · por comprobación {'dead_orders_sent_again': 30, 'growth_after_close': 14, 'entries_filling_a_later_position': 4}
+                          fallas por datos: {'BTC-USD_1h': 10, 'BTC-USD_1m': 10, 'ETH-USD_1m': 10}
+                          posiciones por corrida: mín 1 · mediana 3 · máx 6

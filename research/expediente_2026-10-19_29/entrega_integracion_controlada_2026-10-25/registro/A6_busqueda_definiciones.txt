@@ -1,0 +1,19 @@
+== IC-A.6 búsqueda acotada de definiciones previas: 2026-10-25T18:24:10Z
+Fuentes revisadas (solo lectura):
+  - 558 informes .md de entregas previas en el scratchpad (MATRIZ*, INFORME*, DECISION*, PLAN*, RIESGO*, LEEME*, RESULTADOS*, EXPEDIENTE*), excluidas esta misión y la revisión;
+  - paquete cierre_integral_2026-10-22 extraído (MATRIZ_RIESGOS, INFORME_CIERRE_FINAL, evidence/G_R24/*);
+  - INFORME_REVISION_ADVERSARIA.md y sus logs del servidor PostgreSQL;
+  - repositorio protegido (Grep de solo lectura: *.py, *.md, *.yml);
+  - transcripción de esta sesión.
+R24-H1: la única definición es la del encargo («VARCHAR(32) pierde incidentes entries_blocked:*»). Causa localizada en el código:
+  packages/tia/src/tia/persistence/models.py:535  kind: String(32) (tabla de incidentes) y runtime/live.py:1087 _incident(f"entries_blocked:{key}")
+  ('entries_blocked:position_unverified' = 34 caracteres; ver tests/integration/test_runtime_invariants.py:205).
+R24-H2, R24-H3: NO aparecen en ningún informe ni registro disponible (0 coincidencias de 'R24-H2'/'R24-H3' ni de 'R24' junto a H2/H3).
+  Las únicas «H2»/«H3» previas son hallazgos de la revisión adversaria (H2 = gate acepta omisiones; H3 = ventana R18), que NO están rotulados como R24.
+  → Se dejan PENDIENTES (no se inventa su significado).
+D1–D17 (decisiones de diseño): NO hay una lista D1–D17 de decisiones en las fuentes. Lo que existe con esa numeración es otra cosa:
+  - AUDIT_REPORT.md D1–D12: DEFECTOS antiguos ya corregidos (no decisiones);
+  - docs/MARKET_MAKING_PHASE3_AUDIT.md D1–D4: decisiones de market making;
+  - research/tendencia_btc/papel/corte.py D10: defecto del corte de papel;
+  - en las entregas 2026-10-21/22, D1–D3 son defectos del motor.
+  → Se documentan como NO RECUPERADAS. Los seis temas que el encargo nombra se tratan como temas, sin asignarles números D.

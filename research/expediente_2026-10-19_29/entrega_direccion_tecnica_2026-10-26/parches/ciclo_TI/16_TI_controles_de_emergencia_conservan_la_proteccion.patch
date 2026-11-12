@@ -1,0 +1,327 @@
+diff --git a/packages/tia/src/tia/runtime/live.py b/packages/tia/src/tia/runtime/live.py
+index ab4377c..e88c037 100644
+--- a/packages/tia/src/tia/runtime/live.py
++++ b/packages/tia/src/tia/runtime/live.py
+@@ -721,6 +721,9 @@ class LiveRuntime:
+         self._exit_lock = asyncio.Lock()
+         #: Order ids a cancel-all could not get the venue to confirm (Phase 1.3, G2).
+         self._unconfirmed_cancels: list[str] = []
++        #: The orders the last kill switch left resting because they only reduce the open
++        #: position (its protective stop, a working exit), by client id.
++        self._kept_reducing: list[str] = []
+         #: How long a stop waits for the persistence writes still in flight, and whether
+         #: the last stop had to give up on some (Phase 1.3, G12).
+         self._flush_timeout_seconds = 10.0
+@@ -1669,21 +1672,35 @@ class LiveRuntime:
+     async def kill_switch(self, *, reason: str, actor: str) -> dict[str, Any]:
+         """The emergency stop. Independent of every model and every strategy.
+ 
+-        Stops new entries, cancels resting orders, reconciles, and lands in SAFE_MODE —
+-        which has no automatic exit. It does **not** close positions: that is
+-        :meth:`emergency_flatten`, a separate and more drastic decision, because "the
+-        software is in doubt" and "I want out of the market" are different emergencies.
++        Stops new entries, cancels every resting order that could add exposure,
++        reconciles, and lands in SAFE_MODE — which has no automatic exit. It does **not**
++        close positions: that is :meth:`emergency_flatten`, a separate and more drastic
++        decision, because "the software is in doubt" and "I want out of the market" are
++        different emergencies.
++
++        Because it does not close the position, it keeps what bounds its loss: the orders
++        that only reduce the open position — its protective stop, a working exit — stay
++        at the venue (the switch sends nothing, and SAFE_MODE manages nothing, so a stop
++        cancelled here is not put back). A position left with neither is counted as
++        unprotected and said so, never silently.
+         """
+         if not actor.strip():
+             raise ValueError("the kill switch requires a named actor")
+         self.machine.transition(LiveState.SAFE_MODE, reason=f"kill switch: {reason}", actor=actor)
+-        cancelled = await self._cancel_all_open()
++        cancelled = await self._cancel_all_open(keep_reducing=True)
+         await self._reconcile()
++        kept = list(self._kept_reducing)
++        held = await self._held_quantity()
++        if held is None:
++            self._protection_lost("kill switch: the position cannot be read, so it is not known to be protected")
++        elif held and not kept:
++            self._protection_lost("kill switch: the open position has no stop or working exit at the venue")
+         self._incident(
+-            "kill_switch", reason=reason, actor=actor, detail={"cancelled_orders": cancelled}
++            "kill_switch", reason=reason, actor=actor,
++            detail={"cancelled_orders": cancelled, "kept_reducing_orders": kept},
+         )
+         self._emit("live.state", self.machine.as_dict())
+-        return {"state": self.machine.state.value, "cancelled_orders": cancelled}
++        return {"state": self.machine.state.value, "cancelled_orders": cancelled, "kept_reducing_orders": kept}
+ 
+     async def emergency_flatten(self, *, reason: str, actor: str) -> dict[str, Any]:
+         """Close everything, in order, with verification. An operator decision only.
+@@ -1737,6 +1754,11 @@ class LiveRuntime:
+                 }
+             )
+ 
++        if self._pending_exit is None:
++            # No close is working (the venue refused it, or it could not be sent): the
++            # stop cancelled above is put back now, within this call, not on the next
++            # cycle after a bar has been matched without it (R18).
++            await self._reprotect("emergency flatten: the close is not working")
+         await self._reconcile()
+         self._incident(
+             "emergency_flatten",
+@@ -1755,9 +1777,52 @@ class LiveRuntime:
+             "closing_orders": closed,
+         }
+ 
+-    async def _cancel_all_open(self) -> int:
++    async def _match_simulated_venue_while_standing(self) -> None:
++        """A simulated venue matches only the bars this loop hands it, so a paused or
++        safe-moded session used to stop its venue too: a resting stop never fired however
++        far the price went. While the session stands still, each new closed bar is still
++        matched against the resting orders, and nothing else — no decision, no order, no
++        bar counted. A venue that matches by itself (no ``on_bar``) is left alone."""
++        on_bar = getattr(self._execution, "on_bar", None)
++        if not callable(on_bar):
++            return
++        try:
++            candles = await self._market_data.get_candles(self._symbol, self._timeframe, limit=200)
++        except Exception as exc:
++            _log.warning("standing_match_skipped", error=str(exc)[:200])
++            return
++        if not candles:
++            return
++        latest = candles[-1]
++        if self._last_close is not None and latest.close_time <= self._last_close:
++            return
++        self._last_close = latest.close_time  # matched once: not again when the session resumes
++        for fill in on_bar(latest):
++            self._on_fill(fill)
++
++    async def _held_quantity(self) -> float | None:
++        """The session's position at the venue (0.0 when flat), or ``None`` when it cannot be read."""
++        try:
++            portfolio = await self._execution.get_portfolio()
++        except Exception as exc:
++            _log.warning("position_read_failed", error=str(exc)[:200])
++            return None
++        position = portfolio.positions.get(self._symbol)
++        return 0.0 if position is None or position.is_flat else float(position.quantity)
++
++    def _reducing_order_ids(self) -> set[str]:
++        """The ids of the orders this session tracks that only reduce its position: the
++        protective stop and a working exit. Orders it does not track are not among them."""
++        ids: set[str] = set()
++        for record in (self._protective, self._pending_exit):
++            if record and record.get("order_id"):
++                ids.update(x for x in (record.get("order_id"), record.get("client_order_id")) if x)
++        return ids
++
++    async def _cancel_all_open(self, *, keep_reducing: bool = False) -> int:
+         """Cancel every order the venue lists as open; forget a tracked record only once
+-        the venue confirmed that order's cancel.
++        the venue confirmed that order's cancel. With ``keep_reducing``, the session's own
++        protective stop and working exit are left resting and listed in ``_kept_reducing``.
+ 
+         Before 1.3 the protective stop's and the resting entry's records were dropped
+         *before* the cancels were sent, so a cancel the venue refused left a stop
+@@ -1766,6 +1831,8 @@ class LiveRuntime:
+         """
+         cancelled = 0
+         self._unconfirmed_cancels = []
++        self._kept_reducing = []
++        keep = self._reducing_order_ids() if keep_reducing else set()
+         try:
+             open_orders = await self._execution.get_orders(open_only=True)
+         except Exception as exc:
+@@ -1776,6 +1843,9 @@ class LiveRuntime:
+             if order.state.is_terminal:
+                 continue
+             ref = order.client_order_id or order.order_id
++            if keep & {order.order_id, order.client_order_id}:
++                self._kept_reducing.append(ref)
++                continue
+             if await self._cancel(ref, purpose="cancel all") is not None:
+                 cancelled += 1
+                 self._forget_tracked(order)
+@@ -1907,6 +1977,7 @@ class LiveRuntime:
+             # No decisions, but the venue does not pause: a stop can fire and an exit can
+             # fill while the session stands still, and what they did must be read, booked
+             # and journaled now rather than when the state changes (Phase 1.3, G7).
++            await self._match_simulated_venue_while_standing()
+             await self._poll_tracked_orders()
+             return
+ 
+diff --git a/tests/integration/test_emergency_controls_protection.py b/tests/integration/test_emergency_controls_protection.py
+new file mode 100644
+index 0000000..f3eab0b
+--- /dev/null
++++ b/tests/integration/test_emergency_controls_protection.py
+@@ -0,0 +1,146 @@
++"""The emergency controls must not take away the protection of a position they leave open.
++
++The kill switch stops everything and does not close the position: it used to cancel every
++resting order, its protective stop included, and land in SAFE_MODE, where nothing is
++managed — a position left open with no stop for as long as the operator took to come back.
++The emergency flatten cancels the stop to close at market; a close the venue refused left
++the position without a stop until the next cycle, after a bar had been matched without it.
++And a paused or safe-moded paper session stopped its own simulated venue: a stop resting
++there never fired, however far the price went.
++
++Expected outcomes, fixed before running: after the kill switch the stop still rests and the
++position is reported protected; a position the kill switch leaves with nothing at the venue
++is counted unprotected; a refused emergency close is followed, within the same call, by a
++stop; and a stop resting while the session stands still fires on the bar that crosses it.
++"""
++
++from __future__ import annotations
++
++from tia.domain.enums import OrderType, Side, TimeInForce
++from tia.domain.orders import OrderIntent
++from tia.runtime.states import LiveState
++
++from .test_account_restore import SYMBOL, build, open_position
++
++
++def _stops(engine):  # type: ignore[no-untyped-def]
++    return [o for o in engine.resting_orders(SYMBOL) if o.order_type is OrderType.STOP]
++
++
++def _held(engine) -> float:  # type: ignore[no-untyped-def]
++    position = engine.portfolio.positions.get(SYMBOL)
++    return 0.0 if position is None or position.is_flat else float(position.quantity)
++
++
++async def _protected_position(runtime, engine, market):  # type: ignore[no-untyped-def]
++    """An open long with its stop resting a hair under the price, so the next bars cross it."""
++    await runtime.start()
++    await open_position(runtime, market)
++    market.advance()
++    await runtime._cycle_once()
++    price = market._candles[market.cursor - 1].close
++    runtime._planned_exit["stop"] = round(price * 0.9995, 2)
++    market.advance()
++    await runtime._cycle_once()
++    stops = _stops(engine)
++    assert len(stops) == 1 and _held(engine) > 0
++    return stops[0]
++
++
++async def _until_crossed(runtime, market, level: float, bars: int = 200) -> None:  # type: ignore[no-untyped-def]
++    for _ in range(bars):
++        market.advance()
++        await runtime._cycle_once()
++        if market._candles[market.cursor - 1].low <= level:
++            return
++    raise AssertionError("the price never crossed the stop level")
++
++
++async def test_the_kill_switch_keeps_the_stop_of_the_position_it_does_not_close() -> None:
++    runtime, engine, market, _ = build()
++    stop = await _protected_position(runtime, engine, market)
++
++    result = await runtime.kill_switch(reason="drill", actor="operator")
++
++    assert runtime.state is LiveState.SAFE_MODE
++    assert [o.order_id for o in _stops(engine)] == [stop.order_id], "the stop still rests"
++    assert runtime.snapshot()["position"]["protected"] is True
++    assert result["kept_reducing_orders"] == [stop.client_order_id]
++    assert runtime.counters["unprotected_positions"] == 0
++    await runtime.stop(reason="end")
++
++
++async def test_the_kill_switch_still_cancels_what_could_add_exposure() -> None:
++    runtime, engine, market, _ = build()
++    stop = await _protected_position(runtime, engine, market)
++    price = market._candles[market.cursor - 1].close
++    foreign = await engine.submit_order(OrderIntent(
++        intent_id="manual", client_order_id="manual-buy-1", signal_id="manual", risk_decision_id="manual",
++        symbol=SYMBOL, side=Side.BUY, quantity=0.01, order_type=OrderType.LIMIT, limit_price=round(price * 0.9, 2),
++        time_in_force=TimeInForce.GTC, created_at=runtime._clock.now(),
++    ))
++    assert not foreign.state.is_terminal
++
++    result = await runtime.kill_switch(reason="drill", actor="operator")
++
++    resting = {o.client_order_id for o in engine.resting_orders(SYMBOL)}
++    assert "manual-buy-1" not in resting, "an order that adds exposure is cancelled"
++    assert stop.client_order_id in resting
++    assert result["cancelled_orders"] == 1
++    await runtime.stop(reason="end")
++
++
++async def test_a_kill_switch_over_a_position_with_nothing_at_the_venue_says_it_is_unprotected() -> None:
++    runtime, engine, market, _ = build()
++    stop = await _protected_position(runtime, engine, market)
++    await engine.cancel_order(stop.order_id)  # gone behind the session's back
++    runtime._protective = None
++
++    await runtime.kill_switch(reason="drill", actor="operator")
++
++    assert runtime.state is LiveState.SAFE_MODE, "saying so does not take the session out of SAFE_MODE"
++    assert runtime.counters["unprotected_positions"] == 1
++    assert "position_unprotected" in runtime.entry_blocks
++    assert runtime.last_error.startswith("position unprotected: kill switch")
++    await runtime.stop(reason="end")
++
++
++async def test_a_stop_kept_through_the_kill_switch_fires_while_the_session_stands_still() -> None:
++    runtime, engine, market, _ = build()
++    stop = await _protected_position(runtime, engine, market)
++    await runtime.kill_switch(reason="drill", actor="operator")
++
++    await _until_crossed(runtime, market, float(stop.stop_price))
++
++    assert _held(engine) == 0.0, "the venue does not pause: the stop closed the position"
++    assert runtime.state is LiveState.SAFE_MODE
++    await runtime.stop(reason="end")
++
++
++async def test_a_paused_session_s_stop_fires_on_the_bar_that_crosses_it() -> None:
++    runtime, engine, market, _ = build()
++    stop = await _protected_position(runtime, engine, market)
++    runtime.pause(actor="operator")
++    bars_before = runtime.counters["bars"]
++
++    await _until_crossed(runtime, market, float(stop.stop_price))
++
++    assert _held(engine) == 0.0
++    assert runtime.state is LiveState.PAUSED
++    assert runtime.counters["bars"] == bars_before, "standing still, the session decided nothing"
++    await runtime.stop(reason="end")
++
++
++async def test_a_refused_emergency_close_puts_the_stop_back_in_the_same_call() -> None:
++    runtime, engine, market, _ = build()
++    await _protected_position(runtime, engine, market)
++    real = engine._should_reject
++    engine._should_reject = lambda order: True if order.reduce_only and order.order_type is OrderType.MARKET else real(order)
++
++    result = await runtime.emergency_flatten(reason="drill", actor="operator")
++    engine._should_reject = real
++
++    assert [c["state"] for c in result["closing_orders"]] == ["rejected"]
++    assert len(_stops(engine)) == 1, "protected again before any bar is matched"
++    assert runtime.snapshot()["position"]["protected"] is True
++    await runtime.stop(reason="end")
+diff --git a/tests/integration/test_order_integrity.py b/tests/integration/test_order_integrity.py
+index 18e7a09..fe7a7c6 100644
+--- a/tests/integration/test_order_integrity.py
++++ b/tests/integration/test_order_integrity.py
+@@ -300,11 +300,18 @@ async def test_the_kill_switch_keeps_tracking_an_order_the_venue_did_not_cancel(
+     await runtime.start()
+     stop = await _position_with_stop(runtime, execution, market)
+     _break_cancel(monkeypatch, execution)
++    # The kill switch does not close the position, so it keeps its stop: nothing to cancel.
+     result = await runtime.kill_switch(reason="drill", actor="operator")
+     assert result["cancelled_orders"] == 0
++    assert result["kept_reducing_orders"] == [stop.client_order_id]
+     assert runtime._protective is not None and runtime._protective["order_id"] == stop.order_id
+-    assert runtime._unconfirmed_cancels == [stop.client_order_id]
++    assert runtime._unconfirmed_cancels == []
+     assert runtime.state is LiveState.SAFE_MODE
++    # A cancel-all that does cancel the stop (the flatten's) keeps tracking it when the
++    # venue does not confirm.
++    assert await runtime._cancel_all_open() == 0
++    assert runtime._protective is not None and runtime._protective["order_id"] == stop.order_id
++    assert runtime._unconfirmed_cancels == [stop.client_order_id]
+     monkeypatch.undo()
+     await runtime.stop()
+ 

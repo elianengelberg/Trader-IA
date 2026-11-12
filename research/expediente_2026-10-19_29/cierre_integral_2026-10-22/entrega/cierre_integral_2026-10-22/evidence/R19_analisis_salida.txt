@@ -1,0 +1,28 @@
+decisión: NO REPRODUCIDO
+criterios H-ENT: {'a_todas_con_bucle_activo': True, 'b_tasa_crece_con_K': False, 'c_ninguna_trabada': True, 'd_aparcado_sin_fallas': True}
+fallas R19 con bucle activo por K: {0: 0, 4: 0, 8: 0} · aparcadas: 0 · trabadas: 0 · errores no inyectados: 0 · FK: 0
+r19_base|K0|park0|modulo                 n=  1 rc!=0= 0 sin_sonda=0 fallas={} vaciado_med=4.991 max=4.991 >=8s=0 ejecutables_med=1 cpu_pytest_med=1.027
+r19_base|K0|park0|prueba                 n= 20 rc!=0= 0 sin_sonda=0 fallas={} vaciado_med=7.007 max=9.013 >=8s=3 ejecutables_med=1.0 cpu_pytest_med=1.06
+r19_base|K0|park1|modulo                 n=  1 rc!=0= 0 sin_sonda=0 fallas={} vaciado_med=0.051 max=0.051 >=8s=0 ejecutables_med=1 cpu_pytest_med=1.03
+r19_base|K0|park1|prueba                 n= 20 rc!=0= 0 sin_sonda=0 fallas={} vaciado_med=0.056 max=0.071 >=8s=0 ejecutables_med=1.0 cpu_pytest_med=1.1235
+r19_base|K4|park0|modulo                 n=  1 rc!=0= 0 sin_sonda=0 fallas={} vaciado_med=5.308 max=5.308 >=8s=0 ejecutables_med=5 cpu_pytest_med=0.785
+r19_base|K4|park0|prueba                 n= 20 rc!=0= 0 sin_sonda=0 fallas={} vaciado_med=0.089 max=0.167 >=8s=0 ejecutables_med=5.0 cpu_pytest_med=0.8414999999999999
+r19_base|K4|park1|modulo                 n=  1 rc!=0= 0 sin_sonda=0 fallas={} vaciado_med=0.056 max=0.056 >=8s=0 ejecutables_med=5 cpu_pytest_med=0.726
+r19_base|K4|park1|prueba                 n= 20 rc!=0= 0 sin_sonda=0 fallas={} vaciado_med=0.056 max=0.069 >=8s=0 ejecutables_med=5.0 cpu_pytest_med=0.849
+r19_base|K8|park0|modulo                 n=  1 rc!=0= 0 sin_sonda=0 fallas={} vaciado_med=0.448 max=0.448 >=8s=0 ejecutables_med=9 cpu_pytest_med=0.515
+r19_base|K8|park0|prueba                 n= 20 rc!=0= 0 sin_sonda=0 fallas={} vaciado_med=0.2845 max=0.936 >=8s=0 ejecutables_med=9.0 cpu_pytest_med=0.4625
+r19_base|K8|park1|modulo                 n=  1 rc!=0= 0 sin_sonda=0 fallas={} vaciado_med=0.055 max=0.055 >=8s=0 ejecutables_med=9 cpu_pytest_med=0.472
+r19_base|K8|park1|prueba                 n= 20 rc!=0= 0 sin_sonda=0 fallas={} vaciado_med=0.113 max=0.172 >=8s=0 ejecutables_med=9.0 cpu_pytest_med=0.455
+r19_cand|K0|park0|modulo                 n=  1 rc!=0= 0 sin_sonda=0 fallas={} vaciado_med=6.811 max=6.811 >=8s=0 ejecutables_med=1 cpu_pytest_med=1.034
+r19_cand|K0|park0|prueba                 n= 20 rc!=0= 0 sin_sonda=0 fallas={} vaciado_med=6.7415 max=8.909 >=8s=3 ejecutables_med=1.0 cpu_pytest_med=1.0615
+r19_cand|K0|park1|modulo                 n=  1 rc!=0= 0 sin_sonda=0 fallas={} vaciado_med=0.053 max=0.053 >=8s=0 ejecutables_med=1 cpu_pytest_med=1.033
+r19_cand|K0|park1|prueba                 n= 20 rc!=0= 0 sin_sonda=0 fallas={} vaciado_med=0.0565 max=0.079 >=8s=0 ejecutables_med=1.0 cpu_pytest_med=1.127
+r19_cand|K4|park0|modulo                 n=  1 rc!=0= 0 sin_sonda=0 fallas={} vaciado_med=1.6 max=1.6 >=8s=0 ejecutables_med=5 cpu_pytest_med=0.802
+r19_cand|K4|park0|prueba                 n= 20 rc!=0= 0 sin_sonda=0 fallas={} vaciado_med=0.087 max=2.18 >=8s=0 ejecutables_med=5.0 cpu_pytest_med=0.8394999999999999
+r19_cand|K4|park1|modulo                 n=  1 rc!=0= 0 sin_sonda=0 fallas={} vaciado_med=0.057 max=0.057 >=8s=0 ejecutables_med=5 cpu_pytest_med=0.749
+r19_cand|K4|park1|prueba                 n= 20 rc!=0= 0 sin_sonda=0 fallas={} vaciado_med=0.0525 max=0.12 >=8s=0 ejecutables_med=5.0 cpu_pytest_med=0.831
+r19_cand|K8|park0|modulo                 n=  1 rc!=0= 0 sin_sonda=0 fallas={} vaciado_med=1.712 max=1.712 >=8s=0 ejecutables_med=9 cpu_pytest_med=0.465
+r19_cand|K8|park0|prueba                 n= 20 rc!=0= 0 sin_sonda=0 fallas={} vaciado_med=0.3005 max=4.49 >=8s=0 ejecutables_med=9.0 cpu_pytest_med=0.4555
+r19_cand|K8|park1|modulo                 n=  1 rc!=0= 0 sin_sonda=0 fallas={} vaciado_med=0.147 max=0.147 >=8s=0 ejecutables_med=9 cpu_pytest_med=0.454
+r19_cand|K8|park1|prueba                 n= 20 rc!=0= 0 sin_sonda=0 fallas={} vaciado_med=0.1215 max=0.259 >=8s=0 ejecutables_med=9.0 cpu_pytest_med=0.4475
+cand vs base (bucle activo, prueba sola): {'arboles': ['r19_base', 'r19_cand'], 'corridas_con_falla_R19_bucle_activo': [0, 0], 'sin_falla': [60, 60], 'fisher_dos_colas_p': 1.0}

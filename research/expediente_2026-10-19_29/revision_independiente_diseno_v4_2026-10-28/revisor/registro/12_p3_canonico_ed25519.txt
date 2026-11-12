@@ -1,0 +1,184 @@
+# comando: /usr/bin/python3 -I -B prototipos/p3_canonico_ed25519.py
+# fecha: 2026-10-28T19:46:14Z
+{
+ "positivo": {
+  "bytes": "{\"esquema\":\"PRUEBA-REVISOR/1\",\"evaluacion\":\"prueba-ñandú\",\"hash_insumo\":\"0000000000000000000000000000000000000000000000000000000000000000\",\"intento_previo\":null,\"politica\":\"SIN_REINTENTO\",\"semanas\":158}",
+  "acepta": [
+   true,
+   "ok"
+  ]
+ },
+ "1_json_loads_solo": {
+  "acepta_BOM": true,
+  "acepta_clave_repetida_ultima_gana": true,
+  "acepta_NaN": true,
+  "acepta_espacios_y_salto_final": true
+ },
+ "2_negativos": {
+  "BOM": [
+   false,
+   "rechazo al parsear: JSONDecodeError: Unexpected UTF-8 BOM (decode using utf-8-sig): line 1 column"
+  ],
+  "salto_final": [
+   false,
+   "bytes no canónicos"
+  ],
+  "espacio_inicial": [
+   false,
+   "bytes no canónicos"
+  ],
+  "espacios_internos": [
+   false,
+   "bytes no canónicos"
+  ],
+  "claves_desordenadas": [
+   false,
+   "bytes no canónicos"
+  ],
+  "clave_repetida_mismo_valor": [
+   false,
+   "rechazo al parsear: ValueError: clave repetida"
+  ],
+  "clave_repetida_otro_valor": [
+   false,
+   "rechazo al parsear: ValueError: clave repetida"
+  ],
+  "flotante_1.0": [
+   false,
+   "coma flotante"
+  ],
+  "exponente_1e2": [
+   false,
+   "coma flotante"
+  ],
+  "menos_cero": [
+   false,
+   "bytes no canónicos"
+  ],
+  "NaN": [
+   false,
+   "coma flotante"
+  ],
+  "1e400": [
+   false,
+   "coma flotante"
+  ],
+  "entero_gigante": [
+   false,
+   "rechazo al parsear: ValueError: Exceeds the limit (4300 digits) for integer string conversio"
+  ],
+  "escape_u00f1_en_lugar_de_crudo": [
+   false,
+   "bytes no canónicos"
+  ],
+  "ensure_ascii_True": [
+   false,
+   "bytes no canónicos"
+  ],
+  "sustituto_suelto_escapado": [
+   false,
+   "rechazo al parsear: UnicodeEncodeError: 'utf-8' codec can't encode character '\\ud800' in position 44"
+  ],
+  "sustituto_suelto_crudo": [
+   false,
+   "rechazo al parsear: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xed in position 51: invalid"
+  ],
+  "NUL_escapado": [
+   true,
+   "ok"
+  ],
+  "texto_antes": [
+   false,
+   "rechazo al parsear: JSONDecodeError: Expecting value: line 1 column 1 (char 0)"
+  ],
+  "texto_despues": [
+   false,
+   "rechazo al parsear: JSONDecodeError: Extra data: line 1 column 204 (char 203)"
+  ],
+  "comentario": [
+   false,
+   "rechazo al parsear: JSONDecodeError: Expecting ',' delimiter: line 1 column 202 (char 201)"
+  ],
+  "campo_de_mas": [
+   false,
+   "campos: faltan [], sobran ['extra']"
+  ],
+  "campo_de_mas_anidado": [
+   false,
+   "campos: faltan [], sobran ['z']"
+  ],
+  "campo_faltante": [
+   false,
+   "campos: faltan ['politica'], sobran []"
+  ],
+  "null_donde_no_se_admite": [
+   false,
+   "hash_insumo: no es sha256 hex minúscula"
+  ],
+  "enumerado_desconocido": [
+   false,
+   "politica: enumerado desconocido"
+  ],
+  "tipo_equivocado_str_por_int": [
+   false,
+   "semanas: tipo"
+  ],
+  "bool_por_int": [
+   false,
+   "semanas: tipo"
+  ],
+  "hash_mayusculas": [
+   false,
+   "hash_insumo: no es sha256 hex minúscula"
+  ],
+  "hash_truncado": [
+   false,
+   "hash_insumo: no es sha256 hex minúscula"
+  ],
+  "hash_un_caracter_cambiado": [
+   true,
+   "ok"
+  ],
+  "lista_en_lugar_de_objeto": [
+   false,
+   "no es un objeto"
+  ],
+  "objeto_vacio": [
+   false,
+   "campos: faltan ['esquema', 'evaluacion', 'hash_insumo', 'intento_previo', 'politica', 'semanas'], sobran []"
+  ],
+  "vacio": [
+   false,
+   "rechazo al parsear: JSONDecodeError: Expecting value: line 1 column 1 (char 0)"
+  ]
+ },
+ "2_todos_rechazados": false,
+ "3_equivalencia_subconjunto": [
+  true,
+  true,
+  true
+ ],
+ "3_divergencia_orden_claves_fuera_del_BMP": {
+  "python_sort_keys": [
+   "0xffff",
+   "0x10000"
+  ],
+  "jcs_utf16": [
+   "0x10000",
+   "0xffff"
+  ],
+  "iguales": false,
+  "nota": "irrelevante si TODAS las claves del esquema son ASCII; por eso hay que fijarlo"
+ },
+ "4_ed25519": {
+  "firma_bytes": 64,
+  "valida_sobre_bytes_exactos": true,
+  "valida_con_salto_final": false,
+  "valida_mismo_objeto_otra_serializacion": false,
+  "valida_con_otra_clave": false,
+  "valida_firma_un_byte_cambiado": false,
+  "nota": "la firma prueba posesión de la clave sobre esos bytes; no dice nada de la validez metodológica",
+  "valida_firma_truncada": "False (InvalidSignature)"
+ }
+}
+# exit=0

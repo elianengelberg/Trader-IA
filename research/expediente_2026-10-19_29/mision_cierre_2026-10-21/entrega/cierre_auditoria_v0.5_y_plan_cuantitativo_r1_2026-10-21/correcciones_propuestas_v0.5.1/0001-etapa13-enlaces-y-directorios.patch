@@ -1,0 +1,32 @@
+--- v0.5/ejecutar_todo.sh
++++ v0.5.1-propuesta/ejecutar_todo.sh
+@@ -102,17 +102,27 @@
+   (cd "$T" && sha256sum experimentos/fuera_de_muestra_T.json experimentos/fuera_de_muestra_T.py PRERREGISTRO_FUERA_DE_MUESTRA_T.md experimentos/calidad_datos.json)
+ } > "$EVID/98_integridad_final.txt" 2>&1; cat "$EVID/98_integridad_final.txt"
+ 
+-echo "== 13. el paquete no cambió durante la ejecución: fuera de evidencia/, ni un byte distinto ni un archivo nuevo"
++echo "== 13. el paquete no cambió durante la ejecución: fuera de evidencia/, ni un byte distinto ni una entrada nueva"
+ INTACTO=0
+ if [ -f SHA256SUMS.txt ]; then
+   {
+     grep -v '  evidencia/' SHA256SUMS.txt | sha256sum -c --quiet || INTACTO=1
+     echo "archivos fuera de evidencia/ comprobados contra SHA256SUMS.txt: $(grep -vc '  evidencia/' SHA256SUMS.txt)"
++    # v0.5.1 (D-1): sha256sum sigue los enlaces, y find -type f no los lista: una entrada que no es archivo regular ni
++    # directorio (enlace simbólico, FIFO, socket) es siempre un cambio, aunque apunte a un contenido idéntico.
++    especiales=$(find . -path ./evidencia -prune -o ! -type f ! -type d -print | sed 's|^\./||' | LC_ALL=C sort)
++    if [ -n "$especiales" ]; then INTACTO=1; echo "entradas que no son archivos regulares (p. ej. enlaces):"; echo "$especiales"; fi
+     find . -path ./evidencia -prune -o -type f -print | sed 's|^\./||' | LC_ALL=C sort > "$PREV/presentes"
+     { sed 's/^[0-9a-f]*  //' SHA256SUMS.txt; echo SHA256SUMS.txt; } | LC_ALL=C sort > "$PREV/esperados"
+     nuevos=$(LC_ALL=C comm -23 "$PREV/presentes" "$PREV/esperados")
+     if [ -n "$nuevos" ]; then INTACTO=1; echo "archivos NUEVOS fuera de evidencia/:"; echo "$nuevos"; fi
+-    [ $INTACTO = 0 ] && echo "paquete intacto: sin cambios ni archivos nuevos (p. ej. __pycache__)" || echo "¡EL PAQUETE CAMBIÓ!"
++    # v0.5.1 (D-1): los únicos directorios admitidos son los que contienen archivos del manifiesto, y evidencia/
++    find . -path ./evidencia -prune -o -type d -print | sed 's|^\./||' | grep -vx '\.' | LC_ALL=C sort > "$PREV/dirs_presentes"
++    { sed 's/^[0-9a-f]*  //' SHA256SUMS.txt | awk -F/ '{p = ""; for (i = 1; i < NF; i++) {p = (p == "" ? $i : p "/" $i); print p}}'
++      echo evidencia; } | LC_ALL=C sort -u > "$PREV/dirs_esperados"
++    dnuevos=$(LC_ALL=C comm -23 "$PREV/dirs_presentes" "$PREV/dirs_esperados")
++    if [ -n "$dnuevos" ]; then INTACTO=1; echo "directorios NUEVOS fuera de evidencia/:"; echo "$dnuevos"; fi
++    [ $INTACTO = 0 ] && echo "paquete intacto: sin cambios ni entradas nuevas (archivos, enlaces ni directorios)" || echo "¡EL PAQUETE CAMBIÓ!"
+   } > "$EVID/97_paquete_intacto.txt" 2>&1
+ else
+   echo "sin SHA256SUMS.txt (copia de trabajo sin empaquetar): no se comprueba" > "$EVID/97_paquete_intacto.txt"

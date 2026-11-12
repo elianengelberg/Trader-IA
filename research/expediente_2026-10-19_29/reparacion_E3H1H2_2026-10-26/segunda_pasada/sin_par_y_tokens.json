@@ -1,0 +1,685 @@
+{
+ "sin_par": [
+  {
+   "url_contiene": "0a17fc70baad496aa2bbc47661aa6727",
+   "cita": "1 COVER-old = 1 COVER-new",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/0a17fc70baad496aa2bbc47661aa6727",
+    "archivo": "bn_0a17fc70baad496aa2bbc47661aa6727_66412b03ff6f.json",
+    "captura": "20210413011543",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-17/segments/1618038071212.27/warc/CC-MAIN-20210413000853-20210413030853-00048.warc.gz bytes=746616281-746645004"
+   },
+   "tipo": "canje de token (COVER-old → COVER-new)",
+   "decision": "Sin evento: canje 1:1 del mismo token; COVERUSDT no figura en el bucket",
+   "certeza": "alta"
+  },
+  {
+   "url_contiene": "52712c5af7284587b4e7dd2279a670d1",
+   "cita": "Binance will remove and cease trading on the following trading pairs at 2021-09-09 12:00 PM (UTC): AAVEBRL, EOSAUD, ICPRUB",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/52712c5af7284587b4e7dd2279a670d1",
+    "archivo": "bn_52712c5af7284587b4e7dd2279a670d1_db4b5f584033.json",
+    "captura": "20211204022729",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-49/segments/1637964362923.11/warc/CC-MAIN-20211204003045-20211204033045-00219.warc.gz bytes=738393306-738444215"
+   },
+   "tipo": "remoción de pares",
+   "decision": "Fuera del universo: el texto lista los pares y ninguno es contra USDT (A3.2)",
+   "certeza": "alta"
+  },
+  {
+   "url_contiene": "a6e9bfe3106f4390abf96622139db6d8",
+   "cita": "Binance will perform a conversion of delisted tokens to BUSD",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/a6e9bfe3106f4390abf96622139db6d8",
+    "archivo": "bn_a6e9bfe3106f4390abf96622139db6d8_d0b19e61738e.json",
+    "captura": "20210926015326",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-39/segments/1631780057787.63/warc/CC-MAIN-20210925232725-20210926022725-00712.warc.gz bytes=701931431-701963370"
+   },
+   "tipo": "conversión posterior a exclusiones ya ocurridas",
+   "decision": "Sin evento nuevo: convierte saldos de tokens ya excluidos",
+   "certeza": "alta"
+  },
+  {
+   "url_contiene": "announcement/f45dde7da58b473aa885349946bed269",
+   "cita": "Binance will delist all WAPI endpoints from the Binance API at 2021-08-01 2:00 AM (UTC)",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/f45dde7da58b473aa885349946bed269",
+    "archivo": "bn_f45dde7da58b473aa885349946bed269_e3ddb5ddd63c.json",
+    "captura": "20210619043246",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-25/segments/1623487643380.40/warc/CC-MAIN-20210619020602-20210619050602-00564.warc.gz bytes=596684223-596718125"
+   },
+   "tipo": "cambio de API",
+   "decision": "Descartado: no es un token ni un par (error de extracción)",
+   "certeza": "alta"
+  },
+  {
+   "url_contiene": "delisting-wapi-endpoints-f45dde7da58b473aa885349946bed269",
+   "cita": "Binance will delist all WAPI endpoints from the Binance API",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/notice-to-api-users-on-delisting-wapi-endpoints-f45dde7da58b473aa885349946bed269",
+    "archivo": "url_https___www.binance.com_en_support_announcement_notice-to-api-users-on-delis_07e1cd228b10.json",
+    "captura": "20221208173235",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2022-49/segments/1669446711344.13/warc/CC-MAIN-20221208150643-20221208180643-00778.warc.gz bytes=664694903-664764167"
+   },
+   "tipo": "cambio de API (duplicado)",
+   "decision": "Descartado: no es un token ni un par (error de extracción)",
+   "certeza": "alta"
+  },
+  {
+   "url_contiene": "360026666152",
+   "cita": "for the following coin on 2019/04/22 at 10:00 AM UTC: Bitcoin SV (BCHSV)",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/360026666152",
+    "archivo": "url_https___www.binance.com_en_support_announcement_360026666152_9d9eeb4918f1.json",
+    "captura": "20210622234107",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-25/segments/1623488525399.79/warc/CC-MAIN-20210622220817-20210623010817-00014.warc.gz bytes=586162004-586193829"
+   },
+   "tipo": "exclusión de token (captura duplicada)",
+   "decision": "Cubierto por el evento BCHSVUSDT|2019-04-22 (categoría A)",
+   "certeza": "alta"
+  },
+  {
+   "url_contiene": "360041278332",
+   "cita": "Binance has now delisted all FTX leveraged tokens including BULL, BEAR, ETHBULL, ETHBEAR",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/360041278332",
+    "archivo": "url_https___www.binance.com_en_support_announcement_360041278332_63b96139b92e.json",
+    "captura": "20210805011125",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-31/segments/1627046155268.80/warc/CC-MAIN-20210805000836-20210805030836-00606.warc.gz bytes=666795608-666824150"
+   },
+   "tipo": "aviso posterior a la exclusión",
+   "decision": "Cubierto por los 10 eventos FTX del 2020-03-31 (categoría A)",
+   "certeza": "alta"
+  },
+  {
+   "url_contiene": "Will-Complete-Distribution-of-BUSD",
+   "cita": "Binance has now delisted all FTX leveraged tokens",
+   "fuente": {
+    "url": "https://binance.zendesk.com/hc/en-us/articles/360041278332-Binance-Has-Delisted-All-FTX-Leveraged-Tokens-and-Will-Complete-Distribution-of-BUSD",
+    "archivo": "zd_360041278332_d330c39364d2.json",
+    "captura": "20200605170300",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-24/segments/1590348502097.77/warc/CC-MAIN-20200605143036-20200605173036-00166.warc.gz bytes=256916493-256928170"
+   },
+   "tipo": "aviso posterior a la exclusión (duplicado)",
+   "decision": "Cubierto por los 10 eventos FTX del 2020-03-31 (categoría A)",
+   "certeza": "alta"
+  },
+  {
+   "url_contiene": "c-161?navId=161",
+   "cita": "Delisting",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/c-161?navId=161",
+    "archivo": "url_https___www.binance.com_en_support_announcement_c-161_3aa8c3dc20a8.json",
+    "captura": "20220528082306",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2022-21/segments/1652663013003.96/warc/CC-MAIN-20220528062047-20220528092047-00481.warc.gz bytes=760314613-760356754"
+   },
+   "tipo": "página índice de la sección",
+   "decision": "Descartado: solo navegación, sin contenido de anuncio. La ausencia de contenido no prueba que no hubo eventos",
+   "certeza": "alta"
+  },
+  {
+   "url_contiene": "delisting?c=161&navId=161",
+   "cita": "Delisting",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/delisting?c=161&navId=161",
+    "archivo": "url_https___www.binance.com_en_support_announcement_delisting_bba7f9ec840a.json",
+    "captura": "20221127121631",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2022-49/segments/1669446710237.57/warc/CC-MAIN-20221127105736-20221127135736-00622.warc.gz bytes=708798498-708848061"
+   },
+   "tipo": "página índice de la sección",
+   "decision": "Descartado: solo navegación, sin contenido de anuncio. La ausencia de contenido no prueba que no hubo eventos",
+   "certeza": "alta"
+  },
+  {
+   "url_contiene": "9972ee7df32144d099c78c7df39011a2",
+   "cita": "Binance will re-open withdrawals for the following 12 delisted tokens",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/notice-on-the-withdrawals-of-delisted-tokens-conversion-of-selected-tokens-to-usdt-9972ee7df32144d099c78c7df39011a2",
+    "archivo": "url_https___www.binance.com_en_support_announcement_notice-on-the-withdrawals-of_93ce9bd28b1f.json",
+    "captura": "20240304105357",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-10/segments/1707947476442.30/warc/CC-MAIN-20240304101406-20240304131406-00345.warc.gz bytes=637272833-637357918"
+   },
+   "tipo": "reapertura de retiros y conversión de 12 tokens ya excluidos",
+   "decision": "Sin evento nuevo; cada token se revisa abajo (A3.3)",
+   "certeza": "alta"
+  },
+  {
+   "url_contiene": "9ec5cabbc8974a1c8890e1c9d87a98a7",
+   "cita": "Binance will perform a conversion of the below tokens to USDC",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/notice-on-the-withdrawals-of-delisted-tokens-conversion-of-selected-tokens-to-usdc-2024-08-12-9ec5cabbc8974a1c8890e1c9d87a98a7",
+    "archivo": "url_https___www.binance.com_en_support_announcement_notice-on-the-withdrawals-of_950c1cf8ea63.json",
+    "captura": "20240909104852",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-38/segments/1725700651098.19/warc/CC-MAIN-20240909103148-20240909133148-00197.warc.gz bytes=619470821-619553353"
+   },
+   "tipo": "conversión de 15 tokens ya excluidos",
+   "decision": "Sin evento nuevo; cada token se revisa abajo (A3.3)",
+   "certeza": "alta"
+  }
+ ],
+ "tokens_avisos_de_conversion": [
+  {
+   "aviso": "2023-12-04",
+   "token": "AION",
+   "usdt_en_bucket": true,
+   "otros_pares_en_bucket": [
+    "AIONBNB",
+    "AIONBTC",
+    "AIONBUSD",
+    "AIONETH"
+   ],
+   "evidencia_usdt_en_paginas": [
+    "bn_49bcf21cdb824c028d070ddde897d96e_b786f86b57db.json",
+    "bn_b819888e4cf642bcb98494d0b16e06fd_9a86b2d18b2a.json",
+    "url_https___www.binance.com_en_support_announcement_360039968311_b1eee29c7fd0.json"
+   ],
+   "pares_mencionados": [
+    "AION/BNB",
+    "AION/BTC",
+    "AION/BUSD",
+    "AION/ETH",
+    "AION/USDT"
+   ],
+   "decision": "Par USDT en el bucket: su salida es una salida observada y se audita como tal (N7, Adenda R)",
+   "evidencia": "positiva (par en Vision)"
+  },
+  {
+   "aviso": "2023-12-04",
+   "token": "BEAM",
+   "usdt_en_bucket": true,
+   "otros_pares_en_bucket": [
+    "BEAMBNB",
+    "BEAMBTC"
+   ],
+   "evidencia_usdt_en_paginas": [
+    "bn_ef86c91c21484923a9fe68ceb44f6620_9fc0443f49dd.json",
+    "url_https___www.binance.com_en_support_announcement_360033568792_ce7498db4066.json",
+    "url_https___www.binance.com_en_support_announcement_binance-lists-beam-beam-3600_cf8eae689e3d.json"
+   ],
+   "pares_mencionados": [
+    "BEAM/BNB",
+    "BEAM/BTC",
+    "BEAM/USDT"
+   ],
+   "decision": "Par USDT en el bucket: su salida es una salida observada y se audita como tal (N7, Adenda R)",
+   "evidencia": "positiva (par en Vision)"
+  },
+  {
+   "aviso": "2023-12-04",
+   "token": "BCD",
+   "usdt_en_bucket": false,
+   "otros_pares_en_bucket": [
+    "BCDBTC",
+    "BCDETH"
+   ],
+   "evidencia_usdt_en_paginas": [],
+   "pares_mencionados": [
+    "BCD/BTC",
+    "BCD/ETH"
+   ],
+   "decision": "A3.3.2: sin evidencia de par USDT y con otro par en el bucket → sin par USDT documentado (fuera del universo)",
+   "evidencia": "negativa por regla (el bucket conserva pares retirados)"
+  },
+  {
+   "aviso": "2023-12-04",
+   "token": "GO",
+   "usdt_en_bucket": false,
+   "otros_pares_en_bucket": [
+    "GOBNB",
+    "GOBTC"
+   ],
+   "evidencia_usdt_en_paginas": [],
+   "pares_mencionados": [
+    "GO/BNB",
+    "GO/BTC"
+   ],
+   "decision": "A3.3.2: sin evidencia de par USDT y con otro par en el bucket → sin par USDT documentado (fuera del universo)",
+   "evidencia": "negativa por regla (el bucket conserva pares retirados)"
+  },
+  {
+   "aviso": "2023-12-04",
+   "token": "NEBL",
+   "usdt_en_bucket": true,
+   "otros_pares_en_bucket": [
+    "NEBLBNB",
+    "NEBLBTC",
+    "NEBLBUSD",
+    "NEBLETH"
+   ],
+   "evidencia_usdt_en_paginas": [
+    "url_https___www.binance.com_en_support_announcement_binance-adds-agix-busd-nebl-_d5fb94c5291c.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-delist-qlc-nebl_0a0c8d0291fd.json"
+   ],
+   "pares_mencionados": [
+    "NEBL/BNB",
+    "NEBL/BTC",
+    "NEBL/BUSD",
+    "NEBL/ETH",
+    "NEBL/USD"
+   ],
+   "decision": "Par USDT en el bucket: su salida es una salida observada y se audita como tal (N7, Adenda R)",
+   "evidencia": "positiva (par en Vision)"
+  },
+  {
+   "aviso": "2023-12-04",
+   "token": "NAS",
+   "usdt_en_bucket": false,
+   "otros_pares_en_bucket": [
+    "NASBNB",
+    "NASBTC",
+    "NASETH"
+   ],
+   "evidencia_usdt_en_paginas": [],
+   "pares_mencionados": [
+    "NAS/BNB",
+    "NAS/BTC",
+    "NAS/ETH"
+   ],
+   "decision": "A3.3.2: sin evidencia de par USDT y con otro par en el bucket → sin par USDT documentado (fuera del universo)",
+   "evidencia": "negativa por regla (el bucket conserva pares retirados)"
+  },
+  {
+   "aviso": "2023-12-04",
+   "token": "NSBT",
+   "usdt_en_bucket": false,
+   "otros_pares_en_bucket": [],
+   "evidencia_usdt_en_paginas": [],
+   "pares_mencionados": [],
+   "decision": "A3.3.3, lectura manual: el archivo identifica el token como distribuido por airdrop; ninguna página menciona un par de negociación spot. No es D",
+   "cita": "The QiSwap (QI) and Neutrino Token (NSBT) airdrop programs were complete",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/c890d42730f44cc082ba5d1f927689bf",
+    "archivo": "bn_c890d42730f44cc082ba5d1f927689bf_0373e66395ea.json",
+    "captura": "20211028184120",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-43/segments/1634323588398.42/warc/CC-MAIN-20211028162638-20211028192638-00289.warc.gz bytes=790147769-790177687"
+   },
+   "evidencia": "positiva de airdrop; ausencia de evidencia de negociación spot (no se toma como prueba de que no existió)"
+  },
+  {
+   "aviso": "2023-12-04",
+   "token": "NXS",
+   "usdt_en_bucket": false,
+   "otros_pares_en_bucket": [
+    "NXSBNB",
+    "NXSBTC",
+    "NXSETH"
+   ],
+   "evidencia_usdt_en_paginas": [],
+   "pares_mencionados": [
+    "NXS/BNB",
+    "NXS/BTC",
+    "NXS/ETH"
+   ],
+   "decision": "A3.3.2: sin evidencia de par USDT y con otro par en el bucket → sin par USDT documentado (fuera del universo)",
+   "evidencia": "negativa por regla (el bucket conserva pares retirados)"
+  },
+  {
+   "aviso": "2023-12-04",
+   "token": "VIA",
+   "usdt_en_bucket": false,
+   "otros_pares_en_bucket": [
+    "VIABNB",
+    "VIABTC",
+    "VIAETH"
+   ],
+   "evidencia_usdt_en_paginas": [],
+   "pares_mencionados": [
+    "VIA/BNB",
+    "VIA/BTC",
+    "VIA/ETH"
+   ],
+   "decision": "A3.3.2: sin evidencia de par USDT y con otro par en el bucket → sin par USDT documentado (fuera del universo)",
+   "evidencia": "negativa por regla (el bucket conserva pares retirados)"
+  },
+  {
+   "aviso": "2023-12-04",
+   "token": "SKY",
+   "usdt_en_bucket": true,
+   "otros_pares_en_bucket": [
+    "SKYBNB",
+    "SKYBTC",
+    "SKYETH",
+    "SKYTRY",
+    "SKYUSDC"
+   ],
+   "evidencia_usdt_en_paginas": [],
+   "pares_mencionados": [
+    "SKY/BNB",
+    "SKY/BTC",
+    "SKY/ETH"
+   ],
+   "decision": "A3.3.2: el SKYUSDT del bucket empieza el 2025-09-17, casi dos años después del aviso: es otro activo (cambio de símbolo MKR→SKY). Para Skycoin no hay evidencia de par USDT y sí otros pares en el bucket → sin par USDT documentado (fuera del universo)",
+   "evidencia": "negativa por regla; certeza media-alta (la identidad del SKYUSDT de 2025 se infiere de la actividad)"
+  },
+  {
+   "aviso": "2023-12-04",
+   "token": "SGB",
+   "usdt_en_bucket": false,
+   "otros_pares_en_bucket": [],
+   "evidencia_usdt_en_paginas": [],
+   "pares_mencionados": [],
+   "decision": "A3.3.3, lectura manual: el archivo identifica el token como distribuido por airdrop; ninguna página menciona un par de negociación spot. No es D",
+   "cita": "Binance will support the Songbird (SGB) Airdrop Program for XRP (XRP) holders",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/4acc20ea6da14660a61f84b862afc1ed",
+    "archivo": "bn_4acc20ea6da14660a61f84b862afc1ed_59387378b62f.json",
+    "captura": "20211202065539",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-49/segments/1637964361169.72/warc/CC-MAIN-20211202054457-20211202084457-00090.warc.gz bytes=720687938-720740134"
+   },
+   "evidencia": "positiva de airdrop; ausencia de evidencia de negociación spot (no se toma como prueba de que no existió)"
+  },
+  {
+   "aviso": "2023-12-04",
+   "token": "YOYO",
+   "usdt_en_bucket": false,
+   "otros_pares_en_bucket": [
+    "YOYOBNB",
+    "YOYOBTC",
+    "YOYOETH"
+   ],
+   "evidencia_usdt_en_paginas": [],
+   "pares_mencionados": [
+    "YOYO/BNB",
+    "YOYO/BTC",
+    "YOYO/ETH"
+   ],
+   "decision": "A3.3.2: sin evidencia de par USDT y con otro par en el bucket → sin par USDT documentado (fuera del universo)",
+   "evidencia": "negativa por regla (el bucket conserva pares retirados)"
+  },
+  {
+   "aviso": "2024-08-12",
+   "token": "BTG",
+   "usdt_en_bucket": true,
+   "otros_pares_en_bucket": [
+    "BTGBTC",
+    "BTGBUSD",
+    "BTGETH"
+   ],
+   "evidencia_usdt_en_paginas": [
+    "bn_07e08d63eacf49cb9e61b47287fdfc88_2181f734ebcc.json",
+    "bn_2f2d58933d004b888d7cb9b5e6ed5abc_a1d365cc8b3e.json",
+    "bn_4620c8a2a87c42978519750964af7aa4_39b5815074c6.json"
+   ],
+   "pares_mencionados": [
+    "BTG/BTC",
+    "BTG/BUSD",
+    "BTG/ETH",
+    "BTG/USDT"
+   ],
+   "decision": "Par USDT en el bucket: su salida es una salida observada y se audita como tal (N7, Adenda R)",
+   "evidencia": "positiva (par en Vision)"
+  },
+  {
+   "aviso": "2024-08-12",
+   "token": "BTCST",
+   "usdt_en_bucket": true,
+   "otros_pares_en_bucket": [
+    "BTCSTBTC",
+    "BTCSTBUSD"
+   ],
+   "evidencia_usdt_en_paginas": [
+    "bn_2c08ba9e1a1b409fb6a4a2cb2f5ed58b_ca587e4ce636.json",
+    "bn_52c414185e3045128ec201d1f35388cc_386bffa59abc.json",
+    "bn_556e80d3f5364f75aafaf1eb9e9f20c1_f544ba0f7771.json"
+   ],
+   "pares_mencionados": [
+    "BTCST/ USDT",
+    "BTCST/BTC",
+    "BTCST/BUSD",
+    "BTCST/USDT"
+   ],
+   "decision": "Par USDT en el bucket: su salida es una salida observada y se audita como tal (N7, Adenda R)",
+   "evidencia": "positiva (par en Vision)"
+  },
+  {
+   "aviso": "2024-08-12",
+   "token": "BTS",
+   "usdt_en_bucket": true,
+   "otros_pares_en_bucket": [
+    "BTSBNB",
+    "BTSBTC",
+    "BTSBUSD",
+    "BTSETH"
+   ],
+   "evidencia_usdt_en_paginas": [
+    "bn_556e80d3f5364f75aafaf1eb9e9f20c1_f544ba0f7771.json",
+    "bn_d2cd00c391814709bafec51dba8e88b7_2e99ed24036c.json",
+    "bn_ee59b5c8ddf84d6bbbde4ebff7bdfaa0_4fdaa5f7e215.json"
+   ],
+   "pares_mencionados": [
+    "BTS/BNB",
+    "BTS/BTC",
+    "BTS/BUSD",
+    "BTS/ETH",
+    "BTS/USDT"
+   ],
+   "decision": "Par USDT en el bucket: su salida es una salida observada y se audita como tal (N7, Adenda R)",
+   "evidencia": "positiva (par en Vision)"
+  },
+  {
+   "aviso": "2024-08-12",
+   "token": "DNT",
+   "usdt_en_bucket": true,
+   "otros_pares_en_bucket": [
+    "DNTBTC",
+    "DNTBUSD",
+    "DNTETH"
+   ],
+   "evidencia_usdt_en_paginas": [
+    "bn_ebcbe8498f9843448a9e3a3c01a389d2_4757ff853180.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-delist-dnt-nbs-_e28c7c3e58e3.json"
+   ],
+   "pares_mencionados": [
+    "DNT/BTC",
+    "DNT/BUSD",
+    "DNT/ETH",
+    "DNT/USDT"
+   ],
+   "decision": "Par USDT en el bucket: su salida es una salida observada y se audita como tal (N7, Adenda R)",
+   "evidencia": "positiva (par en Vision)"
+  },
+  {
+   "aviso": "2024-08-12",
+   "token": "GRS",
+   "usdt_en_bucket": false,
+   "otros_pares_en_bucket": [
+    "GRSBTC",
+    "GRSETH"
+   ],
+   "evidencia_usdt_en_paginas": [],
+   "pares_mencionados": [
+    "GRS/BTC",
+    "GRS/ETH"
+   ],
+   "decision": "A3.3.2: sin evidencia de par USDT y con otro par en el bucket → sin par USDT documentado (fuera del universo)",
+   "evidencia": "negativa por regla (el bucket conserva pares retirados)"
+  },
+  {
+   "aviso": "2024-08-12",
+   "token": "HEGIC",
+   "usdt_en_bucket": false,
+   "otros_pares_en_bucket": [
+    "HEGICBUSD",
+    "HEGICETH"
+   ],
+   "evidencia_usdt_en_paginas": [],
+   "pares_mencionados": [
+    "HEGIC/BUSD",
+    "HEGIC/ETH"
+   ],
+   "decision": "A3.3.2: sin evidencia de par USDT y con otro par en el bucket → sin par USDT documentado (fuera del universo)",
+   "evidencia": "negativa por regla (el bucket conserva pares retirados)"
+  },
+  {
+   "aviso": "2024-08-12",
+   "token": "MOB",
+   "usdt_en_bucket": true,
+   "otros_pares_en_bucket": [
+    "MOBBTC",
+    "MOBBUSD"
+   ],
+   "evidencia_usdt_en_paginas": [
+    "bn_1b82de6f419743e2ac940566e6639b8b_2d5445985c70.json",
+    "bn_77c4b6dfcb1043ef8ed4d4296e32dc40_3dc9fc2e22d2.json",
+    "url_https___www.binance.com_en_support_announcement_binance-margin-will-delist-b_ba02ad688816.json"
+   ],
+   "pares_mencionados": [
+    "MOB/BTC",
+    "MOB/BUSD",
+    "MOB/USDT"
+   ],
+   "decision": "Par USDT en el bucket: su salida es una salida observada y se audita como tal (N7, Adenda R)",
+   "evidencia": "positiva (par en Vision)"
+  },
+  {
+   "aviso": "2024-08-12",
+   "token": "XMR",
+   "usdt_en_bucket": true,
+   "otros_pares_en_bucket": [
+    "XMRBNB",
+    "XMRBTC",
+    "XMRBUSD",
+    "XMRETH"
+   ],
+   "evidencia_usdt_en_paginas": [
+    "bn_10a8048af25140489a1b9c65d822031a_6a1665542ea9.json",
+    "bn_556e80d3f5364f75aafaf1eb9e9f20c1_f544ba0f7771.json",
+    "url_https___www.binance.com_en_support_announcement_360025316371_1b772b512746.json"
+   ],
+   "pares_mencionados": [
+    "XMR/BNB",
+    "XMR/BTC",
+    "XMR/BUSD",
+    "XMR/ETH",
+    "XMR/USDT"
+   ],
+   "decision": "Par USDT en el bucket: su salida es una salida observada y se audita como tal (N7, Adenda R)",
+   "evidencia": "positiva (par en Vision)"
+  },
+  {
+   "aviso": "2024-08-12",
+   "token": "MTH",
+   "usdt_en_bucket": false,
+   "otros_pares_en_bucket": [
+    "MTHBTC",
+    "MTHETH"
+   ],
+   "evidencia_usdt_en_paginas": [],
+   "pares_mencionados": [
+    "MTH/BTC",
+    "MTH/ETH"
+   ],
+   "decision": "A3.3.2: sin evidencia de par USDT y con otro par en el bucket → sin par USDT documentado (fuera del universo)",
+   "evidencia": "negativa por regla (el bucket conserva pares retirados)"
+  },
+  {
+   "aviso": "2024-08-12",
+   "token": "MULTI",
+   "usdt_en_bucket": true,
+   "otros_pares_en_bucket": [
+    "MULTIBTC",
+    "MULTIBUSD"
+   ],
+   "evidencia_usdt_en_paginas": [
+    "url_https___www.binance.com_en_support_announcement_binance-will-delist-ant-mult_f317e3f215f3.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-support-the-any_0d963f079737.json"
+   ],
+   "pares_mencionados": [
+    "MULTI/BTC",
+    "MULTI/BUSD",
+    "MULTI/USDT"
+   ],
+   "decision": "Par USDT en el bucket: su salida es una salida observada y se audita como tal (N7, Adenda R)",
+   "evidencia": "positiva (par en Vision)"
+  },
+  {
+   "aviso": "2024-08-12",
+   "token": "NAV",
+   "usdt_en_bucket": false,
+   "otros_pares_en_bucket": [
+    "NAVBNB",
+    "NAVBTC",
+    "NAVETH"
+   ],
+   "evidencia_usdt_en_paginas": [],
+   "pares_mencionados": [
+    "NAV/BNB",
+    "NAV/BTC",
+    "NAV/ETH"
+   ],
+   "decision": "A3.3.2: sin evidencia de par USDT y con otro par en el bucket → sin par USDT documentado (fuera del universo)",
+   "evidencia": "negativa por regla (el bucket conserva pares retirados)"
+  },
+  {
+   "aviso": "2024-08-12",
+   "token": "SOLO",
+   "usdt_en_bucket": false,
+   "otros_pares_en_bucket": [],
+   "evidencia_usdt_en_paginas": [],
+   "pares_mencionados": [],
+   "decision": "A3.3.3, lectura manual: el archivo identifica el token como distribuido por airdrop; ninguna página menciona un par de negociación spot. No es D",
+   "cita": "Binance will support the Sologenic (SOLO) Airdrop Program for XRP (XRP) holders",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/binance-will-support-the-sologenic-solo-airdrop-program-for-xrp-xrp-holders-45605c2192e14056b4eea9fc2fbb7282",
+    "archivo": "url_https___www.binance.com_en_support_announcement_binance-will-support-the-sol_984fce06b040.json",
+    "captura": "20230921161716",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2023-40/segments/1695233506028.36/warc/CC-MAIN-20230921141907-20230921171907-00300.warc.gz bytes=763113349-763190032"
+   },
+   "evidencia": "positiva de airdrop; ausencia de evidencia de negociación spot (no se toma como prueba de que no existió)"
+  },
+  {
+   "aviso": "2024-08-12",
+   "token": "SPARTA",
+   "usdt_en_bucket": false,
+   "otros_pares_en_bucket": [
+    "SPARTABNB"
+   ],
+   "evidencia_usdt_en_paginas": [],
+   "pares_mencionados": [
+    "SPARTA/BNB"
+   ],
+   "decision": "A3.3.2: sin evidencia de par USDT y con otro par en el bucket → sin par USDT documentado (fuera del universo)",
+   "evidencia": "negativa por regla (el bucket conserva pares retirados)"
+  },
+  {
+   "aviso": "2024-08-12",
+   "token": "XYM",
+   "usdt_en_bucket": false,
+   "otros_pares_en_bucket": [],
+   "evidencia_usdt_en_paginas": [],
+   "pares_mencionados": [],
+   "decision": "A3.3.3, lectura manual: el archivo identifica el token como distribuido por airdrop; ninguna página menciona un par de negociación spot. No es D",
+   "cita": "When Binance performs the snapshot on users’ NEM (XEM) holdings for the Symbol (XYM) airdrop",
+   "fuente": {
+    "url": "https://www.binance.com/en/support/announcement/17aaa4d4b0884875b241e85199e8bf61",
+    "archivo": "bn_17aaa4d4b0884875b241e85199e8bf61_ce99af404598.json",
+    "captura": "20210418154058",
+    "warc": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-17/segments/1618038492417.61/warc/CC-MAIN-20210418133614-20210418163614-00246.warc.gz bytes=786029483-786057954"
+   },
+   "evidencia": "positiva de airdrop; ausencia de evidencia de negociación spot (no se toma como prueba de que no existió)"
+  },
+  {
+   "aviso": "2024-08-12",
+   "token": "TRIBE",
+   "usdt_en_bucket": true,
+   "otros_pares_en_bucket": [
+    "TRIBEBNB",
+    "TRIBEBTC",
+    "TRIBEBUSD"
+   ],
+   "evidencia_usdt_en_paginas": [
+    "bn_d22b03e28ba64f3cbde5e8a0aea55c66_a026fa091f5b.json",
+    "bn_f30a88c724324fff82b7aebf4d578533_8d94f37c7eb4.json",
+    "url_https___www.binance.com_en_support_announcement_binance-will-list-tribe-trib_b813dc969244.json"
+   ],
+   "pares_mencionados": [
+    "TRIBE/BNB",
+    "TRIBE/BTC",
+    "TRIBE/BUSD",
+    "TRIBE/USDT"
+   ],
+   "decision": "Par USDT en el bucket: su salida es una salida observada y se audita como tal (N7, Adenda R)",
+   "evidencia": "positiva (par en Vision)"
+  }
+ ]
+}

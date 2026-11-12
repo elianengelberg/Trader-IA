@@ -1,0 +1,310 @@
+{
+ "prueba": "tests/unit/test_backtest_order_hygiene.py",
+ "mutantes": {
+  "M1_D1_salida_id_sin_barra": {
+   "cambios": [
+    [
+     "signal_id=f\"{exit_key}:{candle.close_time.isoformat()}\",",
+     "signal_id=exit_key,"
+    ]
+   ],
+   "rc": 1,
+   "resultados": {
+    "test_stops_and_exits_survive_rejections": "PASSED",
+    "test_the_stop_in_the_book_follows_the_leg": "PASSED",
+    "test_the_stop_is_replaced_only_when_its_size_or_level_moved": "PASSED",
+    "test_partial_fills_leave_no_untracked_or_stuck_position": "PASSED",
+    "test_a_close_that_leaves_position_is_released_and_retried": "PASSED",
+    "test_a_leg_without_a_stop_level_is_reported": "PASSED",
+    "test_a_rejected_close_is_sent_again_and_closes": "FAILED",
+    "test_every_invariant_holds_under_repeated_rejections_partials_and_reversals": "FAILED"
+   },
+   "motivos": [
+    "E   AssertionError: no rejected time stop was ever sent again: the retry was suppressed as a duplicate",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_d1d3/M1_D1_salida_id_sin_barra/tests/unit/test_backtest_order_hygiene.py:260: AssertionError: no rejected time stop was ever sent again: the retry was suppressed as a duplicate",
+    "E   AssertionError: ('d1_exit', ['bar 184: the time stop close of sig_V2WTMSZFG2W7S2HXGV4H43D2 never reached the venue', 'bar 185: the tim...43D2 never reached the venue', 'bar 186: the time stop close of sig_V2WTMSZFG2W7S2HXGV4H43D2 never reached the venue'])",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_d1d3/M1_D1_salida_id_sin_barra/tests/unit/test_backtest_order_hygiene.py:336: AssertionError: ('d1_exit', ['bar 184: the time stop close of sig_V2WTMSZFG2W7S2HXGV4H43D2 never reached the venue', 'bar 185: the tim...43D2 never reached the venue', 'bar 186: the time stop close of sig_V2WTMSZFG2W7S2HXGV4H43D2 never reached the venue'])",
+    "FAILED tests/unit/test_backtest_order_hygiene.py::test_a_rejected_close_is_sent_again_and_closes",
+    "FAILED tests/unit/test_backtest_order_hygiene.py::test_every_invariant_holds_under_repeated_rejections_partials_and_reversals"
+   ],
+   "resumen": [
+    "2 failed, 6 passed in 47.19s"
+   ]
+  },
+  "M2_D1_stop_id_sin_colocacion": {
+   "cambios": [
+    [
+     "signal_id=f\"{leg.signal_id}:protective:{self._stop_placements}\",",
+     "signal_id=f\"{leg.signal_id}:protective\","
+    ]
+   ],
+   "rc": 1,
+   "resultados": {
+    "test_a_rejected_close_is_sent_again_and_closes": "PASSED",
+    "test_the_stop_in_the_book_follows_the_leg": "PASSED",
+    "test_the_stop_is_replaced_only_when_its_size_or_level_moved": "PASSED",
+    "test_partial_fills_leave_no_untracked_or_stuck_position": "PASSED",
+    "test_a_close_that_leaves_position_is_released_and_retried": "PASSED",
+    "test_a_leg_without_a_stop_level_is_reported": "PASSED",
+    "test_stops_and_exits_survive_rejections": "FAILED",
+    "test_every_invariant_holds_under_repeated_rejections_partials_and_reversals": "FAILED"
+   },
+   "motivos": [
+    "E   AssertionError: ['bar 183: 9 bars without a stop', 'bar 195: 9 bars without a stop', 'bar 196: 10 bars without a stop']",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_d1d3/M2_D1_stop_id_sin_colocacion/tests/unit/test_backtest_order_hygiene.py:246: AssertionError: ['bar 183: 9 bars without a stop', 'bar 195: 9 bars without a stop', 'bar 196: 10 bars without a stop']",
+    "E   AssertionError: ('d1_stop', ['bar 507: 9 bars without a stop', 'bar 508: 10 bars without a stop'])",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_d1d3/M2_D1_stop_id_sin_colocacion/tests/unit/test_backtest_order_hygiene.py:336: AssertionError: ('d1_stop', ['bar 507: 9 bars without a stop', 'bar 508: 10 bars without a stop'])",
+    "FAILED tests/unit/test_backtest_order_hygiene.py::test_stops_and_exits_survive_rejections",
+    "FAILED tests/unit/test_backtest_order_hygiene.py::test_every_invariant_holds_under_repeated_rejections_partials_and_reversals"
+   ],
+   "resumen": [
+    "2 failed, 6 passed in 47.21s"
+   ]
+  },
+  "M3_D2_sin_comparar_nivel": {
+   "cambios": [
+    [
+     "if same_size and same_level:",
+     "if same_size:"
+    ]
+   ],
+   "rc": 1,
+   "resultados": {
+    "test_stops_and_exits_survive_rejections": "PASSED",
+    "test_a_rejected_close_is_sent_again_and_closes": "PASSED",
+    "test_partial_fills_leave_no_untracked_or_stuck_position": "PASSED",
+    "test_a_close_that_leaves_position_is_released_and_retried": "PASSED",
+    "test_a_leg_without_a_stop_level_is_reported": "PASSED",
+    "test_the_stop_in_the_book_follows_the_leg": "FAILED",
+    "test_the_stop_is_replaced_only_when_its_size_or_level_moved": "FAILED",
+    "test_every_invariant_holds_under_repeated_rejections_partials_and_reversals": "FAILED"
+   },
+   "motivos": [
+    "E   AssertionError: ['bar 175: leg stop 62584.94100498582, order in the book 62608.515972277375', 'bar 176: leg stop 62567.83067468193, order in the book 62608.515972277375', 'bar 177: leg stop 62567.83067468193, order in the book 62608.515972277375']",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_d1d3/M3_D2_sin_comparar_nivel/tests/unit/test_backtest_order_hygiene.py:268: AssertionError: ['bar 175: leg stop 62584.94100498582, order in the book 62608.515972277375', 'bar 176: leg stop 62567.83067468193, order in the book 62608.515972277375', 'bar 177: leg stop 62567.83067468193, order in the book 62608.515972277375']",
+    "E   AssertionError: the scenario must move stops (break-even, trailing)",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_d1d3/M3_D2_sin_comparar_nivel/tests/unit/test_backtest_order_hygiene.py:279: AssertionError: the scenario must move stops (break-even, trailing)",
+    "E   AssertionError: ('d2', ['bar 178: leg stop 62488.12001492422, order in the book 62556.40802256819', 'bar 179: leg stop 62488.12001492422, order in the book 62556.40802256819', 'bar 180: leg stop 62462.69553130117, order in the book 62556.40802256819'])",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_d1d3/M3_D2_sin_comparar_nivel/tests/unit/test_backtest_order_hygiene.py:336: AssertionError: ('d2', ['bar 178: leg stop 62488.12001492422, order in the book 62556.40802256819', 'bar 179: leg stop 62488.12001492422, order in the book 62556.40802256819', 'bar 180: leg stop 62462.69553130117, order in the book 62556.40802256819'])",
+    "FAILED tests/unit/test_backtest_order_hygiene.py::test_the_stop_in_the_book_follows_the_leg",
+    "FAILED tests/unit/test_backtest_order_hygiene.py::test_the_stop_is_replaced_only_when_its_size_or_level_moved",
+    "FAILED tests/unit/test_backtest_order_hygiene.py::test_every_invariant_holds_under_repeated_rejections_partials_and_reversals"
+   ],
+   "resumen": [
+    "3 failed, 5 passed in 43.80s"
+   ]
+  },
+  "M4_D3_sin_cancelar_resto_al_salir": {
+   "cambios": [
+    [
+     "for order in provider.resting_orders(leg.symbol):",
+     "for order in ():"
+    ]
+   ],
+   "rc": 1,
+   "resultados": {
+    "test_stops_and_exits_survive_rejections": "PASSED",
+    "test_a_rejected_close_is_sent_again_and_closes": "PASSED",
+    "test_the_stop_in_the_book_follows_the_leg": "PASSED",
+    "test_the_stop_is_replaced_only_when_its_size_or_level_moved": "PASSED",
+    "test_a_leg_without_a_stop_level_is_reported": "PASSED",
+    "test_every_invariant_holds_under_repeated_rejections_partials_and_reversals": "PASSED",
+    "test_partial_fills_leave_no_untracked_or_stuck_position": "FAILED",
+    "test_a_close_that_leaves_position_is_released_and_retried": "FAILED"
+   },
+   "motivos": [
+    "E   AssertionError: ('d3_added', ['bar 508: the close filled in full and 4.29999999999979e-05 is still held', 'bar 541: the close filled i...and 5.999999999997902e-06 is still held', 'bar 664: the close filled in full and 9.999999999997383e-06 is still held'])",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_d1d3/M4_D3_sin_cancelar_resto_al_salir/tests/unit/test_backtest_order_hygiene.py:289: AssertionError: ('d3_added', ['bar 508: the close filled in full and 4.29999999999979e-05 is still held', 'bar 541: the close filled i...and 5.999999999997902e-06 is still held', 'bar 664: the close filled in full and 9.999999999997383e-06 is still held'])",
+    "E   AssertionError: ('d3_added', ['bar 181: the close filled in full and 6.799999999999862e-05 is still held'])",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_d1d3/M4_D3_sin_cancelar_resto_al_salir/tests/unit/test_backtest_order_hygiene.py:300: AssertionError: ('d3_added', ['bar 181: the close filled in full and 6.799999999999862e-05 is still held'])",
+    "FAILED tests/unit/test_backtest_order_hygiene.py::test_partial_fills_leave_no_untracked_or_stuck_position",
+    "FAILED tests/unit/test_backtest_order_hygiene.py::test_a_close_that_leaves_position_is_released_and_retried"
+   ],
+   "resumen": [
+    "2 failed, 6 passed in 58.52s"
+   ]
+  },
+  "M5_D3_sin_cancelar_resto_en_plano": {
+   "cambios": [
+    [
+     "for order in provider.resting_orders(symbol):",
+     "for order in ():"
+    ]
+   ],
+   "rc": 1,
+   "resultados": {
+    "test_stops_and_exits_survive_rejections": "PASSED",
+    "test_a_rejected_close_is_sent_again_and_closes": "PASSED",
+    "test_the_stop_in_the_book_follows_the_leg": "PASSED",
+    "test_the_stop_is_replaced_only_when_its_size_or_level_moved": "PASSED",
+    "test_a_close_that_leaves_position_is_released_and_retried": "PASSED",
+    "test_a_leg_without_a_stop_level_is_reported": "PASSED",
+    "test_every_invariant_holds_under_repeated_rejections_partials_and_reversals": "PASSED",
+    "test_partial_fills_leave_no_untracked_or_stuck_position": "FAILED"
+   },
+   "motivos": [
+    "E   AssertionError: ('d3_reopened', [\"bar 563: position for '' after it closed\", \"bar 564: position for '' after it closed\", \"bar 565: position for '' after it closed\"])",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_d1d3/M5_D3_sin_cancelar_resto_en_plano/tests/unit/test_backtest_order_hygiene.py:289: AssertionError: ('d3_reopened', [\"bar 563: position for '' after it closed\", \"bar 564: position for '' after it closed\", \"bar 565: position for '' after it closed\"])",
+    "FAILED tests/unit/test_backtest_order_hygiene.py::test_partial_fills_leave_no_untracked_or_stuck_position"
+   ],
+   "resumen": [
+    "1 failed, 7 passed in 58.21s"
+   ]
+  },
+  "M6_D3_sin_red_de_seguridad": {
+   "cambios": [
+    [
+     "if exit_order is not None and exit_order.state.is_terminal and leg.quantity > 0:",
+     "if False:"
+    ]
+   ],
+   "rc": 1,
+   "resultados": {
+    "test_stops_and_exits_survive_rejections": "PASSED",
+    "test_a_rejected_close_is_sent_again_and_closes": "PASSED",
+    "test_the_stop_in_the_book_follows_the_leg": "PASSED",
+    "test_the_stop_is_replaced_only_when_its_size_or_level_moved": "PASSED",
+    "test_partial_fills_leave_no_untracked_or_stuck_position": "PASSED",
+    "test_a_leg_without_a_stop_level_is_reported": "PASSED",
+    "test_every_invariant_holds_under_repeated_rejections_partials_and_reversals": "PASSED",
+    "test_a_close_that_leaves_position_is_released_and_retried": "FAILED"
+   },
+   "motivos": [
+    "E   AssertionError: ('d3_stuck', ['bar 181: 0.06254199999999999 still held, waiting on a close that is expired', 'bar 182: 0.0625419999999...d, waiting on a close that is expired', 'bar 183: 0.06254199999999999 still held, waiting on a close that is expired'])",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_d1d3/M6_D3_sin_red_de_seguridad/tests/unit/test_backtest_order_hygiene.py:300: AssertionError: ('d3_stuck', ['bar 181: 0.06254199999999999 still held, waiting on a close that is expired', 'bar 182: 0.0625419999999...d, waiting on a close that is expired', 'bar 183: 0.06254199999999999 still held, waiting on a close that is expired'])",
+    "FAILED tests/unit/test_backtest_order_hygiene.py::test_a_close_that_leaves_position_is_released_and_retried"
+   ],
+   "resumen": [
+    "1 failed, 7 passed in 62.27s (0:01:02)"
+   ]
+  },
+  "M7_sin_aviso_de_pierna_sin_stop": {
+   "cambios": [
+    [
+     "if cfg.use_protective_stops and unprotected:",
+     "if False:"
+    ]
+   ],
+   "rc": 1,
+   "resultados": {
+    "test_stops_and_exits_survive_rejections": "PASSED",
+    "test_a_rejected_close_is_sent_again_and_closes": "PASSED",
+    "test_the_stop_in_the_book_follows_the_leg": "PASSED",
+    "test_the_stop_is_replaced_only_when_its_size_or_level_moved": "PASSED",
+    "test_partial_fills_leave_no_untracked_or_stuck_position": "PASSED",
+    "test_a_close_that_leaves_position_is_released_and_retried": "PASSED",
+    "test_every_invariant_holds_under_repeated_rejections_partials_and_reversals": "PASSED",
+    "test_a_leg_without_a_stop_level_is_reported": "FAILED"
+   },
+   "motivos": [
+    "E   AssertionError: (\"an open position was force-closed at the final bar's close; that exit was chosen by the sample boundary, not by the ...t any confidence worth quoting', 'the sample covers 29 days, which is unlikely to contain more than one market regime')",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_d1d3/M7_sin_aviso_de_pierna_sin_stop/tests/unit/test_backtest_order_hygiene.py:312: AssertionError: (\"an open position was force-closed at the final bar's close; that exit was chosen by the sample boundary, not by the ...t any confidence worth quoting', 'the sample covers 29 days, which is unlikely to contain more than one market regime')",
+    "FAILED tests/unit/test_backtest_order_hygiene.py::test_a_leg_without_a_stop_level_is_reported"
+   ],
+   "resumen": [
+    "1 failed, 7 passed in 62.64s (0:01:02)"
+   ]
+  },
+  "M8_D3_sin_ninguna_capa": {
+   "cambios": [
+    [
+     "for order in provider.resting_orders(leg.symbol):",
+     "for order in ():"
+    ],
+    [
+     "for order in provider.resting_orders(symbol):",
+     "for order in ():"
+    ],
+    [
+     "if exit_order is not None and exit_order.state.is_terminal and leg.quantity > 0:",
+     "if False:"
+    ]
+   ],
+   "rc": 1,
+   "resultados": {
+    "test_stops_and_exits_survive_rejections": "PASSED",
+    "test_a_rejected_close_is_sent_again_and_closes": "PASSED",
+    "test_the_stop_in_the_book_follows_the_leg": "PASSED",
+    "test_the_stop_is_replaced_only_when_its_size_or_level_moved": "PASSED",
+    "test_a_leg_without_a_stop_level_is_reported": "PASSED",
+    "test_every_invariant_holds_under_repeated_rejections_partials_and_reversals": "PASSED",
+    "test_partial_fills_leave_no_untracked_or_stuck_position": "FAILED",
+    "test_a_close_that_leaves_position_is_released_and_retried": "FAILED"
+   },
+   "motivos": [
+    "E   AssertionError: ('d3_stuck', ['bar 508: 4.29999999999979e-05 still held, waiting on a close that is filled', 'bar 509: 4.5999999999997...ld, waiting on a close that is filled', 'bar 510: 4.79999999999979e-05 still held, waiting on a close that is filled'])",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_d1d3/M8_D3_sin_ninguna_capa/tests/unit/test_backtest_order_hygiene.py:289: AssertionError: ('d3_stuck', ['bar 508: 4.29999999999979e-05 still held, waiting on a close that is filled', 'bar 509: 4.5999999999997...ld, waiting on a close that is filled', 'bar 510: 4.79999999999979e-05 still held, waiting on a close that is filled'])",
+    "E   AssertionError: ('d3_stuck', ['bar 181: 6.799999999999862e-05 still held, waiting on a close that is filled', 'bar 182: 0.000112999999..., waiting on a close that is filled', 'bar 183: 0.00014199999999999863 still held, waiting on a close that is filled'])",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_d1d3/M8_D3_sin_ninguna_capa/tests/unit/test_backtest_order_hygiene.py:300: AssertionError: ('d3_stuck', ['bar 181: 6.799999999999862e-05 still held, waiting on a close that is filled', 'bar 182: 0.000112999999..., waiting on a close that is filled', 'bar 183: 0.00014199999999999863 still held, waiting on a close that is filled'])",
+    "FAILED tests/unit/test_backtest_order_hygiene.py::test_partial_fills_leave_no_untracked_or_stuck_position",
+    "FAILED tests/unit/test_backtest_order_hygiene.py::test_a_close_that_leaves_position_is_released_and_retried"
+   ],
+   "resumen": [
+    "2 failed, 6 passed in 63.83s (0:01:03)"
+   ]
+  },
+  "M9_D2_recoloca_el_stop_en_cada_barra": {
+   "cambios": [
+    [
+     "if same_size and same_level:",
+     "if False:"
+    ]
+   ],
+   "rc": 1,
+   "resultados": {
+    "test_stops_and_exits_survive_rejections": "PASSED",
+    "test_a_rejected_close_is_sent_again_and_closes": "PASSED",
+    "test_the_stop_in_the_book_follows_the_leg": "PASSED",
+    "test_partial_fills_leave_no_untracked_or_stuck_position": "PASSED",
+    "test_a_close_that_leaves_position_is_released_and_retried": "PASSED",
+    "test_a_leg_without_a_stop_level_is_reported": "PASSED",
+    "test_the_stop_is_replaced_only_when_its_size_or_level_moved": "FAILED",
+    "test_every_invariant_holds_under_repeated_rejections_partials_and_reversals": "FAILED"
+   },
+   "motivos": [
+    "E   AssertionError: ['bar 177: working stop ord_SY2R2MQ2DSSBY91JS6YQ9MKT replaced at the same size and level', 'bar 179: working stop ord_... at the same size and level', 'bar 181: working stop ord_CC8C3YBMR5FZFJWVVJDC78V7 replaced at the same size and level']",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_d1d3/M9_D2_recoloca_el_stop_en_cada_barra/tests/unit/test_backtest_order_hygiene.py:278: AssertionError: ['bar 177: working stop ord_SY2R2MQ2DSSBY91JS6YQ9MKT replaced at the same size and level', 'bar 179: working stop ord_... at the same size and level', 'bar 181: working stop ord_CC8C3YBMR5FZFJWVVJDC78V7 replaced at the same size and level']",
+    "E   AssertionError: ('d2_churn', ['bar 179: working stop ord_9TDRGJVRYM5WVMKXPYR8XQ1C replaced at the same size and level', 'bar 181: work...at the same size and level', 'bar 196: working stop ord_1NFC8JT15DPC40TTAQA00X9M replaced at the same size and level'])",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_d1d3/M9_D2_recoloca_el_stop_en_cada_barra/tests/unit/test_backtest_order_hygiene.py:336: AssertionError: ('d2_churn', ['bar 179: working stop ord_9TDRGJVRYM5WVMKXPYR8XQ1C replaced at the same size and level', 'bar 181: work...at the same size and level', 'bar 196: working stop ord_1NFC8JT15DPC40TTAQA00X9M replaced at the same size and level'])",
+    "FAILED tests/unit/test_backtest_order_hygiene.py::test_the_stop_is_replaced_only_when_its_size_or_level_moved",
+    "FAILED tests/unit/test_backtest_order_hygiene.py::test_every_invariant_holds_under_repeated_rejections_partials_and_reversals"
+   ],
+   "resumen": [
+    "2 failed, 6 passed in 62.65s (0:01:02)"
+   ]
+  },
+  "M10_cierre_sin_reduce_only": {
+   "cambios": [
+    [
+     "            created_at=candle.close_time,\n            reduce_only=True,",
+     "            created_at=candle.close_time,\n            reduce_only=False,"
+    ]
+   ],
+   "rc": 1,
+   "resultados": {
+    "test_stops_and_exits_survive_rejections": "PASSED",
+    "test_the_stop_in_the_book_follows_the_leg": "PASSED",
+    "test_the_stop_is_replaced_only_when_its_size_or_level_moved": "PASSED",
+    "test_partial_fills_leave_no_untracked_or_stuck_position": "PASSED",
+    "test_a_leg_without_a_stop_level_is_reported": "PASSED",
+    "test_a_rejected_close_is_sent_again_and_closes": "FAILED",
+    "test_a_close_that_leaves_position_is_released_and_retried": "FAILED",
+    "test_every_invariant_holds_under_repeated_rejections_partials_and_reversals": "FAILED"
+   },
+   "motivos": [
+    "E   AssertionError: no time stop was rejected",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_d1d3/M10_cierre_sin_reduce_only/tests/unit/test_backtest_order_hygiene.py:257: AssertionError: no time stop was rejected",
+    "E   AssertionError: the scenario must end closes with position left",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_d1d3/M10_cierre_sin_reduce_only/tests/unit/test_backtest_order_hygiene.py:303: AssertionError: the scenario must end closes with position left",
+    "E   AssertionError: closes must be retried past two rejections",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/mutantes_d1d3/M10_cierre_sin_reduce_only/tests/unit/test_backtest_order_hygiene.py:342: AssertionError: closes must be retried past two rejections",
+    "FAILED tests/unit/test_backtest_order_hygiene.py::test_a_rejected_close_is_sent_again_and_closes",
+    "FAILED tests/unit/test_backtest_order_hygiene.py::test_a_close_that_leaves_position_is_released_and_retried",
+    "FAILED tests/unit/test_backtest_order_hygiene.py::test_every_invariant_holds_under_repeated_rejections_partials_and_reversals"
+   ],
+   "resumen": [
+    "3 failed, 5 passed in 45.24s"
+   ]
+  }
+ }
+}

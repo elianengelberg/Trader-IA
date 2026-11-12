@@ -1,0 +1,2 @@
+tests/integration/test_alert_delivery.py:78: AssertionError: the alert went out anyway
+tests/integration/test_alert_delivery.py:94: AttributeError: 'AppState' object has no attribute '_alert_failures'

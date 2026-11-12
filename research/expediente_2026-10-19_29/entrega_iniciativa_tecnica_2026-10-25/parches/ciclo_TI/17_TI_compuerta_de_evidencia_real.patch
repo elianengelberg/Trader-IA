@@ -1,0 +1,135 @@
+diff --git a/packages/tia/src/tia/api/gate_probes.py b/packages/tia/src/tia/api/gate_probes.py
+index 87ed8e1..4aedcf3 100644
+--- a/packages/tia/src/tia/api/gate_probes.py
++++ b/packages/tia/src/tia/api/gate_probes.py
+@@ -730,10 +730,27 @@ def _credentials(state: AppState, record: BinanceValidationRecord | None) -> Gat
+ 
+ 
+ def _edge(state: AppState) -> GateCheck:
+-    runtime = state.runtime
+-    if runtime is None:
+-        return failing(CheckName.EDGE_EVIDENCE, "no run is active", "run paper trading first")
+-    economics = runtime.economics_snapshot()["expected_value"]
++    # The evidence a live session prices its entries with is the running paper-live
++    # session's: its estimator admits rows by ``ev_evidence_policy``. The demo run's
++    # estimator learns from every scenario a generator drew — counting its trades here let
++    # synthetic markets fill the sample this check asks for.
++    policy = state.settings.live.ev_evidence_policy
++    if policy != "real_only":
++        return failing(
++            CheckName.EDGE_EVIDENCE,
++            f"ev_evidence_policy is {policy!r}: the live session's expected-value engine would "
++            "also learn from trades closed on synthetic scenarios",
++            "set TIA_LIVE__EV_EVIDENCE_POLICY=real_only — an edge measured on a generator's "
++            "drift is not one the market owes",
++        )
++    live = state.live_runtime
++    if live is None or not live.is_running:
++        return failing(
++            CheckName.EDGE_EVIDENCE,
++            "no paper-live session is running, so no real-market evidence is being read",
++            "run the 24/7 paper session first",
++        )
++    economics = live.evidence_coverage()
+     coverage: dict[str, int] = economics["coverage"]
+     minimum = economics["min_samples"]
+     filled = {bucket: count for bucket, count in coverage.items() if count >= minimum}
+diff --git a/packages/tia/src/tia/runtime/live.py b/packages/tia/src/tia/runtime/live.py
+index e88c037..c279ac1 100644
+--- a/packages/tia/src/tia/runtime/live.py
++++ b/packages/tia/src/tia/runtime/live.py
+@@ -4848,6 +4848,12 @@ class LiveRuntime:
+             ),
+         }
+ 
++    def evidence_coverage(self) -> dict[str, Any]:
++        """What this session's expected-value engine learns from: the closed trades per
++        bucket it admitted, the floor a bucket needs, and the admission policy."""
++        return {"coverage": self._edges.coverage(), "min_samples": self._edges.min_samples,
++                "policy": self._evidence_policy, "excluded": self._evidence_excluded}
++
+     def evidence_state(self) -> dict[str, Any]:
+         """How current this session's evidence is — what the Learning page's freshness
+         line reads, so "is this stale?" has an answer instead of a guess."""
+diff --git a/tests/integration/test_edge_evidence_gate.py b/tests/integration/test_edge_evidence_gate.py
+new file mode 100644
+index 0000000..8ab688d
+--- /dev/null
++++ b/tests/integration/test_edge_evidence_gate.py
+@@ -0,0 +1,76 @@
++"""The activation gate's edge-evidence check reads the evidence a live session would trade on.
++
++It used to read the demo run's estimator — fed by every scenario a generator drew — and to
++pass once any bucket held thirty closed trades, whatever market they closed in. Thirty trades
++of synthetic drift satisfied it; with only the 24/7 session running, it failed for want of a
++demo run, however much real-market evidence that session held.
++
++Expected outcomes, fixed before running: under ``ev_evidence_policy="legacy"`` the check fails
++whatever the sample; under ``real_only`` it fails without a running paper-live session, fails
++when only synthetic trades fill a bucket, and passes when a bucket holds enough trades closed
++against real market data.
++"""
++
++from __future__ import annotations
++
++from datetime import UTC, datetime, timedelta
++from types import SimpleNamespace
++from typing import Any
++
++from tia.api.gate_probes import _edge
++from tia.core.clock import SimulatedClock
++from tia.domain.enums import Direction, MarketRegime
++from tia.economics.expected_value import MIN_SAMPLES_FOR_EDGE, Outcome
++from tia.runtime.live import LiveRuntime
++from tia.runtime.scenarios import generate_series, get_scenario
++
++from .test_account_restore import SYMBOL, engine_for
++from .test_live_runtime import FakeMarketData, live_settings
++
++
++def _trades(n: int, market_data: str) -> list[Outcome]:
++    return [Outcome(regime=MarketRegime.TRENDING_UP, direction=Direction.LONG, confidence=0.75, net_return_bps=40.0,
++                    gross_return_bps=55.0, market_data=market_data) for _ in range(n)]
++
++
++def _session(outcomes: list[Outcome], **live_overrides: Any) -> LiveRuntime:
++    candles = generate_series(get_scenario("trend_up"), symbol=SYMBOL, timeframe="1m",
++                              start=datetime(2026, 1, 5, 6, 0, tzinfo=UTC), seed=9)
++    clock = SimulatedClock(candles[149].close_time + timedelta(seconds=1))
++    settings = live_settings(**live_overrides)
++    return LiveRuntime(settings, activation=None, market_data=FakeMarketData(candles, clock),
++                       execution=engine_for(clock, settings), clock=clock, poll_interval_seconds=0.0,
++                       prior_outcomes=outcomes)
++
++
++def _state(policy: str, live=None):  # type: ignore[no-untyped-def]
++    settings = SimpleNamespace(live=SimpleNamespace(ev_evidence_policy=policy))
++    return SimpleNamespace(settings=settings, live_runtime=live, runtime=None)
++
++
++async def test_legacy_evidence_never_passes_the_check() -> None:
++    runtime = _session(_trades(MIN_SAMPLES_FOR_EDGE, "real"), ev_evidence_policy="legacy")
++    await runtime.start()
++    try:
++        check = _edge(_state("legacy", runtime))
++        assert not check.passed and "synthetic" in check.detail
++    finally:
++        await runtime.stop(reason="end")
++
++
++def test_without_a_paper_live_session_there_is_no_evidence_to_read() -> None:
++    check = _edge(_state("real_only", None))
++    assert not check.passed and "paper-live session" in check.detail
++
++
++async def test_synthetic_trades_do_not_fill_the_sample_and_real_ones_do() -> None:
++    synthetic = _session(_trades(5 * MIN_SAMPLES_FOR_EDGE, "synthetic"), ev_evidence_policy="real_only")
++    real = _session(_trades(MIN_SAMPLES_FOR_EDGE, "real"), ev_evidence_policy="real_only")
++    await synthetic.start()
++    await real.start()
++    try:
++        assert not _edge(_state("real_only", synthetic)).passed
++        assert _edge(_state("real_only", real)).passed
++    finally:
++        await synthetic.stop(reason="end")
++        await real.stop(reason="end")

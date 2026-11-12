@@ -1,0 +1,7 @@
+E           AssertionError: the feed never stopped: no stale-data halt, no incident
+E           assert (['market data...s (TTL 300s)'] == []
+E             
+E             Left contains one more item: 'market data stale: no new bar for 660s (TTL 300s)'
+E             Use -v to get more diff)
+PASSED tests/integration/test_watchdog_after_standing.py::test_a_feed_that_stopped_during_the_pause_is_still_caught_after_the_resume
+FAILED tests/integration/test_watchdog_after_standing.py::test_a_session_resumed_after_a_long_pause_with_bars_flowing_is_not_halted_as_stale

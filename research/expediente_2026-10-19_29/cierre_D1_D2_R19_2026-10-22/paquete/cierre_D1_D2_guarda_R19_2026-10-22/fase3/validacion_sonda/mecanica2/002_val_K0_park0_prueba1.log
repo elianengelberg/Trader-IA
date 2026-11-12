@@ -1,0 +1,9 @@
+.                                                                        [100%]
+==================================== PASSES ====================================
+____________________ test_errores_inyectado_y_no_inyectado _____________________
+----------------------------- Captured stdout call -----------------------------
+2026-10-22 19:35:14 [warning  ] live_persist_task_failed       component=runtime.live error='database unavailable during fill'
+2026-10-22 19:35:14 [warning  ] live_persist_task_failed       component=runtime.live error=boom
+=========================== short test summary info ============================
+PASSED tests/integration/test_validacion_sonda_r19.py::test_errores_inyectado_y_no_inyectado
+1 passed in 1.52s

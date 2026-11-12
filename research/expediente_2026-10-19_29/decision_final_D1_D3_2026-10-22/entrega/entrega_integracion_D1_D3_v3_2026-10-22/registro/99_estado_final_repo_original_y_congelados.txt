@@ -1,0 +1,33 @@
+== Estado final del repositorio original (decisión final D1–D3, al armar la entrega v3): 2026-10-22T16:52:09Z
+ruta: /home/user/Trader-IA
+HEAD: 72ffae5d2698440c8f1afaff12e07bd8adde66fb
+rama: claude/algo-trading-simulation-platform-ngf7xo
+refs: refs/heads/claude/algo-trading-simulation-platform-ngf7xo 72ffae5d2698440c8f1afaff12e07bd8adde66fb;refs/remotes/origin/claude/algo-trading-simulation-platform-ngf7xo 72ffae5d2698440c8f1afaff12e07bd8adde66fb;
+cambios (porcelain -uall): 0
+stash: 0
+índice (ls-files -s) sha256: 07e0c86bb1c04ba22975582d17d1a729c500ceafe51b1615b1149fca4afac7e2
+árbol de HEAD: 44850cfcbf53c3f8223d38a92031f4402f8ffb32
+reflog (sha256 completo): 6d55854cfe1e43f71e488c6c841dbfa9fa60b6d1ff00f8b679705367ccb21138 · entradas: 13
+remotos: origin	https://github.com/elianengelberg/Trader-IA (fetch);origin	https://github.com/elianengelberg/Trader-IA (push);
+engine.py disco: 547109460bb5734ab7b108dc9387fca802e69b29cc8e74c262b80bdc55533ea4
+paper.py disco:  f5e0cb87a98d951ada347dc183968c59cc914cd52ac5cdaddf574f7264b7ff00
+archivos no rastreados ignorados (conteo, solo informativo): 18
+
+== Comparación línea a línea con registro/00 (sin la línea de fecha)
+IDÉNTICO al estado inicial
+
+== Archivos congelados (solo lectura)
+OK   36 entradas  /home/user/Trader-IA/research/tendencia_btc/ARTEFACTOS_SHA256.txt
+OK   16 entradas  /home/user/Trader-IA/research/hcarry_next/ARTEFACTOS_SHA256_2026-10-17.txt
+OK   9 entradas  /home/user/Trader-IA/research/hcarry_next/recuperado/SHA256SUMS
+OK   1 entradas  /home/user/Trader-IA/research/entregas_hcarry/SHA256SUMS
+OK   5 entradas  /home/user/Trader-IA/research/entregas_hcarry/SHA256SUMS_2026-10-17
+OK   6 entradas  <scratchpad>/experimentos/E1_bot_datos_reales_2026-10-19/resultados/real/SHA256SUMS
+OK   3 entradas  <scratchpad>/experimentos/E2_descubrimiento_2026-10-19/SHA256SUMS
+OK   8 entradas  <scratchpad>/experimentos/E3_seleccion_posicion_2026-10-19/SHA256SUMS
+T-MULTI y T-papel versionados: 0 cambios en research/tendencia_btc (git)
+rc=0
+
+== Entregas anteriores (no modificadas)
+f9495ad8d1e767e9eadf56cb77bd8dd2ad9a2fb12d5ec0de304f85bc2f06d269  <scratchpad>/integracion_parche_D1_D3_2026-10-21/entrega/entrega_integracion_D1_D3_2026-10-22.zip
+793e8d6a918aeb09f21bd24ae5cbc1c337664d8a54332d1e0a407e1bb14487eb  <scratchpad>/cierre_D1_D3_2026-10-22/entrega/entrega_integracion_D1_D3_v2_2026-10-22.zip

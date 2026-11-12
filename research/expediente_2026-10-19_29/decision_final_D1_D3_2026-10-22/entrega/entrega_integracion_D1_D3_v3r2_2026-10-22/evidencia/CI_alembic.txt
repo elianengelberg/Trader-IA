@@ -1,0 +1,9 @@
+== 2026-10-22T16:16:59Z · paso 'Migrations apply from empty' de ci.yml (TIA_DATABASE_URL=sqlite:///./data/runtime/ci.db; python -m alembic upgrade head), venv_A
+-- base (0 cambios; data/runtime existe: no)
+rc=0
+tabla backtests: ['run_id', 'created_at', 'dataset', 'symbols', 'timeframe', 'bars', 'seed', 'verdict', 'total_return_pct', 'max_drawdown_pct', 'sharpe', 'trades', 'equity_curve', 'baselines', 'evidence_statement', 'warnings', 'conditions']
+versión alembic: [('0007',)]
+-- final (11 cambios; data/runtime existe: no)
+rc=0
+tabla backtests: ['run_id', 'created_at', 'dataset', 'symbols', 'timeframe', 'bars', 'seed', 'verdict', 'total_return_pct', 'max_drawdown_pct', 'sharpe', 'trades', 'equity_curve', 'baselines', 'evidence_statement', 'warnings', 'conditions']
+versión alembic: [('0007',)]

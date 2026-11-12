@@ -1,0 +1,76 @@
+== suite completa del árbol final (A + 05v2 + 03 + 04 + 06) como la CI parcheada: 2026-10-22T23:13:38Z
+python: Python 3.11.17 · freeze: a1a96cac94471aac · carga al inicio: 3.13 3.90 3.76 5/126 8174
+comando: PYTHONPATH=packages/tia/src python -B -m pytest tests -q -p no:cacheprovider --junitxml=ci-evidence/junit.xml
+pytest rc=0 · duración 380 s · carga al final: 2.10 2.87 3.37 2/121 9847
+    return self._jws.encode(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+JUnit: 1985 pruebas · 1985 pasan · 0 fallan · 0 errores · 0 omitidas · 376.960 s
+== gate (scripts/ci_gate.py), como el paso de la CI
+commit `72ffae5d2698440c8f1afaff12e07bd8adde66fb` · tree `44850cfcbf53c3f8223d38a92031f4402f8ffb32` · Python 3.11.17
+tests 1985 · passed 1985 · failed 0 · errors 0 · skipped 0 · version guard 7/7
+engine_version 1.1.0 · pip freeze `a1a96cac94471aac…`
+**gate: pass**
+gate rc=0
+== ruff como la CI parcheada (packages tests scripts)
+S603 `subprocess` call: check for execution of untrusted input
+  --> scripts/ci_gate.py:32:12
+   |
+31 | def _git(*args: str) -> str:
+32 |     return subprocess.run(["git", *args], capture_output=True, text=True, check=True).stdout.strip()
+   |            ^^^^^^^^^^^^^^
+
+S607 Starting a process with a partial executable path
+  --> scripts/ci_gate.py:32:27
+   |
+31 | def _git(*args: str) -> str:
+32 |     return subprocess.run(["git", *args], capture_output=True, text=True, check=True).stdout.strip()
+   |                           ^^^^^^^^^^^^^^
+
+S314 Using `xml` to parse untrusted data is known to be vulnerable to XML attacks; use `defusedxml` equivalents
+  --> scripts/ci_gate.py:40:18
+   |
+39 | def _report(junit: Path) -> dict[str, object]:
+40 |     cases = list(ET.parse(junit).getroot().iter("testcase"))
+   |                  ^^^^^^^^^^^^^^^
+41 |     def outcome(case: ET.Element) -> str:
+42 |         for tag in ("failure", "error", "skipped"):
+   |
+
+RUF100 [*] Unused `noqa` directive (non-enabled: `PLC0415`)
+  --> scripts/ci_gate.py:58:57
+   |
+56 | def _engine_version() -> str | None:
+57 |     try:
+58 |         from tia.backtest.engine import ENGINE_VERSION  # noqa: PLC0415 - read the code under test
+   |                                                         ^^^^^^^^^^^^^^^
+59 |     except ImportError:
+60 |         return None
+   |
+help: Remove unused `noqa` directive
+   |
+57 |     try:
+   -         from tia.backtest.engine import ENGINE_VERSION  # noqa: PLC0415 - read the code under test
+58 +         from tia.backtest.engine import ENGINE_VERSION
+59 |     except ImportError:
+   |
+
+PTH123 `open()` should be replaced by `Path.open()`
+   --> scripts/ci_gate.py:108:14
+    |
+106 |     summary = os.environ.get("GITHUB_STEP_SUMMARY")
+107 |     if summary:
+108 |         with open(summary, "a") as out:
+    |              ^^^^
+109 |             out.write("\n\n".join(lines) + "\n")
+110 |     print("\n".join(lines))
+    |
+help: Replace with `Path.open()`
+
+Found 5 errors.
+[*] 1 fixable with `--fix`.
+ruff rc=1
+== alembic upgrade head desde cero (copia aparte, como la CI)
+alembic rc=0
+estado del árbol tras la suite: 16 entradas además de ci-evidence/ (esperado 16)
+fin 2026-10-22T23:20:00Z

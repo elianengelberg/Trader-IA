@@ -1,0 +1,120 @@
+{
+ "calidad": {
+  "spot_BTC": {
+   "dias": 3210,
+   "primero": "2017-08-17",
+   "ultimo": "2026-05-31",
+   "informe": {
+    "simbolo": "BTCUSDT",
+    "archivos": 106,
+    "meses_no_publicados": 0,
+    "primer_dia": "2017-08-17",
+    "ultimo_dia": "2026-05-31",
+    "dias": 3210,
+    "dias_ausentes": 0,
+    "duracion_irregular": 0,
+    "repetidas": 0,
+    "ohlc_incoherente": 0,
+    "precio_no_positivo": 0,
+    "manifiesto_sha256": "5a0805a7e22797637c400a1e939ec6c2d10e0cdc26410566f212708211b6367b",
+    "apto": true
+   }
+  },
+  "spot_ETH": {
+   "dias": 3210,
+   "primero": "2017-08-17",
+   "ultimo": "2026-05-31",
+   "informe": {
+    "simbolo": "ETHUSDT",
+    "archivos": 106,
+    "meses_no_publicados": 0,
+    "primer_dia": "2017-08-17",
+    "ultimo_dia": "2026-05-31",
+    "dias": 3210,
+    "dias_ausentes": 0,
+    "duracion_irregular": 0,
+    "repetidas": 0,
+    "ohlc_incoherente": 0,
+    "precio_no_positivo": 0,
+    "manifiesto_sha256": "3998305bb38909a08a94f6365317695f930dea4ea10933b19a22e17b40998f6a",
+    "apto": true
+   }
+  },
+  "funding_BTC": {
+   "liquidaciones": 7029,
+   "primera": "2020-01-01T00:00:00+00:00",
+   "ultima": "2026-05-31T16:00:00.004000+00:00",
+   "archivos": 77,
+   "esperadas_8h": 7029
+  },
+  "funding_ETH": {
+   "liquidaciones": 7029,
+   "primera": "2020-01-01T00:00:00+00:00",
+   "ultima": "2026-05-31T16:00:00.004000+00:00",
+   "archivos": 77,
+   "esperadas_8h": 7029
+  },
+  "prima_BTC": {
+   "horas": 56063,
+   "esperadas": 56232,
+   "faltantes": 169,
+   "archivos": 77
+  },
+  "wikipedia": {
+   "sha256": "8d9a43b4d9e55c5e03f914b48189638939569fa4fd672530770d51eebceb69d7",
+   "bytes": 575742,
+   "primero": "2015-07-01",
+   "ultimo": "2026-05-31",
+   "dias": 3988,
+   "esperados": 3988,
+   "faltantes": 0,
+   "no_positivos": 0
+  }
+ },
+ "problemas": [],
+ "entrenamiento_sin_futuro": true,
+ "filas_de_entrenamiento_comprobadas": 44846,
+ "invariancia_frente_al_futuro": [
+  {
+   "corte": "2021-10-04",
+   "variables_A_B_hasta_el_corte": true,
+   "atencion_C_hasta_el_corte": true,
+   "pronosticos_A": true,
+   "exposiciones_B": true,
+   "pronosticos_C": true
+  },
+  {
+   "corte": "2022-04-10",
+   "variables_A_B_hasta_el_corte": true,
+   "atencion_C_hasta_el_corte": true,
+   "pronosticos_A": true,
+   "exposiciones_B": true,
+   "pronosticos_C": true
+  },
+  {
+   "corte": "2022-11-22",
+   "variables_A_B_hasta_el_corte": true,
+   "atencion_C_hasta_el_corte": true,
+   "pronosticos_A": true,
+   "exposiciones_B": true,
+   "pronosticos_C": true
+  },
+  {
+   "corte": "2024-05-21",
+   "variables_A_B_hasta_el_corte": true,
+   "atencion_C_hasta_el_corte": true,
+   "pronosticos_A": true,
+   "exposiciones_B": true,
+   "pronosticos_C": true
+  },
+  {
+   "corte": "2025-02-20",
+   "variables_A_B_hasta_el_corte": true,
+   "atencion_C_hasta_el_corte": true,
+   "pronosticos_A": true,
+   "exposiciones_B": true,
+   "pronosticos_C": true
+  }
+ ],
+ "todo_ok": true
+}

@@ -1,0 +1,13 @@
+{
+ "fuente": "MEC v0.2 §5 (expediente metodológico 2026-10-20); fijados ANTES de cualquier tasa de rechazo",
+ "procesos": ["C1", "C2", "C3", "C4", "C5", "C6"],
+ "tamanos": [1612, 366, 731, 1096],
+ "replicas": 2000,
+ "B": 1999,
+ "semilla": 20261103,
+ "prueba_primaria": {"metodo": "bootstrap_t_bloques_circulares", "ell": 20},
+ "regla_respaldo": {"componentes": ["bootstrap_t_l20", "bootstrap_t_l40", "newey_west_L20"], "combinacion": "max_p"},
+ "bandas": {"0.025": [0.018, 0.032], "0.05": [0.0403, 0.0597]},
+ "criterio": "tasa de rechazo <= limite superior de la banda (±2 errores de Monte Carlo con 2000 replicas); sub-rechazo aceptado e informado",
+ "desvio_diario": 0.01
+}

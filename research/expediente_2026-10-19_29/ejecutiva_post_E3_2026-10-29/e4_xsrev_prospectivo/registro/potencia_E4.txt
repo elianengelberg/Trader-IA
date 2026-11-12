@@ -1,0 +1,21 @@
+=== 180 días evaluables ===
+  φ=0.0 sd=0.1: potencia {0.01: 0.27, 0.02: 0.77, 0.03: 0.98} · P(refutar tamaño ≥0,01 | IC=0) = 0.27 · IC mínimo con 80 % = 0.0209
+  φ=0.0 sd=0.15: potencia {0.01: 0.14, 0.02: 0.43, 0.03: 0.77} · P(refutar tamaño ≥0,01 | IC=0) = 0.14 · IC mínimo con 80 % = 0.0313
+  φ=0.0 sd=0.2: potencia {0.01: 0.1, 0.02: 0.27, 0.03: 0.52} · P(refutar tamaño ≥0,01 | IC=0) = 0.1 · IC mínimo con 80 % = 0.0418
+  φ=0.1 sd=0.1: potencia {0.01: 0.23, 0.02: 0.68, 0.03: 0.95} · P(refutar tamaño ≥0,01 | IC=0) = 0.23 · IC mínimo con 80 % = 0.0231
+  φ=0.1 sd=0.15: potencia {0.01: 0.12, 0.02: 0.37, 0.03: 0.68} · P(refutar tamaño ≥0,01 | IC=0) = 0.12 · IC mínimo con 80 % = 0.0346
+  φ=0.1 sd=0.2: potencia {0.01: 0.09, 0.02: 0.23, 0.03: 0.44} · P(refutar tamaño ≥0,01 | IC=0) = 0.09 · IC mínimo con 80 % = 0.0462
+=== 365 días evaluables ===
+  φ=0.0 sd=0.1: potencia {0.01: 0.48, 0.02: 0.97, 0.03: 1.0} · P(refutar tamaño ≥0,01 | IC=0) = 0.48 · IC mínimo con 80 % = 0.0147
+  φ=0.0 sd=0.15: potencia {0.01: 0.25, 0.02: 0.72, 0.03: 0.97} · P(refutar tamaño ≥0,01 | IC=0) = 0.25 · IC mínimo con 80 % = 0.0220
+  φ=0.0 sd=0.2: potencia {0.01: 0.16, 0.02: 0.48, 0.03: 0.82} · P(refutar tamaño ≥0,01 | IC=0) = 0.16 · IC mínimo con 80 % = 0.0293
+  φ=0.1 sd=0.1: potencia {0.01: 0.41, 0.02: 0.93, 0.03: 1.0} · P(refutar tamaño ≥0,01 | IC=0) = 0.41 · IC mínimo con 80 % = 0.0162
+  φ=0.1 sd=0.15: potencia {0.01: 0.21, 0.02: 0.63, 0.03: 0.93} · P(refutar tamaño ≥0,01 | IC=0) = 0.21 · IC mínimo con 80 % = 0.0243
+  φ=0.1 sd=0.2: potencia {0.01: 0.14, 0.02: 0.41, 0.03: 0.74} · P(refutar tamaño ≥0,01 | IC=0) = 0.14 · IC mínimo con 80 % = 0.0324
+=== 540 días evaluables ===
+  φ=0.0 sd=0.1: potencia {0.01: 0.64, 0.02: 1.0, 0.03: 1.0} · P(refutar tamaño ≥0,01 | IC=0) = 0.64 · IC mínimo con 80 % = 0.0121
+  φ=0.0 sd=0.15: potencia {0.01: 0.34, 0.02: 0.87, 0.03: 1.0} · P(refutar tamaño ≥0,01 | IC=0) = 0.34 · IC mínimo con 80 % = 0.0181
+  φ=0.0 sd=0.2: potencia {0.01: 0.21, 0.02: 0.64, 0.03: 0.94} · P(refutar tamaño ≥0,01 | IC=0) = 0.21 · IC mínimo con 80 % = 0.0241
+  φ=0.1 sd=0.1: potencia {0.01: 0.56, 0.02: 0.99, 0.03: 1.0} · P(refutar tamaño ≥0,01 | IC=0) = 0.56 · IC mínimo con 80 % = 0.0133
+  φ=0.1 sd=0.15: potencia {0.01: 0.29, 0.02: 0.8, 0.03: 0.99} · P(refutar tamaño ≥0,01 | IC=0) = 0.29 · IC mínimo con 80 % = 0.0200
+  φ=0.1 sd=0.2: potencia {0.01: 0.18, 0.02: 0.56, 0.03: 0.88} · P(refutar tamaño ≥0,01 | IC=0) = 0.18 · IC mínimo con 80 % = 0.0267

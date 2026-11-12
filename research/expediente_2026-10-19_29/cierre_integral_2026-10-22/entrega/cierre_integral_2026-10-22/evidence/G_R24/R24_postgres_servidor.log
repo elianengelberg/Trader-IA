@@ -1,0 +1,19 @@
+2026-10-22 22:59:49.374 UTC [6032] LOG:  starting PostgreSQL 16.15 (Ubuntu 16.15-0ubuntu0.24.04.1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0, 64-bit
+2026-10-22 22:59:49.375 UTC [6032] LOG:  listening on Unix socket "/tmp/tia_r24_cfc0aa8e/.s.PGSQL.5432"
+2026-10-22 22:59:49.383 UTC [6035] LOG:  database system was shut down at 2026-10-22 22:59:49 UTC
+2026-10-22 22:59:49.392 UTC [6032] LOG:  database system is ready to accept connections
+2026-10-22 23:00:44.227 UTC [6033] LOG:  checkpoint starting: immediate force wait
+2026-10-22 23:00:44.636 UTC [6033] LOG:  checkpoint complete: wrote 6765 buffers (41.3%); 0 WAL file(s) added, 0 removed, 2 recycled; write=0.241 s, sync=0.167 s, total=0.410 s; sync files=2956, longest=0.037 s, average=0.001 s; distance=38143 kB, estimate=38143 kB; lsn=0/3A2F340, redo lsn=0/3A2F2D0
+2026-10-22 23:00:45.891 UTC [6033] LOG:  checkpoint starting: immediate force wait
+2026-10-22 23:00:45.898 UTC [6033] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.001 s, total=0.008 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4764 kB, estimate=34805 kB; lsn=0/3ED6620, redo lsn=0/3ED65E8
+2026-10-22 23:00:47.302 UTC [6033] LOG:  checkpoint starting: immediate force wait
+2026-10-22 23:00:47.310 UTC [6033] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.001 s, sync=0.001 s, total=0.009 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4764 kB, estimate=31801 kB; lsn=0/437D8E0, redo lsn=0/437D8A8
+2026-10-22 23:00:48.603 UTC [6033] LOG:  checkpoint starting: immediate force wait
+2026-10-22 23:00:48.656 UTC [6033] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.021 s, sync=0.005 s, total=0.054 s; sync files=4, longest=0.004 s, average=0.002 s; distance=4765 kB, estimate=29098 kB; lsn=0/4824D50, redo lsn=0/4824D18
+2026-10-22 23:01:37.633 UTC [6032] LOG:  received fast shutdown request
+2026-10-22 23:01:37.635 UTC [6032] LOG:  aborting any active transactions
+2026-10-22 23:01:37.636 UTC [6032] LOG:  background worker "logical replication launcher" (PID 6038) exited with exit code 1
+2026-10-22 23:01:37.644 UTC [6033] LOG:  shutting down
+2026-10-22 23:01:37.647 UTC [6033] LOG:  checkpoint starting: shutdown immediate
+2026-10-22 23:01:40.069 UTC [6033] LOG:  checkpoint complete: wrote 13064 buffers (79.7%); 0 WAL file(s) added, 0 removed, 15 recycled; write=0.401 s, sync=2.009 s, total=2.426 s; sync files=21133, longest=0.120 s, average=0.001 s; distance=239454 kB, estimate=239454 kB; lsn=0/131FC5C8, redo lsn=0/131FC5C8
+2026-10-22 23:01:40.088 UTC [6032] LOG:  database system is shut down

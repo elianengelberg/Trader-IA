@@ -1,0 +1,485 @@
+[
+ {
+  "mapeo": "VENUSDT→VETUSDT",
+  "regla": 1,
+  "r_tabla": 100,
+  "E_tabla": "2018-07-23",
+  "apertura_tabla": "2018-07-25",
+  "cita_presente": true,
+  "relaciones_en_texto": [
+   100.0
+  ],
+  "fechas_cese_en_texto": [
+   "2018-07-23"
+  ],
+  "fechas_apertura_en_texto": [
+   "2018-07-25"
+  ],
+  "ultimo_activo_viejo": "2018-07-22",
+  "primer_activo_nuevo": "2018-07-25",
+  "viejo_vuelve_despues_de_E": false,
+  "nuevo_activo_antes_de_E": false
+ },
+ {
+  "mapeo": "BCHABCUSDT→BCHUSDT",
+  "regla": 1,
+  "r_tabla": 1,
+  "E_tabla": "2019-11-28",
+  "apertura_tabla": "2019-11-28",
+  "cita_presente": true,
+  "relaciones_en_texto": [
+   1.0
+  ],
+  "fechas_cese_en_texto": [],
+  "fechas_apertura_en_texto": [
+   "2019-11-28"
+  ],
+  "ultimo_activo_viejo": "2019-11-27",
+  "primer_activo_nuevo": "2019-11-28",
+  "viejo_vuelve_despues_de_E": false,
+  "nuevo_activo_antes_de_E": false
+ },
+ {
+  "mapeo": "STORMUSDT→STMXUSDT",
+  "regla": 1,
+  "r_tabla": 1,
+  "E_tabla": "2020-06-08",
+  "apertura_tabla": "2020-06-11",
+  "cita_presente": true,
+  "relaciones_en_texto": [
+   1.0
+  ],
+  "fechas_cese_en_texto": [
+   "2020-06-08"
+  ],
+  "fechas_apertura_en_texto": [
+   "2020-06-11"
+  ],
+  "ultimo_activo_viejo": "2020-06-07",
+  "primer_activo_nuevo": "2020-06-11",
+  "viejo_vuelve_despues_de_E": false,
+  "nuevo_activo_antes_de_E": false
+ },
+ {
+  "mapeo": "ERDUSDT→EGLDUSDT",
+  "regla": 1,
+  "r_tabla": 0.001,
+  "E_tabla": "2020-08-31",
+  "apertura_tabla": "2020-09-03",
+  "cita_presente": true,
+  "relaciones_en_texto": [
+   0.001
+  ],
+  "fechas_cese_en_texto": [
+   "2020-08-31"
+  ],
+  "fechas_apertura_en_texto": [
+   "2020-09-03"
+  ],
+  "ultimo_activo_viejo": "2020-08-30",
+  "primer_activo_nuevo": "2020-09-03",
+  "viejo_vuelve_despues_de_E": false,
+  "nuevo_activo_antes_de_E": false
+ },
+ {
+  "mapeo": "LENDUSDT→AAVEUSDT",
+  "regla": 1,
+  "r_tabla": 0.01,
+  "E_tabla": "2020-10-12",
+  "apertura_tabla": "2020-10-15",
+  "cita_presente": true,
+  "relaciones_en_texto": [
+   0.01
+  ],
+  "fechas_cese_en_texto": [
+   "2020-10-12"
+  ],
+  "fechas_apertura_en_texto": [],
+  "ultimo_activo_viejo": "2020-10-11",
+  "primer_activo_nuevo": "2020-10-15",
+  "viejo_vuelve_despues_de_E": false,
+  "nuevo_activo_antes_de_E": false
+ },
+ {
+  "mapeo": "STRATUSDT→STRAXUSDT",
+  "regla": 1,
+  "r_tabla": 1,
+  "E_tabla": "2020-11-12",
+  "apertura_tabla": "2020-11-18",
+  "cita_presente": true,
+  "relaciones_en_texto": [
+   1.0
+  ],
+  "fechas_cese_en_texto": [
+   "2020-11-12"
+  ],
+  "fechas_apertura_en_texto": [
+   "2020-11-18"
+  ],
+  "ultimo_activo_viejo": "2020-11-11",
+  "primer_activo_nuevo": "2020-11-18",
+  "viejo_vuelve_despues_de_E": false,
+  "nuevo_activo_antes_de_E": false
+ },
+ {
+  "mapeo": "COCOSUSDT→COCOSUSDT",
+  "regla": 2,
+  "r_tabla": 0.001,
+  "E_tabla": "2021-01-19",
+  "apertura_tabla": "2021-01-23",
+  "cita_presente": true,
+  "relaciones_en_texto": [
+   [
+    "1,000",
+    "1"
+   ]
+  ],
+  "fechas_cese_en_texto": [
+   "2021-01-19"
+  ],
+  "fechas_apertura_en_texto": [
+   "2021-01-23"
+  ],
+  "corte_en_datos": [
+   "2021-01-18",
+   "2021-01-23",
+   4
+  ],
+  "ratio_precio_F3": 1112.0,
+  "coherente_con_F3": 1.112
+ },
+ {
+  "mapeo": "XZCUSDT→FIROUSDT",
+  "regla": 1,
+  "r_tabla": 1,
+  "E_tabla": "2021-01-25",
+  "apertura_tabla": "2021-01-29",
+  "cita_presente": true,
+  "relaciones_en_texto": [
+   1.0
+  ],
+  "fechas_cese_en_texto": [
+   "2021-01-22",
+   "2021-01-25"
+  ],
+  "fechas_apertura_en_texto": [],
+  "ultimo_activo_viejo": "2021-01-24",
+  "primer_activo_nuevo": "2021-01-29",
+  "viejo_vuelve_despues_de_E": false,
+  "nuevo_activo_antes_de_E": false
+ },
+ {
+  "mapeo": "BTCSTUSDT→BTCSTUSDT",
+  "regla": 2,
+  "r_tabla": 10,
+  "E_tabla": "2021-03-15",
+  "apertura_tabla": "2021-03-19",
+  "cita_presente": true,
+  "relaciones_en_texto": [
+   [
+    "1",
+    "10"
+   ]
+  ],
+  "fechas_cese_en_texto": [
+   "2021-03-15"
+  ],
+  "fechas_apertura_en_texto": [
+   "2021-03-19"
+  ],
+  "corte_en_datos": [
+   "2021-03-14",
+   "2021-03-19",
+   4
+  ],
+  "ratio_precio_F3": null,
+  "coherente_con_F3": null
+ },
+ {
+  "mapeo": "DREPUSDT→DREPUSDT",
+  "regla": 2,
+  "r_tabla": 0.01,
+  "E_tabla": "2021-03-29",
+  "apertura_tabla": "2021-04-02",
+  "cita_presente": true,
+  "relaciones_en_texto": [
+   [
+    "100",
+    "1"
+   ]
+  ],
+  "fechas_cese_en_texto": [
+   "2021-03-22"
+  ],
+  "fechas_apertura_en_texto": [
+   "2021-03-26"
+  ],
+  "corte_en_datos": [
+   "2021-03-28",
+   "2021-04-02",
+   4
+  ],
+  "ratio_precio_F3": 100.33202305079571,
+  "coherente_con_F3": 1.0033202305079572
+ },
+ {
+  "mapeo": "NPXSUSDT→PUNDIXUSDT",
+  "regla": 1,
+  "r_tabla": 0.001,
+  "E_tabla": "2021-04-05",
+  "apertura_tabla": "2021-04-09",
+  "cita_presente": true,
+  "relaciones_en_texto": [
+   0.001
+  ],
+  "fechas_cese_en_texto": [
+   "2021-04-05"
+  ],
+  "fechas_apertura_en_texto": [
+   "2021-04-09"
+  ],
+  "ultimo_activo_viejo": "2021-04-04",
+  "primer_activo_nuevo": "2021-04-09",
+  "viejo_vuelve_despues_de_E": false,
+  "nuevo_activo_antes_de_E": false
+ },
+ {
+  "mapeo": "SUNUSDT→SUNUSDT",
+  "regla": 2,
+  "r_tabla": 1000,
+  "E_tabla": "2021-06-14",
+  "apertura_tabla": "2021-06-18",
+  "cita_presente": true,
+  "relaciones_en_texto": [
+   1000.0
+  ],
+  "fechas_cese_en_texto": [
+   "2021-06-14"
+  ],
+  "fechas_apertura_en_texto": [
+   "2021-06-18"
+  ],
+  "corte_en_datos": [
+   "2021-06-13",
+   "2021-06-18",
+   4
+  ],
+  "ratio_precio_F3": 0.0010370119611825773,
+  "coherente_con_F3": 1.0370119611825774
+ },
+ {
+  "mapeo": "PAXUSDT→USDPUSDT",
+  "regla": 1,
+  "r_tabla": 1,
+  "E_tabla": "2021-09-06",
+  "apertura_tabla": "2021-09-10",
+  "cita_presente": true,
+  "relaciones_en_texto": [
+   1.0
+  ],
+  "fechas_cese_en_texto": [
+   "2021-09-06"
+  ],
+  "fechas_apertura_en_texto": [],
+  "ultimo_activo_viejo": "2021-09-05",
+  "primer_activo_nuevo": "2021-09-10",
+  "viejo_vuelve_despues_de_E": false,
+  "nuevo_activo_antes_de_E": false
+ },
+ {
+  "mapeo": "ANYUSDT→MULTIUSDT",
+  "regla": 1,
+  "r_tabla": 1,
+  "E_tabla": "2022-03-30",
+  "apertura_tabla": "2022-04-06",
+  "cita_presente": true,
+  "relaciones_en_texto": [
+   1.0
+  ],
+  "fechas_cese_en_texto": [
+   "2022-03-30"
+  ],
+  "fechas_apertura_en_texto": [
+   "2022-04-06"
+  ],
+  "ultimo_activo_viejo": "2022-03-29",
+  "primer_activo_nuevo": "2022-04-06",
+  "viejo_vuelve_despues_de_E": false,
+  "nuevo_activo_antes_de_E": false
+ },
+ {
+  "mapeo": "POLYUSDT→POLYXUSDT",
+  "regla": 1,
+  "r_tabla": 1,
+  "E_tabla": "2022-10-10",
+  "apertura_tabla": "2022-10-17",
+  "cita_presente": true,
+  "relaciones_en_texto": [
+   1.0
+  ],
+  "fechas_cese_en_texto": [
+   "2022-10-10"
+  ],
+  "fechas_apertura_en_texto": [
+   "2022-10-17"
+  ],
+  "ultimo_activo_viejo": "2022-10-09",
+  "primer_activo_nuevo": "2022-10-17",
+  "viejo_vuelve_despues_de_E": false,
+  "nuevo_activo_antes_de_E": false
+ },
+ {
+  "mapeo": "COCOSUSDT→COMBOUSDT",
+  "regla": 1,
+  "r_tabla": 1,
+  "E_tabla": "2023-06-02",
+  "apertura_tabla": null,
+  "cita_presente": true,
+  "relaciones_en_texto": [
+   1.0
+  ],
+  "fechas_cese_en_texto": [],
+  "fechas_apertura_en_texto": [],
+  "ultimo_activo_viejo": "2023-05-28",
+  "primer_activo_nuevo": "2023-06-02",
+  "viejo_vuelve_despues_de_E": false,
+  "nuevo_activo_antes_de_E": false
+ },
+ {
+  "mapeo": "QUICKUSDT→QUICKUSDT",
+  "regla": 2,
+  "r_tabla": 1000,
+  "E_tabla": "2023-07-17",
+  "apertura_tabla": "2023-07-21",
+  "cita_presente": true,
+  "relaciones_en_texto": [
+   1000.0
+  ],
+  "fechas_cese_en_texto": [
+   "2023-07-11",
+   "2023-07-17"
+  ],
+  "fechas_apertura_en_texto": [
+   "2023-07-21"
+  ],
+  "corte_en_datos": [
+   "2023-07-16",
+   "2023-07-21",
+   4
+  ],
+  "ratio_precio_F3": 0.0009959731543624161,
+  "coherente_con_F3": 0.9959731543624161
+ },
+ {
+  "mapeo": "MCUSDT→BEAMXUSDT",
+  "regla": 1,
+  "r_tabla": 100,
+  "E_tabla": "2023-11-07",
+  "apertura_tabla": "2023-11-14",
+  "cita_presente": true,
+  "relaciones_en_texto": [
+   100.0
+  ],
+  "fechas_cese_en_texto": [
+   "2023-10-31",
+   "2023-11-01",
+   "2023-11-07"
+  ],
+  "fechas_apertura_en_texto": [
+   "2023-11-14"
+  ],
+  "ultimo_activo_viejo": "2023-11-06",
+  "primer_activo_nuevo": "2023-11-14",
+  "viejo_vuelve_despues_de_E": false,
+  "nuevo_activo_antes_de_E": false
+ },
+ {
+  "mapeo": "TVKUSDT→VANRYUSDT",
+  "regla": 1,
+  "r_tabla": 1,
+  "E_tabla": "2023-12-01",
+  "apertura_tabla": null,
+  "cita_presente": true,
+  "relaciones_en_texto": [
+   1.0
+  ],
+  "fechas_cese_en_texto": [],
+  "fechas_apertura_en_texto": [],
+  "ultimo_activo_viejo": "2023-11-26",
+  "primer_activo_nuevo": "2023-12-01",
+  "viejo_vuelve_despues_de_E": false,
+  "nuevo_activo_antes_de_E": false
+ },
+ {
+  "mapeo": "PLAUSDT→PDAUSDT",
+  "regla": 1,
+  "r_tabla": 1,
+  "E_tabla": "2024-02-26",
+  "apertura_tabla": "2024-03-01",
+  "cita_presente": true,
+  "relaciones_en_texto": [],
+  "fechas_cese_en_texto": [
+   "2024-02-23",
+   "2024-02-26"
+  ],
+  "fechas_apertura_en_texto": [
+   "2024-03-01"
+  ],
+  "ultimo_activo_viejo": "2024-02-25",
+  "primer_activo_nuevo": "2024-03-01",
+  "viejo_vuelve_despues_de_E": false,
+  "nuevo_activo_antes_de_E": false
+ },
+ {
+  "mapeo": "STRAXUSDT→STRAXUSDT",
+  "regla": 2,
+  "r_tabla": 10,
+  "E_tabla": "2024-03-20",
+  "apertura_tabla": "2024-03-28",
+  "cita_presente": true,
+  "relaciones_en_texto": [
+   10.0
+  ],
+  "fechas_cese_en_texto": [
+   "2024-03-15",
+   "2024-03-19",
+   "2024-03-20"
+  ],
+  "fechas_apertura_en_texto": [
+   "2024-03-28"
+  ],
+  "corte_en_datos": [
+   "2024-03-19",
+   "2024-03-28",
+   8
+  ],
+  "ratio_precio_F3": 0.09875086745315753,
+  "coherente_con_F3": 0.9875086745315753
+ },
+ {
+  "mapeo": "MATICUSDT→POLUSDT",
+  "regla": 1,
+  "r_tabla": 1,
+  "E_tabla": "2024-09-10",
+  "apertura_tabla": "2024-09-13",
+  "cita_presente": true,
+  "relaciones_en_texto": [
+   1.0
+  ],
+  "fechas_cese_en_texto": [
+   "2024-09-04",
+   "2024-09-05",
+   "2024-09-06",
+   "2024-09-08",
+   "2024-09-09",
+   "2024-09-10"
+  ],
+  "fechas_apertura_en_texto": [
+   "2024-09-13"
+  ],
+  "ultimo_activo_viejo": "2024-09-09",
+  "primer_activo_nuevo": "2024-09-13",
+  "viejo_vuelve_despues_de_E": false,
+  "nuevo_activo_antes_de_E": false
+ }
+]

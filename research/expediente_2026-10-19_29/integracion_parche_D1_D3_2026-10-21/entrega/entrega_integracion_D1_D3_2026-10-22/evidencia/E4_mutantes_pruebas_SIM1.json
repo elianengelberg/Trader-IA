@@ -1,0 +1,177 @@
+{
+ "prueba": "tests/unit/test_backtest_order_hygiene.py",
+ "mutantes": {
+  "M1_D1_salida_id_sin_barra": {
+   "cambios": [
+    [
+     "signal_id=f\"{exit_key}:{candle.close_time.isoformat()}\",",
+     "signal_id=exit_key,"
+    ]
+   ],
+   "rc": 0,
+   "resultados": {
+    "test_stops_and_exits_survive_rejections": "PASSED",
+    "test_the_stop_in_the_book_follows_the_leg": "PASSED",
+    "test_partial_fills_leave_no_untracked_or_stuck_position": "PASSED",
+    "test_a_leg_without_a_stop_level_is_reported": "PASSED"
+   },
+   "motivos": [],
+   "resumen": [
+    "PASSED tests/unit/test_backtest_order_hygiene.py::test_a_leg_without_a_stop_level_is_reported"
+   ]
+  },
+  "M2_D1_stop_id_sin_colocacion": {
+   "cambios": [
+    [
+     "signal_id=f\"{leg.signal_id}:protective:{self._stop_placements}\",",
+     "signal_id=f\"{leg.signal_id}:protective\","
+    ]
+   ],
+   "rc": 1,
+   "resultados": {
+    "test_the_stop_in_the_book_follows_the_leg": "PASSED",
+    "test_partial_fills_leave_no_untracked_or_stuck_position": "PASSED",
+    "test_a_leg_without_a_stop_level_is_reported": "PASSED",
+    "test_stops_and_exits_survive_rejections": "FAILED"
+   },
+   "motivos": [
+    "E   AssertionError: ['bar 183: 9 bars without a stop', 'bar 195: 9 bars without a stop', 'bar 196: 10 bars without a stop']",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_parche_D1_D3_2026-10-21/mutantes_v1/M2_D1_stop_id_sin_colocacion/tests/unit/test_backtest_order_hygiene.py:104: AssertionError: ['bar 183: 9 bars without a stop', 'bar 195: 9 bars without a stop', 'bar 196: 10 bars without a stop']"
+   ],
+   "resumen": [
+    "FAILED tests/unit/test_backtest_order_hygiene.py::test_stops_and_exits_survive_rejections"
+   ]
+  },
+  "M3_D2_sin_comparar_nivel": {
+   "cambios": [
+    [
+     "if same_size and same_level:",
+     "if same_size:"
+    ]
+   ],
+   "rc": 1,
+   "resultados": {
+    "test_stops_and_exits_survive_rejections": "PASSED",
+    "test_partial_fills_leave_no_untracked_or_stuck_position": "PASSED",
+    "test_a_leg_without_a_stop_level_is_reported": "PASSED",
+    "test_the_stop_in_the_book_follows_the_leg": "FAILED"
+   },
+   "motivos": [
+    "E   AssertionError: ['bar 175: leg stop 62584.94100498582, order in the book 62608.515972277375', 'bar 176: leg stop 62567.83067468193, order in the book 62608.515972277375', 'bar 177: leg stop 62567.83067468193, order in the book 62608.515972277375']",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_parche_D1_D3_2026-10-21/mutantes_v1/M3_D2_sin_comparar_nivel/tests/unit/test_backtest_order_hygiene.py:111: AssertionError: ['bar 175: leg stop 62584.94100498582, order in the book 62608.515972277375', 'bar 176: leg stop 62567.83067468193, order in the book 62608.515972277375', 'bar 177: leg stop 62567.83067468193, order in the book 62608.515972277375']"
+   ],
+   "resumen": [
+    "FAILED tests/unit/test_backtest_order_hygiene.py::test_the_stop_in_the_book_follows_the_leg"
+   ]
+  },
+  "M4_D3_sin_cancelar_resto_al_salir": {
+   "cambios": [
+    [
+     "for order in provider.resting_orders(leg.symbol):",
+     "for order in ():"
+    ]
+   ],
+   "rc": 1,
+   "resultados": {
+    "test_stops_and_exits_survive_rejections": "PASSED",
+    "test_the_stop_in_the_book_follows_the_leg": "PASSED",
+    "test_a_leg_without_a_stop_level_is_reported": "PASSED",
+    "test_partial_fills_leave_no_untracked_or_stuck_position": "FAILED"
+   },
+   "motivos": [
+    "E   AssertionError: the scenario must leave entry remainders resting",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_parche_D1_D3_2026-10-21/mutantes_v1/M4_D3_sin_cancelar_resto_al_salir/tests/unit/test_backtest_order_hygiene.py:120: AssertionError: the scenario must leave entry remainders resting"
+   ],
+   "resumen": [
+    "FAILED tests/unit/test_backtest_order_hygiene.py::test_partial_fills_leave_no_untracked_or_stuck_position"
+   ]
+  },
+  "M5_D3_sin_cancelar_resto_en_plano": {
+   "cambios": [
+    [
+     "for order in provider.resting_orders(symbol):",
+     "for order in ():"
+    ]
+   ],
+   "rc": 0,
+   "resultados": {
+    "test_stops_and_exits_survive_rejections": "PASSED",
+    "test_the_stop_in_the_book_follows_the_leg": "PASSED",
+    "test_partial_fills_leave_no_untracked_or_stuck_position": "PASSED",
+    "test_a_leg_without_a_stop_level_is_reported": "PASSED"
+   },
+   "motivos": [],
+   "resumen": [
+    "PASSED tests/unit/test_backtest_order_hygiene.py::test_a_leg_without_a_stop_level_is_reported"
+   ]
+  },
+  "M6_D3_sin_red_de_seguridad": {
+   "cambios": [
+    [
+     "if exit_order is not None and exit_order.state.is_terminal and leg.quantity > 0:",
+     "if False:"
+    ]
+   ],
+   "rc": 0,
+   "resultados": {
+    "test_stops_and_exits_survive_rejections": "PASSED",
+    "test_the_stop_in_the_book_follows_the_leg": "PASSED",
+    "test_partial_fills_leave_no_untracked_or_stuck_position": "PASSED",
+    "test_a_leg_without_a_stop_level_is_reported": "PASSED"
+   },
+   "motivos": [],
+   "resumen": [
+    "PASSED tests/unit/test_backtest_order_hygiene.py::test_a_leg_without_a_stop_level_is_reported"
+   ]
+  },
+  "M7_sin_aviso_de_pierna_sin_stop": {
+   "cambios": [
+    [
+     "if cfg.use_protective_stops and unprotected:",
+     "if False:"
+    ]
+   ],
+   "rc": 0,
+   "resultados": {
+    "test_stops_and_exits_survive_rejections": "PASSED",
+    "test_the_stop_in_the_book_follows_the_leg": "PASSED",
+    "test_partial_fills_leave_no_untracked_or_stuck_position": "PASSED",
+    "test_a_leg_without_a_stop_level_is_reported": "PASSED"
+   },
+   "motivos": [],
+   "resumen": [
+    "PASSED tests/unit/test_backtest_order_hygiene.py::test_a_leg_without_a_stop_level_is_reported"
+   ]
+  },
+  "M8_D3_sin_ninguna_capa": {
+   "cambios": [
+    [
+     "for order in provider.resting_orders(leg.symbol):",
+     "for order in ():"
+    ],
+    [
+     "for order in provider.resting_orders(symbol):",
+     "for order in ():"
+    ],
+    [
+     "if exit_order is not None and exit_order.state.is_terminal and leg.quantity > 0:",
+     "if False:"
+    ]
+   ],
+   "rc": 1,
+   "resultados": {
+    "test_stops_and_exits_survive_rejections": "PASSED",
+    "test_the_stop_in_the_book_follows_the_leg": "PASSED",
+    "test_a_leg_without_a_stop_level_is_reported": "PASSED",
+    "test_partial_fills_leave_no_untracked_or_stuck_position": "FAILED"
+   },
+   "motivos": [
+    "E   AssertionError: ['bar 508: 4.29999999999979e-05 still held, waiting on a close that is filled', 'bar 509: 4.59999999999979e-05 still held, waiting on a close that is filled', 'bar 510: 4.79999999999979e-05 still held, waiting on a close that is filled']",
+    "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_parche_D1_D3_2026-10-21/mutantes_v1/M8_D3_sin_ninguna_capa/tests/unit/test_backtest_order_hygiene.py:119: AssertionError: ['bar 508: 4.29999999999979e-05 still held, waiting on a close that is filled', 'bar 509: 4.59999999999979e-05 still held, waiting on a close that is filled', 'bar 510: 4.79999999999979e-05 still held, waiting on a close that is filled']"
+   ],
+   "resumen": [
+    "FAILED tests/unit/test_backtest_order_hygiene.py::test_partial_fills_leave_no_untracked_or_stuck_position"
+   ]
+  }
+ }
+}

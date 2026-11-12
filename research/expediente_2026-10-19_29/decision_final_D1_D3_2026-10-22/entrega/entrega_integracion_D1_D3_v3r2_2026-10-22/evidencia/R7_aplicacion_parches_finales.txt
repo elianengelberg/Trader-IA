@@ -1,0 +1,35 @@
+== 2026-10-22T16:15:32Z · aplicación en cadena sobre clones nuevos de 72ffae5d2698440c8f1afaff12e07bd8adde66fb
+1944f433334cada2c4fa937080241bf51643c1393f54b4d2530003557b2e60bf  01_obligatorio_D1_D3_motor_y_pruebas_definitivas.patch
+d5c90091b705647cdbdd9044d0406ccc28f12e39c6070deeb5cd8aef03cf6a62  02v3_obligatorio_trazabilidad_version_motor_CORREGIDO.patch
+0be65ea6a5e7072ff83c25ed1cccec80877ceb7b1e0609e2468a025b5294e33a  03_opcional_pruebas_reloj_y_persistencia.patch
+fin_obligatoria: aplica 01_obligatorio_D1_D3_motor_y_pruebas_definitivas.patch
+fin_obligatoria: aplica 02v3_obligatorio_trazabilidad_version_motor_CORREGIDO.patch
+fin_completa: aplica 01_obligatorio_D1_D3_motor_y_pruebas_definitivas.patch
+fin_completa: aplica 02v3_obligatorio_trazabilidad_version_motor_CORREGIDO.patch
+fin_completa: aplica 03_opcional_pruebas_reloj_y_persistencia.patch
+fin_base: HEAD 72ffae5 · cambios 0
+fin_obligatoria: HEAD 72ffae5 · cambios 8
+fin_completa: HEAD 72ffae5 · cambios 11
+-- obligatoria v3 = copia corregida (corr):
+   igual docs/ARCHITECTURE.md
+   igual packages/tia/src/tia/api/state.py
+   igual packages/tia/src/tia/backtest/engine.py
+   igual packages/tia/src/tia/backtest/result.py
+   igual packages/tia/src/tia/execution/paper.py
+   igual packages/tia/src/tia/persistence/repositories.py
+   igual tests/integration/test_backtest_provenance.py
+   igual tests/unit/test_backtest_order_hygiene.py
+-- archivos resultantes obligatoria v3
+185ad17f712f65cde5a4e11ea553879aa0a952f71078f7ff9466fe1520d40f2f  docs/ARCHITECTURE.md
+f38d0c006f19930bda2a327080857f78295f76ae572e858a00a250a44d0055ed  packages/tia/src/tia/api/state.py
+584fdc3b6c1f9b82ddfb7c2ce1ef67774b255f09ecbc467b2af6ac029f380aba  packages/tia/src/tia/backtest/engine.py
+ff1d13bd84eb04ed5f555aae3a555d1e2f0191566240bdba4e0afefb06d6d244  packages/tia/src/tia/backtest/result.py
+05569d169edc8faacb0d7720747005fd3249ed2247acb8063500dc7e518bfe2b  packages/tia/src/tia/execution/paper.py
+6db86d5a822974d0d8c77677dcc34cb6719ffd78edc1b0e26641ba90ef773c31  packages/tia/src/tia/persistence/repositories.py
+da39b16cb2f312b261965205d2c9a854b367d3489a988106c4da5e96742c9d93  tests/integration/test_backtest_provenance.py
+3900d62698fe81a1a0b926feef9be9dca6637725c0d59304da004e9d7cd6363a  tests/unit/test_backtest_order_hygiene.py
+-- cambios respecto de v2 (archivos resultantes):
+   cambia: docs/ARCHITECTURE.md
+   cambia: packages/tia/src/tia/backtest/engine.py
+   cambia: packages/tia/src/tia/persistence/repositories.py
+   cambia: tests/integration/test_backtest_provenance.py

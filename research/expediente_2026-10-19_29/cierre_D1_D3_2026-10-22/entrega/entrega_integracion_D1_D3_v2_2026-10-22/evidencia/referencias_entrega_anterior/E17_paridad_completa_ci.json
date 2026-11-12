@@ -1,0 +1,83 @@
+{
+ "motor": "/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_parche_D1_D3_2026-10-21/integracion/packages/tia/src/tia/backtest/engine.py",
+ "sha256_engine": "85965ec56298519ca107d2bb61f301fe22a02584b5fc98917d147d81e036da88",
+ "sha256_registro_E1": "cc52fbf8f229e15fabdda1dc47a497ef245f234559644be982df4cfefbfe1c86",
+ "configuraciones": {
+  "P1": {
+   "rt_identicos_a_E1": true,
+   "n_rt": 629,
+   "n_rt_E1": 629,
+   "h_rt": "132336d3948088585556b6b61289854fef29a633a6106375fe31266a9a18c2dd",
+   "h_operaciones_completas": "1418ebccb21cdc5ea4d8ff047abcf983cab34ee2a076806db0940a955834a94b",
+   "h_equity": "0ebbe7234446b427668f88156039aaeba1a5e02d0000b1da067cd45e5943b2a3",
+   "h_metricas": "568ad0f3185f07673ddf8ffeaa9427a3b85c81dae74979bd13dec17706544d1d",
+   "h_decisiones": "b3fce5a9a7212d546898be07ea69cc566334be719e0b41ed9e6e60fd4af00417",
+   "higiene": {
+    "entry_remainders_cancelled_on_exit": 4,
+    "stale_entry_remainders_cancelled_flat": 0,
+    "exits_done_with_position_left": 0,
+    "bars_with_leg_and_no_stop": 0
+   },
+   "advertencias": [],
+   "n_operaciones": 744,
+   "equity_final": 98833.0919668353
+  },
+  "P2": {
+   "rt_identicos_a_E1": true,
+   "n_rt": 139,
+   "n_rt_E1": 139,
+   "h_rt": "41dde2dcd23281d1a114ea90eff2c820bbd1cfbbe4e977dbc8b9113c5f227d72",
+   "h_operaciones_completas": "075c89b57b4334511659936f56b7e2b1cd06a88a1931b8687c1ade586aeac95e",
+   "h_equity": "d03f117df87a23673eaeca2f9ee8f403818ff436380e5a8bd6b07c555bb9e271",
+   "h_metricas": "74a2dc8b4c6959787c3da4e8d76b9303cc2ee3cc0f505aa6d09c1cc711b4f367",
+   "h_decisiones": "57968d38877054f76e6464ceca55a3b9df812723125551155c81bb317c417adb",
+   "higiene": {
+    "entry_remainders_cancelled_on_exit": 0,
+    "stale_entry_remainders_cancelled_flat": 0,
+    "exits_done_with_position_left": 0,
+    "bars_with_leg_and_no_stop": 0
+   },
+   "advertencias": [],
+   "n_operaciones": 171,
+   "equity_final": 98651.46155511691
+  },
+  "P3": {
+   "rt_identicos_a_E1": true,
+   "n_rt": 185,
+   "n_rt_E1": 185,
+   "h_rt": "40538bf460641141ab528a28c3de6a46c45e083b94528c0561c1fb7482d958d4",
+   "h_operaciones_completas": "60583835ba176d10724b6c18a4139414192cb448bbb44f7335e7ea3c65c0bd6a",
+   "h_equity": "46c01be279da5f4f3c5b345da6071594b93e7b79a094337fdcb86fc75959877d",
+   "h_metricas": "ea61c6b7b66bb24a899e5769490199e5c5b7a5c14198df6fcbd40eaac771bdaf",
+   "h_decisiones": "db697b3c8f980b1f0889df76db876923c197738b69818c3252bc34325d9b0bab",
+   "higiene": {
+    "entry_remainders_cancelled_on_exit": 2,
+    "stale_entry_remainders_cancelled_flat": 0,
+    "exits_done_with_position_left": 0,
+    "bars_with_leg_and_no_stop": 0
+   },
+   "advertencias": [],
+   "n_operaciones": 218,
+   "equity_final": 99714.95029181075
+  },
+  "S1": {
+   "rt_identicos_a_E1": true,
+   "n_rt": 795,
+   "n_rt_E1": 795,
+   "h_rt": "4a4a1db01a63c344231cf9171867deeadf7e3093d23244f41daef1056aa76fa1",
+   "h_operaciones_completas": "8b153452ef8154c36177ccaef90ee5822eb175ff4605eceeb6fa6dba5aae3d93",
+   "h_equity": "ad1013dcc713f0febdbc8e88103ca827085fdf92883f3330f345c37e42f3df00",
+   "h_metricas": "fca2fa53eb76b228a5724f10d9e0e3ddf9af6083b09e1db7947f4c13a15b79d6",
+   "h_decisiones": "0f949974d087419304f5fadcb3b22054e893cb67f14df73d572d30ae491915e1",
+   "higiene": {
+    "entry_remainders_cancelled_on_exit": 3,
+    "stale_entry_remainders_cancelled_flat": 0,
+    "exits_done_with_position_left": 0,
+    "bars_with_leg_and_no_stop": 0
+   },
+   "advertencias": [],
+   "n_operaciones": 959,
+   "equity_final": 97838.79692104929
+  }
+ }
+}

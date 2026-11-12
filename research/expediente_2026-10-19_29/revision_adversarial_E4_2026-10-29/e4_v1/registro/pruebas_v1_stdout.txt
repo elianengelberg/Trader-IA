@@ -1,0 +1,1 @@
+{"U1_rangos": true, "U2_lectura": true, "U3_exclusiones": true, "U4_fuga": true, "U5_limites": true, "U6_alfa_y_cobertura": true, "U7_potencia": true, "U8_congelacion": true, "todas_ok": true}

@@ -1,0 +1,70 @@
+{
+ "diseno": "TI · Experimento complementario: ¿cuánto de la baja potencia del motor de EV viene de la razón de costos (0,6)?\nMismo diseño que exp_ev_falsos_positivos.py parte 1 (clases reales, retornos normales i.i.d. sintéticos, 5.000 réplicas por\ncelda), σ=100 bps, c ∈ {10,20}, n ∈ {30,120}, razón ∈ {0,6 (actual), 1,0 (sin el límite efectivo)}. Fijado antes de correr.",
+ "semilla": 20261026,
+ "filas": [
+  {
+   "sigma_bps": 100.0,
+   "costo_bps": 10.0,
+   "n": 30,
+   "razon": 0.6,
+   "P_aprobado_H0": 0.0308,
+   "P_aprobado_H1": 0.3022
+  },
+  {
+   "sigma_bps": 100.0,
+   "costo_bps": 10.0,
+   "n": 30,
+   "razon": 1.0,
+   "P_aprobado_H0": 0.033,
+   "P_aprobado_H1": 0.327
+  },
+  {
+   "sigma_bps": 100.0,
+   "costo_bps": 10.0,
+   "n": 120,
+   "razon": 0.6,
+   "P_aprobado_H0": 0.0032,
+   "P_aprobado_H1": 0.4462
+  },
+  {
+   "sigma_bps": 100.0,
+   "costo_bps": 10.0,
+   "n": 120,
+   "razon": 1.0,
+   "P_aprobado_H0": 0.0056,
+   "P_aprobado_H1": 0.5266
+  },
+  {
+   "sigma_bps": 100.0,
+   "costo_bps": 20.0,
+   "n": 30,
+   "razon": 0.6,
+   "P_aprobado_H0": 0.0036,
+   "P_aprobado_H1": 0.1866
+  },
+  {
+   "sigma_bps": 100.0,
+   "costo_bps": 20.0,
+   "n": 30,
+   "razon": 1.0,
+   "P_aprobado_H0": 0.0094,
+   "P_aprobado_H1": 0.3148
+  },
+  {
+   "sigma_bps": 100.0,
+   "costo_bps": 20.0,
+   "n": 120,
+   "razon": 0.6,
+   "P_aprobado_H0": 0.0,
+   "P_aprobado_H1": 0.204
+  },
+  {
+   "sigma_bps": 100.0,
+   "costo_bps": 20.0,
+   "n": 120,
+   "razon": 1.0,
+   "P_aprobado_H0": 0.0,
+   "P_aprobado_H1": 0.5382
+  }
+ ]
+}

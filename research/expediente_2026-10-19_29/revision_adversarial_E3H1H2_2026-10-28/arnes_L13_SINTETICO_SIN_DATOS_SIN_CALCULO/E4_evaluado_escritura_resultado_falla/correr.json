@@ -1,0 +1,4 @@
+{
+ "escenario": "E4_evaluado_escritura_resultado_falla",
+ "termino": "FinTerminal: ERROR en la etapa «escritura»: OSError: [Errno 28] fallo inyectado al escribir RESULTADO_E3.json (sin espacio). Ver /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/revision_adversarial_E3H1H2_2026-10-28/arnes_L13_SINTETICO_SIN_DATOS_SIN_CALCULO/E4_evaluado_escritur"
+}

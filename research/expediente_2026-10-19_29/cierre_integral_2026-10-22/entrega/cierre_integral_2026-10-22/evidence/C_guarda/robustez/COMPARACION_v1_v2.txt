@@ -1,0 +1,18 @@
+== Robustez de la guarda 05 v1 frente a v2 (robustez_guarda.py del paquete 410ae629, sin cambios): 2026-10-22T23:12:58Z
+herramienta: 13c04f8c14ed5c5260150ab142e4285ff34e3e340094c5d1c6dc9fd427b5d276
+nota: los árboles de robustez son copias sin .git; se identifican por el hash de la guarda y del motor (v1 ff1ad540… = paquete 410ae629; v2 262840b3… = esta misión; engine 584fdc3b… = 01+02v3, 3a27b159… = 02v3 sin 01).
+obl_v1: guarda ff1ad5402b41ccf8 · engine 584fdc3b6c1f9b82
+solo02_v1: guarda ff1ad5402b41ccf8 · engine 3a27b159935d059a
+obl_v2: guarda 262840b3f0fc7807 · engine 584fdc3b6c1f9b82
+solo02_v2: guarda 262840b3f0fc7807 · engine 3a27b159935d059a
+-- ¿resultados por corrida idénticos entre v1 y v2? (mismas filas datos×semilla×escenario, mismas comprobaciones que saltan)
+obl_1_10.json: v1 150 filas · v2 150 filas · idénticas: True
+obl_11_20.json: v1 150 filas · v2 150 filas · idénticas: True
+solo02_1_10.json: v1 150 filas · v2 150 filas · idénticas: True
+-- lectura: 0 de 300 corridas con falso positivo en el motor correcto (v1 y v2). Contra 02v3 sin 01, por escenario: d1 30/30, d2 30/30, d3_parciales 13/30, d3_ioc 30/30 (1 sin precondición), todo_junto 30/30.
+   La guarda (las 5 pruebas juntas) falla en todas las combinaciones datos×semilla de 02v3 sin 01, porque d1, d2 y todo_junto saltan en 30/30.
+   v1 y v2 coinciden en este barrido: los cambios de v2 (versión sin registrar, forma corta, clasificación del cierre) no actúan sobre estos motores; sus efectos se ven en los mutantes N2, N3, L6, L7 y C1.
+-- determinismo: filas COMPLETAS (todas las claves) de dos ejecuciones independientes sobre el mismo motor y las mismas semillas
+obl_1_10.json: claves ['datos', 'escenario', 'posiciones', 'precondicion', 'saltan', 'semilla', 'version'] · filas completas idénticas: True
+obl_11_20.json: claves ['datos', 'escenario', 'posiciones', 'precondicion', 'saltan', 'semilla', 'version'] · filas completas idénticas: True
+solo02_1_10.json: claves ['datos', 'escenario', 'posiciones', 'precondicion', 'saltan', 'semilla', 'version'] · filas completas idénticas: True

@@ -1,0 +1,82 @@
+2026-10-22 19:19:30 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=99891.51 run_id=bt_90Y0N4NDY53PBN4J4JSTMZ7A trades=13
+2026-10-22 19:19:33 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=99901.95 run_id=bt_BXWNRMBMSFP8T8J08DAVCBYQ trades=12
+2026-10-22 19:19:35 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=99938.94 run_id=bt_BX15TY83794DA1TAB8YRHRZZ trades=72
+2026-10-22 19:19:37 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=99932.07 run_id=bt_Z0FFVDZT5X94B55CA0X01XZR trades=65
+2026-10-22 19:19:40 [info     ] backtest_complete              bars=700 component=backtest.engine final_equity=100000.61 run_id=bt_XMC69Q4P2GGRT2K7EPFSCANH trades=36
+{
+ "rechazo_primer_cierre": {
+  "posiciones": 13,
+  "enviadas": 76,
+  "cierres_enviados": 16,
+  "cierres_rechazados": 8,
+  "cierres_expirados_con_posicion": 0,
+  "racha_max_sin_cobertura": 0,
+  "permanencia_max_barras": 7,
+  "stops_movidos": 26,
+  "stops_mal": 0,
+  "muertas_reenviadas": 0,
+  "crece_tras_cierre": 0,
+  "entrada_en_posicion_posterior": 0,
+  "cierres_sin_reduce_only": 0
+ },
+ "calmo": {
+  "posiciones": 12,
+  "enviadas": 67,
+  "cierres_enviados": 4,
+  "cierres_rechazados": 0,
+  "cierres_expirados_con_posicion": 0,
+  "racha_max_sin_cobertura": 0,
+  "permanencia_max_barras": 24,
+  "stops_movidos": 39,
+  "stops_mal": 0,
+  "muertas_reenviadas": 0,
+  "crece_tras_cierre": 0,
+  "entrada_en_posicion_posterior": 0,
+  "cierres_sin_reduce_only": 0
+ },
+ "parciales": {
+  "posiciones": 7,
+  "enviadas": 79,
+  "cierres_enviados": 5,
+  "cierres_rechazados": 0,
+  "cierres_expirados_con_posicion": 0,
+  "racha_max_sin_cobertura": 0,
+  "permanencia_max_barras": 53,
+  "stops_movidos": 10,
+  "stops_mal": 0,
+  "muertas_reenviadas": 0,
+  "crece_tras_cierre": 0,
+  "entrada_en_posicion_posterior": 0,
+  "cierres_sin_reduce_only": 0
+ },
+ "ioc": {
+  "posiciones": 8,
+  "enviadas": 237,
+  "cierres_enviados": 94,
+  "cierres_rechazados": 0,
+  "cierres_expirados_con_posicion": 87,
+  "racha_max_sin_cobertura": 0,
+  "permanencia_max_barras": 62,
+  "stops_movidos": 2,
+  "stops_mal": 0,
+  "muertas_reenviadas": 0,
+  "crece_tras_cierre": 0,
+  "entrada_en_posicion_posterior": 0,
+  "cierres_sin_reduce_only": 0
+ },
+ "todo_junto": {
+  "posiciones": 10,
+  "enviadas": 88,
+  "cierres_enviados": 22,
+  "cierres_rechazados": 9,
+  "cierres_expirados_con_posicion": 0,
+  "racha_max_sin_cobertura": 2,
+  "permanencia_max_barras": 14,
+  "stops_movidos": 17,
+  "stops_mal": 0,
+  "muertas_reenviadas": 0,
+  "crece_tras_cierre": 0,
+  "entrada_en_posicion_posterior": 0,
+  "cierres_sin_reduce_only": 0
+ }
+}

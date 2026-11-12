@@ -1,0 +1,85 @@
+........................................................................ [  3%]
+........................sssssssss......................F................ [  7%]
+............................s........................................... [ 10%]
+........................................................................ [ 14%]
+........................................................................ [ 17%]
+........................................................................ [ 21%]
+........................................................................ [ 24%]
+........................................................................ [ 28%]
+........................................................................ [ 31%]
+........................................................................ [ 35%]
+........................................................................ [ 38%]
+........................................................................ [ 42%]
+........................................................................ [ 46%]
+........................................................................ [ 49%]
+........................................................................ [ 53%]
+........................................................................ [ 56%]
+........................................................................ [ 60%]
+........................................................................ [ 63%]
+........................................................................ [ 67%]
+........................................................................ [ 70%]
+........................................................................ [ 74%]
+........................................................................ [ 77%]
+........................................................................ [ 81%]
+........................................................................ [ 85%]
+........................................................................ [ 88%]
+........................................................................ [ 92%]
+........................................................................ [ 95%]
+........................................................................ [ 99%]
+...............                                                          [100%]
+=================================== FAILURES ===================================
+_ test_a_batch_that_never_reached_the_store_is_settled_once_by_the_next_session _
+
+tmp_path = PosixPath('/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/logs/J_main/tmp/pytest-of-root/pytest-0/test_a_batch_that_never_reache0')
+
+    async def test_a_batch_that_never_reached_the_store_is_settled_once_by_the_next_session(tmp_path: Path) -> None:
+        """Failure 1 and 4: the process booked the settlement in memory and died before the
+        write landed. The dead process's cash is not the account's; the journal is. The next
+        session finds the period pending and settles it once, from its own data."""
+        db = _db(tmp_path)
+        await db.create_schema()
+        try:
+>           a = await _session_a(db, mode="drop_batch")
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_funding_recovery.py:176: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_funding_recovery.py:116: in _session_a
+    await settle(runtime)  # the write is queued; let it reach the (faulting) store
+    ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+runtime = <tia.runtime.live.LiveRuntime object at 0x7f754df38ed0>
+
+    async def settle(runtime: LiveRuntime | None = None) -> None:
+        """Let the sequenced persistence writes land. With a runtime, wait for exactly the
+        writes it scheduled; without one, yield a few times (used where no runtime is in play)."""
+        if runtime is not None:
+>           assert await runtime.flush_persistence(timeout_seconds=10.0), "persistence writes still in flight"
+E           AssertionError: persistence writes still in flight
+E           assert False
+
+tests/integration/test_account_restore.py:109: AssertionError
+----------------------------- Captured stdout call -----------------------------
+2026-10-25 19:12:06 [info     ] schema_created                 component=persistence.database dialect=sqlite version=8
+2026-10-25 19:12:06 [info     ] paper_cash_adjustment          amount=-0.400237 component=execution.paper reason='funding +0.000100 on 4002.37 (observed, estimate rate, period 2026-10-25:2)'
+2026-10-25 19:12:06 [error    ] live_persist_write_lost        component=runtime.live error='database unavailable during account_events' ids={'run_id': 'live_01M5SKABGG805Y9TAGN95PP21Z'} kind=account_events run_id=live_01M5SKABGG805Y9TAGN95PP21Z
+=============================== warnings summary ===============================
+tests/unit/test_api_security.py::test_a_token_signed_with_another_secret_is_rejected
+  /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/venv/lib/python3.11/site-packages/jwt/api_jwt.py:149: InsecureKeyLengthWarning: The HMAC key is 21 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+    return self._jws.encode(
+
+tests/unit/test_api_security.py::test_a_token_signed_with_another_secret_is_rejected
+tests/unit/test_api_security.py::test_a_tampered_token_is_rejected
+tests/unit/test_api_security.py::test_an_expired_token_is_rejected
+  /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/venv/lib/python3.11/site-packages/jwt/api_jwt.py:370: InsecureKeyLengthWarning: The HMAC key is 22 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+    decoded = self.decode_complete(
+
+tests/unit/test_api_security.py::test_a_tampered_token_is_rejected
+tests/unit/test_api_security.py::test_an_expired_token_is_rejected
+  /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/venv/lib/python3.11/site-packages/jwt/api_jwt.py:149: InsecureKeyLengthWarning: The HMAC key is 22 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+    return self._jws.encode(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/integration/test_funding_recovery.py::test_a_batch_that_never_reached_the_store_is_settled_once_by_the_next_session

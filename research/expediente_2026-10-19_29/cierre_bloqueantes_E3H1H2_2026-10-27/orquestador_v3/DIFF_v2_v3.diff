@@ -1,0 +1,686 @@
+--- reparacion_E3H1H2_2026-10-26/orquestador_v2/ejecutar_E3_v2.py
++++ cierre_bloqueantes_E3H1H2_2026-10-27/orquestador_v3/ejecutar_E3_v3.py
+@@ -1,17 +1,36 @@
+-"""E3 · orquestador v2 de la ejecución confirmatoria ÚNICA de la v3 (H1 y H2) en la ventana A. NO autoriza ninguna ejecución.
+-
+-Base: `ejecutar_E3R.py` (3b64a04d…, congelado, sin modificar). Cambios, y solo estos (diff en DIFF_v1_v2.diff):
+-  C2. R4 (N14): el aporte de cada moneda se mide contra el retorno BRUTO de EW-U30 (antes, contra el neto).
+-  C3. Modo real: antes de leer cualquier precio verifica el sha256 exacto de cada insumo (conjunto de las 757 series,
+-      estructural, listas, segunda pasada, mapeos, ventana A y módulos congelados) contra `ENTRADAS_CONGELADAS.json`.
+-      Si algo no coincide, se detiene sin crear la salida y sin leer precios.
+-  C4. Panel: aplica los mapeos de la Adenda 1 (regla 1, renombre X → Y; regla 2, redenominación X → X con r) y deja de
+-      aplicar la Adenda R2. Los cortes sin anuncio archivado siguen la regla 3 (mismo listado si el corte dura < 30 días).
+-  C5. INVÁLIDO es un resultado explícito: si la ventana o la validez previa (v3 §10) fallan, escribe RESULTADO_E3.json
+-      con «INVALIDO» y el motivo, sin calcular H1 ni H2.
+-  C6. Solo la ventana A: se eliminan la opción B, R1′ y la elección entre varios P0. La autorización debe contener la
+-      FRASE nueva, el sha256 de este archivo y el de ENTRADAS_CONGELADAS.json (que fija, entre otros, el de la ventana A).
+-Todo lo demás (validez previa, H1, H2, Holm, robustez, descriptivo) es idéntico al v1.
++"""E3 · orquestador v3 de la ejecución confirmatoria ÚNICA de la v3 (H1 y H2) en la ventana A. NO autoriza ninguna ejecución.
++
++Base: `ejecutar_E3_v2.py` (01fc9344…), derivado a su vez de `ejecutar_E3R.py` (3b64a04d…, congelado). El cálculo
++(validez previa, H1, H2, Holm, robustez, descriptivo) es el del v2, con un único cambio: `zip(…, strict=True)` en
++`contribuciones` (antes truncaba en silencio si las longitudes diferían). Cambios del v3 (diff en DIFF_v2_v3.diff):
++  C7. Ventana A fijada en el código: inicio 2023-05-15 y sha256 del archivo de ventana. Cualquier otra se rechaza
++      antes de crear la salida.
++  C8. Entradas exigidas fijadas en el código (nombre, base, ruta, tipo y sha256). El manifiesto tiene que coincidir
++      exactamente: uno vacío, incompleto, con entradas de más, repetidas o con otra ruta se rechaza. Los mapeos se
++      leen SOLO de la entrada verificada `mapeos_adenda1_completa`.
++  C9. Lectura única: cada insumo se lee una vez a memoria, se hashea y se usa desde esos mismos bytes (series, JSON
++      y módulos). No hay una segunda lectura de disco entre verificar y usar. Se rechazan enlaces simbólicos.
++  C10. Código ejecutado = código verificado: universo, motor e inferencia se compilan y ejecutan desde los bytes
++      verificados, nunca con `import` desde disco ni desde `__pycache__`. El sha256 del propio orquestador se toma de
++      los bytes leídos al cargarlo.
++  C11. Estados terminales: antes de crear la salida, todo fallo es un rechazo que NO consume la ejecución. Después,
++      cualquier excepción deja RESULTADO_E3.json con «ERROR» (etapa, tipo, mensaje, traceback y su sha256, y si ya
++      había estadísticos), escrito de forma atómica. Un registro de intentos con bloqueo (INTENTOS_E3.jsonl) impide
++      repetir después de EVALUADO o INVALIDO, o con un intento sin estado terminal. Para reintentar después de un
++      ERROR previo a los estadísticos exige una autorización nueva que cite el sha256 del RESULTADO con ERROR.
++  C12. Mapeos completos de la Adenda 1: reglas 1, 2 y 1R (reutilización de ticker: el tramo posterior es un listado
++      nuevo). Se rechazan duplicados, huecos ≥ 30 días en la regla 1 y cualquier cambio en las marcas de lista fija o
++      de apalancado. La consistencia de los mapeos se comprueba ANTES de crear la salida, leyendo solo `estado`.
++  C13. Además de la FRASE y de los sha256 del orquestador y del manifiesto, la autorización tiene que contener las
++      frases de las decisiones metodológicas que el código no puede tomar por sí mismo: reapertura y Adenda R, y
++      lectura literal D-1.
++Operacionalizaciones fijadas antes de cualquier resultado, heredadas del v1 (ninguna cambia una clasificación):
++  - R5: la réplica b usa la semilla 20261021 + b. Diagnóstico §5.4: bootstrap con semilla 20261027 y B = 999 en cada réplica.
++  - §6.4 «al anular esos aportes»: IC̄ recalculado sin las monedas con marca obsoleta en t+6; ē recalculado sin las semanas
++    con una liquidación contable o una posición sin apertura en t+7, en la cartera o en EW-U30. Etiqueta si cambia un signo.
++  - Sharpe deflactado: V[SR] sobre los 20 excesos calculados (15 de la grilla, R1, R2, R4, R6 y el bruto).
++  - BTC: la fila BTCUSDT del mismo panel de Vision (no `research/tendencia_btc/datos/`, N20): misma fuente que la cartera.
++  - Exceso de timing de T (N19): NO se calcula; T no se reabre (regla vigente del proyecto).
+ 
+ Modos:
+   sintetico <salida_dir> <momentum> [replicas_R5] [dir_ejecucion_E3]
+@@ -20,25 +39,60 @@
+       SOLO con autorización explícita posterior. La salida no puede existir (ejecución única).
+ """
+ import datetime as dt
++import fcntl
+ import hashlib
++import io
+ import json
+ import math
++import os
+ import sys
++import traceback
++import types
+ from pathlib import Path
+ from statistics import NormalDist
+ 
+ import numpy as np
+ 
+-sys.dont_write_bytecode = True  # no escribir cachés en el directorio congelado de E3
++sys.dont_write_bytecode = True  # no escribir cachés en ningún directorio
++_BYTES_PROPIOS = Path(__file__).read_bytes()  # C10: los bytes de este archivo, leídos una vez al cargarlo
++SHA_PROPIO = hashlib.sha256(_BYTES_PROPIOS).hexdigest()
+ AQUI = Path(__file__).resolve().parent
+ E3_DEFECTO = AQUI.parent.parent / "experimentos" / "E3_seleccion_posicion_2026-10-19" / "ejecucion_E3"
+-MANIFIESTO = AQUI / "ENTRADAS_CONGELADAS.json"
++REPARACION = AQUI.parent.parent / "reparacion_E3H1H2_2026-10-26"
++CIERRE = AQUI.parent
++MANIFIESTO = AQUI / "ENTRADAS_CONGELADAS_V3.json"
++INTENTOS = AQUI / "INTENTOS_E3.jsonl"
+ CONGELADOS = {"universo.py": "2af45115238d0065d54f0c6230b16c71831293b235b72627e62d1d7c7d7491f7",
+               "motor.py": "cadb805d2d882fcf909e0309cff85203ee383c6b8ed0ac08b89f4028ee999b2e",
+               "inferencia.py": "7b28038621c1d366655d726bb885ca0105f1a25cfcdb9615e86a7fe39e85f3e1"}
+ PRUEBAS_MOTOR = "54f832d39422379f14bf5d0ad2f42bba9e8f0b4d40915ea72bcef0c968da04e5"  # HUELLAS_codigo_preparado.txt
+-FRASE = ("AUTORIZO LA EJECUCION UNICA DE E3 (H1 Y H2) EN LA VENTANA A CON LA V3, LA ADENDA R CON R1 LITERAL, "
+-         "LA SEGUNDA PASADA Y LOS MAPEOS DE LA ADENDA 1")
++INICIO_H_A = "2023-05-15"  # C7
++SHA_VENTANA_A = "dcbd80abf5b0d4a2373d411c3db37cf4a2089dc8fcbcb193dce085b838d57e24"
++EXIGIDAS = {  # C8: nombre → (base, ruta, tipo, sha256)
++    "series_calidad_757": ("E3", "resultados/calidad/series", "conjunto", "6506fb03c211def710abe61a2493799000b80996c63000fcfc98da624cbaba79"),
++    "estructural": ("E3", "resultados/estructural/estructural.json", "archivo", "14838dadec428483c91bf57abd1db6916d473bffe4e789ecbdd394de6351ec55"),
++    "listas_fijas_por_lunes": ("E3", "resultados/estructural/listas_fijas_por_lunes.json", "archivo", "de6cca7735016e2734bfc53cab27eea89e765a763ab240789b609ba55a24a620"),
++    "universo.py": ("E3", "codigo/universo.py", "archivo", CONGELADOS["universo.py"]),
++    "motor.py": ("E3", "codigo/motor.py", "archivo", CONGELADOS["motor.py"]),
++    "inferencia.py": ("E3", "codigo/inferencia.py", "archivo", CONGELADOS["inferencia.py"]),
++    "pruebas_motor.py": ("E3", "codigo/pruebas_motor.py", "archivo", PRUEBAS_MOTOR),
++    "conciliacion.py": ("E3", "codigo/conciliacion.py", "archivo", "6f764845598b4ecf6c3cffbc6c7b584f21e493403c7bcd14339f5f582c9273ad"),
++    "resoluciones_manuales": ("reparacion", "segunda_pasada/resoluciones_manuales.json", "archivo", "41a13221dea70023126ce3fb6c311c9f41e2aef063820207c1f7e871d2873863"),
++    "pasada2_conciliacion": ("reparacion", "segunda_pasada/salida_pasada2/conciliacion.json", "archivo", "7a0778e8c0ac55697cca3d0fd81da1a055e3a6700c06ca1d6867e905971e6456"),
++    "pasada2_eventos": ("reparacion", "segunda_pasada/salida_pasada2/eventos.json", "archivo", "dbd5a85dd265e84e94d678636c4714ae0189d1800faf9c13c52f15ccda3808c6"),
++    "pasada2_salidas": ("reparacion", "segunda_pasada/salida_pasada2/salidas.json", "archivo", "9c6fd418b3fee0236e63865c126228201654d46dff19a438007eea6354a0ec2e"),
++    "eventos_omitidos": ("reparacion", "segunda_pasada/eventos_omitidos.json", "archivo", "823b30965a273f3e367c6d03abb45ed1b1b890fc90b2a7c5feb34f46b7562e12"),
++    "mapeos_adenda1_completa": ("cierre", "tabla/mapeos_adenda1_completa.json", "archivo", "bd07e7f9654c4f73b1205d11382a14fa7f5f87122bc350d2726906dcc1ee400a"),
++    "ventana_A": ("ventana", None, "archivo", SHA_VENTANA_A),
++}
++FRASE = ("AUTORIZO LA EJECUCION UNICA DE E3 (H1 Y H2) EN LA VENTANA A (INICIO 2023-05-15) CON LA V3, LA ADENDA R CON R1 "
++         "LITERAL, LA SEGUNDA PASADA, LA TABLA COMPLETA DE LA ADENDA 1 Y EL ORQUESTADOR V3")
++FRASES_DECISION = {  # C13: decisiones metodológicas que tienen que figurar expresamente en la autorización
++    "reapertura_y_adenda_R": ("REABRO E3 (CIERRE_E3 §2), ADOPTO LA ADENDA R CON R1 LITERAL EN LUGAR DE V3 §4.11 (II) Y (IV), "
++                              "SIN (III), Y DISPENSO LA CONDICION DE REAPERTURA DE CIERRE_E3 §4"),
++    "D1_lectura_literal": "DECISION D-1: LECTURA LITERAL DE LA REGLA 1 (SIN CONTINUIDAD GTO->GFT, LUNA->LUNC NI UST->USTC)",
++}
++ETAPAS_SIN_ESTADISTICOS = ("panel", "validez_previa")  # C11: un ERROR en estas etapas no expuso H1 ni H2
+ ULTIMA_FORMACION = dt.date(2026, 5, 18)
+ ULTIMO_DIA_DATOS = dt.date(2026, 5, 31)
+ SEMILLA_H2, SEMILLA_R5, SEMILLA_CORTES, SEMILLA_DIAG = 20261020, 20261021, 20261022, 20261027
+@@ -46,94 +100,260 @@
+ _N = NormalDist()
+ 
+ 
++class Rechazo(SystemExit):
++    """Detención ANTES de crear la salida: no se leyó ningún precio y no se consume la ejecución única."""
++
++
++class FinTerminal(SystemExit):
++    """Estado terminal ya escrito (INVALIDO o ERROR): no se reescribe."""
++
++
+ def sha(p: Path) -> str:
+     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+ 
+ 
++def sha_bytes(b: bytes) -> str:
++    return hashlib.sha256(b).hexdigest()
++
++
++# ------------------------------------------------------------------ C10: código desde bytes verificados
++
++ORDEN_MODULOS = ("universo", "motor", "inferencia", "pruebas_motor")
++
++
++def cargar_modulos(fuentes: dict) -> dict:
++    """Compila y ejecuta cada módulo desde sus bytes verificados, en orden de dependencia, y lo registra en
++    sys.modules antes del siguiente (motor hace `from universo import …`). No busca nada en disco: ni el .py ni
++    `__pycache__`."""
++    mods = {}
++    for nombre in ORDEN_MODULOS:
++        if nombre not in fuentes:
++            continue
++        virtual = f"<verificado:{nombre}.py:{sha_bytes(fuentes[nombre])[:12]}>"
++        codigo = compile(fuentes[nombre], virtual, "exec", dont_inherit=True)
++        m = types.ModuleType(nombre)
++        m.__file__ = virtual
++        sys.modules[nombre] = m
++        exec(codigo, m.__dict__)
++        mods[nombre] = m
++    return mods
++
++
+ def importar_congelados(e3: Path):
+-    cod = e3 / "codigo"
+-    for nombre, h in CONGELADOS.items():
+-        if sha(cod / nombre) != h:
+-            raise SystemExit(f"{nombre} no coincide con su hash congelado: no se ejecuta")
+-    sys.path.insert(0, str(cod))
+-    import inferencia
+-    import motor
+-    import universo
+-    return universo, motor, inferencia
+-
+-
+-# ------------------------------------------------------------------ insumos (C3), sin leer precios
++    """Modo sintético: lee los módulos de E3 una vez, verifica su sha256 y los carga desde esos mismos bytes."""
++    cod = Path(e3) / "codigo"
++    fuentes = {}
++    for nombre, h in {**CONGELADOS, "pruebas_motor.py": PRUEBAS_MOTOR}.items():
++        b = (cod / nombre).read_bytes()
++        if sha_bytes(b) != h:
++            raise Rechazo(f"{nombre} no coincide con su hash congelado: no se ejecuta")
++        fuentes[nombre[:-3]] = b
++    mods = cargar_modulos(fuentes)
++    return mods["universo"], mods["motor"], mods["inferencia"]
++
++
++# ------------------------------------------------------------------ C8 + C9: insumos leídos una vez y verificados
++
++def _leer_archivo(p) -> bytes:
++    p = Path(p)
++    if p.is_symlink():
++        raise ValueError(f"{p} es un enlace simbólico")
++    if not p.is_file():
++        raise FileNotFoundError(str(p))
++    return p.read_bytes()
++
++
++def _leer_conjunto(d) -> dict:
++    d = Path(d)
++    if d.is_symlink() or not d.is_dir():
++        raise FileNotFoundError(f"{d} no es un directorio real")
++    out = {}
++    for raiz, dirs, archivos in os.walk(d, followlinks=False):
++        for n in dirs + archivos:
++            if Path(raiz, n).is_symlink():
++                raise ValueError(f"{Path(raiz, n)} es un enlace simbólico")
++        for n in archivos:
++            p = Path(raiz, n)
++            out[p.relative_to(d).as_posix()] = p.read_bytes()
++    return out
++
++
++def hash_conjunto_bytes(conj: dict) -> str:
++    """Receta de CIERRE_E3 (sha256 de `find . -type f -print0 | sort -z | xargs -0 sha256sum`), sobre bytes en memoria."""
++    rel = sorted(("./" + r for r in conj), key=lambda r: r.encode())
++    return hashlib.sha256("".join(f"{sha_bytes(conj[r[2:]])}  {r}\n" for r in rel).encode()).hexdigest()
++
+ 
+ def hash_conjunto(d: Path) -> str:
+-    """Receta de CIERRE_E3: sha256 de la salida de `find . -type f -print0 | sort -z | xargs -0 sha256sum`."""
+-    d = Path(d)
+-    rel = sorted(("./" + p.relative_to(d).as_posix() for p in d.rglob("*") if p.is_file()), key=lambda r: r.encode())
+-    return hashlib.sha256("".join(f"{sha(d / r[2:])}  {r}\n" for r in rel).encode()).hexdigest()
+-
+-
+-def verificar_entradas(e3: Path, ventana: Path, manifiesto: Path = None) -> dict:
+-    """Compara cada insumo con su sha256 congelado. Lee bytes para el hash, no interpreta ningún precio.
+-    Si falta un insumo o un hash no coincide, aborta: la salida no se crea y no se lee ningún precio."""
+-    m = json.loads(Path(manifiesto or MANIFIESTO).read_text())
+-    raices = {"E3": Path(e3), "reparacion": AQUI.parent, "ventana": Path(ventana)}
+-    obs, malos = {}, {}
+-    for x in m["entradas"]:
+-        ruta = raices[x["base"]] if x["base"] == "ventana" else raices[x["base"]] / x["ruta"]
+-        if not ruta.exists():
+-            malos[x["nombre"]] = {"esperado": x["sha256"], "observado": "AUSENTE"}
++    """La misma receta, leyendo del directorio (pruebas y generación del manifiesto)."""
++    return hash_conjunto_bytes(_leer_conjunto(d))
++
++
++def leer_y_verificar(manifiesto_bytes: bytes, raices: dict) -> dict:
++    """C8: el manifiesto tiene que coincidir EXACTAMENTE con EXIGIDAS (nombre, base, ruta, tipo y sha256).
++    C9: cada insumo se lee una sola vez y se devuelven esos bytes, que son los únicos que se usan después."""
++    try:
++        m = json.loads(manifiesto_bytes)
++    except ValueError as exc:
++        raise Rechazo(f"manifiesto ilegible ({exc}). No se lee ningún precio.") from exc
++    entradas = m.get("entradas") if isinstance(m, dict) else None
++    if not isinstance(entradas, list) or not entradas:
++        raise Rechazo("manifiesto vacío o sin lista de entradas. No se lee ningún precio.")
++    nombres = [x.get("nombre") if isinstance(x, dict) else None for x in entradas]
++    if None in nombres or len(set(nombres)) != len(nombres):
++        raise Rechazo("manifiesto con entradas repetidas o mal formadas. No se lee ningún precio.")
++    faltan, sobran = sorted(set(EXIGIDAS) - set(nombres)), sorted(set(nombres) - set(EXIGIDAS))
++    if faltan or sobran:
++        raise Rechazo(f"manifiesto incompleto o con entradas de más (faltan {faltan}; sobran {sobran}). No se lee ningún precio.")
++    distintas = [x["nombre"] for x in entradas
++                 if (x.get("base"), x.get("ruta"), x.get("tipo"), x.get("sha256")) != EXIGIDAS[x["nombre"]]]
++    if distintas or m.get("inicio_H_esperado") != INICIO_H_A:
++        raise Rechazo(f"manifiesto distinto del fijado en el código: {distintas or ['inicio_H_esperado']}. No se lee ningún precio.")
++    datos, malos = {}, {}
++    for nombre, (base, ruta, tipo, h) in EXIGIDAS.items():
++        p = raices[base] if base == "ventana" else Path(raices[base]) / ruta
++        try:
++            contenido = _leer_conjunto(p) if tipo == "conjunto" else _leer_archivo(p)
++        except (OSError, ValueError) as exc:
++            malos[nombre] = f"ilegible: {exc}"
+             continue
+-        h = hash_conjunto(ruta) if x["tipo"] == "conjunto" else sha(ruta)
+-        obs[x["nombre"]] = h
+-        if h != x["sha256"]:
+-            malos[x["nombre"]] = {"esperado": x["sha256"], "observado": h}
++        obs = hash_conjunto_bytes(contenido) if tipo == "conjunto" else sha_bytes(contenido)
++        if obs != h:
++            malos[nombre] = {"esperado": h, "observado": obs}
++        datos[nombre] = contenido
+     if malos:
+-        raise SystemExit(f"insumos que no coinciden con ENTRADAS_CONGELADAS.json: {malos}. No se lee ningún precio.")
+-    return {"manifiesto": sha(Path(manifiesto or MANIFIESTO)), "insumos": obs, "inicio_H_esperado": m["inicio_H_esperado"],
+-            "mapeos": m["mapeos"]}
+-
+-
+-# ------------------------------------------------------------------ panel real (solo en modo real, con autorización)
+-
+-def panel_real(e3: Path, universo, mapeos):
+-    """Series de calidad de E3: act = estado == 1. Aplica los mapeos de la Adenda 1 (C4); no aplica la Adenda R2."""
+-    series = sorted((e3 / "resultados" / "calidad" / "series").glob("*.npz"))
++        raise Rechazo(f"insumos que no coinciden con lo fijado en el código: {malos}. No se lee ningún precio.")
++    return datos
++
++
++# ------------------------------------------------------------------ panel real (solo con autorización), desde bytes
++
++def _npz(b: bytes):
++    return np.load(io.BytesIO(b), allow_pickle=False)
++
++
++def _series(datos: dict) -> list:
++    s = datos["series_calidad_757"]
++    raras = [r for r in s if "/" in r or not r.endswith(".npz")]
++    if raras:
++        raise Rechazo(f"el conjunto de series contiene archivos que no son series: {sorted(raras)[:5]}")
++    return [s[r] for r in sorted(s)]
++
++
++def actividad_desde_bytes(datos: dict):
++    """Solo `simbolo` y `estado`, nunca O, H, L, C ni QV: comprueba los mapeos antes de crear la salida."""
++    syms, act = [], []
++    for b in _series(datos):
++        z = _npz(b)
++        syms.append(str(z["simbolo"]))
++        act.append(z["estado"] == 1)
++    return syms, np.array(act)
++
++
++def panel_real(datos: dict, universo, mapeos):
++    """Series de calidad de E3 desde los bytes verificados: act = estado == 1. Aplica los mapeos de la Adenda 1 (C12)."""
+     syms, O, C, QV, act = [], [], [], [], []
+-    for f in series:
+-        z = np.load(f)
++    for b in _series(datos):
++        z = _npz(b)
+         syms.append(str(z["simbolo"]))
+         O.append(z["O"]), C.append(z["C"]), QV.append(z["QV"]), act.append(z["estado"] == 1)
+     O, C, QV, act = (np.array(x) for x in (O, C, QV, act))
+-    syms, O, C, QV, act, registro = aplicar_mapeos(syms, O, C, QV, act, mapeos, universo.INICIO)
+-    return universo.Panel(syms, O, C, QV, act, mapeos_renombre=registro), registro
++    syms2, O, C, QV, act, registro, origen = aplicar_mapeos(syms, O, C, QV, act, mapeos, universo.INICIO)
++    comprobar_marcas(syms, syms2, origen, universo)
++    P = universo.Panel(syms2, O, C, QV, act, mapeos_renombre=registro)
++    antes = marcas(syms, universo)
++    for k, org in enumerate(origen):  # contra lo que el propio universo.Panel infirió
++        if (bool(P.fijo[k]), bool(P.apalancado[k])) != antes[org[0]]:
++            raise RuntimeError(f"{syms2[k]}: universo.Panel cambió la marca de lista fija o de apalancado")
++    return P, registro
++
++
++def marcas(syms, universo) -> dict:
++    """Las marcas que universo.Panel deriva SOLO del nombre (líneas de `apalancado` y `fijo`), por símbolo."""
++    base = [universo.base_de(s) for s in syms]
++    bases = set(base)
++    return {s: (b in universo.LISTA_FIJA, any(b.endswith(suf) and b[:-len(suf)] in bases for suf in ("UP", "DOWN", "BULL", "BEAR")))
++            for s, b in zip(syms, base)}
++
++
++def comprobar_marcas(syms, syms2, origen, universo):
++    """C12: ningún mapeo puede cambiar la marca de lista fija o de apalancado de una fila (por ejemplo, retirar la base
++    de un token apalancado, o fusionar X e Y con marcas distintas)."""
++    antes, despues = marcas(syms, universo), marcas(syms2, universo)
++    malos = []
++    for s2, org in zip(syms2, origen):
++        esperadas = {antes[o] for o in org}
++        if len(esperadas) != 1 or despues[s2] not in esperadas:
++            malos.append({"fila": s2, "origen": list(org), "antes": sorted(esperadas), "despues": despues[s2]})
++    if malos:
++        raise Rechazo(f"los mapeos cambian marcas de lista fija o de apalancado: {malos[:5]}")
+ 
+ 
+ def aplicar_mapeos(syms, O, C, QV, act, mapeos, inicio):
+-    """Adenda 1, reglas 1 y 2 (v3 §2.2.4; §4.10 «renombre mapeado»), en orden de fecha efectiva E.
+-    r = unidades nuevas por unidad vieja. QV está en USDT y no cambia.
++    """Adenda 1 (v3 §2.2.4; §4.10 «renombre mapeado»), reglas 1, 1R y 2, en orden de fecha. r = unidades nuevas por
++    unidad vieja. QV está en USDT y no cambia.
+     Regla 2 (X → X): los precios de X anteriores a la reapertura (primer día activo > E) se dividen por r. La serie queda
+       continua a través de r y las unidades de una posición, multiplicadas por r. Edad y listado no cambian.
+     Regla 1 (X → Y): Y continúa a X en la fila de X: historia de X con precios / r hasta su último día activo y, desde el
+       primer día activo de Y, los datos de Y. La fila pasa a llamarse Y (hereda edad y posiciones) y la fila original de Y
+       se retira. Aborta si falta X o Y, si X vuelve a estar activo después de E, si Y estuvo activo antes del cese de X,
+-      o si no hay reapertura: no se une nada a ciegas."""
+-    syms = list(syms)
++      o si el hueco entre ambos es ≥ 30 días (la regla mecánica de 30 días reiniciaría la edad que la regla 1 hereda).
++    Regla 1R (reutilización del ticker X; Adenda 1, regla 1, última oración): desde `reutilizacion_desde` la fila X es un
++      listado nuevo (otro activo). El tramo anterior pasa a una fila propia «X~HASTAaaaammddUSDT», que termina en su
++      último día activo. Exige un corte de negociación que termine justo en esa fecha.
++    Rechaza mapeos repetidos o de regla desconocida. Devuelve también el origen de cada fila final."""
++    vistos = set()
++    for m in mapeos:
++        clave = (m.get("regla"), m.get("viejo_usdt"), m.get("nuevo_usdt"), m.get("E"), m.get("reutilizacion_desde"))
++        if m.get("regla") not in (1, 2, "1R"):
++            raise Rechazo(f"regla desconocida en la tabla de mapeos: {m}")
++        if clave in vistos:
++            raise Rechazo(f"mapeo repetido: {clave}")
++        vistos.add(clave)
++    syms, origen = list(syms), [(s,) for s in syms]
+     O, C, QV, act = O.copy(), C.copy(), QV.copy(), act.copy()
+-    retirar, registro = [], []
+-    for m in sorted(mapeos, key=lambda m: (m["E"], m["regla"])):
+-        x, y, r = m["viejo_usdt"], m["nuevo_usdt"], float(m["r"])
+-        if x not in syms or y not in syms or not r > 0:
+-            raise SystemExit(f"mapeo imposible: {x} → {y} (r = {m['r']})")
+-        i, e = syms.index(x), (dt.date.fromisoformat(m["E"]) - inicio).days
++    retirar, registro, extra = [], [], []
++
++    def fecha(m):
++        return m["reutilizacion_desde"] if m["regla"] == "1R" else m["E"]
++
++    for m in sorted(mapeos, key=lambda m: (fecha(m), str(m["regla"]))):
++        x = m["viejo_usdt"]
++        if x not in syms:
++            raise Rechazo(f"mapeo imposible: {x} no está en el panel")
++        i = syms.index(x)
++        if m["regla"] == "1R":
++            k = (dt.date.fromisoformat(m["reutilizacion_desde"]) - inicio).days
++            antes = np.flatnonzero(act[i, :k])
++            if not 0 < k < act.shape[1] or not act[i, k] or antes.size == 0 or k - int(antes[-1]) < 2:
++                raise Rechazo(f"{x}: no hay un corte que termine el {m['reutilizacion_desde']}; no se divide la serie")
++            L = int(antes[-1])
++            nombre = f"{x[:-4]}~HASTA{inicio + dt.timedelta(days=L):%Y%m%d}USDT"
++            if nombre in syms:
++                raise Rechazo(f"{nombre} ya existe en el panel")
++            fila = [a[i].copy() for a in (O, C, QV, act)]
++            for a in fila[:3]:
++                a[k:] = np.nan
++            fila[3][k:] = False
++            O[i, :k], C[i, :k], QV[i, :k], act[i, :k] = np.nan, np.nan, np.nan, False
++            extra.append((nombre, fila, origen[i]))
++            registro.append({**m, "fila_listado_nuevo": x, "fila_tramo_anterior": nombre,
++                             "ultimo_activo_tramo_anterior": (inicio + dt.timedelta(days=L)).isoformat()})
++            continue
++        y, r = m["nuevo_usdt"], float(m["r"])
++        if y not in syms or not (r > 0 and math.isfinite(r)):
++            raise Rechazo(f"mapeo imposible: {x} → {y} (r = {m['r']})")
++        e = (dt.date.fromisoformat(m["E"]) - inicio).days
+         if m["regla"] == 2:
+             if x != y:
+-                raise SystemExit(f"regla 2 con símbolos distintos: {x} → {y}")
++                raise Rechazo(f"regla 2 con símbolos distintos: {x} → {y}")
+             despues = np.flatnonzero(act[i, e + 1:])
+             if despues.size == 0:
+-                raise SystemExit(f"{x}: no hay reapertura después de {m['E']}")
++                raise Rechazo(f"{x}: no hay reapertura después de {m['E']}")
+             k = e + 1 + int(despues[0])
+             antes = np.flatnonzero(act[i, :e + 1])
+             if antes.size == 0 or k - int(antes[-1]) < 2:
+-                raise SystemExit(f"{x}: no hay un corte de negociación alrededor de E = {m['E']}; no se aplica r")
++                raise Rechazo(f"{x}: no hay un corte de negociación alrededor de E = {m['E']}; no se aplica r")
+             O[i, :k] /= r
+             C[i, :k] /= r
+             registro.append({**m, "fila": x, "dia_reapertura": (inicio + dt.timedelta(days=k)).isoformat()})
+@@ -141,19 +361,25 @@
+         j = syms.index(y)
+         activos_x = np.flatnonzero(act[i])
+         if activos_x.size == 0 or activos_x[-1] > e:
+-            raise SystemExit(f"{x}: sin actividad o activo después de E = {m['E']}; no se mapea")
++            raise Rechazo(f"{x}: sin actividad o activo después de E = {m['E']}; no se mapea")
+         activos_y = np.flatnonzero(act[j])
+         if activos_y.size == 0 or activos_y[0] <= activos_x[-1]:
+-            raise SystemExit(f"{y}: sin actividad o activo antes del cese de {x}; no se mapea")
++            raise Rechazo(f"{y}: sin actividad o activo antes del cese de {x}; no se mapea")
+         k = int(activos_y[0])
++        if k - int(activos_x[-1]) - 1 >= 30:
++            raise Rechazo(f"{x} → {y}: hueco de {k - int(activos_x[-1]) - 1} días (≥ 30); la regla 1 no puede heredar la edad")
+         O[i, :k], C[i, :k] = O[i, :k] / r, C[i, :k] / r
+         O[i, k:], C[i, k:], QV[i, k:], act[i, k:] = O[j, k:], C[j, k:], QV[j, k:], act[j, k:]
+         syms[i], syms[j] = y, f"#retirada:{y}"
++        origen[i] = origen[i] + origen[j]
+         retirar.append(j)
+         registro.append({**m, "fila": y, "ultimo_activo_viejo": (inicio + dt.timedelta(days=int(activos_x[-1]))).isoformat(),
+                          "primer_activo_nuevo": (inicio + dt.timedelta(days=k)).isoformat()})
+     quedan = [s for s in range(len(syms)) if s not in set(retirar)]
+-    return [syms[s] for s in quedan], O[quedan], C[quedan], QV[quedan], act[quedan], registro
++    syms_f = [syms[s] for s in quedan] + [n for n, _, _ in extra]
++    origen_f = [origen[s] for s in quedan] + [o for _, _, o in extra]
++    O, C, QV, act = (np.vstack([A[quedan]] + [f[q][None, :] for _, f, _ in extra]) for q, A in enumerate((O, C, QV, act)))
++    return syms_f, O, C, QV, act, registro, origen_f
+ 
+ 
+ # ------------------------------------------------------------------ validez previa (v3 §10), sin estadísticos
+@@ -203,7 +429,7 @@
+ def contribuciones(P, sim, formaciones, sim_ew):
+     """R4 (N14): aporte_c = Σ_t w_{c,t} · (r_{c,t} − r_{EW,t}), bruto; r_{c,t} de apertura a apertura de la semana."""
+     aporte = {}
+-    r_ew = dict(zip(formaciones[:-1], sim_ew["r"], strict=False))
++    r_ew = dict(zip(formaciones[:-1], sim_ew["r"], strict=True))
+     for t, pesos in sim["pesos"]:
+         if t not in r_ew:
+             continue
+@@ -499,50 +725,173 @@
+                       **{k: res[k] for k in ("semanas_ic", "H1", "clasificacion_6_5")}}, default=float, ensure_ascii=False))
+ 
+ 
+-def resultado_invalido(salida: Path, motivo: str, **extra):
++# ------------------------------------------------------------------ C11: estados terminales, escritura atómica e intentos
++
++def escribir_atomico(p: Path, obj) -> str:
++    """Escribe a un temporal, sincroniza y reemplaza: nunca queda un JSON a medio escribir. Devuelve el sha256."""
++    p = Path(p)
++    tmp = p.with_name(p.name + ".tmp")
++    texto = json.dumps(obj, indent=1, default=float, ensure_ascii=False)
++    with open(tmp, "w", encoding="utf-8") as f:
++        f.write(texto)
++        f.flush()
++        os.fsync(f.fileno())
++    os.replace(tmp, p)
++    return sha_bytes(texto.encode("utf-8"))
++
++
++class Intentos:
++    """Registro de intentos de la ejecución única (una línea JSON por evento), con bloqueo exclusivo mientras dura un
++    intento. El bloqueo lo libera el sistema si el proceso muere; el registro, en cambio, queda con el intento abierto."""
++
++    def __init__(self, ruta: Path):
++        self.f = open(ruta, "a+", encoding="utf-8")
++        try:
++            fcntl.flock(self.f.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
++        except OSError as exc:
++            self.f.close()
++            raise Rechazo("otra ejecución de E3 está en curso: el registro de intentos está bloqueado") from exc
++        self.f.seek(0)
++        self.eventos = [json.loads(linea) for linea in self.f.read().splitlines() if linea.strip()]
++
++    def anotar(self, **ev):
++        ev = {"utc": dt.datetime.now(dt.UTC).isoformat(), **ev}
++        self.f.write(json.dumps(ev, ensure_ascii=False) + "\n")
++        self.f.flush()
++        os.fsync(self.f.fileno())
++        self.eventos.append(ev)
++
++    def cerrar(self):
++        try:
++            fcntl.flock(self.f.fileno(), fcntl.LOCK_UN)
++        finally:
++            self.f.close()
++
++
++def permitir_intento(intentos: Intentos, sha_aut: str, texto: str):
++    """C11: hay una sola ejecución con resultado. Se rechaza, ANTES de crear la salida:
++      - si ya hay un EVALUADO o un INVALIDO;
++      - si hay un intento INICIADO sin estado terminal (el proceso murió o el disco falló: revisión manual);
++      - si el último ERROR ocurrió con estadísticos ya iniciados (reintentar sería una decisión metodológica);
++      - si, tras un ERROR previo a los estadísticos, la autorización es la misma o no cita el sha256 de ese RESULTADO."""
++    ev = intentos.eventos
++    terminales = [e for e in ev if e["evento"] in ("EVALUADO", "INVALIDO")]
++    if terminales:
++        raise Rechazo(f"E3 ya tiene un resultado terminal ({terminales[-1]['evento']}, {terminales[-1]['utc']}): no hay otra ejecución")
++    abiertos = ({e["id_intento"] for e in ev if e["evento"] == "INICIADO"}
++                - {e["id_intento"] for e in ev if e["evento"] in ("ERROR", "EVALUADO", "INVALIDO")})
++    if abiertos:
++        raise Rechazo(f"hay un intento sin estado terminal ({sorted(abiertos)}): requiere revisión manual antes de cualquier otro")
++    errores = [e for e in ev if e["evento"] == "ERROR"]
++    if not errores:
++        return None
++    u = errores[-1]
++    if u["estadisticos_iniciados"]:
++        raise Rechazo(f"el ERROR previo ocurrió en la etapa «{u['etapa']}», con estadísticos iniciados: "
++                      "reintentar es una decisión metodológica, no técnica")
++    if any(e.get("sha_autorizacion") == sha_aut for e in ev):
++        raise Rechazo("esta autorización ya se usó en un intento anterior: un reintento exige una autorización nueva")
++    if f"REINTENTO TRAS ERROR {u['sha_resultado']}" not in texto:
++        raise Rechazo(f"la autorización de reintento tiene que citar «REINTENTO TRAS ERROR {u['sha_resultado']}»")
++    return u
++
++
++def resultado_invalido(salida: Path, intentos: Intentos, id_intento: str, motivo: str, **extra):
+     """C5: INVÁLIDO como resultado explícito, sin H1 ni H2."""
+     res = {"veredicto": "INVALIDO", "motivo": motivo, "H1": None, "H2": None, **extra,
+            "nota": "E3-H1/H2 NO EVALUABLES con esta ventana. No se busca otra ventana ni se cambia ninguna regla."}
+-    (salida / "RESULTADO_E3.json").write_text(json.dumps(res, indent=1, default=float, ensure_ascii=False))
+-    raise SystemExit(f"INVALIDO: {motivo}. Ver {salida / 'RESULTADO_E3.json'}")
++    h = escribir_atomico(salida / "RESULTADO_E3.json", res)
++    intentos.anotar(evento="INVALIDO", id_intento=id_intento, sha_resultado=h)
++    raise FinTerminal(f"INVALIDO: {motivo}. Ver {salida / 'RESULTADO_E3.json'}")
++
++
++def resultado_error(salida: Path, intentos: Intentos, id_intento: str, etapa: str, exc: BaseException):
++    """C11: cualquier excepción después de crear la salida deja un ERROR explícito; nunca un éxito aparente ni un
++    hueco. Si ni siquiera se puede escribir, el intento queda abierto y el siguiente se rechaza (revisión manual)."""
++    tb = "".join(traceback.format_exception(type(exc), exc, exc.__traceback__))
++    res = {"veredicto": "ERROR", "etapa": etapa, "tipo": type(exc).__name__, "mensaje": str(exc)[:2000],
++           "traceback": tb, "sha_traceback": sha_bytes(tb.encode("utf-8")),
++           "estadisticos_iniciados": etapa not in ETAPAS_SIN_ESTADISTICOS, "H1": None, "H2": None,
++           "nota": "E3-H1/H2 SIN RESULTADO por un fallo técnico: no es EVALUADO ni INVALIDO. Reintentar exige una "
++                   "autorización nueva que cite el sha256 de este archivo; con estadísticos iniciados, es una decisión "
++                   "metodológica."}
++    try:
++        h = escribir_atomico(salida / "RESULTADO_E3.json", res)
++    except BaseException as exc2:
++        raise FinTerminal(f"ERROR en la etapa «{etapa}» y no se pudo escribir RESULTADO_E3.json ({exc2!r}); el intento "
++                          "queda abierto en el registro: revisión manual") from exc
++    intentos.anotar(evento="ERROR", id_intento=id_intento, etapa=etapa, tipo=type(exc).__name__,
++                    estadisticos_iniciados=res["estadisticos_iniciados"], sha_resultado=h)
++    raise FinTerminal(f"ERROR en la etapa «{etapa}»: {type(exc).__name__}: {exc}. Ver {salida / 'RESULTADO_E3.json'}") from exc
+ 
+ 
+ def modo_real(e3: Path, ventana: Path, autorizacion: Path, salida: Path, manifiesto: Path = None):
++    e3, ventana, autorizacion, salida = Path(e3), Path(ventana), Path(autorizacion), Path(salida)
+     if salida.exists():
+-        raise SystemExit(f"{salida} ya existe: la ejecución confirmatoria es única")
+-    manifiesto = Path(manifiesto or MANIFIESTO)
+-    texto = autorizacion.read_text() if autorizacion.exists() else ""
+-    requeridos = {"FRASE": FRASE in texto, "orquestador_v2": sha(Path(__file__)) in texto,
+-                  "entradas_congeladas": manifiesto.exists() and sha(manifiesto) in texto}
++        raise Rechazo(f"{salida} ya existe: la ejecución confirmatoria es única")
++    aut_bytes = autorizacion.read_bytes() if autorizacion.is_file() else b""
++    texto = aut_bytes.decode("utf-8", errors="replace")
++    man_path = Path(manifiesto or MANIFIESTO)
++    man_bytes = man_path.read_bytes() if man_path.is_file() else b""  # C9: el manifiesto también se lee una sola vez
++    sha_aut, sha_man = sha_bytes(aut_bytes), sha_bytes(man_bytes)
++    requeridos = {"FRASE": FRASE in texto, "orquestador_v3": SHA_PROPIO in texto,
++                  "entradas_congeladas": bool(man_bytes) and sha_man in texto,
++                  **{f"decision_{k}": f in texto for k, f in FRASES_DECISION.items()}}
+     if not all(requeridos.values()):
+-        raise SystemExit(f"autorización ausente o incompleta: {requeridos}. No se lee ningún precio.")
+-    entradas = verificar_entradas(e3, ventana, manifiesto)  # C3: antes de leer cualquier precio
+-    vd = json.loads(ventana.read_text())
+-    salida.mkdir(parents=True)
+-    registro = {"inicio_utc": dt.datetime.now(dt.UTC).isoformat(), "ventana": str(ventana), "sha_ventana": sha(ventana),
+-                "sha_orquestador": sha(Path(__file__)), "sha_autorizacion": sha(autorizacion), "entradas": entradas,
+-                "inicio_H": vd.get("inicio_H")}
+-    (salida / "REGISTRO_EJECUCION.json").write_text(json.dumps(registro, indent=1))  # antes de calcular
+-    if vd.get("veredicto") != "VALIDO" or vd.get("inicio_H") != entradas["inicio_H_esperado"]:
+-        resultado_invalido(salida, "la ventana A no es VÁLIDA o no es la congelada", ventana=vd.get("veredicto"))
+-    universo, motor, inferencia = importar_congelados(e3)
+-    mapeos = json.loads((AQUI.parent / entradas["mapeos"]).read_text())["mapeos"]
+-    P, registro_mapeos = panel_real(e3, universo, mapeos)
+-    inicio = dt.date.fromisoformat(vd["inicio_H"])
+-    formaciones = universo.lunes(inicio, ULTIMA_FORMACION + dt.timedelta(days=7))
+-    validez, cache = validez_previa(P, formaciones, universo, motor)
+-    (salida / "VALIDEZ_PREVIA.json").write_text(json.dumps({**validez, "mapeos_aplicados": registro_mapeos}, indent=1, default=float))
+-    if not validez["valido"]:
+-        resultado_invalido(salida, "validez previa (v3 §10)", validez_previa=validez)
+-    Fm = universo.lunes(inicio, ULTIMA_FORMACION + dt.timedelta(days=9), dia_semana=2)
+-    res = ejecutar(P, formaciones, universo, motor, inferencia, cache=cache, formaciones_miercoles=Fm)
+-    res["veredicto"] = "EVALUADO"
+-    res["validez_previa"] = validez
+-    res["mapeos_aplicados"] = registro_mapeos
+-    res["registro"] = registro
+-    (salida / "RESULTADO_E3.json").write_text(json.dumps(res, indent=1, default=float, ensure_ascii=False))
+-    print(json.dumps({k: res[k] for k in ("semanas_ic", "H1", "H2", "holm", "clasificacion_6_5")}, default=float,
+-                     ensure_ascii=False, indent=1))
++        raise Rechazo(f"autorización ausente o incompleta: {requeridos}. No se lee ningún precio.")
++    intentos = Intentos(INTENTOS)
++    try:
++        previo = permitir_intento(intentos, sha_aut, texto)
++        raices = {"E3": e3, "reparacion": REPARACION, "cierre": CIERRE, "ventana": ventana}
++        datos = leer_y_verificar(man_bytes, raices)                                   # C8 + C9
++        vd = json.loads(datos["ventana_A"])
++        if vd.get("veredicto") != "VALIDO" or vd.get("inicio_H") != INICIO_H_A:       # C7 (además del sha256 fijado)
++            raise Rechazo(f"la ventana no es la A aprobada (veredicto {vd.get('veredicto')}, inicio {vd.get('inicio_H')})")
++        fuentes = {n[:-3]: datos[n] for n in CONGELADOS}
++        mods = cargar_modulos(fuentes)                                                  # C10
++        universo, motor, inferencia = mods["universo"], mods["motor"], mods["inferencia"]
++        mapeos = json.loads(datos["mapeos_adenda1_completa"])["mapeos"]               # C8: solo la entrada verificada
++        syms, act = actividad_desde_bytes(datos)                                        # C12: antes de la salida, solo estado
++        ceros = np.zeros(act.shape)
++        syms2, _, _, _, _, reg_previo, origen = aplicar_mapeos(syms, ceros, ceros, ceros, act, mapeos, universo.INICIO)
++        comprobar_marcas(syms, syms2, origen, universo)
++        id_intento = f"{sha_aut[:16]}:{salida}"
++        salida.mkdir(parents=True, exist_ok=False)
++        intentos.anotar(evento="INICIADO", id_intento=id_intento, salida=str(salida), sha_autorizacion=sha_aut,
++                        sha_orquestador=SHA_PROPIO, sha_manifiesto=sha_man, reintento_de=previo and previo["sha_resultado"])
++        registro = {"inicio_utc": dt.datetime.now(dt.UTC).isoformat(), "estado": "EN_CURSO", "ventana": str(ventana),
++                    "sha_ventana": sha_bytes(datos["ventana_A"]), "sha_orquestador": SHA_PROPIO, "sha_manifiesto": sha_man,
++                    "sha_autorizacion": sha_aut, "inicio_H": INICIO_H_A, "mapeos_en_tabla": len(mapeos),
++                    "mapeos_aplicados_en_la_comprobacion_previa": len(reg_previo), "reintento_de": previo and previo["sha_resultado"]}
++        escribir_atomico(salida / "REGISTRO_EJECUCION.json", registro)  # antes de calcular
++        etapa = "panel"
++        try:
++            P, registro_mapeos = panel_real(datos, universo, mapeos)
++            inicio = dt.date.fromisoformat(INICIO_H_A)
++            formaciones = universo.lunes(inicio, ULTIMA_FORMACION + dt.timedelta(days=7))
++            etapa = "validez_previa"
++            validez, cache = validez_previa(P, formaciones, universo, motor)
++            escribir_atomico(salida / "VALIDEZ_PREVIA.json", {**validez, "mapeos_aplicados": registro_mapeos})
++            if not validez["valido"]:
++                resultado_invalido(salida, intentos, id_intento, "validez previa (v3 §10)", validez_previa=validez)
++            etapa = "calculo"
++            Fm = universo.lunes(inicio, ULTIMA_FORMACION + dt.timedelta(days=9), dia_semana=2)
++            res = ejecutar(P, formaciones, universo, motor, inferencia, cache=cache, formaciones_miercoles=Fm)
++            etapa = "escritura"
++            res["veredicto"] = "EVALUADO"
++            res["validez_previa"] = validez
++            res["mapeos_aplicados"] = registro_mapeos
++            res["registro"] = registro
++            h = escribir_atomico(salida / "RESULTADO_E3.json", res)
++            intentos.anotar(evento="EVALUADO", id_intento=id_intento, sha_resultado=h)
++        except FinTerminal:
++            raise
++        except BaseException as exc:  # incluye SystemExit de código congelado y KeyboardInterrupt
++            resultado_error(salida, intentos, id_intento, etapa, exc)
++        print(json.dumps({k: res[k] for k in ("semanas_ic", "H1", "H2", "holm", "clasificacion_6_5")}, default=float,
++                         ensure_ascii=False, indent=1))
++    finally:
++        intentos.cerrar()
+ 
+ 
+ if __name__ == "__main__":

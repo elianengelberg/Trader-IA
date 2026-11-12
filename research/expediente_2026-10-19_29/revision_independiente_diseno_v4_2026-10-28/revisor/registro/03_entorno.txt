@@ -1,0 +1,50 @@
+# comprobaciones de entorno de solo lectura · 2026-10-28T19:37:47Z
+## 1. hilos del proceso tras 'import numpy' (venv)
+hilos antes de numpy: 1 | despues: 4 | numpy 2.4.6
+threading.active_count: 1
+## 2. archivos .pth / sitecustomize / usercustomize en site-packages del venv
+-rw-r--r-- 1 root root 205 Oct 25 18:19 integracion_controlada_2026-10-25/venv/lib/python3.11/site-packages/a1_coverage.pth
+-rw-r--r-- 1 root root 151 Oct 25 18:18 integracion_controlada_2026-10-25/venv/lib/python3.11/site-packages/distutils-precedence.pth
+ls: cannot access 'integracion_controlada_2026-10-25/venv/lib/python3.11/site-packages/sitecustomize.py': No such file or directory
+ls: cannot access 'integracion_controlada_2026-10-25/venv/lib/python3.11/site-packages/usercustomize.py': No such file or directory
+## 3. contenido de los .pth (solo lectura)
+--- integracion_controlada_2026-10-25/venv/lib/python3.11/site-packages/a1_coverage.pth
+import sys; exec('import os\n\nif os.getenv("COVERAGE_PROCESS_START") or os.getenv("COVERAGE_PROCESS_CONFIG"):\n try:\n  import coverage\n except:\n  pass\n else:\n  coverage.process_startup(slug="pth")')
+
+--- integracion_controlada_2026-10-25/venv/lib/python3.11/site-packages/distutils-precedence.pth
+import os; var = 'SETUPTOOLS_USE_DISTUTILS'; enabled = os.environ.get(var, 'local') == 'local'; enabled and __import__('_distutils_hack').add_shim(); 
+
+## 4. ¿-I conserva site-packages del venv en sys.path? (si sí, los .pth se ejecutan igual bajo -I)
+flags: 1 0 1
+['/tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_controlada_2026-10-25/venv/lib/python3.11/site-packages']
+_distutils_hack cargado: True
+## 5. -I -S (sin site): ¿numpy importable?
+ModuleNotFoundError: No module named 'numpy'
+## 6. cryptography / numpy en cada intérprete
+ModuleNotFoundError: No module named 'cryptography'
+sys cryptography 50.0.1
+sys numpy 2.5.3
+## 7. ¿PYTHONPATH sitecustomize se ignora con -I? (mecanismo, carpeta temporal dentro de revisor/)
+sin -I:
+SITECUSTOMIZE EJECUTADO
+fin
+con -I:
+fin
+## 8. realpath del intérprete del venv
+/usr/bin/python3.11
+73bf4b06fad87996
+## 9. zona de archivo: ¿conviven código v1/v2, datos extraídos, intérprete y documento autorizante? (solo ls/conteo, sin abrir datos)
+757
+-rw-r--r-- 1 root root 52081 Oct 27 18:36 cierre_bloqueantes_E3H1H2_2026-10-27/orquestador_v3/ejecutar_E3_v3.py
+-rw-r--r-- 1 root root 28250 Oct 26 20:00 experimentos/E3R_desbloqueo_2026-10-26/ejecutar_E3R.py
+-rw-r--r-- 1 root root 31328 Oct 26 22:53 reparacion_E3H1H2_2026-10-26/orquestador_v2/ejecutar_E3_v2.py
+24665 reparacion_E3H1H2_2026-10-26/INFORME_REPARACION_E3H1H2.md
+DIFF_v2_v3.diff
+ENTRADAS_CONGELADAS_V3.json
+ejecutar_E3_v3.py
+generar_v3.py
+plantilla_cabecera.py
+plantilla_cola.py
+## 10. ext4 y fsync: versión del kernel
+6.18.44-fc-v180
+/dev/vda / ext4 rw,relatime,discard,no_prefetch_block_bitmaps,resv_strict,resuid=65534,resgid=65534 0 0

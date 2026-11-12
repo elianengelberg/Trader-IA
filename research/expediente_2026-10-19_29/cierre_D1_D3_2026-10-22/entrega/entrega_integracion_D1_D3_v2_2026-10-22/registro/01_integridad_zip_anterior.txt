@@ -1,0 +1,18 @@
+== Fase A — integridad de la entrega anterior: 2026-10-22T12:20:58Z
+ZIP: /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_parche_D1_D3_2026-10-21/entrega/entrega_integracion_D1_D3_2026-10-22.zip
+sha256 real: f9495ad8d1e767e9eadf56cb77bd8dd2ad9a2fb12d5ec0de304f85bc2f06d269
+sha256 declarado: f9495ad8d1e767e9eadf56cb77bd8dd2ad9a2fb12d5ec0de304f85bc2f06d269
+unzip -t: No errors detected in compressed data of /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/integracion_parche_D1_D3_2026-10-21/entrega/entrega_integracion_D1_D3_2026-10-22.zip.
+entradas (archivos): 63 · directorios: 0
+rutas duplicadas: 0
+rutas absolutas o con '..': 0
+enlaces simbólicos: 0
+raíz única: entrega_integracion_D1_D3_2026-10-22 
+sha256sum -c SHA256SUMS: 62 OK / 62 líneas · fallas: 0
+archivos no listados en el manifiesto: 0
+listados que faltan: 0
+archivos con contenido duplicado: 1 hash(es)
+   ./evidencia/E17_paridad_completa_ci.json
+   ./evidencia/E17_paridad_completa_e1.json
+tamaño por extensión:
+      1 /SHA256SUMS       2 diff       6 json       3 md       1 patch       9 py       2 sh      36 txt       3 xml 

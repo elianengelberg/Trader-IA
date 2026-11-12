@@ -1,0 +1,27 @@
+== huellas fijadas ANTES de la ejecución con datos reales: 2026-10-19T18:10:58Z
+84ba4aa49cea46f0aaa7cb7051b3263a510543b8e7b9838248ca8082a1f97823  prerregistro/PRERREGISTRO_E1.md
+81a4aac184c6a5b4ba2b99b930e1dba9b60cb23a18308bf8af2d19bb4a70df65  codigo/e1.py
+2f09f8e9bdf39d4fd3ab0a1ce18133e4e2162da503b41200eb655db4c55aac36  codigo/e1_comun.py
+45fa3ffb6f3b29c1363c8155fd3c585a51cc2480a46b76cf5655ced5b3288ad5  codigo/e1_verificacion.py
+d70faf81ff0692bd851a427537a31ddfb2924d61f1fd02eb4e19f2f401dc79f6  codigo/diag_motor.py
+e5dd8b939f976826afba8c7e118b15806bbd8cdee347f3e08c6b78bf4e68bf74  entorno/requisitos_con_hash.txt
+51c5f8bab781c4242200abdfc788dd101bb205827e1d12cf5b796e232ac413f1  resultados/verificacion_backtester_sintetico.json
+código del paquete usado (sin cambios; commit de HEAD y diff vacío en packages/tia):
+  HEAD 692f2b2d7af3189027b62e60367d104d855b0f3f | diff packages/tia: 0 líneas
+  sha256 library.py a1b8844465adb38b… engine.py 547109460bb5734a…
+estado: ninguna estrategia se ejecutó todavía sobre datos reales (solo se leyó cobertura y huecos)
+
+== Adenda 1: huellas re-fijadas ANTES de ejecutar: 2026-10-19T18:12:15Z
+f710a2b070997b1d1a319f49ce47e9b408aba17046a331612a54c3d7c42abaef  prerregistro/PRERREGISTRO_E1.md
+81a4aac184c6a5b4ba2b99b930e1dba9b60cb23a18308bf8af2d19bb4a70df65  codigo/e1.py
+cbe1bb94ffcb828c1d8a4a363e0f53bcf68280a3843ea11679d2bb1627a0afd6  codigo/e1_comun.py
+== corrección de la hora escrita en el título de la adenda (~18:15 -> 18:12, la real): 2026-10-19T18:12:24Z
+efb6d47f083b3fe5f7f4b1a48dada4410c17551d3d8900afd587a9048c33e1a7  prerregistro/PRERREGISTRO_E1.md
+
+== Adenda 2: huellas re-fijadas ANTES de la ejecución evaluada: 2026-10-19T19:02:48Z
+7af2ef4e3e4c2e8d9c29183ad6adfc647a80e54e10824bd543a98146d6c4e38e  prerregistro/PRERREGISTRO_E1.md
+a5523096f82d08078a03a5b66488d60bbc527af9aa2767a52d236324373118aa  codigo/e1.py
+b61cab579c86457e7b1d0dd1e27f16fe8dfe06db62fcb4c25aa058bc1641f882  codigo/e1_comun.py
+2361caa8df4999b7bc05fc584db31b475711b80e2ddf2346e4fc9a72d3af4060  codigo/e1_verificacion.py
+e285c55fa4926b91cac0829ec1aba5feaf46b3be57e6747035d1ef27c06fdd26  codigo/diag_d3.py
+ee1a9a0c7fec1e115b458ffd6e9942845cc3444efe6024f927e93fc90821d079  resultados/verificacion_backtester_sintetico.json

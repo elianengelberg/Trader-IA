@@ -1,0 +1,9 @@
+Reejecución completa de A-S1 (orquestador/reproducir.sh del ZIP A-S1), Python 3.11.17, 4 procesos
+inicio: 2026-10-21T16:57:11Z  fin: 2026-10-21T17:45:43Z
+segundos: 2903.3 (con carga concurrente de otras tareas)
+resultado_calibracion.json idéntico byte a byte: sí (76a99c6bf45259b5…)
+celdas idénticas byte a byte: 48/48 (96000 réplicas)
+verificacion.json regenerado idéntico: sí
+ "fallas_de_verificacion": [],
+ "replicas_recalculadas": 96,
+ "decision_vinculante": "SE_USA_LA_REGLA_DE_RESPALDO: p = máx(p_ℓ20, p_ℓ40, p_NW), declarada en cada prerregistro",

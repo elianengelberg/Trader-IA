@@ -1,0 +1,194 @@
+--- /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/integ/packages/tia/src/tia/persistence/repositories.py	2026-10-22 16:06:46.211521421 +0000
++++ /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/corr/packages/tia/src/tia/persistence/repositories.py	2026-10-22 16:09:08.155013958 +0000
+@@ -12,6 +12,7 @@
+ 
+ from __future__ import annotations
+ 
++import math
+ from collections.abc import Sequence
+ from datetime import datetime, timedelta
+ from typing import Any
+@@ -477,14 +478,31 @@
+     return tuple(str((conditions or {}).get(key) or "") for key in _BACKTEST_PROVENANCE)
+ 
+ 
++#: The numbers a stored result is made of. Under one ``run_id`` and one provenance they
++#: differ only if something the provenance does not record changed — the Python
++#: environment, or a part of the engine a caller substituted — and then neither run can
++#: claim the row: the store refuses instead of keeping whichever ran last.
++_BACKTEST_NUMBERS = ("bars", "trades", "total_return_pct", "max_drawdown_pct", "sharpe", "equity_curve")
++
++
++def _comparable(value: Any) -> Any:
++    """NaN is stored as NULL by SQLite; both mean "no value" when comparing."""
++    if isinstance(value, float) and math.isnan(value):
++        return None
++    if isinstance(value, list):
++        return [_comparable(v) for v in value]
++    return value
++
++
+ class BacktestRepository:
+     def __init__(self, session: AsyncSession) -> None:
+         self._session = session
+ 
+     async def save(self, values: dict[str, Any]) -> None:
+         """Store a result. A row with the same ``run_id`` is replaced only by a result of
+-        the same provenance — a re-run of the same engine over the same bars. A row from
+-        another engine, or from before the engine was recorded, is never overwritten."""
++        the same provenance and the same numbers — a re-run of the same engine over the
++        same bars. A row from another engine, from before the engine was recorded, or with
++        other numbers under the same provenance is never overwritten."""
+         existing = await self.get(values["run_id"])
+         stored = _provenance(existing.conditions) if existing is not None else None
+         if stored is not None and stored != _provenance(values.get("conditions")):
+@@ -496,6 +514,18 @@
+                 f"backtest {values['run_id']} is already stored with another provenance "
+                 f"({said}); refusing to replace it"
+             )
++        if existing is not None:
++            differ = [
++                key for key in _BACKTEST_NUMBERS
++                if key in values and _comparable(getattr(existing, key)) != _comparable(values[key])
++            ]
++            if differ:
++                raise ValueError(
++                    f"backtest {values['run_id']} is already stored with the same provenance and "
++                    f"other results ({', '.join(differ)}): something the provenance does not record "
++                    "changed (the environment, or a substituted part of the engine); refusing to "
++                    "replace it"
++                )
+         await self._session.execute(_upsert(self._session, BacktestRow, values, ["run_id"]))
+ 
+     async def list_recent(self, limit: int = 25) -> list[BacktestRow]:
+--- /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/integ/packages/tia/src/tia/backtest/engine.py	2026-10-22 16:06:46.211246661 +0000
++++ /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/corr/packages/tia/src/tia/backtest/engine.py	2026-10-22 16:09:08.155411822 +0000
+@@ -748,9 +748,11 @@
+             "universe_digest": content_hash(self._universe.model_dump(mode="json")),
+         }
+         conditions = BacktestConditions(
+-            # Everything that decides the numbers is in the id — configuration, bars,
+-            # strategies, instruments and engine — so a stored result is replaced only by
+-            # a re-run of itself, never by another engine's or another dataset's.
++            # What is recorded about the run is in the id — configuration, bars,
++            # strategies, instruments and the engine's version and source — so another
++            # engine's or another dataset's result gets another id. What is not recorded
++            # (the Python environment, a part substituted by the caller) can still change
++            # the numbers under one id: the store refuses that instead of overwriting.
+             run_id=deterministic_id(
+                 "bt", cfg.dataset, resolved, cfg.digest(),
+                 {
+--- /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/integ/docs/ARCHITECTURE.md	2026-10-22 16:06:46.211246661 +0000
++++ /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/corr/docs/ARCHITECTURE.md	2026-10-22 16:09:08.155793687 +0000
+@@ -506,7 +506,9 @@
+ hand with any change to what a run produces), `engine_fingerprint` (a hash of the engine's
+ source, so an unversioned change still shows), `data_fingerprint` (the bars consumed) and
+ `universe_digest`. All of them are part of the `run_id`, and `BacktestRepository.save`
+-replaces a stored row only with a result of the same provenance. Rows stored before these
++replaces a stored row only with a result of the same provenance and the same numbers: the
++same id with other numbers means something unrecorded changed (the environment, a
++substituted part), and the store refuses it. Rows stored before these
+ fields existed have them empty: their engine is **unknown** — they are kept as they are,
+ never backfilled, and not comparable with versioned results as if the engine were the same.
+ 
+--- /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/integ/tests/integration/test_backtest_provenance.py	2026-10-22 16:11:07.885521225 +0000
++++ /tmp/claude-0/-home-user-Trader-IA/adb27888-5c6a-556a-b45b-2427c90ef46b/scratchpad/decision_final_D1_D3_2026-10-22/corr/tests/integration/test_backtest_provenance.py	2026-10-22 16:09:35.801610460 +0000
+@@ -6,7 +6,9 @@
+ one's without a word. So did one dataset name over other bars (the API's ``bars`` limit).
+ Now the engine version, a fingerprint of its source, the bars and the instruments are in
+ the id and in the conditions, and the store refuses to replace a row of another
+-provenance. Rows stored before keep their id and their missing fields: engine unknown.
++provenance — or a row of the same provenance with other numbers, which means something the
++provenance does not record changed. Rows stored before keep their id and their missing
++fields: engine unknown.
+ """
+ 
+ from __future__ import annotations
+@@ -15,7 +17,7 @@
+ import shutil
+ from datetime import UTC, datetime
+ from pathlib import Path
+-from typing import Any
++from typing import Any, ClassVar
+ 
+ import httpx
+ import pytest
+@@ -29,6 +31,7 @@
+ from tia.core.ids import deterministic_id
+ from tia.data.providers.csv_replay import CsvReplayProvider
+ from tia.domain.instruments import DEFAULT_UNIVERSE
++from tia.execution.paper import PaperExecutionProvider
+ from tia.persistence import BacktestRepository, Database
+ 
+ FIXTURES = Path(__file__).resolve().parents[2] / "data" / "fixtures"
+@@ -58,7 +61,10 @@
+         "bars": c.bars,
+         "seed": c.seed,
+         "total_return_pct": result.metrics.total_return_pct,
++        "max_drawdown_pct": result.metrics.max_drawdown_pct,
++        "sharpe": result.metrics.sharpe,
+         "trades": len(result.trades),
++        "equity_curve": [round(v, 4) for v in result.equity_curve[::5]],
+         "warnings": list(result.warnings),
+         "conditions": c.model_dump(mode="json"),
+     }
+@@ -76,6 +82,17 @@
+     return row
+ 
+ 
++class _RejectsTheFirstOrder(PaperExecutionProvider):
++    """A part of the engine substituted by the caller: invisible to the provenance, visible
++    in the numbers — as a change of environment would be."""
++
++    seen: ClassVar[list[int]] = []  # reset by the test; shared because the engine builds the provider
++
++    def _should_reject(self, order):  # type: ignore[no-untyped-def]
++        self.seen.append(1)
++        return len(self.seen) == 1 or super()._should_reject(order)
++
++
+ async def _store(tmp_path: Path) -> Database:
+     db = Database(f"sqlite+aiosqlite:///{tmp_path / 'backtests.db'}")
+     await db.create_schema()
+@@ -222,6 +239,41 @@
+     finally:
+         await db.close()
+ 
++
++async def test_other_numbers_under_the_same_provenance_are_refused_not_kept_as_the_last_run(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """What the provenance does not record can change the numbers without changing the id.
++    The store does not keep whichever ran last: it refuses, and the first result stays."""
++    first = _run()
++    monkeypatch.setattr(engine_module, "PaperExecutionProvider", _RejectsTheFirstOrder)
++    monkeypatch.setattr(_RejectsTheFirstOrder, "seen", [])
++    other = _run()
++    assert other.conditions == first.conditions, "same id, same recorded provenance"
++    assert len(other.trades) != len(first.trades), "and other numbers"
++    db = await _store(tmp_path)
++    try:
++        await _save(db, _row(first))
++        with pytest.raises(ValueError, match="same provenance and other results"):
++            await _save(db, _row(other))
++        kept = (await _rows(db))[first.conditions.run_id]
++        assert kept.trades == len(first.trades)
++        assert kept.total_return_pct == first.metrics.total_return_pct
++    finally:
++        await db.close()
++
++
++async def test_an_undefined_ratio_does_not_make_a_rerun_look_different(tmp_path: Path) -> None:
++    """SQLite stores NaN as NULL: a re-run that carries NaN again is still the same run."""
++    row = {**_row(_run()), "sharpe": float("nan")}
++    db = await _store(tmp_path)
++    try:
++        await _save(db, row)
++        await _save(db, {**row, "created_at": datetime(2026, 10, 22, 13, tzinfo=UTC)})
++        assert list(await _rows(db)) == [row["run_id"]]
++    finally:
++        await db.close()
++
+ 
+ async def test_the_api_lists_the_engine_of_each_result_and_unknown_for_the_old_ones(
+     tmp_path: Path, monkeypatch: pytest.MonkeyPatch

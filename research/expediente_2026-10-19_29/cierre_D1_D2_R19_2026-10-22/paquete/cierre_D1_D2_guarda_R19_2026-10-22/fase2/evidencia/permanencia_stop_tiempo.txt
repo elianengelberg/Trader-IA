@@ -1,0 +1,2 @@
+primer cierre rechazado=False: permanencia máxima en la venue = 6 barras (TIME_STOP_BARS=6)
+primer cierre rechazado=True: permanencia máxima en la venue = 7 barras (TIME_STOP_BARS=6)

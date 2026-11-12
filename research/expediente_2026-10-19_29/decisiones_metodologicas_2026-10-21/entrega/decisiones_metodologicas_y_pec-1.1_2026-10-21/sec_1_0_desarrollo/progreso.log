@@ -1,0 +1,17 @@
+2026-10-21T17:10:38Z inicio: 0 celdas hechas, 15 pendientes, 2 procesos
+2026-10-21T17:10:42Z celda 1/15 completa: H0_C1_N1096 (4 s)
+2026-10-21T17:10:46Z celda 2/15 completa: H0_C2_N1096 (8 s)
+2026-10-21T17:10:49Z celda 3/15 completa: H0_C1_N1826 (11 s)
+2026-10-21T17:10:50Z celda 4/15 completa: H0_C2_N1826 (12 s)
+2026-10-21T17:10:54Z celda 5/15 completa: H0_C3_N1096 (16 s)
+2026-10-21T17:10:55Z celda 6/15 completa: H0_C3_N1826 (16 s)
+2026-10-21T17:10:56Z celda 7/15 completa: H0_C4_N1096 (18 s)
+2026-10-21T17:10:58Z celda 8/15 completa: H0_C4_N1826 (20 s)
+2026-10-21T17:11:01Z celda 9/15 completa: H0_C5_N1096 (22 s)
+2026-10-21T17:11:02Z celda 10/15 completa: H0_C6_N1096 (24 s)
+2026-10-21T17:11:03Z celda 11/15 completa: H0_C5_N1826 (25 s)
+2026-10-21T17:11:06Z celda 12/15 completa: H0_C6_N1826 (27 s)
+2026-10-21T17:11:17Z celda 13/15 completa: H1_C1_N1826_IR1.27 (39 s)
+2026-10-21T17:11:22Z celda 14/15 completa: H1_C2_N1826_IR1.27 (44 s)
+2026-10-21T17:11:28Z celda 15/15 completa: H1_C5_N1826_IR1.27 (50 s)
+2026-10-21T17:11:28Z fin: 15 celdas

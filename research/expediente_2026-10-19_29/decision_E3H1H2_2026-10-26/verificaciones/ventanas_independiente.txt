@@ -1,0 +1,5 @@
+fallas de la primera pasada: [('2021-02-19', 'BKRWUSDT', 'T'), ('2023-04-27', 'DOTDOWNUSDT', 'T'), ('2023-04-27', 'DOTUPUSDT', 'T'), ('2023-04-27', 'TRXDOWNUSDT', 'T'), ('2023-09-22', 'ARKUSDT', 'C_no_explicada'), ('2023-09-22', 'CREAMUSDT', 'C_no_explicada'), ('2023-09-22', 'FTTUSDT', 'C_no_explicada'), ('2023-09-22', 'GFTUSDT', 'C_no_explicada'), ('2023-09-22', 'IQUSDT', 'C_no_explicada')]
+v3 congelada, primera pasada (C sin resolver): última falla 2023-09-22 → inicio 2023-09-25 · semanas 139 · evaluables 139 · no evaluables 0.0 %
+v3 congelada, C explicados por A3.5 (= regla de A): última falla 2023-04-27 → inicio 2023-05-01 · semanas 160 · evaluables 160 · no evaluables 0.0 %
+R1′ (sin apalancados; BKRW en alcance) (= regla de B): última falla 2021-02-19 → inicio 2021-02-22 · semanas 274 · evaluables 274 · no evaluables 0.0 %
+A: semanas evaluables 160 · último inicio con ≥ 156 evaluables: 2023-05-29 · una falla en alcance con E ≥ 2023-05-29 mueve el inicio más allá y deja A INVÁLIDO

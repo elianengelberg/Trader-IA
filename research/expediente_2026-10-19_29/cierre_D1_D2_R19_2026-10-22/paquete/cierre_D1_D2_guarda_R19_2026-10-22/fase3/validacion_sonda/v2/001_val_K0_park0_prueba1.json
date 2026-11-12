@@ -1,0 +1,239 @@
+{
+ "version_sonda": 2,
+ "park": false,
+ "cpus": 4,
+ "carga_inicio": [
+  0.93505859375,
+  1.208984375,
+  1.17578125
+ ],
+ "fondo": 412428,
+ "manual": 0,
+ "flushes": [
+  {
+   "prueba": "tests/integration/test_validacion_sonda_r19.py::test_lenta_con_productor",
+   "llamador": "settle",
+   "plazo_s": 0.3,
+   "pendientes": 10,
+   "pendientes_por_tipo": {
+    "sin_empezar": 10
+   },
+   "bucle_vivo": true,
+   "carga1": 0.94,
+   "seg": 0.3,
+   "ok": false,
+   "ciclos_fondo_durante": 22873,
+   "foto_al_vencer": 1916,
+   "foto_por_tipo": {
+    "reconciliation": 1906,
+    "fill": 9,
+    "run_heartbeat": 1
+   },
+   "bucle_vivo_al_vencer": true,
+   "carga1_al_vencer": 0.94,
+   "terminaron_despues": 15,
+   "no_terminaron": 1901,
+   "seg_hasta_terminar": 3.002,
+   "ciclos_fondo_en_espera": 185481,
+   "cabeza_tras_espera": {
+    "n": 17,
+    "tipo": "reconciliation",
+    "pila": [
+     "sonda_r19_v2.py:138 sequenced"
+    ]
+   },
+   "productor_detenido": true,
+   "terminaron_sin_productor": 10,
+   "no_terminaron_sin_productor": 1891,
+   "tipos_sin_terminar": {
+    "reconciliation": 1891
+   },
+   "cabeza_final": {
+    "n": 27,
+    "tipo": "reconciliation",
+    "pila": [
+     "sonda_r19_v2.py:138 sequenced"
+    ]
+   }
+  },
+  {
+   "prueba": "tests/integration/test_validacion_sonda_r19.py::test_trabada",
+   "llamador": "settle",
+   "plazo_s": 0.2,
+   "pendientes": 1,
+   "pendientes_por_tipo": {
+    "sin_empezar": 1
+   },
+   "bucle_vivo": true,
+   "carga1": 1.1,
+   "seg": 0.2,
+   "ok": false,
+   "ciclos_fondo_durante": 15340,
+   "foto_al_vencer": 1280,
+   "foto_por_tipo": {
+    "reconciliation": 1278,
+    "run_heartbeat": 1,
+    "order": 1
+   },
+   "bucle_vivo_al_vencer": true,
+   "carga1_al_vencer": 1.1,
+   "terminaron_despues": 0,
+   "no_terminaron": 1280,
+   "seg_hasta_terminar": 3.002,
+   "ciclos_fondo_en_espera": 188734,
+   "cabeza_tras_espera": {
+    "n": 17374,
+    "tipo": "order",
+    "pila": [
+     "sonda_r19_v2.py:138 sequenced"
+    ]
+   },
+   "productor_detenido": true,
+   "terminaron_sin_productor": 0,
+   "no_terminaron_sin_productor": 1280,
+   "tipos_sin_terminar": {
+    "reconciliation": 1278,
+    "run_heartbeat": 1,
+    "order": 1
+   },
+   "cabeza_final": {
+    "n": 17374,
+    "tipo": "order",
+    "pila": [
+     "sonda_r19_v2.py:138 sequenced"
+    ]
+   }
+  },
+  {
+   "prueba": "tests/integration/test_validacion_sonda_r19.py::test_errores_inyectado_y_no_inyectado",
+   "llamador": "settle",
+   "plazo_s": 2.0,
+   "pendientes": 2,
+   "pendientes_por_tipo": {
+    "sin_empezar": 2
+   },
+   "bucle_vivo": false,
+   "carga1": 1.09,
+   "seg": 0.0,
+   "ok": true,
+   "ciclos_fondo_durante": 0
+  },
+  {
+   "prueba": "tests/integration/test_validacion_sonda_r19.py::test_vaciado_que_no_pide_settle",
+   "llamador": "otro_llamador",
+   "plazo_s": 0.05,
+   "pendientes": 1,
+   "pendientes_por_tipo": {
+    "sin_empezar": 1
+   },
+   "bucle_vivo": false,
+   "carga1": 1.09,
+   "seg": 0.05,
+   "ok": false,
+   "ciclos_fondo_durante": 0,
+   "foto_al_vencer": 1,
+   "foto_por_tipo": {
+    "fill": 1
+   },
+   "bucle_vivo_al_vencer": false,
+   "carga1_al_vencer": 1.09,
+   "espera_extra": "omitida: no la pidi\u00f3 settle(); esperar cambiar\u00eda lo que la prueba ve despu\u00e9s"
+  },
+  {
+   "prueba": "tests/integration/test_validacion_sonda_r19.py::test_vaciado_que_no_pide_settle",
+   "llamador": "settle",
+   "plazo_s": 5.0,
+   "pendientes": 1,
+   "pendientes_por_tipo": {
+    "fill": 1
+   },
+   "bucle_vivo": false,
+   "carga1": 1.09,
+   "seg": 0.451,
+   "ok": true,
+   "ciclos_fondo_durante": 0
+  }
+ ],
+ "errores_escritura": [
+  {
+   "prueba": "tests/integration/test_validacion_sonda_r19.py::test_errores_inyectado_y_no_inyectado",
+   "tipo": "fill",
+   "excepcion": "RuntimeError",
+   "mensaje": "database unavailable during fill",
+   "inyectada": true
+  },
+  {
+   "prueba": "tests/integration/test_validacion_sonda_r19.py::test_errores_inyectado_y_no_inyectado",
+   "tipo": "order",
+   "excepcion": "ValueError",
+   "mensaje": "boom",
+   "inyectada": false
+  }
+ ],
+ "pruebas": {
+  "tests/integration/test_validacion_sonda_r19.py::test_lenta_con_productor": {
+   "resultado": "failed",
+   "fases": {
+    "setup": "passed",
+    "call": "failed",
+    "teardown": "passed"
+   },
+   "seg": 5.33,
+   "mensajes": [
+    "call: AssertionError: persistence writes still in flight\nassert False"
+   ],
+   "informes": [
+    "E   AssertionError: persistence writes still in flight\n    assert False"
+   ]
+  },
+  "tests/integration/test_validacion_sonda_r19.py::test_trabada": {
+   "resultado": "failed",
+   "fases": {
+    "setup": "passed",
+    "call": "failed",
+    "teardown": "passed"
+   },
+   "seg": 5.22,
+   "mensajes": [
+    "call: AssertionError: persistence writes still in flight\nassert False"
+   ],
+   "informes": [
+    "E   AssertionError: persistence writes still in flight\n    assert False"
+   ]
+  },
+  "tests/integration/test_validacion_sonda_r19.py::test_errores_inyectado_y_no_inyectado": {
+   "resultado": "passed",
+   "fases": {
+    "setup": "passed",
+    "call": "passed",
+    "teardown": "passed"
+   },
+   "seg": 0.01
+  },
+  "tests/integration/test_validacion_sonda_r19.py::test_vaciado_que_no_pide_settle": {
+   "resultado": "passed",
+   "fases": {
+    "setup": "passed",
+    "call": "passed",
+    "teardown": "passed"
+   },
+   "seg": 0.51
+  }
+ },
+ "por_prueba": {
+  "tests/integration/test_validacion_sonda_r19.py::test_lenta_con_productor": {
+   "fondo": 208354,
+   "manual": 0
+  },
+  "tests/integration/test_validacion_sonda_r19.py::test_trabada": {
+   "fondo": 204074,
+   "manual": 0
+  }
+ },
+ "carga_fin": [
+  1.0908203125,
+  1.23095703125,
+  1.18408203125
+ ],
+ "exit": 1
+}
